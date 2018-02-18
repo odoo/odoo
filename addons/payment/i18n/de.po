@@ -24,13 +24,14 @@
 # Gab_Odoo <gab@odoo.com>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -298,7 +299,7 @@ msgstr "Betrag"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr "Autorisierungsmechanismus wird unterstützt"
+msgstr "Unterstützter Authorize-Mechanismus"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -326,7 +327,7 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_res_id
 msgid "Callback Document ID"
-msgstr "Rückruf der Dokumenten-ID"
+msgstr "Rückruf der Dokument-ID"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_model_id
@@ -396,7 +397,7 @@ msgstr "Klicken um einen Zahlungsanbieter zu erstellen."
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Click to create a payment icon."
-msgstr "Klicken, um ein Zahlungssymbol zu erstellen."
+msgstr "Klicken Sie, um ein Zahlungssymbol zu erstellen."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -577,7 +578,7 @@ msgstr "Gebühren"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
 msgid "Fees Computation Supported"
-msgstr "Gebührenberechnung wird unterstützt"
+msgstr "Unterstützte Gebührenberechnung"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -656,7 +657,7 @@ msgstr "Bild"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
 msgid "Image displayed on the payment form"
-msgstr "Angezeigtes Bild auf dem Zahlungsformular"
+msgstr "Im Zahlungsformular angezeigtes Bild"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -863,7 +864,7 @@ msgid ""
 msgstr ""
 "Beachten Sie, dass Token von Zahlungsanbietern, die nur für die "
 "Autorisierung von Transaktionen festgelegt wurden (anstatt die Menge zu "
-"erfassen) nicht verfügbar sind."
+"erfassen), nicht verfügbar sind."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_payment_flow
@@ -871,8 +872,8 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
-"Hinweis: Abonnements berücksichtigen dieses Feld nicht, sondern verwendet "
-"den Server-to-Server als Standard."
+"Hinweis: Abonnements berücksichtigen dieses Feld nicht, sondern verwenden "
+"standardmäßig Server zu Server."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -1022,12 +1023,16 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
-"Die Zahlungen werden in dieses Journal eingetragen. Wenn Sie Ihr Geld direkt auf Ihr Bankkonto erhalten,\n"
-" wählen Sie Ihr Bankkonto. Wenn Sie nach und nach für mehrere Transaktionen bezahlt werden, erstellen Sie für diesen Zahlungsanbieter ein bestimmtes\n"
-" Zahlungsjournal, um die Bankabstimmung ganz einfach zu verwalten. Sie halten\n"
-" den Betrag auf einem temporären Überleitungskonto Ihrer Bücher (wird automatisch bei der Erstellung\n"
-" des Zahlungsjournals erstellt). Dann wird Ihr Geld von einem Zahlungsanbieter auf Ihr Bankkonto überwiesen, gleichen Sie\n"
-" dann die Bankauszugszeile mit diesem temporären Transferkonto aus. Verwenden Sie Ausgleichsvorlagen, um es mit nur einem Klick zu erledigen."
+"Die Zahlungen werden in dieses Journal eingetragen. Wenn Sie Ihr Geld direkt"
+" auf Ihr Bankkonto erhalten,  wählen Sie Ihr Bankkonto. Wenn Sie nach und "
+"nach für mehrere Transaktionen bezahlt werden, erstellen Sie für diesen "
+"Zahlungsanbieter ein bestimmtes Zahlungsjournal, um die Bankabstimmung ganz "
+"einfach zu verwalten. Der Betrag erscheint auf einem temporären "
+"Überleitungskonto Ihrer Bücher (wird automatisch bei der Erstellung  des "
+"Zahlungsjournals erstellt). Dann wird Ihr Geld von einem Zahlungsanbieter "
+"auf Ihr Bankkonto überwiesen, gleichen Sie dann die Bankauszugsposition mit "
+"diesem temporären Überleitungskonto aus. Verwenden Sie Ausgleichsvorlagen, "
+"um es mit nur einem Klick zu erledigen."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1054,7 +1059,7 @@ msgstr "Telefon"
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
-msgstr "Bitte verwenden Sie folgende Transferinformationen"
+msgstr "Bitte verwenden Sie folgende Überweisungsdaten"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -1236,8 +1241,7 @@ msgstr "Dank-Mitteilung"
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
-"Die %s Zahlungsanbieter dürfen den Aufzeichnungsmodus nicht manuell "
-"betreiben!"
+"Die %s-Zahlungsanbieter dürfen den Erfassungsmodus nicht manuell ausführen!"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -1262,7 +1266,7 @@ msgid ""
 "This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
-"Diese Funktion ist für Zahlungsanbieter, die auf den „Autorisierungs“-Modus eingestellt sind, nicht verfügbar.\n"
+"Diese Funktion ist für Zahlungsanbieter, für die der „Authorize“-Modus eingestellt ist, nicht verfügbar.\n"
 " Bitte verwenden Sie einen Token eines anderen Anbieters als %s."
 
 #. module: payment
@@ -1271,8 +1275,8 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
-"Dieses Feld enthält das Bild in der Größe 1024x1024px, das für dieses "
-"Zahlungssymbol verwendet wird"
+"Dieses Feld enthält das Bild, das für dieses Zahlungssymbol verwendet wird; "
+"maximale Größe 1024 x 1024 Pixel."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -1301,7 +1305,7 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
-"Dieses Zahlungsportal ist für ausgewählte Länder verfügbar. Falls keines "
+"Dieses Zahlungs-Gateway ist für ausgewählte Länder verfügbar. Falls keines "
 "ausgewählt wurde, ist es für alle Länder verfügbar."
 
 #. module: payment
@@ -1311,7 +1315,7 @@ msgid ""
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
 "Diese Vorlage erzeugt den Zahlungsanbieter-Button mit allen erforderlichen Werten.\n"
-" Es wird mit qWeb mit dem folgenden Auswertungskontext gerendert:"
+"Es wird mit qWeb mit dem folgenden Auswertungskontext gerendert:"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
@@ -1378,7 +1382,7 @@ msgstr "Banküberweisung"
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompt with Stripe Payment page for payment information."
 msgstr ""
-"Sie sind schnell mit der Stripe-Zahlungsseite für Zahlungsinformationen."
+"Sie werden auf der Stripe-Zahlungsseite nach Zahlungsinformationen gefragt."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -1386,7 +1390,7 @@ msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
 msgstr ""
-"Sie werden zur Website von Ayden weitergeleitet, wenn Sie auf den Bezahlen-"
+"Sie werden zur Website von Adyen weitergeleitet, wenn Sie auf den Bezahlen-"
 "Button drücken."
 
 #. module: payment
@@ -1395,8 +1399,8 @@ msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
 msgstr ""
-"Sie werden zur Autorisierungs-Website weitergeleitet, wenn Sie auf den "
-"Bezahlen-Button drücken."
+"Sie werden zur Authorize-Website weitergeleitet, wenn Sie auf den Bezahlen-"
+"Button drücken."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
