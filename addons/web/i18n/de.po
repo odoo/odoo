@@ -23,13 +23,14 @@
 # Andi, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Till Stone <benzi95@web.de>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
 "PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: Till Stone <benzi95@web.de>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +138,9 @@ msgid ""
 "                        &lt;body class=\"ie9\"&gt;\n"
 "                    &lt;![endif]--&gt;"
 msgstr ""
+"<!--[if lt IE 10]>\n"
+" <body class=\"ie9\">\n"
+" <![endif]-->"
 
 #. module: web
 #. openerp-web
@@ -248,7 +252,7 @@ msgstr "Zugriffsfehler"
 #: code:addons/web/static/src/xml/base.xml:1283
 #, python-format
 msgid "Access to all Enterprise Apps"
-msgstr ""
+msgstr "Zugang zu allen Enterprise-Apps"
 
 #. module: web
 #. openerp-web
@@ -283,7 +287,7 @@ msgstr "Aktivieren"
 #: code:addons/web/static/src/xml/base.xml:112
 #, python-format
 msgid "Activate Assets Debugging"
-msgstr ""
+msgstr "Assets Debugging aktivieren"
 
 #. module: web
 #. openerp-web
@@ -434,7 +438,7 @@ msgstr "Binäre Datei"
 #: code:addons/web/static/src/xml/base.xml:1287
 #, python-format
 msgid "Bugfixes guarantee"
-msgstr ""
+msgstr "Garantie für Fehlerkorrekturen"
 
 #. module: web
 #. openerp-web
@@ -931,7 +935,7 @@ msgstr "In Datei exportieren"
 #: code:addons/web/static/src/xml/base.xml:1089
 #, python-format
 msgid "Export Type :"
-msgstr ""
+msgstr "Export-Typ:"
 
 #. module: web
 #. openerp-web
@@ -1044,7 +1048,7 @@ msgstr "Filter"
 #: code:addons/web/static/src/xml/base.xml:575
 #, python-format
 msgid "Flip axis"
-msgstr ""
+msgstr "Achse spiegeln"
 
 #. module: web
 #. openerp-web
@@ -1055,6 +1059,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"Für die Excel-Kompatibilität können Daten nicht exportiert werden, wenn mehr als 256 Spalten vorhanden sind.\n"
+"\n"
+"Tipp: Versuchen Sie, die Achse zu spiegeln, filtern Sie weiter oder reduzieren Sie die Anzahl an Werten."
 
 #. module: web
 #. openerp-web
@@ -1069,7 +1076,7 @@ msgstr "Formular"
 #: code:addons/web/static/src/xml/base.xml:1280
 #, python-format
 msgid "Get this feature and much more with Odoo Enterprise!"
-msgstr ""
+msgstr "Erhalten Sie diese Funktion und viel mehr mit Odoo Enterprise!"
 
 #. module: web
 #. openerp-web
@@ -1156,6 +1163,8 @@ msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
 "and dot are allowed."
 msgstr ""
+"Ungültiger Datenbankname. Nur alphanumerische Zeichen, Unterstriche, "
+"Bindestriche und Punkte sind zulässig."
 
 #. module: web
 #. openerp-web
@@ -1440,6 +1449,9 @@ msgid ""
 "No data available for this pivot table.  Try to add some records, or make sure\n"
 "        that there is at least one measure and no active filter in the search bar."
 msgstr ""
+"Keine Daten für die Pivot-Tabelle vorhanden. Füge einen Eintrag hinzu oder "
+"stelle sicher, dass mindestens ein Maßstab vorhanden ist und keine Filter in"
+" der Suchleiste aktiv sind."
 
 #. module: web
 #. openerp-web
@@ -1460,7 +1472,7 @@ msgstr "Es liegen keine Daten zur Anzeige vor"
 #: code:addons/web/static/src/js/widgets/debug_manager.js:328
 #, python-format
 msgid "No metadata available"
-msgstr ""
+msgstr "Keine Metadaten verfügbar"
 
 #. module: web
 #. openerp-web
@@ -1633,6 +1645,8 @@ msgid ""
 "Pie chart cannot display all zero numbers.. Try to change your domain to "
 "display positive results"
 msgstr ""
+"Tortendiagramm kann nicht alle Null-Zahlen anzeigen. Versuchen Sie, Ihre "
+"Domain zu ändern, um positive Ergebnisse anzuzeigen"
 
 #. module: web
 #. openerp-web
@@ -1642,6 +1656,8 @@ msgid ""
 "Pie chart cannot mix positive and negative numbers. Try to change your "
 "domain to only display positive results"
 msgstr ""
+"Tortendiagramm kann keine positiven und negativen Zahlen mischen. Versuchen "
+"Sie, Ihre Domain zu ändern, um nur positive Ergebnisse anzuzeigen"
 
 #. module: web
 #. openerp-web
@@ -1760,7 +1776,7 @@ msgstr "Rendern"
 #: code:addons/web/static/src/xml/base.xml:114
 #, python-format
 msgid "Run JS Tests"
-msgstr ""
+msgstr "JS-Tests ausführen"
 
 #. module: web
 #. openerp-web
@@ -1967,7 +1983,7 @@ msgstr "Größe:"
 #: code:addons/web/controllers/main.py:1038
 #, python-format
 msgid "Something horrible happened"
-msgstr ""
+msgstr "Etwas Dummes ist passiert"
 
 #. module: web
 #. openerp-web
@@ -2147,13 +2163,16 @@ msgid ""
 "Timezone Mismatch : The timezone of your browser doesn't match the selected "
 "one. The time in Odoo is displayed according to your field timezone."
 msgstr ""
+"Zeitzonen-Diskrepanz: Die Zeitzone Ihres Browsers stimmt nicht mit der "
+"ausgewählten Zeitzone überein. Die Zeit in Odoo wird entsprechend Ihrem "
+"Zeitzonen-Feld angezeigt."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:118
 #, python-format
 msgid "Toggle Timelines"
-msgstr ""
+msgstr "Zeitachsen umschalten"
 
 #. module: web
 #. openerp-web
@@ -2271,7 +2290,7 @@ msgstr "Nicht unterstützer Operator %s in Domain %s"
 #: code:addons/web/static/src/xml/base.xml:1256
 #, python-format
 msgid "Update translations"
-msgstr ""
+msgstr "Übersetzungen aktualisieren"
 
 #. module: web
 #. openerp-web
@@ -2285,7 +2304,7 @@ msgstr "Jetzt aktualisieren"
 #: code:addons/web/static/src/xml/base.xml:1286
 #, python-format
 msgid "Upgrade to future versions"
-msgstr ""
+msgstr "Upgraden auf künftige Versionen"
 
 #. module: web
 #. openerp-web
@@ -2398,7 +2417,7 @@ msgstr "Widget:"
 #: code:addons/web/controllers/main.py:474
 #, python-format
 msgid "Wrong login/password"
-msgstr ""
+msgstr "Falsche Anmeldedaten/falsches Passwort"
 
 #. module: web
 #. openerp-web
@@ -2456,7 +2475,7 @@ msgstr "Sie können kein leeres Passwort setzen."
 #: code:addons/web/static/src/xml/base.xml:1254
 #, python-format
 msgid "You have updated"
-msgstr ""
+msgstr "Aktualisierung ausgeführt"
 
 #. module: web
 #. openerp-web
@@ -2640,7 +2659,7 @@ msgstr "ist wahr"
 #: code:addons/web/static/src/js/framework/utils.js:303
 #, python-format
 msgid "kMGTPE"
-msgstr ""
+msgstr "kMGTPE"
 
 #. module: web
 #. openerp-web
