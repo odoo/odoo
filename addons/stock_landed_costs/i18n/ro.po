@@ -41,7 +41,7 @@ msgstr "Jurnal Contabil"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
 msgid "Additional Landed Cost"
-msgstr "Costuri adiționale de transport"
+msgstr "Costuri adiționale"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -80,12 +80,12 @@ msgstr "Anulat(a)"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr "Clic pentru a crea un nou cost de transport."
+msgstr "Clic pentru a crea un nou cost adițional."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr "Clic pentru a defini un nou tip de cost de transport. "
+msgstr "Clic pentru a defini un nou tip de cost adițional. "
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -115,8 +115,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
-"Costurile și liniile de ajustare nu se potrivesc. Ar trebui să recompuneți "
-"costurile de transport."
+"Costurile și liniile de ajustare nu se potrivesc. Ar trebui să recalculați "
+"costurile adiționale."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -151,7 +151,7 @@ msgid ""
 "feature."
 msgstr ""
 "Dezactivarea metodelor de costuri vă va împiedica să utilizați "
-"caracteristica costurilor de transport."
+"caracteristica costurilor adiționale."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -239,17 +239,17 @@ msgstr "Notă contabilă"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_cost_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_id
 msgid "Landed Cost"
-msgstr "Costuri de transport"
+msgstr "Costuri adiționale"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr "Nume cost de transport"
+msgstr "Nume cost adițional"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 msgid "Landed Cost Type"
-msgstr "Tip cost de transport"
+msgstr "Tip cost de adițional"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -260,19 +260,18 @@ msgstr "Tip cost de transport"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
-msgstr "Costuri depozitare"
+msgstr "Costuri adiționale"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr ""
-"Costurile de transport sunt calculate pe baza unității de măsură de "
-"achiziție."
+"Costurile adiționale sunt calculate pe baza unității de măsură de achiziție."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "Costuri de transport validate"
+msgstr "Costuri adiționale validate"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -312,14 +311,14 @@ msgstr "Nume"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
-"Nu există linii de ajustare a valorii. Ar trebui să recompuneți costurile de"
-" transport."
+"Nu există linii de ajustare a valorii. Ar trebui să recalculați costurile "
+"adiționale."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Numai costurile de transport ciornă pot fi validate"
+msgstr "Numai costurile adiționale ciornă pot fi validate"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -383,12 +382,12 @@ msgstr "Stare"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
-msgstr "Stoc Costuri Transport"
+msgstr "Stoc Costuri Adiționale"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Lines"
-msgstr "Stoc Costuri Transport Linii"
+msgstr "Stoc Linii Costuri Adiționale"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_move_id
@@ -409,8 +408,8 @@ msgid ""
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
-"Ridicările selectate nu conține nici o mișcare care ar putea fi afectată de "
-"costurile de transport. Costurile de transport sunt posibile numai pentru "
+"Ridicările selectate nu conțin mișcări care ar putea fi afectată de "
+"costurile adiționale. Costurile adiționale sunt posibile numai pentru "
 "produsele ce au configurată evaluarea în timp real prin metoda costului "
 "real. Asigurați-vă că este cazul, sau ați selectat corect ridicările."
 
@@ -431,8 +430,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"Costurile de transport validate nu pot fi anulate, dar puteți crea costuri "
-"negative de transport pentru a le inversa"
+"Costurile de adiționale validate nu pot fi anulate, dar puteți crea costuri "
+"adiționale negative pentru a le inversa"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
