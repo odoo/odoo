@@ -25,6 +25,7 @@
 # Clo <clo@odoo.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # Florian Hatat, 2017
+# fr trans <e2ffr05@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -97,8 +98,20 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong><strong></strong></p><p></p><p></p></data>"
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Cher/chère ${object.partner_id.name}</p>\n"
+"                <p>\n"
+"                Voici votre ordre de réparation ${doc_name} <strong>${object.name}</strong>\n"
+"                % if object.origin:\n"
+"                (référence : ${object.origin} )\n"
+"                % endif\n"
+"                % if object.invoice_method != 'none':\n"
+"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
+"                % endif\n"
+"                </p>\n"
+"                <p>Vous pouvez répondre à cet e-mail si vous avez des questions.</p>\n"
+"                <p>Merci,</p>\n"
+"            </data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder

@@ -49,7 +49,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 #: model:mail.template,subject:mrp_repair.mail_template_mrp_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.partner_id.name} Reparaturaufträge (Ref ${object.name or 'n/a' })"
+"${object.partner_id.name}-Reparaturaufträge (Ref. ${object.name or 'n/a' })"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -97,19 +97,19 @@ msgid ""
 "            </data>"
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"Hallo ${object.partner_id.name}\n"
-" \n"
-" Hier ist Ihr Reparaturauftrag ${doc_name} ${object.name}\n"
+"<data><p>Hallo ${object.partner_id.name}</p>\n"
+" <p>\n"
+" Hier ist Ihr Reparaturauftrag ${doc_name} <strong>${object.name}</strong>\n"
 " % if object.origin:\n"
-" (with reference: ${object.origin} )\n"
+" (Mit der Referenz: ${object.origin} )\n"
 " % endif\n"
-" % if object.invoice_method !<data><p></p> = 'none':\n"
-" amounting in ${object.amount_total} ${object.pricelist_id.currency_id.name}.\n"
+" % if object.invoice_method ! = 'none':\n"
+" Betrag <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
 " % endif\n"
-" \n"
-" Falls Sie Fragen haben, können Sie auf diese E-Mail antworten.\n"
-" Vielen Dank,\n"
-"<p><strong></strong><strong></strong></p><p></p><p></p></data>"
+" </p>\n"
+" <p>Falls Sie Fragen haben, können Sie auf diese E-Mail antworten.</p>\n"
+" <p>Vielen Dank,</p>\n"
+"</data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -119,7 +119,7 @@ msgstr "<i>(Hinzufügen)</i>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong>Los- / Seriennummer:</strong>"
+msgstr "<strong>Los-/Seriennummer:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -416,9 +416,9 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
-"In einem Reparaturauftrag können Sie die Komponenten, die Sie entfernen, \n"
-" hinzufügen oder ersetzen, einzeln aufführen und die Zeit, die Sie für die verschiedenen\n"
-" Vorgänge gebraucht haben, aufzeichnen."
+"In einem Reparaturauftrag können Sie die Komponenten, die Sie entfernen, "
+"hinzufügen oder ersetzen, einzeln aufführen und die Zeit, die Sie für die "
+"verschiedenen Vorgänge gebraucht haben, aufzeichnen."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:215
@@ -768,7 +768,7 @@ msgstr "Reparaturen müssen vor Beginn der Reparatur bestätigt werden."
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
-"Die Reparatur muss repariert werden, um die Produktschritte zu vollziehen."
+"Die Reparatur muss repariert werden, um die Produktbuchungen zu vollziehen."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:419
@@ -907,9 +907,9 @@ msgid ""
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
-"Der Reparaturauftrag verwendet das Garantiedatum auf der Seriennummer,\n"
-" um festzustellen, ob die Reparatur dem Kunden\n"
-" in Rechnung gestellt werden soll oder nicht."
+"Der Reparaturauftrag verwendet das Garantiedatum auf der Seriennummer, um "
+"festzustellen, ob die Reparatur dem Kunden in Rechnung gestellt werden soll "
+"oder nicht."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
@@ -1018,7 +1018,7 @@ msgid ""
 " Please set one before choosing a product."
 msgstr ""
 "Sie müssen eine Preisliste bei der Reparatur auswählen! \n"
-" Bitte tragen Sie einen Wert vor Ihrer Auswahl ein."
+"Bitte legen Sie eine vor Ihrer Produktauswahl fest."
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_traceability_report

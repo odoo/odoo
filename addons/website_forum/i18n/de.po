@@ -17,6 +17,7 @@
 # Henry Mineehen <info@mineehen.de>, 2017
 # Niki Waibel, 2017
 # Mathias Neef <mn@copado.de>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -74,42 +75,41 @@ msgid ""
 "</div>"
 msgstr ""
 "\n"
-"\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-"\n"
-"\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-"\n"
-"\n"
-" \n"
-" \n"
-" \n"
-" Sehr geehrte/r ${object.name},\n"
-" Sie wurden dazu eingeladen, Ihre E-Mail-Adresse zu validieren, damit Sie Zugang zu\n"
-" \"${object.company_id.name}\" Diskussionsforen erhalten.\n"
-" Klicken Sie zum Validieren Ihrer E-Mail-Adresse auf den folgenden Link:\n"
-" \n"
-" Validieren Sie mein Konto für „${object.company_id.name}“-Diskussionsforen.\n"
-" \n"
-" Vielen Dank für Ihre Teilnahme!<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td></tr></tbody></table></div> \n"
-" \n"
-" \n"
-" \n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\"><div><hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\"></div></td></tr></tbody></table></div><div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td style=\"padding:0px 10px 5px 5px;font-size: 14px;\"><p></p><p></p><p></p><a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\"></a><p></p></td></tr></tbody></table></div>"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Hallo ${object.name},</p>\n"
+"                <p>Sie wurden dazu eingeladen, Ihre E-Mail-Adresse zu validieren, damit Sie Zugang zu ${object.company_id.name}-Diskussionsforen erhalten.</p>\n"
+"                <p>Klicken Sie zum Validieren Ihrer E-Mail-Adresse auf den folgenden Link:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Mein Konto für ${object.company_id.name}-Diskussionsforen validieren\n"
+"                </a>\n"
+"                <p>Vielen Dank!</p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_forum
 #. openerp-web
@@ -131,7 +131,7 @@ msgstr "${object.company_id.name} Forumsprüfung"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
-msgstr "<i class=\"fa fa-times\"/>&nbsp;&nbsp;&nbsp;&nbsp;"
+msgstr "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -149,8 +149,9 @@ msgid ""
 "(Un)archiving a forum automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
-"Das (Un-)Archivieren eines Forums (un-)archiviert automatisch auch dessen "
-"Beiträge. Möchten Sie fortfahren?"
+"Das Archivieren bzw. Aufheben einer Archivierung eines Forums archiviert "
+"automatisch auch dessen Einträge bzw. hebt deren Archivierung auf. Möchten "
+"Sie fortfahren?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -158,8 +159,9 @@ msgid ""
 "(Un)archiving a post automatically (un)archives its answers. Do you want to "
 "proceed?"
 msgstr ""
-"Das (Un-)Archivieren eines Beigrags (un-)archiviert automatisch auch dessen "
-"Antworten. Möchten Sie fortfahren?"
+"Das Archivieren bzw. Aufheben einer Archivierung eines Beitrags archiviert "
+"automatisch auch dessen Antworten bzw. hebt deren Archivierung auf. Möchten "
+"Sie fortfahren?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -228,9 +230,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
 msgstr ""
-"<b>Antworten sollten nicht Fragen hinzufügen oder erweitern.</b> Bearbeiten "
-"Sie stattdessen entweder die Frage oder fügen Sie eine Frage als Kommentar "
-"hinzu."
+"<b>Eine Antwort soll keine Fragen hinzufügen oder erweitern</b>. Ändern Sie "
+"Ihre Frage stattdessen oder fügen sie einen Kommentar hinzu."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -299,11 +300,11 @@ msgid ""
 "    copy/paste. Links are welcome, but should be complementary to\n"
 "    answer, referring sources or additional reading."
 msgstr ""
-"<b>Antworten sollten nicht nur einen\n"
-" Link zur Lösung bereitstellen.</b> Bieten Sie stattdessen die Lösung\n"
-" als beschreibenden Text in Ihrer Antwort an, selbst wenn Sie diesen nur per\n"
-" Kopieren und Einfügen bereitstellen. Links sind willkommen, sollten jedoch nur als Ergänzung\n"
-" zur Antwort bereitgestellt werden, in denen auf Quellen oder weitere Informationen verwiesen wird."
+"<b>Antworten sollten nicht nur einen Link zur Lösung enthalten.</b> Bieten "
+"Sie stattdessen die Lösung als beschreibenden Text in Ihrer Antwort an, "
+"selbst wenn Sie diesen nur per Kopieren und Einfügen bereitstellen. Links "
+"sind willkommen, sollten jedoch nur als Ergänzung zur Antwort bereitgestellt"
+" werden, in denen auf Quellen oder weitere Informationen verwiesen wird."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -313,12 +314,11 @@ msgid ""
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
-"<b>Antworten sollten nicht nur einen Link zur Lösung bereitstellen.</b> "
-"Bieten Sie stattdessen die Lösung als beschreibenden Text in Ihrer Antwort "
-"an, selbst wenn Sie diesen nur per Kopieren und Einfügen bereitstellen. "
-"Links sind willkommen, sollten jedoch nur als Ergänzung zur Antwort "
-"bereitgestellt werden, in denen auf Quellen oder weitere Informationen "
-"verwiesen wird."
+"<b>Antworten sollten nicht nur einen Link zur Lösung enthalten.</b> Bieten "
+"Sie stattdessen die Lösung als beschreibenden Text in Ihrer Antwort an, "
+"selbst wenn Sie diesen nur per Kopieren und Einfügen bereitstellen. Links "
+"sind willkommen, sollten jedoch nur als Ergänzung zur Antwort bereitgestellt"
+" werden, in denen auf Quellen oder weitere Informationen verwiesen wird."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -477,9 +477,10 @@ msgid ""
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))"
 msgstr ""
-"Ein Tag ist ein Label, das Ihre Frage mit anderen,\n"
-" ähnlichen Fragen kategorisiert. Mit den richtigen Tags können andere\n"
-" Ihre Frage einfacher finden und beantworten. (Mauszeiger über die Tags zum Folgen bzw. nicht mehr Folgen bewegen)"
+"Ein Tag ist ein Label, das Ihre Frage mit anderen, ähnlichen Fragen "
+"kategorisiert. Mit den richtigen Tags können andere Ihre Frage einfacher "
+"finden und beantworten. (Mauszeiger über die Tags zum Folgen bzw. nicht mehr"
+" Folgen bewegen)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -1063,12 +1064,12 @@ msgstr "Alle Antworten in Kommentare umwandeln und umgekehrt"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Convert as a comment"
-msgstr "Als Kommentar konvertieren"
+msgstr "In Kommentar umwandeln"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Convert as an answer"
-msgstr "Als Antwort konvertieren"
+msgstr "In Antwort umwandeln"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_accept
@@ -1383,7 +1384,7 @@ msgstr "Erste Stimme abgegeben"
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flag"
-msgstr "Flag"
+msgstr "Markieren"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
@@ -1599,8 +1600,8 @@ msgid ""
 "'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
 "canadian taxes?"
 msgstr ""
-"Wie kann ein physisches Verzeichnis an einem zurückliegenden Datum erstellt "
-"werden? Wie wird das Feld „verbleibende Stunden“ bei Aufgaben berechnet? Wie"
+"Wie kann ein physischer Bestand an einem zurückliegenden Datum erstellt "
+"werden? Wie wird das Feld „Verbleibende Stunden“ bei Aufgaben berechnet? Wie"
 " werden die kanadischen Steuern für TPS und TVQ berechnet?"
 
 #. module: website_forum
@@ -1677,8 +1678,8 @@ msgid ""
 "Inventory Date Problem, Task remaining hours, Can you help solve solve my "
 "tax computation problem in Canada?"
 msgstr ""
-"Probleme bei Inventurdatum, verbleibende Stunden veranschlagen, können Sie "
-"bei der Lösung meiner Steuerberechnungsprobleme in Kanada helfen?"
+"Probleme bei Inventurdatum, Aufgabe für verbleibende Stunden; können Sie bei"
+" der Lösung meiner Steuerberechnungsprobleme in Kanada helfen?"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_favourite
@@ -2462,7 +2463,7 @@ msgstr "Anzahl Silberauszeichnungen"
 #: code:addons/website_forum/static/src/js/website_forum.js:26
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
-msgstr "Tut uns leid. Du must zum Ausführen dieser Aktion angemeldet sein."
+msgstr "Tut uns leid. Sie müssen zum Ausführen dieser Aktion angemeldet sein."
 
 #. module: website_forum
 #. openerp-web
@@ -2702,7 +2703,7 @@ msgid ""
 "want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
 "Dieser Beitrag wartet derzeit auf Moderation und wurde noch nicht "
-"veröffentlicht. Müchten Sie diesen Beitrag <i>akzeptieren</i> oder "
+"veröffentlicht. Möchten Sie diesen Beitrag <i>akzeptieren</i> oder "
 "<i>ablehnen?</i>"
 
 #. module: website_forum
@@ -2972,8 +2973,8 @@ msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
-"Sie haben bereits einen anstehenden <br/>Beitrag.\n"
-" Bitte warten Sie vor dem Fortfahren darauf, dass ein Moderator Ihren vorigen Beitrag validiert."
+"Sie haben bereits einen ausstehenden Beitrag.<br/>\n"
+"Bitte warten Sie vor dem Fortfahren darauf, dass ein Moderator Ihren vorigen Beitrag validiert."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:138

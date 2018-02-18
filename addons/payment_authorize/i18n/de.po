@@ -9,13 +9,14 @@
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Niki Waibel, 2017
 # e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,11 +41,13 @@ msgid ""
 "Authorize.net Error Message(s):\n"
 " %s"
 msgstr ""
+"Authorize.net-Fehlermeldung(en):\n"
+" %s"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr ""
+msgstr "Authorize.net-Profil-ID"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:167
@@ -53,6 +56,8 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Authorize: empfangene Daten mit fehlender Referenz (%s) oder trans_id (%s) "
+"oder Fingerabdruck (%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -67,17 +72,17 @@ msgstr "Kartennummer"
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Name des Karteninhabers"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Ablauf (MM/JJ)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Wie Sie mit Authorize.Net bezahlt werden"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -103,7 +108,7 @@ msgstr "Karten speichern"
 #: code:addons/payment_authorize/models/payment.py:372
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "Die Erstellung des Kundenprofils bei Autorize.NET ist fehlgeschlagen."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -111,6 +116,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Dies enthält die eindeutige Referenz für diese Partner-/Zahlungs-Token-"
+"Kombination im Backend von Authorize.net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
@@ -121,7 +128,7 @@ msgid ""
 "an invoice."
 msgstr ""
 "Diese Option ermöglicht es Kunden, Ihre Kreditkarte als Zahlungs-Token zu "
-"speichern und sie für eine spätere Zahlung wiederzuverwenden. Falls Sie "
+"speichern und sie für eine spätere Zahlung wiederzuverwenden. Wenn Sie "
 "Abonnements verwalten (wiederkehrende Rechnungsstellung), müssen Sie dem "
 "Kunden automatisch etwas berechnen, wenn Sie eine Rechnung ausstellen."
 

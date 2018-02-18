@@ -14,13 +14,14 @@
 # Tina Rittmüller <tr@ife.de>, 2017
 # David Vidal <david.vidal@trespinos.es>, 2017
 # e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:54+0000\n"
 "PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,9 +105,9 @@ msgid ""
 "                        Sold Out\n"
 "                    </span>"
 msgstr ""
-"<span content=\"http://schema.org/SoldOut\" itemprop=\"availability\">\n"
-" Ausverkauf\n"
-"</span>"
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Ausverkauft\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -120,9 +121,9 @@ msgid ""
 "                        Free\n"
 "                    </span>"
 msgstr ""
-"<span content=\"0\" itemprop=\"price\">\n"
-" Kostenfrei\n"
-"</span>"
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Kostenfrei\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
@@ -207,8 +208,8 @@ msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
-"Aktivieren Sie diese Option, wenn Sie für Ihre Veranstaltung auf der Website\n"
-" Menüs wünschen: Anmeldungen, Zeitplan, Karte, …"
+"Aktivieren Sie diese Option, wenn Sie für Ihr Event auf der Website Menüs "
+"wünschen: Anmeldungen, Zeitplan, Karte, …"
 
 #. module: website_event
 #. openerp-web
@@ -260,8 +261,8 @@ msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
 msgstr ""
-"Erstellt auf der Veranstaltungsseite der Website die Menüs Einführung, "
-"Standort und Anmelden."
+"Erstellt auf der Event-Seite der Website die Menüs Einführung, Standort und "
+"Anmelden."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
@@ -288,7 +289,7 @@ msgstr "E-Mail"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Edit Badges"
-msgstr "Abzeichen bearbeiten"
+msgstr "Ausweise bearbeiten"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
@@ -392,7 +393,7 @@ msgstr "Überblick"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
 msgid "Is Participating"
-msgstr "nimmt teil"
+msgstr "Nimmt teil"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:54
@@ -532,7 +533,7 @@ msgstr "Anmelden"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Registration for this event is now closed"
-msgstr "Die Anmeldung für diese Veranstaltung ist geschlossen."
+msgstr "Die Anmeldung für dieses Event ist geschlossen."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -586,8 +587,7 @@ msgstr "Heute"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Use the top menu <i>'Content'</i> to create your first event."
-msgstr ""
-"Erstellen Sie mit dem Topmenü <i>„Inhalte“</i> Ihre erste Veranstaltung."
+msgstr "Erstellen Sie über das Menü <i>„Inhalt“</i> oben Ihr erstes Event."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
@@ -603,8 +603,7 @@ msgstr "Auf Google Maps visualisieren"
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
 msgstr ""
-"Wir freuen uns, Ihre Anmeldung bei unserer Veranstaltung bestätigen zu "
-"können."
+"Wir freuen uns, Ihre Anmeldung bei unserem Event bestätigen zu können."
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website

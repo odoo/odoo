@@ -22,13 +22,14 @@
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # David Vidal <david.vidal@trespinos.es>, 2017
 # e2f <projects@e2f.com>, 2018
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: e2f_EPV Translator <e2f_EPV@outlook.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,22 +59,22 @@ msgid ""
 "            "
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-" \n"
-" \n"
-" Estimado/a: \n"
-" \n"
-" Nos complace informarle de que su propuesta ${object.name} ha sido aceptada y confirmada para el evento ${object.event_id.name}. \n"
-" \n"
-" Puede encontrar más detalles aquí: \n"
-" \n"
-" \n"
-" Ver evento \n"
-" \n"
-" \n"
-" \n"
-" Atentamente,\n"
-"\n"
-"<div><p><t t-esc=\"object.partner_name\"/></p><p></p><p><div style=\"margin-top: 16px;\"><a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\"></a></div></p><p></p></div>"
+"<div>\n"
+"    <p>\n"
+"        Estimado/a <t t-esc=\"object.partner_name\"/>:\n"
+"    </p><p>\n"
+"        Nos complace informarle de que su propuesta ${object.name} ha sido aceptada y confirmada para el evento ${object.event_id.name}.\n"
+"    </p><p>\n"
+"        Puede encontrar más detalles aquí:\n"
+"        <div style=\"margin-top: 16px;\">\n"
+"            <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                Ver evento\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"    <p>Atentamente,</p>\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -168,10 +169,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-"Cuando un seguimiento se encuentra en estado \"Kanban\", significa que existen situaciones especiales que le están afectando\n"
+"Cuando un seguimiento se encuentra en estado de kanban, significa que existen situaciones especiales que le están afectando:\n"
 " * El gris es la situación por defecto\n"
-" *El rojo indica que hay algo que impide el progreso del seguimiento\n"
-" *El verde indica que el seguimiento puede pasar a la siguiente etapa"
+" * El rojo indica que hay algo que impide el progreso del seguimiento\n"
+" * El verde indica que el seguimiento puede pasar a la siguiente etapa"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -326,9 +327,9 @@ msgid ""
 "    solving an event track."
 msgstr ""
 "Defina los pasos que se utilizarán en el evento desde la\n"
-" creación del seguimiento hasta el cierre del mismo.\n"
-" Utilizará tales etapas para supervisar el progreso\n"
-" de la resolución de un seguimiento de evento."
+"    creación del seguimiento hasta el cierre del mismo.\n"
+"    Utilizará tales etapas para supervisar el progreso\n"
+"    de la resolución de un seguimiento de evento."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -568,8 +569,8 @@ msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
 msgstr ""
-"Si está fijado, se enviará un correo electrónico al cliente cuando el "
-"seguimiento alcance el susodicho paso."
+"Si está configurado, se enviará un correo electrónico al cliente cuando el "
+"seguimiento alcance este paso."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -1075,7 +1076,7 @@ msgstr "Propuestas de seguimiento en el sitio web"
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
-msgstr "Seguimisto listo"
+msgstr "Seguimiento listo"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
@@ -1095,7 +1096,7 @@ msgstr "Estapa de la sesión"
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr "Fases de seguimiento"
+msgstr "Etapas de seguimiento"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
@@ -1133,8 +1134,8 @@ msgid ""
 "Tracks define the schedule of your event. These can be a talk, a round "
 "table, a meeting, etc."
 msgstr ""
-"Los seguimientos determinan el programa de su evento. Puede ser una charla, "
-"una mesa redonda, una reunión, etc."
+"Los seguimientos determinan la planificación de su evento. Puede ser una "
+"charla, una mesa redonda, una reunión, etc."
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
@@ -1142,8 +1143,8 @@ msgid ""
 "Tracks define the schedule of your event. These can bea talk, a round table,"
 " a meeting, etc."
 msgstr ""
-"Los seguimientos determinan el programa de su evento. Pueden ser una charla,"
-" una mesa redonda, una reunión, etc."
+"Los seguimientos determinan la planificación de su evento. Pueden ser una "
+"charla, una mesa redonda, una reunión, etc."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_website_track
