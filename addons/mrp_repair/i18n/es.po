@@ -48,6 +48,8 @@ msgstr "${(object.name or '').replace('/','_')}"
 #: model:mail.template,subject:mrp_repair.mail_template_mrp_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.partner_id.name} Pedidos de reparación (Ref ${object.name o \"n/d\""
+" })"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -94,8 +96,20 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong><strong></strong></p><p></p><p></p></data>"
+"<?xml version=\"1.0\"?>\n"
+"Hola, ${object.partner_id.name}\n"
+" \n"
+" Este es su pedido de reparación ${doc_name} ${object.name}\n"
+" % if object.origin:\n"
+" (con referencia: ${object.origin} )\n"
+" % endif\n"
+" % if object.invoice_method<data><p></p> = \"ninguno\":\n"
+" con un total de ${object.amount_total} ${object.pricelist_id.currency_id.name}.\n"
+" % endif\n"
+" \n"
+" Puede responder a este correo electrónico si tiene alguna duda.\n"
+" Gracias,\n"
+"<p><strong></strong><strong></strong></p><p></p><p></p></data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -105,17 +119,17 @@ msgstr "<i>(Añadir)</i>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong/>"
+msgstr "<strong>Lote/Número de serie:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operations</strong>"
-msgstr "<strong/>"
+msgstr "<strong>Operaciones</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Parts</strong>"
-msgstr "<strong/>"
+msgstr "<strong>Partes</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -145,7 +159,7 @@ msgstr "<strong>Total</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Warranty:</strong>"
-msgstr "<strong/>"
+msgstr "<strong>Garantía:</strong>"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -290,7 +304,7 @@ msgstr "Cliente"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Dirección por defecto"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -590,7 +604,7 @@ msgstr "Empresa"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "Partes"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -610,7 +624,7 @@ msgstr "Tarifa de la empresa seleccionada"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "Imprimir presupuesto"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
@@ -809,7 +823,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "Enviar presupuesto"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:540
@@ -1014,4 +1028,4 @@ msgstr "stock.traceability.report"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_warn_insufficient_qty_repair
 msgid "stock.warn.insufficient.qty.repair"
-msgstr ""
+msgstr "stock.warn.insufficient.qty.repair"
