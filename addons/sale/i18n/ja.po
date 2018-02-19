@@ -13,13 +13,14 @@
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 # Takuya Sawada <takuya@tuntunkun.com>, 2017
+# 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 15:28+0000\n"
-"PO-Revision-Date: 2018-01-29 15:28+0000\n"
-"Last-Translator: Takuya Sawada <takuya@tuntunkun.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1499,11 +1500,17 @@ msgid "No longer edit orders once confirmed"
 msgstr "確認済オーダは編集しない"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sales Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -2267,12 +2274,6 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "複数の異なる単位での販売/購買"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
-msgid ""
-"Sell digital products - provide downloadable content on your customer portal"
-msgstr "デジタル製品を販売 - 顧客ポータルにてダウンロード可能なコンテンツを提供"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "荷姿あたりのユニット数の倍数でプロダクトを販売"
@@ -2368,7 +2369,7 @@ msgstr "配送費用"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
@@ -2850,11 +2851,17 @@ msgid "Your Order has been confirmed."
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
+msgstr "この後のアクションは次の通りです: 見積を確認して販売オーダに変換し、請求書を作成して支払を受け取ります。"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr "この後のアクションは次の通りです: 見積を確認して販売オーダに変換し、請求書を作成して支払を受け取ります。"
 
 #. module: sale

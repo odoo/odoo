@@ -6,7 +6,7 @@
 # Ryanto The <ry.the77@gmail.com>, 2017
 # Bonny Useful <bonny.useful@gmail.com>, 2017
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Budi Iskandar <budiiskandar11@gmail.com>, 2017
 # Edy Kend <edy@azmall.co.id>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: dimas indra <dprahastra@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,24 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:230
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:231
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Blocking: %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:308
@@ -1136,17 +1154,17 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
 msgid ""
 "By default, the system will take from the stock in the source location and "
-"passively wait for availability.The other possibility allows you to directly"
-" create a procurement on the source location (and thus ignore its current "
-"stock) to gather products. If we want to chain moves and have this one to "
-"wait for the previous,this second option should be chosen."
+"passively wait for availability. The other possibility allows you to "
+"directly create a procurement on the source location (and thus ignore its "
+"current stock) to gather products. If we want to chain moves and have this "
+"one to wait for the previous, this second option should be chosen."
 msgstr ""
-"Secara standar, sistem akan mengambil dari stok di lokasi sumber dan secara "
-"pasif menunggu ketersediaan. Kemungkinan lain mengijinkan Anda untuk membuat"
-" pengadaan secara langsung pada lokasi sumber (dan mengabaikan stok saat "
-"ini) untuk mengumpulkan produk. Jika kita ingin membuat pergerakan beruntun "
-"dan membuat yang ini menunggu yang sebelumnya, sebaiknya opsi kedua yang "
-"dipilih."
+"Secara default, sistem akan mengambil dari stok di lokasi sumber dan "
+"menunggu secara pasif ketersediaan. Kemungkinan lain memungkinkan Anda untuk"
+" langsung membuat pengadaan di lokasi sumber (dan dengan demikian "
+"mengabaikan stoknya saat ini) untuk mengumpulkan produk. Jika kita ingin "
+"rantai bergerak dan memiliki yang satu ini untuk menunggu sebelumnya, "
+"pilihan kedua ini harus dipilih."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1735,6 +1753,11 @@ msgid "Cumulative Quantity"
 msgstr "Jumlah Kumulatif"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
+msgid "Current Destination Location"
+msgstr ""
+
+#. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "Current Inventory"
 msgstr "Inventaris Saat Ini"
@@ -1748,6 +1771,11 @@ msgstr "Pengambilan Saat Ini"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_move_line_ids
 msgid "Current Picking Move Line"
 msgstr "Baris Pergerakan Pengambilan Saat Ini"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_source_location_id
+msgid "Current Source Location"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -2302,6 +2330,16 @@ msgid "End"
 msgstr "Akhir"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_ids
+msgid "Entire Package"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_detail_ids
+msgid "Entire Package Detail"
+msgstr ""
+
+#. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:14
 #, python-format
@@ -2451,6 +2489,7 @@ msgstr "Jumlah Perkiraan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_id
 #: model:ir.ui.view,arch_db:stock.view_move_tree
+#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "From"
 msgstr "Dari"
 
@@ -2940,6 +2979,11 @@ msgid "Import using the top left button in"
 msgstr "Impor menggunakan tombol kiri atas di"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
+msgid "In Entire Package"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "In Odoo, <strong>Reordering Rules</strong> are used to replenish your products.\n"
@@ -3303,6 +3347,11 @@ msgstr "Persediaan dari"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_is_locked
 msgid "Is Locked"
 msgstr "Apakah Terkunci"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_is_processed
+msgid "Is Processed"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
@@ -4507,7 +4556,9 @@ msgstr "Tipe Kemasan"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
+#: model:ir.ui.view,arch_db:stock.report_picking
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
+#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
 #, python-format
 msgid "Package"
@@ -4524,6 +4575,11 @@ msgid "Package BarCode with Contents"
 msgstr "Barcode Kemasan dengan Isi"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "Package Content"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "Package Name"
 msgstr "Nama Kemasan"
@@ -4535,6 +4591,11 @@ msgid "Package Reference"
 msgstr "Referensi Kemasan"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Package Reference:"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
 msgstr "Transfer Kemasan"
@@ -4543,6 +4604,12 @@ msgstr "Transfer Kemasan"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
 msgstr "Tipe Kemasan"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_package_barcode
+#: model:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Package Type:"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -5116,6 +5183,11 @@ msgstr "Metode Pengambilan"
 #: model:ir.model.fields,field_description:stock.field_stock_location_putaway_strategy_id
 msgid "Put Away Strategy"
 msgstr "Kebijakan Pengambilan"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Put in Pack"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6374,13 +6446,10 @@ msgstr "Template"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_auto
 msgid ""
-"The 'Manual Operation' value will create a stock move after the current "
-"one.With 'Automatic No Step Added', the location is replaced in the original"
-" move."
+"The 'Manual Operation' value will create a stock move after the current one."
+" With 'Automatic No Step Added', the location is replaced in the original "
+"move."
 msgstr ""
-"Nilai dari 'Operasi Manual' akan membuat pergerakan stok setelah yang ini. "
-"Dengan 'Otomatis Tidak Ada Langkah Tambahan', lokasinya akan digantukan pada"
-" pergerakan asal."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6806,8 +6875,22 @@ msgstr ""
 "untuk pergerakan stok yang dihasilkan ketika anda mengerjakan inventarisasi"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_entire_package_detail_ids
+msgid ""
+"Those are the entire packages of a picking shown in the view of detailed "
+"operations"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
+msgid ""
+"Those are the entire packages of a picking shown in the view of operations"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
 #: model:ir.ui.view,arch_db:stock.view_move_tree
+#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "To"
 msgstr "Kepada"
 
@@ -7009,6 +7092,7 @@ msgstr "Harga Satuan"
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_product_uom_id
 #: model:ir.ui.view,arch_db:stock.stock_move_tree
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7655,9 +7739,9 @@ msgstr "Anda tidak dapat menghapus pembuangan yang telah selesai."
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progress' with the "
-"same product(%s), same location(%s), same package, same owner and same lot. "
-"Please first validatethe first inventory adjustement with this product "
-"before creating another one."
+"same product (%s), same location (%s), same package, same owner and same "
+"lot. Please first validate the first inventory adjustement with this product"
+" before creating another one."
 msgstr ""
 
 #. module: stock
@@ -7729,17 +7813,7 @@ msgstr ""
 " klik tombol 'Reservasi' untuk memeriksa apakah produk tersedia."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:132
-#, python-format
-msgid ""
-"You have already assigned this serial number to this product. Please correct"
-" the serial numbers encoded."
-msgstr ""
-"Anda sudah menetapkan nomor seri untuk produk ini. Silahkan betulkan nomor "
-"seri tercatat."
-
-#. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:106
+#: code:addons/stock/wizard/stock_picking_return.py:110
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
 msgstr ""
@@ -8093,11 +8167,6 @@ msgstr "Ketika Anda menerima produk pesanan"
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "with the <i>Validate</i> button"
 msgstr "dengan tombol <i>Validasi</i>"
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.view_picking_form
-msgid "↳Put in Pack"
-msgstr "↳Masukkan dalam Kemasan"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form

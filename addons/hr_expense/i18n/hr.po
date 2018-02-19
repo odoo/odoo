@@ -3,9 +3,9 @@
 # * hr_expense
 # 
 # Translators:
-# Tina Milas <tina@uvid.hr>, 2017
+# Tina Milas, 2017
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Bole <bole@dajmi5.com>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Ivan Marijanović <ivanm101@yahoo.com>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -1631,7 +1631,6 @@ msgstr "Ukupno"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_total_amount
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
 msgstr "Ukupni iznos"
@@ -1753,6 +1752,12 @@ msgstr ""
 msgid "You cannot report expenses for different employees in the same report!"
 msgstr ""
 "Ne možete prijaviti troškove za različite zaposlenike u istom izvješću!"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:602
+#, python-format
+msgid "You cannot report expenses with different payment modes."
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:109

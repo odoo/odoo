@@ -3,8 +3,8 @@
 # * crm
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# krnkris, 2017
+# Martin Trigaux, 2017
 # gezza <geza.nagy@oregional.hu>, 2017
 # Ákos Nagy <akos.nagy@oregional.hu>, 2017
 # Kovács Tibor <kovika@gmail.com>, 2017
@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -1455,6 +1455,7 @@ msgid "Create a Proof of Concept with consultants"
 msgstr "Tanácsadói kipróbálás létrehozás"
 
 #. module: crm
+#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
@@ -1579,6 +1580,7 @@ msgstr "Jelenlegi sor"
 #: code:addons/crm/models/crm_lead.py:1135
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead_convert2task_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1748,6 +1750,7 @@ msgstr ""
 "stb."
 
 #. module: crm
+#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
@@ -2024,7 +2027,12 @@ msgid "Force assignation"
 msgstr "Hozzárendelés eröltetése"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:577
+#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Formats phone numbers"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "From %s : %s"
 msgstr "Ettől %s : %s"
@@ -2631,6 +2639,16 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manually Assignation of Incoming Emails"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_activities_done
+msgid "Mark All Activities as Done"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_late_activities_done
+msgid "Mark Late Activities as Done"
 msgstr ""
 
 #. module: crm
@@ -4269,6 +4287,12 @@ msgid "Unassigned Leads"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/models/crm_team.py:211
+#, python-format
+msgid "Undefined"
+msgstr "Nincs meghatározva"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Unless you are starting a new business, you probably have a list of "
@@ -4415,11 +4439,6 @@ msgstr "ÁFA"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "VIP letter to potential sponsors"
 msgstr "VIP levél lehetséges szponzoroknak"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Validate and normalize phone numbers."
-msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0

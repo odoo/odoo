@@ -47,8 +47,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 15:28+0000\n"
-"PO-Revision-Date: 2018-01-29 15:28+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1648,7 +1648,6 @@ msgstr ""
 "Ne plus pouvoir modifier les bons de commande dès qu'ils sont confirmés"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
@@ -1656,6 +1655,15 @@ msgid ""
 msgstr ""
 "Attention, dès que le devis devient un bon de commande, il bougera\n"
 "  de la liste de devis à celle des Bons de commande."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sales Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
+msgstr ""
+"Attention, dès lors qu'un devis devient un bon de commande, il passera\n"
+" de la liste des devis à celle des bons de commande."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2429,14 +2437,6 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Acheter et vendre dans des unités de mesure différentes"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
-msgid ""
-"Sell digital products - provide downloadable content on your customer portal"
-msgstr ""
-"Vendez des articles numériques – mettez à disposition du contenu "
-"téléchargeable sur votre portail client"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Vendre les articles par multiple du nb d'unités par colis"
@@ -3053,11 +3053,19 @@ msgid "Your Order has been confirmed."
 msgstr "Votre commande est confirmée."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
+msgstr ""
+"Vos prochaines actions devraient se dérouler efficacement : confirmez le devis\n"
+" pour le transformer en bon de commande, puis créez une facture et obtenez-en le règlement."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 "Vos prochaines actions devraient se dérouler efficacement : confirmez le devis\n"
 " pour le transformer en bon de commande, puis créez une facture et obtenez-en le règlement."

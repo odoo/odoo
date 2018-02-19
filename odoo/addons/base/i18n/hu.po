@@ -3,8 +3,8 @@
 # * base
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# krnkris, 2017
+# Martin Trigaux, 2017
 # gezza <geza.nagy@oregional.hu>, 2017
 # Kovács Tibor <kovika@gmail.com>, 2017
 # Zoltán Csapó <csapoz@gmail.com>, 2017
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-08 13:21+0000\n"
-"PO-Revision-Date: 2017-11-08 13:21+0000\n"
+"POT-Creation-Date: 2018-02-19 14:33+0000\n"
+"PO-Revision-Date: 2018-02-19 14:33+0000\n"
 "Last-Translator: tdombos <tdombos@gmail.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -4227,7 +4227,7 @@ msgid ""
 "An ISR will be generated if you specify the information it needs :\n"
 "    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
 "    - Your invoice must have been set assigned a bank account to receive its payment\n"
-"    (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
 "    - You must have set the postal references of your bank.\n"
 "    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
 "\n"
@@ -4398,6 +4398,44 @@ msgstr ""
 "\n"
 "A modul hozzáadja a Google táblázatkezelő valósidejű kijelzésének lehetőségét, az Odoo rendszerben.\n"
 "=================================================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -4996,6 +5034,19 @@ msgid ""
 "This module contains most code coming from odoo v10 website_portal. Purpose\n"
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -6744,11 +6795,6 @@ msgid "Accounting & Finance"
 msgstr "Könyvelés és pénzügy"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
-msgid "Accounting &amp; Finance"
-msgstr "Könyvelés &amp; Pénzügy"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
 msgstr ""
@@ -6876,6 +6922,11 @@ msgid "Actions"
 msgstr "Műveletek"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+msgid "Activate more currencies"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
 #: model:ir.model.fields,field_description:base.field_ir_filters_active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_active
@@ -6901,6 +6952,11 @@ msgstr "Aktív"
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
 msgstr "Szállítási költséget ad az online értékesítésekhez"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "Követők hozzáadása"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -7229,13 +7285,6 @@ msgstr ""
 "könyvelési modul egyszerűbb változata nem könyvelők számára."
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr ""
-
-#. module: base
 #: code:addons/base/ir/ir_fields.py:378
 #, python-format
 msgid ""
@@ -7461,8 +7510,8 @@ msgstr "Argentina -Főkönyvi kimutatások"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
-msgid "Arguments sent to the client along withthe view tag"
-msgstr "Érvelés elküldve az ügyfél részére a nézet hozzáfüzéssel együtt"
+msgid "Arguments sent to the client along with the view tag"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -7600,6 +7649,11 @@ msgstr "Automatikus keresés"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
+msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
 msgstr ""
 
 #. module: base
@@ -8579,14 +8633,14 @@ msgid "Clean"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to attach a new document."
+msgstr "Kattintson egy új dokumentum csatolásához."
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Kattintson egy egyedi nézet létrehozásához."
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to create new documents."
-msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -9213,6 +9267,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "Létrehozás dátuma"
 
@@ -9449,7 +9504,6 @@ msgstr "Létrehozta"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -9819,6 +9873,31 @@ msgstr "Nap: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Napok"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Tisztelt Hölgyem/Uram,\n"
+"\n"
+"Adataink szerint, az Önök részéről kiegyenlítetlen számláink vannak. Kérjük tekintsék meg a lenti részleteket.\n"
+"Ha időközben kiegyenlítették azokat, akkor tekintsék levelünket tárgytalannak. Egyéb esetben, kérjük Önöket az elmaradt\n"
+"számláink kiegyenlítésére.\n"
+"Egyéb felmerülő kérdésekben állunk szíves rendelkezésükre, kérjük keressenek fel bennünket.\n"
+"\n"
+"Az áru ellenértékének teljes kiegyenlítéséig az áru az Eladó tulajdona, az sem fedezetül sem zálogul nem szolgálhat,\n"
+"el nem tulajdonítható.\n"
+"\n"
+"Előre köszönjük együttműködésüket.\n"
+"Tisztelettel,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -11029,6 +11108,12 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "\"Típus\" mező nem módosítható a modelleken."
 
 #. module: base
+#: code:addons/base/ir/ir_ui_view.py:1016
+#, python-format
+msgid "Field %r used in attributes must be present in view but is missing:"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
 msgstr "Súgó mező"
@@ -11348,6 +11433,23 @@ msgstr "Franciaország - könyvelés"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr "Francia - FEC"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -12281,6 +12383,11 @@ msgid "ID"
 msgstr "Azonosító"
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "Az akció azonosítója ha, meg van határozva az XML fájlban"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "Cél-rekord bejegyzés-azonosító, az adatbázison belül"
@@ -12353,11 +12460,8 @@ msgstr "Ha bejelölt, akkor a csoport portálként is használható."
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
 msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
-"log at DEBUG level(this is very verbose and may include confidential info!)"
+"log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
-"Ha bekapcsolt, akkor a teljes SMTP munkafázis kimenete be lesz írva a "
-"szerver naplóba a DEBUG szinten(ez nagyon bőbeszédű és talán fontos/bizalmas"
-" adatokat is fog tárolni!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -17502,8 +17606,8 @@ msgstr "Érdeklődő"
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron_link_field_id
 msgid ""
-"Provide the field used to link the newly created recordon the record on used"
-" by the server action."
+"Provide the field used to link the newly created record on the record on "
+"used by the server action."
 msgstr ""
 
 #. module: base
@@ -18526,6 +18630,11 @@ msgid "Sell based on timesheets"
 msgstr "Értékesítsen a munkaidő-kiosztások alapján"
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "E-mail küldés"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account
 #: model:ir.module.module,summary:base.module_account_invoicing
 msgid "Send Invoices and Track Payments"
@@ -19462,11 +19571,12 @@ msgstr "Technikai név"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technikai beállítások"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:750
+#: code:addons/base/ir/ir_translation.py:760
 #, python-format
 msgid "Technical Translations"
 msgstr "Műszaki fordítások"
@@ -19543,6 +19653,12 @@ msgid "Thailand - Accounting Reports"
 msgstr "Thaiföld - Főkönyvi kimutatások"
 
 #. module: base
+#: code:addons/base/res/res_users.py:290
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -19555,12 +19671,9 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid ""
-"The Selection Options expression is not a valid Pythonic expression.Please "
+"The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
-"A kiválasztási lehetőségek kifejezése nem egy érvényes Python kifejezés. "
-"Kérem adjon meg egy kifejezést, a következő formátumban [('key','Label'), "
-"...]."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -20463,7 +20576,7 @@ msgstr "Twitter gördítősáv"
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids anygap in the sequence (while "
+"later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
 "Két sorrendet ajánl a tárgy beillesztéshez: Alapértelmezett és „Nincs rés”. "
@@ -21859,13 +21972,10 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid ""
-"Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
-" do the trick."
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
 msgstr ""
-"Az Ön Odoo szervere nem támogatja az SSL-en keresztüli SMTP átvitelt. "
-"Használhatja a helyette a STARTTLS-t. Ha az SSL szükséges, akkor a szerver "
-"oldali Python 2.6 való frissítés elvégzi ezt a trükköt."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:477

@@ -44,13 +44,15 @@
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
+# Lucas Deliege <lud@openerp.com>, 2018
+# fr rev <e2ffr04@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: fr rev <e2ffr04@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1277,6 +1279,11 @@ msgid "Friendly to the environment."
 msgstr "Respectueux de l'environnement."
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Future Activities"
+msgstr "Activités futures"
+
+#. module: product
 #: model:product.product,name:product.product_product_1
 #: model:product.template,name:product.product_product_1_product_template
 msgid "GAP Analysis Service"
@@ -1641,6 +1648,11 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:product.field_product_uom_write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Late Activities"
+msgstr "Activités en retard"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_delay
@@ -2462,6 +2474,13 @@ msgstr ""
 "* Non coché : Chaque entreprise ne peut voir que ses articles (articles pour lesquels la société est définie). Les articles non reliés à une société sont visibles par toutes les sociétés."
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Montrez toutes les enregistrements pour lesquelles la date des prochaines "
+"actions est pour aujourd'hui ou avant. "
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
 msgstr "Montrer les listes de prix sur les Produits"
@@ -2971,6 +2990,11 @@ msgid ""
 msgstr ""
 "Le référence fournisseur de l'article sera utilisé lors de l'édition d'un "
 "devis. Laissez le champ vide si vous voulez utiliser la référence interne."
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Today Activities"
+msgstr "Activités du Jour"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7

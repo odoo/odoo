@@ -6,7 +6,7 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 # Mikko Salmela <salmemik@gmail.com>, 2017
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Jukka Paulin <jukka.paulin@gmail.com>, 2017
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-07 15:45+0000\n"
-"PO-Revision-Date: 2017-11-07 15:45+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -26,19 +26,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:111
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:124
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:118
+#: code:addons/sale_payment/models/payment.py:131
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:126
+#: code:addons/sale_payment/models/payment.py:139
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr ""
@@ -72,6 +77,12 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<strong>Transactions</strong>"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:54
+#, python-format
+msgid "Amount Mismatch (%s)"
 msgstr ""
 
 #. module: sale_payment
@@ -128,18 +139,13 @@ msgid "Number of transactions to capture"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_success
-msgid "Order successfully paid."
-msgstr ""
-
-#. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:50
+#: code:addons/sale_payment/controllers/payment.py:49
 #, python-format
 msgid "Pay"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:187
+#: code:addons/sale_payment/models/payment.py:200
 #, python-format
 msgid "Pay Now"
 msgstr "Maksa nyt"
@@ -180,6 +186,11 @@ msgid "Quotation"
 msgstr "Tarjous"
 
 #. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
+msgid "Sale Order State"
+msgstr ""
+
+#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
 msgstr "Myyntikanava"
@@ -188,6 +199,14 @@ msgstr "Myyntikanava"
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
 msgid "Sales Order"
 msgstr "Myyntitilaus"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:55
+#, python-format
+msgid ""
+"The sale order was not confirmed despite response from the acquirer (%s): SO"
+" amount is %r but acquirer replied with %r."
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -238,3 +257,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
 msgid "Transactions"
 msgstr "Tapahtumat"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Maksusuorituksesi on hyväksytty."

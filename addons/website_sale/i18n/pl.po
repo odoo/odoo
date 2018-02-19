@@ -5,7 +5,7 @@
 # Translators:
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
 # Bartłomiej Maliński <bartlomiej.malinski@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Slawomir Adamus <melthalion@gmail.com>, 2017
 # zbik2607 <darek@krokus.com.pl>, 2017
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Monika Grzelak <m.e.grzelak@gmail.com>, 2017\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -2242,6 +2242,7 @@ msgstr "Kategoria nadrzędna"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "Zapłać teraz"
@@ -2266,6 +2267,11 @@ msgstr "Beneficijent płatności"
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
 msgstr "Informacje o płatności"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transakcja płatności"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3530,6 +3536,11 @@ msgstr "Twój odnośnik"
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
 msgstr "Twój koszyk jest pusty!"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

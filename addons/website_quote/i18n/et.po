@@ -7,15 +7,15 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Martin Trigaux, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
-# Egon Raamat <egon@avalah.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
+# Egon Raamat <egon@avalah.ee>, 2017
 # Marek Pontus, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Marek Pontus, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -78,11 +78,6 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "! You can"
-msgstr ""
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -103,6 +98,7 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
@@ -216,7 +212,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<span>Suggested Products</span>"
-msgstr ""
+msgstr "<span>Soovitatud tooted</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -490,12 +486,12 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Confirmation"
-msgstr ""
+msgstr "Kinnitus"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "Kinnitamise e-kiri"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
@@ -551,7 +547,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Day 1"
-msgstr ""
+msgstr "1. päev"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -559,7 +555,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Day 2"
-msgstr ""
+msgstr "2. päev"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -567,12 +563,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Day 3"
-msgstr ""
+msgstr "3. päev"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_res_config_settings_default_template_id
 msgid "Default Template"
-msgstr ""
+msgstr "Vaikimisi põhi"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_name
@@ -1013,12 +1009,6 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:210
-#, python-format
-msgid "Order paid by %s. Transaction: %s. Amount: %s."
-msgstr ""
-
-#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
 msgstr ""
@@ -1077,7 +1067,7 @@ msgstr "Maksa"
 #. module: website_quote
 #: model:ir.ui.menu,name:website_quote.payment_acquirer_menu_sale
 msgid "Payment Acquirers"
-msgstr "Makse saajad"
+msgstr "Pangalingid"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1212,7 +1202,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation expires after"
-msgstr ""
+msgstr "Pakkumine aegub"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:50
@@ -1315,7 +1305,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
-msgstr ""
+msgstr "Soovitatud tooted"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1363,6 +1353,9 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"Administraator saab seadistada vaikimisi tingmised müügimooduli seadetest. "
+"Kui kasutad seda pakkumise põhja, siis siin määratud tingimused ilmuvad "
+"üldistes seadetes määratud tingimuste asemel."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1579,6 +1572,11 @@ msgid "Yearly upgrade training sessions when a new version is released"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "You can"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
@@ -1643,18 +1641,8 @@ msgid "Your order ${object.name} is confirmed"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your payment has been received, thank you for your trust."
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your transaction is waiting confirmation."
 msgstr ""
 
 #. module: website_quote
@@ -1665,13 +1653,13 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "day"
-msgstr ""
+msgstr "päev"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "days"
-msgstr "päevad"
+msgstr "päeva pärast"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1690,17 +1678,24 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been cancelled"
+msgid ""
+"for\n"
+"                          any questions."
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been validated"
+msgid "has already been cancelled!"
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has not yet been sent"
+msgid "has already been validated!"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent!"
 msgstr ""
 
 #. module: website_quote

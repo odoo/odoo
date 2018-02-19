@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: Egon Raamat <egon@avalah.ee>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -746,7 +746,7 @@ msgstr "Tegevused"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Activities Analysis"
-msgstr ""
+msgstr "Tegevuste analüüs"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_done
@@ -843,7 +843,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Arveldamist ootavate pakkumiste summa"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -871,7 +871,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Archive"
-msgstr ""
+msgstr "Arhiveeri"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1339,6 +1339,7 @@ msgid "Create a Proof of Concept with consultants"
 msgstr ""
 
 #. module: crm
+#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
@@ -1456,6 +1457,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:1135
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead_convert2task_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1621,6 +1623,7 @@ msgid "Display your brochures, product sheets, showcases etc."
 msgstr ""
 
 #. module: crm
+#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
@@ -1762,27 +1765,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Expected Closing"
-msgstr ""
+msgstr "Eeldatav sulgemine"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing Date"
-msgstr ""
+msgstr "Eeldatav sulgemise kuupäev"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Day"
-msgstr ""
+msgstr "Eeldatav sulgemise päev"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Month"
-msgstr ""
+msgstr "Eeldatav sulgemise kuu"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Week"
-msgstr ""
+msgstr "Eeldatav sulgemise nädal"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
@@ -1792,7 +1795,7 @@ msgstr "Eeldatav tulu"
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_expected_revenue
 msgid "Expected Revenue by Team"
-msgstr ""
+msgstr "Tiimi eeldatav tulu"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -1802,7 +1805,7 @@ msgstr "Eeldatavad tulud"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_dashboard_graph_period_pipeline
 msgid "Expected to Close"
-msgstr ""
+msgstr "Eeldatav sulgemise aeg"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1876,7 +1879,12 @@ msgid "Force assignation"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:577
+#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Formats phone numbers"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "From %s : %s"
 msgstr ""
@@ -2306,7 +2314,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Leads"
-msgstr "Algatused"
+msgstr "Müügivihjed"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
@@ -2455,6 +2463,16 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manually Assignation of Incoming Emails"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_activities_done
+msgid "Mark All Activities as Done"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_late_activities_done
+msgid "Mark Late Activities as Done"
 msgstr ""
 
 #. module: crm
@@ -2652,7 +2670,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
-msgstr ""
+msgstr "Minu müügitoru"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2769,7 +2787,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_count
 msgid "Number of open opportunities"
-msgstr ""
+msgstr "Avatud võimaluste arv"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2834,12 +2852,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunities"
-msgstr ""
+msgstr "Avatud võimalused"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunity"
-msgstr ""
+msgstr "Avatud võimalus"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -3089,7 +3107,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #, python-format
 msgid "Pipeline"
-msgstr ""
+msgstr "Müügitoru"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -3098,7 +3116,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr ""
+msgstr "Müügitoru analüüs"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -3606,7 +3624,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_stage_form
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Stage"
-msgstr "Tase"
+msgstr "Etapp"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
@@ -3730,7 +3748,7 @@ msgstr "Meeskond"
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
 msgid "Team Activities"
-msgstr "Meeskonna tegevused"
+msgstr "Tiimi tegevused"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4008,6 +4026,12 @@ msgid "Unassigned Leads"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/models/crm_team.py:211
+#, python-format
+msgid "Undefined"
+msgstr "Määramata"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Unless you are starting a new business, you probably have a list of "
@@ -4140,11 +4164,6 @@ msgid "VIP letter to potential sponsors"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Validate and normalize phone numbers."
-msgstr ""
-
-#. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Very High"
 msgstr ""
@@ -4268,17 +4287,17 @@ msgstr ""
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Month"
-msgstr ""
+msgstr "Kuu jooksul"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Week"
-msgstr ""
+msgstr "Nädala jooksul"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Year"
-msgstr ""
+msgstr "Aasta jooksul"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_wizard_id

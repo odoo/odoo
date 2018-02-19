@@ -5,7 +5,7 @@
 # Translators:
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: kent_ocean <ke.tanabe@gmail.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -1618,7 +1618,6 @@ msgstr "合計"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_total_amount
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
 msgstr "合計金額"
@@ -1740,6 +1739,12 @@ msgstr ""
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
 msgstr "同じレポートで異なる従業員の経費を報告することはできません！"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:602
+#, python-format
+msgid "You cannot report expenses with different payment modes."
+msgstr ""
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:109

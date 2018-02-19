@@ -3,9 +3,9 @@
 # * website_sale
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2017
+# krnkris, 2017
 # gezza <geza.nagy@oregional.hu>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Kovács Tibor <kovika@gmail.com>, 2017
 # Zsofia Biro <zsbiro1205@gmail.com>, 2017
 # picibucor <picibucor@gmail.com>, 2017
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: picibucor <picibucor@gmail.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -2185,6 +2185,7 @@ msgstr "Szülő kategória"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "Fizessen most"
@@ -2209,6 +2210,11 @@ msgstr "Fizetés kézhezvevői"
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
 msgstr "Fizetési információ"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Fizetési tranzakció"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3519,6 +3525,11 @@ msgstr "Partner hivatkozása"
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
 msgstr "Az Ön kosara üres!"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

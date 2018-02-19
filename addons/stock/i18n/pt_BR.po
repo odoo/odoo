@@ -3,12 +3,12 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # grazziano <gra.negocia@gmail.com>, 2017
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
 # Mateus Lopes <mateus1@gmail.com>, 2017
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
-# SILMAR PINHEIRO VIANA <pinheirosilmar@gmail.com>, 2017
+# Silmar <pinheirosilmar@gmail.com>, 2017
 # danimaribeiro <danimaribeiro@gmail.com>, 2017
 # falexandresilva <falexandresilva@gmail.com>, 2017
 # Adriel Kotviski <kotviski@gmail.com>, 2017
@@ -17,20 +17,38 @@
 # Anderson Fratuci <ander.frat@gmail.com>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
 # Hendrix Costa <hendrixcosta@gmail.com>, 2017
-# Danilo Rodrigues <danilo.i997@hotmail.com>, 2017
+# Danilo Rodrigues, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Danilo Rodrigues <danilo.i997@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"Last-Translator: Danilo Rodrigues, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:230
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:231
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Blocking: %s"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:308
@@ -1098,11 +1116,17 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
 msgid ""
 "By default, the system will take from the stock in the source location and "
-"passively wait for availability.The other possibility allows you to directly"
-" create a procurement on the source location (and thus ignore its current "
-"stock) to gather products. If we want to chain moves and have this one to "
-"wait for the previous,this second option should be chosen."
+"passively wait for availability. The other possibility allows you to "
+"directly create a procurement on the source location (and thus ignore its "
+"current stock) to gather products. If we want to chain moves and have this "
+"one to wait for the previous, this second option should be chosen."
 msgstr ""
+"Por padrão, o sistema terá de o estoque no local de origem e passivamente "
+"esperar por disponibilidade. A outra possibilidade permite-lhe criar "
+"directamente um contrato sobre o local de origem (e, portanto, ignorar o seu"
+" estoque atual) para reunir produtos. Se quisermos movimentos de cadeia e "
+"ter um presente para esperar o anterior, esta segunda opção deve ser "
+"escolhido."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1687,6 +1711,11 @@ msgid "Cumulative Quantity"
 msgstr "Quantidade Cumulativa"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
+msgid "Current Destination Location"
+msgstr ""
+
+#. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "Current Inventory"
 msgstr ""
@@ -1699,6 +1728,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_move_line_ids
 msgid "Current Picking Move Line"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_source_location_id
+msgid "Current Source Location"
 msgstr ""
 
 #. module: stock
@@ -2253,6 +2287,16 @@ msgid "End"
 msgstr "Fim"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_ids
+msgid "Entire Package"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_detail_ids
+msgid "Entire Package Detail"
+msgstr ""
+
+#. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:14
 #, python-format
@@ -2400,6 +2444,7 @@ msgstr "Quantidade Prevista"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_id
 #: model:ir.ui.view,arch_db:stock.view_move_tree
+#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "From"
 msgstr "De"
 
@@ -2874,6 +2919,11 @@ msgid "Import using the top left button in"
 msgstr "Importar usando o botão superior esquerdo em"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
+msgid "In Entire Package"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "In Odoo, <strong>Reordering Rules</strong> are used to replenish your products.\n"
@@ -3237,6 +3287,11 @@ msgstr "Inventário de"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_is_locked
 msgid "Is Locked"
 msgstr "Está Trancado"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_is_processed
+msgid "Is Processed"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
@@ -4441,7 +4496,9 @@ msgstr "Tipo pacote"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
+#: model:ir.ui.view,arch_db:stock.report_picking
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
+#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
 #, python-format
 msgid "Package"
@@ -4458,6 +4515,11 @@ msgid "Package BarCode with Contents"
 msgstr "Código de Barras com Conteúdo do Pacote "
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.report_package_barcode
+msgid "Package Content"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "Package Name"
 msgstr "Nome do pacote"
@@ -4469,6 +4531,11 @@ msgid "Package Reference"
 msgstr "Referência pacote"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Package Reference:"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
 msgstr "Transferências de Pacote"
@@ -4476,6 +4543,12 @@ msgstr "Transferências de Pacote"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_package_barcode
+#: model:ir.ui.view,arch_db:stock.report_package_barcode_small
+msgid "Package Type:"
 msgstr ""
 
 #. module: stock
@@ -5044,6 +5117,11 @@ msgstr "Guardar um método "
 #: model:ir.model.fields,field_description:stock.field_stock_location_putaway_strategy_id
 msgid "Put Away Strategy"
 msgstr "Guardar Estratégia "
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Put in Pack"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6274,9 +6352,9 @@ msgstr "Modelo"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_auto
 msgid ""
-"The 'Manual Operation' value will create a stock move after the current "
-"one.With 'Automatic No Step Added', the location is replaced in the original"
-" move."
+"The 'Manual Operation' value will create a stock move after the current one."
+" With 'Automatic No Step Added', the location is replaced in the original "
+"move."
 msgstr ""
 
 #. module: stock
@@ -6678,8 +6756,22 @@ msgstr ""
 " dos movimentos de estoque gerados quando você faz um inventário."
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_entire_package_detail_ids
+msgid ""
+"Those are the entire packages of a picking shown in the view of detailed "
+"operations"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
+msgid ""
+"Those are the entire packages of a picking shown in the view of operations"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
 #: model:ir.ui.view,arch_db:stock.view_move_tree
+#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "To"
 msgstr "Para"
 
@@ -6874,6 +6966,7 @@ msgstr "Preço Unitário"
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_product_uom_id
 #: model:ir.ui.view,arch_db:stock.stock_move_tree
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7505,9 +7598,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progress' with the "
-"same product(%s), same location(%s), same package, same owner and same lot. "
-"Please first validatethe first inventory adjustement with this product "
-"before creating another one."
+"same product (%s), same location (%s), same package, same owner and same "
+"lot. Please first validate the first inventory adjustement with this product"
+" before creating another one."
 msgstr ""
 
 #. module: stock
@@ -7575,15 +7668,7 @@ msgstr ""
 "para verificar se os produtos estão disponíveis."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:132
-#, python-format
-msgid ""
-"You have already assigned this serial number to this product. Please correct"
-" the serial numbers encoded."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:106
+#: code:addons/stock/wizard/stock_picking_return.py:110
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
 msgstr ""
@@ -7931,11 +8016,6 @@ msgstr "quando você recebe os produtos solicitados"
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "with the <i>Validate</i> button"
 msgstr "com o botão <i>Validar</i>"
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.view_picking_form
-msgid "↳Put in Pack"
-msgstr "↳Colocar em Pacote"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: Hedi Hunt <Hedi.Hunt@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -105,12 +105,6 @@ msgstr "%s (koopia)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (koopia)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1307,6 +1301,11 @@ msgstr "Partnerile saab määrata hoiatuse (Konto)"
 #, python-format
 msgid "Account"
 msgstr "Konto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
+msgid "Account Accountant"
+msgstr "Konto raamatupidaja"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -4959,7 +4958,7 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
-"Odoo meeskonnale,<br/>\n"
+"Odoo tiimile,<br/>\n"
 "                            Fabien Pinckaers, Asutaja"
 
 #. module: account
@@ -5625,7 +5624,7 @@ msgstr "Tulu"
 #: model:ir.model.fields,field_description:account.field_product_template_property_account_income_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Income Account"
-msgstr "Tulude konto"
+msgstr "Tulukonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_id
@@ -5808,7 +5807,7 @@ msgstr "Arve viide"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_state
 msgid "Invoice Status"
-msgstr "Arve olek"
+msgstr "Arve staatus"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -6599,7 +6598,7 @@ msgstr "Luba klientidel maksta arveid veebis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
 msgid "Level"
-msgstr "Tase"
+msgstr "Etapp"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_liability0
@@ -7122,14 +7121,6 @@ msgstr "Ühtegi sobivat maksemeetodit ei ole aktiveeritud andmikus %s"
 #: selection:account.financial.report,display_detail:0
 msgid "No detail"
 msgstr "Detaile ei ole"
-
-#. module: account
-#: code:addons/account/models/company.py:274
-#, python-format
-msgid ""
-"No miscellaneous journal could be found. Please create one before "
-"proceeding."
-msgstr "Varia andmikke ei leitud. Palun looge üks enne jätkamist."
 
 #. module: account
 #: code:addons/account/models/account.py:116
@@ -7796,7 +7787,7 @@ msgstr "Võla limiit"
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Payables"
-msgstr "Võlgnevused"
+msgstr "Kohustused"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_amount
@@ -8212,6 +8203,7 @@ msgid "Print checks to pay your vendors"
 msgstr "Trüki tšekid ja maksa tarnijatele"
 
 #. module: account
+#: model:ir.model,name:account.model_product_product
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id
@@ -8319,7 +8311,7 @@ msgstr "Ostu maks (%)"
 #: code:addons/account/models/account_journal_dashboard.py:35
 #, python-format
 msgid "Purchase: Untaxed Total"
-msgstr "Ost: Ilmamaksudeta summa"
+msgstr "Ost: maksudeta kokku"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -8860,7 +8852,7 @@ msgstr "Käibemaks(%)"
 #: code:addons/account/models/account_journal_dashboard.py:33
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "Müük: ilmamaksudeta summa"
+msgstr "Müük: maksudeta kokku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_user_id
@@ -10670,7 +10662,7 @@ msgstr "Pealkiri 3 (poolpaks, väiksem)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
-msgstr "Arveks"
+msgstr "Arveks teha"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -11016,12 +11008,12 @@ msgstr "Sobitamata kanded"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Summa maksuta"
+msgstr "Maksudeta summa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr "Maksustamata summa ettevõtte valuutas"
+msgstr "Maksudeta summa ettevõtte valuutas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11307,7 +11299,7 @@ msgstr "Tarnija viide"
 #: model:ir.model.fields,field_description:account.field_product_product_supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Tarnija maksud"
+msgstr "Ostumaksud"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_supplier

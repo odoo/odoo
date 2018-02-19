@@ -25,13 +25,14 @@
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
+# Juan José Trujillo <juanjosetrujillo@gmx.de>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Juan José Trujillo <juanjosetrujillo@gmx.de>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,68 +66,42 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr "<i class=\"fa fa-trash\"/>Löschen"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:76
-#: code:addons/payment/static/src/js/payment_form.js:219
+#: code:addons/payment/models/payment_acquirer.py:112
 #, python-format
-msgid "<p>Please fill all the inputs required.</p>"
-msgstr "<p>Fülle alle Felder aus</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:180
-#, python-format
-msgid "<p>Please select a payment method.</p>"
-msgstr "<p>Bitte wähle eine Zahlungsmethode aus.</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:274
-#, python-format
-msgid "<p>Please select the option to add a new payment method.</p>"
+msgid "<i>Cancel,</i> Your payment has been cancelled."
 msgstr ""
-"<p>Wähle bitte eine Option aus um eine neue Zahlungsoption hinzuzufügen.</p>"
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:108
+#, python-format
+msgid ""
+"<i>Done,</i> Your online payment has been successfully processed. Thank you "
+"for your order."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:116
+#, python-format
+msgid ""
+"<i>Error,</i> Please be aware that an error occurred during the transaction."
+" The order has been confirmed but will not be paid. Do not hesitate to "
+"contact us if you have any questions on the status of your order."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:104
+#, python-format
+msgid ""
+"<i>Pending,</i> Your online payment has been successfully processed. But "
+"your order is not validated yet."
+msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:315
+#: code:addons/payment/static/src/js/payment_form.js:349
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
 msgstr "<p>Diese Karte ist bereits mit diesem Eintrag verbunden.<p/>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:108
-#: code:addons/payment/static/src/js/payment_form.js:120
-#: code:addons/payment/static/src/js/payment_form.js:254
-#: code:addons/payment/static/src/js/payment_form.js:267
-#, python-format
-msgid "<p>We are not able to add your payment method at the moment.</p>"
-msgstr "<p>Wie können im Moment deine Zahlungsmethode nicht hinzufügen.</p> "
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:298
-#: code:addons/payment/static/src/js/payment_form.js:333
-#, python-format
-msgid "<p>We are not able to delete your payment method at the moment.</p>"
-msgstr "<p>Wie können im Moment deine Zahlungsmethode nicht entfernen</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:155
-#: code:addons/payment/static/src/js/payment_form.js:161
-#, python-format
-msgid "<p>We are not able to redirect you to the payment form.</p>"
-msgstr ""
-"<p>Wir können dich momentan nicht zum Zahlungsformular weiterleiten.</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:169
-#, python-format
-msgid "<p>We're unable to process your payment.</p>"
-msgstr "<p>Wir können deine Zahlung nicht verarbeiten.</p>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -821,14 +796,6 @@ msgstr ""
 "Für die Erstellung eines neuen Zahlungs-Tokens fehlt die Partnerreferenz."
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:75
-#: code:addons/payment/static/src/js/payment_form.js:218
-#, python-format
-msgid "Missing values"
-msgstr "fehlende Werte"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
 #: model:ir.model.fields,field_description:payment.field_payment_icon_name
 #: model:ir.model.fields,field_description:payment.field_payment_token_name
@@ -943,6 +910,11 @@ msgid "Payment Acquirers"
 msgstr "Zahlungsanbieter"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
+msgid "Payment Flow"
+msgstr ""
+
+#. module: payment
 #: model:ir.model,name:payment.model_payment_icon
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
@@ -995,9 +967,9 @@ msgid "Payment Transactions"
 msgstr "Zahlungstransaktionen"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
-msgid "Payment flow"
-msgstr "Zahlungsfluss"
+#: selection:payment.acquirer,payment_flow:0
+msgid "Payment from Odoo"
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
@@ -1056,6 +1028,20 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:199
+#, python-format
+msgid "Please select a payment method."
+msgstr "Bitte wählen Sie eine Zahlungsmethode aus"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:308
+#, python-format
+msgid "Please select the option to add a new payment method."
+msgstr ""
+
+#. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
@@ -1084,6 +1070,11 @@ msgstr "Produktivbetrieb"
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
 msgstr "Anbieter"
+
+#. module: payment
+#: selection:payment.acquirer,payment_flow:0
+msgid "Redirection to the acquirer website"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
@@ -1237,24 +1228,14 @@ msgid "Thanks Message"
 msgstr "Dank-Mitteilung"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:570
+#: code:addons/payment/models/payment_acquirer.py:567
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
 "Die %s-Zahlungsanbieter dürfen den Erfassungsmodus nicht manuell ausführen!"
 
 #. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer encode his payment details on the website."
-msgstr "Der Kunde kodiert seine Zahlungsinformationen auf der Website."
-
-#. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer is redirected to the website of the acquirer."
-msgstr "Der Kunde wird auf die Website des Zahlungsanbieters weitergeleitet."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:563
+#: code:addons/payment/models/payment_acquirer.py:560
 #, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr "Die Zahlungsreferenz muß eindeutig sein!"
@@ -1290,14 +1271,10 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase.If you manage subscriptions (recurring "
-"invoicing), you need it to automatically charge the customer when you issue "
-"an invoice."
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
 msgstr ""
-"Diese Option ermöglicht es Kunden, Ihre Kreditkarte als Zahlungs-Token zu "
-"speichern und sie für eine spätere Zahlung wiederzuverwenden. Wenn Sie "
-"Abonnements verwalten (wiederkehrende Rechnungsstellung), müssen Sie dem "
-"Kunden automatisch etwas berechnen, wenn Sie eine Rechnung ausstellen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
@@ -1367,10 +1344,53 @@ msgstr "Nichtige Transaktion"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:318
+#: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "Warning!"
 msgstr "Warnung!"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:134
+#, python-format
+msgid "We are not able to add your payment method at the moment."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:300
+#, python-format
+msgid "We are not able to add your payment method at the moment.</p>"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:332
+#: code:addons/payment/static/src/js/payment_form.js:367
+#, python-format
+msgid "We are not able to delete your payment method at the moment."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:173
+#, python-format
+msgid "We are not able to redirect you to the payment form."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:179
+#, python-format
+msgid "We are not able to redirect you to the payment form.<"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:188
+#, python-format
+msgid "We're unable to process your payment."
+msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1447,6 +1467,11 @@ msgstr ""
 "Button drücken."
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Ihre Zahlung wurde genehmigt."
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
 msgstr "PLZ"
@@ -1480,6 +1505,14 @@ msgstr "context: der aktuelle context dictionary"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
 msgstr "currency: das Transaktions-Währungs browse record"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:119
+#: code:addons/payment/static/src/js/payment_form.js:285
+#, python-format
+msgid "e.g. Your credit card details are wrong. Please verify."
+msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

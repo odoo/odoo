@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Tina Milas <tina@uvid.hr>, 2017
+# Martin Trigaux, 2017
+# Tina Milas, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Mario Jureša <mario.juresa@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -737,6 +737,8 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
+"Zaokruživanje po stavci se preporučuje ako su vaše cijene sa uključenim "
+"porezom. Na taj način suma svih subtotala jednaka je totalu sa porezom."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -2246,6 +2248,7 @@ msgstr "Nadređena kategorija"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "Plaćanje"
@@ -2258,7 +2261,7 @@ msgstr "Plaćanje <span class=\"fa fa-long-arrow-right\"/>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Pay with"
-msgstr ""
+msgstr "Plati putem"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
@@ -2270,6 +2273,11 @@ msgstr "Stjecatelj plaćanja"
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
 msgstr "Informacije o plaćanju"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transakcija plaćanja"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3546,6 +3554,11 @@ msgstr "Vaša oznaka"
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
 msgstr "Vaša košarica je prazna!"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Vaše plaćanje je odobreno."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

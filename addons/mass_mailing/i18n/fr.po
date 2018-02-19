@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Fabien Bourgeois <fabien@yaltik.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # Quentin THEURET <odoo@kerpeo.com>, 2017
@@ -19,8 +19,8 @@
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Olivier Dony <odo@odoo.com>, 2017
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2017
-# Kévin R. <realrom@hotmail.fr>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Kévin R., 2017
+# Florian Hatat, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
 # Vincent Regouby <v.regouby@inetshore.com>, 2017
 # Jean-Marc Dupont <jmd@6it.fr>, 2017
@@ -39,8 +39,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: fr trans <e2ftrans1@yahoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -758,6 +758,11 @@ msgid "Failed"
 msgstr "Échec"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_model_fields
+msgid "Fields"
+msgstr "Champs"
+
+#. module: mass_mailing
 #: model:mail.mass_mailing,name:mass_mailing.mass_mail_1
 #: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
 msgid "First Newsletter"
@@ -1065,6 +1070,8 @@ msgstr "Campagne de courriel de masse"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_name
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
@@ -1083,6 +1090,7 @@ msgstr "Analyse du courriel de masse"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_campaign_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
@@ -1814,11 +1822,6 @@ msgstr "Civilité"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
 msgid "Total"
 msgstr "Total"
-
-#. module: mass_mailing
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_search
-msgid "Tracked Link"
-msgstr "Lien suivi"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
