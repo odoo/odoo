@@ -1539,7 +1539,80 @@ class AccountMoveLine(models.Model):
         if domain:
             query = self._where_calc(domain)
             tables, where_clause, where_clause_params = query.get_sql()
+
         return tables, where_clause, where_clause_params
+
+    @api.model
+    def _query_get_cash_basis(self, query, tables, where_clause, where_params):
+        user_types = self.env['account.account.type'].search([('type', 'in', ('receivable', 'payable'))])
+
+        if not user_types:
+            return query, where_params
+
+        fields = self.env['ir.model.fields'].search(
+            [('model', '=', 'account.move.line'), ('store', '=', True), ('ttype', 'not in', ('one2many', 'many2many'))])
+
+        cash_basis_fields = {
+            'date': 'ref.date',
+            'debit_cash_basis': 'CASE WHEN "account_move_line".debit > 0 THEN ref.matched_percentage * "account_move_line".debit ELSE 0 END AS debit_cash_basis',
+            'credit_cash_basis': 'CASE WHEN "account_move_line".credit > 0 THEN ref.matched_percentage * "account_move_line".credit ELSE 0 END AS credit_cash_basis',
+            'balance_cash_basis': 'ref.matched_percentage * "account_move_line".balance AS balance_cash_basis',
+        }
+
+        select_1 = select_2 = ''
+        for f in fields:
+            name = '"account_move_line".' + f.name
+            select_1 += ', ' + name if select_1 else name
+            if cash_basis_fields.get(f.name):
+                name = cash_basis_fields[f.name]
+            select_2 += ', ' + name if select_2 else name
+
+        cash_basis_query = '''WITH account_move_line AS
+            (
+                SELECT ''' + select_1 + '''
+                FROM ''' + tables + '''
+                JOIN account_journal j ON "account_move_line".journal_id = j.id
+                WHERE (j.type IN ('cash', 'bank')
+                OR "account_move_line".move_id NOT IN (SELECT DISTINCT move_id FROM account_move_line WHERE user_type_id IN %s))
+                AND ''' + where_clause + '''
+                UNION ALL (
+                    WITH payment_table AS (
+                        SELECT
+                            aml.move_id,
+                            "account_move_line".date,
+                            CASE WHEN aml.balance = 0 THEN 0 ELSE part.amount / ABS(am.amount) END as matched_percentage
+                        FROM account_partial_reconcile part
+                        LEFT JOIN account_move_line aml ON aml.id = part.debit_move_id
+                        LEFT JOIN account_move am ON aml.move_id = am.id, ''' + tables + '''
+                        WHERE part.credit_move_id = "account_move_line".id
+                        AND "account_move_line".user_type_id IN %s
+                        AND ''' + where_clause + '''
+                        UNION ALL
+                        SELECT
+                            aml.move_id,
+                            "account_move_line".date,
+                            CASE WHEN aml.balance = 0 THEN 0 ELSE part.amount / ABS(am.amount) END as matched_percentage
+                        FROM account_partial_reconcile part
+                        LEFT JOIN account_move_line aml ON aml.id = part.credit_move_id
+                        LEFT JOIN account_move am ON aml.move_id = am.id, ''' + tables + '''
+                        WHERE part.debit_move_id = "account_move_line".id
+                        AND "account_move_line".user_type_id IN %s
+                        AND ''' + where_clause + '''
+                    )
+                    SELECT ''' + select_2 + '''
+                    FROM account_move_line "account_move_line"
+                    RIGHT JOIN payment_table ref ON "account_move_line".move_id = ref.move_id
+                    JOIN account_journal j ON "account_move_line".journal_id = j.id
+                    WHERE j.type NOT IN ('cash', 'bank')
+                    AND "account_move_line".move_id IN (SELECT DISTINCT move_id FROM account_move_line WHERE user_type_id IN %s)
+                )
+            )
+        '''
+        query = query\
+            .replace('"account_move_line".debit', '"account_move_line".debit_cash_basis')\
+            .replace('"account_move_line".credit', '"account_move_line".credit_cash_basis')\
+            .replace('"account_move_line".balance', '"account_move_line".balance_cash_basis')
+        return cash_basis_query + query, (([tuple(user_types.ids)] + where_params) * 3) + [tuple(user_types.ids)]
 
     @api.multi
     def open_reconcile_view(self):
