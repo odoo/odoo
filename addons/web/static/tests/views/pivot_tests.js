@@ -152,7 +152,12 @@ QUnit.module('Views', {
             },
             viewOptions: {
                 action: {
-                    views: [[2, 'form'], [5, 'kanban'], [false, 'list'], [false, 'pivot']],
+                    views: [
+                        { viewID: 2, type: 'form' },
+                        { viewID: 5, type: 'kanban' },
+                        { viewID: false, type: 'list' },
+                        { viewID: false, type: 'pivot' },
+                    ],
                 },
                 context: {someKey: true, search_default_test: 3},
                 title: 'Partners',
