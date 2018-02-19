@@ -136,6 +136,12 @@ var BasicRenderer = AbstractRenderer.extend({
         }
     },
 
+    /**
+     * Order to focus to be given to the content of the current view
+     */
+    giveFocus:function() {
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

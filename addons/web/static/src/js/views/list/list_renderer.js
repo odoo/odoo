@@ -37,6 +37,9 @@ var ListRenderer = BasicRenderer.extend({
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
         'click thead .o_list_record_selector input': '_onToggleSelection',
+        'keypress thead tr td' : '_onKeyPress',
+        'keydown tr' : '_onKeyDown',
+        'keydown thead tr' : '_onKeyDown',
     },
     /**
      * @constructor
@@ -65,7 +68,14 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
+    /**
+     * Order to focus to be given to the content of the current view
+     * @override
+     * @public
+     */
+    giveFocus:function() {
+        this.$('tbody .o_list_record_selector input:first()').focus();
+    },
     /**
      * @override
      */
@@ -716,6 +726,32 @@ var ListRenderer = BasicRenderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to 
+     * a cell using the keyboard, if he presses enter, enter the model represented by the line
+     * 
+     * @private
+     * @param {KeyboardEvent} e
+     */
+    _onKeyDown : function(e) {
+        if (!this.editable) {
+            switch(e.which) {
+                case $.ui.keyCode.DOWN:
+                    $(e.currentTarget).next().find('input').focus();
+                    break;
+                case $.ui.keyCode.UP:
+                    $(e.currentTarget).prev().find('input').focus();
+                    break; 
+                case $.ui.keyCode.ENTER: 
+                    e.preventDefault();
+                    var id = $(e.currentTarget).data('id');
+                    if (id) {
+                        this.trigger_up('open_record', {id:id, target: e.target});
+                    }
+                    break;
+            }
+        }
+    },
     /**
      * @private
      * @param {MouseEvent} event

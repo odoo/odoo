@@ -248,6 +248,12 @@ var SearchView = Widget.extend({
                     }
                     e.preventDefault();
                     break;
+                case $.ui.keyCode.DOWN:
+                    if (!this.autocomplete.is_expanded()) {
+                        e.preventDefault();
+                        this.trigger_up('navigation_move', {direction: 'down'});
+                        break;
+                    }
             }
         },
     },
@@ -336,6 +342,9 @@ var SearchView = Widget.extend({
         }
         return $.when.apply($, menu_defs).then(this.set_default_filters.bind(this));
     },
+    on_attach_callback: function () {
+        this._focusInput();
+    },
     get_title: function () {
         return this.title;
     },
@@ -417,6 +426,12 @@ var SearchView = Widget.extend({
         if (this.$buttons) {
             this.$buttons.toggle(!this.headless && is_visible && this.visible_filters);
         }
+        this._focusInput();
+    },
+    /**
+     * puts the focus on the search input
+     */
+    _focusInput: function () {
         if (!config.device.touch && config.device.size_class >= config.device.SIZES.SM) {
             this.$('input').focus();
         }

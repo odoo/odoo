@@ -116,6 +116,15 @@ var ListController = BasicController.extend({
         if (!this.noLeaf && this.hasButtons) {
             this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+
+            this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
+            this.$buttons.find('.o_list_button_add').tooltip({
+                delay: {show: 200, hide:0},
+                title: function(){
+                    return qweb.render('CreateButton.tooltip');
+                },
+                trigger: 'manual',
+            });
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
             this.$buttons.appendTo($node);
         }
@@ -220,6 +229,33 @@ var ListController = BasicController.extend({
         return this.model
             .toggleActive(ids, !archive, this.handle)
             .then(this.update.bind(this, {}, {reload: false}));
+    },
+    /**
+     * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard
+     * 
+     * @param {jQueryElement} $createButton  The create button itself
+     */
+    _assignCreateKeyboardBehavior: function($createButton) {
+        var self = this;
+        $createButton.on('keydown', function(e) {
+            $createButton.tooltip('hide');
+            switch(e.which) {
+                case $.ui.keyCode.ENTER:
+                    e.preventDefault();
+                    self._onCreateRecord.apply(self);
+                    break;
+                case $.ui.keyCode.DOWN:
+                    e.preventDefault();
+                    self.renderer.giveFocus();
+                    break;
+                case $.ui.keyCode.TAB:
+                    if (!e.shiftKey && (e.target.classList.contains("btn-primary") || e.target.classList.contains("oe_highlight"))) {
+                        e.preventDefault();
+                        $createButton.tooltip('show');
+                    }
+                    break;
+            }
+        });
     },
     /**
      * This function is the hook called by the field manager mixin to confirm
@@ -353,7 +389,9 @@ var ListController = BasicController.extend({
         // we prevent the event propagation because we don't want this event to
         // trigger a click on the main bus, which would be then caught by the
         // list editable renderer and would unselect the newly created row
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         var state = this.model.get(this.handle, {raw: true});
         if (this.editable && !state.groupedBy.length) {
             this._addRecord();
