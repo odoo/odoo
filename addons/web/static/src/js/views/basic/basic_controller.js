@@ -121,6 +121,12 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return [];
     },
     /**
+     * Gives the focus to the renderer
+     */
+    giveFocus:function() {
+        this.renderer.giveFocus();
+    },
+    /**
      * Returns true iff the given recordID (or the main recordID) is dirty.
      *
      * @param {string} [recordID] - default to main recordID
