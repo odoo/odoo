@@ -155,7 +155,7 @@ FormController.include({
             id: candidate.id,
             data: candidateChanges,
         };
-        return this.model.notifyChanges(this.handle, changes);
+        return this.model.notifyChanges(this.handle, changes, {notifyChange: false});
     },
     /**
      * @private
