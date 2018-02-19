@@ -113,9 +113,18 @@ class AccountInvoiceRefund(models.TransientModel):
                 refund.message_post(body=body, subject=subject)
         if xml_id:
             result = self.env.ref('account.%s' % (xml_id)).read()[0]
-            invoice_domain = safe_eval(result['domain'])
-            invoice_domain.append(('id', 'in', created_inv))
-            result['domain'] = invoice_domain
+            if mode == 'modify':
+                # When refund method is `modify` then it will directly open the new draft bill/invoice in form view
+                if inv_refund.type == 'in_invoice':
+                    view_ref = self.env.ref('account.invoice_supplier_form')
+                else:
+                    view_ref = self.env.ref('account.invoice_form')
+                result['views'] = [(view_ref.id, 'form')]
+                result['res_id'] = inv_refund.id
+            else:
+                invoice_domain = safe_eval(result['domain'])
+                invoice_domain.append(('id', 'in', created_inv))
+                result['domain'] = invoice_domain
             return result
         return True
 
