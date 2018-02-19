@@ -4,8 +4,8 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
-import math
+from odoo.tools import float_is_zero, float_round
+
 
 class ChangeProductionQty(models.TransientModel):
     _name = 'change.production.qty'
@@ -61,7 +61,8 @@ class ChangeProductionQty(models.TransientModel):
             for wo in production.workorder_ids:
                 operation = wo.operation_id
                 if operation_bom_qty.get(operation.id):
-                    cycle_number = math.ceil(operation_bom_qty[operation.id] / operation.workcenter_id.capacity)  # TODO: float_round UP
+                    rounding = bom.product_uom_id.rounding
+                    cycle_number = float_round(operation_bom_qty[operation.id] / operation.workcenter_id.capacity, precision_rounding=rounding)
                     wo.duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)

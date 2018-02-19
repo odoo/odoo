@@ -1592,7 +1592,7 @@ class ReportController(http.Controller):
     ], type='http', auth='user', website=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report = request.env['ir.actions.report']._get_report_from_name(reportname)
-        context = dict(request.env.context)
+        context = dict(request.env.context, print_mode=converter)
 
         if docids:
             docids = [int(i) for i in docids.split(',')]
