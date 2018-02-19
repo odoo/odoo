@@ -97,7 +97,9 @@ class Product(models.Model):
         for move in self:
             move.delivery_count = res.get(move.id, 0)
 
-    @api.depends('stock_quant_ids', 'stock_move_ids')
+    @api.depends('stock_quant_ids', 'stock_move_ids',
+                 'stock_move_ids.product_qty', 'stock_quant_ids.qty',
+                 'stock_move_ids.state','stock_quant_ids.lot_id')
     def _compute_quantities(self):
         res = self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in self:
@@ -432,6 +434,11 @@ class ProductTemplate(models.Model):
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids')
 
+    @api.depends(
+        'product_variant_ids', 'product_variant_ids.qty_available',
+        'product_variant_ids.virtual_available', 'product_variant_ids.incoming_qty',
+        'product_variant_ids.outgoing_qty'
+                 )
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:

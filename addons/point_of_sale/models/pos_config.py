@@ -134,7 +134,7 @@ class PosConfig(models.Model):
             else:
                 pos_config.currency_id = self.env.user.company_id.currency_id.id
 
-    @api.depends('session_ids')
+    @api.depends('session_ids', 'session_ids.state')
     def _compute_current_session(self):
         for pos_config in self:
             session = pos_config.session_ids.filtered(lambda r: r.user_id.id == self.env.uid and \
@@ -144,7 +144,7 @@ class PosConfig(models.Model):
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
 
-    @api.depends('session_ids')
+    @api.depends('session_ids', 'session_ids.state')
     def _compute_last_session(self):
         PosSession = self.env['pos.session']
         for pos_config in self:
