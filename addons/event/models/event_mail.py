@@ -80,7 +80,7 @@ class EventMailScheduler(models.Model):
             self.mail_registration_ids.filtered(lambda reg: reg.scheduled_date and reg.scheduled_date <= datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT)).execute()
         else:
             if not self.mail_sent:
-                self.event_id.mail_attendees(self.template_id.id)
+                self.event_id.mail_attendees(self.template_id.id, filter_func=lambda reg: reg.state != "cancel")
                 self.write({'mail_sent': True})
         return True
 
