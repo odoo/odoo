@@ -130,6 +130,9 @@ class StockMove(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
+    move_line_default_uom_id = fields.Many2one('product.uom', compute='_compute_move_line_default_uom',
+        help="Default UOM for the move line created from this move, should be the same than the move's uom\
+        except with serial then it will use the quant's UOM.")
     move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=[('product_qty', '=', 0.0)])
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move')
     returned_move_ids = fields.One2many('stock.move', 'origin_returned_move_id', 'All returned moves', help='Optional: all returned moves created from this move')
@@ -313,6 +316,9 @@ class StockMove(models.Model):
                     # all available quantity is assigned
                     info += _(' (reserved)')
             move.string_availability_info = info
+
+    def _compute_move_line_default_uom(self):
+        self.move_line_default_uom_id = self.product_id.tracking == 'serial' and self.product_id.uom_id.id or self.product_uom.id
 
     @api.constrains('product_uom')
     def _check_uom(self):

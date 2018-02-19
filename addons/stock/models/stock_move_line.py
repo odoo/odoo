@@ -142,7 +142,9 @@ class StockMoveLine(models.Model):
         """
         res = {}
         if self.product_id.tracking == 'serial':
-            if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
+            quant_quantity_done = self.product_uom_id._compute_quantity(self.qty_done, self.product_id.uom_id, rounding_method='HALF-UP')
+            if float_compare(quant_quantity_done, 1.0, precision_rounding=self.product_id.uom_id.rounding) != 0\
+                    and not float_is_zero(quant_quantity_done, precision_rounding=self.product_id.uom_id.rounding):
                 message = _('You can only process 1.0 %s for products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
