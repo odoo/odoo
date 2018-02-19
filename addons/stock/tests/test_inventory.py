@@ -44,7 +44,7 @@ class TestInventory(TransactionCase):
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 100)
         inventory.line_ids.product_qty = 0  # Put the quantity back to 0
-        inventory.action_done()
+        inventory.action_validate()
 
         # check
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
@@ -72,7 +72,7 @@ class TestInventory(TransactionCase):
         inventory.line_ids.prod_lot_id = lot1
         inventory.line_ids.product_qty = 1
 
-        inventory.action_done()
+        inventory.action_validate()
 
         # check
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1), 1.0)
@@ -103,7 +103,7 @@ class TestInventory(TransactionCase):
         inventory.line_ids.product_qty = 2
 
         with self.assertRaises(ValidationError):
-            inventory.action_done()
+            inventory.action_validate()
 
     def test_inventory_4(self):
         """ Check that even if a product is tracked by serial number, it's possible to add
@@ -164,7 +164,7 @@ class TestInventory(TransactionCase):
         self.assertEqual(inventory.line_ids.theoretical_qty, 0)
         inventory.line_ids.partner_id = owner1
         inventory.line_ids.product_qty = 5
-        inventory.action_done()
+        inventory.action_validate()
 
         quant = self.env['stock.quant']._gather(self.product1, self.stock_location)
         self.assertEqual(len(quant), 1)
@@ -186,7 +186,7 @@ class TestInventory(TransactionCase):
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 10
-        inventory.action_done()
+        inventory.action_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
 
         # Make a chain of two moves, validate the first and check that 10 products are reserved
@@ -229,7 +229,7 @@ class TestInventory(TransactionCase):
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 8
-        inventory.action_done()
+        inventory.action_validate()
         self.assertEqual(self.env['stock.quant']._gather(self.product1, self.pack_location).quantity, 8.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 0)
         self.assertEqual(move_pack_cust.state, 'partially_available')
@@ -250,7 +250,7 @@ class TestInventory(TransactionCase):
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 10
-        inventory.action_done()
+        inventory.action_validate()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 2)
 

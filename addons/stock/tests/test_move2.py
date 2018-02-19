@@ -1055,7 +1055,7 @@ class TestSinglePicking(TestStockCommon):
         })
         inventory.action_start()
         inventory.line_ids.product_qty = 2
-        inventory.action_done()
+        inventory.action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1113,7 +1113,7 @@ class TestSinglePicking(TestStockCommon):
         inventory.action_start()
         inventory.line_ids.prod_lot_id = lot1
         inventory.line_ids.product_qty = 2
-        inventory.action_done()
+        inventory.action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1179,7 +1179,7 @@ class TestSinglePicking(TestStockCommon):
             'product_id': self.productA.id,
             'product_qty': 1,
         })
-        inventory.action_done()
+        inventory.action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1246,7 +1246,7 @@ class TestSinglePicking(TestStockCommon):
             'product_id': self.productA.id,
             'product_qty': 1,
         })
-        inventory.action_done()
+        inventory.action_validate()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1820,7 +1820,7 @@ class TestRoutes(TestStockCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-    
+
     def _enable_pick_ship(self):
         self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
 
@@ -1834,7 +1834,7 @@ class TestRoutes(TestStockCommon):
         `origin` fields are erased.
         """
         self._enable_pick_ship()
-        
+
         # create a procurement group and set in on the pick procurement rule
         procurement_group0 = self.env['procurement.group'].create({})
         pick_rule = self.pick_ship_route.pull_ids.filtered(lambda rule: 'Stock -> Output' in rule.name)
@@ -1888,9 +1888,9 @@ class TestRoutes(TestStockCommon):
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
         self.assertEqual(picking_pick.origin, False)
-    
+
     def test_replenish_pick_ship_1(self):
-        """ Creates 2 warehouses and make a replenish using one warehouse 
+        """ Creates 2 warehouses and make a replenish using one warehouse
         to ressuply the other one, Then check if the quantity and the product are matching
         """
         self.product_uom_qty = 42
@@ -1916,21 +1916,21 @@ class TestRoutes(TestStockCommon):
             'quantity': self.product_uom_qty,
             'warehouse_id': self.wh.id,
         })
-        
+
         replenish_wizard.launch_replenishment()
         last_picking_id = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment')])[-1]
         self.assertTrue(last_picking_id, 'Picking not found')
         move_line = last_picking_id.move_lines.search([('product_id','=', self.product1.id)])
         self.assertTrue(move_line,'The product is not in the picking')
         self.assertEqual(move_line[0].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
-        self.assertEqual(move_line[1].product_uom_qty, self.product_uom_qty, 'Quantities does not match')       
+        self.assertEqual(move_line[1].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
 
     def test_push_rule_on_move_1(self):
         """ Create a route with a push rule, force it on a move, check that it is applied.
-        """       
+        """
         self._enable_pick_ship()
         stock_location = self.env.ref('stock.stock_location_stock')
-        
+
         push_location = self.env['stock.location'].create({
             'location_id': stock_location.location_id.id,
             'name': 'push location',

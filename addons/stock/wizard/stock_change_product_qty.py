@@ -91,5 +91,5 @@ class ProductChangeQuantity(models.TransientModel):
                 'location_id': wizard.location_id.id,
                 'line_ids': [(0, 0, line_data)],
             })
-            inventory.action_done()
+            inventory.action_validate()
         return {'type': 'ir.actions.act_window_close'}
