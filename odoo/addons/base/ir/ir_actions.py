@@ -37,6 +37,21 @@ class IrActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
 
+    @api.model
+    def check_access_rights(self, operation, raise_exception=True):
+        if self._name != 'ir.actions.actions':
+            return super(IrActions, self).check_access_rights(operation, raise_exception=raise_exception)
+
+        assert operation in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
+
+        if operation == 'read':
+            return True
+
+        if raise_exception:
+            raise AccessError("Modifying server actions directly makes no sense")
+
+        return False
+
     def _compute_xml_id(self):
         res = self.get_external_id()
         for record in self:
