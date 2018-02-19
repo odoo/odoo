@@ -200,7 +200,7 @@
 
                 <script type="text/javascript">
                     var odoo = {
-                        csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                        csrf_token: <t t-raw="json.dumps(request.csrf_token(None))"/>,
                     };
                 </script>
 
