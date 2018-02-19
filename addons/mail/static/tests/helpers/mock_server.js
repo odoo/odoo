@@ -5,15 +5,6 @@ var MockServer = require('web.MockServer');
 
 MockServer.include({
     /**
-     * @override
-     */
-    _performRpc: function (route, args) {
-        if (route === '/mail/init_messaging') {
-            return $.when(this._mockInitMessaging(args));
-        }
-        return this._super(route, args);
-    },
-    /**
      * Simulate the '/mail/init_messaging' route
      *
      * @private
@@ -29,6 +20,18 @@ MockServer.include({
             'shortcodes': [],
             'menu_id': false,
         };
+    },
+    /**
+     * @override
+     */
+    _performRpc: function (route, args) {
+        if (route === '/mail/init_messaging') {
+            return $.when(this._mockInitMessaging(args));
+        }
+        if (args.method === 'message_fetch') {
+            return $.when([]);
+        }
+        return this._super(route, args);
     },
 });
 
