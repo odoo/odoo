@@ -291,7 +291,7 @@ class ResourceCalendar(models.Model):
         return day_date + relativedelta(days=days)
 
     @api.multi
-    def _get_leave_intervals(self, resource_id=None, start_datetime=None, end_datetime=None):
+    def _get_leave_intervals(self, resource_id=None, start_datetime=None, end_datetime=None, domain=None):
         """Get the leaves of the calendar. Leaves can be filtered on the resource,
         and on a start and end datetime.
 
@@ -303,16 +303,20 @@ class ResourceCalendar(models.Model):
         :return list leaves: list of time intervals """
         self.ensure_one()
         if resource_id:
-            domain = ['|', ('resource_id', '=', resource_id), ('resource_id', '=', False)]
+            search_domain = ['|', ('resource_id', '=', resource_id), ('resource_id', '=', False)]
         else:
-            domain = [('resource_id', '=', False)]
+            search_domain = [('resource_id', '=', False)]
         if start_datetime:
             # domain += [('date_to', '>', fields.Datetime.to_string(to_naive_utc(start_datetime, self.env.user)))]
-            domain += [('date_to', '>', fields.Datetime.to_string(start_datetime + timedelta(days=-1)))]
+            search_domain += [('date_to', '>', fields.Datetime.to_string(start_datetime + timedelta(days=-1)))]
         if end_datetime:
             # domain += [('date_from', '<', fields.Datetime.to_string(to_naive_utc(end_datetime, self.env.user)))]
-            domain += [('date_from', '<', fields.Datetime.to_string(end_datetime + timedelta(days=1)))]
-        leaves = self.env['resource.calendar.leaves'].search(domain + [('calendar_id', '=', self.id)])
+            search_domain += [('date_from', '<', fields.Datetime.to_string(end_datetime + timedelta(days=1)))]
+        if domain:
+            search_domain += domain
+        if domain is None:
+            search_domain += [('time_type', '=', 'leave')]
+        leaves = self.env['resource.calendar.leaves'].search(search_domain + [('calendar_id', '=', self.id)])
 
         filtered_leaves = self.env['resource.calendar.leaves']
         for leave in leaves:
@@ -343,7 +347,7 @@ class ResourceCalendar(models.Model):
             yield self._interval_new(dt_f, dt_t, {'attendances': calendar_working_day})
 
     @api.multi
-    def _get_day_work_intervals(self, day_date, start_time=None, end_time=None, compute_leaves=False, resource_id=None):
+    def _get_day_work_intervals(self, day_date, start_time=None, end_time=None, compute_leaves=False, resource_id=None, domain=None):
         """ Get the working intervals of the day given by day_date based on
         current calendar. Input should be given in current user timezone and
         output is given in naive UTC, ready to be used by the orm or webclient.
@@ -371,7 +375,8 @@ class ResourceCalendar(models.Model):
             leaves = self._get_leave_intervals(
                 resource_id=resource_id,
                 start_datetime=datetime.datetime.combine(day_date, start_time),
-                end_datetime=datetime.datetime.combine(day_date, end_time))
+                end_datetime=datetime.datetime.combine(day_date, end_time),
+                domain=domain)
             working_intervals = [
                 sub_interval
                 for interval in working_intervals
@@ -383,7 +388,7 @@ class ResourceCalendar(models.Model):
             to_naive_utc(interval[1], self.env.user),
             interval[2]) for interval in working_intervals]
 
-    def _get_day_leave_intervals(self, day_date, start_time, end_time, resource_id):
+    def _get_day_leave_intervals(self, day_date, start_time, end_time, resource_id, domain=None):
         """ Get the leave intervals of the day given by day_date based on current
         calendar. Input should be given in current user timezone and
         output is given in naive UTC, ready to be used by the orm or webclient.
@@ -406,7 +411,8 @@ class ResourceCalendar(models.Model):
         leaves_intervals = self._get_leave_intervals(
             resource_id=resource_id,
             start_datetime=datetime.datetime.combine(day_date, start_time),
-            end_datetime=datetime.datetime.combine(day_date, end_time))
+            end_datetime=datetime.datetime.combine(day_date, end_time),
+            domain=domain)
 
         final_intervals = [i for i in
                            [self._interval_and(leave_interval, work_interval)
@@ -423,7 +429,7 @@ class ResourceCalendar(models.Model):
     # Main computation API
     # --------------------------------------------------
 
-    def _iter_work_intervals(self, start_dt, end_dt, resource_id, compute_leaves=True):
+    def _iter_work_intervals(self, start_dt, end_dt, resource_id, compute_leaves=True, domain=None):
         """ Lists the current resource's work intervals between the two provided
         datetimes (inclusive) expressed in UTC, for each worked day. """
         if not end_dt:
@@ -448,11 +454,12 @@ class ResourceCalendar(models.Model):
                 start_time=start_time,
                 end_time=end_time,
                 compute_leaves=compute_leaves,
-                resource_id=resource_id)
+                resource_id=resource_id,
+                domain=domain)
             if intervals:
                 yield intervals
 
-    def _iter_leave_intervals(self, start_dt, end_dt, resource_id):
+    def _iter_leave_intervals(self, start_dt, end_dt, resource_id, domain=None):
         """ Lists the current resource's leave intervals between the two provided
         datetimes (inclusive) expressed in UTC. """
         if not end_dt:
@@ -476,22 +483,23 @@ class ResourceCalendar(models.Model):
                 day.date(),
                 start_time,
                 end_time,
-                resource_id)
+                resource_id,
+                domain=domain)
 
             if intervals:
                 yield intervals
 
-    def _iter_work_hours_count(self, from_datetime, to_datetime, resource_id):
+    def _iter_work_hours_count(self, from_datetime, to_datetime, resource_id, domain=None):
         """ Lists the current resource's work hours count between the two provided
         datetime expressed in naive UTC. """
 
-        for interval in self._iter_work_intervals(from_datetime, to_datetime, resource_id):
+        for interval in self._iter_work_intervals(from_datetime, to_datetime, resource_id, domain=domain):
             td = timedelta()
             for work_interval in interval:
                 td += work_interval[1] - work_interval[0]
             yield (interval[0][0].date(), td.total_seconds() / 3600.0)
 
-    def _iter_work_days(self, from_date, to_date, resource_id):
+    def _iter_work_days(self, from_date, to_date, resource_id, domain=None):
         """ Lists the current resource's work days between the two provided
         dates (inclusive) expressed in naive UTC.
 
@@ -507,7 +515,7 @@ class ResourceCalendar(models.Model):
         for interval in self._iter_work_intervals(
                 datetime.datetime(from_date.year, from_date.month, from_date.day),
                 datetime.datetime(to_date.year, to_date.month, to_date.day),
-                resource_id):
+                resource_id, domain=domain):
             yield interval[0][0].date()
 
     @api.multi
@@ -519,11 +527,11 @@ class ResourceCalendar(models.Model):
         return bool(next(self._iter_work_days(date, date, resource_id), False))
 
     @api.multi
-    def get_work_hours_count(self, start_dt, end_dt, resource_id, compute_leaves=True):
+    def get_work_hours_count(self, start_dt, end_dt, resource_id, compute_leaves=True, domain=None):
         """ Count number of work hours between two datetimes. For compute_leaves,
         resource_id: see _get_day_work_intervals. """
         res = timedelta()
-        for intervals in self._iter_work_intervals(start_dt, end_dt, resource_id, compute_leaves=compute_leaves):
+        for intervals in self._iter_work_intervals(start_dt, end_dt, resource_id, compute_leaves=compute_leaves, domain=domain):
             for interval in intervals:
                 res += interval[1] - interval[0]
         return res.total_seconds() / 3600.0
@@ -533,7 +541,7 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
 
     @api.multi
-    def _schedule_hours(self, hours, day_dt, compute_leaves=False, resource_id=None):
+    def _schedule_hours(self, hours, day_dt, compute_leaves=False, resource_id=None, domain=None):
         """ Schedule hours of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline. For compute_leaves, resource_id:
@@ -555,7 +563,7 @@ class ResourceCalendar(models.Model):
         day_dt_tz = to_naive_user_tz(day_dt, self.env.user)
         current_datetime = day_dt_tz
 
-        call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id)
+        call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id, domain=domain)
 
         while float_compare(remaining_hours, 0.0, precision_digits=2) in (1, 0) and iterations < 1000:
             if backwards:
@@ -585,9 +593,9 @@ class ResourceCalendar(models.Model):
         return intervals
 
     @api.multi
-    def plan_hours(self, hours, day_dt, compute_leaves=False, resource_id=None):
+    def plan_hours(self, hours, day_dt, compute_leaves=False, resource_id=None, domain=None):
         """ Return datetime after having planned hours """
-        res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id)
+        res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, domain)
         if res and hours < 0.0:
             return res[0][0]
         elif res:
@@ -595,7 +603,7 @@ class ResourceCalendar(models.Model):
         return False
 
     @api.multi
-    def _schedule_days(self, days, day_dt, compute_leaves=False, resource_id=None):
+    def _schedule_days(self, days, day_dt, compute_leaves=False, resource_id=None, domain=None):
         """Schedule days of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline. For compute_leaves, resource_id:
@@ -619,7 +627,8 @@ class ResourceCalendar(models.Model):
         while planned_days < abs(days) and iterations < 100:
             working_intervals = self._get_day_work_intervals(
                 current_datetime.date(),
-                compute_leaves=compute_leaves, resource_id=resource_id)
+                compute_leaves=compute_leaves, resource_id=resource_id,
+                domain=domain)
             if not self or working_intervals:  # no calendar -> no working hours, but day is considered as worked
                 planned_days += 1
                 intervals += working_intervals
@@ -634,9 +643,9 @@ class ResourceCalendar(models.Model):
         return intervals
 
     @api.multi
-    def plan_days(self, days, day_dt, compute_leaves=False, resource_id=None):
+    def plan_days(self, days, day_dt, compute_leaves=False, resource_id=None, domain=None):
         """ Returns the datetime of a days scheduling. """
-        res = self._schedule_days(days, day_dt, compute_leaves, resource_id)
+        res = self._schedule_days(days, day_dt, compute_leaves, resource_id, domain)
         return res and res[-1][1] or False
 
 
@@ -755,6 +764,8 @@ class ResourceCalendarLeaves(models.Model):
     resource_id = fields.Many2one(
         "resource.resource", 'Resource',
         help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource")
+    time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave',
+                                 help="Whether this should be computed as a holiday or as work time (eg: formation)")
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):

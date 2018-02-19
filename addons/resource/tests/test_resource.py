@@ -698,6 +698,48 @@ class TestResourceMixin(TestResourceCommon):
         self.assertEqual(res['days'], 0.75)
         self.assertEqual(res['hours'], 6.0)
 
+    def test_days_count_with_domain(self):
+        self.test.resource_id.write({
+            'user_id': self.lost_user.id,
+        })
+
+        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
+            'name': 'first',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-02-05 08:00:00'), self.lost_user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-02-09 18:00:00'), self.lost_user)
+        })
+
+        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
+            'name': 'second',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-01-12 08:00:00'), self.lost_user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-01-13 18:00:00'), self.lost_user)
+        })
+
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', '')]
+        )
+        self.assertEqual(res, 3.0)
+
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', 'first')]
+        )
+        self.assertEqual(res, 1.0)
+
+        res = self.test.get_leaves_day_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', 'first')]
+        )
+        self.assertEqual(res, 2.0)
+
 class TestGlobalLeaves(TestResourceCommon):
 
     def setUp(self):
@@ -768,3 +810,40 @@ class TestGlobalLeaves(TestResourceCommon):
 
         work_spec = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(Date.from_string('2018-04-06'), time(0), time(23, 59, 59), self.resource1_id)]
         self.assertEqual(work_spec[0], (Datetime.from_string('2018-04-06 16:00:00'), Datetime.from_string('2018-04-06 21:00:00')))
+
+
+class TestTimeType(TestResourceCommon):
+    def setUp(self):
+        super(TestTimeType, self).setUp()
+        Leave = self.env['resource.calendar.leaves']
+
+        self.other1 = Leave.create({
+            'name': 'Formation',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': Datetime.from_string('2013-02-15 09:00:00'),
+            'date_to': Datetime.from_string('2013-02-15 19:00:00'),
+            'time_type': 'other',
+        })
+        self.other2 = Leave.create({
+            'name': 'Homeworking',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': Datetime.from_string('2013-02-12 09:00:00'),
+            'date_to': Datetime.from_string('2013-02-12 15:00:00'),
+            'time_type': 'other',
+        })
+
+    def test_leaves_leaves(self):
+        # Here we test if setting the value to leave has the effect intended
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-26'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'leave')])
+        self.assertEqual(len(leave), 1, "When asking for leave should compute the leaves")
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-15'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'leave')])
+        self.assertEqual(len(leave), 0, "When asking for leave should ignore others")
+
+    def test_leaves_other(self):
+        # Here we test if setting the value to other has the effect intended
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-26'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'other')])
+        self.assertEqual(len(leave), 0, "When asking for other should ignore leaves")
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-15'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'other')])
+        self.assertEqual(len(leave), 2, "When asking for other should compute others")
