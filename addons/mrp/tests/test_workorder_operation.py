@@ -70,7 +70,7 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'location_id': self.source_location_id
             })]
         })
-        inventory.action_done()
+        inventory.action_validate()
 
         # Create work order
         production_table.button_plan()
@@ -170,7 +170,7 @@ class TestWorkOrderProcess(common.TransactionCase):
                 'location_id': self.source_location_id
             })]
         })
-        inventory.action_done()
+        inventory.action_validate()
 
         # Create work order
         production_table.button_plan()
@@ -222,7 +222,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.assertEqual(move_table_bolt.quantity_done, 4)
 
         # Change the quantity of the production order to 1
-        wiz = self.env['change.production.qty'].create({'mo_id': production_table.id , 
+        wiz = self.env['change.production.qty'].create({'mo_id': production_table.id ,
                                                         'product_qty': 1.0})
         wiz.change_prod_qty()
         # ---------------------------------------------------------------
@@ -313,7 +313,7 @@ class TestWorkOrderProcess(common.TransactionCase):
             })]
         })
         # inventory.action_start()
-        inventory.action_done()
+        inventory.action_validate()
 
         # Check consumed move status
         mo_custom_laptop.action_assign()
@@ -377,12 +377,12 @@ class TestWorkOrderProcess(common.TransactionCase):
 #         finsh_moves_state = any(move.state != 'done' for move in mo_custom_laptop.move_finished_ids)
 #         self.assertFalse(raw_moves_state, "Wrong state in consumed moves of production order.")
 #         self.assertFalse(finsh_moves_state, "Wrong state in consumed moves of production order.")
-# 
+#
 #         # Finished move quants of production order
-# 
+#
 #         finshed_quant_lot_001 = mo_custom_laptop.move_finished_ids.filtered(lambda x: x.product_id.id == custom_laptop.id and x.product_uom_qty==6).mapped('quant_ids')
 #         finshed_quant_lot_002 = mo_custom_laptop.move_finished_ids.filtered(lambda x: x.product_id.id == custom_laptop.id and x.product_uom_qty==4).mapped('quant_ids')
-# 
+#
 #         # Check total quantity consumed of charger, keybord
 #         # --------------------------------------------------
 #         charger_quants = mo_custom_laptop.move_raw_ids.filtered(lambda x: x.product_id.id == product_charger.id and x.state == 'done').mapped('quant_ids')
@@ -487,7 +487,7 @@ class TestWorkOrderProcess(common.TransactionCase):
             })]
         })
         # inventory.action_start()
-        inventory.action_done()
+        inventory.action_validate()
 
         # Start Production ...
         # --------------------

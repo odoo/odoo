@@ -70,7 +70,8 @@ class TestWarehouse(common.TestMrpCommon):
                 (0, 0, {'product_id': self.product_2.id, 'product_uom_id': self.product_2.uom_id.id, 'product_qty': 12, 'prod_lot_id': lot_product_2.id, 'location_id': self.ref('stock.stock_location_14')})
             ]})
         (stock_inv_product_4 | stock_inv_product_2).action_start()
-        (stock_inv_product_4 | stock_inv_product_2).action_done()
+        stock_inv_product_2.action_validate()
+        stock_inv_product_4.action_validate()
 
         #Create Manufacturing order.
         production_3 = self.env['mrp.production'].create({
@@ -97,6 +98,6 @@ class TestWarehouse(common.TestMrpCommon):
 
         #Check scrap move is created for this production order.
         #TODO: should check with scrap objects link in between
-        
+
 #        scrap_move = production_3.move_raw_ids.filtered(lambda x: x.product_id == self.product_2 and x.scrapped)
 #        self.assertTrue(scrap_move, "There are no any scrap move created for production order.")
