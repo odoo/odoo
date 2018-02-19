@@ -27,6 +27,7 @@ var ActionManager = Widget.extend({
         breadcrumb_clicked: '_onBreadcrumbClicked',
         history_back: '_onHistoryBack',
         push_state: '_onPushState',
+        redirect: '_onRedirect',
     },
 
     /**
@@ -171,20 +172,12 @@ var ActionManager = Widget.extend({
         }
 
         return this.dp.add($.when(def)).then(function () {
-            action.jsID = _.uniqueId('action_');
-            action.pushState = options.pushState;
-
             // action.target 'main' is equivalent to 'current' except that it
             // also clears the breadcrumbs
             options.clear_breadcrumbs = action.target === 'main' ||
                                         options.clear_breadcrumbs;
 
-            // ensure that the context and domain are evaluated
-            var context = new Context(self.userContext, options.additional_context, action.context);
-            action.context = pyeval.eval('context', context);
-            if (action.domain) {
-                action.domain = pyeval.eval('domain', action.domain, action.context);
-            }
+            self._preprocessAction(action, options);
 
             return self._handleAction(action, options);
         });
@@ -757,6 +750,24 @@ var ActionManager = Widget.extend({
         return def;
     },
     /**
+     * Preprocesses the action before it is handled by the ActionManager
+     * (assigns a JS id, evaluates its context and domains, etc.).
+     *
+     * @param {Object} action
+     * @param {Object} options see @doAction options
+     */
+    _preprocessAction: function (action, options) {
+        action.jsID = _.uniqueId('action_');
+        action.pushState = options.pushState;
+
+        // ensure that the context and domain are evaluated
+        var context = new Context(this.userContext, options.additional_context, action.context);
+        action.context = pyeval.eval('context', context);
+        if (action.domain) {
+            action.domain = pyeval.eval('domain', action.domain, action.context);
+        }
+    },
+    /**
      * Unlinks the given action and its controller from the internal structures
      * and destroys its controllers.
      *
@@ -884,6 +895,24 @@ var ActionManager = Widget.extend({
             ev.stopPropagation();
             this._pushState(ev.data.controllerID, ev.data.state);
         }
+    },
+    /**
+    * Intercepts and triggers a redirection on a link
+    *
+    * @private
+    * @param {OdooEvent} ev
+    * @param {integer} ev.data.res_id
+    * @param {string} ev.data.res_model
+    */
+    _onRedirect: function (ev) {
+        this.do_action({
+            type:'ir.actions.act_window',
+            view_type: 'form',
+            view_mode: 'form',
+            res_model: ev.data.res_model,
+            views: [[false, 'form']],
+            res_id: ev.data.res_id,
+        });
     },
 });
 

@@ -9,6 +9,7 @@ var FilterMenu = require('web.FilterMenu');
 var GroupByMenu = require('web.GroupByMenu');
 var pyeval = require('web.pyeval');
 var search_inputs = require('web.search_inputs');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 var _t = core._t;
 
@@ -274,7 +275,8 @@ var SearchView = Widget.extend({
         this._super.apply(this, arguments);
         this.options = options;
         this.dataset = dataset;
-        this.fields_view = fvg;
+        this.fields_view = this._processFieldsView(_.clone(fvg));
+
         this.fields = this.fields_view.fields;
         this.query = undefined;
         this.title = this.options.action && this.options.action.name;
@@ -602,6 +604,26 @@ var SearchView = Widget.extend({
             }
             current_category = filter.category;
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Processes a fieldsView in place. In particular, parses its arch.
+     *
+     * @todo: this function is also defined in AbstractView ; this code
+     * duplication could be removed once the SearchView will be rewritten.
+     * @private
+     * @param {Object} fv
+     * @param {string} fv.arch
+     * @returns {Object} the processed fieldsView
+     */
+    _processFieldsView: function (fv) {
+        var doc = $.parseXML(fv.arch).documentElement;
+        fv.arch = utils.xml_to_json(doc, true);
+        return fv;
     },
 });
 

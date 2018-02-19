@@ -134,6 +134,14 @@ var x2ManyCommands = {
 };
 
 var BasicModel = AbstractModel.extend({
+    // list of models for which the DataManager's cache should be cleared on
+    // create, update and delete operations
+    noCacheModels: [
+        'ir.actions.act_window',
+        'ir.filters',
+        'ir.ui.view',
+    ],
+
     /**
      * @override
      */
@@ -228,11 +236,12 @@ var BasicModel = AbstractModel.extend({
     deleteRecords: function (recordIds, modelName) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
+        var context = _.extend(records[0].getContext(), session.user_context);
         return this._rpc({
                 model: modelName,
                 method: 'unlink',
                 args: [_.pluck(records, 'res_id')],
-                context: session.user_context, // todo: combine with view context
+                context: context,
             })
             .then(function () {
                 _.each(records, function (record) {
@@ -247,6 +256,8 @@ var BasicModel = AbstractModel.extend({
                         record.count--;
                     }
                 });
+                // optionally clear the DataManager's cache
+                self._invalidateCache(records[0]);
             });
     },
     /**
@@ -908,11 +919,14 @@ var BasicModel = AbstractModel.extend({
                         // Erase changes as they have been applied
                         record._changes = {};
 
+                        // Optionally clear the DataManager's cache
+                        self._invalidateCache(record);
+
                         self.unfreezeOrder(record.id);
 
                         // Update the data directly or reload them
                         if (shouldReload) {
-                            self._fetchRecord(record).then(function (record) {
+                            self._fetchRecord(record).then(function () {
                                 def.resolve(changedFields);
                             });
                         } else {
@@ -1022,8 +1036,11 @@ var BasicModel = AbstractModel.extend({
                 method: 'write',
                 args: [resIDs, { active: value }],
             })
-            .then(this.reload.bind(this, parentID));
-
+            .then(function () {
+                // optionally clear the DataManager's cache
+                self._invalidateCache(parent);
+                return self.reload(parentID);
+            });
     },
     /**
      * Toggle (open/close) a group in a grouped list, then fetches relevant
@@ -1522,6 +1539,7 @@ var BasicModel = AbstractModel.extend({
                         fields: view ? view.fields : fieldInfo.relatedFields,
                         fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
                         res_id: d.id,
+                        data: d,
                         viewType: view ? view.type : fieldInfo.viewType,
                         parentID: list.id,
                     });
@@ -1854,7 +1872,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: record.getContext(),
+                context: _.extend({}, record.getContext(), {bin_size: true}),
             })
             .then(function (result) {
                 if (result.length === 0) {
@@ -2360,7 +2378,7 @@ var BasicModel = AbstractModel.extend({
                     count: ids.length,
                     context: record.context,
                     fieldsInfo: fieldsInfo,
-                    fields: view ? view.fields : fieldInfo.relatedFields,
+                    fields: view ? view.viewFields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
                     modelName: field.relation,
                     res_ids: ids,
@@ -2374,7 +2392,7 @@ var BasicModel = AbstractModel.extend({
                 });
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
-                    var def = self._readUngroupedList(list).then(function (list) {
+                    var def = self._readUngroupedList(list).then(function () {
                         return $.when(
                             self._fetchX2ManysBatched(list),
                             self._fetchReferencesBatched(list)
@@ -2403,6 +2421,7 @@ var BasicModel = AbstractModel.extend({
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
         list = this._applyX2ManyOperations(list);
+        this._sortList(list);
         var x2mRecords = [];
 
         // step 1: collect ids
@@ -2640,7 +2659,7 @@ var BasicModel = AbstractModel.extend({
                 var relRecordAdded = [];
                 var relRecordUpdated = [];
                 _.each(list._changes, function (change) {
-                    if (change.operation === 'ADD') {
+                    if (change.operation === 'ADD' && change.id) {
                         relRecordAdded.push(self.localData[change.id]);
                     } else if (change.operation === 'UPDATE' && !self.isNew(change.id)) {
                         // ignore new records that would have been updated
@@ -2699,6 +2718,10 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(addedIds, list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
+                            if (!relRecord) {
+                                commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
+                                continue;
+                            }
                             changes = this._generateChanges(relRecord, options);
                             if (changes.id) {
                                 // the subrecord already exists in db
@@ -2931,6 +2954,21 @@ var BasicModel = AbstractModel.extend({
         return context;
     },
     /**
+     * Invalidates the DataManager's cache if the main model (i.e. the model of
+     * its root parent) of the given dataPoint is a model in 'noCacheModels'.
+     *
+     * @private
+     * @param {Object} dataPoint
+     */
+    _invalidateCache: function (dataPoint) {
+        while (dataPoint.parentID) {
+            dataPoint = this.localData[dataPoint.parentID];
+        }
+        if (_.contains(this.noCacheModels, dataPoint.model)) {
+            core.bus.trigger('clear_cache');
+        }
+    },
+    /**
      * Returns true if the field is protected against changes, looking for a
      * readonly modifier unless there is a force_save modifier (checking first
      * in the modifiers, and if there is no readonly modifier, checking the
@@ -3092,23 +3130,13 @@ var BasicModel = AbstractModel.extend({
             id: {type: 'integer'},
         }, params.fields);
 
-        // datapoint context is extended by fields widgets
-        var context = _.extend({}, params.context);
-        if (params.fieldsInfo && params.viewType) {
-            _.each(params.fieldsInfo[params.viewType], function (field) {
-                if (field.context) {
-                    _.extend(context, field.context);
-                }
-            });
-        }
-
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: context,
+            context: params.context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],
@@ -3243,92 +3271,7 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._fetchNameGet(dp));
                         record._changes[name] = dp.id;
                     } else if (field.type === 'one2many' || field.type === 'many2many') {
-                        var fieldInfo = record.fieldsInfo[record.viewType][name];
-                        var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
-                        var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
-                        var fields = view ? view.fields : fieldInfo.relatedFields;
-                        var viewType = view ? view.type : fieldInfo.viewType;
-
-                        var x2manyList = self._makeDataPoint({
-                            context: record.context,
-                            fieldsInfo: fieldsInfo,
-                            fields: fields,
-                            limit: fieldInfo.limit,
-                            modelName: field.relation,
-                            parentID: record.id,
-                            rawContext: fieldInfo && fieldInfo.context,
-                            relationField: field.relation_field,
-                            res_ids: [],
-                            static: true,
-                            type: 'list',
-                            viewType: viewType,
-                        });
-                        record._changes[name] = x2manyList.id;
-                        x2manyList._changes = [];
-                        var many2ones = {};
-                        var r;
-                        result[name] = result[name] || []; // handle false value
-                        var isCommandList = result[name].length && _.isArray(result[name][0]);
-                        if (!isCommandList) {
-                            result[name] = [[6, false, result[name]]];
-                        }
-                        _.each(result[name], function (value) {
-                            // value is a command
-                            if (value[0] === 0) {
-                                // CREATE
-                                r = self._makeDataPoint({
-                                    modelName: x2manyList.model,
-                                    context: x2manyList.context,
-                                    fieldsInfo: fieldsInfo,
-                                    fields: fields,
-                                    parentID: x2manyList.id,
-                                    viewType: viewType,
-                                });
-                                x2manyList._changes.push({operation: 'ADD', id: r.id});
-                                x2manyList._cache[r.res_id] = r.id;
-
-                                // this is necessary so the fields are initialized
-                                _.each(r.getFieldNames(), function (fieldName) {
-                                    r.data[fieldName] = null;
-                                });
-
-                                r._changes = _.defaults(value[2], r.data);
-                                for (var name in r._changes) {
-                                    if (!r._changes[name]) {
-                                        continue;
-                                    }
-                                    var isFieldInView = name in r.fields;
-                                    if (isFieldInView && r.fields[name].type === 'many2one') {
-                                        var rec = self._makeDataPoint({
-                                            context: r.context,
-                                            modelName: r.fields[name].relation,
-                                            data: {id: r._changes[name]},
-                                            parentID: r.id,
-                                        });
-                                        r._changes[name] = rec.id;
-                                        many2ones[name] = true;
-                                    }
-                                }
-                            }
-                            if (value[0] === 6) {
-                                // REPLACE_WITH
-                                _.each(value[2], function (res_id) {
-                                    x2manyList._changes.push({operation: 'ADD', resID: res_id});
-                                });
-                                var def = self._readUngroupedList(x2manyList).then(function () {
-                                    return $.when(
-                                        self._fetchX2ManysBatched(x2manyList),
-                                        self._fetchReferencesBatched(x2manyList)
-                                    );
-                                });
-                                defs.push(def);
-                            }
-                        });
-
-                        // fetch many2ones display_name
-                        _.each(_.keys(many2ones), function (name) {
-                            defs.push(self._fetchNameGets(x2manyList, name));
-                        });
+                        defs.push(self._processX2ManyCommands(record, name, result[name]));
                     } else {
                         record._changes[name] = self._parseServerValue(field, result[name]);
                     }
@@ -3503,6 +3446,122 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Process x2many commands in a default record by transforming the list of
+     * commands in operations (pushed in _changes) and fetch the related
+     * records fields.
+     *
+     * Note that this method can be called recursively.
+     *
+     * @todo in master: factorize this code with the postprocessing of x2many in
+     *  _applyOnChange
+     *
+     * @private
+     * @param {Object} record
+     * @param {string} fieldName
+     * @param {Array[Array]} commands
+     * @returns {Deferred}
+     */
+    _processX2ManyCommands: function (record, fieldName, commands) {
+        var self = this;
+        var defs = [];
+        var field = record.fields[fieldName];
+        var fieldInfo = record.fieldsInfo[record.viewType][fieldName];
+        var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
+        var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
+        var fields = view ? view.fields : fieldInfo.relatedFields;
+        var viewType = view ? view.type : fieldInfo.viewType;
+
+        var x2manyList = self._makeDataPoint({
+            context: record.context,
+            fieldsInfo: fieldsInfo,
+            fields: fields,
+            limit: fieldInfo.limit,
+            modelName: field.relation,
+            parentID: record.id,
+            rawContext: fieldInfo && fieldInfo.context,
+            relationField: field.relation_field,
+            res_ids: [],
+            static: true,
+            type: 'list',
+            viewType: viewType,
+        });
+        record._changes[fieldName] = x2manyList.id;
+        x2manyList._changes = [];
+        var many2ones = {};
+        var r;
+        commands = commands || []; // handle false value
+        var isCommandList = commands.length && _.isArray(commands[0]);
+        if (!isCommandList) {
+            commands = [[6, false, commands]];
+        }
+        _.each(commands, function (value) {
+            // value is a command
+            if (value[0] === 0) {
+                // CREATE
+                r = self._makeDataPoint({
+                    modelName: x2manyList.model,
+                    context: x2manyList.context,
+                    fieldsInfo: fieldsInfo,
+                    fields: fields,
+                    parentID: x2manyList.id,
+                    viewType: viewType,
+                });
+                x2manyList._changes.push({operation: 'ADD', id: r.id});
+                x2manyList._cache[r.res_id] = r.id;
+
+                // this is necessary so the fields are initialized
+                _.each(r.getFieldNames(), function (fieldName) {
+                    r.data[fieldName] = null;
+                });
+
+                r._changes = _.defaults(value[2], r.data);
+                for (var fieldName in r._changes) {
+                    if (!r._changes[fieldName]) {
+                        continue;
+                    }
+                    var isFieldInView = fieldName in r.fields;
+                    if (isFieldInView) {
+                        var field = r.fields[fieldName];
+                        var fieldType = field.type;
+                        if (fieldType === 'many2one') {
+                            var rec = self._makeDataPoint({
+                                context: r.context,
+                                modelName: field.relation,
+                                data: {id: r._changes[fieldName]},
+                                parentID: r.id,
+                            });
+                            r._changes[fieldName] = rec.id;
+                            many2ones[fieldName] = true;
+                        } else if (_.contains(['one2many', 'many2many'], fieldType)) {
+                            var x2mCommands = commands[0][2][fieldName];
+                            defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
+                        }
+                    }
+                }
+            }
+            if (value[0] === 6) {
+                // REPLACE_WITH
+                _.each(value[2], function (res_id) {
+                    x2manyList._changes.push({operation: 'ADD', resID: res_id});
+                });
+                var def = self._readUngroupedList(x2manyList).then(function () {
+                    return $.when(
+                        self._fetchX2ManysBatched(x2manyList),
+                        self._fetchReferencesBatched(x2manyList)
+                    );
+                });
+                defs.push(def);
+            }
+        });
+
+        // fetch many2ones display_name
+        _.each(_.keys(many2ones), function (name) {
+            defs.push(self._fetchNameGets(x2manyList, name));
+        });
+
+        return $.when.apply($, defs);
+    },
+    /**
      * Reads data from server for all missing fields.
      *
      * @private
@@ -3657,6 +3716,10 @@ var BasicModel = AbstractModel.extend({
                             // Also keep data if we only reload groups' own data
                             delete updatedProps.data;
                         }
+                        // set the limit such that all previously loaded records
+                        // (e.g. if we are coming back to the kanban view from a
+                        // form view) are reloaded
+                        oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         _.extend(oldGroup, updatedProps);
                         newGroup = oldGroup;
                     } else if (!newGroup.openGroupByDefault) {

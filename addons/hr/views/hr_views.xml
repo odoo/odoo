@@ -70,7 +70,7 @@
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
-                                        <field name="resource_calendar_id"/>
+                                        <field name="resource_calendar_id" required="1"/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -87,8 +87,9 @@
                                         <field name="address_home_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="is_address_home_a_company" invisible="1" />
-                                        <div class="text-warning" attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
+                                        <field name="is_address_home_a_company" invisible="1"/>
+                                        <div class="text-warning" groups="hr.group_hr_user"
+                                             attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
                                             Use here the home address of the employee.
                                             This private address is used in the expense report reimbursement document.
                                             It should be different from the work address.
@@ -254,8 +255,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new employee.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new employee
               </p><p>
                 With just a quick glance on the Odoo employee screen, you
                 can easily find all the information you need for each person;
@@ -290,12 +291,14 @@
             </field>
         </record>
 
+        <!-- TODO remove me in master -->
         <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
             <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
+            <field name="domain">['|', ('id','in',active_ids), ('parent_id', 'in', active_ids)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_partner_tree2"/>
             <field name="binding_model_id" ref="hr.model_hr_employee"/>
         </record>
@@ -446,17 +449,10 @@
             <field name="search_view_id" ref="view_job_filter"/>
             <field name="context">{"search_default_Current":1}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new job position.
+              <p class="o_view_nocontent_smiling_face">
+                Ready to recruit more efficiently?
               </p><p>
-                Job Positions are used to define jobs and their requirements.
-                You can keep track of the number of employees you have per job
-                position and follow the evolution according to what you planned
-                for the future.
-              </p><p>
-                You can attach a survey to a job position. It will be used in
-                the recruitment process to evaluate the applicants for this job
-                position.
+                Let's create a job position.
               </p>
             </field>
         </record>
@@ -472,8 +468,8 @@
                 "default_department_id": active_id}
             </field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new employee.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new employee
               </p><p>
                 With just a quick glance on the Odoo employee screen, you
                 can easily find all the information you need for each person;
@@ -609,8 +605,8 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a department.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new department
               </p><p>
                 Odoo's department structure is used to manage all documents
                 related to employees by departments: expenses, timesheets,

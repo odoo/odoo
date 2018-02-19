@@ -121,7 +121,7 @@ class Applicant(models.Model):
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     write_date = fields.Datetime("Update Date", readonly=True)
-    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
+    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', track_visibility='onchange',
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids',
@@ -278,7 +278,7 @@ class Applicant(models.Model):
     def get_empty_list_help(self, help):
         return super(Applicant, self.with_context(empty_list_help_model='hr.job',
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
-                                                  empty_list_help_document_name=_("job applicants"))).get_empty_list_help(help)
+                                                  empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
 
     @api.multi
     def action_get_created_employee(self):
@@ -336,10 +336,10 @@ class Applicant(models.Model):
         return super(Applicant, self)._track_subtype(init_values)
 
     @api.model
-    def message_get_reply_to(self, ids, default=None):
+    def _notify_get_reply_to(self, ids, default=None):
         """ Override to get the reply_to of the parent project. """
         applicants = self.sudo().browse(ids)
-        aliases = self.env['hr.job'].message_get_reply_to(applicants.mapped('job_id').ids, default=default)
+        aliases = self.env['hr.job']._notify_get_reply_to(applicants.mapped('job_id').ids, default=default)
         return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
 
     @api.multi
@@ -377,7 +377,7 @@ class Applicant(models.Model):
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, values):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -388,7 +388,7 @@ class Applicant(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message, values)
+        return super(Applicant, self)._message_post_after_hook(message, values, notif_layout)
 
     @api.multi
     def create_employee_from_applicant(self):

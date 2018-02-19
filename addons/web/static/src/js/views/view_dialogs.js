@@ -165,9 +165,6 @@ var FormViewDialog = ViewDialog.extend({
         }
 
         fields_view_def.then(function (viewInfo) {
-            if (self.recordID) {
-                self.model.addFieldsInfo(self.recordID, viewInfo);
-            }
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
                 context: self.context,
@@ -411,7 +408,7 @@ var SelectCreateDialog = ViewDialog.extend({
             on_saved: function (record) {
                 var values = [{
                     id: record.res_id,
-                    display_name: record.data.display_name,
+                    display_name: record.data.display_name || record.data.name,
                 }];
                 self.on_selected(values);
             },

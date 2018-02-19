@@ -1,10 +1,13 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var config = require('web.config');
+var core = require('web.core');
 var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
+var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -581,6 +584,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection is reset on reload', function (assert) {
+        assert.expect(5);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="int_field" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
+            "total should be 32 (no record selected)");
+
+        // select first record
+        var $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
+        $firstRowSelector.click();
+        assert.ok($firstRowSelector.is(':checked'), "first row should be selected");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '10',
+            "total should be 10 (first record selected)");
+
+        // reload
+        list.reload();
+        $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
+        assert.notOk($firstRowSelector.is(':checked'),
+            "first row should no longer be selected");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
+            "total should be 32 (no more record selected)");
+
+        list.destroy();
+    });
+
     QUnit.test('aggregates are computed correctly', function (assert) {
         assert.expect(4);
 
@@ -656,6 +693,25 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('td[title="Sum"]').text(), "37",
             "current total should now be 37");
+        list.destroy();
+    });
+
+    QUnit.test('aggregates are formatted according to field widget', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux" widget="float_time" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '19:24',
+            "total should be formatted as a float_time");
+
         list.destroy();
     });
 
@@ -1270,18 +1326,18 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should display the no content helper");
 
         assert.strictEqual(list.$('table').length, 0, "should not have a table in the dom");
 
-        assert.strictEqual(list.$('.oe_view_nocontent p.hello:contains(add a partner)').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent p.hello:contains(add a partner)').length, 1,
             "should have rendered no content helper from action");
 
         this.data.foo.records = records;
         list.reload();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
         assert.strictEqual(list.$('table').length, 1, "should have a table in the dom");
         list.destroy();
@@ -1299,7 +1355,7 @@ QUnit.module('Views', {
             arch: '<tree><field name="foo"/></tree>',
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
 
         assert.strictEqual(list.$('tr.o_data_row').length, 0,
@@ -1339,7 +1395,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should have a no content helper displayed");
 
         assert.strictEqual(list.$('div.table-responsive').length, 0,
@@ -1348,7 +1404,7 @@ QUnit.module('Views', {
 
         list.$buttons.find('.o_list_button_add').click();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not have a no content helper displayed");
         assert.strictEqual(list.$('table').length, 1, "should have rendered a table");
         assert.strictEqual(list.$el.css('height'), list.$('div.table-responsive').css('height'),
@@ -1928,7 +1984,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
-        assert.expect(7);
+        assert.expect(9);
 
         var list = createView({
             View: ListView,
@@ -1962,9 +2018,14 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 3,
             "the foo field widget parent cell should now be readonly again");
 
-        // Reswitch the cell to editable and save the row
         list.$('tbody tr:nth(0) td:nth(2) input').click();
-        list.$('thead').click();
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered as editable again");
+        assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
+            "the foo field widget parent cell should not be readonly again");
+
+        // Click outside to leave edition mode
+        list.$el.click();
 
         assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
             "there should be 2 readonly foo cells in readonly mode");
@@ -2350,7 +2411,6 @@ QUnit.module('Views', {
 
         list.destroy();
     });
-
 
     QUnit.test('navigation with tab on a one2many list with create="0"', function (assert) {
         assert.expect(4);
@@ -2771,6 +2831,28 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('pressing ESC discard the current line changes (with required)', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        list.$('input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+        assert.strictEqual(list.$('tr.o_data_row').length, 4,
+            "should have 4 data row in list");
+        assert.strictEqual(list.$('tr.o_data_row.o_selected_row').length, 0,
+            "no rows should be selected");
+        assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
+            "should not have a visible save button");
+        list.destroy();
+    });
+
     QUnit.test('field with password attribute', function (assert) {
         assert.expect(2);
 
@@ -3172,7 +3254,6 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-
     QUnit.test('basic support for widgets', function (assert) {
         assert.expect(1);
 
@@ -3223,6 +3304,114 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('check if the view destroys all widgets and instances', function (assert) {
+        assert.expect(1);
+
+        var instanceNumber = 0;
+        testUtils.patch(mixins.ParentedMixin, {
+            init: function () {
+                instanceNumber++;
+                return this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                if (!this.isDestroyed()) {
+                    instanceNumber--;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        var params = {
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="date"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="m2o"/>' +
+                    '<field name="o2m"/>' +
+                    '<field name="m2m"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="currency_id"/>' +
+                    '<field name="datetime"/>' +
+                    '<field name="reference"/>' +
+                '</tree>',
+        };
+
+        var list = createView(params);
+        list.destroy();
+
+        var initialInstanceNumber = instanceNumber;
+        instanceNumber = 0;
+
+        list = createView(params);
+
+        // call destroy function of controller to ensure that it correctly destroys everything
+        list.__destroy();
+
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+
+        list.destroy();
+
+        testUtils.unpatch(mixins.ParentedMixin);
+    });
+
+    QUnit.test('list view on a "noCache" model', function (assert) {
+        assert.expect(8);
+
+        testUtils.patch(BasicModel, {
+            noCacheModels: BasicModel.prototype.noCacheModels.concat(['foo']),
+        });
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (_.contains(['create', 'unlink', 'write'], args.method)) {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+        core.bus.on('clear_cache', list, assert.step.bind(assert, 'clear_cache'));
+
+        // create a new record
+        list.$buttons.find('.o_list_button_add').click();
+        list.$('.o_selected_row .o_field_widget').val('some value').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        // edit an existing record
+        list.$('.o_data_cell:first').click();
+        list.$('.o_selected_row .o_field_widget').val('new value').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        // delete a record
+        list.$('.o_data_row:first .o_list_record_selector input').click();
+        list.sidebar.$('a:contains(Delete)').click();
+        $('.modal .modal-footer .btn-primary').click(); // confirm
+
+        assert.verifySteps([
+            'create',
+            'clear_cache',
+            'write',
+            'clear_cache',
+            'unlink',
+            'clear_cache',
+        ]);
+
+        list.destroy();
+        testUtils.unpatch(BasicModel);
+    });
 });
 
 });

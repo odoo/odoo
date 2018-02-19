@@ -61,6 +61,7 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
         this.searchable = params.searchable;
         this.searchView = params.searchView;
         this.searchViewHidden = params.searchViewHidden;
+        this.groupable = params.groupable;
         this.actionViews = params.actionViews;
         this.viewType = params.viewType;
         this.withControlPanel = params.withControlPanel !== false;
@@ -328,6 +329,7 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
             hidden: !this.withControlPanel,
             searchview: this.searchView,
             search_view_hidden: !this.searchable || this.searchviewHidden,
+            groupable: this.groupable,
         });
 
         this._pushState();

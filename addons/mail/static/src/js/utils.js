@@ -1,48 +1,6 @@
 odoo.define('mail.utils', function (require) {
 "use strict";
 
-var bus = require('bus.bus').bus;
-
-
-function send_notification(widget, title, content) {
-    if (window.Notification && Notification.permission === "granted") {
-        if (bus.is_master) {
-            _send_native_notification(title, content);
-        }
-    } else {
-        widget.do_notify(title, content);
-        if (bus.is_master) {
-            _beep(widget);
-        }
-    }
-}
-function _send_native_notification(title, content) {
-    var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png"});
-    notification.onclick = function () {
-        window.focus();
-        if (this.cancel) {
-            this.cancel();
-        } else if (this.close) {
-            this.close();
-        }
-    };
-}
-var _beep = (function () {
-    if (typeof(Audio) === "undefined") {
-        return function () {};
-    }
-    var audio;
-    return function (widget) {
-        if (!audio) {
-            audio = new Audio();
-            var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-            var session = widget.getSession();
-            audio.src = session.url("/mail/static/src/audio/ting" + ext);
-        }
-        audio.play();
-    };
-})();
-
 function parse_and_transform(html_string, transform_function) {
     var open_token = "OPEN" + Date.now();
     var string = html_string.replace(/&lt;/g, open_token);
@@ -100,15 +58,17 @@ function inline (node, transform_children) {
 
 // Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
 function parse_email (text) {
-    var result = text.match(/(.*)<(.*@.*)>/);
-    if (result) {
-        return [_.str.trim(result[1]), _.str.trim(result[2])];
+    if (text){
+        var result = text.match(/(.*)<(.*@.*)>/);
+        if (result) {
+            return [_.str.trim(result[1]), _.str.trim(result[2])];
+        }
+        result = text.match(/(.*@.*)/);
+        if (result) {
+            return [_.str.trim(result[1]), _.str.trim(result[1])];
+        }
+        return [text, false];
     }
-    result = text.match(/(.*@.*)/);
-    if (result) {
-        return [_.str.trim(result[1]), _.str.trim(result[1])];
-    }
-    return [text, false];
 }
 
 // Replaces textarea text into html text (add <p>, <a>)
@@ -139,7 +99,6 @@ function unaccent (str) {
 }
 
 return {
-    send_notification: send_notification,
     parse_and_transform: parse_and_transform,
     add_link: add_link,
     linkify: linkify,

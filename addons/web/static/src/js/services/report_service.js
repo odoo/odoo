@@ -6,12 +6,11 @@ odoo.define('web.ReportService', function (require) {
  */
 
 var AbstractService = require('web.AbstractService');
-var session = require('web.session');
-
-var wkhtmltopdfState;
+var core = require('web.core');
 
 var ReportService = AbstractService.extend({
     name: 'report',
+    dependencies: ['ajax'],
 
     /**
      * Checks the state of the installation of wkhtmltopdf on the server.
@@ -21,14 +20,16 @@ var ReportService = AbstractService.extend({
      *   (possible values are 'ok', 'broken', 'install', 'upgrade', 'workers').
      */
     checkWkhtmltopdf: function () {
-        if (!wkhtmltopdfState) {
-            // AAB: for now, services aren't available for each other, so we
-            // can't use this._rpc (the ajax service)
-            wkhtmltopdfState = session.rpc('/report/check_wkhtmltopdf');
+        if (!this.wkhtmltopdfState) {
+            this.wkhtmltopdfState = this._rpc({
+                route:'/report/check_wkhtmltopdf'
+            });
         }
-        return wkhtmltopdfState;
+        return this.wkhtmltopdfState;
     },
 });
+
+core.serviceRegistry.add('report', ReportService);
 
 return ReportService;
 

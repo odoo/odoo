@@ -110,8 +110,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new warehouse.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new warehouse
               </p>
             </field>
         </record>
@@ -240,9 +240,11 @@
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a reordering rule.
-              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a reordering rule
+              </p><p>
+                Define a minimum stock rule so that Odoo creates automatically requests for quotations or draft manufacturing orders to resupply your stock.
+              </p>
             </field>
         </record>
         <menuitem

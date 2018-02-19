@@ -124,12 +124,6 @@ class Http(models.AbstractModel):
         return False
 
     @classmethod
-    def _serve_404(cls):
-        req_page = request.httprequest.path
-        page404 = 'website.%s' % (request.website.is_publisher() and 'page_404' or '404')
-        return request.render(page404, {'path': req_page[1:]})
-
-    @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
         domain = [
@@ -153,7 +147,7 @@ class Http(models.AbstractModel):
         if redirect:
             return request.redirect(redirect.url_to, code=redirect.type)
 
-        return cls._serve_404()
+        return False
 
     @classmethod
     def _handle_exception(cls, exception):
@@ -212,11 +206,16 @@ class Http(models.AbstractModel):
                 status_code=code,
             )
 
+            view_id = code
+            if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
+                view_id = 'page_404'
+                values['path'] = request.httprequest.path[1:]
+
             if not request.uid:
                 cls._auth_method_public()
 
             try:
-                html = request.env['ir.ui.view'].render_template('website.%s' % code, values)
+                html = request.env['ir.ui.view'].render_template('website.%s' % view_id, values)
             except Exception:
                 html = request.env['ir.ui.view'].render_template('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')

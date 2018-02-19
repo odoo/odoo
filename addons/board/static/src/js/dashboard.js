@@ -266,10 +266,8 @@ FormRenderer.include({
                 return element.tag === "action"? element: false;
             });
         });
-        if (!hasAction) {
-            return $('<div class="oe_view_nocontent">')
-                .append($('<div>').html(this.noContentHelp || " "));
-        }
+        this.$el.toggleClass('o_dashboard_nocontent', !hasAction);
+
         // We should start with three columns available
         node = $.extend(true, {}, node);
 

@@ -63,7 +63,7 @@ class account_abstract_payment(models.AbstractModel):
     @api.depends('payment_type', 'journal_id')
     def _compute_hide_payment_method(self):
         for payment in self:
-            if not payment.journal_id:
+            if not payment.journal_id or payment.journal_id.type not in ['bank', 'cash']:
                 payment.hide_payment_method = True
                 continue
             journal_payment_methods = payment.payment_type == 'inbound'\
@@ -332,7 +332,7 @@ class account_payment(models.Model):
         else:
             if self.payment_type == 'inbound':
                 domain.append(('at_least_one_inbound', '=', True))
-            else:
+            elif self.payment_type == 'outbound':
                 domain.append(('at_least_one_outbound', '=', True))
         return {'domain': domain, 'journal_types': set(journal_type)}
 
@@ -341,9 +341,16 @@ class account_payment(models.Model):
         jrnl_filters = self._compute_journal_domain_and_types()
         journal_types = jrnl_filters['journal_types']
         domain_on_types = [('type', 'in', list(journal_types))]
-        if self.journal_id.type not in journal_types:
-            self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
-        return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
+
+        journal_domain = jrnl_filters['domain'] + domain_on_types
+        default_journal_id = self.env.context.get('default_journal_id')
+        if not default_journal_id:
+            if self.journal_id.type not in journal_types:
+                self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
+        else:
+            journal_domain = journal_domain.append(('id', '=', default_journal_id))
+
+        return {'domain': {'journal_id': journal_domain}}
 
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
@@ -374,6 +381,8 @@ class account_payment(models.Model):
                 self.partner_type = 'customer'
             elif self.payment_type == 'outbound':
                 self.partner_type = 'supplier'
+            else:
+                self.partner_type = False
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):
@@ -501,11 +510,12 @@ class account_payment(models.Model):
                 (transfer_credit_aml + transfer_debit_aml).reconcile()
 
             rec.write({'state': 'posted', 'move_name': move.name})
+        return True
 
     @api.multi
     def action_draft(self):
         return self.write({'state': 'draft'})
-        
+
     def action_validate_invoice_payment(self):
         """ Posts a payment used to pay an invoice. This function only posts the
         payment by default but can be overridden to apply specific post or pre-processing.
@@ -515,7 +525,7 @@ class account_payment(models.Model):
         if any(len(record.invoice_ids) != 1 for record in self):
             # For multiple invoices, there is account.register.payments wizard
             raise UserError(_("This method should only be called to process a single invoice's payment."))
-        self.post();
+        return self.post()
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.
@@ -624,9 +634,9 @@ class account_payment(models.Model):
         """
         journal = journal or self.journal_id
         if not journal.sequence_id:
-            raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
+            raise UserError(_('Configuration Error !\nThe journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
-            raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
+            raise UserError(_('Configuration Error !\nThe sequence of journal %s is deactivated.') % journal.name)
         name = self.move_name or journal.with_context(ir_sequence_date=self.payment_date).sequence_id.next_by_id()
         return {
             'name': name,
@@ -669,7 +679,7 @@ class account_payment(models.Model):
                 for inv in invoice:
                     if inv.move_id:
                         name += inv.number + ', '
-                name = name[:len(name)-2] 
+                name = name[:len(name)-2]
         return {
             'name': name,
             'account_id': self.destination_account_id.id,

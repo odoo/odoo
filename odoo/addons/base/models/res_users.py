@@ -84,7 +84,6 @@ class Groups(models.Model):
     color = fields.Integer(string='Color Index')
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
-    is_portal = fields.Boolean('Portal', help="If checked, this group is usable as a portal.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
@@ -949,7 +948,7 @@ class ChangePasswordUser(models.TransientModel):
     _name = 'change.password.user'
     _description = 'Change Password Wizard User'
 
-    wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True)
+    wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
     user_login = fields.Char(string='User Login', readonly=True)
     new_passwd = fields.Char(string='New Password', default='')

@@ -65,6 +65,19 @@ class TestBasic(TransactionCase):
         with self.assertRaises(AssertionError):
             f.f2 = 42
 
+    def test_attrs(self):
+        """ Checks that attrs/modifiers with non-normalized domains work
+        """
+        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+
+        # not readonly yet, should work
+        f.f2 = 5
+        # make f2 readonly
+        f.f1 = 63
+        f.f3 = 5
+        with self.assertRaises(AssertionError):
+            f.f2 = 6
+
 class TestM2O(TransactionCase):
     def test_default_and_onchange(self):
         """ Checks defaults & onchanges impacting m2o fields

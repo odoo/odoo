@@ -607,3 +607,10 @@ class MrpProduction(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('production_id', '=', self.id)]
         return action
+    
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("manufacturing order"),
+        )
+        return super(MrpProduction, self).get_empty_list_help(help)

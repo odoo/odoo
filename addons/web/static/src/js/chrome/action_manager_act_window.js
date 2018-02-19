@@ -45,11 +45,15 @@ ActionManager.include({
      */
     loadState: function (state) {
         var action;
-        var options = {pushState: false};
+        var options = {
+            clear_breadcrumbs: true,
+            pushState: false,
+        };
         if (state.action) {
             var currentController = this.getCurrentController();
             var currentAction = currentController && this.actions[currentController.actionID];
-            if (currentAction && currentAction.id === state.action) {
+            if (currentAction && currentAction.id === state.action &&
+                currentAction.type === 'ir.actions.act_window') {
                 // the action to load is already the current one, so update it
                 this._closeDialog(true); // there may be a currently opened dialog, close it
                 currentAction.env.currentId = state.id;
@@ -155,6 +159,14 @@ ActionManager.include({
      */
     _createViewController: function (action, viewType, viewOptions, options) {
         var self = this;
+        var viewDescr = _.findWhere(action.views, {type: viewType});
+        if (!viewDescr) {
+            // the requested view type isn't specified in the action (e.g.
+            // action with list view only, user clicks on a row in the list, it
+            // tries to switch to form view)
+            return $.Deferred().reject();
+        }
+
         var controllerID = _.uniqueId('controller_');
         var controller = {
             actionID: action.jsID,
@@ -180,7 +192,6 @@ ActionManager.include({
             // communication with trigger_up (e.g. for 'env_updated' event)
             viewOptions = _.extend(viewOptions, { controllerID: controllerID });
 
-            var viewDescr = _.findWhere(action.views, {type: viewType});
             var view = new viewDescr.Widget(viewDescr.fieldsView, viewOptions);
             var def = $.Deferred();
             action.controllers[viewType] = def;
@@ -298,10 +309,6 @@ ActionManager.include({
      * @returns {Object}
      */
     _generateActionEnv: function (action, options) {
-        var actionGroupBy = action.context.group_by || [];
-        if (typeof actionGroupBy === 'string') {
-            actionGroupBy = [actionGroupBy];
-        }
         var resID = options.resID || action.res_id;
         return {
             modelName: action.res_model,
@@ -309,7 +316,7 @@ ActionManager.include({
             currentId: resID || undefined,
             domain: [],
             context: action.context || {},
-            groupBy: actionGroupBy,
+            groupBy: [],
         };
     },
     /**
@@ -347,11 +354,13 @@ ActionManager.include({
         _.each(action.views, function (view) {
             var viewType = view[1];
             var fieldsView = fieldsViews[viewType];
-            var View = view_registry.get(fieldsView.arch.attrs.js_class || viewType);
+            var parsedXML = new DOMParser().parseFromString(fieldsView.arch, "text/xml");
+            var key = parsedXML.documentElement.getAttribute('js_class');
+            var View = view_registry.get(key || viewType);
             if (View) {
                 views.push({
                     accessKey: View.prototype.accessKey,
-                    fieldsView: fieldsViews[viewType],
+                    fieldsView: fieldsView,
                     icon: View.prototype.icon,
                     isMobileFriendly: View.prototype.mobile_friendly,
                     multiRecord: View.prototype.multi_record,
@@ -440,10 +449,11 @@ ActionManager.include({
             throw new Error(_.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
                             JSON.stringify(results.error)));
         }
+        var groupBy = results.group_by.length ? results.group_by : (action.context.group_by || []);
         return {
             context: results.context,
             domain: results.domain,
-            groupBy: results.group_by,
+            groupBy: (typeof groupBy === 'string') ? [groupBy] : groupBy,
         };
     },
     /**

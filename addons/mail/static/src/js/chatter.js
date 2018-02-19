@@ -2,7 +2,6 @@ odoo.define('mail.Chatter', function (require) {
 "use strict";
 
 var Activity = require('mail.Activity');
-var chat_mixin = require('mail.chat_mixin');
 var ChatterComposer = require('mail.ChatterComposer');
 var Followers = require('mail.Followers');
 var ThreadField = require('mail.ThreadField');
@@ -22,7 +21,7 @@ var QWeb = core.qweb;
 // with each other.
 // It synchronizes the rendering of those widgets (as they may be asynchronous), to limitate
 // the flickering when switching between records
-var Chatter = Widget.extend(chat_mixin, {
+var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
         reload_mail_fields: '_onReloadMailFields',
@@ -52,7 +51,7 @@ var Chatter = Widget.extend(chat_mixin, {
         // mention: get the prefetched partners and use them as mention suggestions
         // if there is a follower widget, the followers will be added to the
         // suggestions as well once fetched
-        this.mentionPartnerSuggestions = this._getMentionPartnerSuggestions();
+        this.mentionPartnerSuggestions = this.call('chat_manager', 'getMentionPartnerSuggestions');
         this.mentionSuggestions = this.mentionPartnerSuggestions;
 
         this.fields = {};
@@ -185,7 +184,7 @@ var Chatter = Widget.extend(chat_mixin, {
             input_baseline: 14,
             is_log: options && options.is_log,
             record_name: this.record_name,
-            default_body: old_composer && old_composer.$input && old_composer.$input.val(),
+            default_body: old_composer && old_composer.$input && old_composer.$input.html(),
             default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
         });
         this.composer.on('input_focused', this, function () {
@@ -331,7 +330,7 @@ var Chatter = Widget.extend(chat_mixin, {
                     var suggested_partners = [];
                     var thread_recipients = result[self.context.default_res_id];
                     _.each(thread_recipients, function (recipient) {
-                        var parsed_email = utils.parse_email(recipient[1]);
+                        var parsed_email = recipient[1] && utils.parse_email(recipient[1]);
                         suggested_partners.push({
                             checked: true,
                             partner_id: recipient[0],

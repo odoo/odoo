@@ -52,11 +52,23 @@ class ProjectTaskType(models.Model):
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
+    @api.multi
+    def unlink(self):
+        stages = self
+        default_project_id = self.env.context.get('default_project_id')
+        if default_project_id:
+            shared_stages = self.filtered(lambda x: len(x.project_ids) > 1 and default_project_id in x.project_ids.ids)
+            tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', default_project_id), ('stage_id', 'in', self.ids)])
+            if shared_stages and not tasks:
+                shared_stages.write({'project_ids': [(3, default_project_id)]})
+                stages = self.filtered(lambda x: x not in shared_stages)
+        return super(ProjectTaskType, stages).unlink()
+
 
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['mail.alias.mixin', 'mail.thread', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
     _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
@@ -123,7 +135,7 @@ class Project(models.Model):
             'view_id': False,
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
-            'help': _('''<p class="oe_view_nocontent_create">
+            'help': _('''<p class="o_view_nocontent_smiling_face">
                         Documents are attached to the tasks and issues of your project.</p><p>
                         Send messages or log internal notes with attachments to link
                         documents to your project.
@@ -151,7 +163,8 @@ class Project(models.Model):
         action_data = None
         if action:
             action.sudo().write({
-                "help": _('''<p class="oe_view_nocontent_create">Click to create a new project.</p>''')
+                "help": _('''<p class="o_view_nocontent_smiling_face">
+                    Create a new project</p>''')
             })
             action_data = action.read()[0]
         # Reload the dashboard
@@ -280,6 +293,7 @@ class Project(models.Model):
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -304,7 +318,11 @@ class Project(models.Model):
 
     @api.multi
     def write(self, vals):
-        res = super(Project, self).write(vals)
+        # directly compute is_favorite to dodge allow write access right
+        if 'is_favorite' in vals:
+            vals.pop('is_favorite')
+            self._fields['is_favorite'].determine_inverse(self)
+        res = super(Project, self).write(vals) if vals else True
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
@@ -390,17 +408,8 @@ class Project(models.Model):
     def open_tasks(self):
         ctx = dict(self._context)
         ctx.update({'search_default_project_id': self.id})
-        kanban_view_id = self.env.ref('project.view_task_kanban')
-        return {
-            'name': _('Tasks'),
-            'res_model': 'project.task',
-            'type': 'ir.actions.act_window',
-            'view_id': kanban_view_id.id,
-            'views': [(kanban_view_id.id, 'kanban'), (False, 'form')],
-            'view_mode': 'kanban,tree,form',
-            'view_type': 'form',
-            'context': ctx
-        }
+        action = self.env['ir.actions.act_window'].for_xml_id('project', 'act_project_project_2_project_task_all')
+        return dict(action, context=ctx)
 
     @api.multi
     def action_view_all_rating(self):
@@ -435,7 +444,7 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin', 'rating.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
@@ -469,7 +478,7 @@ class Task(models.Model):
         return stages.browse(stage_ids)
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
+    name = fields.Char(string='Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Low'),
@@ -477,7 +486,7 @@ class Task(models.Model):
         ], default='0', index=True, string="Priority")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
-    stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
+    stage_id = fields.Many2one('project.task.type', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
@@ -517,19 +526,19 @@ class Task(models.Model):
     partner_id = fields.Many2one('res.partner',
         string='Customer',
         default=_get_default_partner)
-    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
+    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company',
         string='Company',
         default=lambda self: self.env['res.company']._company_default_get())
     color = fields.Integer(string='Color Index')
-    user_email = fields.Char(related='user_id.email', string='User Email', readonly=True)
+    user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
         help="Attachment that don't come from message.")
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True, related_sudo=False)
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
     parent_id = fields.Many2one('project.task', string='Parent Task')
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
@@ -638,6 +647,7 @@ class Task(models.Model):
                 raise ValidationError(_('Task %s can not have a parent task and subtasks. Only one subtask level is allowed.' % (task.name,)))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -690,10 +700,16 @@ class Task(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
+        tname = _("task")
+        project_id = self.env.context.get('default_project_id', False)
+        if project_id:
+            name = self.env['project.project'].browse(project_id).label_tasks
+            if name: tname = name.lower()
+
         self = self.with_context(
             empty_list_help_id=self.env.context.get('default_project_id'),
             empty_list_help_model='project.project',
-            empty_list_help_document_name=_("tasks")
+            empty_list_help_document_name=tname,
         )
         return super(Task, self).get_empty_list_help(help)
 
@@ -887,11 +903,11 @@ class Task(models.Model):
         return groups
 
     @api.model
-    def message_get_reply_to(self, res_ids, default=None):
+    def _notify_get_reply_to(self, res_ids, default=None):
         """ Override to get the reply_to of the parent project. """
         tasks = self.sudo().browse(res_ids)
         project_ids = tasks.mapped('project_id').ids
-        aliases = self.env['project.project'].message_get_reply_to(project_ids, default=default)
+        aliases = self.env['project.project']._notify_get_reply_to(project_ids, default=default)
         return {task.id: aliases.get(task.project_id.id, False) for task in tasks}
 
     @api.multi
@@ -967,14 +983,12 @@ class Task(models.Model):
         return recipients
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
-        res = super(Task, self).message_get_email_values(notif_mail=notif_mail)
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers.update(safe_eval(res['headers']))
-            except Exception:
-                pass
+    def _notify_specific_email_values(self, message):
+        res = super(Task, self)._notify_specific_email_values(message)
+        try:
+            headers = safe_eval(res.get('headers', dict()))
+        except Exception:
+            headers = {}
         if self.project_id:
             current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
@@ -984,7 +998,7 @@ class Task(models.Model):
         res['headers'] = repr(headers)
         return res
 
-    def _message_post_after_hook(self, message, values):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -995,7 +1009,7 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message, values)
+        return super(Task, self)._message_post_after_hook(message, values, notif_layout)
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})

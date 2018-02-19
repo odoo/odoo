@@ -234,8 +234,8 @@
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
         <field name="context">{'default_technician_user_id': uid}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new maintenance request.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
             </p>
@@ -253,8 +253,8 @@
             'default_category_id': active_id,
         }</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new maintenance request.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new maintenance request
             </p><p>
                 Follow the process of the request and communicate with the collaborator.
             </p>
@@ -270,6 +270,13 @@
             'default_equipment_id': active_id,
         }</field>
         <field name="domain">[('equipment_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new maintenance request
+            </p><p>
+                Follow the process of the request and communicate with the collaborator.
+            </p>
+        </field>
     </record>
 
     <record id="hr_equipment_todo_request_action_from_dashboard" model="ir.actions.act_window">
@@ -280,6 +287,13 @@
             'default_maintenance_team_id': active_id,
         }</field>
         <field name="domain">[('maintenance_team_id', '=', active_id), ('maintenance_type', 'in', context.get('maintenance_type', ['preventive', 'corrective']))]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new maintenance request
+            </p><p>
+                Follow the process of the request and communicate with the collaborator.
+            </p>
+        </field>
     </record>
 
     <record id="hr_equipment_request_action_cal" model="ir.actions.act_window">
@@ -287,6 +301,13 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">calendar,kanban,tree,form,pivot,graph</field>
         <field name="view_id" ref="hr_equipment_view_calendar"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new maintenance request
+            </p><p>
+                Follow the process of the request and communicate with the collaborator.
+            </p>
+        </field>
     </record>
 
     <record id="maintenance_request_action_reports" model="ir.actions.act_window">
@@ -294,8 +315,10 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">graph,pivot,kanban,tree,form,calendar</field>
         <field name="help" type="html">
-            <p>
-                No maintenance request.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new maintenance request
+            </p><p>
+                Follow the process of the request and communicate with the collaborator.
             </p>
         </field>
     </record>
@@ -518,13 +541,11 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="hr_equipment_view_kanban"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new equipment.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new equipment
             </p><p>
-                This application helps you to track equipments used by employees.
-                Create some laptop, printer or phone and link each equipment to
-                an employee or department. You will manage allocations, issues
-                and maintenance of equipment.
+                Track equipments and link it to an employee or department.
+                You will be able to manage allocations, issues and maintenance of your equipment.
             </p>
         </field>
     </record>
@@ -541,12 +562,11 @@
             'default_category_id': active_id,
         }</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new Engine.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new equipment
             </p><p>
-                This application helps you to track equipments used by employees.
-                Create some laptop, printer or phone and link each equipment to an employee or department.
-                You will manage allocations, issues and maintenance of equipment.
+                Track equipments and link it to an employee or department.
+                You will be able to manage allocations, issues and maintenance of your equipment.
             </p>
         </field>
     </record>
@@ -665,8 +685,8 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="hr_equipment_category_view_tree"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new equipment category.
+            <p class="o_view_nocontent_smiling_face">
+                Add a new equipment category
             </p>
         </field>
     </record>
@@ -719,8 +739,8 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_type">form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a stage in the maintenance request.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new stage in the maintenance request
           </p>
         </field>
     </record>
@@ -930,8 +950,8 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('maintenance_team_view_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('maintenance_team_view_kanban')})]"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a team in the maintenance request.
+          <p class="o_view_nocontent_smiling_face">
+            Add a team in the maintenance request
           </p>
         </field>
     </record>
@@ -943,8 +963,8 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="maintenance_team_kanban"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a stage in the maintenance request.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new stage in the maintenance request
           </p>
         </field>
     </record>

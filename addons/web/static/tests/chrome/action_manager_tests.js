@@ -1,9 +1,11 @@
 odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
+var ReportClientAction = require('report.client_action');
+
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
-var ReportClientAction = require('report.client_action');
+var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -18,11 +20,11 @@ QUnit.module('ActionManager', {
                     bar: {string: "Bar", type: "many2one", relation: 'partner'},
                 },
                 records: [
-                    {id: 1, display_name: "First record", foo: "yop"},
-                    {id: 2, display_name: "Second record", foo: "blip"},
-                    {id: 3, display_name: "Third record", foo: "gnap"},
-                    {id: 4, display_name: "Fourth record", foo: "plop"},
-                    {id: 5, display_name: "Fifth record", foo: "zoup"},
+                    {id: 1, display_name: "First record", foo: "yop", bar: 2},
+                    {id: 2, display_name: "Second record", foo: "blip", bar: 1},
+                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1},
+                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2},
+                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2},
                 ],
             },
             pony: {
@@ -87,6 +89,11 @@ QUnit.module('ActionManager', {
             res_model: 'pony',
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [false, 'form']],
+        }, {
+            id: 9,
+            name: 'A Client Action',
+            tag: 'ClientAction',
+            type: 'ir.actions.client',
         }];
 
         this.archs = {
@@ -774,6 +781,59 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('change a param of an ir.actions.client in the url', function (assert) {
+        assert.expect(7);
+
+        var ClientAction = Widget.extend(ControlPanelMixin, {
+            className: 'o_client_action',
+            init: function (parent, action) {
+                this._super.apply(this, arguments);
+                var context = action.context;
+                this.a = context.params && context.params.a || 'default value';
+            },
+            start: function () {
+                assert.step('start');
+                this.$el.text(this.a);
+                this.trigger_up('push_state', {
+                    controllerID: this.controllerID,
+                    state: {a: this.a},
+                });
+            },
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        // execute the client action
+        actionManager.doAction(9);
+
+        assert.strictEqual(actionManager.$('.o_client_action').text(), 'default value',
+            "should have rendered the client action");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+
+        // update param 'a' in the url
+        actionManager.loadState({
+            action: 9,
+            a: 'new value',
+        });
+
+        assert.strictEqual(actionManager.$('.o_client_action').text(), 'new value',
+            "should have rerendered the client action with the correct param");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should still be one controller in the breadcrumbs");
+
+        // should have executed the client action twice
+        assert.verifySteps(['start', 'start']);
+
+        actionManager.destroy();
+        delete core.action_registry.map.ClientAction;
+    });
+
     QUnit.module('Concurrency management');
 
     QUnit.test('drop previous actions if possible', function (assert) {
@@ -1267,12 +1327,13 @@ QUnit.module('ActionManager', {
     QUnit.module('Report actions');
 
     QUnit.test('can execute report actions from db ID', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var actionManager = createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            services: [ReportService],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1289,12 +1350,15 @@ QUnit.module('ActionManager', {
             },
         });
         actionManager.doAction(7, {
-            on_close: assert.step.bind(assert, 'on_close'),
+            on_close: function () {
+                assert.step('on_close');
+            },
         });
 
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
+            '/web/static/src/img/spin.png', // block UI image
             '/report/download',
             'on_close',
         ]);
@@ -1303,12 +1367,13 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('should trigger a notification if wkhtmltopdf is to upgrade', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var actionManager = createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            services: [ReportService],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1330,11 +1395,11 @@ QUnit.module('ActionManager', {
             },
         });
         actionManager.doAction(7);
-
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             'notification',
+            '/web/static/src/img/spin.png', // block UI image
             '/report/download',
         ]);
 
@@ -1362,6 +1427,7 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            services: [ReportService],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -2161,6 +2227,88 @@ QUnit.module('ActionManager', {
             "there should be one controller in the breadcrumbs");
         assert.strictEqual($('.o_control_panel .breadcrumb li:last').text(), 'Partners',
             "breadcrumbs should contain the name of the current action");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('honor group_by specified in actions context', function (assert) {
+        assert.expect(5);
+
+        _.findWhere(this.actions, {id: 3}).context = "{'group_by': 'bar'}";
+        this.archs['partner,false,search'] = '<search>'+
+            '<group>'+
+                '<filter name="foo" string="foo" context="{\'group_by\': \'foo\'}"/>' +
+            '</group>'+
+        '</search>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(3);
+
+        assert.strictEqual(actionManager.$('.o_list_view_grouped').length, 1,
+            "should be grouped");
+        assert.strictEqual(actionManager.$('.o_group_header').length, 2,
+            "should be grouped by 'bar' (two groups) at first load");
+
+        // groupby 'bar' using the searchview
+        $('.o_control_panel .o_searchview_more').click(); // open search view sub menus
+        $('.o_control_panel .o_cp_right button:contains(Group By)').click(); // open groupby dropdown
+        $('.o_control_panel .o_group_by_menu a:first').click(); // click on 'Foo'
+
+        assert.strictEqual(actionManager.$('.o_group_header').length, 5,
+            "should be grouped by 'foo' (five groups)");
+
+        // remove the groupby in the searchview
+        $('.o_control_panel .o_searchview .o_facet_remove').click();
+
+        assert.strictEqual(actionManager.$('.o_list_view_grouped').length, 1,
+            "should still be grouped");
+        assert.strictEqual(actionManager.$('.o_group_header').length, 2,
+            "should be grouped by 'bar' (two groups) at reload");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('switch request to unknown view type', function (assert) {
+        assert.expect(7);
+
+        this.actions.push({
+            id: 33,
+            name: 'Partners',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list'], [1, 'kanban']], // no form view
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.doAction(33);
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "should display the list view");
+
+        // try to open a record in a form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "should still display the list view");
+        assert.strictEqual(actionManager.$('.o_form_view').length, 0,
+            "should not display the form view");
+
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            '/web/dataset/search_read',
+        ]);
 
         actionManager.destroy();
     });

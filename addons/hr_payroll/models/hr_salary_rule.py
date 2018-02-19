@@ -36,6 +36,7 @@ class HrPayrollStructure(models.Model):
             raise ValidationError(_('Error ! You cannot create a recursive Salary Structure.'))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, code=_("%s (copy)") % (self.code))

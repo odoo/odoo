@@ -29,7 +29,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
           "override_session" is set to true.
      */
     init: function (parent, origin, options) {
-        mixins.EventDispatcherMixin.init.call(this, parent);
+        mixins.EventDispatcherMixin.init.call(this);
+        this.setParent(parent);
         options = options || {};
         this.module_list = (options.modules && options.modules.slice()) || (window.odoo._modules && window.odoo._modules.slice()) || [];
         this.server = null;

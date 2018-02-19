@@ -105,6 +105,10 @@ var db = {
             {id: 9, display_name: "Delta PC - Delta PC"},
         ]
     },
+    'account.analytic.tag': {
+        fields: {},
+        records: []
+    },
     'account.bank.statement': {
         fields: {},
         reconciliation_widget_preprocess: function () {
@@ -507,6 +511,7 @@ odoo.define('account.reconciliation_tests', function (require) {
 
 var ReconciliationClientAction = require('account.ReconciliationClientAction');
 var demoData = require('account.reconciliation_tests.data');
+
 var testUtils = require('web.test_utils');
 
 QUnit.module('account', {
@@ -572,8 +577,8 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         widget.$('.accounting_view tfoot td:first').trigger('click');
-        assert.strictEqual(widget.$('.create .o_input').length, 6,
-            "create panel should display 5 fields (account_id, tax_id, analytic_account_id, label, amount)");
+        assert.strictEqual(widget.$('.create input.o_input').length, 7,
+            "create panel should contain 7 fields (account_id, tax_id, journal_id, analytic_account_id, analytic_tag_ids, label, amount)");
         assert.strictEqual(widget.$('.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier').length, 3,
             "account_id, label and amount should be required fields");
         assert.strictEqual(widget.$('.create .create_label input').val(), 'SAJ/2014/002 and SAJ/2014/003',
@@ -643,13 +648,15 @@ QUnit.module('account', {
                                                                   "counterpart_aml_id": 109,
                                                                   "credit": 650,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0002"
+                                                                  "name": "INV/2017/0002",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 },
                                                                 {
                                                                   "counterpart_aml_id": 112,
                                                                   "credit": 525,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0003"
+                                                                  "name": "INV/2017/0003",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 }],
                                     payment_aml_ids: [], new_aml_dicts: []}]],
                 "Should call process_reconciliations with ids");
@@ -691,7 +698,8 @@ QUnit.module('account', {
                                         account_id: 287,
                                         credit: 1175,
                                         debit: 0,
-                                        name: 'SAJ/2014/002 and SAJ/2014/003'
+                                        name: 'SAJ/2014/002 and SAJ/2014/003',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }]}]],
                 "Should call process_reconciliations with ids");
         });
@@ -731,14 +739,15 @@ QUnit.module('account', {
         // We also create a line which is the open balance.
         testUtils.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8, 
+                [[5],[{partner_id: 8,
                                     counterpart_aml_dicts: [{
                                         counterpart_aml_id: 109,
                                         credit: 650,
                                         debit: 0,
-                                        name: 'INV/2017/0002'
+                                        name: 'INV/2017/0002',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }],
-                                    payment_aml_ids: [], 
+                                    payment_aml_ids: [],
                                     new_aml_dicts: [{
                                         account_id: 287,
                                         credit: 525,
@@ -767,13 +776,7 @@ QUnit.module('account', {
                             partner_id: false,
                             counterpart_aml_dicts:[],
                             payment_aml_ids: [392],
-                            new_aml_dicts: [
-                                {
-                                  "credit": 343.42,
-                                  "debit": 0,
-                                  "name": "Bank fees : Open balance"
-                                }
-                            ],
+                            new_aml_dicts: [],
                         }]
                     ], "should call process_reconciliations with partial reconcile values");
                 }
@@ -802,14 +805,14 @@ QUnit.module('account', {
         assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 0, "should not display the partial reconciliation alert");
+        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
         assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should not display the reconcile button");
         assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
-        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 0, "should not display a partial reconciliation alert");
-        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should not display the partial reconciliation information");
+        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
+        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_true'), "should display the partial reconciliation information");
         assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
-        assert.strictEqual( widget.$el.data('mode'), "match", "should be inactive mode");
+        assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
         widget.$('button.btn-default:not(hidden)').trigger('click');
 
         clientAction.destroy();
@@ -890,7 +893,7 @@ QUnit.module('account', {
         var widget = clientAction.widgets[0];
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(widget.$('.match table tr').length, 2, "agrolait should have 2 propositions for reconciliation");
-        
+
         // Adding the two propositions
         // This is in order to try that after changing partner the propositions are emptied
         widget.$('.match .cell_account_code:first').trigger('click');

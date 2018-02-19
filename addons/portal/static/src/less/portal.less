@@ -143,6 +143,20 @@ hr {
     min-height: 24px;
 }
 
+// Images spacing
+img, .media_iframe_video, .o_image {
+    &.pull-right {
+        margin-left: @grid-gutter-width / 2;
+    }
+    &.pull-left {
+        margin-right: @grid-gutter-width / 2;
+    }
+}
+img {
+    // Make all images responsive by default but with inline-block display
+    .img-responsive(inline-block);
+}
+
 // Others
 ::-moz-selection {
     background: rgba(150, 150, 220, 0.3);

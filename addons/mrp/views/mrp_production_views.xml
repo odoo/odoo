@@ -48,7 +48,7 @@
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
                     <span class="label label-danger" attrs="{'invisible': ['|',('availability', 'in', ('assigned', 'none')), ('state', 'not in', ('confirmed','progress'))]}">Raw materials not available!</span>
                     <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done"/>
-                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', '|', ('state', '=', 'cancel'), ('id', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="If the manufacturing order is unlocked you can add to the initial demand."/>
+                    <button name="action_toggle_is_locked" attrs="{'invisible': ['|', '|', ('state', '=', 'cancel'), ('id', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to correct what has been consumed or produced."/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="mrp.group_mrp_manager" type="object"/>
                 </header>
                 <sheet>
@@ -56,6 +56,7 @@
                     <field name="post_visible" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
+                        <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="workorder_done_count" widget="statinfo" nolabel="1"/> / <field name="workorder_count" widget="statinfo" nolabel="1"/></span>
@@ -297,14 +298,8 @@
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_todo': True}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create a Manufacturing Order.
-              </p><p>
-                Based on a Bill of Material, a Manufacturing Order will consume raw materials
-                and produce finished products.
-              </p><p>
-                Manufacturing Orders can be generated automatically based on customer
-                requirements or reordering rules.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new manufacturing order
               </p>
             </field>
         </record>
@@ -335,8 +330,8 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="domain">[('state', '=', 'confirmed'), ('routing_id', '!=', False)]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to start a new manufacturing order.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new manufacturing order
               </p><p>
                 A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.
@@ -356,8 +351,8 @@
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('availability', 'in', ('waiting', 'partially_available'))]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to start a new manufacturing order.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new manufacturing order
               </p><p>
                 A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.

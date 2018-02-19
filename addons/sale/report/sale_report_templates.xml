@@ -64,6 +64,9 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+            <!-- if Rounding Method is computed per line -->
+            <t t-set="display_taxamount"
+               t-value="doc.company_id.tax_calculation_rounding_method == 'round_per_line'"/>
 
             <t t-foreach="doc.order_lines_layouted()" t-as="page">
                 <table class="table table-condensed">
@@ -74,6 +77,7 @@
                             <th class="text-right">Unit Price</th>
                             <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
                             <th class="text-right">Taxes</th>
+                            <th t-if="display_taxamount" class="text-right">Tax Amount</th>
                             <th class="text-right" groups="sale.group_show_price_subtotal">Amount</th>
                             <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
                         </tr>
@@ -105,6 +109,10 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
+                                    </td>
+                                    <td t-if="display_taxamount" class="text-right">
+                                        <span t-field="l.price_tax"
+                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                     </td>
                                     <td class="text-right" groups="sale.group_show_price_subtotal">
                                         <span t-field="l.price_subtotal"
@@ -150,7 +158,10 @@
                             <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
                                 <tr style="border-bottom:1px solid #dddddd;">
                                     <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
-                                        <td><span t-esc="amount_by_group[0]"/></td>
+                                        <td>
+                                            <span t-esc="amount_by_group[0]"/>
+                                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
+                                        </td>
                                         <td class="text-right">
                                             <span t-esc="amount_by_group[1]"
                                                 t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
@@ -158,7 +169,7 @@
                                     </t>
                                     <t t-else ="">
                                         <td>
-                                            <span t-esc="amount_by_group[0]"/><span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
+                                            <span t-esc="amount_by_group[0]"/>
                                         </td>
                                         <td class="text-right">
                                             <span t-esc="amount_by_group[1]"

@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
+    <!-- survey assets  -->
+    <template id="survey_assets" name="Survey Results assets">
+        <script src="/web/static/lib/nvd3/d3.v3.js"></script>
+        <script src="/web/static/lib/nvd3/nv.d3.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+        <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
+        <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fonts.less" />
+        <!-- Some helper classes (like mt- mb-) are required for survey templates  -->
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/utils.less"/>
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/>
+        <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+    </template>
+
+    <!-- Forbidden error messages-->
+    <template id="403">
+        <t t-call="survey.layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt32">403: Forbidden</h1>
+                    <p>The page you were looking for could not be authorized.</p>
+                    <p>Maybe you were looking for
+                        <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form">this page</a> ?
+                    </p>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <!-- "Thank you" message when the survey is completed -->
     <template id="sfinished" name="Survey Finished">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <t t-call="survey.back" />
@@ -20,7 +54,7 @@
 
     <!-- Message when the survey is not open  -->
     <template id="notopen" name="Survey not open">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <div class="jumbotron mt32">
@@ -34,7 +68,7 @@
 
     <!-- Message when a login is required  -->
     <template id="auth_required" name="Login required for this survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <div class="jumbotron mt32">
@@ -48,7 +82,7 @@
 
     <!-- Message when the survey has no pages  -->
     <template id="nopages" name="Survey has no pages">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <t t-call="survey.back" />
@@ -68,9 +102,42 @@
         </div>
     </template>
 
+    <!-- new layout for survey -->
+    <template id="survey.layout" name="Survey Layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="web.assets_common"/>
+                <t t-call-assets="survey.survey_assets"/>
+            </t>
+            <body>
+                <header>
+                    <div><title>Odoo</title></div>
+                    <div class="text-center">
+                        <img t-attf-src="/web/binary/company_logo"/>
+                    </div>
+                </header>
+                <div id="wrap" class="oe_structure oe_empty"/>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+            <xpath expr="//footer" position="replace">
+                <div class="container mt16 mb8">
+                    <div class="pull-right" t-ignore="true" t-if="not editable">
+                        Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
+                        <a target="_blank" class="label label-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
+                    </div>
+                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+                    </div>
+                </div>
+            </xpath>
+        </t>
+    </template>
+
     <!-- First page of a survey -->
     <template id="survey_init" name="Survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="oe_structure" />
                 <div class="container">
@@ -89,15 +156,8 @@
     </template>
 
     <!-- A survey -->
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/survey/static/src/js/survey.js" />
-            <script type="text/javascript" src="/survey/static/src/js/tour_test_survey.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
-        </xpath>
-    </template>
     <template id="survey" name="Survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
@@ -269,15 +329,9 @@
         </div>
     </template>
 
-    <template id="assets_frontend_survey" inherit_id="website.assets_frontend" name="Printing Survey assets">
-        <xpath expr="." position="inside">
-            <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
-        </xpath>
-    </template>
-
     <!-- Printable view of a survey (all pages) -->
     <template id="survey_print" name="Survey">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <t t-call="survey.back" />

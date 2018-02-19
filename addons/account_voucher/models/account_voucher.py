@@ -120,6 +120,29 @@ class AccountVoucher(models.Model):
     def _get_journal_currency(self):
         self.currency_id = self.journal_id.currency_id.id or self.company_id.currency_id.id
 
+    @api.depends('company_id', 'pay_now', 'account_id')
+    def _compute_payment_journal_id(self):
+        for voucher in self:
+            if voucher.pay_now != 'pay_now':
+                continue
+            domain = [
+                ('type', 'in', ('bank', 'cash')),
+                ('company_id', '=', voucher.company_id.id),
+            ]
+            if voucher.account_id and voucher.account_id.internal_type == 'liquidity':
+                field = 'default_debit_account_id' if voucher.voucher_type == 'sale' else 'default_credit_account_id'
+                domain.append((field, '=', voucher.account_id.id))
+            voucher.payment_journal_id = self.env['account.journal'].search(domain, limit=1)
+
+    def _inverse_payment_journal_id(self):
+        for voucher in self:
+            if voucher.pay_now != 'pay_now':
+                continue
+            if voucher.voucher_type == 'sale':
+                voucher.account_id = voucher.payment_journal_id.default_debit_account_id
+            else:
+                voucher.account_id = voucher.payment_journal_id.default_credit_account_id
+
     @api.multi
     @api.depends('tax_correction', 'line_ids.price_subtotal')
     def _compute_total(self):
@@ -250,6 +273,7 @@ class AccountVoucher(models.Model):
             'journal_id': self.payment_journal_id.id,
             'company_id': self.company_id.id,
             'communication': self.name,
+
         }
 
     @api.multi
@@ -282,6 +306,7 @@ class AccountVoucher(models.Model):
                 'move_id': move_id,
                 'partner_id': self.partner_id.commercial_partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
+                'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'quantity': 1,
                 'credit': abs(amount) if self.voucher_type == 'sale' else 0.0,
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
@@ -374,6 +399,7 @@ class AccountVoucherLine(models.Model):
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")
     currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id')

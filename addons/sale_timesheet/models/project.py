@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class Project(models.Model):
     _inherit = 'project.project'
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', readonly=True, help="Sale order line from which the project has been created. Used for tracability.")
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', domain=[('is_expense', '=', False)], readonly=True, help="Sale order line from which the project has been created. Used for tracability.")
 
     @api.multi
     def action_view_timesheet(self):
@@ -24,8 +24,8 @@ class Project(models.Model):
             'view_mode': 'tree,form',
             'view_type': 'form',
             'help': _("""
-                <p class="oe_view_nocontent_create">
-                    Click to record timesheets.
+                <p class="o_view_nocontent_smiling_face">
+                    Record timesheets
                 </p><p>
                     You can register and track your workings hours by project every
                     day. Every time spent on a project will become a cost and can be re-invoiced to
@@ -56,7 +56,15 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id)]")
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False)]")
+
+    @api.multi
+    @api.constrains('sale_line_id')
+    def _check_sale_line_type(self):
+        for task in self:
+            if task.sale_line_id:
+                if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
+                    raise ValidationError(_("The Sales order line should be one selling a service, and no coming from expense."))
 
     @api.model
     def create(self, values):

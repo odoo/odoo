@@ -478,7 +478,7 @@ class StockMove(TransactionCase):
             'product_id': self.product2.id,
         })
 
-        move1.with_context(debug=True).move_line_ids[1].lot_id = lot3
+        move1.move_line_ids[1].lot_id = lot3
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 0.0)
@@ -605,6 +605,55 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot2, strict=True), 0.0)
         quants = self.env['stock.quant']._gather(self.product2, self.stock_location)
         self.assertEqual(len(quants), 0)
+
+    def test_mixed_tracking_reservation_8(self):
+        """ Send one product tracked by lot to a customer. In your stock, there are one tracked and
+        one untracked quant. Reserve the move, then edit the lot to one not present in stock. The
+        system will update the reservation and use the untracked quant. Now unreserve, no error
+        should happen
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product2.id,
+        })
+
+        # at first, we only make the tracked quant available in stock to make sure this one is selected
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1)
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_mixed_tracking_reservation_7',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        self.assertEqual(move1.reserved_availability, 1.0)
+        self.assertEqual(move1.move_line_ids.lot_id.id, lot1.id)
+
+        # change the lot_id to one not available in stock while an untracked quant is available
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1)
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product2.id,
+        })
+        move1.move_line_ids.lot_id = lot2
+        self.assertEqual(move1.reserved_availability, 1.0)
+        self.assertEqual(move1.move_line_ids.lot_id.id, lot2.id)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
+
+        # unreserve
+        move1._do_unreserve()
+
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(len(move1.move_line_ids), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
 
     def test_putaway_1(self):
         """ Receive products from a supplier. Check that putaway rules are rightly applied on
@@ -755,6 +804,28 @@ class StockMove(TransactionCase):
         customer_quants = self.env['stock.quant']._gather(self.product1, self.customer_location)
         self.assertEqual(customer_quants.quantity, 30)
         self.assertEqual(customer_quants.reserved_quantity, 0)
+
+    def test_availability_5(self):
+        """ Check that rerun action assign only create new stock move
+        lines instead of adding quantity in existing one.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 2.0)
+        # move from shelf1
+        move = self.env['stock.move'].create({
+            'name': 'test_edit_moveline_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 4.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 4.0)
+        move._action_assign()
+
+        self.assertEqual(len(move.move_line_ids), 4.0)
 
     def test_unreserve_1(self):
         """ Check that unreserving a stock move sets the products reserved as available and
@@ -1678,7 +1749,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.product_qty, 5)
         move_line.qty_done = 5.0
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation
-        move_line.with_context(debug=True).lot_id = lot1
+        move_line.lot_id = lot1
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation when assgning a lot now
 
         move1._action_done()
@@ -3083,7 +3154,7 @@ class StockMove(TransactionCase):
         move1._action_confirm()
         move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
-        move1.with_context(debug=True).product_uom_qty = 5
+        move1.product_uom_qty = 5
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 5)
         self.assertEqual(len(move1.move_line_ids), 1)

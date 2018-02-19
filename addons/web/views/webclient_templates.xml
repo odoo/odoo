@@ -76,6 +76,7 @@
         <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/time.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/mixins.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/service_mixins.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/rpc.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/widget.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/registry.js"></script>
@@ -115,7 +116,6 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/fields.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/fields_extra.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/views.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/views_extra.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/pivot_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/graph_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view.less"/>
@@ -123,6 +123,7 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view_extra.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_dashboard.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_examples_dialog.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_column_progressbar.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_view.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_view_mobile.less"/>
@@ -154,6 +155,7 @@
         <script type="text/javascript" src="/web/static/src/js/chrome/control_panel.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/root_widget.js"></script>
         <script type="text/javascript" src="/web/static/src/js/_deprecated/data.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/context.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
@@ -214,14 +216,17 @@
         <script type="text/javascript" src="/web/static/src/js/views/graph/graph_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/graph/graph_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_column.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_quick_create.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_column_progressbar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_column_quick_create.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_model.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_examples_registry.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record_quick_create.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer_mobile.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/quick_create_form_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/list/list_editable_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/list/list_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/list/list_view.js"></script>
@@ -236,6 +241,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_quick_create.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/attach_document.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>

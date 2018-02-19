@@ -50,24 +50,24 @@
             sequence="1"/>
 
         <menuitem id="report_sales_team"
-            name="Sales Channels"
+            name="Sales Channel Dashboard"
             parent="menu_sale_report"
             action="sales_team.crm_team_salesteams_act"
-            sequence="2"/>
+            sequence="3"/>
 
         <menuitem id="report_all_channels_sales"
             action="report_all_channels_sales_action"
-            name="All Channels Sales Orders"
+            name="Sales by Channel"
             parent="menu_sale_report"
-            sequence="3"/>
+            sequence="2"/>
 
         <menuitem id="product_menu_catalog" name="Products" action="product.product_template_action" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
-        <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="product.group_product_variant" active="False"/>
+        <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="base.group_no_one" active="False"/>
         <menuitem action="product.product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
-        <menuitem id="menu_attribute_action" action="product.attribute_action" parent="prod_config_main" sequence="1" groups="product.group_product_variant" active="False"/>
-        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant" active="False"/>
-        <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
+        <menuitem id="menu_attribute_action" action="product.attribute_action" parent="prod_config_main" sequence="1" groups="base.group_no_one" active="False"/>
+        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="base.group_no_one" active="False"/>
+        <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="base.group_no_one" sequence="2" active="False"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom" active="False"/>
         <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom" active="False"/>
         <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="product.group_uom" active="False"/>
@@ -247,7 +247,8 @@
                                             <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                             <field name="invoice_status" invisible="1"/>
                                             <field name="qty_to_invoice" invisible="1"/>
-                                            <field name="qty_delivered_updateable" invisible="1"/>
+                                            <field name="qty_delivered_manual" invisible="1"/>
+                                            <field name="qty_delivered_method" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
@@ -259,7 +260,7 @@
                                             </div>
                                             <label for="qty_delivered" string="Delivered Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
-                                                <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                                <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
                                             </div>
                                             <label for="qty_invoiced" string="Invoiced Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
@@ -272,15 +273,15 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                            <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
                                                 attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="customer_lead"/>
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
                                             </div>
-                                            <label for="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
+                                            <label for="analytic_tag_ids" groups="analytic.group_analytic_tags"/>
                                             <div>
-                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_accounting" options="{'color_field': 'color'}"/>
+                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" options="{'color_field': 'color'}"/>
                                             </div>
                                         </group>
                                     </group>
@@ -308,7 +309,9 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                     />
                                     <field name="qty_delivered"
-                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])], 'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])], 'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
+                                    <field name="qty_delivered_manual" invisible="1"/>
+                                    <field name="qty_delivered_method" invisible="1"/>
                                     <field name="qty_invoiced"
                                         attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                     <field name="qty_to_invoice" invisible="1"/>
@@ -316,7 +319,7 @@
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                         context="{'company_id': parent.company_id}"
                                         groups="product.group_uom" options='{"no_open": True}'/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                     <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
@@ -324,7 +327,6 @@
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
                                     <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
-                                    <field name="qty_delivered_updateable" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
                                     <field name="customer_lead" invisible="1"/>
@@ -392,7 +394,7 @@
                                 <group string="Reporting" name="technical" groups="base.group_no_one">
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
-                                <group name="utm_link" groups="base.group_no_one"/>    
+                                <group name="utm_link" groups="base.group_no_one"/>
                             </group>
                         </page>
                     </notebook>
@@ -493,13 +495,10 @@
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Create a Quotation, the first step of a new sale.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new quotation, the first step of a new sale!
                 </p><p>
-                    Once the quotation is confirmed, it becomes a sales order.
-                    You'll be able to invoice it and collect payments.
-                    From the <i>Sales Orders</i> menu, you can track delivery
-                    orders or services.
+                    Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
                 </p>
             </field>
         </record>
@@ -520,11 +519,11 @@
             <field name="domain">[('invoice_status','=','to invoice')]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
-              <p>
-                You will find here all orders that are ready to be invoiced.
+              <p class="o_view_nocontent_smiling_face">
+                No orders to invoice found
               </p><p>
-                You can select all orders and invoice them in batch, or check
-                every order and invoice them one by one.
+                You can select all orders and invoice them in batch,<br/>
+                or check every order and invoice them one by one.
               </p>
             </field>
         </record>
@@ -549,14 +548,14 @@
             <field name="context">{'create': False}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
-              <p>
-                Orders to upsell are orders having products with an invoicing
-                policy based on <i>ordered quantities</i> for which you have
-                delivered more than what have been ordered.
+              <p class="o_view_nocontent_smiling_face">
+                No orders to upsell found
               </p><p>
-                <i>Example: pre-paid service offers for which the customer have
-                to buy an extra pack of hours, because he used all his support
-                hours.</i>
+                These are orders with products invoiced based on ordered quantities, 
+                in the case you have delivered more than what was ordered.
+                A typical example is the pre-paid hours of service, 
+                where you want to sell extra hours to the customer
+                because the initial hours have already been used.
               </p>
             </field>
         </record>
@@ -574,11 +573,10 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation
-                to a Sales Order, then create the Invoice and collect the Payment.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>
@@ -690,6 +688,7 @@
                     <group string="Invoicing" name="invoicing">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
+                        <field name="expense_policy" widget="radio"/>
                     </group>
                 </group>
             </field>
@@ -825,12 +824,10 @@
                 }
             </field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation to a Sales Order, then create the Invoice and collect the Payment.
-              </p><p>
-                Note that once a Quotation becomes a Sales Order, it will be moved from the Quotations list to the Sales Order list.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>
@@ -865,14 +862,10 @@
             <field name="domain">[]</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation
-                to a Sales Order, then create the Invoice and collect the Payment.
-              </p><p>
-                Note that once a Quotation becomes a Sales Order, it will be moved
-                from the Quotations list to the Sales Order list.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>

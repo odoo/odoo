@@ -199,6 +199,21 @@ class PurchaseOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
         return super(PurchaseOrder, self).create(vals)
 
+    def write(self, vals):
+        if vals.get('order_line') and self.state == 'purchase':
+            for order in self:
+                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
+        res = super(PurchaseOrder, self).write(vals)
+        if vals.get('order_line') and self.state == 'purchase':
+            for order in self:
+                to_log = {}
+                for order_line in order.order_line:
+                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
+                        to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
+                if to_log:
+                    order._log_decrease_ordered_quantity(to_log)
+        return res
+
     @api.multi
     def unlink(self):
         for order in self:
@@ -207,6 +222,7 @@ class PurchaseOrder(models.Model):
         return super(PurchaseOrder, self).unlink()
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
@@ -236,7 +252,8 @@ class PurchaseOrder(models.Model):
         else:
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
+            if not self.currency_id:
+                self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
         return {}
 
     @api.onchange('fiscal_position_id')
@@ -306,7 +323,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': "purchase.mail_template_data_notification_email_purchase_order",
+            'custom_layout': "mail.mail_notification_borders",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
@@ -469,6 +486,41 @@ class PurchaseOrder(models.Model):
                     line.product_id.write(vals)
                 except AccessError:  # no write access rights -> just ignore
                     break
+
+    def _log_decrease_ordered_quantity(self, purchase_order_lines_quantities):
+
+        def _keys_in_sorted(move):
+            """ sort by picking and the responsible for the product the
+            move.
+            """
+            return (move.picking_id.id, move.product_id.responsible_id.id)
+
+        def _keys_in_groupby(move):
+            """ group by picking and the responsible for the product the
+            move.
+            """
+            return (move.picking_id, move.product_id.responsible_id)
+
+        def _render_note_exception_quantity_po(order_exceptions):
+            order_line_ids = self.env['purchase.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
+            purchase_order_ids = order_line_ids.mapped('order_id')
+            move_ids = self.env['stock.move'].concat(*rendering_context.keys())
+            impacted_pickings = move_ids.mapped('picking_id')._get_impacted_pickings(move_ids) - move_ids.mapped('picking_id')
+            values = {
+                'purchase_order_ids': purchase_order_ids,
+                'order_exceptions': order_exceptions.values(),
+                'impacted_pickings': impacted_pickings,
+            }
+            return self.env.ref('purchase.exception_on_po').render(values=values)
+
+        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        filtered_documents = {}
+        for (parent, responsible), rendering_context in documents.items():
+            if parent._name == 'stock.picking':
+                if parent.state == 'cancel':
+                    continue
+            filtered_documents[(parent, responsible)] = rendering_context
+        self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
 
     @api.multi
     def action_view_picking(self):
@@ -776,10 +828,10 @@ class PurchaseOrderLine(models.Model):
         self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
 
-        product_lang = self.product_id.with_context({
-            'lang': self.partner_id.lang,
-            'partner_id': self.partner_id.id,
-        })
+        product_lang = self.product_id.with_context(
+            lang=self.partner_id.lang,
+            partner_id=self.partner_id.id,
+        )
         self.name = product_lang.display_name
         if product_lang.description_purchase:
             self.name += '\n' + product_lang.description_purchase
@@ -820,12 +872,13 @@ class PurchaseOrderLine(models.Model):
     def _onchange_quantity(self):
         if not self.product_id:
             return
-
+        params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order[:10],
-            uom_id=self.product_uom)
+            uom_id=self.product_uom,
+            params=params)
 
         if seller or not self.date_planned:
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -882,9 +935,10 @@ class ProcurementRule(models.Model):
 
         supplier = self._make_po_select_supplier(values, suppliers)
         partner = supplier.name
+        # we put `supplier_info` in values for extensibility purposes
+        values['supplier'] = supplier
 
         domain = self._make_po_get_domain(values, partner)
-
         if domain in cache:
             po = cache[domain]
         else:
@@ -909,25 +963,11 @@ class ProcurementRule(models.Model):
         for line in po.order_line:
             if line.product_id == product_id and line.product_uom == product_id.uom_po_id:
                 if line._merge_in_existing_line(product_id, product_qty, product_uom, location_id, name, origin, values):
-                    procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
-                    seller = product_id._select_seller(
-                        partner_id=partner,
-                        quantity=line.product_qty + procurement_uom_po_qty,
-                        date=po.date_order and po.date_order[:10],
-                        uom_id=product_id.uom_po_id)
-
-                    price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, values['company_id']) if seller else 0.0
-                    if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
-                        price_unit = seller.currency_id.compute(price_unit, po.currency_id)
-
-                    po_line = line.write({
-                        'product_qty': line.product_qty + procurement_uom_po_qty,
-                        'price_unit': price_unit,
-                        'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
-                    })
+                    vals = self._update_purchase_order_line(product_id, product_qty, product_uom, values, line, partner)
+                    po_line = line.write(vals)
                     break
         if not po_line:
-            vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
+            vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, partner)
             self.env['purchase.order.line'].create(vals)
 
     def _get_purchase_schedule_date(self, values):
@@ -948,11 +988,29 @@ class ProcurementRule(models.Model):
 
         return schedule_date - relativedelta(days=int(seller.delay))
 
-    @api.multi
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, supplier):
+    def _update_purchase_order_line(self, product_id, product_qty, product_uom, values, line, partner):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         seller = product_id._select_seller(
-            partner_id=supplier.name,
+            partner_id=partner,
+            quantity=line.product_qty + procurement_uom_po_qty,
+            date=line.order_id.date_order and line.order_id.date_order[:10],
+            uom_id=product_id.uom_po_id)
+
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, values['company_id']) if seller else 0.0
+        if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
+            price_unit = seller.currency_id.compute(price_unit, line.order_id.currency_id)
+
+        return {
+            'product_qty': line.product_qty + procurement_uom_po_qty,
+            'price_unit': price_unit,
+            'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
+        }
+
+    @api.multi
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, partner):
+        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
+        seller = product_id._select_seller(
+            partner_id=partner,
             quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order[:10],
             uom_id=product_id.uom_po_id)
@@ -968,8 +1026,8 @@ class ProcurementRule(models.Model):
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
         product_lang = product_id.with_context({
-            'lang': supplier.name.lang,
-            'partner_id': supplier.name.id,
+            'lang': partner.lang,
+            'partner_id': partner.id,
         })
         name = product_lang.display_name
         if product_lang.description_purchase:

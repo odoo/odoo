@@ -97,20 +97,8 @@ var createActionManager = function (params) {
         },
     });
     addMockEnvironment(widget, _.defaults(params, {debounce: false}));
-    intercept(widget, 'call_service', function (event) {
-        if (event.data.service === 'report') {
-            var state = widget._rpc({route: '/report/check_wkhtmltopdf'});
-            event.data.callback(state);
-        }
-    }, true);
     widget.appendTo($target);
     widget.$el.addClass('o_web_client');
-
-    // make sure images and iframes do not trigger a GET on the server
-    // AAB; this should be done in addMockEnvironment
-    $target.on('DOMNodeInserted.removeSRC', function () {
-        removeSrcAttribute($(this), widget);
-    });
 
     var userContext = params.context && params.context.user_context || {};
     var actionManager = new ActionManager(widget, userContext);
@@ -118,13 +106,29 @@ var createActionManager = function (params) {
     var originalDestroy = ActionManager.prototype.destroy;
     actionManager.destroy = function () {
         actionManager.destroy = originalDestroy;
-        $target.off('DOMNodeInserted.removeSRC');
         widget.destroy();
     };
     actionManager.appendTo(widget.$el);
 
     return actionManager;
 };
+
+/**
+ * performs a fields_view_get, and mocks the postprocessing done by the
+ * data_manager to return an equivalent structure.
+ *
+ * @param {MockServer} server
+ * @param {Object} params
+ * @param {string} params.model
+ * @returns {Object} an object with 3 keys: arch, fields and viewFields
+ */
+function fieldsViewGet(server, params) {
+    var fieldsView = server.fieldsViewGet(params);
+    // mock the structure produced by the DataManager
+    fieldsView.viewFields = fieldsView.fields;
+    fieldsView.fields = server.fieldsGet(params.model);
+    return fieldsView;
+}
 
 /**
  * create a view synchronously.  This method uses the createAsyncView method.
@@ -189,8 +193,7 @@ function createAsyncView(params) {
 
     // add mock environment: mock server, session, fieldviewget, ...
     var mockServer = addMockEnvironment(widget, params);
-    var viewInfo = mockServer.fieldsViewGet(params);
-
+    var viewInfo = fieldsViewGet(mockServer, params);
     // create the view
     var viewOptions = {
         modelName: params.model || 'foo',
@@ -205,11 +208,6 @@ function createAsyncView(params) {
 
     var view = new params.View(viewInfo, viewOptions);
 
-    // make sure images do not trigger a GET on the server
-    $target.on('DOMNodeInserted.removeSRC', function () {
-        removeSrcAttribute($(this), widget);
-    });
-
     // reproduce the DOM environment of views
     var $web_client = $('<div>').addClass('o_web_client').prependTo($target);
     var controlPanel = new ControlPanel(widget);
@@ -219,12 +217,12 @@ function createAsyncView(params) {
     return view.getController(widget).then(function (view) {
         // override the view's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the view and the mockServer.
+        view.__destroy = view.destroy;
         view.destroy = function () {
             // remove the override to properly destroy the view and its children
             // when it will be called the second time (by its parent)
             delete view.destroy;
             widget.destroy();
-            $('#qunit-fixture').off('DOMNodeInserted.removeSRC');
         };
 
         // link the view to the control panel
@@ -314,6 +312,12 @@ function addMockEnvironment(widget, params) {
         currentDate: params.currentDate,
         debug: params.debug,
     });
+
+    // make sure images do not trigger a GET on the server
+    $('body').on('DOMNodeInserted.removeSRC', function () {
+        removeSrcAttribute($(this), widget);
+    });
+
     // make sure the debounce value for input fields is set to 0
     var initialDebounceValue = DebouncedField.prototype.DEBOUNCE;
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
@@ -330,6 +334,7 @@ function addMockEnvironment(widget, params) {
         initialConfig.device = _.clone(config.device);
         if ('device' in params.config) {
             _.extend(config.device, params.config.device);
+            config.device.isMobile = config.device.size_class <= config.device.SIZES.XS;
         }
         if ('debug' in params.config) {
             config.debug = params.config.debug;
@@ -386,19 +391,53 @@ function addMockEnvironment(widget, params) {
             _.extend(core._t.database.parameters, initialParameters);
         }
 
+        $('body').off('DOMNodeInserted.removeSRC');
+        $('.blockUI').remove();
+
         widgetDestroy.call(this);
     };
 
-    intercept(widget, 'call_service', function (event) {
-        if (event.data.service === 'ajax') {
-            var result = mockServer.performRpc(event.data.args[0], event.data.args[1]);
-            event.data.callback(result);
+    // Dispatch service calls
+    // Note: some services could call other services at init,
+    // Which is why we have to init services after that
+    var services = {ajax: null}; // mocked ajax service already loaded
+    intercept(widget, 'call_service', function (ev) {
+        var args, result;
+        if (ev.data.service === 'ajax') {
+            // ajax service is already mocked by the server
+            var route = ev.data.args[0];
+            args = ev.data.args[1];
+            result = mockServer.performRpc(route, args);
+        } else if (services[ev.data.service]) {
+            var service = services[ev.data.service];
+            args = (ev.data.args || []);
+            result = service[ev.data.method].apply(service, args);
         }
+        ev.data.callback(result);
     });
+
+    // Deploy services
+    var done = false;
+    while (!done) {
+        var index = _.findIndex(params.services, function (Service) {
+            return !_.some(Service.prototype.dependencies, function (depName) {
+                return !_.has(services, depName);
+            });
+        });
+        if (index !== -1) {
+            var Service = params.services.splice(index, 1)[0];
+            services[Service.prototype.name] = new Service(widget);
+        } else {
+            done = true;
+        }
+    }
 
     intercept(widget, 'load_action', function (event) {
         mockServer.performRpc('/web/action/load', {
-            kwargs: {action_id: event.data.actionID},
+            kwargs: {
+                action_id: event.data.actionID,
+                additional_context: event.data.context,
+            },
         }).then(function (action) {
             event.data.on_success(action);
         });
@@ -416,7 +455,7 @@ function addMockEnvironment(widget, params) {
             model: event.data.modelName,
         }).then(function (views) {
             views = _.mapObject(views, function (viewParams) {
-                return mockServer.fieldsViewGet(viewParams);
+                return fieldsViewGet(mockServer, viewParams);
             });
             event.data.on_success(views);
         });
@@ -610,9 +649,10 @@ function removeSrcAttribute($el, widget) {
     $el.find('img, iframe[src]').each(function () {
         var $el = $(this);
         var src = $el.attr('src');
-        if (src[0] !== '#' && src !== 'about:blank') {
+        if (src && src !== 'about:blank') {
             if ($el[0].nodeName === 'IMG') {
-                $el.attr('src', '#test:' + src);
+                $el.attr('data-src', src);
+                $el.removeAttr('src');
             } else {
                 $el.attr('data-src', src);
                 $el.attr('src', 'about:blank');
@@ -626,47 +666,83 @@ function removeSrcAttribute($el, widget) {
 
 var patches = {};
 /**
- * Patches a given Class with the given properties.
+ * Patches a given Class or Object with the given properties.
  *
- * @param {Class} Klass
+ * @param {Class|Object} target
  * @param {Object} props
  */
-function patch (Klass, props) {
+function patch (target, props) {
     var patchID = _.uniqueId('patch_');
-    Klass.__patchID = patchID;
+    target.__patchID = patchID;
     patches[patchID] = {
-        Klass: Klass,
+        target: target,
         otherPatchedProps: [],
         ownPatchedProps: [],
     };
-    _.each(props, function (value, key) {
-        if (Klass.prototype.hasOwnProperty(key)) {
-            patches[patchID].ownPatchedProps.push({
-                key: key,
-                initialValue: Klass.prototype[key],
-            });
-        } else {
-            patches[patchID].otherPatchedProps.push(key);
-        }
-    });
-    Klass.include(props);
+    if (target.prototype) {
+        _.each(props, function (value, key) {
+            if (target.prototype.hasOwnProperty(key)) {
+                patches[patchID].ownPatchedProps.push({
+                    key: key,
+                    initialValue: target.prototype[key],
+                });
+            } else {
+                patches[patchID].otherPatchedProps.push(key);
+            }
+        });
+        target.include(props);
+    } else {
+        _.each(props, function (value, key) {
+            if (key in target) {
+                var oldValue = target[key];
+                patches[patchID].ownPatchedProps.push({
+                    key: key,
+                    initialValue: oldValue,
+                });
+                if (typeof value === 'function') {
+                    target[key] = function () {
+                        var oldSuper = this._super;
+                        this._super = oldValue;
+                        var result = value.apply(this, arguments);
+                        if (oldSuper === undefined) {
+                            delete this._super;
+                        } else {
+                            this._super = oldSuper;
+                        }
+                        return result;
+                    };
+                } else {
+                    target[key] = value;
+                }
+            } else {
+                patches[patchID].otherPatchedProps.push(key);
+                target[key] = value;
+            }
+        });
+    }
 }
 /**
- * Unpatches a given Class.
+ * Unpatches a given Class or Object.
  *
- * @param {Class} Klass
+ * @param {Class|Object} target
  */
-function unpatch(Klass) {
-    var patchID = Klass.__patchID;
+function unpatch(target) {
+    var patchID = target.__patchID;
     var patch = patches[patchID];
     _.each(patch.ownPatchedProps, function (p) {
-        Klass[p.key] = p.initialValue;
+        target[p.key] = p.initialValue;
     });
-    _.each(patch.otherPatchedProps, function (key) {
-        delete Klass.prototype[key];
-    });
+    if (target.prototype) {
+        _.each(patch.otherPatchedProps, function (key) {
+            delete target.prototype[key];
+        });
+    } else {
+        _.each(patch.otherPatchedProps, function (key) {
+            delete target[key];
+        });
+    }
     delete patches[patchID];
-    delete Klass.__patchID;
+    delete target.__patchID;
 }
 
 // Loading static files cannot be properly simulated when their real content is
@@ -691,6 +767,7 @@ return $.when(
         createParent: createParent,
         createView: createView,
         dragAndDrop: dragAndDrop,
+        fieldsViewGet: fieldsViewGet,
         intercept: intercept,
         observe: observe,
         patch: patch,

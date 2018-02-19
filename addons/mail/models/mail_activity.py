@@ -4,6 +4,7 @@
 from datetime import date, datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
+from odoo.osv import expression
 
 
 class MailActivityType(models.Model):
@@ -315,8 +316,9 @@ class MailActivityMixin(models.AbstractModel):
         search='_search_activity_type_id',
         groups="base.group_user")
     activity_date_deadline = fields.Date(
-        'Next Activity Deadline', related='activity_ids.date_deadline',
-        readonly=True, store=True,  # store to enable ordering + search
+        'Next Activity Deadline',
+        compute='_compute_activity_date_deadline', search='_search_activity_date_deadline',
+        readonly=True, store=False,
         groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
@@ -334,6 +336,14 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'today'
             elif 'planned' in states:
                 record.activity_state = 'planned'
+
+    @api.depends('activity_ids.date_deadline')
+    def _compute_activity_date_deadline(self):
+        for record in self:
+            record.activity_date_deadline = record.activity_ids[:1].date_deadline
+
+    def _search_activity_date_deadline(self, operator, operand):
+        return [('activity_ids.date_deadline', operator, operand)]
 
     @api.model
     def _search_activity_user_id(self, operator, operand):

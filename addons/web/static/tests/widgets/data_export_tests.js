@@ -94,7 +94,7 @@ QUnit.module('widgets', {
             },
         });
 
-        list.getParent().searchview = {
+        list.searchView = {
             build_search_data: function () {
                 assert.step('build_search_data');
                 return {
@@ -171,7 +171,7 @@ QUnit.module('widgets', {
             },
         });
 
-        list.getParent().searchview = {
+        list.searchView = {
             build_search_data: function () {
                 assert.step('build_search_data');
                 return {

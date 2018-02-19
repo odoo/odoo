@@ -140,7 +140,9 @@ return Widget.extend({
             };
             this.$input.val('');
             if (content) {
-                this.trigger('post_message', message, this.channel_id);
+                this.trigger('post_message', message, {
+                    channelID: this.channel_id,
+                });
             }
         }
     },
@@ -150,7 +152,7 @@ return Widget.extend({
         this.trigger("close_chat_session");
     },
     on_click_fold: function () {
-        if (config.device.size_class !== config.device.SIZES.XS) {
+        if (!config.device.isMobile) {
             this.toggle_fold();
             this.trigger("fold_channel", this.channel_id, this.folded);
         }

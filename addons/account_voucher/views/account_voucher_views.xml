@@ -86,6 +86,7 @@
                             <field name="account_id"/>
                             <field name="tax_ids" widget="many2many_tags"/>
                             <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -104,6 +105,7 @@
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="quantity"/>
                     <field name="price_unit"/>
                     <field name="tax_ids" widget="many2many_tags"/>
@@ -256,6 +258,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
@@ -300,8 +303,8 @@
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a sale receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new sale receipt
               </p><p>
                 When the sale receipt is confirmed, you can record the customer
                 payment related to this sales receipt.
@@ -374,6 +377,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]"/>
@@ -417,8 +421,8 @@
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a purchase receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Register a new purchase receipt
               </p><p>
                 When the purchase receipt is confirmed, you can record the
                 vendor payment related to this purchase receipt.

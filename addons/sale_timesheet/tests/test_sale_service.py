@@ -1,44 +1,53 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale_timesheet.tests.common import CommonTest
+from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
 from odoo.exceptions import UserError
 
 
-class TestSaleService(CommonTest):
+class TestSaleService(TestCommonSaleTimesheetNoChart):
     """ This test suite provide checks for miscellaneous small things. """
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestSaleService, cls).setUpClass()
+        # set up
+        cls.setUpEmployees()
+        cls.setUpServiceProducts()
+
+        cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': cls.partner_customer_usd.id,
+            'partner_invoice_id': cls.partner_customer_usd.id,
+            'partner_shipping_id': cls.partner_customer_usd.id,
+        })
 
     def test_sale_service(self):
         """ Test task creation when confirming a sale_order with the corresponding product """
-        sale_order_vals = {
-            'partner_id': self.partner_usd.id,
-            'partner_invoice_id': self.partner_usd.id,
-            'partner_shipping_id': self.partner_usd.id,
-            'order_line': [(0, 0, {
-                'name': self.product_delivery_timesheet2.name,
-                'product_id': self.product_delivery_timesheet2.id,
-                'product_uom_qty': 50,
-                'product_uom': self.product_delivery_timesheet2.uom_id.id,
-                'price_unit': self.product_delivery_timesheet2.list_price
-                }),
-            ],
-            'pricelist_id': self.pricelist_usd.id,
-        }
-        sale_order = self.env['sale.order'].create(sale_order_vals)
-        sale_order.order_line._compute_product_updatable()
-        self.assertTrue(sale_order.order_line[0].product_updatable)
-        sale_order.action_confirm()
-        sale_order.order_line._compute_product_updatable()
-        self.assertFalse(sale_order.order_line[0].product_updatable)
-        self.assertEqual(sale_order.invoice_status, 'no', 'Sale Service: there should be nothing to invoice after validation')
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'name': self.product_delivery_timesheet2.name,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 50,
+            'product_uom': self.product_delivery_timesheet2.uom_id.id,
+            'price_unit': self.product_delivery_timesheet2.list_price
+        })
+
+        self.sale_order.order_line._compute_product_updatable()
+        self.assertTrue(sale_order_line.product_updatable)
+        self.sale_order.action_confirm()
+        self.sale_order.order_line._compute_product_updatable()
+
+        self.assertFalse(sale_order_line.product_updatable)
+        self.assertEqual(self.sale_order.invoice_status, 'no', 'Sale Service: there should be nothing to invoice after validation')
 
         # check task creation
         project = self.project_global
-        task = project.task_ids.filtered(lambda t: t.name == '%s:%s' % (sale_order.name, self.product_delivery_timesheet2.name))
+        task = project.task_ids.filtered(lambda t: t.name == '%s:%s' % (self.sale_order.name, self.product_delivery_timesheet2.name))
         self.assertTrue(task, 'Sale Service: task is not created')
-        self.assertEqual(task.partner_id, sale_order.partner_id, 'Sale Service: customer should be the same on task and on SO')
-        self.assertEqual(task.email_from, sale_order.partner_id.email, 'Sale Service: Task Email should be the same as the SO customer Email')
-        # register timesheet on task
+        self.assertEqual(task.partner_id, self.sale_order.partner_id, 'Sale Service: customer should be the same on task and on SO')
+        self.assertEqual(task.email_from, self.sale_order.partner_id.email, 'Sale Service: Task Email should be the same as the SO customer Email')
+
+        # log timesheet on task
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
             'project_id': project.id,
@@ -46,12 +55,12 @@ class TestSaleService(CommonTest):
             'unit_amount': 50,
             'employee_id': self.employee_manager.id,
         })
-        self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Service: there should be sale_ordermething to invoice after registering timesheets')
-        sale_order.action_invoice_create()
-        line = sale_order.order_line
-        self.assertTrue(line.product_uom_qty == line.qty_delivered == line.qty_invoiced, 'Sale Service: line should be invoiced completely')
-        self.assertEqual(sale_order.invoice_status, 'invoiced', 'Sale Service: SO should be invoiced')
-        self.assertEqual(sale_order.tasks_count, 1, "A task should have been created on SO confirmation.")
+        self.assertEqual(self.sale_order.invoice_status, 'to invoice', 'Sale Service: there should be sale_ordermething to invoice after registering timesheets')
+        self.sale_order.action_invoice_create()
+
+        self.assertTrue(sale_order_line.product_uom_qty == sale_order_line.qty_delivered == sale_order_line.qty_invoiced, 'Sale Service: line should be invoiced completely')
+        self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Service: SO should be invoiced')
+        self.assertEqual(self.sale_order.tasks_count, 1, "A task should have been created on SO confirmation.")
 
         # Add a line on the confirmed SO, and it should generate a new task directly
         product_service_task = self.env['product.product'].create({
@@ -74,71 +83,58 @@ class TestSaleService(CommonTest):
             'product_uom_qty': 10,
             'product_uom': product_service_task.uom_id.id,
             'price_unit': product_service_task.list_price,
-            'order_id': sale_order.id,
+            'order_id': self.sale_order.id,
         })
 
-        self.assertEqual(sale_order.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
+        self.assertEqual(self.sale_order.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
 
     def test_timesheet_uom(self):
         """ Test timesheet invoicing and uom conversion """
         # create SO and confirm it
         uom_days = self.env.ref('product.product_uom_day')
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_usd.id,
-            'partner_invoice_id': self.partner_usd.id,
-            'partner_shipping_id': self.partner_usd.id,
-            'order_line': [
-                (0, 0, {
-                    'name': self.product_delivery_timesheet3.name,
-                    'product_id': self.product_delivery_timesheet3.id,
-                    'product_uom_qty': 5,
-                    'product_uom': uom_days.id,
-                    'price_unit': self.product_delivery_timesheet3.list_price
-                })
-            ],
-            'pricelist_id': self.pricelist_usd.id,
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 5,
+            'product_uom': uom_days.id,
+            'price_unit': self.product_delivery_timesheet3.list_price
         })
-        sale_order.action_confirm()
-        task = self.env['project.task'].search([('sale_line_id', '=', sale_order.order_line.id)])
+        self.sale_order.action_confirm()
+        task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])
 
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'project_id': sale_order.project_project_id.id,
+            'project_id': self.sale_order.project_project_id.id,
             'task_id': task.id,
             'unit_amount': 16,
             'employee_id': self.employee_manager.id,
         })
-        self.assertEqual(sale_order.order_line.qty_delivered, 2, 'Sale: uom conversion of timesheets is wrong')
+        self.assertEqual(self.sale_order.order_line.qty_delivered, 2, 'Sale: uom conversion of timesheets is wrong')
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'project_id': sale_order.project_project_id.id,
+            'project_id': self.sale_order.project_project_id.id,
             'task_id': task.id,
             'unit_amount': 24,
             'employee_id': self.employee_user.id,
         })
-        sale_order.action_invoice_create()
-        self.assertEqual(sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        self.sale_order.action_invoice_create()
+        self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
 
     def test_task_so_line_assignation(self):
         # create SO and confirm it
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_usd.id,
-            'partner_invoice_id': self.partner_usd.id,
-            'partner_shipping_id': self.partner_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
-        })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 10,
             'product_uom': self.product_delivery_timesheet2.uom_id.id,
             'price_unit': self.product_delivery_timesheet2.list_price,
-            'order_id': sale_order.id,
+            'order_id': self.sale_order.id,
         })
         so_line_deliver_global_project.product_id_change()
-        sale_order.action_confirm()
+        self.sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
 
         # let's log some timesheets (on the project created by so_line_ordered_project_only)
@@ -169,7 +165,7 @@ class TestSaleService(CommonTest):
         self.assertTrue(all([billing_type == 'billable_time' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "Timesheet to a billable time task should be billable")
 
         # invoice SO, and validate invoice
-        invoice_id = sale_order.action_invoice_create()[0]
+        invoice_id = self.sale_order.action_invoice_create()[0]
         invoice = self.env['account.invoice'].browse(invoice_id)
         invoice.action_invoice_open()
 
@@ -180,9 +176,9 @@ class TestSaleService(CommonTest):
     def test_delivered_quantity(self):
         # create SO and confirm it
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.partner_usd.id,
-            'partner_invoice_id': self.partner_usd.id,
-            'partner_shipping_id': self.partner_usd.id,
+            'partner_id': self.partner_customer_usd.id,
+            'partner_invoice_id': self.partner_customer_usd.id,
+            'partner_shipping_id': self.partner_customer_usd.id,
             'pricelist_id': self.pricelist_usd.id,
         })
         so_line_deliver_new_task_project = self.env['sale.order.line'].create({

@@ -136,7 +136,7 @@ class ProductProduct(models.Model):
     volume = fields.Float('Volume', help="The volume in m3.")
     weight = fields.Float(
         'Weight', digits=dp.get_precision('Stock Weight'),
-        help="The weight of the contents in Kg, not including any packaging, etc.")
+        help="Weight of the product, packaging not included. The unit of measure can be changed in the general settings")
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
@@ -331,6 +331,7 @@ class ProductProduct(models.Model):
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         # TDE FIXME: clean context / variant brol
         if default is None:
@@ -464,15 +465,18 @@ class ProductProduct(models.Model):
                 'res_id': self.product_tmpl_id.id,
                 'target': 'new'}
 
+    def _prepare_sellers(self, params):
+        return self.seller_ids
+
     @api.multi
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
             date = fields.Date.context_today(self)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         res = self.env['product.supplierinfo']
-        for seller in self.seller_ids:
+        for seller in self._prepare_sellers(params):
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -549,6 +553,14 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
         return history.cost or 0.0
+
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("product"),
+        )
+        return super(ProductProduct, self).get_empty_list_help(help)
+
 
 class ProductPackaging(models.Model):
     _name = "product.packaging"

@@ -5,8 +5,8 @@
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# fausthuang <faust_huang@hotmail.com>, 2016
+# Martin Trigaux, 2016
+# fausthuang, 2016
 # 菜小蛇 <lttlsnk@gmail.com>, 2016
 # Connie Xiao <connie.xiao@elico-corp.com>, 2016
 # Michael Chong <michaelchong2005@gmail.com>, 2016
@@ -28,11 +28,11 @@
 # mrshelly <mrshelly@hotmail.com>, 2016
 # Kai Zhu <parahexen@gmail.com>, 2016
 # Gang LIU <liu9ang@hotmail.com>, 2016
-# Brown Hu <suhyy@163.com>, 2016
+# Brown Hu, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
 # 军 李 <niathack@hotmail.com>, 2016
 # Rona Lin <ssauapw@qq.com>, 2016
-# 林俊 <54773801@qq.com>, 2016
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2016
 # 坤 陈 <1339537473@qq.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 # Godners Ren <godners@163.com>, 2017
@@ -44,13 +44,14 @@
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # Jonathon Li <jonathonli@gmail.com>, 2017
 # jack adam <jackadam@sina.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: jack adam <jackadam@sina.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -219,6 +220,8 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml "
+"version=\"1.0\"?><data><p></p><p><br/><strong></strong><strong></strong></p><p></p><p></p></data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -289,6 +292,35 @@ msgid ""
 "</table>\n"
 "</div>"
 msgstr ""
+"<div><table bgcolor=\"#ededed\" border=\"0\" cellpadding=\"0\" "
+"style=\"padding: 20px; background-color: #ededed; border-"
+"collapse:separate;\" summary=\"o_mail_notification\" "
+"width=\"100%\"><tbody><tr><td align=\"center\" style=\"min-width: "
+"590px;\"><table bgcolor=\"#875A7B\" border=\"0\" cellpadding=\"0\" style"
+"=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; "
+"border-collapse:separate;\" width=\"590\"><tr><td valign=\"middle\"><span "
+"style=\"font-size:20px; color:white; font-weight: bold;\"/></td><td "
+"align=\"right\" valign=\"middle\"><img alt=\"${company.name}\" "
+"src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\"/></td></tr></table></td></tr><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table bgcolor=\"#ffffff\" "
+"border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"rgb(255, 255, 255); padding: 20px; border-collapse:separate;\" "
+"width=\"590\"><tbody><td style=\"font-family:Arial,Helvetica,sans-serif; "
+"color: #555; font-size: 14px;\" "
+"valign=\"top\"/></tbody></table></td></tr><tr><td align=\"center\" style"
+"=\"min-width: 590px;\"><table bgcolor=\"#875A7B\" border=\"0\" "
+"cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"rgb(135,90,123); padding: 20px; border-collapse:separate;\" "
+"width=\"590\"><tr><td align=\"left\" style=\"color: #fff; padding-top: 10px;"
+" padding-bottom: 10px; font-size: 12px;\" valign=\"middle\"><br/></td><td "
+"align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: "
+"10px; font-size: 12px;\" valign=\"middle\"><a "
+"href=\"mailto:${company.email}\" style=\"text-decoration:none; color: "
+"white;\"/><br/><a href=\"${company.website}\" style=\"text-decoration:none; "
+"color: white;\"/></td></tr></table></td></tr><tr><td align=\"center\"><a "
+"href=\"https://www.odoo.com\" "
+"target=\"_blank\"/></td></tr></tbody></table></div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -338,6 +370,12 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div><p><i/></p><p lilt=\"split=0\"><strong/></p><p "
+"lilt=\"split=1\"><strong/></p><br/><br/><center><a "
+"class=\"o_default_snippet_text\" href=\"${access_url}\" style=\"background-"
+"color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-"
+"radius: 5px; font-size: 16px;\"/></center><br/><br/><p/><p/><p/><p "
+"style=\"color:#888888\"/></div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -5852,6 +5890,10 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"手动：通过现金、支票或除 Odoo 以外的其他方法获取报酬。\n"
+" 电子方式：在客户线上购买或订阅时（支付令），在已保存的卡中请求交易，通过付款受让人自动获取报酬。\n"
+" 批量存款：\n"
+" 批量存款：几个客户同时支票付款时，可生成批量存款提交到银行中。当在 Odoo 进行编码银行对账单时，建议您协调批量存款与交易之间的关系。从设置中启用该选项。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6190,7 +6232,7 @@ msgstr "无详情"
 msgid ""
 "No miscellaneous journal could be found. Please create one before "
 "proceeding."
-msgstr ""
+msgstr "未找到杂项日记账，请在处理之前先创建一个"
 
 #. module: account
 #: code:addons/account/models/account.py:116
@@ -9222,7 +9264,7 @@ msgstr "如果有大量的发票，这个功能很有用。"
 msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
-msgstr ""
+msgstr "该字段包含此日记账中与信用清单目录数量相关的信息。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_id

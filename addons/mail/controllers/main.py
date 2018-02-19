@@ -258,8 +258,8 @@ class MailController(http.Controller):
     def needaction(self):
         return request.env['res.partner'].get_needaction_count()
 
-    @http.route('/mail/client_action', type='json', auth='user')
-    def mail_client_action(self):
+    @http.route('/mail/init_messaging', type='json', auth='user')
+    def mail_init_messaging(self):
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
             'starred_counter': request.env['res.partner'].get_starred_count(),

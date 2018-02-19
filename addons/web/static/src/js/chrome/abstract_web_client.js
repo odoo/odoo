@@ -18,17 +18,18 @@ var config = require('web.config');
 var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
+var dom = require('web.dom');
 var Loading = require('web.Loading');
-var mixins = require('web.mixins');
 var NotificationManager = require('web.NotificationManager');
 var RainbowMan = require('web.RainbowMan');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
+var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
     custom_events: {
         clear_uncommitted_changes: function (e) {
             this.clear_uncommitted_changes().then(e.data.callback);
@@ -46,7 +47,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
 
         // notifications, warnings and effects
         notification: function (e) {
-            if(this.notification_manager) {
+            if (this.notification_manager) {
                 this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
             }
         },
@@ -89,8 +90,8 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     },
     init: function (parent) {
         this.client_options = {};
-        mixins.ServiceProvider.init.call(this);
         this._super(parent);
+        ServiceProviderMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
         this.menu_dm = new concurrency.DropMisordered();
@@ -201,8 +202,15 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         };
     },
     set_action_manager: function () {
+        var self = this;
         this.action_manager = new ActionManager(this, session.user_context);
-        return this.action_manager.appendTo(this.$('.o_main_content'));
+        var fragment = document.createDocumentFragment();
+        return this.action_manager.appendTo(fragment).then(function () {
+            dom.append(self.$('.o_main_content'), fragment, {
+                in_DOM: true,
+                callbacks: [{widget: self.action_manager}],
+            });
+        });
     },
     set_notification_manager: function () {
         this.notification_manager = new NotificationManager(this);
@@ -237,6 +245,10 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
      * identified by strings. Each time a title part is changed, all parts
      * are gathered, ordered by alphabetical order and displayed in the title
      * of the window separated by ``-``.
+     *
+     * @private
+     * @param {string} part
+     * @param {string} title
      */
     set_title_part: function (part, title) {
         var tmp = _.clone(this.get("title_part"));

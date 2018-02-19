@@ -18,8 +18,10 @@
         <field name="view_mode">kanban,tree</field>
         <field name="context">{'search_default_group_by_definition': True, 'search_default_inprogress': True, 'search_default_challenge_id': active_id, 'default_challenge_id': active_id}</field>
         <field name="help" type="html">
-          <p>
-            There is no goals associated to this challenge matching your search.
+          <p class="o_view_nocontent_empty_folder">
+                No goal found
+          </p><p>
+            There is no goal associated to this challenge matching your search.
             Make sure that your challenge is active and assigned to at least one user.
           </p>
         </field>
@@ -172,10 +174,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a challenge.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new challenge
+            </p><p>
                 Assign a list of goals to chosen users to evaluate them.
                 The challenge can use a period (weekly, monthly...) for automatic creation of goals.
                 The goals are created for the specified users or member of the group.
