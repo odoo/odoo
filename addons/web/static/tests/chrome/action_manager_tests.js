@@ -66,7 +66,6 @@ QUnit.module('ActionManager', {
             res_model: 'partner',
             target: 'new',
             type: 'ir.actions.act_window',
-            view_mode: 'form',
             views: [[false, 'form']],
         }, {
             id: 6,
@@ -75,7 +74,6 @@ QUnit.module('ActionManager', {
             res_model: 'partner',
             target: 'inline',
             type: 'ir.actions.act_window',
-            view_mode: 'form',
             views: [[false, 'form']],
         }, {
             id: 7,
@@ -135,7 +133,6 @@ QUnit.module('ActionManager', {
 
         this.actions[3].views = [[false, 'form']];
         this.actions[3].target = 'inline';
-        this.actions[3].view_mode = 'form';
 
         var actionManager = createActionManager({
             actions: this.actions,
