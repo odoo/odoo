@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,64 +66,9 @@ msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:77
-#: code:addons/payment/static/src/js/payment_form.js:229
-#, python-format
-msgid "<p>Please fill all the inputs required.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:190
-#, python-format
-msgid "<p>Please select a payment method.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:287
-#, python-format
-msgid "<p>Please select the option to add a new payment method.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:328
+#: code:addons/payment/static/src/js/payment_form.js:349
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:109
-#: code:addons/payment/static/src/js/payment_form.js:121
-#: code:addons/payment/static/src/js/payment_form.js:264
-#: code:addons/payment/static/src/js/payment_form.js:277
-#, python-format
-msgid "<p>We are not able to add your payment method at the moment.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:311
-#: code:addons/payment/static/src/js/payment_form.js:346
-#, python-format
-msgid "<p>We are not able to delete your payment method at the moment.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:162
-#: code:addons/payment/static/src/js/payment_form.js:168
-#, python-format
-msgid "<p>We are not able to redirect you to the payment form.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:179
-#, python-format
-msgid "<p>We're unable to process your payment.</p>"
 msgstr ""
 
 #. module: payment
@@ -275,7 +220,8 @@ msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
-msgid "Authorize.net"
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
 msgstr ""
 
 #. module: payment
@@ -763,14 +709,6 @@ msgid "Missing partner reference when trying to create a new payment token"
 msgstr ""
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:75
-#: code:addons/payment/static/src/js/payment_form.js:218
-#, python-format
-msgid "Missing values"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
 #: model:ir.model.fields,field_description:payment.field_payment_icon_name
 #: model:ir.model.fields,field_description:payment.field_payment_token_name
@@ -874,6 +812,11 @@ msgid "Payment Acquirers"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
+msgid "Payment Flow"
+msgstr ""
+
+#. module: payment
 #: model:ir.model,name:payment.model_payment_icon
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
@@ -926,8 +869,8 @@ msgid "Payment Transactions"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
-msgid "Payment flow"
+#: selection:payment.acquirer,payment_flow:0
+msgid "Payment from Odoo"
 msgstr ""
 
 #. module: payment
@@ -976,6 +919,20 @@ msgid "Phone"
 msgstr ""
 
 #. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:199
+#, python-format
+msgid "Please select a payment method."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:308
+#, python-format
+msgid "Please select the option to add a new payment method."
+msgstr ""
+
+#. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
@@ -1003,6 +960,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_provider
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
+msgstr ""
+
+#. module: payment
+#: selection:payment.acquirer,payment_flow:0
+msgid "Redirection to the acquirer website"
 msgstr ""
 
 #. module: payment
@@ -1151,23 +1113,13 @@ msgid "Thanks Message"
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:570
+#: code:addons/payment/models/payment_acquirer.py:567
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
 
 #. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer encode his payment details on the website."
-msgstr ""
-
-#. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer is redirected to the website of the acquirer."
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:563
+#: code:addons/payment/models/payment_acquirer.py:560
 #, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr ""
@@ -1252,9 +1204,52 @@ msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:318
+#: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "Warning!"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:134
+#, python-format
+msgid "We are not able to add your payment method at the moment."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:300
+#, python-format
+msgid "We are not able to add your payment method at the moment.</p>"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:332
+#: code:addons/payment/static/src/js/payment_form.js:367
+#, python-format
+msgid "We are not able to delete your payment method at the moment."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:173
+#, python-format
+msgid "We are not able to redirect you to the payment form."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:179
+#, python-format
+msgid "We are not able to redirect you to the payment form.<"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:188
+#, python-format
+msgid "We're unable to process your payment."
 msgstr ""
 
 #. module: payment
@@ -1304,6 +1299,11 @@ msgid "You will be redirected to the Sips website after clicking on payment butt
 msgstr ""
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
 msgstr ""
@@ -1336,6 +1336,14 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:119
+#: code:addons/payment/static/src/js/payment_form.js:285
+#, python-format
+msgid "e.g. Your credit card details are wrong. Please verify."
 msgstr ""
 
 #. module: payment
