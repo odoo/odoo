@@ -123,7 +123,7 @@ class Inventory(models.Model):
         return res_filter
 
     @api.onchange('filter')
-    def onchange_filter(self):
+    def _onchange_filter(self):
         if self.filter not in ('product', 'product_owner'):
             self.product_id = False
         if self.filter != 'lot':
@@ -140,7 +140,7 @@ class Inventory(models.Model):
                 return {'domain': {'product_id': [('product_tmpl_id', '=', self.product_id.product_tmpl_id.id)]}}
 
     @api.onchange('location_id')
-    def onchange_location_id(self):
+    def _onchange_location_id(self):
         if self.location_id.company_id:
             self.company_id = self.location_id.company_id
 
@@ -365,7 +365,7 @@ class InventoryLine(models.Model):
         self.theoretical_qty = theoretical_qty
 
     @api.onchange('product_id')
-    def onchange_product(self):
+    def _onchange_product(self):
         res = {}
         # If no UoM or incorrect UoM put default one from product
         if self.product_id:
@@ -374,7 +374,7 @@ class InventoryLine(models.Model):
         return res
 
     @api.onchange('product_id', 'location_id', 'product_uom_id', 'prod_lot_id', 'partner_id', 'package_id')
-    def onchange_quantity_context(self):
+    def _onchange_quantity_context(self):
         if self.product_id and self.location_id and self.product_id.uom_id.category_id == self.product_uom_id.category_id:  # TDE FIXME: last part added because crash
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
