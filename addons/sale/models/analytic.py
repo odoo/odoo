@@ -41,7 +41,8 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def _sale_postprocess(self, values, additional_so_lines=None):
         if 'so_line' not in values:  # allow to force a False value for so_line
-            self.with_context(sale_analytic_norecompute=True)._sale_determine_order_line()
+            # only take the AAL from expense or vendor bill, meaning having a negative amount
+            self.filtered(lambda aal: aal.amount <= 0).with_context(sale_analytic_norecompute=True)._sale_determine_order_line()
 
         if any(field_name in values for field_name in self._sale_get_fields_delivered_qty()):
             if not self._context.get('sale_analytic_norecompute'):
