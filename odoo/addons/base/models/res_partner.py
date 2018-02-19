@@ -269,13 +269,16 @@ class Partner(models.Model):
     def _compute_get_ids(self):
         self.self = self.id
 
-    @api.depends('is_company', 'parent_id.commercial_partner_id')
+    @api.depends('is_company', 'parent_id')
     def _compute_commercial_partner(self):
         for partner in self:
             if partner.is_company or not partner.parent_id:
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
+
+            for child in partner.child_ids:
+                child.commercial_partner_id = partner.commercial_partner_id
 
     @api.depends('company_name', 'parent_id.is_company', 'commercial_partner_id.name')
     def _compute_commercial_company_name(self):

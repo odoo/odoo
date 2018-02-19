@@ -166,13 +166,14 @@ class ResPartner(models.Model):
         if not company:
             company = self.env.user.company_id
 
+        european_countries = self.env.ref('base.europe').country_ids
         for record in self.filtered(lambda x: x.vat):
             record_vat_country_code = self._split_vat(record.vat)[0]
             commercial_partner_country_code = record.commercial_partner_id.country_id and record.commercial_partner_id.country_id.code.lower() or False
             vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
             vat_no = _ref_vat.get(record_vat_country_code) or _ref_vat.get(commercial_partner_country_code) or vat_no
 
-            if company.vat_check_vies:
+            if company.vat_check_vies and record.country_id in european_countries:
                 if record.base_vat_vies_check_status == 'wrong':
                     raise ValidationError(_('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or does not respect the expected format %s.') % (record.vat, record.name, vat_no))
             elif not record._check_vat(self.simple_vat_check):
