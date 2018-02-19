@@ -651,7 +651,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             :return: list of lists of corresponding values
         """
         lines = []
-        for record in self:
+
+        def splittor(rs):
+            """ Splits the self recordset in batches of 1000 (to avoid
+            entire-recordset-prefetch-effects) & removes the previous batch
+            from the cache after it's been iterated in full
+            """
+            for idx in range(0, len(rs), 1000):
+                sub = rs[idx: idx+1000]
+                for rec in sub:
+                    yield rec
+                rs.invalidate_cache(ids=sub.ids)
+
+        # memory stable but ends up prefetching 275 fields (???)
+        for idx, record in enumerate(splittor(self)):
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
