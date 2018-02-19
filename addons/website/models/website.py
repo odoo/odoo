@@ -806,7 +806,7 @@ class Menu(models.Model):
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_left = fields.Integer('Parent Left', index=True)
-    parent_right = fields.Integer('Parent Rigth', index=True)
+    parent_right = fields.Integer('Parent Right', index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
     @api.one
