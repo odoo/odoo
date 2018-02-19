@@ -53,6 +53,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         },
         warning: '_onDisplayWarning',
         load_action: '_onLoadAction',
+        scrollTo: 'scrollTo',
+        getScrollPosition: '_onGetScrollPosition',
         load_views: function (event) {
             var params = {
                 model: event.data.modelName,
@@ -397,6 +399,56 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         } else {
             throw new Error('Unknown effect type: ' + type);
         }
+    },
+
+    // --------------------------------------------------------------
+    // Scroll position handling
+    // --------------------------------------------------------------
+
+    /**
+     * Get top position if mobile, otherwise top and left
+     *
+     * @returns {Object}
+     */
+    getScrollPosition: function () {
+        if (config.device.isMobile) {
+            return {
+                top: $(window).scrollTop(),
+            };
+        } else {
+            return {
+                top: this.action_manager.el.scrollTop,
+                left: this.action_manager.el.scrollLeft,
+            };
+        }
+    },
+    /**
+     * Scrolls the webclient to either a given offset or a target element
+     * Must be called with: trigger_up('scrollTo', options)
+     *
+     * @param {OdooEvent} ev
+     * @param {integer} [ev.data.top] the number of pixels to scroll from top
+     * @param {integer} [ev.data.left] the number of pixels to scroll from left
+     * @param {string} [ev.data.selector] the selector of the target element to scroll to
+     */
+    scrollTo: function (ev) {
+        var offset = {top: ev.data.top, left: ev.data.left || 0};
+        if (!offset.top && !offset.left) {
+            offset = dom.getPosition(document.querySelector(ev.data.selector));
+            if (!config.device.isMobile) {
+                // Substract the position of the action_manager as it is the scrolling part
+                offset.top -= dom.getPosition(this.action_manager.el).top;
+            }
+        }
+        if (config.device.isMobile) {
+            $(window).scrollTop(offset.top);
+        } else {
+            this.action_manager.el.scrollTop = offset.top;
+        }
+        this.action_manager.el.scrollLeft = offset.left;
+    },
+    _onGetScrollPosition: function (ev) {
+        ev.data.callback(this.getScrollPosition());
     },
 });
 

@@ -229,6 +229,21 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the current vertical and horizontal scroll position.
+     *
+     * @private
+     * @returns {integer}
+     */
+    _getScrollPosition: function () {
+        var scrollPosition;
+        this.trigger_up('getScrollPosition', {
+            callback: function (value) {
+                scrollPosition = value;
+            }
+        });
+        return scrollPosition;
+    },
+    /**
      * This method is the way a view can notifies the outside world that
      * something has changed.  The main use for this is to update the url, for
      * example with a new id.
