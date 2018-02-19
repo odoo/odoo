@@ -117,6 +117,18 @@
         border-top: none;  // Override bootstrap for grouped list views
     }
 
+    tbody {
+        tr:focus-within {
+            background-color: @odoo-form-lightsecondary;
+        }
+        tr{
+            .focussed {
+                background-color: @odoo-form-lightsecondary;
+            }
+        }
+    }
+
+
     // Values styling
     .o_list_number {
         text-align: right;
