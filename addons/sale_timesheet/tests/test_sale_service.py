@@ -106,7 +106,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'project_id': self.sale_order.project_project_id.id,
+            'project_id': task.project_id.id,
             'task_id': task.id,
             'unit_amount': 16,
             'employee_id': self.employee_manager.id,
@@ -115,7 +115,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'project_id': self.sale_order.project_project_id.id,
+            'project_id': task.project_id.id,
             'task_id': task.id,
             'unit_amount': 24,
             'employee_id': self.employee_user.id,

@@ -18,7 +18,6 @@ class SaleOrder(models.Model):
     tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
     tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
 
-    project_project_id = fields.Many2one('project.project', compute='_compute_project_project_id', string='Project associated to this sale')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
 
     @api.multi
@@ -42,18 +41,10 @@ class SaleOrder(models.Model):
             order.tasks_count = len(order.tasks_ids)
 
     @api.multi
-    @api.depends('analytic_account_id.project_ids')
-    def _compute_project_project_id(self):
-        for order in self:
-            order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.analytic_account_id.id)])
-
-    @api.multi
-    @api.depends('order_line.product_id', 'project_project_id')
+    @api.depends('order_line.product_id')
     def _compute_project_ids(self):
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
-            if order.project_project_id:
-                projects |= order.project_project_id
             order.project_ids = projects
 
     @api.multi
