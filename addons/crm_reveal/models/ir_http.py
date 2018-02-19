@@ -13,16 +13,20 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls):
-        result = super(IrHttp, cls)._dispatch()
-        if not request.session.get('reveal') and request.is_frontend and request.httprequest.method == 'GET' and request._request_type == 'http' and not request.session.uid:
-            request.session['reveal'] = True  # Mark session for reveal
-            args = (request.env.cr.dbname, request.env.uid, request.httprequest.path, request.httprequest.remote_addr)
-            Thread(target=cls.handle_reveal_request, args=args).start()
-        return result
+        response = super(IrHttp, cls)._dispatch()
+        if response and getattr(response, 'status_code', 0) == 200 and hasattr(response, 'qcontext'):
+            template = response.qcontext.get('response_template')
+            if template:
+                view = request.env['website'].get_template(template)
+                if view:
+                    url = request.httprequest.url
+                    if request.env['http.url.track'].sudo().match_url(url):
+                        if not request.session.get('s_db_id'):
+                            session_vals = {'user_id': request.session.get('uid'), 'ip_address': request.httprequest.remote_addr}
+                            s_db_id = request.env['http.session'].sudo().create_session(session_vals)
+                            request.session['s_db_id'] = s_db_id
 
-    @classmethod
-    def handle_reveal_request(cls, dbname, uid, path, ip):
-        with api.Environment.manage():
-            with Registry(dbname).cursor() as cr:
-                env = api.Environment(cr, uid, {})
-                env['crm.reveal.rule'].sudo().process_reveal_request(path, ip)
+                        vals = {'user_id': request.session.get('uid'), 'session_id': request.session['s_db_id'], 'url': url}
+                        request.env['http.pageview'].sudo().create_pageview(vals)
+
+        return response

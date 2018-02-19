@@ -25,7 +25,6 @@ class CRMLeadRule(models.Model):
 
     # Website Traffic Filter
     country_ids = fields.Many2many('res.country', string='Countries')
-    regex_url = fields.Char(string='URL Regex')
 
     # Company Criteria Filter
     industry_tag_ids = fields.Many2many('crm.reveal.industry', string="Industry Tags")
@@ -52,6 +51,8 @@ class CRMLeadRule(models.Model):
     lead_ids = fields.One2many('crm.lead', 'reveal_rule_id', string="Generated Lead / Opportunity")
     leads_count = fields.Integer(compute='_compute_leads_count', string="Number of Generated Leads")
 
+    url_regex_id = fields.Many2one('http.url.track', delegate=True, required=True, ondelete='restrict')
+
     _sql_constraints = [
         ('limit_extra_contacts', 'check(extra_contacts >= 0 and extra_contacts <= 5)', "Maximum 5 extra contacts are allowed!"),
     ]
@@ -74,6 +75,21 @@ class CRMLeadRule(models.Model):
                 credit += self.extra_contacts
         self.calculate_credits = credit
 
+    @api.model
+    def create(self, vals):
+        self.clear_caches()
+        return super(CRMLeadRule, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        self.clear_caches()
+        return super(CRMLeadRule, self).write(vals)
+
+    @api.multi
+    def unlink(self):
+        self.clear_caches()
+        return super(CRMLeadRule, self).unlink()
+
     @api.multi
     def action_get_lead_tree_view(self):
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
@@ -81,21 +97,31 @@ class CRMLeadRule(models.Model):
         return action
 
     @api.model
-    def process_reveal_request(self, path, ip):
+    def process_lead_generation(self):
+        http_session_records = self.env['http.session'].search([])
+        for session in http_session_records:
+            page_views = session.pageview_ids.search([('crm_reveal_scanned', '=', False), ('session_id', '=', session.id)])
+            if page_views:
+                self.process_reveal_request(session,page_views.mapped('url'), session.ip_address)
+                for pv in page_views:
+                    pv.crm_reveal_scanned = True
+
+    @api.model
+    def process_reveal_request(self, session_record, paths, ip):
         """Entry point form http dispatch"""
         lead_exist = self.env['crm.lead'].with_context(active_test=False).search_count([('reveal_ip', '=', ip)])
         if not lead_exist:
-            rules = self._get_matching_rules(path)
+            rules = self._get_matching_rules(paths)
             if rules:
-                rules._perform_reveal_service(ip)
+                rules._perform_reveal_service(session_record, ip)
 
-    def _get_matching_rules(self, path):
+    def _get_matching_rules(self, paths):
         active_rules = self.search([])
         rules = self.env['crm.reveal.rule']
         for rule in active_rules:
             try:
                 if rule.regex_url:
-                    if re.match(rule.regex_url, path, re.I | re.M):
+                    if list(filter(lambda p: re.match(rule.regex_url, p, re.I | re.M), paths)):
                         rules += rule
                 else:
                     rules += rule
@@ -126,7 +152,7 @@ class CRMLeadRule(models.Model):
             rule_data.append(data)
         return rule_data
 
-    def _perform_reveal_service(self, ip):
+    def _perform_reveal_service(self,session_record, ip):
         result = False
         account_token = self.env['iap.account'].get('reveal')
         endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT)
@@ -139,7 +165,9 @@ class CRMLeadRule(models.Model):
 
         result = jsonrpc(endpoint, params=params)
         if result:
-            self._process_response(result, ip)
+            lead = self._process_response(result, ip)
+            if lead:
+                session_record.lead_id = lead.id
 
     def _process_response(self, result, ip):
         """This method will get response from service and create the lead accordingly"""
@@ -162,6 +190,7 @@ class CRMLeadRule(models.Model):
         lead = self.env['crm.lead'].create(lead_vals)
         msg_post_data = self._format_data_for_message_post(result)
         lead.message_post_with_view('crm_reveal.lead_message_template', values=msg_post_data, subtype_id=self.env.ref('mail.mt_note').id)
+        return lead
 
     # Methods responsible for format response data in to valid odoo lead data
     def _lead_vals_from_response(self, result):

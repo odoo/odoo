@@ -13,6 +13,6 @@ class TestRule(models.TransientModel):
     @api.model
     def create(self, vals):
         rec = super(TestRule, self).create(vals)
-        self.env['crm.reveal.rule'].process_reveal_request(vals['url'], vals['ip'])
+        self.env['crm.reveal.rule'].process_reveal_request( self.env['http.session'], [vals['url']], vals['ip'])
         # "104.192.139.233"  # "180.211.100.4"  # "208.66.29.178"
         return rec
