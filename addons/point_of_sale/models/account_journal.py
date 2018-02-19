@@ -22,3 +22,9 @@ class AccountJournal(models.Model):
             if session:
                 args += [('id', 'in', session.config_id.journal_ids.ids)]
         return super(AccountJournal, self).search(args=args, offset=offset, limit=limit, order=order, count=count)
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    pos_order_ids = fields.Many2many('pos.order', 'account_move_line_pos_order_rel', 'account_move_line_id', 'pos_order_id')
