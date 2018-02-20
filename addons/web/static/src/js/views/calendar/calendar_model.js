@@ -4,6 +4,7 @@ odoo.define('web.CalendarModel', function (require) {
 var AbstractModel = require('web.AbstractModel');
 var Context = require('web.Context');
 var core = require('web.core');
+var config = require('web.config');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
 var time = require('web.time');
@@ -384,6 +385,10 @@ return AbstractModel.extend({
                 week: {
                     columnFormat: 'ddd ' + time.getLangDateFormat(),
                     titleFormat: time.getLangTimeFormat(),
+                },
+                month: {
+                    eventStartEditable: config.device.isMobile ? false : true,
+                    longPressDelay: 0,
                 }
             },
             monthNames: moment.months(),
