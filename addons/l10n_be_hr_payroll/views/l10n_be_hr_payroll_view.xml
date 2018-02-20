@@ -61,8 +61,8 @@
                     <field name="transport_mode" widget="radio"/>
                     <field name="car_atn" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}" invisible="1"/>
                     <field name="transport_employer_cost" invisible="1"/>
-                    <label string="Public Transport" attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}"/>
-                    <div attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}">
+                    <label string="Public Transport" attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}" name="public_transport_label"/>
+                    <div attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}" name="public_transport_div">
                         <div>
                             <label for="public_transport_employee_amount" class="oe_inline"/>
                             <field name="public_transport_employee_amount" class="oe_inline"/>
@@ -72,8 +72,8 @@
                             <field name="public_transport_reimbursed_amount" class="oe_inline"/>
                         </div>
                     </div>
-                    <label string="Other" attrs="{'invisible': [('transport_mode', '!=', 'others')]}"/>
-                    <div attrs="{'invisible': [('transport_mode', '!=', 'others')]}" class="o_row">
+                    <label string="Other" attrs="{'invisible': [('transport_mode', '!=', 'others')]}" name="others_label"/>
+                    <div attrs="{'invisible': [('transport_mode', '!=', 'others')]}" class="o_row" name="others_div">
                         <field name="others_reimbursed_amount" class="oe_inline" nolabel="1"/>
                         <span>/ month</span>
                     </div>
