@@ -390,11 +390,15 @@ class EventRegistration(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self).message_get_suggested_recipients()
+        public_users = self.env["res.users"]
+        public_groups = self.env.ref("base.group_public", False)
+        if public_groups:
+            public_users = public_groups.mapped("users")
         try:
             for attendee in self:
-                if attendee.partner_id:
+                if attendee.partner_id and not attendee.partner_id.user_ids & public_users:
                     attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
-                elif attendee.email:
+                if attendee.email not in {False, attendee.partner_id.email}:
                     attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
         except AccessError:     # no read access rights -> ignore suggested recipients
             pass
