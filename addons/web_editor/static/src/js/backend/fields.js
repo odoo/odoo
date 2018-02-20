@@ -84,11 +84,49 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the domain for attachments used in media dialog.
+     * We look for attachments related to the current document. If there is a value for the model
+     * field, it is used to search attachments, and the attachments from the current document are
+     * filtered to display only user-created documents.
+     * In the case of a wizard such as mail, we have the documents uploaded and those of the model
+     *
+     * @private
+     * @returns {Array} "ir.attachment" odoo domain.
+     */
+    _getAttachmentsDomain: function () {
+        var domain = ['|', ['id', 'in', _.pluck(this.attachments, 'id')]];
+        var attachedDocumentDomain = [
+            '&',
+            ['res_model', '=', this.model],
+            ['res_id', '=', this.res_id|0]
+        ];
+        // if the document is not yet created, do not see the documents of other users
+        if (!this.res_id) {
+            attachedDocumentDomain.unshift('&');
+            attachedDocumentDomain.push(['create_uid', '=', session.uid]);
+        }
+        if (this.recordData.model) {
+            var relatedDomain = ['&',
+                ['res_model', '=', this.recordData.model],
+                ['res_id', '=', this.recordData.res_id|0]];
+            if (!this.recordData.res_id) {
+                relatedDomain.unshift('&');
+                relatedDomain.push(['create_uid', '=', session.uid]);
+            }
+            domain = domain.concat(['|'], attachedDocumentDomain, relatedDomain);
+        } else {
+            domain = domain.concat(attachedDocumentDomain);
+        }
+        return domain;
+    },
+    /**
      * @private
      * @returns {Object} the summernote configuration
      */
     _getSummernoteConfig: function () {
         var summernoteConfig = {
+            model: this.model,
+            id: this.res_id,
             focus: false,
             height: 180,
             toolbar: [
@@ -107,6 +145,22 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             lang: "odoo",
             onChange: this._doDebouncedAction.bind(this),
         };
+
+        var fieldNameAttachment =_.chain(this.recordData)
+            .pairs()
+            .find(function (value) {
+                return _.isObject(value[1]) && value[1].model === "ir.attachment";
+            })
+            .first()
+            .value();
+
+        if (fieldNameAttachment) {
+            this.fieldNameAttachment = fieldNameAttachment;
+            this.attachments = [];
+            summernoteConfig.onImageUpload = this._onImageUpload.bind(this);
+            summernoteConfig.getMediaDomain = this._getAttachmentsDomain.bind(this);
+        }
+
         if (config.debug) {
             summernoteConfig.toolbar.splice(7, 0, ['view', ['codeview']]);
         }
@@ -125,6 +179,34 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         return this.$content.html();
     },
     /**
+     * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
+     * This method is called when an image is uploaded by the media dialog.
+     *
+     * For e.g. when sending email, this allows people to add attachments with the content
+     * editor interface and that they appear in the attachment list.
+     * The new documents being attached to the email, they will not be erased by the CRON
+     * when closing the wizard.
+     *
+     * @private
+     */
+    _onImageUpload: function (attachments) {
+        var self = this;
+        attachments = _.filter(attachments, function (attachment) {
+            return !_.findWhere(self.attachments, {id: attachment.id});
+        });
+        if (!attachments.length) {
+            return;
+        }
+        this.attachments = this.attachments.concat(attachments);
+        this.trigger_up('field_changed', {
+            dataPointID: this.dataPointID,
+            changes: _.object([this.fieldNameAttachment], [{
+                operation: 'ADD_M2M',
+                ids: attachments
+            }])
+        });
+    },
+    /**
      * @override
      * @private
      */
@@ -134,8 +216,6 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         this.$textarea.summernote(this._getSummernoteConfig());
         this.$content = this.$('.note-editable:first');
         this.$content.html(this._textToHtml(this.value));
-        this.$content.data('oe-id', this.recordData.res_id || this.res_id);
-        this.$content.data('oe-model', this.recordData.model || this.model);
         // trigger a mouseup to refresh the editor toolbar
         this.$content.trigger('mouseup');
         if (this.nodeOptions['style-inline']) {
