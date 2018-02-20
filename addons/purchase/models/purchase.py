@@ -1125,4 +1125,5 @@ class MailComposeMessage(models.TransientModel):
     def send_mail(self, auto_commit=False):
         if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
             self.mail_purchase_order_on_send()
-        return super(MailComposeMessage, self.with_context(mail_post_autofollow=True)).send_mail(auto_commit=auto_commit)
+            self = self.with_context(mail_post_autofollow=True)
+        return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)
