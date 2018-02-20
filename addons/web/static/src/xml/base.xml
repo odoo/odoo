@@ -403,6 +403,15 @@
     </div>
 </t>
 
+<t t-name="ListView.SelectAll">
+    <div class="alert alert-warning text-center mb0 pt4 pb4 o_list_view_select_all">
+        <t t-esc="title"/>
+        <a class="btn btn-link btn-sm o_list_view_select_action" t-att-data-action-type="action_type">
+            <t t-esc="action_label"/> <i class="fa fa-arrow-right"> </i>
+        </a>
+    </div>
+</t>
+
 <t t-name="FormView.buttons">
     <div class="o_form_buttons_view" role="toolbar" aria-label="Main actions">
         <button t-if="widget.is_action_enabled('edit')" type="button"

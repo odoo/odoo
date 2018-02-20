@@ -340,7 +340,10 @@ var ListController = BasicController.extend({
     _getSidebarEnv: function () {
         var env = this._super.apply(this, arguments);
         var record = this.model.get(this.handle);
-        return _.extend(env, {domain: record.getDomain()});
+        return _.extend(env, {
+            domain: record.getDomain(),
+            all_selected: this.allSelected
+        });
     },
     /**
      * Allows to change the mode of a single row.
@@ -541,6 +544,7 @@ var ListController = BasicController.extend({
      */
     _onSelectionChanged: function (ev) {
         this.selectedRecords = ev.data.selection;
+        this.allSelected = event.data.allSelected;
         this._toggleSidebar();
     },
     /**
