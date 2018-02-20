@@ -443,7 +443,7 @@ class Picking(models.Model):
         for picking in self:
             if self._context.get('planned_picking') and picking.state == 'draft':
                 picking.show_validate = False
-            elif picking.state not in ('draft', 'confirmed', 'assigned') or not picking.is_locked:
+            elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned') or not picking.is_locked:
                 picking.show_validate = False
             else:
                 picking.show_validate = True
@@ -594,8 +594,7 @@ class Picking(models.Model):
         @return: True
         """
         # TDE FIXME: remove decorator when migration the remaining
-        # TDE FIXME: draft -> automatically done, if waiting ?? CLEAR ME
-        todo_moves = self.mapped('move_lines').filtered(lambda self: self.state in ['draft', 'partially_available', 'assigned', 'confirmed'])
+        todo_moves = self.mapped('move_lines').filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         # Check if there are ops not linked to moves yet
         for pick in self:
             # # Explode manually added packages
