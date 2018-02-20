@@ -57,13 +57,14 @@
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # William Henrotin <whe@odoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Agathe Mollé <molleagathe@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-08 13:21+0000\n"
-"PO-Revision-Date: 2017-11-08 13:21+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 14:33+0000\n"
+"PO-Revision-Date: 2018-02-19 14:33+0000\n"
+"Last-Translator: Agathe Mollé <molleagathe@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -325,8 +326,8 @@ msgstr ""
 "\n"
 "Reconnaissance des revenus\n"
 "====================\n"
-"Gérez la reconnaissance des revenus sur les ventes de produits.\n"
-"Assure le suivi des versements, et crée des entrées de journal correspondantes."
+"Gérez la reconnaissance des revenus des ventes de produits.\n"
+"Assure le suivi des versements, et crée les pièces comptables correspondantes."
 
 #. module: base
 #: code:addons/base/res/res_config.py:315
@@ -349,7 +350,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Ce module ajoute un canal de vente personnalisé pour le module Point de vente afin d'afficher et de gérer plus facilement les ventes réalisées par votre point de vente.\n"
+"Ce module ajoute un canal de vente personnalisé pour le point de vente afin d'afficher et de gérer plus facilement les ventes réalisées par votre point de vente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -364,7 +365,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Ce module ajoute plusieurs fonctionnalités pour les restaurants au module Point de vente :\n"
+"Ce module ajoute plusieurs fonctionnalités pour les restaurants au Point de vente :\n"
 "– Impression de la note : vous permet d'imprimer un reçu avant de régler la commande\n"
 "– Séparation de la note : vous permet de séparer une commande en plusieurs commandes différentes\n"
 "– Impression de la commande en cuisine : vous permet d'imprimer les nouvelles commandes en cuisine ou au bar\n"
@@ -397,8 +398,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Ce module vous permet de définir un programme de fidélité dans le module\n"
-"Point de vente, à travers lequel les clients gagnent des points\n"
+"Ce module vous permet de définir un programme de fidélité dans le\n"
+"point de vente, grâce auquel les clients gagnent des points\n"
 "et obtiennent des récompenses.\n"
 "\n"
 
@@ -789,7 +790,7 @@ msgstr ""
 "\n"
 " L'objet de ce module est de mettre en œuvre des champs « isolés », c'est-à-dire des champs\n"
 "quasiment nuls. Cette mise en œuvre contourne la limite PostgreSQL\n"
-" sur le nombre de colonnes d'un tableau. Les valeurs de tous les champs\n"
+" du nombre de colonnes d'un tableau. Les valeurs de tous les champs\n"
 " isolés sont stockées dans un champ « sérialisé » sous la forme d'un mappage JSON."
 
 #. module: base
@@ -852,17 +853,17 @@ msgstr ""
 "à la spécification pain.008.001.02) à transmettre à votre banque afin de\n"
 "percevoir un ensemble de paiements.\n"
 "\n"
-"Pour pouvoir utiliser cette méthode de paiement, un client doit avoir\n"
+"Pour pouvoir utiliser ce mode de paiement, un client doit avoir\n"
 "remis un mandat à l'entreprise, dans lequel il donne son accord pour le prélèvement automatique.\n"
 " Cet accord doit être codé sous forme de « mandat de client » dans Odoo.\n"
 "\n"
 " Vous devez également répondre aux exigences suivantes pour générer\n"
 " correctement un fichier de prélèvement automatique SEPA : \n"
-" – Le compte de votre entreprise doit avoir un numéro IBAN valide\n"
+" – Le compte de votre entreprise doit avoir un numéro IBAN valide\n"
 "  – Le compte de votre entreprise doit être associé à une banque disposant d'un BIC valide\n"
-" – Votre entreprise doit avoir un identifiant de créancier (pour cela, accédez aux « paramètres » du module de comptabilité)\n"
+" – Votre entreprise doit avoir un identifiant de créancier (pour cela, accédez aux « paramètres » du module de comptabilité)\n"
 " – Votre entreprise doit avoir défini un journal pour recevoir les paiements par prélèvement automatique SEPA (encore une fois, dans les « paramètres » du module de comptabilité)\n"
-" – Tous les clients pour lesquels vous générez un paiement doivent posséder un numéro de compte IBAN valide dans une banque associée à un code BIC correct.\n"
+" – Tous les clients pour lesquels vous générez un paiement doivent posséder un numéro de compte IBAN valide dans une banque associée à un code BIC correct.\n"
 "\n"
 " Odoo vous informe si l'une de ces exigences n'est pas remplie.\n"
 "\n"
@@ -872,9 +873,9 @@ msgstr ""
 "au moyen d'un prélèvement automatique SEPA et de générer un fichier XML de collecte, les regroupant tels\n"
 "qu'ils apparaissent.\n"
 "\n"
-"Une méthode de paiement par « prélèvement automatique SEPA » dédiée est également disponible pour les\n"
+"Un mode de paiement par « prélèvement automatique SEPA » dédié est également disponible pour les\n"
 "factures ouvertes, lorsque vous sélectionnez un compte bancaire dans l'assistant « Enregistrer un paiement ».\n"
-"Utilisez-la afin de générer un paiement par prélèvement automatique SEPA pour les factures si vous avez ajouté un mandat\n"
+"Utilisez-le afin de générer un paiement par prélèvement automatique SEPA pour les factures si vous avez ajouté un mandat\n"
 "pour le propriétaire après sa validation. Un message d'erreur s'affiche si vous\n"
 "essayez d'utiliser cette méthode sur une facture dont le paiement ne peut pas être traité par mandat."
 
@@ -985,7 +986,7 @@ msgid ""
 "    Adds workcenters to Quality Control\n"
 msgstr ""
 "\n"
-" Ajoute des postes de charge au module Contrôle qualité\n"
+" Ajoute des postes de travail au module Contrôle qualité\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1072,7 +1073,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"* Permet de faire automatiquement des prévisions pour les projets créés à partir de commandes client"
+"* Permet de faire automatiquement des prévisions pour les projets créés à partir de commandes clients"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -1083,7 +1084,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"* Soumission et validation de feuille de temps\n"
+"* Envoi et validation de feuilles de temps\n"
 "* Activez la vue Grille pour les feuilles de temps\n"
 "    "
 
@@ -1912,14 +1913,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Règles de la paie belge.\n"
+"Règles de gestion de la paie en Belgique.\n"
 "======================\n"
 "\n"
 "    * Coordonnées des employés\n"
 "    * Contrats des employés\n"
 "    * Contrat basé sur le passeport \n"
-"    * Indemnités / déductions\n"
-"    * Permet de configurer les salaires de base / bruts / nets\n"
+"    * Indemnités/déductions\n"
+"    * Permet de configurer les salaires de base/bruts/nets\n"
 "    * Bulletins de l'employé\n"
 "    * Registre mensuel de paie\n"
 "    * Intégré à la gestion des congés\n"
@@ -1988,7 +1989,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Module intermédiaire pour évaluer des éléments de site Web.\n"
+"Module intermédiaire pour évaluer des éléments de site Web.\n"
 "        "
 
 #. module: base
@@ -2036,7 +2037,7 @@ msgstr ""
 "Validation de numéros de téléphone CRM\n"
 "============================\n"
 "\n"
-"Ce module permet de valider et de mettre en forme les numéros de téléphone des pistes et contacts."
+"Ce module permet de valider et de mettre en forme les numéros de téléphone des leads et des contacts."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -2208,10 +2209,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Validation de coordonnées sur le site Web\n"
+"Validation de coordonnées sur le site Web\n"
 "====================================\n"
 "\n"
-"Validez les coordonnées (téléphone, mobile) et normalisez-les pour les pistes et les contacts :\n"
+"Validez les coordonnées (téléphone, mobile) et normalisez-les pour les leads et les contacts :\n"
 "– Utilisez le format national pour le pays dans lequel se trouve votre entreprise\n"
 "– Utilisez le format international pour les autres\n"
 "        "
@@ -2280,7 +2281,7 @@ msgid ""
 "this event.\n"
 msgstr ""
 "\n"
-"Création d'inscriptions avec les commandes client.\n"
+"Création d'inscriptions avec les commandes clients.\n"
 "========================================\n"
 "\n"
 "Ce module vous permet d'automatiser et de lier le processus de création d'inscription à votre processus de vente et d'activer ainsi la fonctionnalité de facturation des inscriptions.\n"
@@ -2422,7 +2423,7 @@ msgid ""
 "Display orders to invoice in website dashboard.\n"
 msgstr ""
 "\n"
-"Affichez les commandes à facturer dans le tableau de bord du site Web.\n"
+"Affichez les commandes à facturer dans le tableau de bord du site Web.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum_doc
@@ -2806,7 +2807,7 @@ msgstr ""
 "Ce module permet d'envoyer une notification push FCM sur les appareils mobiles enregistrés\n"
 "pour chaque message de la zone de discussion.\n"
 "\n"
-"**Configurez vos clés API depuis Paramètre général**\n"
+"**Configurez vos clés API depuis les paramètres généraux**\n"
 "    "
 
 #. module: base
@@ -2853,7 +2854,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Assistance – Application de gestion de ticket\n"
+"Assistance – Application de gestion de tickets\n"
 "================================\n"
 "\n"
 "Fonctionnalités :\n"
@@ -4868,7 +4869,7 @@ msgid ""
 "An ISR will be generated if you specify the information it needs :\n"
 "    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
 "    - Your invoice must have been set assigned a bank account to receive its payment\n"
-"    (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
 "    - You must have set the postal references of your bank.\n"
 "    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
 "\n"
@@ -4879,24 +4880,6 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
-"\n"
-"Localisation helvétique\n"
-"==================\n"
-"Ce module définit un plan comptable pour les taxes en Suisse (Swiss PME/KMU 2015) et permet de générer un ISR lorsque vous imprimez une facture ou l'envoyez par courrier.\n"
-"\n"
-"Un ISR sera généré si vous indiquez les informations nécessaires :\n"
-"    – Le compte bancaire sur lequel vous voulez percevoir le paiement doit être défini et avoir une référence postale valide.\n"
-"    – Votre facture doit être associée à un compte bancaire pour recevoir le paiement\n"
-"    (vous pouvez effectuer cette opération manuellement, mais une valeur par défaut est automatiquement définie si vous avez indiqué un compte bancaire).\n"
-"    – Vous devez avoir défini les références postales de votre banque.\n"
-"    – Votre facture doit être en EUR ou en CHF (car les ISR n'acceptent pas d'autres devises)\n"
-"\n"
-"L'ISR est automatiquement généré si vous remplissez les critères précédemment cités.\n"
-"\n"
-"Voici comment cela fonctionne :\n"
-"    – Si vous imprimez la facture, deux fichiers sont téléchargés : la facture et l'IRS correspondant\n"
-"    – Si vous cliquez sur le bouton « Envoyer par courrier », deux fichiers sont joints au brouillon : la facture et l'ISR correspondant.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -5062,6 +5045,44 @@ msgstr ""
 "\n"
 "Ce module ajoute la possibilité d'afficher les donnée d'Odoo dans un tableur Google en temps réel.\n"
 "=========================================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -5643,6 +5664,19 @@ msgstr ""
 "Ce module contient essentiellement du code provenant de website_portal version 10 d'Odoo. L'objectif\n"
 "de ce module est d'autoriser l'affichage d'un portail client sans\n"
 "dépendre de fonctionnalités d'édition et de personnalisation de site Web."
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_barcodes
@@ -7514,11 +7548,6 @@ msgid "Accounting & Finance"
 msgstr "Comptabilité & finance"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
-msgid "Accounting &amp; Finance"
-msgstr "Comptabilité &amp; Finance"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
 msgstr "Comptabilité – Fabrication"
@@ -7665,6 +7694,11 @@ msgid "Actions"
 msgstr "Actions"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+msgid "Activate more currencies"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
 #: model:ir.model.fields,field_description:base.field_ir_filters_active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_active
@@ -7690,6 +7724,11 @@ msgstr "Actif/ve"
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
 msgstr "Ajouter les coûts de livraison aux commandes en ligne"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "Ajouter des abonnés"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -8032,15 +8071,6 @@ msgstr ""
 " sont pas des comptables."
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr ""
-"Vous trouverez également ici tous les documents associés et pourrez les "
-"télécharger en cliquant sur chacun d'eux."
-
-#. module: base
 #: code:addons/base/ir/ir_fields.py:378
 #, python-format
 msgid ""
@@ -8264,8 +8294,8 @@ msgstr "Rapports Comptables - Argentine"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
-msgid "Arguments sent to the client along withthe view tag"
-msgstr "Arguments envoyés au client avec la  vue"
+msgid "Arguments sent to the client along with the view tag"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -8404,6 +8434,11 @@ msgstr "Recherche automatique"
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
 msgstr "Automatiser les campagnes marketing"
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
+msgstr "Action Automatisée"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -9391,14 +9426,14 @@ msgid "Clean"
 msgstr "Nettoyer"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to attach a new document."
+msgstr "Cliquer ici pour joindre un nouveau document."
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Cliquer ici pour créer une vue personnalisée"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to create new documents."
-msgstr "Cliquez ici pour créer de nouveaux documents."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -10025,6 +10060,7 @@ msgstr "Créer une action contextuelle"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "Date de création"
 
@@ -10262,7 +10298,6 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -10633,6 +10668,28 @@ msgstr "Jour: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Jours"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Madame, Monsieur,\n"
+"\n"
+"D'après nos relevés, il semble que nous sommes encore en attente à ce jour de paiements de votre part, dont les détails sont indiqués ci-dessous.\n"
+"Si ces sommes ont déjà été réglées, vous pouvez ignorer ce rappel. Dans le cas contraire, nous vous remercions de bien vouloir nous faire parvenir votre règlement.\n"
+"Si vous avez d'autres questions concernant votre compte, vous pouvez nous contacter directement.\n"
+"\n"
+"En vous remerciant par avance.\n"
+"\n"
+"Cordialement,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -11865,6 +11922,12 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "Le champ \"Type\" ne peut pas être modifié dans les modèles"
 
 #. module: base
+#: code:addons/base/ir/ir_ui_view.py:1016
+#, python-format
+msgid "Field %r used in attributes must be present in view but is missing:"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
 msgstr "Champ d'Aide"
@@ -12188,6 +12251,23 @@ msgstr "France - Rapports Comptables"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr "France - FEC"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -13170,6 +13250,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "Identifiant de l'action si elle est définie dans un fichier XML"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "ID de l'enregistrement cible dans la base de données"
@@ -13242,11 +13327,8 @@ msgstr "Si coché, ce groupe peut être utilisé comme portail."
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
 msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
-"log at DEBUG level(this is very verbose and may include confidential info!)"
+"log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
-"Si activé, les messages de sessions SMTP seront écrits dans le journal du "
-"serveur au niveau DEBUG (ce qui est très verbeux et peut inclure des "
-"informations confidentielles!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -19695,11 +19777,9 @@ msgstr "Prospect"
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron_link_field_id
 msgid ""
-"Provide the field used to link the newly created recordon the record on used"
-" by the server action."
+"Provide the field used to link the newly created record on the record on "
+"used by the server action."
 msgstr ""
-"Indiquez le champ utilisé pour associer le nouvel enregistrement utilisé par"
-" l'action du serveur."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -20728,6 +20808,11 @@ msgid "Sell based on timesheets"
 msgstr "Vente fondée sur les feuilles de temps"
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "Envoyer un courriel"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account
 #: model:ir.module.module,summary:base.module_account_invoicing
 msgid "Send Invoices and Track Payments"
@@ -21689,11 +21774,12 @@ msgstr "Nom technique"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Paramètres techniques"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:750
+#: code:addons/base/ir/ir_translation.py:760
 #, python-format
 msgid "Technical Translations"
 msgstr "Traductions techniques"
@@ -21770,6 +21856,12 @@ msgid "Thailand - Accounting Reports"
 msgstr "Thaïlande - Rapports comptables"
 
 #. module: base
+#: code:addons/base/res/res_users.py:290
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -21782,12 +21874,9 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid ""
-"The Selection Options expression is not a valid Pythonic expression.Please "
+"The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
-"L'expression des options de liste déroulante n'est pas une expression Python"
-" valide. Veuillez renseigner une expression de la forme [('clé', 'Libellé'),"
-" ...]."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -22706,12 +22795,12 @@ msgstr "Mur Twitter"
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids anygap in the sequence (while "
+"later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
-"Deux implémentations d'objets de séquence sont proposées : « standard » et «"
-" continu ». Cette dernière est plus lente, mais qui interdit toute "
-"discontinuité dans la séquence contrairement à la première."
+"Deux implémentations d'objets de séquence sont proposées : «standard» et "
+"«sans écart» qui est plus lent, mais qui interdit tout écart dans la "
+"séquence (alors qu'ils sont possibles dans la première)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_type
@@ -24119,13 +24208,10 @@ msgstr "<a href=\"https://www.odoo.com/page/crm\"/>"
 #: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid ""
-"Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
-" do the trick."
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
 msgstr ""
-"Votre serveur Odoo ne prend pas en charge SMTP-sur-SSL. Utiliser STARTTLS à "
-"la place. Si SSL est nécessaire, une mise à jour à Python 2.6 du côté du "
-"serveur devrait faire l'affaire."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:477

@@ -197,7 +197,7 @@ class Holidays(models.Model):
              "\nChoose 'Allocation Request' if you want to increase the number of leaves available for someone")
     parent_id = fields.Many2one('hr.holidays', string='Parent')
     linked_request_ids = fields.One2many('hr.holidays', 'parent_id', string='Linked Requests')
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
+    department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
     holiday_type = fields.Selection([
@@ -216,6 +216,7 @@ class Holidays(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self.manager_id = self.employee_id and self.employee_id.parent_id
+        self.department_id = self.employee_id and self.employee_id.department_id
 
     @api.multi
     @api.depends('number_of_days_temp', 'type')
