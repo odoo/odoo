@@ -190,6 +190,89 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Add and process default values for a given record. Those values are
+     * parsed and stored in the '_changes' key of the record. For relational
+     * fields, sub-dataPoints are created, and missing relational data is
+     * fetched. Also generate default values for fields with no given value.
+     * Typically, this function is called with the result of a 'default_get'
+     * RPC, to populate a newly created dataPoint. It may also be called when a
+     * one2many subrecord is open in a form view (dialog), to generate the
+     * default values for the fields displayed in the o2m form view, but not in
+     * the list or kanban (mainly to correctly create sub-dataPoints for
+     * relational fields).
+     *
+     * @param {string} recordID local id for a record
+     * @param {Object} values dict of default values for the given record
+     * @param {Object} [options]
+     * @param {string} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
+     * @param {Array} [options.fieldNames] list of field names for which a
+     *   default value must be generated (used to complete the values dict)
+     * @returns {Deferred}
+     */
+    applyDefaultValues: function (recordID, values, options) {
+        options = options || {};
+        var record = this.localData[recordID];
+        var viewType = options.viewType || record.viewType;
+        var fieldNames = options.fieldNames || Object.keys(record.fieldsInfo[viewType]);
+        var field;
+        var fieldName;
+        record._changes = record._changes || {};
+
+        // fill default values for missing fields
+        for (var i = 0; i < fieldNames.length; i++) {
+            fieldName = fieldNames[i];
+            if (!(fieldName in values) && !(fieldName in record._changes)) {
+                field = record.fields[fieldName];
+                if (field.type === 'float' ||
+                    field.type === 'integer' ||
+                    field.type === 'monetary') {
+                    values[fieldName] = 0;
+                } else if (field.type === 'one2many' || field.type === 'many2many') {
+                    values[fieldName] = [];
+                } else {
+                    values[fieldName] = null;
+                }
+            }
+        }
+
+        // parse each value and create dataPoints for relational fields
+        var defs = [];
+        for (fieldName in values) {
+            field = record.fields[fieldName];
+            if (!field) {
+                continue; // ignore values for unknown fields
+            }
+            record.data[fieldName] = null;
+            var dp;
+            if (field.type === 'many2one' && values[fieldName]) {
+                dp = this._makeDataPoint({
+                    context: record.context,
+                    data: {id: values[fieldName]},
+                    modelName: field.relation,
+                    parentID: record.id,
+                });
+                record._changes[fieldName] = dp.id;
+            } else if (field.type === 'reference' && values[fieldName]) {
+                var ref = values[fieldName].split(',');
+                dp = this._makeDataPoint({
+                    context: record.context,
+                    data: {id: parseInt(ref[1])},
+                    modelName: ref[0],
+                    parentID: record.id,
+                });
+                defs.push(this._fetchNameGet(dp));
+                record._changes[fieldName] = dp.id;
+            } else if (field.type === 'one2many' || field.type === 'many2many') {
+                defs.push(this._processX2ManyCommands(record, fieldName, values[fieldName], options));
+            } else {
+                record._changes[fieldName] = this._parseServerValue(field, values[fieldName]);
+            }
+        }
+
+        return $.when.apply($, defs);
+    },
+    /**
      * Onchange RPCs may return values for fields that are not in the current
      * view. Those fields might even be unknown when the onchange returns (e.g.
      * in x2manys, we only know the fields that are used in the inner view, but
@@ -1397,6 +1480,7 @@ var BasicModel = AbstractModel.extend({
                     list = self._makeDataPoint({
                         fields: view ? view.fields : fieldInfo.relatedFields,
                         fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
+                        limit: fieldInfo.limit,
                         modelName: field.relation,
                         parentID: record.id,
                         static: true,
@@ -3227,27 +3311,8 @@ var BasicModel = AbstractModel.extend({
                 context: params.context,
             })
             .then(function (result) {
-                // fill default values for missing fields
-                for (var i = 0; i < fieldNames.length; i++) {
-                    var fieldName = fieldNames[i];
-                    if (!(fieldName in result)) {
-                        var field = params.fields[fieldName];
-                        if (field.type === 'float' ||
-                            field.type === 'integer' ||
-                            field.type === 'monetary') {
-                            result[fieldName] = 0;
-                        } else if (field.type === 'one2many' || field.type === 'many2many') {
-                            result[fieldName] = [];
-                        } else {
-                            result[fieldName] = null;
-                        }
-                    }
-                }
-
-                var data = {};
                 var record = self._makeDataPoint({
                     modelName: modelName,
-                    data: data,
                     fields: params.fields,
                     fieldsInfo: params.fieldsInfo,
                     context: params.context,
@@ -3256,37 +3321,7 @@ var BasicModel = AbstractModel.extend({
                     viewType: params.viewType,
                 });
 
-                var defs = [];
-                _.each(fieldNames, function (name) {
-                    var field = params.fields[name];
-                    data[name] = null;
-                    record._changes = record._changes || {};
-                    var dp;
-                    if (field.type === 'many2one' && result[name]) {
-                        dp = self._makeDataPoint({
-                            context: record.context,
-                            data: {id: result[name]},
-                            modelName: field.relation,
-                            parentID: record.id,
-                        });
-                        record._changes[name] = dp.id;
-                    } else if (field.type === 'reference' && result[name]) {
-                        var ref = result[name].split(',');
-                        dp = self._makeDataPoint({
-                            context: record.context,
-                            data: {id: parseInt(ref[1])},
-                            modelName: ref[0],
-                            parentID: record.id,
-                        });
-                        defs.push(self._fetchNameGet(dp));
-                        record._changes[name] = dp.id;
-                    } else if (field.type === 'one2many' || field.type === 'many2many') {
-                        defs.push(self._processX2ManyCommands(record, name, result[name]));
-                    } else {
-                        record._changes[name] = self._parseServerValue(field, result[name]);
-                    }
-                });
-                return $.when.apply($, defs)
+                return self.applyDefaultValues(record.id, result)
                     .then(function () {
                         var def = $.Deferred();
                         self._performOnChange(record, fields_key).always(function () {
@@ -3469,13 +3504,17 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} record
      * @param {string} fieldName
      * @param {Array[Array]} commands
+     * @param {Object} [options]
+     * @param {string} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {Deferred}
      */
-    _processX2ManyCommands: function (record, fieldName, commands) {
+    _processX2ManyCommands: function (record, fieldName, commands, options) {
         var self = this;
+        options = options || {};
         var defs = [];
         var field = record.fields[fieldName];
-        var fieldInfo = record.fieldsInfo[record.viewType][fieldName];
+        var fieldInfo = record.fieldsInfo[options.viewType || record.viewType][fieldName];
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
         var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
         var fields = view ? view.fields : fieldInfo.relatedFields;
