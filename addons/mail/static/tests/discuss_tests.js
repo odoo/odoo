@@ -1,12 +1,18 @@
 odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
-var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
-
+var ChatManager = require('mail.ChatManager');
+var Composers = require('mail.composer');
 var mailTestUtils = require('mail.testUtils');
 
+var concurrency = require('web.concurrency');
+var testUtils = require('web.test_utils');
+
+var BasicComposer = Composers.BasicComposer;
+var createBusService = mailTestUtils.createBusService;
 var createDiscuss = mailTestUtils.createDiscuss;
+var patchWindowGetSelection = testUtils.patchWindowGetSelection;
+var unpatchWindowGetSelection = testUtils.unpatchWindowGetSelection;
 
 QUnit.module('mail', {}, function () {
 
@@ -17,57 +23,125 @@ QUnit.module('Discuss client action', {
                 fields: {},
             },
         };
+        this.services = [ChatManager, createBusService()];
     },
 });
 
-QUnit.skip('mobile basic rendering', function (assert) {
-    // Unfortunately, this test is skipped for now because there is no way to
-    // execute the whole test suite in mobile (it only works test by test), so
-    // as the client action include for mobile is rejected when we are not in
-    // mobile, it isn't possible to test it
-    // Moreover, RPCs done by the chat_manager (e.g. message_fetch) should be
-    // properly mocked.
-    assert.expect(11);
+QUnit.test('basic rendering', function (assert) {
+    assert.expect(5);
+    var done = assert.async();
 
-    var parent = new Widget();
-    testUtils.addMockEnvironment(parent, {
-        data: this.data,
-        archs: {
-            'mail.message,false,search': '<search/>',
-        },
-        config: {device: {isMobile: true}},
-    });
-
-    var params = {
+    createDiscuss({
         id: 1,
         context: {},
         params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        // test basic rendering
+        var $sidebar = discuss.$('.o_mail_chat_sidebar');
+        assert.strictEqual($sidebar.length, 1,
+            "should have rendered a sidebar");
+
+        var $nocontent = discuss.$('.o_mail_chat_content');
+        assert.strictEqual($nocontent.length, 1,
+            "should have rendered the content");
+        assert.strictEqual($nocontent.find('.o_mail_no_content').length, 1,
+            "should display no content message");
+
+        var $inbox = $sidebar.find('.o_mail_chat_channel_item[data-channel-id=channel_inbox]');
+        assert.strictEqual($inbox.length, 1,
+            "should have the channel item 'channel_inbox' in the sidebar");
+
+        var $starred = $sidebar.find('.o_mail_chat_channel_item[data-channel-id=channel_starred]');
+        assert.strictEqual($starred.length, 1,
+            "should have the channel item 'channel_starred' in the sidebar");
+        discuss.destroy();
+        done();
+    });
+});
+
+QUnit.test('@ mention in channel', function (assert) {
+    assert.expect(9);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
     };
-    var discuss = createDiscuss(params);
 
-    // test basic rendering in mobile
-    assert.equal(discuss.$(".o_mail_chat_mobile_control_panel").length, 1, "Mobile control panel created");
-    assert.equal(discuss.$(".o_mail_mobile_tab").length, 4, "Four mobile tabs created");
-    assert.equal(discuss.$('.o_mail_chat_content').length, 1, "One default chat content pane created");
-    assert.equal(discuss.$(".o_mail_chat_tab_pane").length, 3, "Three mobile tab panes created");
+    // Remove the mention throttle to speed up the test
+    var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
+    BasicComposer.prototype.MENTION_THROTTLE = 1;
 
-    // Inbox
-    assert.equal(discuss.activeMobileTab, "channel_inbox", "'channel_inbox' is default active tab");
-    assert.ok(discuss.$(".o_channel_inbox_item:nth(0)").hasClass("btn-primary"), "Showing 'Inbox'");
+    var fetchListenersDef = $.Deferred();
 
-    // Starred
-    discuss.$(".o_channel_inbox_item[data-type='channel_starred']").click();
-    assert.ok(discuss.$(".o_channel_inbox_item:nth(1)").hasClass("btn-primary"), "Clicked on 'Starred'");
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_fetch_listeners') {
+                fetchListenersDef.resolve();
+                return $.when([ { id: 2, name: 'TestUser'} ]);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_chat_sidebar')
+                        .find('.o_mail_chat_channel_item[data-channel-id=1]');
+        assert.strictEqual($general.length, 1,
+            "should have the channel item with id 1");
+        assert.strictEqual($general.attr('title'), 'general',
+            "should have the title 'general'");
 
-    assert.ok(discuss.$(".o_mail_chat_content").is(":visible"), "Default main content pane visible");
+        // click on general
+        $general.click();
+        var $input = discuss.$('.o_composer_input').first();
+        assert.ok($input.length, "should display a composer input");
 
-    discuss.$(".o_mail_mobile_tab[data-type='dm']").click();
-    assert.equal(discuss.activeMobileTab, "dm", "After click on 'Conversation', is now active tab");
+        // Simulate '@' typed by user with mocked Window.getSelection
+        // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
+        $input.focus();
+        $input.text("@");
+        patchWindowGetSelection();
+        $input.trigger('keyup');
 
-    assert.ok(!discuss.$(".o_mail_chat_content").is(":visible"), "none", "'Main' content pane is invisible");
-    assert.ok(discuss.$(".o_mail_chat_tab_pane:nth(0)").is(":visible"), "'Conversation' pane is visible");
+        fetchListenersDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                assert.strictEqual(discuss.$('.dropup.o_composer_mention_dropdown.open').length, 1,
+                "dropup menu for partner mentions should be open");
 
-    discuss.destroy();
+                var $mentionProposition = discuss.$('.o_mention_proposition');
+                assert.strictEqual($mentionProposition.length, 1,
+                    "should display one partner mention proposition");
+                assert.strictEqual($mentionProposition.data('id'), 2,
+                    "partner mention should link to the correct partner id");
+                assert.strictEqual($mentionProposition.find('.o_mention_name').text(), "TestUser",
+                    "partner mention should display the correct partner name");
+
+                $mentionProposition.click();
+                assert.strictEqual(discuss.$('.o_mention_proposition').length, 0,
+                    "should not have any partner mention proposition after clicking on it");
+                assert.strictEqual($input.find('a').text() , "@TestUser",
+                    "should have the correct mention link in the composer input");
+
+                BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
+                unpatchWindowGetSelection();
+                discuss.destroy();
+                done();
+        });
+    });
 });
 
 });
