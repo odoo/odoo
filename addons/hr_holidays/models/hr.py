@@ -218,7 +218,12 @@ class Employee(models.Model):
 
     def write(self, values):
         res = super(Employee, self).write(values)
-        if 'parent_id' in values:
+        if 'parent_id' in values or 'department_id' in values:
             holidays = self.env['hr.holidays'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
-            holidays.write({'manager_id': values['parent_id']})
+            hr_vals = {}
+            if values.get('parent_id') is not None:
+                hr_vals['manager_id'] = values['parent_id']
+            if values.get('department_id') is not None:
+                hr_vals['department_id'] = values['department_id']
+            holidays.write(hr_vals)
         return res
