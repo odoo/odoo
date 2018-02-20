@@ -49,8 +49,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-08 13:21+0000\n"
-"PO-Revision-Date: 2017-11-08 13:21+0000\n"
+"POT-Creation-Date: 2018-02-19 14:33+0000\n"
+"PO-Revision-Date: 2018-02-19 14:33+0000\n"
 "Last-Translator: e2f_KAZ <e2fKAZ@outlook.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -340,7 +340,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Dieses Modul fügt einen benutzerdefinierten Verkaufskanal hinzu, damit der Point of Sale Ihre Point of Sale-Verkäufe leichter anzeigen und verwalten kann.\n"
+"Dieses Modul fügt einen benutzerdefinierten Vertriebskanal hinzu, damit der Point of Sale Ihre Point of Sale-Verkäufe leichter anzeigen und verwalten kann.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -3513,10 +3513,10 @@ msgstr ""
 "Hauptfertigungszeitplan\n"
 "==========================\n"
 "\n"
-"Manchmal müssen Sie Bestellungen für Komponenten von\n"
+"Manchmal müssen Sie Beschaffungsaufträge für Komponenten von\n"
 "Fertigungsaufträgen erstellen, die erst später erfasst werden. Oder für Beschaffungsaufträge, bei denen Ihnen erst später die Beschaffungsaufträge vorliegen. Die Lösung besteht darin,\n"
 "Ihre Verkaufprognosen vorherzusagen und auf dieser Grundlage bereits einige Fertigungsaufträge\n"
-" oder Bestellungen zu erstellen.\n"
+" oder Beschaffungsaufträge zu erstellen.\n"
 "\n"
 "Sie müssen die Produkte auswählen, die Sie dem Bericht hinzufügen möchten. Sie können\n"
 "die Periode für den Bericht auswählen: Tag, Woche, Monat, ... Es ist auch möglich,den\n"
@@ -4923,7 +4923,7 @@ msgid ""
 "An ISR will be generated if you specify the information it needs :\n"
 "    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
 "    - Your invoice must have been set assigned a bank account to receive its payment\n"
-"    (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
 "    - You must have set the postal references of your bank.\n"
 "    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
 "\n"
@@ -4934,23 +4934,6 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
-"\n"
-"Lokalisierung für die Schweiz\n"
-"==================\n"
-"Dieses Modul definiert einen Kontenplan für die Schweiz (Schweizer PME/KMU 2015), berechnet Steuern und aktiviert die Generierung von ISR, wenn Sie eine Rechnung ausdrucken oder diese per E-Mail senden.\n"
-"\n"
-"ISR wird generiert, wenn Sie eine Angabe zu den benötigten Informationen machen: \n"
-" - Das Bankkonto, über das Sie bezahlt werden wollen, muss eingestellt sein, und eine gültige postalische Referenz haben.\n"
-" - Ihre Rechnung muss einem Bankkonto zum Erhalt der Zahlung zugewiesen worden sein\n"
-" (das kann manuell erfolgen, aber ein Standardwert wird automatisch gesetzt, wenn Sie ein Bankkonto definiert haben).\n"
-" - Sie müssen die postalischen Referenzen Ihrer Bank festgelegt haben.\n"
-" - Ihre Rechnung muss in EUR oder CHF gestellt sein (da ISRs keine anderen Währungen akzeptieren).\n"
-"\n"
-"Die Generierung der ISR ist automatisch, wenn Sie die vorherigen Kriterien erfüllen.\n"
-"\n"
-"Und so funktioniert es:\n"
-" - Das Audrucken der Rechnung löst den Download von zwei Dateien aus: der Rechnung und der zugehörigen ISR\n"
-" - Wenn Sie auf die Schaltfläche „Send by mail“ (per E-Mail senden) klicken, werden zwei Dateien an Ihren E-Mail-Entwurf angehängt: die Rechnung und die entsprechende ISR.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -5115,6 +5098,44 @@ msgstr ""
 "\n"
 "Dieses Modul fügt die Möglichkeit, Daten aus Odoo  in Google Spreadsheets in Echtzeit anzuzeigen, hinzu.\n"
 "=================================================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -5713,6 +5734,19 @@ msgstr ""
 "Abhängigkeit zu den Webseiten-Ausgabe- und -Anpassungs-Kapazitäten zu ermöglichen."
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_barcodes
 msgid ""
 "\n"
@@ -6298,7 +6332,7 @@ msgid ""
 "This module provides standard tools (account model, context manager and helpers) to support In-App purchases inside Odoo.\n"
 msgstr ""
 "\n"
-"Dieses Modul bietet Standard-Tools (Kontomodell, Kontext-Manager und Helfer) an, um In-App-Käufe innerhalb von Odoo zu unterstützen.\n"
+"Dieses Modul bietet Standard-Werkzeuge (Kontomodell, Kontext-Manager und Helfer) an, um In-App-Käufe innerhalb von Odoo zu unterstützen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -7583,11 +7617,6 @@ msgid "Accounting & Finance"
 msgstr "Finanzen & Controlling"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
-msgid "Accounting &amp; Finance"
-msgstr "Buchhaltung &amp; Finanzen"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
 msgstr "Rechnungslegung – MRP"
@@ -7735,6 +7764,11 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+msgid "Activate more currencies"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
 #: model:ir.model.fields,field_description:base.field_ir_filters_active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_active
@@ -7760,6 +7794,11 @@ msgstr "Aktiv"
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
 msgstr "Erlaubt es Frachtkosten im Online-Shop zu berechnen"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "Abonnenten hinzufügen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -8084,15 +8123,6 @@ msgstr ""
 " genutzt werden, die keine ausgewiesenen Buchhaltungsexperten sind."
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr ""
-"Hier finden Sie auch alle zugehörigen Dokumente, die Sie herunterladen "
-"können, indem Sie auf das jeweilige Dokument klicken."
-
-#. module: base
 #: code:addons/base/ir/ir_fields.py:378
 #, python-format
 msgid ""
@@ -8316,10 +8346,8 @@ msgstr "Argentinien - Buchhaltungsauswertungen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
-msgid "Arguments sent to the client along withthe view tag"
+msgid "Arguments sent to the client along with the view tag"
 msgstr ""
-"Argumente, die zusammen mit der Sicht-Kennung an die Anwendung (client) "
-"gesendet werden"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -8458,6 +8486,11 @@ msgstr "Automatische Suche"
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
 msgstr "Marketingkampagnen automatisieren"
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
+msgstr "Automatische Aktion"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -9443,14 +9476,14 @@ msgid "Clean"
 msgstr "Sauber"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to attach a new document."
+msgstr "Klicken Sie hier, um ein neues Dokument anzuhängen."
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Klicken Sie hier, um eine angepasste Ansicht zu erstellen"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to create new documents."
-msgstr "Klicken Sie hier, um neue Dokumente zu erstellen."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -10073,6 +10106,7 @@ msgstr "Kontext-Aktion erstellen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "Erstellt am"
 
@@ -10308,7 +10342,6 @@ msgstr "Erstellt von"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -10679,6 +10712,27 @@ msgstr "Tag: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Tage"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Sehr geehrte Damen und Herren,\n"
+"\n"
+"unsere Aufzeichnungen zeigen, dass einige Zahlungen auf Ihrem Konto noch unbeglichen sind. Details finden Sie unten.\n"
+"Wurde der Betrag zwischenzeitlich bezahlt, betrachten Sie diese Nachricht als gegenstandslos. Ansonsten weisen Sie den unten angegeben Betrag zur Zahlung an uns an. Wenn Sie Fragen zu Ihrem Konto haben, sprechen Sie uns bitte an.\n"
+"\n"
+"Vielen Dank für Ihre Kooperation.\n"
+"\n"
+"Mit freundlichen Grüßen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -11428,7 +11482,7 @@ msgstr ""
 "Enterprise-Erweiterung für MRP\n"
 "\n"
 "* Arbeitsauftragsplanung. Prüfen Sie die Planung über Gantt-Ansichten, die nach Produktionsauftrag/Arbeitsplatz\n"
-"* Lieferverfolgungs-Bericht\n"
+"* Lieferverfolgungsbericht\n"
 "* Kostenstruktur-Bericht (mrp_account) zusammengestellt sind."
 
 #. module: base
@@ -11939,6 +11993,12 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "Das Feld \"Typ\" kann auf Modellen nicht bearbeitet werden."
 
 #. module: base
+#: code:addons/base/ir/ir_ui_view.py:1016
+#, python-format
+msgid "Field %r used in attributes must be present in view but is missing:"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
 msgstr "Feldhilfe"
@@ -12259,6 +12319,23 @@ msgstr "Französische Buchhaltungsauswertungen"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr "France - FEC"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -13244,6 +13321,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "Die ID für diese ist in einem xml File definiert."
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "ID des Zieldatensatzes in der DB"
@@ -13316,11 +13398,8 @@ msgstr "Wenn aktiviert, kann diese Gruppe als Portalgruppe definiert werden."
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
 msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
-"log at DEBUG level(this is very verbose and may include confidential info!)"
+"log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
-"Wenn aktiviert, wird die komplette Ausgabe der SMTP Sitzung im DEBUG Mode in"
-" den Serverlog geschrieben (Dieser ist sehr umfangreich und kann "
-"vertrauliche Information enthalten!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -14688,7 +14767,7 @@ msgid ""
 msgstr ""
 "Konto und Zahlung verknüpfen und Portal-Zahlung hinzufügen\n"
 "\n"
-"Tools für die kontobezogene Zahlung sowie Portaloptionen bereitstellen, um die Zahlung zu\n"
+"Werkzeuge für die kontobezogene Zahlung sowie Portaloptionen bereitstellen, um die Zahlung zu\n"
 "ermöglichen.\n"
 "\n"
 " * AKTUALISIEREN\n"
@@ -14712,10 +14791,10 @@ msgid ""
 msgstr ""
 "Verkauf und Zahlung verknüpfen\n"
 "\n"
-"Tools für die verkaufsbezogene Zahlung bereitstellen\n"
+"Werkzeuge für die verkaufsbezogene Zahlung bereitstellen\n"
 "\n"
 " * spezifische Abwicklung von Transaktionen wie die Bestätigung von Verkaufsaufträgen\n"
-" * Tools-Methode zum Umgang mit Transaktionen, wenn Sie die Zahlung/den Verkauf zulassen\n"
+" * Werkzeuge-Methode zum Umgang mit Transaktionen, wenn Sie die Zahlung/den Verkauf zulassen\n"
 " * JS-Code für den Umgang mit einem Zahlungsformular (e-Commerce\n"
 " * zahlungsbezogene Felder auf Verkaufsvertrag hinzufügen\n"
 
@@ -16227,13 +16306,13 @@ msgstr ""
 "sind standardmäßig so konfiguriert, dass sie alle möglichen Events tracken, die sich auf\n"
 "Warenkörbe, Aufrufe, usw. beziehen.\n"
 "\n"
-"Da die Odoo-Marketingtools (Massen-Mailings, Kampagnen usw.) auch mit\n"
+"Da die Odoo-Marketing-Werkzeuge (Massen-Mailings, Kampagnen usw.) auch mit\n"
 "Google Analytics verknüpft sind,erhalten Sie eine 360°-Ansicht Ihres Geschäfts.\n"
 "\n"
 "SEO-optimierte Blog-Beiträge\n"
 "------------------------\n"
 "\n"
-"SEO-Tools können direkt verwendet werden, ohne dass eine Konfiguration erforderlich ist. Odoo schlägt\n"
+"SEO-Werkzeuge können direkt verwendet werden, ohne dass eine Konfiguration erforderlich ist. Odoo schlägt\n"
 "entsprechend den in Google am häufigsten gesuchten Begriffen Keywords für Ihre Beiträge vor. Google\n"
 "Analytics verfolgt die Interessen Ihrer Besucher und Sitemaps werden automatisch erstellt,\n"
 "damit eine schnelle Google-Indizierung möglich ist, usw.\n"
@@ -16445,7 +16524,7 @@ msgstr ""
 "\n"
 "Stärken Sie gute Gewohnheiten und verbessern Sie die Gewinnquoten mit Echtzeit-Anerkennung und\n"
 "-Belohnungen, die durch die [ [Gamifizierung](http:/en.wikipedia.org/wiki/Gamification) inspiriert sind. \n"
-"Richten Sie Verkaufskanäle an klaren Geschäftszielen aus und verwenden Sie dazu Boards für Herausforderungen, persönliche Ziele und Team Leader.\n"
+"Richten Sie Vertriebskanäle an klaren Geschäftszielen aus und verwenden Sie dazu Boards für Herausforderungen, persönliche Ziele und Team Leader.\n"
 "\n"
 "### Bestenlisten\n"
 "\n"
@@ -17419,7 +17498,7 @@ msgstr ""
 "Open Source-Lieferkette.\n"
 "\n"
 "Automatisieren</a> Sie Beschaffungsvorschläge, starten Sie eine Anfrage für ein Angebot, verfolgen Sie\n"
-"Bestellungen, verwalten Sie die Lieferanteninformationen, kontrollieren Sie den Erhalt von Produkten und\n"
+"Beschaffungsaufträgen, verwalten Sie die Lieferanteninformationen, kontrollieren Sie den Erhalt von Produkten und\n"
 "überprüfen Sie die Rechnungen von Lieferanten.\n"
 "\n"
 "Automatisierte Beschaffungsvorschläge\n"
@@ -17430,21 +17509,21 @@ msgstr ""
 "Einkaufs und Lagerbestands mit Beschaffungsregeln abhängig von\n"
 "Lagerbeständen, Logistikregeln, Verkaufsaufträgen, prognostizierten Fertigungsaufträgen, usw.\n"
 "\n"
-"Senden Sie mit nur einem Klick Anfragen für Angebote oder Bestellungen an Ihren Lieferanten.\n"
-"Erhalten Sie über Ihre Bestellung Zugang zu Produktzugängen und Rechnungen.\n"
+"Senden Sie mit nur einem Klick Anfragen für Angebote oder Beschaffungsaufträge an Ihren Lieferanten.\n"
+"Erhalten Sie über Ihre Beschaffungsaufträge Zugang zu Produktzugängen und Rechnungen.\n"
 "\n"
 "Ausschreibungen für den Erwerb\n"
 "----------------\n"
 "\n"
 "Veröffentlichen Sie Ausschreibungen für den Erwerb, integrieren Sie die Antworten des Lieferanten in den Prozess und\n"
-"vergleichen Sie Vorschläge. Wählen Sie das beste Angebot und übermitteln Sie Bestellungen auf einfache Weise.\n"
+"vergleichen Sie Vorschläge. Wählen Sie das beste Angebot und übermitteln Sie Beschaffungsaufträge auf einfache Weise.\n"
 "Mit der Berichtsfunktion können Sie im Nachhinein die Qualität Ihrer Lieferanten analysieren.\n"
 "\n"
 "\n"
 "E-Mail-Integrationen\n"
 "------------------\n"
 "\n"
-"Integrieren Sie die gesamte Kommunikation mit Lieferanten auf den Bestellungen (oder Angebotsanfragen), um die Verhandlung\n"
+"Integrieren Sie die gesamte Kommunikation mit Lieferanten auf den Beschaffungsaufträgen (oder Angebotsanfragen), um die Verhandlung\n"
 "und Probleme mit dem Kundendienst nachvollziehen zu können. Mit dem\n"
 "Nachforderungsmanagement-Modul können Sie Probleme mit Lieferanten verfolgen.\n"
 "\n"
@@ -17471,8 +17550,8 @@ msgstr ""
 "Kontrollmethode entsprechend Ihrer Bedürfnisse.\n"
 "\n"
 "Kontrollieren Sie mühelos Ihre Lieferantenrechnungen. Wählen Sie die richtige Methode entsprechend\n"
-"Ihrer Bedürfnisse: Generieren Sie vorab Rechnungsentwürfe auf der Grundlage von Bestellungen, von Produktzugängen,\n"
-"erstellen Sie Rechnungen manuell und importieren Sie Positionen aus Bestellungen,\n"
+"Ihrer Bedürfnisse: Generieren Sie vorab Rechnungsentwürfe auf der Grundlage von Beschaffungsaufträgen, von Produktzugängen,\n"
+"erstellen Sie Rechnungen manuell und importieren Sie Positionen aus Beschaffungsaufträgen,\n"
 "usw.\n"
 "\n"
 
@@ -17651,11 +17730,11 @@ msgstr ""
 "Mobiltelefone, Tablets, Desktop) Sie müssen sich keine Sorgen um mobile Inhalte machen, denn\n"
 "die Inhalte werden standardmäßig an die mobilen Geräte angepasst.\n"
 "\n"
-"SEO-Tools nur einen Klick entfernt\n"
+"SEO-Werkzeuge nur einen Klick entfernt\n"
 "----------------------------\n"
 "\n"
-"Das Tool für *Werbeaktionen* empfiehlt Schlüsselwörter entsprechend der am häufigsten in Google gesuchten Begriffe.\n"
-"Tools zur Suchmaschinen-Optimierung sind gebrauchsfertig, ohne dass eine Konfiguration\n"
+"Das Werkzeug für *Werbeaktionen* empfiehlt Schlüsselwörter entsprechend der am häufigsten in Google gesuchten Begriffe.\n"
+"Werkzeuge zur Suchmaschinen-Optimierung sind gebrauchsfertig, ohne dass eine Konfiguration\n"
 "erforderlich ist.\n"
 "\n"
 "\n"
@@ -17919,7 +17998,7 @@ msgstr ""
 "sind standardmäßig so konfiguriert, dass sie alle möglichen Events verfolgen, die mit Warenkörben,\n"
 "Aufrufen, usw. im Zusammenhang stehen.\n"
 "\n"
-"Da auch die Odoo-Marketing-Tools (Massen-Mailing, Kampagnen, usw.) ebenfalls mit\n"
+"Da auch die Odoo-Marketing-Werkzeuge (Massen-Mailing, Kampagnen, usw.) ebenfalls mit\n"
 "Google Analytics verknüpft sind, erhalten Sie eine vollständige Übersicht über Ihr Unternehmen.\n"
 "\n"
 "Erschließen Sie neue Märkte\n"
@@ -17944,7 +18023,7 @@ msgstr ""
 "Akquirieren Sie neue Kunden\n"
 "-----------------------------\n"
 "\n"
-"SEO-Tools sind einsatzbereit, keine Konfiguration ist erforderlich. Odoo schlägt\n"
+"SEO-Werkzeuge sind einsatzbereit, keine Konfiguration ist erforderlich. Odoo schlägt\n"
 "Keywords auf der Grundlage der am häufigsten in Google gesuchten Begriffe vor, Google Analytics verfolgt Ihre\n"
 "Warenkorb-Events, Sitemaps werden automatisch für die Google-Indexierung erstellt,\n"
 "usw.n\n"
@@ -19682,11 +19761,9 @@ msgstr "Interessent"
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron_link_field_id
 msgid ""
-"Provide the field used to link the newly created recordon the record on used"
-" by the server action."
+"Provide the field used to link the newly created record on the record on "
+"used by the server action."
 msgstr ""
-"Geben Sie das Feld an, das verwendet wird, um den neu erstellten Datensatz "
-"mit dem Datensatz zu verknüpfen, der von der Serveraktion verwendet wird."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -20715,6 +20792,11 @@ msgid "Sell based on timesheets"
 msgstr "Verkauf basierend auf Zeiterfassung"
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "E-Mail versenden"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account
 #: model:ir.module.module,summary:base.module_account_invoicing
 msgid "Send Invoices and Track Payments"
@@ -21648,8 +21730,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_account_taxcloud
 msgid "TaxCloud make it easy for business to comply with sales tax law"
 msgstr ""
-"TaxCloud erleichtert es den Unternehmen, das Verkaufssteuer-Gesetz "
-"einzuhalten"
+"TaxCloud erleichtert es den Unternehmen, das Umsatzsteuer-Gesetz einzuhalten"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
@@ -21680,11 +21761,12 @@ msgstr "Technischer Name"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technische Einstellungen"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:750
+#: code:addons/base/ir/ir_translation.py:760
 #, python-format
 msgid "Technical Translations"
 msgstr "Technische Übersetzung"
@@ -21761,6 +21843,12 @@ msgid "Thailand - Accounting Reports"
 msgstr "Thailändische Buchhaltungsauswertungen"
 
 #. module: base
+#: code:addons/base/res/res_users.py:290
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -21773,11 +21861,9 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid ""
-"The Selection Options expression is not a valid Pythonic expression.Please "
+"The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
-"Die Anweisung für die Auswahl ist kein gültiger Python-Ausruck. Bitte "
-"hinterlegen Sie einen gültigen Ausdruck im Format [('key','Label'),...]."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -22699,11 +22785,12 @@ msgstr "Twitter Roller"
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids anygap in the sequence (while "
+"later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
-"2 Arten von Folgen werden unterstützt. Standard: Schneller jedoch mit "
-"Lücken. Ohne Lücken: Etwas langsamer, erstellt aber lückenlose Nummerierung."
+"2 Arten von Folgen werden unterstützt. \n"
+"* Standard: Schneller jedoch mit Lücken.\n"
+"* Ohne Lücken: Etwas langsamer, erstellt aber lückenlose Nummerierung."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_type
@@ -24126,12 +24213,10 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid ""
-"Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
-" do the trick."
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
 msgstr ""
-"Ihr OpenERP Server unterstützt SMTP-über-SSL nicht. Verwenden Sie STARTTLS. "
-"SSL wird gebraucht. Ein serverseitiges Upgrade auf Python 2.6 sollte helfen."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:477
@@ -24331,7 +24416,7 @@ msgstr "z.B. www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
 msgid "eBay Connector"
-msgstr "eBay connector"
+msgstr "eBay-Konnektor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale

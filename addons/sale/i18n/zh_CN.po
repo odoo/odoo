@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 15:28+0000\n"
-"PO-Revision-Date: 2018-01-29 15:28+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: 石家庄_老刘 <liuaiqun@sina.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1589,7 +1589,6 @@ msgid "No longer edit orders once confirmed"
 msgstr "一旦确认，不能再编辑订单"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
@@ -1597,6 +1596,15 @@ msgid ""
 msgstr ""
 "请注意，一旦报价成为销售订单，它将被\n"
 "                 从报价清单移动到销售订单清单。"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sales Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
+msgstr ""
+"请注意，一旦报价成为销售订单，它将被\n"
+"从报价单移动到销售订单列表。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2359,12 +2367,6 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "在不同的度量单位产品中采购和销售"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
-msgid ""
-"Sell digital products - provide downloadable content on your customer portal"
-msgstr "销售数字产品 - 在你的客户门户网站提供可下载的内容"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "可在每个包装中多个单位销售产品"
@@ -2938,11 +2940,19 @@ msgid "Your Order has been confirmed."
 msgstr "您的订单已经确认。"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
+msgstr ""
+"你的下一步行动应该有效：确认报价\n"
+"一个销售订单，然后创建发票和付款方式。"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 "你的下一步行动应该有效：确认报价\n"
 "一个销售订单，然后创建发票和付款方式。"

@@ -244,9 +244,69 @@ class TestSaleStock(TestSale):
         the new move lines.
         """
         # sell two products
-        item1 = self.products['prod_order']
-        item2 = self.products['prod_del']
+        item1 = self.products['prod_order']  # consumable
+        item2 = self.products['prod_del']    # stockable
 
+        self.so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
+            ],
+        })
+        self.so.action_confirm()
+
+        # deliver them
+        # One of the move is for a consumable product, thus is assigned. The second one is for a
+        # stockable product, thus is unavailable. Hitting `button_validate` will first ask to
+        # process all the reserved quantities and, if the user chose to process, a second wizard
+        # will ask to create a backorder for the unavailable product.
+        self.assertEquals(len(self.so.picking_ids), 1)
+        res_dict = self.so.picking_ids[0].button_validate()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        self.assertEqual(wizard._name, 'stock.immediate.transfer')
+        res_dict = wizard.process()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        self.assertEqual(wizard._name, 'stock.backorder.confirmation')
+        wizard.process()
+
+        # Now, the original picking is done and there is a new one (the backorder).
+        self.assertEquals(len(self.so.picking_ids), 2)
+        for picking in self.so.picking_ids:
+            move = picking.move_lines
+            if picking.backorder_id:
+                self.assertEqual(move.product_id.id, item2.id)
+                self.assertEqual(move.state, 'confirmed')
+            else:
+                self.assertEqual(picking.move_lines.product_id.id, item1.id)
+                self.assertEqual(move.state, 'done')
+
+        # update the two original sale order lines
+        self.so.write({
+            'order_line': [
+                (1, self.so.order_line[0].id, {'product_uom_qty': 2}),
+                (1, self.so.order_line[1].id, {'product_uom_qty': 2}),
+            ]
+        })
+        # a single picking should be created for the new delivery
+        self.assertEquals(len(self.so.picking_ids), 2)
+        backorder = self.so.picking_ids.filtered(lambda p: p.backorder_id)
+        self.assertEqual(len(backorder.move_lines), 2)
+        for backorder_move in backorder.move_lines:
+            if backorder_move.product_id.id == item1.id:
+                self.assertEqual(backorder_move.product_qty, 1)
+            elif backorder_move.product_id.id == item2.id:
+                self.assertEqual(backorder_move.product_qty, 2)
+
+    def test_05_create_picking_update_saleorderline(self):
+        """ Same test than test_04 but only with enough products in stock so that the reservation
+        is successful.
+        """
+        # sell two products
+        item1 = self.products['prod_order']  # consumable
+        item2 = self.products['prod_del']    # stockable
+
+        self.env['stock.quant']._update_available_quantity(item2, self.env.ref('stock.stock_location_stock'), 2)
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'order_line': [

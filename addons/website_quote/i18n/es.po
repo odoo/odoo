@@ -34,8 +34,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -146,11 +146,6 @@ msgstr ""
 "</div>"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "! You can"
-msgstr "! Tu puedes"
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -171,6 +166,7 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
@@ -1146,12 +1142,6 @@ msgid "Optional Products Lines"
 msgstr "Líneas de productos opcionales"
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:210
-#, python-format
-msgid "Order paid by %s. Transaction: %s. Amount: %s."
-msgstr "Pedido pagado antes del %s. Transacción: %s. Importe: %s."
-
-#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
 msgstr "Nuestra oferta"
@@ -1755,6 +1745,11 @@ msgid "Yearly upgrade training sessions when a new version is released"
 msgstr "Sesiones de formación anuales cuando hay nuevas versiones disponibles"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "You can"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
@@ -1824,19 +1819,9 @@ msgid "Your order ${object.name} is confirmed"
 msgstr "Su pedido ${object.name} está confirmado"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 msgid "Your payment has been authorized."
 msgstr "Se ha autorizado su pago."
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your payment has been received, thank you for your trust."
-msgstr "Su pago ha sido recibido, gracias por su confianza."
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your transaction is waiting confirmation."
-msgstr "Su transacción está esperando confirmación."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1871,18 +1856,25 @@ msgstr "para cualquier cuestión."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been cancelled"
-msgstr "ya ha sido cancelada"
+msgid ""
+"for\n"
+"                          any questions."
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been validated"
-msgstr "ya ha sido validada"
+msgid "has already been cancelled!"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has not yet been sent"
-msgstr "aún no ha sido enviada"
+msgid "has already been validated!"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent!"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

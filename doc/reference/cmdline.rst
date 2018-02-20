@@ -54,7 +54,7 @@ Running the server
         Maximum allowed virtual memory per worker. If the limit is exceeded,
         the worker is killed and recycled at the end of the current request.
 
-        Defaults to 640MB.
+        Defaults to 2048MB.
 
     .. option:: --limit-memory-hard <limit>
 
@@ -62,7 +62,7 @@ Running the server
         immediately killed without waiting for the end of the current request
         processing.
 
-        Defaults to 768MB.
+        Defaults to 2560MB.
 
     .. option:: --limit-time-cpu <limit>
 

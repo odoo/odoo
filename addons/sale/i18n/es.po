@@ -7,15 +7,14 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 # Carlos Lopez <celm1990@hotmail.com>, 2017
-# Antonio Trueba, 2018
 # e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-29 15:28+0000\n"
-"PO-Revision-Date: 2018-01-29 15:28+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1611,7 +1610,6 @@ msgid "No longer edit orders once confirmed"
 msgstr "No editar órdenes una vez confirmadas"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
@@ -1619,6 +1617,15 @@ msgid ""
 msgstr ""
 "Tenga en cuenta que una vez que un presupuesto se convierta en un pedido de venta, se moverá\n"
 "                 de la lista de presupuestos a la lista de pedidos de venta."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sales Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
+msgstr ""
+"Tenga en cuenta que una vez que el presupuesto se convierta en un pedido de venta,\n"
+"se moverá desde la lista de presupuestos a la lista de pedidos de venta."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2396,14 +2403,6 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Vender y comprar productos en diferentes unidades de medida"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
-msgid ""
-"Sell digital products - provide downloadable content on your customer portal"
-msgstr ""
-"Vender productos digitales - proporcionar contenido descargable en su portal"
-" de clientes"
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Vender productos por múltiplo de unidad"
@@ -3027,11 +3026,19 @@ msgid "Your Order has been confirmed."
 msgstr "Su pedido ha sido confirmado."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
+msgstr ""
+"Sus próximas acciones deberían fluir de manera eficiente: confirmar el presupuesto\n"
+"a pedido de venta, luego crear la factura y cobrarla."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 "Sus próximas acciones deberían fluir de manera eficiente: confirmar el presupuesto\n"
 "a pedido de venta, luego crear la factura y cobrarla."
