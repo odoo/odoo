@@ -168,7 +168,7 @@ class Partner(models.Model):
         return True
 
     @api.multi
-    def _notify_by_email(self, message, force_send=False, send_after_commit=True, user_signature=True):
+    def _notify_by_email(self, message, force_send=False, send_after_commit=True, user_signature=True, base_template=None):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called.
 
@@ -180,7 +180,6 @@ class Partner(models.Model):
             return True
 
         # existing custom notification email
-        base_template = None
         if message.model and self._context.get('custom_layout', False):
             base_template = self.env.ref(self._context['custom_layout'], raise_if_not_found=False)
         if not base_template:
