@@ -42,10 +42,6 @@ class ResConfigSettings(models.TransientModel):
     has_google_analytics = fields.Boolean("Google Analytics", config_parameter='website.has_google_analytics')
     has_google_analytics_dashboard = fields.Boolean("Google Analytics in Dashboard", config_parameter='website.has_google_analytics_dashboard')
     has_google_maps = fields.Boolean("Google Maps", config_parameter='website.has_google_maps')
-    auth_signup_uninvited = fields.Selection([
-        ('b2b', 'On invitation (B2B)'),
-        ('b2c', 'Free sign up (B2C)'),
-    ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     @api.onchange('has_google_analytics')
     def onchange_has_google_analytics(self):
