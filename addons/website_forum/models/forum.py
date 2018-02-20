@@ -517,7 +517,7 @@ class Post(models.Model):
 
     @api.multi
     def post_notification(self):
-        for post in self:
+        for post in self.with_context(rendering_bundle=True):
             tag_partners = post.tag_ids.mapped('message_partner_ids')
             tag_channels = post.tag_ids.mapped('message_channel_ids')
 
