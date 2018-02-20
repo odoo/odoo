@@ -796,7 +796,7 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, layout=False, force_send=False, send_after_commit=True, user_signature=True):
+    def _notify(self, layout=False, force_send=False, send_after_commit=True, values=None):
         """ Compute recipients to notify based on specified recipients and document
         followers. Delegate notification to partners to send emails and bus notifications
         and to channels to broadcast messages on channels """
@@ -847,7 +847,7 @@ class Message(models.Model):
                 ('id', 'in', (partners_sudo - notif_partners).ids),
                 ('channel_ids', 'in', email_channels.ids),
                 ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
-            ])._notify(self, layout=layout, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+            ])._notify(self, layout=layout, force_send=force_send, send_after_commit=send_after_commit, values=values)
 
         notif_partners._notify_by_chat(self)
 

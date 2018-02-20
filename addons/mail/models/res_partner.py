@@ -37,13 +37,16 @@ class Partner(models.Model):
         return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)
 
     @api.model
-    def _notify_prepare_template_context(self, message):
+    def _notify_prepare_template_context(self, message, notif_values):
         # compute signature
-        signature = ""
-        if message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
+        if not notif_values.pop('add_sign', True):
+            signature = False
+        elif message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
             signature = message.author_id.user_ids[0].signature
         elif message.author_id:
             signature = "<p>-- <br/>%s</p>" % message.author_id.name
+        else:
+            signature = ""
 
         # compute Sent by
         if message.author_id and message.author_id.user_ids:
@@ -91,7 +94,7 @@ class Partner(models.Model):
         }
 
     @api.model
-    def _notify_prepare_email_values(self, message):
+    def _notify_prepare_email_values(self, message, notif_values):
         # compute email references
         references = message.parent_id.message_id if message.parent_id else False
 
@@ -103,7 +106,7 @@ class Partner(models.Model):
         mail_values = {
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id,
-            'auto_delete': self._context.get('mail_auto_delete', True),
+            'auto_delete': notif_values.pop('mail_auto_delete', True),
             'references': references,
         }
         mail_values.update(custom_values)
@@ -146,16 +149,23 @@ class Partner(models.Model):
             })
 
     @api.multi
-    def _notify(self, message, layout=False, force_send=False, send_after_commit=True, user_signature=True):
+    def _notify(self, message, layout=False, force_send=False, send_after_commit=True, values=None):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called.
 
         :param boolean force_send: send notification emails now instead of letting the scheduler handle the email queue
         :param boolean send_after_commit: send notification emails after the transaction end instead of durign the
                                           transaction; this option is used only if force_send is True
-        :param user_signature: add current user signature to notification emails """
+        :param dict values: values used to compute the notification process, containing
+
+         * add_sign: add user signature to notification email, default is True
+         * mail_auto_delete: auto delete send emails, default is True
+         * other values are given to the context used to render the notification template, allowing customization
+
+        """
         if not self.ids:
             return True
+        values = values if values is not None else {}
 
         template_xmlid = layout if layout else 'mail.message_notification_email'
         try:
@@ -164,10 +174,8 @@ class Partner(models.Model):
             _logger.warning('QWeb template %s not found when sending notification emails. Skipping.' % (template_xmlid))
             return False
 
-        base_template_ctx = self._notify_prepare_template_context(message)
-        if not user_signature:
-            base_template_ctx['signature'] = False
-        base_mail_values = self._notify_prepare_email_values(message)
+        base_template_ctx = self._notify_prepare_template_context(message, values)
+        base_mail_values = self._notify_prepare_email_values(message, values)
 
         # classify recipients: actions / no action
         if message.model and message.res_id and hasattr(self.env[message.model], '_notify_classify_recipients'):
@@ -180,7 +188,7 @@ class Partner(models.Model):
         for email_type, recipient_template_values in recipients.items():
             if recipient_template_values['recipients']:
                 # generate notification email content
-                template_ctx = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none
+                template_ctx = {**base_template_ctx, **recipient_template_values, **values}  # fixme: set button_unfollow to none
                 fol_values = {
                     'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
                     'body': base_template.render(template_ctx, engine='ir.qweb'),
