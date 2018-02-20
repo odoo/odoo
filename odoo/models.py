@@ -2993,6 +2993,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         return self.env['ir.model.access'].check(self._name, operation, raise_exception)
 
+    @api.model
+    def get_active_records(self):
+        active_domain = self.env.context.get('active_domain')
+        active_ids = self.env.context.get('active_ids')
+        active_model = self.env.context.get('active_model')
+
+        if active_model and self._name != active_model:
+            raise TypeError("Active model and current model is not same")
+
+        if 'active_domain' in self.env.context:
+            return self.search(active_domain)
+        elif active_ids:
+            return self.browse(active_ids)
+        else:
+            return self
+
     @api.multi
     def check_access_rule(self, operation):
         """ Verifies that the operation given by ``operation`` is allowed for
