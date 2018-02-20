@@ -1193,7 +1193,7 @@ class Lead(models.Model):
                 update_vals[key] = res.group(2).lower()
         return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
 
-    def _message_post_after_hook(self, message, values, notif_layout):
+    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -1204,7 +1204,7 @@ class Lead(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Lead, self)._message_post_after_hook(message, values, notif_layout)
+        return super(Lead, self)._message_post_after_hook(message, values, notif_layout, notif_values)
 
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):

@@ -67,12 +67,8 @@ class MailThread(models.AbstractModel):
        creating messages
      - ``tracking_disable``: at create and write, perform no MailThread features
        (auto subscription, tracking, post, ...)
-     - ``mail_auto_delete``: auto delete mail notifications; True by default
-       (technical hack for templates)
      - ``mail_notify_force_send``: if less than 50 email notifications to send,
        send them directly instead of using the queue; True by default
-     - ``mail_notify_user_signature``: add the current user signature in
-       email notifications; True by default
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
@@ -1788,7 +1784,7 @@ class MailThread(models.AbstractModel):
     def message_post(self, body='', subject=None,
                      message_type='notification', subtype=None,
                      parent_id=False, attachments=None, content_subtype='html',
-                     notif_layout=False, **kwargs):
+                     notif_layout=False, notif_values=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
             :param int thread_id: thread ID to post into, or list with one ID;
@@ -1913,10 +1909,10 @@ class MailThread(models.AbstractModel):
 
         # Post the message
         new_message = MailMessage.create(values)
-        self._message_post_after_hook(new_message, values, notif_layout)
+        self._message_post_after_hook(new_message, values, notif_layout, notif_values)
         return new_message
 
-    def _message_post_after_hook(self, message, values, notif_layout):
+    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
@@ -1924,7 +1920,7 @@ class MailThread(models.AbstractModel):
         message._notify(
             layout=notif_layout,
             force_send=self.env.context.get('mail_notify_force_send', True),
-            user_signature=self.env.context.get('mail_notify_user_signature', True)
+            values=notif_values,
         )
 
         # Post-process: subscribe author
@@ -1986,6 +1982,34 @@ class MailThread(models.AbstractModel):
             update_values = composer.onchange_template_id(template_id, kwargs['composition_mode'], self._name, res_id)['value']
             composer.write(update_values)
         return composer.send_mail()
+
+    def message_notify(self, partner_ids, body='', subject=False, **kwargs):
+        """ Shortcut allowing to notify partners of messages not linked to
+        any document. It pushes notifications on inbox or by email depending
+        on the user configuration, like other notifications. """
+        kw_author = kwargs.pop('author_id', False)
+        if kw_author:
+            author = self.env['res.partner'].sudo().browse(kw_author)
+            email_from = formataddr((author.name, author.email))
+        else:
+            author = self.env.user.partner_id
+            email_from = formataddr((author.name, author.email))
+
+        msg_values = {
+            'subject': subject,
+            'body': body,
+            'author_id': author.id,
+            'email_from': email_from,
+            'message_type': 'notification',
+            'partner_ids': partner_ids,
+            'model': False,
+            'subtype_id': self.env['ir.model.data'].sudo().xmlid_to_res_id('mail.mt_note'),
+            'record_name': False,
+            'reply_to': self.env['mail.thread'].sudo()._notify_get_reply_to([0])[0],
+            'message_id': tools.generate_tracking_message_id('message-notify'),
+        }
+        msg_values.update(kwargs)
+        return self.env['mail.thread'].message_post(**msg_values)
 
     def _message_log(self, body='', subject=False, message_type='notification', **kwargs):
         """ Shortcut allowing to post note on a document. It does not perform
@@ -2135,15 +2159,24 @@ class MailThread(models.AbstractModel):
             ctx.pop('active_domain')
             self = self.with_context(ctx)
 
+        assignation_tpl = self.env.ref('mail.message_user_assigned')
+
         for record in self:
-            record.message_post_with_view(
-                'mail.message_user_assigned',
-                composition_mode='mass_mail',
+            values = {
+                'object': record,
+            }
+            assignation_msg = assignation_tpl.render(values, engine='ir.qweb')
+            assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
+            record.message_notify(
+                subject='You have been assigned to %s' % record.display_name,
+                body=assignation_msg,
                 partner_ids=[(4, pid) for pid in partner_ids],
-                auto_delete=True,
-                auto_delete_message=True,
-                parent_id=False, # override accidental context defaults
-                subtype_id=self.env.ref('mail.mt_note').id)
+                record_name=record.display_name,
+                notif_layout='mail.mail_notification_light',
+                notif_values={
+                    'model_description': record._description.lower(),
+                }
+            )
 
     @api.multi
     def message_auto_subscribe(self, updated_fields, values=None):
@@ -2214,7 +2247,7 @@ class MailThread(models.AbstractModel):
             self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 
         # remove the current user from the needaction partner to avoid to notify the author of the message
-        user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user and user.notification_type == 'email']
+        user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user]
         self._message_auto_subscribe_notify(user_pids)
 
         return True
