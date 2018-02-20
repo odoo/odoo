@@ -49,6 +49,9 @@ MockServer.include({
         if (args.method === 'message_fetch') {
             return $.when([]);
         }
+        if (args.method === 'channel_seen') {
+            return $.when();
+        }
         return this._super(route, args);
     },
 });

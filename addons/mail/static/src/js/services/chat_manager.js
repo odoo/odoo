@@ -29,6 +29,7 @@ var ODOOBOT_ID = "ODOOBOT"; // default author_id for messages
 var ChatManager =  AbstractService.extend({
     name: 'chat_manager',
     dependencies: ['ajax', 'bus_service'],
+    CHANNEL_SEEN_THROTTLE: 3000,
     /**
      * @override
      */
@@ -73,7 +74,7 @@ var ChatManager =  AbstractService.extend({
                 }, {
                     shadow: true
                 });
-        }, 3000);
+        }, self.CHANNEL_SEEN_THROTTLE);
 
         this._isReady = this._initMessaging();
 

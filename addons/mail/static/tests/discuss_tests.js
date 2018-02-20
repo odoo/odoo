@@ -5,6 +5,7 @@ var ChatManager = require('mail.ChatManager');
 var Composers = require('mail.composer');
 var mailTestUtils = require('mail.testUtils');
 
+var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
 var testUtils = require('web.test_utils');
 
@@ -62,8 +63,19 @@ QUnit.test('basic rendering', function (assert) {
 });
 
 QUnit.test('@ mention in channel', function (assert) {
-    assert.expect(9);
+    assert.expect(12);
     var done = assert.async();
+
+    // Remove throttles to speed up the test
+    var channelThrottle = ChatManager.prototype.CHANNEL_SEEN_THROTTLE;
+    var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
+    ChatManager.prototype.CHANNEL_SEEN_THROTTLE = 1;
+    BasicComposer.prototype.MENTION_THROTTLE = 1;
+
+    var bus = new Bus();
+    var BusService = createBusService(bus);
+    var fetchListenersDef = $.Deferred();
+    var receiveMessageDef = $.Deferred();
 
     this.data.initMessaging = {
         channel_slots: {
@@ -75,22 +87,27 @@ QUnit.test('@ mention in channel', function (assert) {
         },
     };
 
-    // Remove the mention throttle to speed up the test
-    var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
-    BasicComposer.prototype.MENTION_THROTTLE = 1;
-
-    var fetchListenersDef = $.Deferred();
-
     createDiscuss({
         id: 1,
         context: {},
         params: {},
         data: this.data,
-        services: this.services,
+        services: [ChatManager, BusService],
         mockRPC: function (route, args) {
             if (args.method === 'channel_fetch_listeners') {
                 fetchListenersDef.resolve();
-                return $.when([ { id: 2, name: 'TestUser'} ]);
+                return $.when([ {id: 2, name: 'TestUser'} ]);
+            }
+            if (args.method === 'message_post') {
+                var data = {
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    channel_ids: [1],
+                };
+                var notification = [[false, 'mail.channel'], data];
+                bus.trigger('notification', [notification]);
+                receiveMessageDef.resolve();
+                return $.when(42);
             }
             return this._super.apply(this, arguments);
         },
@@ -135,10 +152,26 @@ QUnit.test('@ mention in channel', function (assert) {
                 assert.strictEqual($input.find('a').text() , "@TestUser",
                     "should have the correct mention link in the composer input");
 
-                BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
-                unpatchWindowGetSelection();
-                discuss.destroy();
-                done();
+                // send message
+                $input.trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
+
+                receiveMessageDef
+                    .then(concurrency.delay.bind(concurrency, 0))
+                    .then(function () {
+                        assert.strictEqual(discuss.$('.o_thread_message_content').length, 1,
+                            "should display one message with some content");
+                        assert.strictEqual(discuss.$('.o_thread_message_content a').length, 1,
+                            "should contain a link in the message content");
+                        assert.strictEqual(discuss.$('.o_thread_message_content a').text(),
+                            "@TestUser", "should have correct mention link in the message content");
+
+                        // Restore throttles and window.getSelection
+                        BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
+                        ChatManager.prototype.CHANNEL_SEEN_THROTTLE = channelThrottle;
+                        unpatchWindowGetSelection();
+                        discuss.destroy();
+                        done();
+                });
         });
     });
 });
