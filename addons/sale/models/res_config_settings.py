@@ -70,7 +70,7 @@ class ResConfigSettings(models.TransientModel):
     sale_signup_method = fields.Selection([
         ('b2b', 'On invitation (B2B)'),
         ('b2c', 'Free sign up (B2C)'),
-    ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
+    ], string='Sales Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL Connector")

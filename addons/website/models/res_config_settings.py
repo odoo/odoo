@@ -45,7 +45,7 @@ class ResConfigSettings(models.TransientModel):
     website_signup_method = fields.Selection([
         ('b2b', 'On invitation (B2B)'),
         ('b2c', 'Free sign up (B2C)'),
-    ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
+    ], string='Website Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     @api.onchange('has_google_analytics')
     def onchange_has_google_analytics(self):
