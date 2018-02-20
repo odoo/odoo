@@ -85,7 +85,7 @@ class Partner(models.Model):
             'model_name': model_name,
             'record': record,
             'record_name': record_name,
-            'tracking': tracking,
+            'tracking_values': tracking,
             'is_discussion': is_discussion,
             'subtype': message.subtype_id,
         }
