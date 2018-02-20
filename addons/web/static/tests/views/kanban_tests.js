@@ -2464,8 +2464,8 @@ QUnit.module('Views', {
             "there should be no columns");
         assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
             "there should be no records");
-        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
-            "there should be a nocontent helper");
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should not be a nocontent helper");
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 0,
             "there should not be a column quick create");
         kanban.destroy();
