@@ -415,6 +415,8 @@ class EventRegistration(models.Model):
             default_template_id=template.id,
             default_composition_mode='comment',
         )
+        if self.partner_id:
+            ctx["lang"] = self.partner_id.lang
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
