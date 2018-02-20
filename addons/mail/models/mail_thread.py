@@ -1823,7 +1823,7 @@ class MailThread(models.AbstractModel):
                 return RecordModel.browse(self.ids).message_post(
                     body=body, subject=subject, message_type=message_type,
                     subtype=subtype, parent_id=parent_id, attachments=attachments,
-                    content_subtype=content_subtype, **kwargs)
+                    content_subtype=content_subtype, notif_layout=notif_layout, **kwargs)
 
         # 0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
