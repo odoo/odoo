@@ -15,7 +15,6 @@
         'http_routing',
         'portal',
         'social_media',
-        'auth_signup',
     ],
     'installable': True,
     'data': [
