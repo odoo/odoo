@@ -2751,10 +2751,13 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('grouped list are not editable', function (assert) {
+    QUnit.test('grouped list are not editable (ungrouped first)', function (assert) {
         // Editable grouped list views are not supported, so the purpose of this
         // test is to check that when a list view is grouped, its editable
         // attribute is ignored
+        // In this test, the view isn't grouped at the beginning, so it is first
+        // editable, and then it is reloaded with a groupBy and is no longer
+        // editable
         assert.expect(5);
 
         var list = createView({
@@ -2786,6 +2789,59 @@ QUnit.module('Views', {
         list.$buttons.find('.o_list_button_add').click();
         assert.verifySteps(['switch view form 1', 'switch view form false'],
             'two switch view to form should have been requested');
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list are not editable (grouped first)', function (assert) {
+        // Editable grouped list views are not supported, so the purpose of this
+        // test is to check that when a list view is grouped, its editable
+        // attribute is ignored
+        // In this test, the view is grouped at the beginning, so it isn't
+        // editable, and then it is reloaded with no groupBy and becomes editable
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            intercepts: {
+                switch_view: function (event) {
+                    var resID = event.data.res_id || false;
+                    assert.step('switch view ' + event.data.view_type + ' ' + resID);
+                },
+            },
+            groupBy: ['bar'],
+        });
+
+        // the view being grouped, it is not editable, so clicking on a record
+        // should open the form view
+        list.$('.o_group_header:first').click(); // open first group
+        list.$('.o_data_cell:first').click();
+
+        // for the same reason, clicking on 'Create' should open the form view
+        list.$buttons.find('.o_list_button_add').click();
+
+        assert.verifySteps(['switch view form 1', 'switch view form false'],
+            "two switch view to form should have been requested");
+
+        // reload without groupBy
+        list.reload({groupBy: []});
+
+        // as the view is no longer grouped, it is editable, so clicking on a
+        // row should switch it in edition
+        list.$('.o_data_cell:first').click();
+
+        assert.verifySteps(['switch view form 1', 'switch view form false'],
+            "no more switch view should have been requested");
+        assert.strictEqual(list.$('.o_selected_row').length, 1,
+            "a row should be in edition");
+
+        // clicking on the body should leave the edition
+        $('body').click();
+        assert.strictEqual(list.$('.o_selected_row').length, 0,
+            "the row should no longer be in edition");
 
         list.destroy();
     });

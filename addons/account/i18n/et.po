@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Egon Raamat <egon@avalah.ee>, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Mattias Põldaru <mahfiaz@gmail.com>, 2017
@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: Hedi Hunt <Hedi.Hunt@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -105,12 +105,6 @@ msgstr "%s (koopia)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (koopia)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -636,7 +630,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Bilanss Odoo's\">Bilanss pearaamatus</span>"
+msgstr "<span title=\"Bilanss Odoo's\">Saldo pearaamatus</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1309,6 +1303,11 @@ msgid "Account"
 msgstr "Konto"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
+msgid "Account Accountant"
+msgstr "Konto raamatupidaja"
+
+#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Konto vana proovibilansi aruanne"
@@ -1431,7 +1430,7 @@ msgstr "Prindi konto arveraamat"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Account Properties"
-msgstr "Konto omadused"
+msgstr "Konto seaded"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_receivable_id
@@ -2458,7 +2457,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 #, python-format
 msgid "Bank Accounts"
-msgstr "Pangakonto"
+msgstr "Pangakontod"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_code_prefix
@@ -4135,7 +4134,7 @@ msgstr "Eraldi kreeditarve kirje järjekord"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
 msgid "Default Credit Account"
-msgstr "Vaikimisi Kreeditkonto"
+msgstr "Vaikimisi kreeditkonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_debit_account_id
@@ -4959,7 +4958,7 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
-"Odoo meeskonnale,<br/>\n"
+"Odoo tiimile,<br/>\n"
 "                            Fabien Pinckaers, Asutaja"
 
 #. module: account
@@ -5625,7 +5624,7 @@ msgstr "Tulu"
 #: model:ir.model.fields,field_description:account.field_product_template_property_account_income_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Income Account"
-msgstr "Tulude konto"
+msgstr "Tulukonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_id
@@ -5696,7 +5695,7 @@ msgstr "Sisemine märkus"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_note
 msgid "Internal Notes"
-msgstr "Sisemised märkmed"
+msgstr "Ettevõttesisesed märkmed"
 
 #. module: account
 #: selection:account.payment,payment_type:0
@@ -5712,7 +5711,7 @@ msgstr "Sisemine tüüp"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_template_form
 msgid "Internal notes..."
-msgstr "Sisemised märkused..."
+msgstr "Ettevõttesisesed märkmed..."
 
 #. module: account
 #: code:addons/account/models/partner.py:45
@@ -5808,7 +5807,7 @@ msgstr "Arve viide"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_state
 msgid "Invoice Status"
-msgstr "Arve olek"
+msgstr "Arve staatus"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -6250,7 +6249,7 @@ msgstr "Kanban Töölaua graafik"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Keep empty for no control"
-msgstr "Jäta tühjaks, kui ei soovi kontrolli"
+msgstr "Jäta tühjaks, kui sa ei soovi kontrolli"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_invoice
@@ -6594,12 +6593,12 @@ msgstr "Luba Odoo'l sobitada kanded kasutaja jaoks"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Let your customers pay their invoices online"
-msgstr "Luba klientidel maksta arveid internetis"
+msgstr "Luba klientidel maksta arveid veebis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
 msgid "Level"
-msgstr "Tase"
+msgstr "Etapp"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_liability0
@@ -6937,7 +6936,7 @@ msgstr "Muuda maksumäära"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
-msgstr "Muuda: loo kreeditarve, sobita ja loo uus mustand arve"
+msgstr "Muuda: loo kreeditarve, sobita ja loo uus mustandarve"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7072,12 +7071,12 @@ msgstr "Uus"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Statement"
-msgstr "Uus väljavõte"
+msgstr "Lisa väljavõte"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New Transactions"
-msgstr "Uued tehingud"
+msgstr "Lisa tehinguid"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1319
@@ -7122,14 +7121,6 @@ msgstr "Ühtegi sobivat maksemeetodit ei ole aktiveeritud andmikus %s"
 #: selection:account.financial.report,display_detail:0
 msgid "No detail"
 msgstr "Detaile ei ole"
-
-#. module: account
-#: code:addons/account/models/company.py:274
-#, python-format
-msgid ""
-"No miscellaneous journal could be found. Please create one before "
-"proceeding."
-msgstr "Varia andmikke ei leitud. Palun looge üks enne jätkamist."
 
 #. module: account
 #: code:addons/account/models/account.py:116
@@ -7796,7 +7787,7 @@ msgstr "Võla limiit"
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Payables"
-msgstr "Võlgnevused"
+msgstr "Kohustused"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_amount
@@ -8212,6 +8203,7 @@ msgid "Print checks to pay your vendors"
 msgstr "Trüki tšekid ja maksa tarnijatele"
 
 #. module: account
+#: model:ir.model,name:account.model_product_product
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id
@@ -8288,7 +8280,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
 msgid "Properties"
-msgstr "Omadused"
+msgstr "Seaded"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -8319,7 +8311,7 @@ msgstr "Ostu maks (%)"
 #: code:addons/account/models/account_journal_dashboard.py:35
 #, python-format
 msgid "Purchase: Untaxed Total"
-msgstr "Ost: Ilmamaksudeta summa"
+msgstr "Ost: maksudeta kokku"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -8860,7 +8852,7 @@ msgstr "Käibemaks(%)"
 #: code:addons/account/models/account_journal_dashboard.py:33
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "Müük: ilmamaksudeta summa"
+msgstr "Müük: maksudeta kokku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_user_id
@@ -9205,7 +9197,7 @@ msgstr "Näita mitteaktiivseid makse"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Näita andmiku töölaual"
+msgstr "Näita andmikku töölaual"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_sign
@@ -10670,7 +10662,7 @@ msgstr "Pealkiri 3 (poolpaks, väiksem)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
-msgstr "Arveks"
+msgstr "Arveks teha"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -11016,12 +11008,12 @@ msgstr "Sobitamata kanded"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Summa maksuta"
+msgstr "Maksudeta summa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount in Company Currency"
-msgstr "Maksustamata summa ettevõtte valuutas"
+msgstr "Maksudeta summa ettevõtte valuutas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11307,7 +11299,7 @@ msgstr "Tarnija viide"
 #: model:ir.model.fields,field_description:account.field_product_product_supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Tarnija maksud"
+msgstr "Ostumaksud"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_supplier

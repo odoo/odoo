@@ -46,13 +46,14 @@
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# 木头 <mynameisshiy@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-08 13:21+0000\n"
-"PO-Revision-Date: 2017-11-08 13:21+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 14:33+0000\n"
+"PO-Revision-Date: 2018-02-19 14:33+0000\n"
+"Last-Translator: 木头 <mynameisshiy@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4903,7 +4904,7 @@ msgid ""
 "An ISR will be generated if you specify the information it needs :\n"
 "    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
 "    - Your invoice must have been set assigned a bank account to receive its payment\n"
-"    (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
 "    - You must have set the postal references of your bank.\n"
 "    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
 "\n"
@@ -4914,23 +4915,6 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
-"\n"
-" 瑞士本地化\n"
-"==================\n"
-" 此模块会定义瑞士（瑞士 PME/KMU 2015）科目表、税收，并在打印发票或通过邮件进行发送时启生成 ISR 。\n"
-"\n"
-" 如果指定了其所需要的信息，则将会生成 ISR：\n"
-" - 必须设置您希望进行支付的银行账户，并具有有效的邮政参考。\n"
-" - 必须已为发票设置分配的银行账户，以接受发票付款\n"
-" （可以手动设置，但如果已定义银行账户则会自动设置缺省值）。\n"
-" -必须已设置银行邮政参考。\n"
-" - 您的发票必须为欧元或瑞士法郎 （因为 ISR 不接受其他货币）\n"
-"\n"
-" 如果满足之前的条件，则会自动生成 ISR。\n"
-"\n"
-" 以下就是它的运行过程：\n"
-" - 打印发票将触发两个文件的下载：发票及其 ISR\n"
-" - 单击‘通过邮件发送’按钮将会附加两个文件至您的草拟邮件：发票和相应的 ISR。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -5094,6 +5078,44 @@ msgstr ""
 "\n"
 " 此模块可能会添加在谷歌电子表格中实时显示 Odoo 数据的功能。\n"
 "=================================================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -5479,16 +5501,23 @@ msgstr ""
 " 财务头寸\n"
 "----------------\n"
 "\n"
-" 考虑到适用的税收，指的是进行交货的省份。\n"
-" 因此，我们决定在财政头寸中执行最基本的案例implement the most common case in the fiscal positions: delivery is the\n"
-"responsibility of the vendor and done at the customer location.\n"
+" 考虑到适用的税收，重要的是进行交货的省份。\n"
+" 因此，我们决定在财政头寸中执行最基本的情况：交货是\n"
+" 供应商的责任，并且应该在客户所在的地区完成。\n"
 "\n"
-"Some examples:\n"
+" 一些示例：\n"
 "\n"
-"1) You have a customer from another province and you deliver to his location.\n"
-"On the customer, set the fiscal position to his province.\n"
+"1) 您的客户来自其他的省份，您交货至其所在的地区。\n"
+" 针对此客户，您价格财政头寸设置为其所在省份。\n"
 "\n"
-"2) You have a customer from another province."
+"2) 您的客户来自其他省份。但是，此客户\n"
+" 驾驶货车来到您所在的地区接货。针对此客户，不要设置任何财政头寸。\n"
+"\n"
+"3) 国际供商不收取任何税款。税款\n"
+" 由经纪人向客户收取。针对此供应商，将财政头寸设置为国际。\n"
+"\n"
+"4) 国际供应商会收取您的省级税款。使用您的\n"
+" 头寸对其进行登记。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -5505,6 +5534,16 @@ msgid ""
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理波兰科目表和税收的模块。\n"
+"==================================================================================\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\n"
+"rejestrów podatkowych.Moduł ustawia też konta do kupna i sprzedaży towarów\n"
+"zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+"\n"
+"Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -5531,6 +5570,27 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理法国科目表的模块。\n"
+"========================================================================\n"
+"\n"
+" 此模块适用于法国大陆的所有公司。其不适用于\n"
+" 位于 DOM-TOM (Guadeloupe, Martinique, Guyane, Réunion, Mayotte) 的公司。\n"
+"\n"
+" 此本地化模块会为采购创建类型为‘含税’的增值税税收。\n"
+"（使用模块‘hr_expense’时，尤其需要此模块）。请注意，此\n"
+" 模块所提供的财政头寸不会管理这些\n"
+" ‘含税’增值税（因为很难在财政头寸中既管理‘排除税’，又管理‘含税’\n"
+" 场景）。\n"
+"\n"
+" 此模块不适合处理法国大陆\n"
+" 公司为位于 DOM 的公司提供服务的场景 。我们可以在\n"
+" 财政头寸中对其进行管理，但是，它将要求区分‘产品’增值税\n"
+" 和‘服务’增值税。我们认为其太‘重’了，不能\n"
+" 在 l10n_fr 中将其设为缺省；向基于 DOM 的公司销售服务的公司应手动更新\n"
+" 其税收和财政头寸配置。\n"
+"\n"
+"**贷方：** Sistheo、 Zeekom、CrysaLEAD、Akretion 和 Camptocamp。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -5546,6 +5606,16 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理越南科目表的模块。.\n"
+"=========================================================================\n"
+"\n"
+" 此模块适用于基于越南会计标准 (VAS)\n"
+"，且科目表位于 圆形 No. 200/2014/TT-BTC 中的公司\n"
+"\n"
+"**贷方：**\n"
+" - 常规解决方案。\n"
+" - Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -5558,6 +5628,13 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理越南会计报表的模块。\n"
+"=========================================================================\n"
+"\n"
+" 此模块适用于基于越南会计标准 (VAS) 的公司。\n"
+"\n"
+"**贷方：** 常规解决方案。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project
@@ -5596,6 +5673,16 @@ msgid ""
 "modules.\n"
 "    "
 msgstr ""
+"\n"
+" 此模块会在 CRM 的一个或多个商机案例中添加快捷方式。\n"
+"===========================================================================\n"
+"\n"
+" 此模块允许您生成基于所选案例的销售订单。\n"
+" 如果打开了不同的案例（列表），其会根据案例生成销售订单。\n"
+" 然后，关闭此案例，并将其链接至生成的销售订单。\n"
+"\n"
+" 如果您已安装了crm\n"
+" 模块，我们建议您安装此模块。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -5609,6 +5696,28 @@ msgid ""
 "This module contains most code coming from odoo v10 website_portal. Purpose\n"
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
+msgstr ""
+"\n"
+" 此模块会为完全集成的客户门户添加所需的基础代码。\n"
+" 其包含基础控制器类和基础模板。业务扩展组件\n"
+" 将添加其特定的模板和控制器以扩展客户\n"
+" 门户。\n"
+"\n"
+" 此模块包含 odoo v10 网站_门户中的大多数代码。此模块的目的\n"
+" 是允许客户门户的显示，而无需具有\n"
+"  网站版本和定制能力相关性。"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -5635,6 +5744,21 @@ msgid ""
 "- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
 "- Support for encodings EAN-13, EAN-8 and UPC-A\n"
 msgstr ""
+"\n"
+" 此模块会添加条形码扫描和解析支持。\n"
+"\n"
+" 扫描\n"
+"--------\n"
+" 为了在 Odoo 中使用条形码，请使用 USB 扫描器（模拟键盘输入）\n"
+" 必须配置扫描器以使用无前缀和客运返回或标签作为后缀。\n"
+" 每个字符输入之间的延迟必须小于或等于 50 毫秒。\n"
+" 大多数条形码扫描器科在方框外使用。\n"
+" 但是，请确保扫描器与其插入的设备使用相同的键盘布局。\n"
+" 可将设备的键盘布局设置为 US QWERTY （大多数读取器的缺省值）\n"
+" 或者更改扫描器的键盘布局（查看手册）\n"
+"\n"
+" 解析\n"
+"-------"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -7210,11 +7334,6 @@ msgid "Accounting & Finance"
 msgstr "会计及财务"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
-msgid "Accounting &amp; Finance"
-msgstr "会计 & 财务"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
 msgstr "会计 - MRP"
@@ -7362,6 +7481,11 @@ msgid "Actions"
 msgstr "动作"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+msgid "Activate more currencies"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
 #: model:ir.model.fields,field_description:base.field_ir_filters_active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_active
@@ -7387,6 +7511,11 @@ msgstr "有效"
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
 msgstr "添加交货成本到在线销售"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "添加关注者"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -7660,13 +7789,6 @@ msgid ""
 msgstr "允许你创建发票，以及跟踪付款。这是为不是会计师的管理人员准备的简化版会计模块。"
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr ""
-
-#. module: base
 #: code:addons/base/ir/ir_fields.py:378
 #, python-format
 msgid ""
@@ -7880,8 +8002,8 @@ msgstr "阿根廷 - 会计报表"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
-msgid "Arguments sent to the client along withthe view tag"
-msgstr "和视图标签一起发送给客户端的参数"
+msgid "Arguments sent to the client along with the view tag"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -8020,6 +8142,11 @@ msgstr "自动搜索"
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
 msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
+msgstr "自动动作"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -8977,14 +9104,14 @@ msgid "Clean"
 msgstr "清理"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to attach a new document."
+msgstr "单击此处附加新文档。"
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "单击此处创建自定义视图"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to create new documents."
-msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -9593,6 +9720,7 @@ msgstr "创建上下文操作"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "创建日期"
 
@@ -9821,7 +9949,6 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -10185,6 +10312,27 @@ msgstr "日：%(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "天"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"尊敬的先生/女士,\n"
+"    我们的记录表明，你的账户仍有到期的付款。请查找下面的明细。\n"
+"    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n"
+"    如果有任何关于账户的疑问，请联系我们。\n"
+"\n"
+"    谢谢你的合作。\n"
+"    此致 ,\n"
+"           敬礼"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -11368,6 +11516,12 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "字段\"Type\" 不能在模型上更改 。"
 
 #. module: base
+#: code:addons/base/ir/ir_ui_view.py:1016
+#, python-format
+msgid "Field %r used in attributes must be present in view but is missing:"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
 msgstr "字段帮助"
@@ -11674,6 +11828,23 @@ msgstr "法国-会计报表"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr "法国-FEC"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -12580,6 +12751,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "在XML文件中定义的动作的ID"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "在数据库中目标记录的ID"
@@ -12650,10 +12826,8 @@ msgstr "如果选中，该用户组可以在门户页面中使用。"
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
 msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
-"log at DEBUG level(this is very verbose and may include confidential info!)"
+"log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
-"打开此项时, 在DEBUG日志模式下, SMTP的详细日志会记录到 openerp-server.log 中.(注意,日志记录得比较详尽, "
-"会包含一些SMTP帐户信息, 在调试完毕后, 请关闭此项)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -17691,9 +17865,9 @@ msgstr "潜在客户"
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron_link_field_id
 msgid ""
-"Provide the field used to link the newly created recordon the record on used"
-" by the server action."
-msgstr "提供用于将新创建的记录链接到服务器操作使用的记录的字段。"
+"Provide the field used to link the newly created record on the record on "
+"used by the server action."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -18406,7 +18580,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
 msgid "Salary Package Configurator"
-msgstr ""
+msgstr "薪资包配置"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18703,6 +18877,11 @@ msgstr "在线销售你的产品"
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
 msgstr "基于工时表销售"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "发送电子邮件"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -19376,7 +19555,7 @@ msgstr "Stripe付款"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
 msgid "Studio"
-msgstr ""
+msgstr "在线开发工具"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_request_link_search_view
@@ -19645,11 +19824,12 @@ msgstr "技术名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技术设置"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:750
+#: code:addons/base/ir/ir_translation.py:760
 #, python-format
 msgid "Technical Translations"
 msgstr "技术翻译"
@@ -19726,6 +19906,12 @@ msgid "Thailand - Accounting Reports"
 msgstr "泰国 - 会计报表"
 
 #. module: base
+#: code:addons/base/res/res_users.py:290
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -19736,9 +19922,9 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid ""
-"The Selection Options expression is not a valid Pythonic expression.Please "
+"The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
-msgstr "选择项表达式不是有效的 Python 表达式。请提供一个按照格式 [('key','Label'), ...] 撰写的表达式."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -20567,9 +20753,9 @@ msgstr "推特滚卷条"
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids anygap in the sequence (while "
+"later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
-msgstr ""
+msgstr "提供了两种序列对象的实现方案：标准的和 '无间断'。后者比前者慢，但是后者禁止序列号间断（这可能在后者发生）。"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_type
@@ -21916,12 +22102,10 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid ""
-"Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
-" do the trick."
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
 msgstr ""
-"你的 OpenERP 服务器不支持 SMTP-over-SSL。可以使用STARTTTLS。如需使用 SSL，服务器端升级为 Python 2.6 "
-"即可。"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:477
@@ -22013,12 +22197,12 @@ msgstr "base.update.translations"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "binary"
-msgstr ""
+msgstr "二进制数据"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "boolean"
-msgstr ""
+msgstr "布尔型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
@@ -22028,7 +22212,7 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "char"
-msgstr ""
+msgstr "字符型"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -22049,7 +22233,7 @@ msgstr "数据库 ID"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "date"
-msgstr ""
+msgstr "日期"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
@@ -22454,7 +22638,7 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr ""
+msgstr "多对一"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0

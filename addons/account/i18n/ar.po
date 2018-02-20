@@ -23,7 +23,6 @@
 # Abd El-Rahman Ali <abdelrahman.ali.242@gmail.com>, 2017
 # Zuhair Hammadi <zuhair12@gmail.com>, 2017
 # morheb bek <morhebbek@gmail.com>, 2017
-# nle_odoo, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
 # Mohamed Hamdy <medo_boy1104@yahoo.com>, 2017
 # Hear Here <hearherebox@gmail.com>, 2017
@@ -35,6 +34,7 @@
 # fares alokeeli <okffok@gmail.com>, 2017
 # Khalid Aljahil <khalid@tarkeeb.sa>, 2017
 # abdullah alsabi <alsabi.abdullah@gmail.com>, 2017
+# nle_odoo, 2017
 # Malek Gifaeri <Malek.gifaeri@gmail.com>, 2017
 # Abdulaziz Alkahlani <abdulaziz.alkahlani@gmail.com>, 2017
 # jahzar <jahzar@gmail.com>, 2017
@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: jahzar <jahzar@gmail.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -128,12 +128,6 @@ msgstr "%s (نسخة)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1198,6 +1192,11 @@ msgstr "يمكن ضبط تحذير خاص (بحساب) الشريك"
 #, python-format
 msgid "Account"
 msgstr "حساب"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
+msgid "Account Accountant"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -6983,14 +6982,6 @@ msgid "No detail"
 msgstr "لا تفاصيل"
 
 #. module: account
-#: code:addons/account/models/company.py:274
-#, python-format
-msgid ""
-"No miscellaneous journal could be found. Please create one before "
-"proceeding."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account.py:116
 #, python-format
 msgid "No opening move defined !"
@@ -8071,6 +8062,7 @@ msgid "Print checks to pay your vendors"
 msgstr ""
 
 #. module: account
+#: model:ir.model,name:account.model_product_product
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id
