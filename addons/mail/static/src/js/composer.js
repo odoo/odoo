@@ -228,7 +228,7 @@ var MentionManager = Widget.extend({
         // create the regex of all mention's names
         var names = _.pluck(listener.selection, 'name');
         var escaped_names = _.map(names, function (str) {
-            return "("+_.str.escapeRegExp(listener.delimiter+str)+")(?= |&nbsp;)";
+            return "("+_.str.escapeRegExp(listener.delimiter+str)+")";
         });
         var regex_str = escaped_names.join('|');
         // extract matches
