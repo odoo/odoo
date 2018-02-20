@@ -136,13 +136,13 @@ class account_invoice(osv.osv):
         company_currency = inv.company_id.currency_id
         price_unit = i_line._get_anglo_saxon_price_unit()
         if inv.currency_id != company_currency:
-            currency_id = inv.currency_id.id
+            currency = inv.currency_id
             amount_currency = i_line._get_price(inv, company_currency.id, i_line, price_unit)
         else:
-            currency_id = False
+            currency = False
             amount_currency = False
 
-        return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, i_line.product_id, i_line.uom_id, i_line.quantity, price_unit, currency=currency_id, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id)
+        return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, i_line.product_id, i_line.uom_id, i_line.quantity, price_unit, currency=currency, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id)
 
 
 #----------------------------------------------------------
