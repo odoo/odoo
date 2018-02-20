@@ -350,7 +350,8 @@ var KanbanRenderer = BasicRenderer.extend({
             !remove &&
             !this._hasContent() &&
             !!this.noContentHelp &&
-            !(this.quickCreate && !this.quickCreate.folded);
+            !(this.quickCreate && !this.quickCreate.folded) &&
+            !this.state.isGroupedByM2ONoColumn;
 
         var $noContentHelper = this.$('.o_view_nocontent');
 
