@@ -567,7 +567,7 @@ var ViewEditor = Widget.extend({
             Dialog.alert(this, '', {
                 title: _t("Server error"),
                 $content: $('<div/>').html(
-                    _t("A server error occured. Please check you correctly signed in and that the file you are saving is well-formed.")
+                    _t("A server error occured. Please check you correctly signed in and that the file you are saving is correctly formatted.")
                     + '<br/>'
                     + error
                 )
