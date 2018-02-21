@@ -2,9 +2,9 @@
 <odoo>
 <data>
 <template id="report_mrprepairorder">
-    <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="report.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
                 <div class="page">
                     <div class="oe_structure"/>
 
@@ -15,13 +15,13 @@
                                 <strong t-if="o.address_id != o.partner_invoice_id">Invoice address: </strong>
                                 <div t-field="o.partner_invoice_id" 
                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                                <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                                <p t-if="o.partner_invoice_id.vat">VAT: <span t-field="o.partner_invoice_id.vat"/></p>
                             </div>
                             <div t-if="o.address_id != o.partner_invoice_id">
                                 <strong>Shipping address :</strong>
                                 <div t-field="o.address_id" 
                                     t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                                <p t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></p>
+                                <p t-if="o.address_id.vat">VAT: <span t-field="o.address_id.vat"/></p>
                             </div>                        
                         </div>
                         <div class="col-xs-5 col-xs-offset-1">
@@ -152,6 +152,13 @@
                     <div class="oe_structure"/>
                 </div>
             </t>
+        </t>
+</template>
+
+<template id="report_mrprepairorder2">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="mrp_repair.report_mrprepairorder" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>

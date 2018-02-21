@@ -151,7 +151,7 @@ class Partner(models.Model):
 
     @api.one
     @api.constrains('associate_member')
-    def _check_recursion(self):
+    def _check_recursion_associate_member(self):
         level = 100
         while self:
             self = self.associate_member

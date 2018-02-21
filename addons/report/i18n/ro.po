@@ -8,10 +8,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -228,17 +228,17 @@ msgstr "Editare"
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external footer"
-msgstr ""
+msgstr "Editare subsol extern"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external header"
-msgstr ""
+msgstr "Editare antet extern"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit internal header"
-msgstr ""
+msgstr "Editare antet intern"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -250,6 +250,7 @@ msgstr "Email:"
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
+"Eroare! Nu puteți selecta un format și specifica lățimea/înălțimea paginii."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -322,7 +323,7 @@ msgstr "Registru 28 431.8 x 279.4 mm"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_left
 msgid "Left Margin (mm)"
-msgstr "Marginea din stanga (mm)"
+msgstr "Marginea din stânga (mm)"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -383,7 +384,7 @@ msgstr "Format hârtie"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
 msgid "Paper format *"
-msgstr ""
+msgstr "Format hârtie *"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
@@ -410,13 +411,13 @@ msgstr "Portret"
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
-msgstr ""
+msgstr "Previzualizare raport extern"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
-msgstr ""
+msgstr "Previzualizare raport intern"
 
 #. module: report
 #. openerp-web
@@ -428,12 +429,12 @@ msgstr "Tipăriți"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Nume raport tipărit"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "Vizualizări Qweb"
 
 #. module: report
 #. openerp-web
@@ -480,12 +481,12 @@ msgstr "Tabloid 29 279.4 x 431.8 mm"
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
 msgid "This is a sample of an external report."
-msgstr ""
+msgstr "Acesta este un exemplu pentru un raport extern."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_internalreport
 msgid "This is a sample of an internal report."
-msgstr ""
+msgstr "Acesta este un exemplu pentru un raport intern."
 
 #. module: report
 #: model:ir.model.fields,help:report.field_ir_act_report_xml_print_report_name
@@ -494,12 +495,15 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Acesta este numele fișierului utilizat de raport la descărcare. Lăsați "
+"necompletat pentru a nu modifica numele fișierului. Puteți utiliza expresii "
+"python cu variabilele time și object."
 
 #. module: report
 #: code:addons/report/models/report.py:273
 #, python-format
 msgid "This report is not loaded into the database: %s."
-msgstr ""
+msgstr "Acest raport nu este încărcat în baza de date: %s."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_top
@@ -524,6 +528,7 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
+"Nu a putut fi găsit Wkhtmltopdf în acest sistem. PDF-ul nu poate fi creat."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -531,10 +536,18 @@ msgid "Website:"
 msgstr "Pagină web:"
 
 #. module: report
-#: code:addons/report/models/report.py:435
+#: code:addons/report/models/report.py:450
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:452
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr ""
+msgstr "Wkhtmltopdf eșuat (cod eroare: %s). Mesaj: %s"
 
 #. module: report
 #. openerp-web
@@ -544,6 +557,8 @@ msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
 msgstr ""
+"Trebuie să lansați Odoo cu cel puțin doi workers pentru a tipări un pdf din "
+"acest raport."
 
 #. module: report
 #. openerp-web
@@ -555,6 +570,18 @@ msgid ""
 "support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
+"Trebuie să faceți upgrade la versiunea 0.12.0 a programului Wkhtmltopdf  pentru a fi afișate corect zonele de antet și subsol și deasemenea pentru a afișa corect tabele pe mai multe pagini. <br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"target=\"_blank\">wkhtmltopdf.org</a>"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:21
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The report will be "
+"shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_base_config_settings
@@ -562,15 +589,16 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: report
-#. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:96
-#, python-format
-msgid ""
-"Your installation of Wkhtmltopdf seems to be broken. The \n"
-"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+#: model:ir.model,name:report.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
 msgstr "ir.qweb.field.barcode"
+
+#. module: report
+#: model:ir.model,name:report.model_report_abstract_report
+msgid "report.abstract_report"
+msgstr "report.abstract_report"

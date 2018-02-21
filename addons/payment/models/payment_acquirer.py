@@ -157,7 +157,7 @@ class PaymentAcquirer(models.Model):
     def _check_authorization_support(self):
         for acquirer in self:
             if acquirer.auto_confirm == 'authorize' and acquirer.provider not in self._get_feature_support()['authorize']:
-                raise ValidationError('Transaction Authorization is not supported by this payment provider.')
+                raise ValidationError(_('Transaction Authorization is not supported by this payment provider.'))
         return True
 
     _constraints = [
@@ -429,7 +429,7 @@ class PaymentTransaction(models.Model):
     # duplicate partner / transaction data to store the values at transaction time
     partner_id = fields.Many2one('res.partner', 'Partner', track_visibility='onchange')
     partner_name = fields.Char('Partner Name')
-    partner_lang = fields.Selection(_lang_get, 'Language', default='en_US')
+    partner_lang = fields.Selection(_lang_get, 'Language', default=lambda self: self.env.lang)
     partner_email = fields.Char('Email')
     partner_zip = fields.Char('Zip')
     partner_address = fields.Char('Address')
@@ -446,7 +446,7 @@ class PaymentTransaction(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         onchange_vals = self.on_change_partner_id(self.partner_id.id).get('value', {})
-        self.write(onchange_vals)
+        self.update(onchange_vals)
 
     @api.multi
     def on_change_partner_id(self, partner_id):
@@ -527,7 +527,7 @@ class PaymentTransaction(models.Model):
         ref_suffix = 1
         init_ref = reference
         while self.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):
-            reference = init_ref + '-' + str(ref_suffix)
+            reference = init_ref + 'x' + str(ref_suffix)
             ref_suffix += 1
         return reference
 
@@ -616,21 +616,21 @@ class PaymentTransaction(models.Model):
     @api.multi
     def action_capture(self):
         if any(self.mapped(lambda tx: tx.state != 'authorized')):
-            raise ValidationError('Only transactions in the Authorized status can be captured.')
+            raise ValidationError(_('Only transactions in the Authorized status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     @api.multi
     def action_void(self):
         if any(self.mapped(lambda tx: tx.state != 'authorized')):
-            raise ValidationError('Only transactions in the Authorized status can be voided.')
+            raise ValidationError(_('Only transactions in the Authorized status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()
 
 
 class PaymentToken(models.Model):
     _name = 'payment.token'
-    _order = 'partner_id'
+    _order = 'partner_id, id desc'
 
     name = fields.Char('Name', help='Name of the payment token')
     short_name = fields.Char('Short name', compute='_compute_short_name')

@@ -3,14 +3,16 @@
 # * web
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,52 +73,45 @@ msgstr "%(view_type)s 视图"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:105
+#: code:addons/web/static/src/js/framework/translation.js:103
 #, python-format
 msgid "%d days ago"
 msgstr "%d 天前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:103
+#: code:addons/web/static/src/js/framework/translation.js:101
 #, python-format
 msgid "%d hours ago"
 msgstr "%d 小时前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:101
+#: code:addons/web/static/src/js/framework/translation.js:99
 #, python-format
 msgid "%d minutes ago"
 msgstr "%d 分钟前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:107
+#: code:addons/web/static/src/js/framework/translation.js:105
 #, python-format
 msgid "%d months ago"
 msgstr "%d 月前"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:137
+#: code:addons/web/static/src/js/widgets/debug_manager.js:136
 #, python-format
 msgid "%d requests (%d ms) %d queries (%d ms)"
 msgstr "%d请求(%d ms)%d查询(%d ms)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:109
+#: code:addons/web/static/src/js/framework/translation.js:107
 #, python-format
 msgid "%d years ago"
 msgstr "%d 年前"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/list_view.js:1405
-#, python-format
-msgid "%s (%d)"
-msgstr "%s (%d)"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.webclient_bootstrap
@@ -125,6 +120,9 @@ msgid ""
 "                        &lt;body class=\"ie9\"&gt;\n"
 "                    &lt;![endif]--&gt;"
 msgstr ""
+"&lt;!--[if lt IE 10]&gt;\n"
+"                        &lt;body class=\"ie9\"&gt;\n"
+"                    &lt;![endif]--&gt;"
 
 #. module: web
 #. openerp-web
@@ -369,14 +367,14 @@ msgstr "应用"
 #: code:addons/web/static/src/js/views/list_view.js:289
 #, python-format
 msgid "Archive"
-msgstr "存档"
+msgstr "归档"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:641
 #, python-format
 msgid "Archived"
-msgstr "已存档"
+msgstr "归档"
 
 #. module: web
 #. openerp-web
@@ -446,7 +444,7 @@ msgstr "字节,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
 #: code:addons/web/static/src/js/views/list_common.js:134
 #, python-format
 msgid "Can't convert value %s to context"
-msgstr "不能转换值 %s 到context"
+msgstr "不能转换值 %s 到上下文context"
 
 #. module: web
 #. openerp-web
@@ -590,7 +588,7 @@ msgstr "不能序列化 XML"
 #: code:addons/web/static/src/xml/base.xml:571
 #, python-format
 msgid "Count"
-msgstr "计数"
+msgstr "个数"
 
 #. module: web
 #. openerp-web
@@ -880,7 +878,7 @@ msgstr "评估错误"
 #: code:addons/web/static/src/xml/base.xml:576
 #, python-format
 msgid "Expand all"
-msgstr "全部展开"
+msgstr "展开全部"
 
 #. module: web
 #. openerp-web
@@ -901,7 +899,7 @@ msgstr "导出数据"
 #: code:addons/web/static/src/xml/base.xml:1096
 #, python-format
 msgid "Export Formats :"
-msgstr "输出格式："
+msgstr "导出格式："
 
 #. module: web
 #. openerp-web
@@ -965,7 +963,7 @@ msgstr "字段视图获取"
 #: code:addons/web/static/src/js/widgets/debug_manager.js:243
 #, python-format
 msgid "Fields of %s"
-msgstr "字段的 %s"
+msgstr " %s 的字段"
 
 #. module: web
 #. openerp-web
@@ -1039,6 +1037,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"为了兼容Excel，如果列数超过256，则不能导出数据。\n"
+"\n"
+"提示：尝试翻转轴，进一步过滤或减少测量次数。"
 
 #. module: web
 #. openerp-web
@@ -1105,32 +1106,41 @@ msgstr "ID："
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1248
+#: code:addons/web/static/src/js/views/form_widgets.js:1252
 #, python-format
 msgid "Image"
 msgstr "图像"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1091
+#: code:addons/web/static/src/xml/base.xml:1093
 #, python-format
 msgid "Import-Compatible Export"
-msgstr "导入兼容导出"
+msgstr "导入兼容"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:635
+#: code:addons/web/static/src/js/views/form_widgets.js:637
 #, python-format
 msgid "Inactive"
 msgstr "无效"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph_widget.js:199
-#: code:addons/web/static/src/js/views/graph_widget.js:206
+#: code:addons/web/static/src/js/views/graph_widget.js:209
+#: code:addons/web/static/src/js/views/graph_widget.js:217
 #, python-format
 msgid "Invalid data"
 msgstr "无效的数据"
+
+#. module: web
+#: code:addons/web/controllers/main.py:653
+#: code:addons/web/controllers/main.py:667
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr "数据库名称无效。只允许字母数字字符，下划线，连字符和点。"
 
 #. module: web
 #. openerp-web
@@ -1271,7 +1281,7 @@ msgstr "也许你应该考虑按 F5 键重新加载程序..."
 #: code:addons/web/static/src/xml/base.xml:563
 #, python-format
 msgid "Measures"
-msgstr "计量"
+msgstr "测量"
 
 #. module: web
 #. openerp-web
@@ -1292,7 +1302,7 @@ msgstr "方法："
 #: code:addons/web/static/src/js/framework/crash_manager.js:16
 #, python-format
 msgid "Missing Record"
-msgstr "缺少记录"
+msgstr "缺失记录"
 
 #. module: web
 #. openerp-web
@@ -1320,7 +1330,7 @@ msgstr "修饰器："
 #: code:addons/web/static/src/xml/base.xml:592
 #, python-format
 msgid "Month"
-msgstr "月份"
+msgstr "月"
 
 #. module: web
 #. openerp-web
@@ -1353,7 +1363,7 @@ msgstr "上移"
 #: code:addons/web/static/src/xml/base.xml:1272
 #, python-format
 msgid "My Odoo.com account"
-msgstr "在Odoo.com官方网站帐户"
+msgstr "Odoo.com帐户"
 
 #. module: web
 #. openerp-web
@@ -1395,7 +1405,7 @@ msgstr "否"
 #: code:addons/web/static/src/xml/base.xml:175
 #, python-format
 msgid "No Update:"
-msgstr "没有更新:"
+msgstr "无更新:"
 
 #. module: web
 #. openerp-web
@@ -1452,17 +1462,10 @@ msgstr "无选择的记录"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:324
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
 msgid "No value found for the field %s for value %s"
 msgstr "找不到该字段%s的值 %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/framework/utils.js:144
-#, python-format
-msgid "Node [%s] is not a JSONified XML node"
-msgstr "节点 [%s] 不是JSON化的XML节点"
 
 #. module: web
 #. openerp-web
@@ -1483,7 +1486,7 @@ msgstr "没有足够的数据点"
 #: code:addons/web/static/src/xml/base.xml:744
 #, python-format
 msgid "Not shown in kanban"
-msgstr "不在看板显示"
+msgstr "在看板不显示"
 
 #. module: web
 #. openerp-web
@@ -1798,7 +1801,7 @@ msgstr "保存字段列表"
 #: code:addons/web/static/src/xml/base.xml:1141
 #, python-format
 msgid "Saved exports:"
-msgstr "已保存的导出结果："
+msgstr "保存的导出："
 
 #. module: web
 #. openerp-web
@@ -2035,7 +2038,7 @@ msgstr "下列字段无效："
 msgid ""
 "The line has been modified, your changes will be discarded. Are you sure you"
 " want to discard the changes ?"
-msgstr "该生产线已被修改，你的更改将被丢弃。你确定要放弃更改？"
+msgstr "明细已被修改，你的更改将被丢弃。你确定要放弃更改？"
 
 #. module: web
 #: code:addons/web/controllers/main.py:718
@@ -2142,7 +2145,7 @@ msgstr "总计"
 #: code:addons/web/static/src/js/abstract_web_client.js:114
 #, python-format
 msgid "Traceback:"
-msgstr "回溯:"
+msgstr "追溯:"
 
 #. module: web
 #. openerp-web
@@ -2171,7 +2174,7 @@ msgstr "类型："
 #: code:addons/web/static/src/js/views/list_view.js:290
 #, python-format
 msgid "Unarchive"
-msgstr "取消存档"
+msgstr "取消归档"
 
 #. module: web
 #. openerp-web
@@ -2252,14 +2255,14 @@ msgstr "更新翻译"
 #: code:addons/web/static/src/js/views/form_upgrade_widgets.js:36
 #, python-format
 msgid "Upgrade now"
-msgstr "即刻升级"
+msgstr "马上升级"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1286
 #, python-format
 msgid "Upgrade to future versions"
-msgstr "升级未来版本号"
+msgstr "升级到未来版本"
 
 #. module: web
 #. openerp-web
@@ -2609,7 +2612,7 @@ msgstr "为真"
 #: code:addons/web/static/src/js/framework/utils.js:303
 #, python-format
 msgid "kMGTPE"
-msgstr ""
+msgstr "kMGTPE"
 
 #. module: web
 #. openerp-web

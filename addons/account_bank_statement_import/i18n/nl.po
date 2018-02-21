@@ -343,7 +343,7 @@ msgid ""
 "was a mistake, hit cancel to abort the import."
 msgstr ""
 "Klik op OK om een rekening/dagboek aan te maken en de import af te ronden. "
-"Heeft u een fout gemaakt, druk dan op cancel om de import af te breken."
+"Heeft u een fout gemaakt, druk dan op annulleren om de import af te breken."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -503,7 +503,7 @@ msgstr "De gebruikte valuta"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "De boekingen van dit dagboek worden genaamd met de prefix."
+msgstr "De boekingen van dit dagboek worden aangeduid met deze prefix."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -574,6 +574,15 @@ msgstr ""
 #, python-format
 msgid "You have already imported that file."
 msgstr "U hebt dit bestand reeds geïmporteerd."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
+#, python-format
+msgid ""
+"You have to set a Default Debit Account and a Default Credit Account for the"
+" journal: %s"
+msgstr ""
+"U moet een standaard debit en credit rekening instellen voor het dagboek: %s"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

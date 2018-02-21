@@ -67,13 +67,18 @@ class SaleOrder(models.Model):
             'pricelist': order.pricelist_id.id,
         })
         product = self.env['product.product'].with_context(product_context).browse(product_id)
+        pu = product.price
+        if order.pricelist_id and order.partner_id:
+            order_line = order._cart_find_product_line(product.id)
+            if order_line:
+                pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 
         return {
             'product_id': product_id,
             'product_uom_qty': qty,
             'order_id': order_id,
             'product_uom': product.uom_id.id,
-            'price_unit': product.price,
+            'price_unit': pu,
         }
 
     @api.multi
@@ -108,6 +113,17 @@ class SaleOrder(models.Model):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
+
+        try:
+            if add_qty:
+                add_qty = float(add_qty)
+        except ValueError:
+            add_qty = 1
+        try:
+            if set_qty:
+                set_qty = float(set_qty)
+        except ValueError:
+            set_qty = 0
         quantity = 0
         order_line = False
         if self.state != 'draft':
@@ -143,11 +159,23 @@ class SaleOrder(models.Model):
         else:
             # update line
             values = self._website_product_id_change(self.id, product_id, qty=quantity)
-
-
-
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
-                values['price_unit'] = order_line._get_display_price(order_line.product_id)
+                order = self.sudo().browse(self.id)
+                product_context = dict(self.env.context)
+                product_context.setdefault('lang', order.partner_id.lang)
+                product_context.update({
+                    'partner': order.partner_id.id,
+                    'quantity': quantity,
+                    'date': order.date_order,
+                    'pricelist': order.pricelist_id.id,
+                })
+                product = self.env['product.product'].with_context(product_context).browse(product_id)
+                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
+                    order_line._get_display_price(product),
+                    order_line.product_id.taxes_id,
+                    order_line.tax_id,
+                    self.company_id
+                )
 
             order_line.write(values)
 
@@ -212,7 +240,7 @@ class Website(models.Model):
         if not pricelists:  # no pricelist for this country, or no GeoIP
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
         else:
-            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.code)
+            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.sudo().code)
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
@@ -228,19 +256,20 @@ class Website(models.Model):
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request.website
-        if not request.website:
+        website = request and hasattr(request, 'website') and request.website or None
+        if not website:
             if self.env.context.get('website_id'):
                 website = self.browse(self.env.context['website_id'])
             else:
-                website = self.search([], limit=1)
-        isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
+                # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
+                website = len(self) == 1 and self or self.search([], limit=1)
+        isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
-                                                   request.session.get('website_sale_current_pl'),
+                                                   request and request.session.get('website_sale_current_pl') or None,
                                                    website.pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
                                                    order_pl=order_pl and order_pl.id or None)
@@ -264,7 +293,7 @@ class Website(models.Model):
         available_pricelists = self.get_pricelist_available()
         pl = None
         partner = self.env.user.partner_id
-        if request.session.get('website_sale_current_pl'):
+        if request and request.session.get('website_sale_current_pl'):
             # `website_sale_current_pl` is set only if the user specifically chose it:
             #  - Either, he chose it from the pricelist selection
             #  - Either, he entered a coupon code
@@ -300,7 +329,29 @@ class Website(models.Model):
     @api.model
     def sale_get_payment_term(self, partner):
         DEFAULT_PAYMENT_TERM = 'account.account_payment_term_immediate'
-        return self.env.ref(DEFAULT_PAYMENT_TERM, False).id or partner.property_payment_term_id.id
+        return partner.property_payment_term_id.id or self.env.ref(DEFAULT_PAYMENT_TERM, False).id
+
+    @api.multi
+    def _prepare_sale_order_values(self, partner, pricelist):
+        self.ensure_one()
+        affiliate_id = request.session.get('affiliate_id')
+        salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
+        addr = partner.address_get(['delivery', 'invoice'])
+        default_user_id = partner.parent_id.user_id.id or partner.user_id.id
+        values = {
+            'partner_id': partner.id,
+            'pricelist_id': pricelist.id,
+            'payment_term_id': self.sale_get_payment_term(partner),
+            'team_id': self.salesteam_id.id,
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
+        }
+        company = self.company_id or pricelist.company_id
+        if company:
+            values['company_id'] = company.id
+
+        return values
 
     @api.multi
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
@@ -337,25 +388,8 @@ class Website(models.Model):
         # create so if needed
         if not sale_order and (force_create or code):
             # TODO cache partner_id session
-            affiliate_id = request.session.get('affiliate_id')
-            if self.env['res.users'].sudo().browse(affiliate_id).exists():
-                salesperson_id = affiliate_id
-            else:
-                salesperson_id = request.website.salesperson_id.id
-            addr = partner.address_get(['delivery', 'invoice'])
-            so_data = {
-                'partner_id': partner.id,
-                'pricelist_id': pricelist_id,
-                'payment_term_id': self.sale_get_payment_term(partner),
-                'team_id': self.salesteam_id.id,
-                'partner_invoice_id': addr['invoice'],
-                'partner_shipping_id': addr['delivery'],
-                'user_id': salesperson_id or self.salesperson_id.id,
-            }
-            company = self.company_id or self.env['product.pricelist'].browse(pricelist_id).sudo().company_id
-            if company:
-                so_data['company_id'] = company.id
-
+            pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
+            so_data = self._prepare_sale_order_values(partner, pricelist)
             sale_order = self.env['sale.order'].sudo().create(so_data)
 
             # set fiscal position
@@ -374,9 +408,12 @@ class Website(models.Model):
             request.session['sale_order_id'] = sale_order.id
 
             if request.website.partner_id.id != partner.id:
-                partner.write({'last_website_so_id': sale_order_id})
+                partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:
+            # case when user emptied the cart
+            if not request.session.get('sale_order_id'):
+                request.session['sale_order_id'] = sale_order.id
 
             # check for change of pricelist with a coupon
             pricelist_id = pricelist_id or partner.property_product_pricelist.id
@@ -415,7 +452,7 @@ class Website(models.Model):
                     update_pricelist = True
 
             if code and code != sale_order.pricelist_id.code:
-                code_pricelist = self.env['product.pricelist'].search([('code', '=', code)], limit=1)
+                code_pricelist = self.env['product.pricelist'].sudo().search([('code', '=', code)], limit=1)
                 if code_pricelist:
                     pricelist_id = code_pricelist.id
                     update_pricelist = True
@@ -435,7 +472,7 @@ class Website(models.Model):
 
         else:
             request.session['sale_order_id'] = None
-            return None
+            return self.env['sale.order']
 
         return sale_order
 
@@ -443,7 +480,15 @@ class Website(models.Model):
         tx_id = request.session.get('sale_transaction_id')
         if tx_id:
             transaction = self.env['payment.transaction'].sudo().browse(tx_id)
-            if transaction.state != 'cancel':
+            # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
+            # payment was not not proceeded. For example:
+            # - Select SIPS for payment
+            # - Be redirected to SIPS website
+            # - Go back to eCommerce without paying
+            # - Be redirected to SIPS website again => error
+            # Since there is no link module between 'website_sale' and 'payment_sips', we prevent
+            # here to reuse any previous transaction for SIPS.
+            if transaction.state != 'cancel' and transaction.acquirer_id.provider != 'sips':
                 return transaction
             else:
                 request.session['sale_transaction_id'] = False

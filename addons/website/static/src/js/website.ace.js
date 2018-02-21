@@ -57,7 +57,7 @@ var ViewEditor = AceCommon.ViewEditor.extend({
                     self.$('#ace-view-list').val(viewId).change();
                 } else {
                     if (views.length >= 2) {
-                        var mainTemplate = views[1];
+                        var mainTemplate = views[0];
                         self.$('#ace-view-list').val(mainTemplate.id).trigger('change');
                     }
                     window.location.hash = hash;

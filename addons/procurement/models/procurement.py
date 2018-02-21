@@ -275,27 +275,26 @@ class ProcurementOrder(models.Model):
             This is appropriate for batch jobs only.
         @return:  Dictionary of values
         '''
-        ProcurementSudo = self.env['procurement.order'].sudo()
         try:
             if use_new_cursor:
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
-
+            ProcurementSudo = self.env['procurement.order'].sudo()
             # Run confirmed procurements
             procurements = ProcurementSudo.search([('state', '=', 'confirmed')] + (company_id and [('company_id', '=', company_id)] or []))
+            run_procurements = []
             while procurements:
                 procurements.run(autocommit=use_new_cursor)
+                run_procurements.extend(procurements.ids)
                 if use_new_cursor:
                     self.env.cr.commit()
-                procurements = ProcurementSudo.search([('id', 'not in', procurements.ids), ('state', '=', 'confirmed')] + (company_id and [('company_id', '=', company_id)] or []))
+                procurements = ProcurementSudo.search([('id', 'not in', run_procurements), ('state', '=', 'confirmed')] + (company_id and [('company_id', '=', company_id)] or []))
 
             # Check done procurements
             procurements = ProcurementSudo.search([('state', '=', 'running')] + (company_id and [('company_id', '=', company_id)] or []))
-            while procurements:
-                procurements.check(autocommit=use_new_cursor)
-                if use_new_cursor:
-                    self.env.cr.commit()
-                procurements = ProcurementSudo.search([('id', 'not in', procurements.ids), ('state', '=', 'running')] + (company_id and [('company_id', '=', company_id)] or []))
+            procurements.check(autocommit=use_new_cursor)
+            if use_new_cursor:
+                self.env.cr.commit()
 
         finally:
             if use_new_cursor:

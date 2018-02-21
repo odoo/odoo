@@ -31,9 +31,29 @@ msgid "API Transaction Key"
 msgstr "API Transactiesleutel"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/models/authorize_request.py:66
+#, python-format
+msgid ""
+"Authorize.net Error Message(s):\n"
+" %s"
+msgstr ""
+"Authorize.net fout bericht(en):\n"
+"%s"
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
 msgstr "Authorize.net Profiel ID"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:167
+#, python-format
+msgid ""
+"Authorize: received data with missing reference (%s) or trans_id (%s) or "
+"fingerprint (%s)"
+msgstr ""
+"Authorize: data ontvangen met missende referentie (%s) of trans_id (%s) of "
+"fingerprint (%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -83,6 +103,12 @@ msgstr "Betaling verwerver"
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:347
+#, python-format
+msgid "The Customer Profile creation in Authorize.NET failed."
+msgstr "Aanmaken van klant profiel op Authorize.NET mislukt."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile

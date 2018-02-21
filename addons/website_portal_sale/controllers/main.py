@@ -29,7 +29,7 @@ class website_account(website_account):
         invoice_count = Invoice.search_count([
             ('type', 'in', ['out_invoice', 'out_refund']),
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['open', 'paid', 'cancelled'])
+            ('state', 'in', ['open', 'paid', 'cancel'])
         ])
 
         response.qcontext.update({
@@ -125,9 +125,12 @@ class website_account(website_account):
             order.check_access_rule('read')
         except AccessError:
             return request.render("website.403")
-        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
+
+        order_sudo = order.sudo()
+        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order_sudo.invoice_ids.mapped('invoice_line_ids')}
+
         return request.render("website_portal_sale.orders_followup", {
-            'order': order.sudo(),
+            'order': order_sudo,
             'order_invoice_lines': order_invoice_lines,
         })
 
@@ -144,7 +147,7 @@ class website_account(website_account):
         domain = [
             ('type', 'in', ['out_invoice', 'out_refund']),
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['open', 'paid', 'cancelled'])
+            ('state', 'in', ['open', 'paid', 'cancel'])
         ]
         archive_groups = self._get_archive_groups('account.invoice', domain)
         if date_begin and date_end:
@@ -172,16 +175,32 @@ class website_account(website_account):
         })
         return request.render("website_portal_sale.portal_my_invoices", values)
 
+    @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="user", website=True)
+    def portal_get_invoice(self, invoice_id=None, **kw):
+        invoice = request.env['account.invoice'].browse([invoice_id])
+        try:
+            invoice.check_access_rights('read')
+            invoice.check_access_rule('read')
+        except AccessError:
+            return request.render("website.403")
+
+        pdf = request.env['report'].sudo().get_pdf([invoice_id], 'account.report_invoice')
+        pdfhttpheaders = [
+            ('Content-Type', 'application/pdf'), ('Content-Length', len(pdf)),
+            ('Content-Disposition', 'attachment; filename=Invoice.pdf;')
+        ]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+
     def details_form_validate(self, data):
         error, error_message = super(website_account, self).details_form_validate(data)
         # prevent VAT/name change if invoices exist
         partner = request.env['res.users'].browse(request.uid).partner_id
         invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
         if invoices:
-            if (data.get('vat', partner.vat) or False) != partner.vat:
+            if 'vat' in data and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
-            if data.get('name', partner.name) != partner.name:
+            if 'name' in data and (data['name'] or False) != (partner.name or False):
                 error['name'] = 'error'
                 error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
         return error, error_message

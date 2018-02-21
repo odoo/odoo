@@ -5,20 +5,22 @@
 # Translators:
 # William Surya Permana <zarambie_game@yahoo.com>, 2016
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Febrasari Almania <febrasari.almania@gmail.com>, 2016
 # Deddy Ddr <deddy.ddr@gmail.com>, 2016
 # Edy Kend <edy@azmall.co.id>, 2016
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
 # Dhaman <dhaman@indonesian-odoo.com>, 2016
 # alfieqashwa <alfieqashwa@gmail.com>, 2016
+# aryge <gustanto.ary@gmail.com>, 2017
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: alfieqashwa <alfieqashwa@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,11 +113,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -160,13 +161,14 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
+#: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
 msgstr "# Kegiatans"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
 msgid "# Working Days"
-msgstr ""
+msgstr "# Hari Kerja"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -268,7 +270,7 @@ msgstr ""
 #: code:addons/project/models/project.py:150
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Klik untuk membuat proyek baru.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -471,6 +473,8 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Konfigurasi berikut berkaitan dengan perusahaan di mana anda "
+"login.</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1067,6 +1071,11 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr "aktivitasnya"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Menambahkan keterangan..."
@@ -1083,7 +1092,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Add/remove from favorite"
-msgstr ""
+msgstr "Tambah/hapus dari favorit"
 
 #. module: project
 #. openerp-web
@@ -1384,7 +1393,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr ""
+msgstr "Pilih Surel Proyek"
 
 #. module: project
 #. openerp-web
@@ -1413,7 +1422,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:67
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr ""
+msgstr "Klik tombol untuk merubah tugas."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
@@ -1428,7 +1437,7 @@ msgstr "Klik untuk menambahkan tahap dalam pipa tugas."
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "Klik untuk membuat proyek baru.<br>"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1542,7 +1551,7 @@ msgstr "Membuat bagan Gantt dengan tenggat waktu dan tugas-tugas proyek Anda"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "Buat Proyek"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -2529,7 +2538,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
 msgid "Let's create your first project."
-msgstr ""
+msgstr "Mari membuat proyek pertama Anda."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_pad
@@ -2629,7 +2638,7 @@ msgstr "Lebih efisien komunikasi antara karyawan"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "Favorit Saya"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2719,7 +2728,7 @@ msgstr "Pemberitahuan"
 #: code:addons/project/static/src/js/tour.js:43
 #, python-format
 msgid "Now that the project is set up, <b>create a few tasks</b>."
-msgstr ""
+msgstr "Setelah proyek sudah siap, <b>buat beberapa tugas</b>."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2735,6 +2744,11 @@ msgstr "Jumlah hari untuk menutup kegiatan"
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
 msgstr "Jumlah dokumen yang dilampirkan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr "TUJUAN"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2771,7 +2785,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "Hanya undangan"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2796,7 +2810,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Or"
-msgstr ""
+msgstr "Atau"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2976,7 +2990,7 @@ msgstr "Proyek Alias"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
 #: model:ir.model.fields,field_description:project.field_project_project_project_count
 msgid "Project Count"
-msgstr ""
+msgstr "Jumlah Proyek"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -3019,7 +3033,7 @@ msgstr "Kegiatan-kegiatan proyek"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
 msgid "Project Time Unit *"
-msgstr ""
+msgstr "Unit Waktu Proyek *"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -3039,6 +3053,7 @@ msgstr "Kegiatan-kegiatan proyek"
 #: model:ir.model.fields,field_description:project.field_project_task_type_project_ids
 #: model:ir.ui.menu,name:project.menu_projects_config
 #: model:ir.ui.view,arch_db:project.analytic_account_inherited_form
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Proyek"
@@ -3046,12 +3061,12 @@ msgstr "Proyek"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Proyek & Tugas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
 msgid "Rating on task"
-msgstr ""
+msgstr "Penilaian tugas"
 
 #. module: project
 #. openerp-web
@@ -3105,7 +3120,7 @@ msgstr "Alasan untuk pembatalan telah didokumentasikan"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "Penerimaan dari ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3274,7 +3289,7 @@ msgstr "Berbagi file dan mengelola versi"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Tampilkan Proyek di dasbor"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3453,7 +3468,7 @@ msgstr "Kegiatan yang diblokir"
 #. module: project
 #: selection:project.config.settings,module_pad:0
 msgid "Task description is plain text"
-msgstr ""
+msgstr "Deskripsi tugas adalah teks biasa"
 
 #. module: project
 #. openerp-web
@@ -3493,6 +3508,7 @@ msgstr "Tugas siap untuk tahap berikutnya"
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.model.fields,field_description:project.field_res_users_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3788,7 +3804,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "Lacak kepuasan pelanggan terhadap tugas"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3894,14 +3910,14 @@ msgstr "Melihat statistik untuk minggu"
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "Terlihat oleh seluruh karyawan"
 
 #. module: project
 #: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "Terlihat oleh pelanggan"
 
 #. module: project
 #. openerp-web
@@ -4094,7 +4110,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "Anda dapat menyimpan laporan agar mudah menggunakannya nanti"
 
 #. module: project
 #: code:addons/project/models/project.py:70
@@ -4121,7 +4137,7 @@ msgstr "Tujuan Anda"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Aplikasi Proyek Odoo Anda aktif dan berjalan"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4136,7 +4152,7 @@ msgstr "Proyek-proyek Anda:"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr ""
+msgstr "aktifkan contoh proyek"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4192,7 +4208,7 @@ msgstr "untuk menggambarkan<br/>pengalaman Anda atau menyarankan perbaikan!"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "bermain dengan."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

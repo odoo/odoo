@@ -45,7 +45,7 @@
                     <strong>Customer Code:</strong>
                     <p t-field="o.partner_id.ref"/>
                 </div>
-                <div name="reference" class="col-xs-2" t-if="o.reference and o.type == 'in_invoice'">
+                <div name="reference" class="col-xs-2" t-if="o.reference">
                     <strong>Reference:</strong>
                     <p t-field="o.reference"/>
                 </div>
@@ -61,7 +61,7 @@
                         <th class="hidden">Source Document</th>
                         <th class="text-right">Quantity</th>
                         <th class="text-right">Unit Price</th>
-                        <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                        <th t-if="display_discount" class="text-right">Disc.(%)</th>
                         <th class="text-right">Taxes</th>
                         <th class="text-right">Tax Excluded Price</th>
                     </tr>
@@ -77,7 +77,7 @@
                         <td class="text-right">
                             <span t-field="l.price_unit"/>
                         </td>
-                        <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                        <td t-if="display_discount" class="text-right">
                             <span t-field="l.discount"/>
                         </td>
                         <td class="text-right">
@@ -104,7 +104,7 @@
                             <tr>
                                 <td><span t-esc="amount_by_group[0] if len(o.tax_line_ids) > 1 else (o.tax_line_ids.tax_id.description or o.tax_line_ids.tax_id.name)"/></td>
                                 <td class="text-right">
-                                    <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    <span t-esc="amount_by_group[2]"/>
                                 </td>
                             </tr>
                         </t>
@@ -118,18 +118,23 @@
                 </div>
             </div>
 
-            <div class="row" t-if="len(o.tax_line_ids) > 1">
+            <!-- DO NOT REMOVE THIS TABLE. MANDATORY IN SOME COUNTRIES -->
+            <div class="row" t-if="len(o.tax_line_ids) > 0">
                 <div class="col-xs-6">
                     <table class="table table-condensed">
                         <thead>
                             <tr>
                                 <th>Tax</th>
+                                <th class="text-right">Base</th>
                                 <th class="text-right">Amount</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="o.tax_line_ids" t-as="t">
                                 <td><span t-field="t.tax_id.description"/></td>
+                                <td class="text-right">
+                                    <span t-field="t.base" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
                                 <td class="text-right">
                                     <span t-field="t.amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
@@ -166,6 +171,8 @@
     <xpath expr="//h2" position="replace">
         <h2>
             <span>Duplicate</span>
+            <span t-if="o.type == 'out_refund'">refund</span>
+            <span t-if="o.type == 'out_invoice'">invoice</span>
             <span t-field="o.number"/>
         </h2>
     </xpath>

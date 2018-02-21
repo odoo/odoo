@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.order_line.mapped('procurement_ids').cancel()
+        self.mapped('order_line').mapped('procurement_ids').cancel()
         return super(SaleOrder, self).action_cancel()
 
     @api.multi
@@ -72,7 +72,6 @@ class SaleOrder(models.Model):
         invoice_vals['incoterms_id'] = self.incoterm.id or False
         return invoice_vals
 
-    @api.model
     def _prepare_procurement_group(self):
         res = super(SaleOrder, self)._prepare_procurement_group()
         res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id})
@@ -110,10 +109,13 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.depends('product_id')
     def _compute_qty_delivered_updateable(self):
-        for line in self:
-            if line.product_id.type not in ('consu', 'product'):
-                return super(SaleOrderLine, self)._compute_qty_delivered_updateable()
-            line.qty_delivered_updateable = False
+        # prefetch field before filtering
+        self.mapped('product_id')
+        # on consumable or stockable products, qty_delivered_updateable defaults
+        # to False; on other lines use the original computation
+        lines = self.filtered(lambda line: line.product_id.type not in ('consu', 'product'))
+        lines = lines.with_prefetch(self._prefetch)
+        super(SaleOrderLine, lines)._compute_qty_delivered_updateable()
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
@@ -183,8 +185,9 @@ class SaleOrderLine(models.Model):
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
             if move.location_dest_id.usage == "customer":
-                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
-            elif move.location_dest_id.usage == "internal" and move.to_refund_so:
+                if not move.origin_returned_move_id:
+                    qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
+            elif move.location_dest_id.usage != "customer" and move.to_refund_so:
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
         return qty
 

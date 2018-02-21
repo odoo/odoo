@@ -35,7 +35,7 @@ class WebsiteBlog(http.Controller):
             group['date_begin'] = start
             group['date_end'] = end
 
-            locale = request.context.get('lang', 'en_US')
+            locale = request.context.get('lang') or 'en_US'
             start = pytz.UTC.localize(fields.Datetime.from_string(start))
             tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
 
@@ -177,7 +177,10 @@ class WebsiteBlog(http.Controller):
         v = {}
         v['blog'] = blog
         v['base_url'] = request.env['ir.config_parameter'].get_param('web.base.url')
-        v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)], limit=min(int(limit), 50))
+        v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)],
+            limit=min(int(limit), 50),
+            order="post_date DESC")
+        v['html2plaintext'] = html2plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
 
@@ -322,7 +325,7 @@ class WebsiteBlog(http.Controller):
 
         :return redirect to the new blog created
         """
-        new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).copy(int(blog_post_id), {})
+        new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
     @http.route('/blog/post_get_discussion/', type='json', auth="public", website=True)

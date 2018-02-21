@@ -36,18 +36,16 @@ class MailChatController(BusController):
     # --------------------------
     @route('/mail/chat_post', type="json", auth="none")
     def mail_chat_post(self, uuid, message_content, **kwargs):
-        request_uid = self._default_request_uid()
         # find the author from the user session, which can be None
         author_id = False  # message_post accept 'False' author_id, but not 'None'
         if request.session.uid:
             author_id = request.env['res.users'].sudo().browse(request.session.uid).partner_id.id
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
-        mail_channel = request.env["mail.channel"].sudo(request_uid).search([('uuid', '=', uuid)], limit=1)
-        message = mail_channel.sudo(request_uid).with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=message_content, message_type='comment', subtype='mail.mt_comment', content_subtype='plaintext', **kwargs)
+        mail_channel = request.env["mail.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
+        message = mail_channel.sudo().with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=message_content, message_type='comment', subtype='mail.mt_comment', content_subtype='plaintext')
         return message and message.id or False
 
     @route(['/mail/chat_history'], type="json", auth="none")
     def mail_chat_history(self, uuid, last_id=False, limit=20):
-        request_uid = self._default_request_uid()
-        channel = request.env["mail.channel"].sudo(request_uid).search([('uuid', '=', uuid)], limit=1)
-        return channel.sudo(request_uid).channel_fetch_message(last_id, limit)
+        channel = request.env["mail.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
+        return channel.sudo().channel_fetch_message(last_id, limit)

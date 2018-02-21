@@ -144,3 +144,15 @@ class StockSettings(models.TransientModel):
             warehouses.mapped('int_type_id').write({'active': active})
 
         return True
+
+    @api.model
+    def get_default_decimal_precision(self, fields):
+        # don't forward-port in v11.0, the API of config wizards changed.
+        digits = self.env.ref('product.decimal_stock_weight').digits
+        return {'decimal_precision': digits}
+
+    @api.multi
+    def set_decimal_precision(self):
+        # don't forward-port in v11.0, the API of config wizards changed.
+        for record in self:
+            self.env.ref('product.decimal_stock_weight').write({'digits': record.decimal_precision})

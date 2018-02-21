@@ -14,7 +14,7 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     to_refund_so = fields.Boolean(
-        "To Refund in SO", default=False,
+        "To Refund in SO", copy=False, default=False,
         help='Trigger a decrease of the delivered quantity in the associated Sale Order')
 
     @api.multi
@@ -33,7 +33,7 @@ class StockMove(models.Model):
         for move in self:
             if move.picking_id and move.picking_id.group_id:
                 picking = move.picking_id
-                order = self.env['sale.order'].search([('procurement_group_id', '=', picking.group_id.id)])
+                order = self.env['sale.order'].sudo().search([('procurement_group_id', '=', picking.group_id.id)])
                 picking.message_post_with_view(
                     'mail.message_origin_link',
                     values={'self': picking, 'origin': order},
@@ -65,11 +65,12 @@ class StockPicking(models.Model):
         res = super(StockPicking, self)._create_backorder(backorder_moves)
         for picking in self.filtered(lambda pick: pick.picking_type_id.code == 'outgoing'):
             backorder = picking.search([('backorder_id', '=', picking.id)])
-            order = self.env['sale.order'].search([('procurement_group_id', '=', backorder.group_id.id)])
-            backorder.message_post_with_view(
-                'mail.message_origin_link',
-                values={'self': backorder, 'origin': order},
-                subtype_id=self.env.ref('mail.mt_note').id)
+            if backorder.group_id: # origin from a sale
+                order = self.env['sale.order'].search([('procurement_group_id', '=', backorder.group_id.id)])
+                backorder.message_post_with_view(
+                    'mail.message_origin_link',
+                    values={'self': backorder, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return res
 
 

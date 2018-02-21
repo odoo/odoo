@@ -105,3 +105,38 @@ class TestProcurement(TestMrpCommon):
         production_product_6.button_mark_done()
         self.assertEqual(production_product_6.state, 'done', 'Production order should be in state done')
         self.assertEqual(self.product_6.qty_available, 24, 'Wrong quantity available of finished product.')
+
+    def test_procurement_2(self):
+        """Check that a manufacturing order create the right procurements when the route are set on
+        a parent category of a product"""
+        # find a child category id
+        all_categ_id = self.env['product.category'].search([('parent_id', '=', None)], limit=1)
+        child_categ_id = self.env['product.category'].search([('parent_id', '=', all_categ_id.id)], limit=1)
+
+        # set the product of `self.bom_1` to this child category
+        for bom_line_id in self.bom_1.bom_line_ids:
+            # check that no routes are defined on the product
+            self.assertEquals(len(bom_line_id.product_id.route_ids), 0)
+            # set the category of the product to a child category
+            bom_line_id.product_id.categ_id = child_categ_id
+
+        # set the MTO route to the parent category (all)
+        self.warehouse = self.env.ref('stock.warehouse0')
+        mto_route = self.warehouse.mto_pull_id.route_id
+        mto_route.product_categ_selectable = True
+        all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
+
+        # create MO
+        production_product_4 = self.env['mrp.production'].create({
+            'name': 'MO/Test-00002',
+            'product_id': self.product_4.id,
+            'product_qty': 1,
+            'bom_id': self.bom_1.id,
+            'product_uom_id': self.product_4.uom_id.id,
+        })
+
+        # check that procurement are correctly created
+        procurement = self.env['procurement.order'].search(
+            [('group_id', '=', production_product_4.procurement_group_id.id),
+             ('product_id', 'in', self.bom_1.bom_line_ids.mapped('product_id.id'))])
+        self.assertEqual(len(procurement), 2)

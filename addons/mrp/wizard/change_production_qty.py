@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.tools import float_is_zero
 import math
 
 class ChangeProductionQty(models.TransientModel):
@@ -22,7 +23,7 @@ class ChangeProductionQty(models.TransientModel):
         if 'mo_id' in fields and not res.get('mo_id') and self._context.get('active_model') == 'mrp.production' and self._context.get('active_id'):
             res['mo_id'] = self._context['active_id']
         if 'product_qty' in fields and not res.get('product_qty') and res.get('mo_id'):
-            res['product_qty'] = self.env['mrp.production'].browse(res.get['mo_id']).product_qty
+            res['product_qty'] = self.env['mrp.production'].browse(res['mo_id']).product_qty
         return res
 
     @api.model
@@ -37,6 +38,7 @@ class ChangeProductionQty(models.TransientModel):
 
     @api.multi
     def change_prod_qty(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for wizard in self:
             production = wizard.mo_id
             produced = sum(production.move_finished_ids.mapped('quantity_done'))
@@ -64,11 +66,14 @@ class ChangeProductionQty(models.TransientModel):
                     wo.duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+                quantity = wo.qty_production - wo.qty_produced
                 if production.product_id.tracking == 'serial':
-                    quantity = 1.0
+                    quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
-                    quantity = wo.qty_production - wo.qty_produced
                     quantity = quantity if (quantity > 0) else 0
+                if float_is_zero(quantity, precision_digits=precision):
+                    wo.final_lot_id = False
+                    wo.active_move_lot_ids.unlink()
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
@@ -81,6 +86,6 @@ class ChangeProductionQty(models.TransientModel):
                 moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
                 moves_raw.mapped('move_lot_ids').write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
-                if wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_lot_ids:
+                if quantity > 0 and wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_lot_ids:
                     wo._generate_lot_ids()
         return {}

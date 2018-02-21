@@ -224,7 +224,10 @@
         <t t-jquery=".action_buttons" t-operation="inner">
             <t t-if="single_statement or multiple_statements">
                 <button class="button_back_to_statement btn btn-default btn-sm">Go to bank statements</button>
-                <button class="button_close_statement btn btn-primary btn-sm">Close the statement<t t-if="multiple_statements">s</t></button>
+                <button class="button_close_statement btn btn-primary btn-sm">
+                    <t t-if="multiple_statements">Close the statements</t>
+                    <t t-else="">Close the statement</t>
+                </button>
             </t>
         </t>
     </t>
@@ -269,9 +272,15 @@
         </table>
     </t>
 
-    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open."></i></t>
+    <t t-name="icon_do_partial_reconciliation">
+        <t t-set="message_content">This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.</t>
+        <i class="do_partial_reconcile_button fa fa-exclamation-triangle" t-att-data-content="message_content"></i>
+    </t>
 
-    <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
+    <t t-name="icon_undo_partial_reconciliation">
+        <t t-set="message_content">Undo the partial reconciliation.</t>
+        <i class="undo_partial_reconcile_button fa fa-exclamation-triangle" t-att-data-content="message_content"></i>
+    </t>
 
     <!-- manual reconciliation -->
 
@@ -283,6 +292,9 @@
     </t>
 
     <t t-name="manual_reconciliation" t-extend="reconciliation">
+        <t t-jquery=".js_automatic_reconciliation">
+            $(this).addClass('hidden');
+        </t>
         <t t-jquery=".interface_options" t-operation="append">
             <table t-if="show_mode_selector" border="0" cellpadding="0" cellspacing="0" class="oe_form_group o_form_group"><tbody>
                 <tr class="oe_form_group_row o_form_group_row">
@@ -292,10 +304,10 @@
                     <td class="oe_form_group_cell o_form_group_cell" colspan="1" width="99%">
                         <span class="oe_form_field o_form_field oe_form_field_radio o_form_field_radio oe_vertical o_vertical oe_form_required o_form_required">
                             <span>
-                                <t t-if="display_mode_customers" t-call="show_mode_selector_option"><t t-set="value">customers</t><t t-set="title">Customers</t></t>
-                                <t t-if="display_mode_suppliers" t-call="show_mode_selector_option"><t t-set="value">suppliers</t><t t-set="title">Vendors</t></t>
-                                <t t-if="display_mode_others" t-call="show_mode_selector_option"><t t-set="value">others</t><t t-set="title">OtherAccounts</t></t>
-                                <t t-call="show_mode_selector_option"><t t-set="value">all</t><t t-set="title">All</t></t>
+                                <t t-if="display_mode_customers" t-call="show_mode_selector_option"><t t-set="value" t-value="'customers'"/><t t-set="title">Customers</t></t>
+                                <t t-if="display_mode_suppliers" t-call="show_mode_selector_option"><t t-set="value" t-value="'suppliers'"/><t t-set="title">Vendors</t></t>
+                                <t t-if="display_mode_others" t-call="show_mode_selector_option"><t t-set="value" t-value="'others'"/><t t-set="title">OtherAccounts</t></t>
+                                <t t-call="show_mode_selector_option"><t t-set="value" t-value="'all'"/><t t-set="title">All</t></t>
                             </span>
                         </span>
                     </td>

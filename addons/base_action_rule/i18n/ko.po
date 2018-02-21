@@ -1,21 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_action_rule
-#
+# 
 # Translators:
-# 종현 엄 <whd5367@naver.com>, 2016
+# 방상우 <mrroom@gmail.com>, 2017
+# 최재호 <hwangtog@gmail.com>, 2017
+# 종현 엄 <whd5367@naver.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Goh Gangtai <gangtai.goh@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: 종현 엄 <whd5367@naver.com>\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Goh Gangtai <gangtai.goh@gmail.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_action_rule
@@ -28,6 +32,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
 msgstr "동작 규칙"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+msgid "Action Rule Line Test"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -48,12 +57,17 @@ msgstr "동작"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_active
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_active
 msgid "Active"
-msgstr "활성"
+msgstr "사용"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
 msgid "Add Followers"
 msgstr "팔로워 추가"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -89,7 +103,7 @@ msgstr "취소됨"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "고객 연락처인 경우 확인란을 선택합니다."
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -131,6 +145,11 @@ msgid "Days"
 msgstr "일"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_deadline
+msgid "Deadline"
+msgstr "마감 시한"
+
+#. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
 msgstr "작동일 이후 지연"
@@ -139,10 +158,8 @@ msgstr "작동일 이후 지연"
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 
 #. module: base_action_rule
@@ -194,8 +211,8 @@ msgid ""
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
-"\"관련 문서 모델\" 페이지로 가서 \"검색\" 화면에 필터 매개 변수를 설정합니다"
-"(영업/기회를 기반으로 한 필터의 예 : 생성일이 2012/01/01과 \"같다\")"
+"\"관련 문서 모델\" 페이지로 가서 \"검색\" 화면에 필터 매개 변수를 설정합니다(영업/기회를 기반으로 한 필터의 예 : 생성일이 "
+"2012/01/01과 \"같다\")"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -221,7 +238,8 @@ msgstr "존재하려면 동작 규칙을 실행하기 전에 이 조건을 만�
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr "존재하려면 기록 갱신 전에 이 조건을 만족해야 합니다."
 
 #. module: base_action_rule
@@ -232,12 +250,12 @@ msgstr "진행 중"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
-"같은 \"검색\" 화면에서 \"현재 필터 저장\" 메뉴를 선택하고 이름을 입력합니다"
-"(예 : 2012/01/01 작성). 그리고 \"모든 사용자와 공유\" 옵션을 추가합니다."
+"같은 \"검색\" 화면에서 \"현재 필터 저장\" 메뉴를 선택하고 이름을 입력합니다(예 : 2012/01/01 작성). 그리고 \"모든 "
+"사용자와 공유\" 옵션을 추가합니다."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
@@ -301,6 +319,11 @@ msgid "Months"
 msgstr "월"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+msgid "Name"
+msgstr "이름"
+
+#. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "New"
 msgstr "신규"
@@ -339,6 +362,11 @@ msgstr "파트너"
 #: selection:base.action.rule.lead.test,state:0
 msgid "Pending"
 msgstr "보류"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_priority
+msgid "Priority"
+msgstr "우선 순위"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
@@ -399,6 +427,16 @@ msgid "Subject"
 msgstr "제목"
 
 #. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action
+msgid "Test Server Action"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action_context
+msgid "Test Server Action Context"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
 msgstr ""
@@ -427,11 +465,9 @@ msgstr "달력 사용"
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
 
@@ -445,16 +481,13 @@ msgstr ""
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
-"하루 기준으로 시간을 지정한 조건을 계산할 때는 작업일에 기초하여 날짜를 계산"
-"하는 달력을 사용하는 것이 가능합니다."
+msgstr "하루 기준으로 시간을 지정한 조건을 계산할 때는 작업일에 기초하여 날짜를 계산하는 달력을 사용하는 것이 가능합니다."
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
-"scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 
 #. module: base_action_rule
@@ -472,6 +505,4 @@ msgstr "선택을 취소하면 규칙은 숨겨지고 실행되지 않습니다.
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
-msgstr ""
-"당신은 또한 새 필터를 만들기 위해서 기록을 선택하는것 대신 필터를 사용할 수 "
-"있습니다."
+msgstr "당신은 또한 새 필터를 만들기 위해서 기록을 선택하는것 대신 필터를 사용할 수 있습니다."

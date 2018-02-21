@@ -115,6 +115,7 @@ def init_logger():
     _logger_init = True
 
     logging.addLevelName(25, "INFO")
+    logging.captureWarnings(True)
 
     from tools.translate import resetlocale
     resetlocale()

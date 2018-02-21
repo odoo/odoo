@@ -3,8 +3,8 @@
 # * website_mail_channel
 # 
 # Translators:
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Paolo Valier, 2016
+# Martin Trigaux, 2016
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
@@ -49,7 +49,7 @@ msgstr ""
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr ""
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Gruppo di Discussione</span>"
 
 #. module: website_mail_channel
 #. openerp-web
@@ -305,3 +305,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
 msgstr "la tua email..."
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr "L'indirizzo"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already unsubscribed or was never subscribed to the mailing list, you may"
+" want to check that the address was correct."
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:238
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""

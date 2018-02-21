@@ -68,7 +68,21 @@ class SaleOrder(models.Model):
         (0, 'Not mandatory on website quote validation'),
         (1, 'Immediate after website order validation'),
         (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
+    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote", compute='_compute_require_payment', store=True)
+
+    @api.one
+    @api.depends('template_id')
+    def _compute_require_payment(self):
+        # Do not overwrite if the field is already set
+        if self.template_id and (self.require_payment is None or self.require_payment is False):
+            self.require_payment = self.template_id.require_payment
+
+    @api.multi
+    def copy(self, default=None):
+        if self.template_id and self.template_id.number_of_days > 0:
+            default = dict(default or {})
+            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        return super(SaleOrder, self).copy(default=default)
 
     @api.one
     def _compute_amount_undiscounted(self):
@@ -76,6 +90,14 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
+
+    @api.onchange('partner_id')
+    def onchange_update_description_lang(self):
+        if not self.template_id:
+            return
+        else:
+            template = self.template_id.with_context(lang=self.partner_id.lang)
+            self.website_description = template.website_description
 
     @api.onchange('template_id')
     def onchange_template_id(self):
@@ -85,15 +107,20 @@ class SaleOrder(models.Model):
 
         order_lines = [(5, 0, 0)]
         for line in template.quote_line:
+            discount = 0
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+                if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
+                    discount = (line.price_unit - price) / line.price_unit * 100
+                    price = line.price_unit
+
             else:
                 price = line.price_unit
 
             data = {
                 'name': line.name,
                 'price_unit': price,
-                'discount': line.discount,
+                'discount': 100 - ((100 - discount) * (100 - line.discount)/100),
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
                 'layout_category_id': line.layout_category_id,
@@ -232,7 +259,8 @@ class SaleOrderOption(models.Model):
 
         order_line = order.order_line.filtered(lambda line: line.product_id == self.product_id)
         if order_line:
-            order_line[0].product_uom_qty += 1
+            order_line = order_line[0]
+            order_line.product_uom_qty += 1
         else:
             vals = {
                 'price_unit': self.price_unit,

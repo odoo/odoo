@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <notebook>
-                        <page string="Settings">
+                        <page name="settings" string="Settings">
                             <group>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
@@ -120,7 +120,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <page name="emails" string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
@@ -226,12 +226,10 @@
                 <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban" on_create="project.open_create_project">
                     <field name="name"/>
                     <field name="use_tasks"/>
-                    <field name="user_id"/>
                     <field name="color"/>
                     <field name="task_count"/>
                     <field name="task_needaction_count"/>
                     <field name="label_tasks"/>
-                    <field name="task_ids"/>
                     <field name="alias_id"/>
                     <field name="alias_name"/>
                     <field name="alias_domain"/>
@@ -323,7 +321,7 @@ action = model.activate_sample_project()
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
@@ -381,7 +379,7 @@ action = model.activate_sample_project()
                             <field name="description" type="html"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Extra Info">
+                        <page name="extra_info" string="Extra Info">
                             <group>
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>

@@ -27,13 +27,8 @@ class ReportEventRegistration(models.Model):
     name_registration = fields.Char('Participant / Contact Name', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
 
-    @api.model_cr
-    def init(self):
-        """Initialize the sql view for the event registration """
-        tools.drop_view_if_exists(self.env.cr, 'report_event_registration')
-
-        # TOFIX this request won't select events that have no registration
-        self.env.cr.execute(""" CREATE VIEW report_event_registration AS (
+    def _select(self):
+        return """
             SELECT
                 e.id::varchar || '/' || coalesce(r.id::varchar,'') AS id,
                 e.id AS event_id,
@@ -51,10 +46,17 @@ class ReportEventRegistration(models.Model):
                 e.seats_max AS seats_max,
                 e.state AS event_state,
                 r.state AS registration_state
+            """
+
+    def _from(self):
+        return """
             FROM
                 event_event e
                 LEFT JOIN event_registration r ON (e.id=r.event_id)
+            """
 
+    def _group_by(self):
+        return """
             GROUP BY
                 event_id,
                 r.id,
@@ -67,5 +69,13 @@ class ReportEventRegistration(models.Model):
                 e.company_id,
                 e.seats_max,
                 name_registration
+            """
+
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute(
+            "CREATE or REPLACE VIEW %s as (%s %s %s)" % (
+                self._table, self._select(), self._from(), self._group_by(),
+            )
         )
-        """)

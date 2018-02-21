@@ -7,13 +7,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # ТАрас <tratatuta@i.ua>, 2016
 # Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Zoriana Zaiats <sorenabell@quintagroup.com>, 2016\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +39,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Коли створений платіж, статус має назву \"Чернетка\"\n"
+"                \n"
+"* Якщо платіжний баланс підлягає перевірці, статус має назву \"Очікування\".\n"
+"                \n"
+"* Якщо сплату розрахунків підтверджено, то статус встановлено на \"Готово\".\n"
+"                \n"
+"* Коли користувач скасовує платіж, статус має назву \"Відхилено\"."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -235,7 +243,7 @@ msgstr "Скасувати розрахунковий листок"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "Неможливо скасувати сплачений розрахунок."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -543,7 +551,7 @@ msgstr "Співробітник"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
 msgid "Employee Contract"
-msgstr ""
+msgstr "Трудовий контракт"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
@@ -694,6 +702,9 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Це використовується для обчислень у відсотках та фіксованій суми. Наприклад,"
+" правило для ваучера на їжу, що має фіксовану суму 1 € за робочий день може "
+"мати свою кількість, визначену у формулі worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -985,7 +996,7 @@ msgstr "Назва розрахунку"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "Розрахунок зарплатні"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1440,7 +1451,7 @@ msgstr "Ви повинні обрати робітника(ів) для ген�
 #: code:addons/hr_payroll/models/hr_payroll.py:838
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
+msgstr "Ви повинні встановити контракт, щоб створити розрахунковий рядок."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings

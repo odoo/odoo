@@ -200,7 +200,7 @@ var KanbanSelection = common.AbstractField.extend({
     prepare_dropdown_selection: function() {
         var self = this;
         var _data = [];
-        var current_stage_id = self.view.datarecord.stage_id[0];
+        var current_stage_id = self.view.datarecord.stage_id && self.view.datarecord.stage_id[0];
         var stage_data = {
             id: current_stage_id,
             legend_normal: self.view.datarecord.legend_normal || undefined,
@@ -465,6 +465,8 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 }
             }
         }).open();
+        this.trigger("dialog_opened", dialog);
+        return dialog;
     },
 });
 
@@ -1175,7 +1177,7 @@ var FieldBinaryFile = FieldBinary.extend({
         this._super();
         if (this.get("effective_readonly")) {
             this.$el.click(function(ev) {
-                if (self.get('value')) {
+                if (self.get('value') && self.view.datarecord.id) {
                     self.on_save_as(ev);
                 }
                 return false;
@@ -1193,6 +1195,11 @@ var FieldBinaryFile = FieldBinary.extend({
             this.do_toggle(!!this.get('value'));
             if (this.get('value')) {
                 this.$el.empty().append($("<span/>").addClass('fa fa-download'));
+                if (this.view.datarecord.id) {
+                    this.$el.css('cursor', 'pointer');
+                } else {
+                    this.$el.css('cursor', 'not-allowed');
+                }
                 if (filename) {
                     this.$el.append(" " + filename);
                 }

@@ -81,7 +81,7 @@ msgstr "Megjelenített név"
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "HR Timesheet/Attendance Report"
-msgstr ""
+msgstr "Időkiosztások/résztvevők kimutatásai"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_id
@@ -125,6 +125,8 @@ msgid ""
 "The timesheet cannot be validated as it contains an attendance record with "
 "no Check Out)."
 msgstr ""
+"Az időkimutatást nem lehet érvényesíteni mivel kilépés nélküli  jelenlét "
+"bejegyzést tartalmaz."
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
@@ -144,7 +146,7 @@ msgstr "Munkaidő-kiosztás"
 #. module: hr_timesheet_attendance
 #: model:ir.ui.menu,name:hr_timesheet_attendance.menu_hr_timesheet_attendance_report
 msgid "Timesheet / Attendance"
-msgstr ""
+msgstr "Időkiosztások / Résztvevők"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
@@ -159,7 +161,7 @@ msgstr "Munkaidő-kiosztás megengedett eltérése (órában)"
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_project_config_settings_timesheet_max_difference
 msgid "Timesheet allowed difference(Hours) *"
-msgstr ""
+msgstr "Időkiosztások megengedett eltérése (órában) *"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_by_account
@@ -206,17 +208,17 @@ msgstr "Munkaidő-kiosztás összesen"
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_attendance
 msgid "Total attendance"
-msgstr ""
+msgstr "Összes résztvevő"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_difference
 msgid "Total difference"
-msgstr ""
+msgstr "Összes eltérés"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_timesheet
 msgid "Total timesheet"
-msgstr ""
+msgstr "Időkiosztás összesen"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_user_id
@@ -247,7 +249,7 @@ msgstr ""
 #: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
 #, python-format
 msgid "You cannot delete a timesheet that has attendance entries."
-msgstr ""
+msgstr "Nem tud olyan időkiosztást törölni amihez van jelenlét bevitel."
 
 #. module: hr_timesheet_attendance
 #: code:addons/hr_timesheet_attendance/models/hr_attendance.py:113
@@ -267,7 +269,7 @@ msgstr "Nem módosíthatja a beírásokat egy visszaigazolt időkimutatáson."
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report
 msgid "hr.timesheet.attendance.report"
-msgstr ""
+msgstr "hr.timesheet.attendance.report"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_project_config_settings
@@ -278,4 +280,4 @@ msgstr "project.config.settings"
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "timesheet attendance"
-msgstr ""
+msgstr "timesheet attendance"

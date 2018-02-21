@@ -19,8 +19,16 @@ class TestDelegation(common.TransactionCase):
         record = self.record
 
         # children fields can be looked up on the parent record directly
-        self.assertEqual(record.field_0, 0)
-        self.assertEqual(record.field_1, 1)
+        self.assertEqual(
+            record.field_0
+            ,
+            0
+            )
+        self.assertEqual(
+            record.field_1
+            ,
+            1
+            )
 
     def test_swap_child(self):
         env = self.env

@@ -127,7 +127,7 @@ class PortalWizardUser(models.TransientModel):
         for wizard_user in self.sudo().with_context(active_test=False):
             group_portal = wizard_user.wizard_id.portal_id
             if not group_portal.is_portal:
-                raise UserError('Not a portal: ' + group_portal.name)
+                raise UserError(_('Group %s is not a portal') % group_portal.name)
             user = wizard_user.partner_id.user_ids[0] if wizard_user.partner_id.user_ids else None
             # update partner email, if a new one was introduced
             if wizard_user.partner_id.email != wizard_user.email:
@@ -137,7 +137,10 @@ class PortalWizardUser(models.TransientModel):
                 user_portal = None
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    company_id = wizard_user.partner_id.company_id.id
+                    if wizard_user.partner_id.company_id:
+                        company_id = wizard_user.partner_id.company_id.id
+                    else:
+                        company_id = self.env['res.company']._company_default_get('res.users')
                     user_portal = wizard_user.sudo().with_context(company_id=company_id)._create_user()
                 else:
                     user_portal = user
@@ -146,7 +149,7 @@ class PortalWizardUser(models.TransientModel):
                     wizard_user.user_id.write({'active': True, 'groups_id': [(4, group_portal.id)]})
                     # prepare for the signup process
                     wizard_user.user_id.partner_id.signup_prepare()
-                    wizard_user._send_email()
+                    wizard_user.with_context(active_test=True)._send_email()
                 wizard_user.refresh()
             else:
                 # remove the user (if it exists) from the portal group

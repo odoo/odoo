@@ -10,7 +10,7 @@
                 <xpath expr="//div[@name='button_box']" position="inside">
                    <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_template_stat)d"
                            icon="fa-truck" string="Procurements" type="action" 
-                           groups="stock.group_adv_location" 
+                           groups="base.group_no_one"
                            attrs="{'invisible':[('type', '=', 'service')]}"/>
                 </xpath>
             </field>
@@ -24,7 +24,7 @@
                 <xpath expr="//div[@name='button_box']" position="inside">
                    <button class="oe_stat_button" name="%(procurement.procurement_order_action_product_product_stat)d"
                            icon="fa-truck" string="Procurements" type="action" 
-                           groups="stock.group_adv_location"
+                           groups="base.group_no_one"
                            attrs="{'invisible':[('type', '=', 'service')]}"/>
                 </xpath>
             </field>

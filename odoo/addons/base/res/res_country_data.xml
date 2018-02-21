@@ -258,8 +258,8 @@
             <field name="name">Belarus</field>
             <field name="code">by</field>
             <field file="base/static/img/country_flags/by.png" name="image" type="base64" />
-            <field name="currency_id" ref="BYR" />
-            <field eval="0" name="phone_code" />
+            <field name="currency_id" ref="BYN" />
+            <field eval="375" name="phone_code" />
         </record>
         <record id="bz" model="res.country">
             <field name="name">Belize</field>
@@ -424,6 +424,7 @@
             <field name="name">Denmark</field>
             <field name="code">dk</field>
             <field file="base/static/img/country_flags/dk.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="DKK" />
             <field eval="45" name="phone_code" />
         </record>

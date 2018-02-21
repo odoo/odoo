@@ -87,11 +87,11 @@ options.registry["width-x"] = options.Class.extend({
 });
 
 options.registry.table_item = options.Class.extend({
-    on_clone: function ($clone) {
+    on_clone: function ($clone, options) {
         this._super.apply(this, arguments);
 
         // If we cloned a td or th element...
-        if (this.$target.is("td, th")) {
+        if (options.isCurrent && this.$target.is("td, th")) {
             // ... and that the td or th element was alone on its row ...
             if (this.$target.siblings().length === 1) {
                 var $tr = $clone.parent();
@@ -273,9 +273,13 @@ snippets_editor.Class.include({
         function editable_area_is_empty($layout) {
             $layout = $layout || $editable_area.find(".o_layout");
             var $mail_wrapper = $layout.children(".o_mail_wrapper");
+            var $mail_wrapper_content = $mail_wrapper.find('.o_mail_wrapper_td');
+            if (!$mail_wrapper_content.length) { // compatibility
+                $mail_wrapper_content = $mail_wrapper;
+            }
             return (
                 $editable_area.html().trim() === ""
-                || ($layout.length > 0 && ($layout.html().trim() === "" || $mail_wrapper.length > 0 && $mail_wrapper.html().trim() === ""))
+                || ($layout.length > 0 && ($layout.html().trim() === "" || $mail_wrapper_content.length > 0 && $mail_wrapper_content.html().trim() === ""))
             );
         }
 
@@ -322,10 +326,17 @@ snippets_editor.Class.include({
             switch_theme.last = theme_params;
 
             $body.removeClass(all_classes).addClass(theme_params.className);
-            switch_images(theme_params, $editable_area);
 
             var $old_layout = $editable_area.find(".o_layout");
-            var $new_wrapper = $("<div/>", {"class": "o_mail_wrapper oe_structure"});
+            // This wrapper structure is the only way to have a responsive and
+            // centered fixed-width content column on all mail clients
+            var $new_wrapper = $('<table/>', {class: 'o_mail_wrapper'});
+            var $new_wrapper_content = $("<td/>", {class: 'o_mail_no_resize o_mail_wrapper_td oe_structure'});
+            $new_wrapper.append($('<tr/>').append(
+                $("<td/>", {class: 'o_mail_no_resize'}),
+                $new_wrapper_content,
+                $("<td/>", {class: 'o_mail_no_resize'})
+            ));
             var $new_layout = $("<div/>", {"class": "o_layout " + theme_params.className}).append($new_wrapper);
 
             var $contents;
@@ -337,12 +348,13 @@ snippets_editor.Class.include({
                 $contents = $editable_area.contents();
             }
 
+            $new_wrapper_content.append($contents);
+            switch_images(theme_params, $new_wrapper_content);
             $editable_area.empty().append($new_layout);
-            $new_wrapper.append($contents);
             $old_layout.remove();
 
             if (first_choice) {
-                self.add_default_snippet_text_classes($new_wrapper);
+                self.add_default_snippet_text_classes($new_wrapper_content);
             }
             self.show_blocks();
         }
@@ -390,4 +402,15 @@ odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
 if ($editable_area.html().indexOf('on_change_model_and_list') !== -1) {
     $editable_area.empty();
 }
+// Adding compatibility for the outlook compliance of mailings.
+// Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
+options.registry.background.include({
+    start: function() {
+        this._super();
+        var $table_target = this.$target.find('table:first');
+        if ($table_target) {
+            this.$target = $table_target;
+        }
+    }
+});
 });

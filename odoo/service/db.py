@@ -211,9 +211,13 @@ def dump_db(db_name, stream, backup_format='zip'):
             return stdout
 
 def exp_restore(db_name, data, copy=False):
+    def chunks(d, n=8192):
+        for i in range(0, len(d), n):
+            yield d[i:i+n]
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
-        data_file.write(data.decode('base64'))
+        for chunk in chunks(data):
+            data_file.write(chunk.decode('base64'))
         data_file.close()
         restore_db(db_name, data_file.name, copy=copy)
     finally:
@@ -319,6 +323,14 @@ def exp_db_exist(db_name):
 def list_dbs(force=False):
     if not odoo.tools.config['list_db'] and not force:
         raise odoo.exceptions.AccessDenied()
+
+    if not odoo.tools.config['dbfilter'] and odoo.tools.config['db_name']:
+        # In case --db-filter is not provided and --database is passed, Odoo will not
+        # fetch the list of databases available on the postgres server and instead will
+        # use the value of --database as comma seperated list of exposed databases.
+        res = sorted(db.strip() for db in odoo.tools.config['db_name'].split(','))
+        return res
+
     chosen_template = odoo.tools.config['db_template']
     templates_list = tuple(set(['postgres', chosen_template]))
     db = odoo.sql_db.db_connect('postgres')

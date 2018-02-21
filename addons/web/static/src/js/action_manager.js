@@ -175,13 +175,18 @@ var ViewManagerAction = WidgetAction.extend({
      * @param {int} [scrollTop] the number of pixels to scroll
      */
     set_scrollTop: function(scrollTop) {
-        this.widget.active_view.controller.set_scrollTop(scrollTop);
+        if (this.widget.active_view && this.widget.active_view.controller) {
+            this.widget.active_view.controller.set_scrollTop(scrollTop);
+        }
     },
     /**
      * @return {int} the number of pixels the webclient is scrolled when leaving the action
      */
     get_scrollTop: function() {
-        return this.widget.active_view.controller.get_scrollTop();
+        if (this.widget.active_view && this.widget.active_view.controller) {
+            return this.widget.active_view.controller.get_scrollTop();
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
@@ -380,6 +385,10 @@ var ActionManager = Widget.extend({
         return this.inner_widget;
     },
     history_back: function() {
+        if (this.dialog) {
+            this.dialog_stop();
+            return;
+        }
         var nb_views = this.inner_action.get_nb_views();
         if (nb_views > 1) {
             // Stay on this action, but select the previous view
@@ -856,7 +865,7 @@ var ActionManager = Widget.extend({
             });
         });
     },
-    ir_actions_act_url: function (action) {
+    ir_actions_act_url: function (action, options) {
         var url = action.url;
         if (session.debug && url && url.length && url[0] === '/') {
             url = $.param.querystring(url, {debug: session.debug});
@@ -867,6 +876,7 @@ var ActionManager = Widget.extend({
             return $.Deferred(); // The action is finished only when the redirection is done
         } else {
             window.open(url, '_blank');
+            options.on_close();
         }
         return $.when();
     },

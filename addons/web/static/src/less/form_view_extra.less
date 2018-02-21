@@ -187,10 +187,16 @@
     }
 
     // All required form fields
+    .o-input-required-style() {
+        background-color: #D2D2FF;
+    }
     .o_form_required {
-        &.o_form_input, .o_form_input, &.o_form_textarea, .o_form_textarea {
-            background-color: #D2D2FF;
+        &.o_form_input, .o_form_input, textarea.o_form_textarea {
+            .o-input-required-style();
         }
+    }
+    textarea.o_form_textarea.o_form_required {
+        .o-input-required-style();
     }
 
     .o_form_field.o_form_field_many2one .o_external_button {

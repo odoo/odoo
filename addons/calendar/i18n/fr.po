@@ -10,7 +10,6 @@
 # Alexandre Laidin <alexandre.laidin@iris-solutions.fr>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
 # Nicolas JEUDY <nicolas@sudokeys.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
@@ -319,12 +318,12 @@ msgstr "${object.event_id.name} - Rappel"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} invitation"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: Date modifiée"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:639
@@ -640,13 +639,15 @@ msgstr "Heure de fin"
 #: code:addons/calendar/models/calendar.py:821
 #, python-format
 msgid "Ending date cannot be set before starting date."
-msgstr ""
+msgstr "La date de fin ne peut pas être antérieure à la date de début."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:819
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr ""
+"La date et l'heure de fin ne peuvent être antérieures à la date et l'heure "
+"de début."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -1169,7 +1170,7 @@ msgstr "Heure de début"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_state
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_state
 msgid "Status"
-msgstr "Statut"
+msgstr "État"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee_state

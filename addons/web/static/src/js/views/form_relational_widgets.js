@@ -26,7 +26,7 @@ var M2ODialog = Dialog.extend({
             title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
             buttons: [
-                {text: _t('Create'), classes: 'btn-primary', click: function() {
+                {text: _t('Create'), classes: 'btn-primary', click: function(e) {
                     if (this.$("input").val() !== ''){
                         this.getParent()._quick_create(this.$("input").val());
                         this.close();
@@ -346,8 +346,8 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         if (!this.get("effective_readonly")) {
             this.$input.val(noValue ? "" : (str.split("\n")[0].trim() || $(data.noDisplayContent).text()));
             this.current_display = this.$input.val();
-            this.$follow_button.toggle(!this.is_false());
-            this.$el.toggleClass('o_with_button', !!this.$follow_button && this.$follow_button.length > 0 && !this.is_false());
+            this.$follow_button.toggle(this.is_set());
+            this.$el.toggleClass('o_with_button', !!this.$follow_button && this.$follow_button.length > 0 && this.is_set());
         } else {
             this.$el.html(noValue ? "" : (_.escape(str.trim()).split("\n").join("<br/>") || data.noDisplayContent));
             // Define callback to perform when clicking on the field
@@ -453,12 +453,18 @@ var AbstractManyField = common.AbstractField.extend({
         });
     },
 
-    _on_load_record: function (record) {
+    set_value_from_record: function (record) {
+        this._super.apply(this, arguments);
+        // we want to update starting_ids straight away so the value can be used as soon as
+        // possible without inconsistency
         this.starting_ids = [];
         // don't set starting_ids for the new record
         if (record.id && record[this.name] && (!isNaN(record.id) || record.id.indexOf(this.dataset.virtual_id_prefix) === -1)) {
             this.starting_ids =  this.get('value').slice();
         }
+    },
+
+    _on_load_record: function (record) {
         this.trigger("load_record", record);
     },
 
@@ -872,6 +878,10 @@ var FieldX2Many = AbstractManyField.extend({
     is_false: function() {
         return _(this.dataset.ids).isEmpty();
     },
+    is_set: function() {
+        // always consider that field is "set" hence displayed
+        return true;
+    },
 });
 
 var X2ManyDataSet = data.BufferedDataSet.extend({
@@ -959,7 +969,8 @@ var X2ManyListView = ListView.extend({
             field.no_rerender = true;
             current_values[field.name] = field.get('value');
         });
-        var cached_records = _.filter(this.dataset.cache, function(item){return !_.isEmpty(item.values) && !item.to_delete;});
+        var ids = _.map(this.records.records, function (item) { return item.attributes.id; });
+        var cached_records = _.filter(this.dataset.cache, function(item){return _.contains(ids, item.id) && !_.isEmpty(item.values) && !item.to_delete;});
         var valid = _.every(cached_records, function(record){
             _.each(fields, function(field){
                 var value = record.values[field.name];
@@ -1062,8 +1073,10 @@ var One2ManyListView = X2ManyListView.extend({
             this._dataset_changed = false;
         });
 
-        this.on('warning', this, function(e) { // In case of a one2many, we do not want any warning which comes from the editor
-            e.stop_propagation();
+        this.on('warning', this, function(e) { // In case of editable list view, we do not want any warning which comes from the editor
+            if (this.editable()) {
+                e.stop_propagation();
+            }
         });
     },
     do_add_record: function () {
@@ -1302,7 +1315,7 @@ var Many2ManyListView = X2ManyListView.extend({
             context: this.x2m.build_context(),
             title: _t("Add: ") + this.x2m.string,
             alternative_form_view: this.x2m.field.views ? this.x2m.field.views.form : undefined,
-            no_create: this.x2m.options.no_create,
+            no_create: this.x2m.options.no_create || !this.is_action_enabled('create'),
             on_selected: function(element_ids) {
                 return self.x2m.data_link_multi(element_ids).then(function() {
                     self.x2m.reload_current_view();
@@ -1714,6 +1727,10 @@ var FieldMany2ManyCheckBoxes = AbstractManyField.extend(common.ReinitializeField
     },
     is_false: function() {
         return false;
+    },
+    is_set: function() {
+        // always consider that field is "set" hence displayed
+        return true;
     },
 });
 

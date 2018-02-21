@@ -7,13 +7,14 @@
 # Cozmin Candea <office@terrabit.ro>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2016
+# Iulian Cutui <iulian.cutui@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2016\n"
+"Last-Translator: Iulian Cutui <iulian.cutui@gmail.com>, 2017\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,6 +124,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un produs stocabil este un produs pentru care gestionați stocul. Aplicația \"Inventar\" trebuie instalată.\n"
+"Un produs consumabil, pe de altă parte, este un produs pentru care nu este gestionat stocul.\n"
+"Un serviciu este un produs nematerial pe care îl oferiți.\n"
+"Un conținut digital este un produs nematerial pe care îl vindeți online. Fișierele sunt atașate la produsele comercializate pe e-commerce, cum ar fi e-cărți, muzică, imagini, ... Trebuie instalat modulul \"Produs digital\"."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -176,7 +181,7 @@ msgstr "Disponibil"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available_in_pos
 msgid "Available in the Point of Sale"
-msgstr "Disponibil in Punct de vânzare"
+msgstr "Disponibil în Punct de vânzare"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
@@ -196,7 +201,7 @@ msgstr "Prețul mediu în facturi clienți."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Preț mediu în facturi furnizori"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
@@ -215,7 +220,7 @@ msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
 msgstr ""
-"Pretul de baza pentru calcularea pretului clientului. Uneori este numit "
+"Prețul de baza pentru calcularea pretului clientului. Uneori este numit "
 "pretul de catalog."
 
 #. module: delivery
@@ -297,6 +302,8 @@ msgstr "Verificați dacă produsul este eligibil pentru a deveni membru."
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
 msgstr ""
+"Bifați dacă produsul trebuie cântărit folosind integrarea cu cântarul "
+"hardware"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_available_in_pos
@@ -306,7 +313,7 @@ msgstr "Selectați dacă doriți ca acest produs să apară în Punctul de vânz
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr "Click pentru a defini o nouă metodă de livrare"
+msgstr "Clic pentru a defini o nouă metodă de livrare"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -454,7 +461,7 @@ msgstr "Livrare"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Transportator"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -540,6 +547,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
+"Fiecare transportator (de exemplu, UPS) poate avea mai multe metode de "
+"livrare (de exemplu, UPS Express, UPS Standard) cu un set de reguli de "
+"prețuri atașate la fiecare metodă."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -650,6 +660,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
 msgstr "Fără taxă de livrare"
 
@@ -692,7 +703,7 @@ msgstr "Grupează după"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
-msgstr ""
+msgstr "Cod HS"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
@@ -1029,6 +1040,7 @@ msgstr "Cost normal - Cost total"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr "Taxă obișnuită de livrare"
 
@@ -1358,7 +1370,7 @@ msgstr "Comandă de vânzare"
 #: model:ir.model,name:delivery.model_sale_order_line
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn
 msgid "Sales Order Line"
-msgstr "Linie comanda de vanzare"
+msgstr "Linie comandă vânzare"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -1544,6 +1556,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr "Poşta"
 
@@ -1572,6 +1585,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Prețul de vânzare este gestionat din produsul șablon. Clic pe butonul "
+"„Prețuri Variante” pentru a seta prețuri suplimentare pe atribute."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1590,6 +1605,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Aceste metode permit calcularea automată a prețului de livrare în funcție de"
+" setările dvs.; cu privire la comanda de vânzări (în baza cotei) sau la "
+"factură (în baza ordinelor de livrare)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
@@ -1611,8 +1629,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
-"Acest cont va fi folosit pentru a evalua diferentele de pret dintre pretul "
-"de achizitie si pretul de cost."
+"Acest cont va fi folosit pentru a evalua diferențele de preț dintre prețul "
+"de achiziție si prețul de cost."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
@@ -1644,8 +1662,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
-"Aceasta locatie a stocului va fi folosita, in locul celei implicite, drept "
-"locatia sursa pentru mutarile stocului generate de comenzile de productie."
+"Aceasta locația a stocului va fi folosita, in locul celei implicite, drept "
+"locația sursa pentru mutările stocului generate de comenzile de producție."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
@@ -1653,8 +1671,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
 msgstr ""
-"Aceasta locatie a stocului va fi folosita, in loc de cea implicita, drept "
-"locatia sursa pentru mutarile stocului generate de aprovizionari."
+"Aceasta locație a stocului va fi folosita, in loc de cea implicita, drept "
+"locația sursa pentru mutările stocului generate de aprovizionări."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
@@ -1662,19 +1680,21 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
-"Aceasta locatie a stocului va fi folosita, in locul celei implicite, drept "
-"locatia sursa pentru mutarile stocului generate atunci cand faceti un "
+"Aceasta locație a stocului va fi folosita, in locul celei implicite, drept "
+"locația sursa pentru mutările stocului generate atunci când faceți un "
 "inventar."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
 msgstr ""
+"Aceste categorii sunt folosite pentru a grupa produsele similare în Punctul "
+"de vânzare."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "De cântărit"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1710,7 +1730,7 @@ msgstr "Urmărire"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Referință urmărire"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1731,7 +1751,7 @@ msgstr "Cifra de afaceri - Pretul standard"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of Measure"
-msgstr "Unitatea de masura"
+msgstr "Unitatea de măsură"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
@@ -1937,7 +1957,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr ""
+msgstr "Zip From"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to

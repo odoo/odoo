@@ -3,6 +3,7 @@
 # * sale_order_dates
 # 
 # Translators:
+# Bülent Tiknas <btiknas@googlemail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
 msgid ""
@@ -22,7 +23,7 @@ msgstr ""
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
-msgstr "Datum Liefervereinbarung"
+msgstr "Frühestes Lieferdatum"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
@@ -58,7 +59,7 @@ msgstr "Effektives Datum"
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
-msgstr "Datum der Anfrage"
+msgstr "Gewünschtes Lieferdatum"
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/models/sale_order.py:56
@@ -83,5 +84,5 @@ msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
-"Das vom Kunden gewünschte Datum ist früher als das verpflichtende Datum. Sie"
-" können dem Wunsch des Kunden nicht nachkommen."
+"Das vom Kunden gewünschte Datum ist früher als das frühest mögliche "
+"Lieferdatum. Sie können dem Wunsch des Kunden nicht nachkommen."

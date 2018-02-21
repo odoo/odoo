@@ -58,7 +58,7 @@ class ReportProjectTaskUser(models.Model):
                     t.partner_id,
                     t.stage_id as stage_id,
                     t.kanban_state as state,
-                    (extract('epoch' from (t.write_date-t.create_date)))/(3600*24)  as closing_days,
+                    (extract('epoch' from (NULLIF(t.date_end, t.write_date)-t.create_date)))/(3600*24)  as closing_days,
                     (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
                     (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24)  as delay_endings_days
         """

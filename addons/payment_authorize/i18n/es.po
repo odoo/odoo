@@ -3,17 +3,21 @@
 # * payment_authorize
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Humberto Garza De Koster <garzadekoster@gmail.com>, 2016
+# David Arnold <blaggacao@users.noreply.github.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Humberto Garza De Koster <garzadekoster@gmail.com>, 2016\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,14 +36,34 @@ msgid "API Transaction Key"
 msgstr "API Clave de la transacción"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/models/authorize_request.py:66
+#, python-format
+msgid ""
+"Authorize.net Error Message(s):\n"
+" %s"
+msgstr ""
+"Authorize.Net Mensaje(s) de error:\n"
+" %s"
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
+msgstr "Authorize.net perfil ID"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:167
+#, python-format
+msgid ""
+"Authorize: received data with missing reference (%s) or trans_id (%s) or "
+"fingerprint (%s)"
 msgstr ""
+"Authorize: datos recibidos sin referencia (%s) o trans_id (%s) o huella "
+"digital (%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -86,13 +110,21 @@ msgid "Payment Transaction"
 msgstr "Transacción de pago"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:347
+#, python-format
+msgid "The Customer Profile creation in Authorize.NET failed."
+msgstr "Fallo en la creación del perfil de cliente en Authorize.NET."
+
+#. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
 msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Esto contiene la única referencia para esta combinación de empresa/pago de "
+"token en el backend de Authorize.net"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"

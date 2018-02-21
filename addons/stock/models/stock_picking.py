@@ -245,8 +245,10 @@ class Picking(models.Model):
     picking_type_code = fields.Selection([
         ('incoming', 'Vendors'),
         ('outgoing', 'Customers'),
-        ('internal', 'Internal')], related='picking_type_id.code')
-    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs')
+        ('internal', 'Internal')], related='picking_type_id.code',
+        readonly=True)
+    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
+        readonly=True)
 
     quant_reserved_exist = fields.Boolean(
         'Has quants already reserved', compute='_compute_quant_reserved_exist',
@@ -316,22 +318,18 @@ class Picking(models.Model):
             self.state = 'cancel'
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
-        elif self.move_type == 'one':
-            ordered_moves = self.move_lines.filtered(
-                lambda move: move.state not in ['cancel', 'done']
-            ).sorted(
-                key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=False
-            )
-            self.state = ordered_moves[0].state
         else:
-            filtered_moves = self.move_lines.filtered(lambda move: move.state not in ['cancel', 'done'])
-            if not all(move.state == 'assigned' for move in filtered_moves) and any(move.state == 'assigned' for move in filtered_moves):
-                self.state = 'partially_available'
-            elif any(move.partially_available for move in filtered_moves):
+            # We sort our moves by importance of state: "confirmed" should be first, then we'll have
+            # "waiting" and finally "assigned" at the end.
+            moves_todo = self.move_lines\
+                .filtered(lambda move: move.state not in ['cancel', 'done'])\
+                .sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0)
+            if self.move_type == 'one':
+                self.state = moves_todo[0].state or 'draft'
+            elif moves_todo[0].state != 'assigned' and any(x.partially_available or x.state == 'assigned' for x in moves_todo):
                 self.state = 'partially_available'
             else:
-                ordered_moves = filtered_moves.sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=True)
-                self.state = ordered_moves[0].state
+                self.state = moves_todo[-1].state or 'draft'
 
     @api.one
     @api.depends('move_lines.priority')
@@ -574,8 +572,11 @@ class Picking(models.Model):
                 'location_dest_id': mapping.location_dst_id,
                 'product_uom_id': uom.id,
                 'pack_lot_ids': [
-                    (0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[mapping][lot]})
-                    for lot in lots_grouped.get(mapping, {}).keys()],
+                    (0, 0, {
+                        'lot_id': lot,
+                        'qty': 0.0,
+                        'qty_todo': mapping.product.uom_id._compute_quantity(lots_grouped[mapping][lot], uom)
+                    }) for lot in lots_grouped.get(mapping, {}).keys()],
             }
             product_id_to_vals.setdefault(mapping.product.id, list()).append(val_dict)
 
@@ -602,7 +603,10 @@ class Picking(models.Model):
                     continue
                 move_quants = move.reserved_quant_ids
                 picking_quants += move_quants
-                forced_qty = (move.state == 'assigned') and move.product_qty - sum([x.qty for x in move_quants]) or 0
+                forced_qty = 0.0
+                if move.state == 'assigned':
+                    qty = move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, round=False)
+                    forced_qty = qty - sum([x.qty for x in move_quants])
                 # if we used force_assign() on the move, or if the move is incoming, forced_qty > 0
                 if float_compare(forced_qty, 0, precision_rounding=move.product_id.uom_id.rounding) > 0:
                     if forced_qties.get(move.product_id):
@@ -611,9 +615,13 @@ class Picking(models.Model):
                         forced_qties[move.product_id] = forced_qty
             for vals in picking._prepare_pack_ops(picking_quants, forced_qties):
                 vals['fresh_record'] = False
-                PackOperation.create(vals)
+                PackOperation |= PackOperation.create(vals)
         # recompute the remaining quantities all at once
         self.do_recompute_remaining_quantities()
+        for pack in PackOperation:
+            pack.ordered_qty = sum(
+                pack.mapped('linked_move_operation_ids').mapped('move_id').filtered(lambda r: r.state != 'cancel').mapped('ordered_qty')
+            )
         self.write({'recompute_pack_op': False})
 
     @api.multi
@@ -634,7 +642,7 @@ class Picking(models.Model):
             move_dict = prod2move_ids[product_id][index]
             qty_on_link = min(move_dict['remaining_qty'], qty_to_assign)
             self.env['stock.move.operation.link'].create({'move_id': move_dict['move'].id, 'operation_id': operation_id, 'qty': qty_on_link, 'reserved_quant_id': quant_id})
-            if move_dict['remaining_qty'] == qty_on_link:
+            if float_compare(move_dict['remaining_qty'], qty_on_link, precision_rounding=move_dict['move'].product_uom.rounding) == 0:
                 prod2move_ids[product_id].pop(index)
             else:
                 move_dict['remaining_qty'] -= qty_on_link
@@ -783,6 +791,8 @@ class Picking(models.Model):
     @api.multi
     def do_new_transfer(self):
         for pick in self:
+            if pick.state == 'done':
+                raise UserError(_('The pick is already validated'))
             pack_operations_delete = self.env['stock.pack.operation']
             if not pick.move_lines and not pick.pack_operation_ids:
                 raise UserError(_('Please create some Initial Demand or Mark as Todo and create some Operations. '))

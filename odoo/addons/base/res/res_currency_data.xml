@@ -79,6 +79,7 @@
             <field name="name">IDR</field>
             <field name="symbol">Rp</field>
             <field name="rounding">0.01</field>
+            <field name="position">before</field>
             <field name="active" eval="False"/>
         </record>
 
@@ -265,6 +266,7 @@
             <field name="name">ZAR</field>
             <field name="symbol">R</field>
             <field name="rounding">0.01</field>
+            <field name="position">before</field>
             <field name="active" eval="False"/>
         </record>
 
@@ -402,6 +404,13 @@
         <record id="BYR" model="res.currency">
             <field name="name">BYR</field>
             <field name="symbol">BR</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BYN" model="res.currency">
+            <field name="name">BYN</field>
+            <field name="symbol">Br</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>
@@ -786,7 +795,7 @@
 
         <record id="DZD" model="res.currency">
             <field name="name">DZD</field>
-            <field name="symbol">DZ</field>
+            <field name="symbol">DA</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
         </record>

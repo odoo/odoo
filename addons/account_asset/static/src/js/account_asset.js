@@ -25,8 +25,8 @@ var WidgetOnButton = core.list_widget_registry.get('field').extend({
         }
         return $('<div/>').append((this.parent_state === 'open')? $('<button/>', {
             type: 'button',
-            title: (this.has_value)? _t('Posted') : _t('Unposted'),
-            disabled: !!this.has_value,
+            title: (this.is_posted)? _t('Posted') : _t('Unposted'),
+            disabled: row_data.move_check.value,
             'class': 'btn btn-sm btn-link fa fa-circle o_widgetonbutton ' + class_color,
         }) : '').html();
     },

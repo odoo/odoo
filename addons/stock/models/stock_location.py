@@ -69,15 +69,13 @@ class Location(models.Model):
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
     @api.one
-    @api.depends('name', 'location_id')
+    @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
-        name = self.name
-        current = self
-        while current.location_id:
-            current = current.location_id
-            name = '%s/%s' % (current.name, name)
-        self.complete_name = name
+        if self.location_id.complete_name:
+            self.complete_name = '%s/%s' % (self.location_id.complete_name, self.name)
+        else:
+            self.complete_name = self.name
 
     @api.multi
     def name_get(self):
@@ -209,9 +207,15 @@ class PushedFlow(models.Model):
                 # TDE FIXME: should probably be done in the move model IMO
                 move._push_apply()
         else:
-            new_move = move.copy({
-                'origin': move.origin or move.picking_id.name or "/",
-                'location_id': move.location_dest_id.id,
+            new_move_vals = self._prepare_move_copy_values(move, new_date)
+            new_move = move.copy(new_move_vals)
+            move.write({'move_dest_id': new_move.id})
+            new_move.action_confirm()
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = {
+                'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
+                'location_id': move_to_copy.location_dest_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'date': new_date,
                 'date_expected': new_date,
@@ -222,6 +226,6 @@ class PushedFlow(models.Model):
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
                 'procurement_id': False,
-            })
-            move.write({'move_dest_id': new_move.id})
-            new_move.action_confirm()
+            }
+
+        return new_move_vals

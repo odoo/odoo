@@ -244,6 +244,7 @@ class HrPayslip(models.Model):
     def refund_sheet(self):
         for payslip in self:
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
+            copied_payslip.compute_sheet()
             copied_payslip.action_payslip_done()
         formview_ref = self.env.ref('hr_payroll.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll.view_hr_payslip_tree', False)
@@ -308,19 +309,25 @@ class HrPayslip(models.Model):
         @param contract_ids: list of contract id
         @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
         """
-        def was_on_leave(employee_id, datetime_day):
-            day = fields.Date.to_string(datetime_day)
+
+        def was_on_leave_interval(employee_id, date_from, date_to):
+            date_from = fields.Datetime.to_string(date_from)
+            date_to = fields.Datetime.to_string(date_to)
             return self.env['hr.holidays'].search([
                 ('state', '=', 'validate'),
                 ('employee_id', '=', employee_id),
                 ('type', '=', 'remove'),
-                ('date_from', '<=', day),
-                ('date_to', '>=', day)
-            ], limit=1).holiday_status_id.name
+                ('date_from', '<=', date_from),
+                ('date_to', '>=', date_to)
+            ], limit=1)
 
         res = []
         #fill only if the contract as a working schedule linked
+        uom_day = self.env.ref('product.product_uom_day', raise_if_not_found=False)
         for contract in self.env['hr.contract'].browse(contract_ids).filtered(lambda contract: contract.working_hours):
+            uom_hour = contract.employee_id.resource_id.calendar_id.uom_id or self.env.ref('product.product_uom_hour', raise_if_not_found=False)
+            interval_data = []
+            holidays = self.env['hr.holidays']
             attendances = {
                  'name': _("Normal Working Days paid at 100%"),
                  'sequence': 1,
@@ -333,31 +340,43 @@ class HrPayslip(models.Model):
             day_from = fields.Datetime.from_string(date_from)
             day_to = fields.Datetime.from_string(date_to)
             nb_of_days = (day_to - day_from).days + 1
+
+            # Gather all intervals and holidays
             for day in range(0, nb_of_days):
-                working_hours_on_day = contract.working_hours.working_hours_on_day(day_from + timedelta(days=day))
-                if working_hours_on_day:
-                    #the employee had to work
-                    leave_type = was_on_leave(contract.employee_id.id, day_from + timedelta(days=day))
-                    if leave_type:
-                        #if he was on leave, fill the leaves dict
-                        if leave_type in leaves:
-                            leaves[leave_type]['number_of_days'] += 1.0
-                            leaves[leave_type]['number_of_hours'] += working_hours_on_day
-                        else:
-                            leaves[leave_type] = {
-                                'name': leave_type,
-                                'sequence': 5,
-                                'code': leave_type,
-                                'number_of_days': 1.0,
-                                'number_of_hours': working_hours_on_day,
-                                'contract_id': contract.id,
-                            }
+                working_intervals_on_day = contract.working_hours.get_working_intervals_of_day(start_dt=day_from + timedelta(days=day))
+                for interval in working_intervals_on_day:
+                    interval_data.append((interval, was_on_leave_interval(contract.employee_id.id, interval[0], interval[1])))
+
+            # Extract information from previous data. A working interval is considered:
+            # - as a leave if a hr.holiday completely covers the period
+            # - as a working period instead
+            for interval, holiday in interval_data:
+                holidays |= holiday
+                hours = (interval[1] - interval[0]).total_seconds() / 3600.0
+                if holiday:
+                    #if he was on leave, fill the leaves dict
+                    if holiday.holiday_status_id.name in leaves:
+                        leaves[holiday.holiday_status_id.name]['number_of_hours'] += hours
                     else:
-                        #add the input vals to tmp (increment if existing)
-                        attendances['number_of_days'] += 1.0
-                        attendances['number_of_hours'] += working_hours_on_day
+                        leaves[holiday.holiday_status_id.name] = {
+                            'name': holiday.holiday_status_id.name,
+                            'sequence': 5,
+                            'code': holiday.holiday_status_id.name,
+                            'number_of_days': 0.0,
+                            'number_of_hours': hours,
+                            'contract_id': contract.id,
+                        }
+                else:
+                    #add the input vals to tmp (increment if existing)
+                    attendances['number_of_hours'] += hours
+
+            # Clean-up the results
             leaves = [value for key, value in leaves.items()]
-            res += [attendances] + leaves
+            for data in [attendances] + leaves:
+                data['number_of_days'] = uom_hour._compute_quantity(data['number_of_hours'], uom_day)\
+                    if uom_day and uom_hour\
+                    else data['number_of_hours'] / 8.0
+                res.append(data)
         return res
 
     # YTI TODO contract_ids should be a browse record
@@ -386,7 +405,9 @@ class HrPayslip(models.Model):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
+            if category.code in localdict['categories'].dict:
+                amount += localdict['categories'].dict[category.code]
+            localdict['categories'].dict[category.code] = amount
             return localdict
 
         class BrowsableObject(object):
@@ -547,7 +568,7 @@ class HrPayslip(models.Model):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee = self.env['hr.employee'].browse(employee_id)
-        locale = self.env.context.get('lang', 'en_US')
+        locale = self.env.context.get('lang') or 'en_US'
         res['value'].update({
             'name': _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale))),
             'company_id': employee.company_id.id,
@@ -585,7 +606,7 @@ class HrPayslip(models.Model):
         })
         return res
 
-    @api.onchange('employee_id', 'date_from')
+    @api.onchange('employee_id', 'date_from', 'date_to')
     def onchange_employee(self):
 
         if (not self.employee_id) or (not self.date_from) or (not self.date_to):
@@ -596,7 +617,7 @@ class HrPayslip(models.Model):
         date_to = self.date_to
 
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
-        locale = self.env.context.get('lang', 'en_US')
+        locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
 

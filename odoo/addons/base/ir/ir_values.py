@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import pickle
@@ -132,6 +134,12 @@ class IrValues(models.Model):
         context.pop(self.CONCURRENCY_CHECK_FIELD, None)
         for record in self.with_context(context):
             value = record.value_unpickle
+            # Only char-like fields should be written directly. Other types should be converted to
+            # their appropriate type first.
+            if record.model in self.env and record.name in self.env[record.model]._fields:
+                field = self.env[record.model]._fields[record.name]
+                if field.type not in ['char', 'text', 'html', 'selection']:
+                    value = literal_eval(value)
             if record.key == 'default':
                 value = pickle.dumps(value)
             record.value = value

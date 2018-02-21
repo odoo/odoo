@@ -8,13 +8,15 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2016
+# MIka Pakkanen <mika.pakkanen@gmail.com>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
-"Last-Translator: Tommi Rintala <tommi.rintala@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,13 +67,13 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:190
 #, python-format
 msgid "All Connections Failed"
-msgstr ""
+msgstr "Kaikki yhteydet epäonnistuivat"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_return
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
 msgid "Allow"
-msgstr ""
+msgstr "Salli"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
@@ -94,7 +96,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_number
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
 msgid "Card Number"
-msgstr ""
+msgstr "Kortin numero"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
@@ -148,6 +150,13 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr ""
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
@@ -198,6 +207,13 @@ msgstr ""
 #, python-format
 msgid "Empty Command String"
 msgstr ""
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
+msgstr "Virhe"
 
 #. module: pos_mercury
 #. openerp-web
@@ -399,7 +415,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:227
 #, python-format
 msgid "Invalid Driver’s License"
-msgstr ""
+msgstr "Ajokortti ei voimassa."
 
 #. module: pos_mercury
 #. openerp-web
@@ -600,6 +616,18 @@ msgid "Name of this Mercury configuration"
 msgstr ""
 
 #. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr ""
+
+#. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
 #, python-format
@@ -693,8 +721,8 @@ msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
-msgid "Point of Sale"
-msgstr "Kassapääte"
+msgid "Point of Sale Orders"
+msgstr "Kassapäätteen tilaukset"
 
 #. module: pos_mercury
 #. openerp-web

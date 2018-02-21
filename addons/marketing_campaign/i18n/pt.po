@@ -6,6 +6,7 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
 # Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
+# Manuela Silva <manuela.silva@sky.com>, 2016
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
 msgid ""
 msgstr ""
@@ -47,11 +48,15 @@ msgid ""
 "<p>You will receive your welcome pack via email shortly.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Olá,</p>\n"
+"<p>Irá receber brevemente o seu pacote de boas-vindas via e-mail.</p>\n"
+"<p>Obrigado,</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
 msgid "# of Actions"
-msgstr "Número de ações"
+msgstr "# de Ações"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -59,6 +64,8 @@ msgid ""
 "<span class=\"o_stat_text\">Campaign</span>\n"
 "                            <span class=\"o_stat_text\">Statistics</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Campanha</span>\n"
+"                            <span class=\"o_stat_text\">Estatísticas</span>"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -94,7 +101,7 @@ msgstr "Atividade"
 #: code:addons/marketing_campaign/models/marketing_campaign.py:384
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr "Depois %(interval_nbr)d %(interval_type)s"
+msgstr "Depois de %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
@@ -128,7 +135,7 @@ msgstr "Agosto"
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Automatic"
-msgstr "Automático"
+msgstr "Automática"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:383
@@ -180,7 +187,7 @@ msgstr "Editor de Campanha"
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
 msgid "Campaign Follow-up"
-msgstr "FollowUp da campanha"
+msgstr "Acompanhamento da Campanha"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
@@ -195,7 +202,7 @@ msgstr "Transição da Campanha"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr "WorkItem da Campanha"
+msgstr "Item de Trabalho da Campanha"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
@@ -244,7 +251,7 @@ msgstr "Escolha o recurso em que deseja que esta campanha seja executada"
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid "Click to create a marketing campaign."
-msgstr "Clique para criar uma campanha de marketing"
+msgstr "Clique para criar uma campanha de marketing."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
@@ -259,12 +266,12 @@ msgstr "Condição"
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr "Parabéns! É agora um parceiro de Prata!"
+msgstr "Parabéns! Agora é um Parceiro de Prata!"
 
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr "Parabéns! É agora um parceiro de ouro!"
+msgstr "Parabéns! Agora é um dos nossos Parceiros de Ouro!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:385
@@ -291,7 +298,7 @@ msgstr "País"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_uid
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_uid
 msgid "Created by"
-msgstr "Criada por"
+msgstr "Criado por"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_date
@@ -305,7 +312,7 @@ msgstr "Criado em"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
-msgstr "Ação personalizada"
+msgstr "Ação Personalizada"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_last_date
@@ -361,7 +368,7 @@ msgstr "Nome a Exibir"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
 msgid "Don't Delete Workitems"
-msgstr "Não apague items de trabalho"
+msgstr "Não Eliminar Itens de Trabalho"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -383,7 +390,7 @@ msgstr "Rascunho"
 #: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
-msgstr "Duplicar campanhas não é suportado."
+msgstr "A duplicação de campanhas não é suportado."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,action_type:0
@@ -394,12 +401,12 @@ msgstr "E-mail"
 #: code:addons/marketing_campaign/models/marketing_campaign.py:586
 #, python-format
 msgid "Email Preview"
-msgstr "Visualização do email"
+msgstr "Pré-visualizar E-mail"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr "Template de email"
+msgstr "Modelo de E-mail"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template_preview
@@ -409,7 +416,7 @@ msgstr "Pre visualização do Template do Email"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
 msgid "Email Templates"
-msgstr "Modelos de mensagens"
+msgstr "Modelos de E-mail"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_done
@@ -420,7 +427,7 @@ msgstr "Data Final"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_error_msg
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Error Message"
-msgstr "Mensagem de erro"
+msgstr "Mensagem de Erro"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -438,7 +445,7 @@ msgstr "Exceções"
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_date
 msgid "Execution Date"
-msgstr "Data de execução"
+msgstr "Data de Execução"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_day
@@ -500,13 +507,13 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Follow-Up"
-msgstr "Dar Seguimento"
+msgstr "Acompanhamento"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Follow-up"
-msgstr "Seguimento"
+msgstr "Acompanhamento"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
@@ -524,7 +531,7 @@ msgstr "Hora(s)"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_transition_trigger
 msgid "How is the destination workitem triggered"
-msgstr "Como é o destino workitem triggered"
+msgstr "Como é que o item de trabalho de destino é ativado"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_id
@@ -567,12 +574,12 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Incoming Transitions"
-msgstr "Transações de entrada"
+msgstr "Transações de Entrada"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_run
 msgid "Initial start date of this segment."
-msgstr "Data inicial de ativação deste segmento"
+msgstr "Data inicial de ativação deste segmento."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_type
@@ -612,7 +619,7 @@ msgstr "Última Modificação em"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_last_date
 msgid "Last Synchronization"
-msgstr "Sincronização mais recente"
+msgstr "Última Sincronização"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_uid
@@ -635,12 +642,12 @@ msgstr "Última Atualização em"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_run
 msgid "Launch Date"
-msgstr "Data de lançamento"
+msgstr "Data de Lançamento"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Launch Month"
-msgstr "Mês de Envio"
+msgstr "Mês de Lançamento"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
@@ -666,19 +673,19 @@ msgstr "Março"
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign"
-msgstr "Campanha de marketing"
+msgstr "Campanha de Marketing"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Marketing Campaign Activities"
-msgstr "Campanha de atividades de Marketing"
+msgstr "Atividades da Campanha de Marketing"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Marketing Campaign Activity"
-msgstr "Actividade da Campanha de Marketing"
+msgstr "Atividade da Campanha de Marketing"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
@@ -695,7 +702,7 @@ msgstr "Estatísticas da Campanha de Marketing"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
 msgid "Marketing Reports"
-msgstr "Relatórios de marketing"
+msgstr "Relatórios de Marketing"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -757,7 +764,7 @@ msgstr "Atividade Seguinte"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next Synchronization"
-msgstr "Próxima sincronização"
+msgstr "Sincronização Seguinte"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
@@ -817,7 +824,7 @@ msgstr "Parceiro"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
-msgstr "Campo Parceiro"
+msgstr "Campo de Parceiro"
 
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
@@ -1174,7 +1181,7 @@ msgstr "Custo variável"
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
-msgstr "Bem-vindo ao canal dos parceiros do Odoo"
+msgstr "Bem-vindo ao Canal dos Parceiros do Odoo"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0

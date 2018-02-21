@@ -221,13 +221,21 @@ function make_message (data) {
     // can not be done in preprocess, since it alter the original value
     if (msg.tracking_value_ids && msg.tracking_value_ids.length) {
         _.each(msg.tracking_value_ids, function(f) {
-            if (_.contains(['date', 'datetime'], f.field_type)) {
-                var format = (f.field_type === 'date') ? 'LL' : 'LLL';
+            if (f.field_type === 'datetime') {
+                var format = 'LLL';
                 if (f.old_value) {
                     f.old_value = moment.utc(f.old_value).local().format(format);
                 }
                 if (f.new_value) {
                     f.new_value = moment.utc(f.new_value).local().format(format);
+                }
+            } else if (f.field_type === 'date') {
+                var format = 'LL';
+                if (f.old_value) {
+                    f.old_value = moment(f.old_value).local().format(format);
+                }
+                if (f.new_value) {
+                    f.new_value = moment(f.new_value).local().format(format);
                 }
             }
         });
@@ -479,7 +487,9 @@ function on_needaction_notification (message) {
         increment_unread: true,
     });
     invalidate_caches(message.channel_ids);
-    needaction_counter++;
+    if (message.channel_ids.length !== 0) {
+        needaction_counter++;
+    }
     _.each(message.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
@@ -1044,7 +1054,9 @@ function init () {
 
     bus.on('notification', null, on_notification);
 
-    return session.rpc('/mail/client_action').then(function (result) {
+    return session.is_bound.then(function(){
+        return session.rpc('/mail/client_action');
+    }).then(function (result) {
         _.each(result.channel_slots, function (channels) {
             _.each(channels, add_channel);
         });

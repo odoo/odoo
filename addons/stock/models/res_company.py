@@ -23,14 +23,17 @@ class Company(models.Model):
         location = self.env['stock.location'].create({
             'name': _('%s: Transit Location') % self.name,
             'usage': 'transit',
-            'company_id': self.id,
             'location_id': parent_location and parent_location.id or False,
         })
+        location.sudo().write({'company_id': self.id})
         self.write({'internal_transit_location_id': location.id})
 
     @api.model
     def create(self, vals):
         company = super(Company, self).create(vals)
-        self.env['stock.warehouse'].create({'name': company.name, 'code': company.name[:5], 'company_id': company.id})
+
+        # mutli-company rules prevents creating warehouse and sub-locations
+        self.env['stock.warehouse'].check_access_rights('create')
+        self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id})
         company.create_transit_location()
         return company

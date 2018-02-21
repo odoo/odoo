@@ -169,6 +169,7 @@ class Attendee(models.Model):
                                                       'datas_fname': 'invitation.ics',
                                                       'datas': str(ics_file).encode('base64')})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
+                vals['res_id'] = False
                 current_mail = self.env['mail.mail'].browse(mail_id)
                 current_mail.mail_message_id.write(vals)
                 mails_to_send |= current_mail
@@ -400,7 +401,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.type == 'email':
-            result = meeting.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
+            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
         return result
 
     def do_notif_reminder(self, alert):
@@ -522,9 +523,23 @@ class Meeting(models.Model):
         return partners
 
     @api.multi
-    def _get_recurrent_date_by_event(self):
-        """ Get recurrent dates based on Rule string and all event where recurrent_id is child """
+    def _get_recurrent_dates_by_event(self):
+        """ Get recurrent start and stop dates based on Rule string"""
+        start_dates = self._get_recurrent_date_by_event(date_field='start')
+        stop_dates = self._get_recurrent_date_by_event(date_field='stop')
+        return zip(start_dates, stop_dates)
+
+    @api.multi
+    def _get_recurrent_date_by_event(self, date_field='start'):
+        """ Get recurrent dates based on Rule string and all event where recurrent_id is child
+
+        date_field: the field containing the reference date information for recurrency computation
+        """
         self.ensure_one()
+        if date_field in self._fields.keys() and self._fields[date_field].type in ('date', 'datetime'):
+            reference_date = self[date_field]
+        else:
+            reference_date = self.start
 
         def todate(date):
             val = parser.parse(''.join((re.compile('\d')).findall(date)))
@@ -534,19 +549,22 @@ class Meeting(models.Model):
             return val.astimezone(timezone)
 
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
-        startdate = pytz.UTC.localize(fields.Datetime.from_string(self.start))  # Add "+hh:mm" timezone
-        if not startdate:
-            startdate = datetime.now()
+        event_date = pytz.UTC.localize(fields.Datetime.from_string(reference_date))  # Add "+hh:mm" timezone
+        if not event_date:
+            event_date = datetime.now()
 
-        # Convert the start date to saved timezone (or context tz) as it'll
-        # define the correct hour/day asked by the user to repeat for recurrence.
-        startdate = startdate.astimezone(timezone)  # transform "+hh:mm" timezone
-        rset1 = rrule.rrulestr(str(self.rrule), dtstart=startdate, forceset=True)
+        if self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule:
+            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+        else:
+            # Convert the event date to saved timezone (or context tz) as it'll
+            # define the correct hour/day asked by the user to repeat for recurrence.
+            event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
+            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         for meeting in recurring_meetings:
             rset1._exdate.append(todate(meeting.recurrent_id_date))
-        return [d.astimezone(pytz.UTC) for d in rset1]
+        return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1]
 
     @api.multi
     def _get_recurrency_end_date(self):
@@ -627,16 +645,30 @@ class Meeting(models.Model):
         date_deadline = fields.Datetime.context_timestamp(self.with_context(tz=timezone), fields.Datetime.from_string(stop))
 
         # convert into string the date and time, using user formats
-        date_str = date.strftime(format_date)
-        time_str = date.strftime(format_time)
+        date_str = date.strftime(format_date).decode('utf-8')
+        time_str = date.strftime(format_time).decode('utf-8')
 
         if zallday:
             display_time = _("AllDay , %s") % (date_str)
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
-            display_time = _("%s at (%s To %s) (%s)") % (date_str, time_str, duration.strftime(format_time), timezone)
+            duration_time = duration.strftime(format_time).decode('utf-8')
+            display_time = _(u"%s at (%s To %s) (%s)") % (
+                date_str,
+                time_str,
+                duration_time,
+                timezone,
+            )
         else:
-            display_time = _("%s at %s To\n %s at %s (%s)") % (date_str, time_str, date_deadline.strftime(format_date), date_deadline.strftime(format_time), timezone)
+            dd_date = date_deadline.strftime(format_date).decode('utf-8')
+            dd_time = date_deadline.strftime(format_time).decode('utf-8')
+            display_time = _(u"%s at %s To\n %s at %s (%s)") % (
+                date_str,
+                time_str,
+                dd_date,
+                dd_time,
+                timezone,
+            )
         return display_time
 
     def _get_duration(self, start, stop):
@@ -676,7 +708,7 @@ class Meeting(models.Model):
         ('weekly', 'Week(s)'),
         ('monthly', 'Month(s)'),
         ('yearly', 'Year(s)')
-    ], string='Recurrency', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
+    ], string='Recurrence', states={'done': [('readonly', True)]}, help="Let the event automatically repeat at that interval")
     recurrency = fields.Boolean('Recurrent', help="Recurrent Meeting")
     recurrent_id = fields.Integer('Recurrent ID')
     recurrent_id_date = fields.Datetime('Recurrent ID date')
@@ -985,27 +1017,38 @@ class Meeting(models.Model):
                 result.append(meeting.id)
                 result_data.append(meeting.get_search_fields(order_fields))
                 continue
-            rdates = meeting._get_recurrent_date_by_event()
+            rdates = meeting._get_recurrent_dates_by_event()
 
-            for r_date in rdates:
+            for r_start_date, r_stop_date in rdates:
                 # fix domain evaluation
                 # step 1: check date and replace expression by True or False, replace other expressions by True
                 # step 2: evaluation of & and |
                 # check if there are one False
                 pile = []
                 ok = True
+                r_date = r_start_date  # default for empty domain
                 for arg in domain:
                     if str(arg[0]) in ('start', 'stop', 'final_date'):
+                        if str(arg[0]) == 'start':
+                            r_date = r_start_date
+                        else:
+                            r_date = r_stop_date
+                        if arg[2] and len(arg[2]) > len(r_date.strftime(DEFAULT_SERVER_DATE_FORMAT)):
+                            dformat = DEFAULT_SERVER_DATETIME_FORMAT
+                        else:
+                            dformat = DEFAULT_SERVER_DATE_FORMAT
                         if (arg[1] == '='):
-                            ok = r_date.strftime('%Y-%m-%d') == arg[2]
+                            ok = r_date.strftime(dformat) == arg[2]
                         if (arg[1] == '>'):
-                            ok = r_date.strftime('%Y-%m-%d') > arg[2]
+                            ok = r_date.strftime(dformat) > arg[2]
                         if (arg[1] == '<'):
-                            ok = r_date.strftime('%Y-%m-%d') < arg[2]
+                            ok = r_date.strftime(dformat) < arg[2]
                         if (arg[1] == '>='):
-                            ok = r_date.strftime('%Y-%m-%d') >= arg[2]
+                            ok = r_date.strftime(dformat) >= arg[2]
                         if (arg[1] == '<='):
-                            ok = r_date.strftime('%Y-%m-%d') <= arg[2]
+                            ok = r_date.strftime(dformat) <= arg[2]
+                        if (arg[1] == '!='):
+                            ok = r_date.strftime(dformat) != arg[2]
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
@@ -1028,7 +1071,7 @@ class Meeting(models.Model):
 
                 if [True for item in new_pile if not item]:
                     continue
-                result_data.append(meeting.get_search_fields(order_fields, r_date=r_date))
+                result_data.append(meeting.get_search_fields(order_fields, r_date=r_start_date))
 
         if order_fields:
             uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
@@ -1173,11 +1216,11 @@ class Meeting(models.Model):
 
         elif interval == 'month':
             # Localized month name and year
-            result = babel.dates.format_date(date=date, format='MMMM y', locale=self._context.get('lang', 'en_US'))
+            result = babel.dates.format_date(date=date, format='MMMM y', locale=self._context.get('lang') or 'en_US')
 
         elif interval == 'dayname':
             # Localized day name
-            result = babel.dates.format_date(date=date, format='EEEE', locale=self._context.get('lang', 'en_US'))
+            result = babel.dates.format_date(date=date, format='EEEE', locale=self._context.get('lang') or 'en_US')
 
         elif interval == 'time':
             # Localized time
@@ -1206,8 +1249,6 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
-        data['start_date' if data['allday'] else 'start_datetime'] = data['start']
-        data['stop_date' if data['allday'] else 'stop_datetime'] = data['stop']
         if data.get('rrule'):
             data.update(
                 values,
@@ -1357,11 +1398,11 @@ class Meeting(models.Model):
             super(Meeting, real_meetings).write(values)
 
             # set end_date for calendar searching
-            if values.get('recurrency') and values.get('end_type', 'count') in ('count', unicode('count')) and \
-                    (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
+            if any(field in values for field in ['recurrency', 'end_type', 'count', 'rrule_type', 'start', 'stop']):
                 for real_meeting in real_meetings:
-                    final_date = real_meeting._get_recurrency_end_date()
-                    super(Meeting, real_meeting).write({'final_date': final_date})
+                    if real_meeting.recurrency and real_meeting.end_type in ('count', unicode('count')):
+                        final_date = real_meeting._get_recurrency_end_date()
+                        super(Meeting, real_meeting).write({'final_date': final_date})
 
             attendees_create = False
             if values.get('partner_ids', False):
@@ -1374,10 +1415,11 @@ class Meeting(models.Model):
                     partners_to_notify = meeting.partner_ids.ids
                     event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
-                        partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
+                        partners_to_notify.extend(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
 
-            if (values.get('start_date') or values.get('start_datetime')) and values.get('active', True):
+            if (values.get('start_date') or values.get('start_datetime') or
+                    (values.get('start') and self.env.context.get('from_ui'))) and values.get('active', True):
                 for current_meeting in all_meetings:
                     if attendees_create:
                         attendees_create = attendees_create[current_meeting.id]
@@ -1427,7 +1469,7 @@ class Meeting(models.Model):
     @api.multi
     def read(self, fields=None, load='_classic_read'):
         fields2 = fields and fields[:] or None
-        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
+        EXTRAFIELDS = ('privacy', 'user_id', 'duration', 'allday', 'start', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
@@ -1461,7 +1503,8 @@ class Meeting(models.Model):
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
-                if user_id == self.env.user.id:
+                partner_id = self.env.user.partner_id.id
+                if user_id == self.env.user.id or partner_id in r.get("partner_ids", []):
                     continue
             if r['privacy'] == 'private':
                 for f in r.keys():
@@ -1528,6 +1571,18 @@ class Meeting(models.Model):
 
         if not self._context.get('virtual_id', True):
             return super(Meeting, self).search(new_args, offset=offset, limit=limit, order=order, count=count)
+
+        if any(arg[0] == 'start' for arg in args) and \
+           not any(arg[0] in ('stop', 'final_date') for arg in args):
+            # domain with a start filter but with no stop clause should be extended
+            # e.g. start=2017-01-01, count=5 => virtual occurences must be included in ('start', '>', '2017-01-02')
+            start_args = new_args
+            new_args = []
+            for arg in start_args:
+                new_arg = arg
+                if arg[0] in ('start_date', 'start_datetime', 'start',):
+                    new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
+                new_args.append(new_arg)
 
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
         events = super(Meeting, self).search(new_args, offset=0, limit=0, order=None, count=False)

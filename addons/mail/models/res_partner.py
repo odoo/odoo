@@ -61,7 +61,6 @@ class Partner(models.Model):
             website_url = 'http://%s' % user.company_id.website if not user.company_id.website.lower().startswith(('http:', 'https:')) else user.company_id.website
         else:
             website_url = False
-        company_name = user.company_id.name
 
         model_name = False
         if message.model:
@@ -70,18 +69,29 @@ class Partner(models.Model):
         record_name = message.record_name
 
         tracking = []
-        for tracking_value in message.tracking_value_ids:
+        for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
             tracking.append((tracking_value.field_desc,
                              tracking_value.get_old_display_value()[0],
                              tracking_value.get_new_display_value()[0]))
 
         is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
+        record = False
+        if message.res_id and message.model in self.env:
+            record = self.env[message.model].browse(message.res_id)
+
+        company = user.company_id;
+        if record and hasattr(record, 'company_id'):
+            company = record.company_id;
+        company_name = company.name;
+
         return {
             'signature': signature,
             'website_url': website_url,
+            'company': company,
             'company_name': company_name,
             'model_name': model_name,
+            'record': record,
             'record_name': record_name,
             'tracking': tracking,
             'is_discussion': is_discussion,
@@ -229,11 +239,12 @@ class Partner(models.Model):
                 (not self.pool._init or test_mode):
             email_ids = emails.ids
             dbname = self.env.cr.dbname
+            _context = self._context
 
             def send_notifications():
                 db_registry = registry(dbname)
-                with db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, {})
+                with api.Environment.manage(), db_registry.cursor() as cr:
+                    env = api.Environment(cr, SUPERUSER_ID, _context)
                     env['mail.mail'].browse(email_ids).send()
 
             # unless asked specifically, send emails after the transaction to

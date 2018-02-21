@@ -112,7 +112,6 @@ table.table_desc tr td {
     height: 100%;
     .item {
         height: 100%;
-        background-size: cover;
     }
     .carousel-control {
         cursor: pointer;
@@ -327,9 +326,6 @@ div.carousel .container {
                 max-height: 100%;
                 max-width: 100%;
                 margin: auto;
-                position: relative;
-                top: 50%;
-                .translate(0, -50%);
             }
 
             ul.carousel-indicators {
@@ -359,6 +355,10 @@ div.carousel .container {
                         filter: grayscale(100%);
                         filter: gray;
                         filter: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' height='0'><filter id='greyscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0' /></filter></svg>#greyscale");
+                    }
+
+                    &:first-child {
+                        margin-left: 0;
                     }
                 }
             }

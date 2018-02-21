@@ -6,13 +6,14 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Quim - eccit <quim@eccit.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 14:52+0000\n"
-"PO-Revision-Date: 2016-12-14 14:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#: code:addons/payment_transfer/models/payment.py:63
+#, python-format
+msgid "; multiple order found"
+msgstr "; diverses comandes trobades"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:61
+#, python-format
+msgid "; no order found"
+msgstr ""
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:28
 #, python-format
 msgid ""
 "<div>\n"
@@ -31,18 +44,6 @@ msgid ""
 "<h4>Communication</h4>\n"
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:63
-#, python-format
-msgid "; multiple order found"
-msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:61
-#, python-format
-msgid "; no order found"
 msgstr ""
 
 #. module: payment_transfer

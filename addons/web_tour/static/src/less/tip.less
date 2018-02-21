@@ -1,6 +1,28 @@
 
 .o_tooltip_parent {
     position: relative!important;
+
+    // Tooltips are placed in the <body/> element when opened because this is
+    // the only way to position them above everything else thanks to a 1051
+    // z-index. However, for scrolling performance, the tooltip is placed in its
+    // ideal location (see Tip._get_ideal_location). When in this location, the
+    // tooltip were sometimes overlapping unwanted elements (e.g. chat windows).
+    //
+    // The z-index of the ideal locations cannot be determined safely as they
+    // are different from one tip to another. So, in the appswitcher for
+    // example, the tooltips will act as root-level z-index 1051. As the chat
+    // windows are root-level z-index 3, the tooltips will overlap in that case.
+    //
+    // Changing the opacity of the tooltip parents forces the creation of a
+    // stacking context; the appswitcher tooltips are thus now considered to be
+    // root-level z-index auto (or the default appswitcher one) and should so
+    // act like their parent (e.g. the appswitcher is below the chat windows so
+    // the inner tooltips will be too). The tips will be above all elements of
+    // the appswitcher as they still have a high z-index, but relative to the
+    // appswitcher (this is especially useful in the website where most tooltips
+    // are placed in the body and need to be placed above elements with z-index
+    // like the navbar).
+    opacity: 0.999;
 }
 
 .o_tooltip {
@@ -39,7 +61,7 @@
     border: @o-tip-border-width solid @o-tip-color;
     border-radius: 50%;
     padding: 0; // ! Cannot be changed ! Javascript rely on this.
-    z-index: @zindex-modal+1;
+    z-index: @zindex-modal + 1; // See comment on 'o_tooltip_parent' class
     background-color: @o-tip-color;
     box-shadow: 0 2px 2px 1px rgba(150, 150, 150, 0.3);
 
@@ -214,5 +236,11 @@
                 right: (@o-tip-size - @o-tip-arrow-width) / 2;
             }
         }
+    }
+}
+
+@media print {
+    .o_tooltip {
+        display: none;
     }
 }

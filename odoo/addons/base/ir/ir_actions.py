@@ -375,7 +375,7 @@ class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')
@@ -851,7 +851,13 @@ class IrActionsServer(models.Model):
             else:
                 ref_id = int(ref)
 
-        self.env[model].browse(ref_id).write(res)
+        if self._context.get('onchange_self'):
+            record_cached = self._context['onchange_self']
+            for field, new_value in res.iteritems():
+                record_cached[field] = new_value
+        else:
+            self.env[model].browse(ref_id).write(res)
+
 
     @api.model
     def run_action_object_create(self, action, eval_context=None):
@@ -896,10 +902,11 @@ class IrActionsServer(models.Model):
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)safe_eval """
         def log(message, level="info"):
-            self._cr.execute("""
-                INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
-                VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
+            with self.pool.cursor() as cr:
+                cr.execute("""
+                    INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
+                    VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model = self.env[action.model_id.model]
@@ -956,6 +963,7 @@ class IrActionsServer(models.Model):
         :return: an action_id to be executed, or False is finished correctly without
                  return action
         """
+        res = False
         for action in self:
             eval_context = self._get_eval_context(action)
             condition = action.condition
@@ -973,6 +981,8 @@ class IrActionsServer(models.Model):
 
             elif hasattr(self, 'run_action_%s' % action.state):
                 active_id = self._context.get('active_id')
+                if not active_id and self._context.get('onchange_self'):
+                    active_id = self._context['onchange_self']._origin.id
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id

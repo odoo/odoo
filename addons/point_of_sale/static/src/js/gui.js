@@ -184,12 +184,22 @@ var Gui = core.Class.extend({
     close_other_tabs: function() {
         var self = this;
 
+        // avoid closing itself
+        var now = Date.now();
+
         localStorage['message'] = '';
         localStorage['message'] = JSON.stringify({
             'message':'close_tabs',
             'session': this.pos.pos_session.id,
+            'window_uid': now,
         });
 
+        // storage events are (most of the time) triggered only when the
+        // localstorage is updated in a different tab.
+        // some browsers (e.g. IE) does trigger an event in the same tab
+        // This may be a browser bug or a different interpretation of the HTML spec
+        // cf https://connect.microsoft.com/IE/feedback/details/774798/localstorage-event-fired-in-source-window
+        // Use window_uid parameter to exclude the current window
         window.addEventListener("storage", function(event) {
             var msg = event.data;
 
@@ -197,7 +207,8 @@ var Gui = core.Class.extend({
 
                 var msg = JSON.parse(event.newValue);
                 if ( msg.message  === 'close_tabs' &&
-                     msg.session  ==  self.pos.pos_session.id ) {
+                     msg.session  ==  self.pos.pos_session.id &&
+                     msg.window_uid != now) {
 
                     console.info('POS / Session opened in another window. EXITING POS')
                     self._close();
@@ -362,7 +373,34 @@ var Gui = core.Class.extend({
     // if 'contents' is not a string, it is converted into
     // a JSON representation of the contents. 
 
+
+    // TODO: remove me in master: deprecated in favor of prepare_download_link
+    // this method is kept for backward compatibility but is likely not going
+    // to work as many browsers do to not accept fake click events on links
     download_file: function(contents, name) {
+        href_params = this.prepare_file_blob(contents,name);
+        var evt  = document.createEvent("HTMLEvents");
+        evt.initEvent("click");
+
+        $("<a>",href_params).get(0).dispatchEvent(evt);
+        
+    },      
+    
+    prepare_download_link: function(contents, filename, src, target) {
+        var href_params = this.prepare_file_blob(contents, filename);
+
+        $(target).parent().attr(href_params);
+        $(src).addClass('oe_hidden');
+        $(target).removeClass('oe_hidden');
+
+        // hide again after click
+        $(target).click(function() {
+            $(src).removeClass('oe_hidden');
+            $(this).addClass('oe_hidden');
+        });
+    },  
+    
+    prepare_file_blob: function(contents, name) {
         var URL = window.URL || window.webkitURL;
         
         if (typeof contents !== 'string') {
@@ -371,13 +409,8 @@ var Gui = core.Class.extend({
 
         var blob = new Blob([contents]);
 
-        var evt  = document.createEvent("HTMLEvents");
-            evt.initEvent("click");
-
-        $("<a>",{
-            download: name || 'document.txt',
-            href: URL.createObjectURL(blob),
-        }).get(0).dispatchEvent(evt);
+        return {download: name || 'document.txt',
+                href: URL.createObjectURL(blob),}
     },
 
     /* ---- Gui: EMAILS ---- */

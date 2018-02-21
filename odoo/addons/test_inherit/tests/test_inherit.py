@@ -77,6 +77,12 @@ class test_inherits(common.TransactionCase):
         self.assertIn(daughter, partner_demo.daughter_ids)
 
         # search the partner from the daughter record
+        partners = self.env['res.partner'].search([('daughter_ids', 'like', 'not existing daugther')])
+        self.assertFalse(partners)
+        partners = self.env['res.partner'].search([('daughter_ids', 'not like', 'not existing daugther')])
+        self.assertIn(partner_demo, partners)
+        partners = self.env['res.partner'].search([('daughter_ids', '!=', False)])
+        self.assertIn(partner_demo, partners)
         partners = self.env['res.partner'].search([('daughter_ids', 'in', daughter.ids)])
         self.assertIn(partner_demo, partners)
 

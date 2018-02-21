@@ -15,6 +15,12 @@ class AccountConfigSettings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
+    def _default_fiscalyear_last_day(self):
+        return self.env.user.company_id.fiscalyear_last_day or 31
+
+    def _default_fiscalyear_last_month(self):
+        return self.env.user.company_id.fiscalyear_last_month or 12
+
     @api.one
     @api.depends('company_id')
     def _get_currency_id(self):
@@ -70,8 +76,10 @@ class AccountConfigSettings(models.TransientModel):
              the sales and purchase rates or use the usual m2o fields. This last choice assumes that
              the set of tax defined for the chosen template is complete''')
 
-    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
-    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
+    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day',
+        default=lambda self: self._default_fiscalyear_last_day())
+    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
+        related='company_id.fiscalyear_last_month', default=lambda self: self._default_fiscalyear_last_month())
     period_lock_date = fields.Date(string="Lock Date for Non-Advisers", related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
     fiscalyear_lock_date = fields.Date(string="Lock Date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
 
@@ -145,12 +153,10 @@ class AccountConfigSettings(models.TransientModel):
             '-This installs the module account_bank_statement_import_csv.')
     overdue_msg = fields.Text(related='company_id.overdue_msg', string='Overdue Payments Message *')
 
-
     @api.model
     def _default_has_default_company(self):
         count = self.env['res.company'].search_count([])
         return bool(count == 1)
-
 
     @api.onchange('company_id')
     def onchange_company_id(self):
@@ -233,10 +239,8 @@ class AccountConfigSettings(models.TransientModel):
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
-        if self.default_sale_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
-        if self.default_purchase_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id] if self.default_sale_tax_id else False, for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id] if self.default_purchase_tax_id else False, for_all_users=True, company_id=self.company_id.id)
 
     @api.multi
     def set_chart_of_accounts(self):
@@ -281,3 +285,17 @@ class AccountConfigSettings(models.TransientModel):
             'res_id': self.env.user.company_id.id,
             'target': 'current',
         }
+
+    @api.model
+    def create(self, vals):
+        """
+        Avoid to rewrite the `accounts_code_digits` on the company if the value is the same. As all the values are
+        passed on the res.config creation, the related fields are rewriten on each res_config creation. Rewriting
+        the `account_code_digits` on the company will trigger a write on all the account.account to complete the
+        code the missing characters to complete the desired number of digit, leading to a sql_constraint.
+        """
+        if ('company_id' in vals and 'code_digits' in vals):
+            if self.env['res.company'].browse(vals.get('company_id')).accounts_code_digits == vals.get('code_digits'):
+                vals.pop('code_digits')
+        res = super(AccountConfigSettings, self).create(vals)
+        return res

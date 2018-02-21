@@ -7,6 +7,7 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2016
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
 msgid ""
 msgstr ""
@@ -118,6 +119,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Stavke troška i prilagodbe se ne podudaraju. Možda biste trebali ponovno "
+"izračunati zavisne troškove."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -188,6 +191,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Jednako: Troškovi će biti jednako podijeljeni.\n"
+"Po količini: Trošak će se podijeliti prema količini proizvoda.\n"
+"Po trenutnom trošku: Trošak će se podijeliti prema trenutnom trošku proizvoda.\n"
+"Po težini: Trošak će se podijeliti ovisno o težini.\n"
+"Po volumenu: Trošak će se podijeliti ovisno o volumenu."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -240,7 +248,7 @@ msgstr "Zavisni trošak"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr "Naziv zavosnog troška"
+msgstr "Naziv zavisnog troška"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -261,7 +269,7 @@ msgstr "Zavisni troškovi"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "Zavisni troškovi su izračunati na temelju jedinice mjere nabave."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -306,6 +314,8 @@ msgstr "Naziv"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Nema ovjere stavki prilagodbe. Možda biste trebali ponovno izračunati "
+"zavisne troškove."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75

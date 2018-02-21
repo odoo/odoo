@@ -32,7 +32,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
     @api.constrains('amount')
     def _check_amount(self):
         if not self.amount > 0.0:
-            raise ValidationError('The payment amount must be strictly positive.')
+            raise ValidationError(_('The payment amount must be strictly positive.'))
 
     @api.one
     @api.depends('journal_id')
@@ -53,15 +53,9 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
             return {'domain': {'payment_method_id': [('payment_type', '=', 'outbound'), ('id', 'in', payment_methods.ids)]}}
         return {}
 
-    @api.multi
-    def expense_post_payment(self):
-        self.ensure_one()
-        context = dict(self._context or {})
-        active_ids = context.get('active_ids', [])
-        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
-
-        # Create payment and post it
-        payment = self.env['account.payment'].create({
+    def get_payment_vals(self):
+        """ Hook for extension """
+        return {
             'partner_type': 'supplier',
             'payment_type': 'outbound',
             'partner_id': self.partner_id.id,
@@ -72,7 +66,17 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
             'currency_id': self.currency_id.id,
             'payment_date': self.payment_date,
             'communication': self.communication
-        })
+        }
+
+    @api.multi
+    def expense_post_payment(self):
+        self.ensure_one()
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', [])
+        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
+
+        # Create payment and post it
+        payment = self.env['account.payment'].create(self.get_payment_vals())
         payment.post()
 
         # Log the payment in the chatter
@@ -84,6 +88,10 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
         for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
             if line.account_id.internal_type == 'payable':
                 account_move_lines_to_reconcile |= line
-        account_move_lines_to_reconcile.reconcile()
+        # DO NOT FORWARD-PORT! ONLY FOR v10
+        if len(expense_sheet.expense_line_ids) > 1:
+            return payment.open_payment_matching_screen()
+        else:
+            account_move_lines_to_reconcile.reconcile()
 
         return {'type': 'ir.actions.act_window_close'}

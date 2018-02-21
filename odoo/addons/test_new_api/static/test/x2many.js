@@ -454,5 +454,71 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
         extra_trigger: 'body:not(:has(.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(3)))',
         run: function () {}, // it's a check
+    },
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    {
+        content: "switch to the third form view to test onchange changing one2many (toggle menu dropdown)",
+        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:containsExact(Discussions)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+        edition: 'community'
+    }, {
+        content: "switch to the third form view to test onchange changing one2many (toggle menu dropdown)",
+        trigger: 'nav .o_menu_sections li a:containsExact(Discussions)',
+        extra_trigger: '.tab-pane:eq(0) .o_form_field.o_view_manager_content tbody tr[data-id]:eq(2)',
+        edition: 'enterprise'
+    }, {
+        content: "switch to the thied form view to test onchange changing one2many (open submenu)",
+        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:contains(Discussions 3)',
+        edition: 'community'
+    }, {
+        content: "switch to the thied form view to test onchange changing one2many (open submenu)",
+        trigger: 'nav .o_menu_sections ul li a:contains(Discussions 3)',
+        edition: 'enterprise'
+    }, {
+        content: "wait web client",
+        trigger: '.breadcrumb:contains(Discussions 3)',
+    }, {
+        content: "create new discussion",
+        trigger: 'button.o_list_button_add',
+    }, {
+        content: "set discussion title to generate dummy message",
+        trigger: 'input.o_form_required',
+        run:     'text {generate_dummy_message}',
+    }, {
+        content: "check new dummy message happened",
+        trigger: '.o_group tr:first-child td[data-field="size"]:containsExact(13)',
+        extra_trigger: '.o_group tr:last-child td[data-field="size"]:containsExact(13)',
+        run: function () {}, // it's a check
+    }, {
+        content: "check field not in embedded view received correctly",
+        trigger: 'td[data-field="important"] input[type="checkbox"]:propChecked',
+        run: function () {}, // it's a check
+    }, {
+        content: "empty discussion title",
+        trigger: 'input.o_form_required',
+        run:     'text removed_title',
+    }, {
+        content: "onchange happened",
+        trigger: 'td[data-field="name"]:contains([removed_title])',
+        run: function () {}, // it's a check
+    }, {
+        content: "set discussion title to generate dummy message",
+        trigger: 'input.o_form_required',
+        run:     'text {generate_dummy_message}',
+    }, {
+        content: "chuck update and new dummy message happened",
+        trigger: '.o_group tr:first-child td[data-field="size"]:containsExact(22)',
+        extra_trigger: '.o_group tr:last-child td[data-field="size"]:containsExact(22)',
+        run: function () {}, // it's a check
+    }, { // cancel
+        content: "cancel change",
+        trigger: '.o_cp_buttons .o_form_button_cancel',
+        run: 'click',
+    }, {
+        content: "confirm cancel change",
+        trigger: '.modal-footer button:contains(Ok)',
     }]);
 });

@@ -13,6 +13,7 @@ var EventRegistrationForm = Widget.extend({
                 .off('click')
                 .removeClass('a-submit')
                 .click(function (ev) {
+                    $(this).attr('disabled', true);
                     self.on_click(ev);
                 });
         });
@@ -28,7 +29,8 @@ var EventRegistrationForm = Widget.extend({
         });
         return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
             var $modal = $(modal);
-            $modal.appendTo($form).modal();
+            $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
+            $modal.after($form).modal();
             $modal.on('click', '.js_goto_event', function () {
                 $modal.modal('hide');
             });

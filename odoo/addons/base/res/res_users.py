@@ -183,7 +183,7 @@ class Users(models.Model):
 
     def _default_groups(self):
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return (default_user or self.env['res.users']).groups_id
+        return (default_user or self.env['res.users']).sudo().groups_id
 
     def _companies_count(self):
         return self.env['res.company'].sudo().search_count([])
@@ -270,10 +270,6 @@ class Users(models.Model):
         if self.login and tools.single_email_re.match(self.login):
             self.email = self.login
 
-    @api.onchange('state_id')
-    def onchange_state(self):
-        return self.mapped('partner_id').onchange_state()
-
     @api.onchange('parent_id')
     def onchange_parent_id(self):
         return self.mapped('partner_id').onchange_parent_id()
@@ -283,6 +279,13 @@ class Users(models.Model):
     def _check_company(self):
         if any(user.company_ids and user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
+
+    @api.multi
+    @api.constrains('action_id')
+    def _check_action_id(self):
+        action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
+        if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
+            raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
@@ -739,7 +742,7 @@ class GroupsView(models.Model):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
-            view.with_context(lang=None).write({'arch': xml_content})
+            view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """

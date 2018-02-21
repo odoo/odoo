@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -700,6 +700,7 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
 #: model:ir.model.fields,field_description:product.field_product_product_company_id
@@ -707,11 +708,6 @@ msgstr "Bedrijven"
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
 msgstr "Bedrijf"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-msgid "Company id"
-msgstr "Bedrijf id"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -783,7 +779,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
 msgid "Cost of the product, in the default unit of measure of the product."
-msgstr "Kost van het product, in de standaard maateenheid van het product."
+msgstr ""
+"Kostprijs van het product, in de standaard maateenheid van het product."
 
 #. module: product
 #: model:product.product,name:product.service_delivery
@@ -860,7 +857,6 @@ msgstr ""
 "nieuwste van het nieuwste."
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -927,7 +923,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
 msgid "Delivery Lead Time"
-msgstr "Leveringstermijn"
+msgstr "Levertijd"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description
@@ -1020,7 +1016,7 @@ msgstr "Einddatum van de leveranciersprijs"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
 msgid "Ending valid for the pricelist item validation"
-msgstr "Eindigend geldig voor de prijslijst item validatie"
+msgstr "Eindigend geldig voor de prijslijst item bevestiging"
 
 #. module: product
 #: code:addons/product/models/product.py:43
@@ -1264,7 +1260,7 @@ msgstr "Geeft de reeks volgorde wanneer een productlijst getoond wordt"
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid "Global"
-msgstr "Voor iedereen"
+msgstr "Voor alles"
 
 #. module: product
 #: model:product.product,name:product.membership_0
@@ -1479,6 +1475,7 @@ msgstr "Intern"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Interne categorie"
 
@@ -1978,7 +1975,7 @@ msgstr "Prijslijsten op product"
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr "Prijslijsten worden beheert bij"
+msgstr "Prijslijsten worden beheerd bij"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2302,6 +2299,7 @@ msgstr "Verkoopprijs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Verkoopprijslijst"
 
@@ -2519,7 +2517,7 @@ msgstr "Startdatum voor deze leverancier zijn prijs"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
 msgid "Starting date for the pricelist item validation"
-msgstr "Startdatum voor de prijslijst item validatie"
+msgstr "Startdatum voor de prijslijst item bevestiging"
 
 #. module: product
 #: selection:product.template,type:0
@@ -2613,7 +2611,7 @@ msgid ""
 "                                        impossible to tip over."
 msgstr ""
 "De SoundLink® Mini speaker is klein en licht genoeg\n"
-"om in uw tas te steken. Het weegt maar 1.5 pond,\n"
+"om in uw tas mee te nemen. Het weegt maar 1.5 pond,\n"
 "door zijn lage profiel kan u het bijna overal plaatsen en\n"
 "heeft een laag zwaartekrachtpunt waardoor het bijna niet\n"
 "kan niet omvallen."
@@ -2880,6 +2878,7 @@ msgstr "Deze notitie wordt getoond op de offertes."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -3026,7 +3025,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr "Geldig van"
+msgstr "Geldig vanaf"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_name
@@ -3233,16 +3232,6 @@ msgstr ""
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Werktijd"
-
-#. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
-"Het is niet toegestaan om een afrondingsfactor voor de bedrijfsvaluta te "
-"definiëren welke kleiner is dan de decimale nauwkeurigheid van 'rekening'."
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16

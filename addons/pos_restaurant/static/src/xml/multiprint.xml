@@ -8,6 +8,15 @@
         </span>
     </t>
 
+    <t t-name="NameWrapped">
+        <t t-foreach="change.name_wrapped.slice(1)" t-as="wrapped_line">
+            <line>
+                <left></left>
+                <right><t t-esc="wrapped_line"/></right>
+            </line>
+        </t>
+    </t>
+
     <t t-name="OrderChangeReceipt">
         <receipt 
             align='center' 
@@ -33,8 +42,9 @@
                     <t t-foreach="changes.cancelled" t-as="change">
                         <line>
                             <left><value><t t-esc="change.qty" /></value></left>
-                            <right><t t-esc="change.name" /></right>
+                            <right><t t-esc="change.name_wrapped[0]" /></right>
                         </line>
+                        <t t-call="NameWrapped"/>
                         <t t-if="change.note">
                             <line>
                                 <left>NOTE</left>
@@ -55,8 +65,9 @@
                 <t t-foreach="changes.new" t-as="change">
                     <line>
                         <left><value><t t-esc="change.qty" /></value></left>
-                        <right><t t-esc="change.name" /></right>
+                        <right><t t-esc="change.name_wrapped[0]" /></right>
                     </line>
+                    <t t-call="NameWrapped"/>
                     <t t-if="change.note">
                         <line>
                             <left>NOTE</left>

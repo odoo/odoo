@@ -15,7 +15,6 @@
                 <div class="oe_button_box" name="button_box">
                         <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                         <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
-                        <field name="quant_ids" invisible="True"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -25,11 +24,11 @@
                 </div>
                 <group name="main_group">
                     <group>
-                        <field name="product_id"/>
+                        <field name="product_id" attrs="{'readonly':[('quant_ids','!=',[])]}"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" readonly="1" groups="product.group_uom"/>
                             </div>
                         <field name="ref"/>
                     </group>

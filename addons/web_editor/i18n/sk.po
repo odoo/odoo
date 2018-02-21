@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web_editor
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
-# Matus Krnac <matus.krnac@gmail.com>, 2015
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-03-25 10:15+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: web_editor
@@ -170,6 +172,41 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:374
+#, python-format
+msgid "Background height"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:384
+#, python-format
+msgid "Background position"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:406
+#, python-format
+msgid "Background repeat"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:362
+#, python-format
+msgid "Background size"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:365
+#, python-format
+msgid "Background width"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:258
 #, python-format
 msgid "Basic"
@@ -183,7 +220,7 @@ msgstr ""
 #. module: web_editor
 #: model:ir.ui.view,arch_db:web_editor.colorpicker
 msgid "Black"
-msgstr ""
+msgstr "Čierna"
 
 #. module: web_editor
 #. openerp-web
@@ -215,6 +252,13 @@ msgstr "Stred"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/widgets.js:53
+#, python-format
+msgid "Change media description and tooltip"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/rte.summernote.js:941
 #: code:addons/web_editor/static/src/js/translator.js:74
 #: code:addons/web_editor/static/src/xml/ace.xml:17
@@ -227,7 +271,7 @@ msgstr "Zatvoriť"
 #: code:addons/web_editor/static/src/js/rte.summernote.js:903
 #, python-format
 msgid "Code"
-msgstr "Kód"
+msgstr "Kód "
 
 #. module: web_editor
 #. openerp-web
@@ -248,7 +292,7 @@ msgstr "Farebný štýl"
 #: code:addons/web_editor/static/src/js/snippets.editor.js:802
 #, python-format
 msgid "Column"
-msgstr ""
+msgstr "Stĺpec"
 
 #. module: web_editor
 #. openerp-web
@@ -269,17 +313,24 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:329
 #, python-format
 msgid "Cover"
-msgstr ""
+msgstr "Obálka"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:331
+#, python-format
+msgid "Custom"
+msgstr "Vlastný"
 
 #. module: web_editor
 #. openerp-web
@@ -318,18 +369,26 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/rte.summernote.js:173
+#: code:addons/web_editor/static/src/xml/editor.xml:34
+#, python-format
+msgid "Description"
+msgstr "Popis"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/snippets.options.js:671
 #: code:addons/web_editor/static/src/js/widgets.js:26
 #: code:addons/web_editor/static/src/xml/editor.xml:12
 #: code:addons/web_editor/static/src/xml/editor.xml:140
 #, python-format
 msgid "Discard"
-msgstr "Zrušiť"
+msgstr "Vyradiť"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: web_editor
 #. openerp-web
@@ -451,6 +510,13 @@ msgstr "Float vpravo"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/rte.summernote.js:933
+#, python-format
+msgid "Font Color"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/rte.summernote.js:860
 #, python-format
 msgid "Font Family"
@@ -468,7 +534,7 @@ msgstr "Veľkosť fontu"
 #: code:addons/web_editor/static/src/xml/ace.xml:16
 #, python-format
 msgid "Format"
-msgstr ""
+msgstr "Formát"
 
 #. module: web_editor
 #. openerp-web
@@ -495,6 +561,11 @@ msgstr ""
 #. module: web_editor
 #: model:ir.ui.view,arch_db:web_editor.colorpicker
 msgid "Gray Darker"
+msgstr ""
+
+#. module: web_editor
+#: model:ir.ui.view,arch_db:web_editor.colorpicker
+msgid "Gray Light"
 msgstr ""
 
 #. module: web_editor
@@ -557,6 +628,13 @@ msgid "Help"
 msgstr "Pomoc"
 
 #. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:387
+#, python-format
+msgid "Horizontal"
+msgstr ""
+
+#. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub_id
 msgid "ID"
 msgstr "ID"
@@ -589,7 +667,7 @@ msgstr "URL obrázku"
 #: code:addons/web_editor/static/src/xml/ace.xml:9
 #, python-format
 msgid "Include Asset Bundles"
-msgstr ""
+msgstr "Zahŕňať zväzky aktív"
 
 #. module: web_editor
 #. openerp-web
@@ -691,7 +769,7 @@ msgstr "Výška riadku"
 #: code:addons/web_editor/static/src/xml/editor.xml:254
 #, python-format
 msgid "Link"
-msgstr "Link"
+msgstr "Odkaz"
 
 #. module: web_editor
 #. openerp-web
@@ -724,7 +802,7 @@ msgstr "Viac farby"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub_name
 msgid "Name"
-msgstr ""
+msgstr "Meno"
 
 #. module: web_editor
 #. openerp-web
@@ -760,7 +838,7 @@ msgstr "Normálna"
 #: code:addons/web_editor/static/src/js/snippets.options.js:670
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: web_editor
 #. openerp-web
@@ -890,7 +968,7 @@ msgstr "Odstrániť obrázok"
 #: code:addons/web_editor/static/src/xml/editor.xml:349
 #, python-format
 msgid "Repeat"
-msgstr ""
+msgstr "Opakovať"
 
 #. module: web_editor
 #. openerp-web
@@ -976,7 +1054,7 @@ msgstr "Uložiť"
 #: code:addons/web_editor/static/src/xml/snippets.xml:66
 #, python-format
 msgid "Search"
-msgstr "Hľadanie"
+msgstr "Hľadať"
 
 #. module: web_editor
 #. openerp-web
@@ -1121,7 +1199,7 @@ msgstr "Stôl"
 #: code:addons/web_editor/static/src/js/ace.js:220
 #, python-format
 msgid "Template ID: %s"
-msgstr ""
+msgstr "ID šablóny: %s"
 
 #. module: web_editor
 #. openerp-web
@@ -1236,6 +1314,13 @@ msgstr "Nezoradený zoznam"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:96
+#, python-format
+msgid "Upload an image"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:103
 #, python-format
 msgid "Upload image without optimization"
@@ -1288,7 +1373,7 @@ msgstr "Varovanie"
 #. module: web_editor
 #: model:ir.ui.view,arch_db:web_editor.colorpicker
 msgid "White"
-msgstr ""
+msgstr "Biela"
 
 #. module: web_editor
 #. openerp-web
@@ -1326,7 +1411,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:241
 #, python-format
 msgid "https://www.odoo.com"
-msgstr ""
+msgstr "https://www.odoo.com"
 
 #. module: web_editor
 #. openerp-web

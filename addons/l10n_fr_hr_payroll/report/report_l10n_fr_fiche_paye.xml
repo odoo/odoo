@@ -48,7 +48,7 @@
                                     </td>
                                     <td>
                                         <span t-esc="o.employee_id.id or '_'"/><br/>
-                                        <span t-esc="o.employee_id.ssnid or '_'"/><br/>
+                                        <span t-esc="o.employee_id.identification_id or '_'"/><br/>
                                         <span t-esc="o.contract_id.job_id.name or '_'"/><br/>
                                         <span t-esc="o.contract_id.qualif or '_'"/><br/>
                                         <span t-esc="o.contract_id.niveau or '_'"/><br/>
@@ -135,7 +135,7 @@
                                 <th>Net Imposable</th>
                                 <th>Plafond s.s.</th>
                                 <th></th>
-                                <th>Coût Global Salarié</th>
+                                <th>Total versé par l'employeur</th>
                             </tr>
                         </thead>
                         <tbody>

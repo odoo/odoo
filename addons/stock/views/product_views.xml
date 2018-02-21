@@ -118,6 +118,7 @@
             </field>
         </record>
 
+        <!-- view common to both template and product -->
         <record id="view_template_property_form" model="ir.ui.view">
             <field name="name">product.template.stock.property.form.inherit</field>
             <field name="model">product.template</field>
@@ -131,18 +132,15 @@
                                 <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
                             </group>
                             <group name="group_lots_and_weight">
-                                <label for="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
-                                <div class="o_row" name="weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
+                                <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                                     <field name="weight"/>
                                 </div>
                                 <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
-                                <label for="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}"/>
-                                <div class="o_row" name="volume" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                                <label for="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
+                                <div class="o_row" name="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                                     <field name="volume" string="Volume"/>
                                 </div>
-                            </group>
-                            <group>
-                                <field name="categ_id" string="Internal Category"/>
                             </group>
                             <group name="stock_property" groups="base.group_no_one">
                                 <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
@@ -158,8 +156,8 @@
                 </field>
                 <group name="email_template_and_project" position="before">
                     <group name="sale_condition" string="Sale Conditions">
-                        <label for="warranty" groups="stock.group_stock_production_lot"/>
-                        <div groups="stock.group_stock_production_lot">
+                        <label for="warranty" groups="stock.group_production_lot"/>
+                        <div groups="stock.group_production_lot">
                             <field name="warranty" class="oe_inline"/> months
                         </div>
                         <label for="sale_delay"/>
@@ -170,6 +168,29 @@
                 </group>
             </field>
         </record>
+
+        <record id="product_template_view_form_procurement_button" model="ir.ui.view">
+            <field name="name">product.template.stock.stat.button.group</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="procurement.product_template_view_form_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(procurement.procurement_order_action_product_template_stat)d']" position="attributes">
+                   <attribute name="groups">base.group_no_one,stock.group_adv_location</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_product_view_form_procurement_button" model="ir.ui.view">
+            <field name="name">product.product.stock.stat.button.group</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="procurement.product_product_view_form_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(procurement.procurement_order_action_product_product_stat)d']" position="attributes">
+                   <attribute name="groups">base.group_no_one,stock.group_adv_location</attribute>
+                </xpath>
+            </field>
+        </record>
+
 
         <record model="ir.ui.view" id="product_template_kanban_stock_view">
             <field name="name">Product Template Kanban Stock</field>
@@ -239,6 +260,7 @@
             </field>
         </record>
 
+        <!-- view used for product.product only -->
         <record model="ir.ui.view" id="product_form_view_procurement_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
@@ -309,6 +331,7 @@
             </field>
         </record>
         
+        <!-- view used for product.template only -->
         <record model="ir.ui.view" id="product_template_form_view_procurement_button">
             <field name="name">product.template_procurement</field>
             <field name="model">product.template</field>
@@ -370,6 +393,22 @@
                             class="oe_stat_button" icon="fa-cogs"
                             groups="stock.group_adv_location"/>
                     </div>
+
+                    <!-- change attrs of fields added in view_template_property_form
+                    to restrict the display for templates -->
+                    <xpath expr="//label[@for='weight']" position="attributes">
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                    </xpath>
+                    <xpath expr="//div[@name='weight']" position="attributes">
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                    </xpath>
+                    <xpath expr="//label[@for='volume']" position="attributes">
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                    </xpath>
+                    <xpath expr="//div[@name='volume']" position="attributes">
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                    </xpath>
+
                 </data>
             </field>
         </record>

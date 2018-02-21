@@ -6,6 +6,7 @@
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Bole <bole@dajmi5.com>, 2016
+# Tina Milas <tina@uvid.hr>, 2016
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2016
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
@@ -48,6 +49,9 @@ msgid ""
 "sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
 "figures out a list of accessories based on all the products added to cart."
 msgstr ""
+"Dodaci se pojavljuju kada kupac pregledava košaricu prije kupnje (cross-sell"
+" strategija npr. za računala: miš, tipkovnica itd.). Algoritam pridoda popis"
+" dodataka na osnovu proizvoda koji su dodani u košaricu. "
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -142,6 +146,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Jednako: Troškovi će biti jednako podijeljeni.\n"
+"Po količini: Trošak će se podijeliti prema količini proizvoda.\n"
+"Po trenutnom trošku: Trošak će se podijeliti prema trenutnom trošku proizvoda.\n"
+"Po težini: Trošak će se podijeliti ovisno o težini.\n"
+"Po volumenu: Trošak će se podijeliti ovisno o volumenu."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
@@ -151,7 +160,7 @@ msgstr "Datoteka"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has an order line set for delivery"
-msgstr ""
+msgstr "Ima stavku narudžbe za isporuku"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
@@ -166,7 +175,7 @@ msgstr "Slike"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_intrastat_id
 msgid "Intrastat code"
-msgstr "Intrastat Kod"
+msgstr "Intrastat kod"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_landed_cost_ok
@@ -180,7 +189,7 @@ msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
-"Nijdna metoda dostave nije definirana za vašu trenutnu narudžbu i adresu "
+"Nijedna metoda dostave nije definirana za Vašu trenutnu narudžbu i adresu "
 "isporuke. Molimo kontaktirajte nas za više informacija."
 
 #. module: website_sale_delivery
@@ -195,7 +204,7 @@ msgid ""
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
 "Opcionalni proizvodi su predloženi kad god kupac klikne \"Dodaj u košaricu\""
-" (strategija križne prodaje, npr. za računala: jamstvo, programi itd...)"
+" (strategija križne prodaje, npr. za računala: jamstvo, programi itd.)"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_purchase_requisition
@@ -246,7 +255,7 @@ msgstr "Veličina Y"
 #: code:addons/website_sale_delivery/models/sale_order.py:98
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr "Nažalost, nismo u mogućnosti poslati vašu narudžbu"
+msgstr "Nažalost, nismo u mogućnosti poslati Vašu narudžbu"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_split_method
@@ -264,6 +273,8 @@ msgid ""
 "Suggest more expensive alternatives to your customers (upsell strategy). "
 "Those products show up on the product page."
 msgstr ""
+"Predložite skuplje alternative Vašem kupcu (up-sell strategija). Ti će se "
+"proizvodi pojaviti na stranici o proizvodu."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
@@ -293,7 +304,7 @@ msgstr "Kategorije web proizvoda"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Website Sequence"
-msgstr "Sekvenca webstranica"
+msgstr "Sekvenca web stranica"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
@@ -313,9 +324,9 @@ msgstr "Web meta naslov"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
 msgid "Website price"
-msgstr "Cijena na webstranicama"
+msgstr "Cijena na web stranicama"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_public_price
 msgid "Website public price"
-msgstr "Javna cijena na webstranicama"
+msgstr "Javna cijena na web stranicama"

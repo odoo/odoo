@@ -6,13 +6,14 @@
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Sergiu Baltariu <s_baltariu@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Sergiu Baltariu <s_baltariu@yahoo.com>, 2017\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,10 @@ msgid ""
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
 msgstr ""
+"O <b>Excepția de aprovizionare</b> a apărut când sistemul nu a găsit o cale "
+"pentru a completa aprovizionarea.  Unele excepții se vor rezolva automat de "
+"la sine, dar pentru altele este necesară intervenția manuală  (mesajele de "
+"eroare se găsesc în partea de jos). "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -39,6 +44,10 @@ msgid ""
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
+"O <b>comandă de aprovizionare</b> este utilizată pentru a înregistra "
+"necesitatea unui anumit produs la o anumită locație. Comenzile de "
+"aprovizionare sunt, de obicei, create automat din <i>comenzi de vânzări, "
+"reguli logistice de tragere sau reguli minime de stoc</i>."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
@@ -96,7 +105,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "Clic pentru a crea o comandă de aprovizionate."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -249,7 +258,7 @@ msgstr "Ultima actualizare în"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Late"
-msgstr "Tarziu"
+msgstr "Întârziat"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
@@ -263,6 +272,8 @@ msgid ""
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Majoritatea excepțiilor sunt datorate produselor de cumpărat care nu au "
+"definit furnizor și produselor de fabricat care nu au listă de materiale."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -355,7 +366,7 @@ msgstr "Grup aprovizionare"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement started late"
-msgstr "Aprovizionarea a inceput tarziu"
+msgstr "Aprovizionarea a întârziat"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
@@ -412,6 +423,8 @@ msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
+"Referința documentului care a creat această Aprovizionare. Aceasta e "
+"completată automat de către Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -490,7 +503,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Unit of Measure"
-msgstr "Unitatea de masura"
+msgstr "Unitatea de măsură"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -511,12 +524,15 @@ msgid ""
 "                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Când comanda de aprovizionare este confirmată, se crează automat \n"
+"operațiunile necesare pentru a acoperi nevoile: propunerea \n"
+"de comandă de aprovizionare, comanda de producție, etc."
 
 #. module: procurement
 #: code:addons/procurement/models/procurement.py:144
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
-msgstr ""
+msgstr "Nu se por șterge aproviozionările cu starea Anulat."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

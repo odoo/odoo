@@ -84,12 +84,14 @@ class ProductUoM(models.Model):
             if misc_category:
                 values['category_id'] = misc_category.id
             else:
-                values['category_id'] = EnglishUoMCateg.name_create('Unsorted/Imported Units').id
+                values['category_id'] = EnglishUoMCateg.name_create('Unsorted/Imported Units')[0]
         new_uom = self.create(values)
         return new_uom.name_get()[0]
 
     @api.multi
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP'):
+        if not self:
+            return qty
         self.ensure_one()
         if self.category_id.id != to_unit.category_id.id:
             if self._context.get('raise-exception', True):

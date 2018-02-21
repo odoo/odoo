@@ -5,7 +5,8 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ContributionRegisterReport(models.AbstractModel):
@@ -29,6 +30,9 @@ class ContributionRegisterReport(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
+        if not data.get('form'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         register_ids = self.env.context.get('active_ids', [])
         contrib_registers = self.env['hr.contribution.register'].browse(register_ids)
         date_from = data['form'].get('date_from', fields.Date.today())

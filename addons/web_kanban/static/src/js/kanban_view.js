@@ -60,10 +60,10 @@ var KanbanView = View.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        this.qweb = new QWeb(session.debug, {_s: session.origin});
+        this.qweb = new QWeb(session.debug, {_s: session.origin}, false);
 
         this.limit = this.options.limit || parseInt(this.fields_view.arch.attrs.limit, 10) || 40;
-        this.fields = {};
+        this.fields = this.fields_view.fields;
         this.fields_keys = _.keys(this.fields_view.fields);
         this.grouped = undefined;
         this.group_by_field = undefined;
@@ -105,7 +105,7 @@ var KanbanView = View.extend({
                 this.qweb.add_template(utils.json_node_to_xml(child));
                 break;
             } else if (child.tag === 'field') {
-                var ftype = child.attrs.widget || this.fields_view.fields[child.attrs.name].type;
+                var ftype = child.attrs.widget || this.fields[child.attrs.name].type;
                 if(ftype === "many2many" && "context" in child.attrs) {
                     this.m2m_context[child.attrs.name] = child.attrs.context;
                 }
@@ -122,20 +122,29 @@ var KanbanView = View.extend({
     do_search: function(domain, context, group_by) {
         var self = this;
         var group_by_field = group_by[0] || this.default_group_by;
-        var field = this.fields_view.fields[group_by_field];
-        var grouped_by_m2o = field && (field.type === 'many2one');
-
-        var options = {
-            search_domain: domain,
-            search_context: context,
-            group_by_field: group_by_field,
-            grouped: group_by.length || this.default_group_by,
-            grouped_by_m2o: grouped_by_m2o,
-            relation: (grouped_by_m2o ? field.relation : undefined),
-        };
-
+        var field = this.fields[group_by_field];
+        var options = {};
+        var fields_def;
+        if (field === undefined) {
+            fields_def = data_manager.load_fields(this.dataset).then(function (fields) {
+                self.fields = fields;
+                field = self.fields[group_by_field];
+            });
+        }
+        var load_def = $.when(fields_def).then(function() {
+            var grouped_by_m2o = field && (field.type === 'many2one');
+            options = _.extend(options, {
+                search_domain: domain,
+                search_context: context,
+                group_by_field: group_by_field,
+                grouped: group_by.length || self.default_group_by,
+                grouped_by_m2o: grouped_by_m2o,
+                relation: (grouped_by_m2o ? field.relation : undefined),
+            });
+            return options.grouped ? self.load_groups(options) : self.load_records();
+        });
         return this.search_orderer
-            .add(options.grouped ? this.load_groups(options) : this.load_records())
+            .add(load_def)
             .then(function (data) {
                 _.extend(self, options);
                 if (options.grouped) {
@@ -183,14 +192,7 @@ var KanbanView = View.extend({
         var group_by_field = options.group_by_field;
         var fields_keys = _.uniq(this.fields_keys.concat(group_by_field));
 
-        var fields_def;
-        if (this.fields_view.fields[group_by_field] === undefined) {
-            fields_def = data_manager.load_fields(this.dataset).then(function (fields) {
-                self.fields = fields;
-            })
-        }
-
-        var load_groups_def = new Model(this.model, options.search_context, options.search_domain)
+        return new Model(this.model, options.search_context, options.search_domain)
         .query(fields_keys)
         .group_by([group_by_field])
         .then(function (groups) {
@@ -228,7 +230,7 @@ var KanbanView = View.extend({
 
             // fetch group data (display information)
             var group_ids = _.without(_.map(groups, function (elem) { return elem.attributes.value[0];}), undefined);
-            if (options.grouped_by_m2o && group_ids.length) {
+            if (options.grouped_by_m2o && group_ids.length && group_by_fields_to_read.length) {
                 return new data.DataSet(self, options.relation)
                     .read_ids(group_ids, _.union(['display_name'], group_by_fields_to_read))
                     .then(function(results) {
@@ -246,7 +248,7 @@ var KanbanView = View.extend({
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
                     group.id = value instanceof Array ? value[0] : value;
-                    var field = self.fields_view.fields[options.group_by_field];
+                    var field = self.fields[options.group_by_field];
                     if (field && field.type === "selection") {
                         value= _.find(field.selection, function (s) { return s[0] === group.id; });
                     }
@@ -293,7 +295,6 @@ var KanbanView = View.extend({
                 };
             });
         });
-        return $.when(load_groups_def, fields_def);
     },
 
     is_action_enabled: function(action) {
@@ -306,6 +307,10 @@ var KanbanView = View.extend({
         return this.fields_view.fields.active;
     },
     _is_quick_create_enabled: function() {
+        var group_by_field = this.group_by_field.split(':')[0]
+        if(!_.contains(['char', 'boolean', 'many2one'], this.fields[group_by_field].type)){
+            return false;
+        }
         if (!this.quick_creatable || !this.is_action_enabled('create'))
             return false;
         if (this.fields_view.arch.attrs.quick_create !== undefined)
@@ -464,7 +469,7 @@ var KanbanView = View.extend({
         var self = this;
 
         // Drag'n'drop activation/deactivation
-        var group_by_field_attrs = this.fields_view.fields[this.group_by_field] || this.fields[this.group_by_field];
+        var group_by_field_attrs = this.fields[this.group_by_field];
 
         // Deactivate the drag'n'drop if:
         // - field is a date or datetime since we group by month
@@ -710,7 +715,7 @@ var KanbanView = View.extend({
         var context = {};
         context['default_' + this.group_by_field] = column.id;
         var name = event.data.value;
-        this.dataset.name_create(name).done(function(data) {
+        this.dataset.name_create(name, context).done(function(data) {
             add_record(data[0]);
         }).fail(function(error, event) {
             event.preventDefault();
@@ -736,14 +741,15 @@ var KanbanView = View.extend({
     add_new_column: function (event) {
         var self = this;
         var model = new Model(this.relation, this.search_context);
-        model.call('create', [{name: event.data.value}], {
+        var name = event.data.value;
+        model.call('name_create', [name], {
             context: this.search_context,
-        }).then(function (id) {
+        }).then(function (result) {
             var dataset = new data.DataSetSearch(self, self.model, self.dataset.get_context(), []);
             var group_data = {
                 records: [],
                 title: event.data.value,
-                id: id,
+                id: result[0],
                 attributes: {folded: false},
                 dataset: dataset,
                 values: {},

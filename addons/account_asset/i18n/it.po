@@ -143,7 +143,7 @@ msgid "Asset Durations to Modify"
 msgstr "Durate Immobilizzazione da Modificare"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
 msgstr "Data finale del bene"
 
@@ -158,7 +158,7 @@ msgid "Asset Name"
 msgstr "Nome Immobilizzazione"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
 msgstr "Data iniziale del bene"
 
@@ -987,6 +987,14 @@ msgstr "Il periodo tra due ammortamenti, in mesi"
 msgid "The number of depreciations needed to depreciate your asset"
 msgstr ""
 "Il numero di ammortamenti necessari per ammortizzare l'immobilizzazione"
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard

@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_crm
-#
+# 
 # Translators:
+# 최재호 <hwangtog@gmail.com>, 2017
+# Youngsoo Jung <youngsoo.j@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Hwang, Geon Gu <under_09@naver.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2015-09-08 09:55+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2017-06-26 14:46+0000\n"
+"PO-Revision-Date: 2017-06-26 14:46+0000\n"
+"Last-Translator: Hwang, Geon Gu <under_09@naver.com>, 2017\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_crm
@@ -27,7 +31,7 @@ msgstr ""
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp; 번"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -35,6 +39,18 @@ msgid ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
 msgstr ""
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:63
+#, python-format
+msgid "Campaign"
+msgstr "캠페인"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:62
+#, python-format
+msgid "Create Date"
+msgstr "작성일"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -53,10 +69,11 @@ msgstr "개척/기회"
 
 #. module: website_crm
 #. openerp-web
+#: code:addons/website_crm/controllers/main.py:53
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:34
 #, python-format
 msgid "Leads"
-msgstr ""
+msgstr "개척"
 
 #. module: website_crm
 #. openerp-web
@@ -70,12 +87,30 @@ msgstr ""
 #: code:addons/website_crm/static/src/xml/website_crm_dashboard.xml:13
 #, python-format
 msgid "Leads Analysis"
-msgstr ""
+msgstr "개척 분석"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:64
+#, python-format
+msgid "Medium"
+msgstr "중간"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
 msgstr "전화번호"
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:57
+#, python-format
+msgid "Previous Leads"
+msgstr ""
+
+#. module: website_crm
+#: code:addons/website_crm/controllers/main.py:65
+#, python-format
+msgid "Source"
+msgstr "자재"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form

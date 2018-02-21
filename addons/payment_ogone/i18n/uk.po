@@ -7,13 +7,14 @@
 # Yaroslav Molochko <onorua@gmail.com>, 2016
 # Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
 # LoganDowns <k0mna80@gmail.com>, 2016
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: LoganDowns <k0mna80@gmail.com>, 2016\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr "; не знайдено жодного замовлення"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
 msgid "API User ID"
-msgstr ""
+msgstr "ID користувача API "
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_password
@@ -46,12 +47,12 @@ msgstr "Обліковий запис на пароль API"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_alias_usage
 msgid "Alias Usage"
-msgstr ""
+msgstr "Використання псевдоніму"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
@@ -71,7 +72,7 @@ msgstr "Термін дії"
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
 msgid "How to configure your Ogone account?"
-msgstr ""
+msgstr "Як налаштувати ваш рахунок Ogone?"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
@@ -79,6 +80,9 @@ msgid ""
 "If you want to use Ogone Aliases, this default Alias Usage will be presented"
 " to the customer as the reason you want to keep his payment data"
 msgstr ""
+"Якщо ви хочете використовувати рахунок Ogone, цей типовий псевдонім "
+"користування буде представлений клієнту як причина, за якою ви хочете "
+"зберегти свої дані платежу."
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
@@ -94,13 +98,13 @@ msgstr "Назва"
 #: code:addons/payment_ogone/models/payment.py:248
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+msgstr "Ogone: недійсний shasign, отриманий%s, обчислений%s, для даних %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment.py:237
 #, python-format
 msgid "Ogone: received data for reference %s"
-msgstr ""
+msgstr "Ogone: отримані дані для довідки %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment.py:230
@@ -109,11 +113,13 @@ msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
 "(%s)"
 msgstr ""
+"Ogone: отримані дані з відсутньою довідкою (%s) або pay_id (%s) або shasign "
+"(%s)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid
 msgid "PSPID"
-msgstr ""
+msgstr "PSPID"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
@@ -128,14 +134,14 @@ msgstr "Платіжні операції"
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_in
 msgid "SHA Key IN"
-msgstr ""
+msgstr "SHA Key IN"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_shakey_out
 msgid "SHA Key OUT"
-msgstr ""
+msgstr "SHA Key OUT"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"

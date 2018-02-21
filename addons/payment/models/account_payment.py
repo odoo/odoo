@@ -17,7 +17,8 @@ class AccountPayment(models.Model):
     def _onchange_partner_id(self):
         res = {}
         if self.partner_id:
-            res['domain'] = {'payment_token_id': [('partner_id', '=', self.partner_id.id), ('acquirer_id.auto_confirm', '!=', 'authorize')]}
+            partners = self.partner_id | self.partner_id.commercial_partner_id | self.partner_id.commercial_partner_id.child_ids
+            res['domain'] = {'payment_token_id': [('partner_id', 'in', partners.ids), ('acquirer_id.auto_confirm', '!=', 'authorize')]}
 
         return res
 
@@ -38,9 +39,9 @@ class AccountPayment(models.Model):
 
     def _do_payment(self):
         if self.payment_token_id.acquirer_id.auto_confirm == 'authorize':
-            raise ValidationError('This feature is not available for payment acquirers set to the "Authorize" mode.\n'
-                                  'Please use a token from another provider than %s.' % self.payment_token_id.acquirer_id.name)
-        reference = "PAYMENT-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
+            raise ValidationError(_('This feature is not available for payment acquirers set to the "Authorize" mode.\n'
+                                  'Please use a token from another provider than %s.') % self.payment_token_id.acquirer_id.name)
+        reference = "P-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
         tx = self.env['payment.transaction'].create({
             'amount': self.amount,
             'acquirer_id': self.payment_token_id.acquirer_id.id,

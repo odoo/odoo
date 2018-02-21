@@ -11,10 +11,10 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -118,7 +118,7 @@ msgstr ""
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>保留中,</i> オンライン支払いが正常に処理されました。 しかし、あなたの注文はまだ確認されていません。</span>"
+msgstr "<span><i>保留中</i> オンライン支払が正常に処理されましたが、ご注文はまだ確認されていません。</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -249,11 +249,6 @@ msgid "Click to create a payment acquirer."
 msgstr "クリックすると、決済サービスが作成されます。"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_method_id_code
-msgid "Code"
-msgstr "コード"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "会社"
@@ -280,6 +275,7 @@ msgstr "対応モジュール"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
 msgstr "支払いトークンをカウント"
 
@@ -347,7 +343,7 @@ msgid ""
 "payment page."
 msgstr ""
 "カードのデータが自動的にトークンとして保存されるかどうかを判断します。 "
-"支払いトークンを使用すると、お客様は電子商取引でカードを再利用したり、クレジットカードで請求書を直接請求することができます。 "
+"支払いトークンを使用すると、お客様はeコマースでカードを再利用したり、クレジットカードで請求書を直接請求することができます。 "
 "「顧客に決定させる」に設定すると、eコマースの顧客むけに支払いページにチェックボックスが表示されます。"
 
 #. module: payment
@@ -381,6 +377,11 @@ msgstr "ドラフト"
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
 msgstr "Eメール"
+
+#. module: payment
+#: model:account.payment.method,name:payment.account_payment_method_electronic_in
+msgid "Electronic"
+msgstr "電子"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -628,6 +629,18 @@ msgid "Ogone"
 msgstr "Ogone"
 
 #. module: payment
+#: code:addons/payment/models/payment_acquirer.py:619
+#, python-format
+msgid "Only transactions in the Authorized status can be captured."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:626
+#, python-format
+msgid "Only transactions in the Authorized status can be voided."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
 msgid "Order Confirmation"
 msgstr "受注確認"
@@ -675,6 +688,7 @@ msgstr "支払トークン"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_ids
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
@@ -858,6 +872,14 @@ msgid "The payment transaction reference must be unique!"
 msgstr "支払取引の参照は一意でなければなりません！"
 
 #. module: payment
+#: code:addons/payment/models/account_payment.py:42
+#, python-format
+msgid ""
+"This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
+"Please use a token from another provider than %s."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
@@ -871,6 +893,12 @@ msgid ""
 msgstr ""
 "このテンプレートは、取得者ボタンを必要なすべての値で描画します。\n"
 "                                            qWebを使用して、次の評価コンテキストで描画されます。"
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:160
+#, python-format
+msgid "Transaction Authorization is not supported by this payment provider."
+msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
@@ -917,7 +945,7 @@ msgstr "電信送金"
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompt with Stripe Payment page for payment information."
-msgstr "支払い情報については、スStripe Paymentのページが表示されます。"
+msgstr "支払情報は、Stripe Payment のページに表示されます。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -990,7 +1018,7 @@ msgstr "amount:取引金額、浮動小数点"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr "context：現在のコンテキスト辞書"
+msgstr "context: 現在のコンテキストディクショナリ"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1032,4 +1060,4 @@ msgstr "tx_values: トランザクション値"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr "user: 現在のユーザーの閲覧レコード"
+msgstr "user: 現在のユーザの閲覧レコード"

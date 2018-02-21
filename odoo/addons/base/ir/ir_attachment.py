@@ -26,7 +26,7 @@ class IrAttachment(models.Model):
     The computed field ``datas`` is implemented using ``_file_read``,
     ``_file_write`` and ``_file_delete``, which can be overridden to implement
     other storage engines. Such methods should check for other location pseudo
-    uri (example: hdfs://hadoppserver).
+    uri (example: hdfs://hadoopserver).
 
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash

@@ -4,16 +4,14 @@
 import base64
 import os
 import random
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+
 from lxml import etree
 from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.release import version_info
+from odoo.tools import pickle
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons.anonymization.models.anonymization import group
 
@@ -164,7 +162,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
             table_name = self.env[model_name]._table
 
             # get the current value
-            self.env.cr.execute("select id, %s from %s" % (field_name, table_name))
+            self.env.cr.execute('select id, "%s" from "%s"' % (field_name, table_name))
             for record in self.env.cr.dictfetchall():
                 data.append({"model_id": model_name, "field_id": field_name, "id": record['id'], "value": record[field_name]})
 
@@ -196,7 +194,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 if anonymized_value is None:
                     raise UserError('%s: %s' % (error_type, _("Anonymized value can not be empty.")))
 
-                sql = "update %(table)s set %(field)s = %%(anonymized_value)s where id = %%(id)s" % {
+                sql = 'update "%(table)s" set "%(field)s" = %%(anonymized_value)s where id = %%(id)s' % {
                     'table': table_name,
                     'field': field_name,
                 }
@@ -207,7 +205,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
 
         # save pickle:
         fn = open(abs_filepath, 'w')
-        pickle.dump(data, fn, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(data, fn, protocol=-1)
 
         # update the anonymization fields:
         ano_fields.write({'state': 'anonymized'})
@@ -285,7 +283,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 custom_updates.sort(key=itemgetter('sequence'))
                 queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
             elif table_name:
-                queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
+                queries = [('update "%(table)s" set "%(field)s" = %%(value)s where id = %%(id)s' % {
                     'table': table_name,
                     'field': line['field_id'],
                 }, 'sql')]

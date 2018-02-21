@@ -179,13 +179,18 @@ class BaseActionRule(models.Model):
 
     def _process(self, records):
         """ Process action ``self`` on the ``records`` that have not been done yet. """
-        # filter out the records on which self has already been done, then mark
-        # remaining records as done (to avoid recursive processing)
+        # filter out the records on which self has already been done
         action_done = self._context['__action_done']
-        records -= action_done.setdefault(self, records.browse())
+        records_done = action_done.get(self, records.browse())
+        records -= records_done
         if not records:
             return
-        action_done[self] |= records
+
+        # mark the remaining records as done (to avoid recursive processing)
+        action_done = dict(action_done)
+        action_done[self] = records_done + records
+        self = self.with_context(__action_done=action_done)
+        records = records.with_context(__action_done=action_done)
 
         # modify records
         values = {}
@@ -312,7 +317,15 @@ class BaseActionRule(models.Model):
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):
-            Model = self.env[action_rule.model]
+            Model = self.env.get(action_rule.model)
+
+            # Do not crash if the model of the base_action_rule was uninstalled
+            if Model is None:
+                _logger.warning("Action rule with ID %d depends on model %s" %
+                                (action_rule.id,
+                                 action_rule.model))
+                continue
+
             if action_rule.kind == 'on_create':
                 patch(Model, 'create', make_create())
 

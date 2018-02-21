@@ -73,12 +73,21 @@ var ScreenWidget = PosBaseWidget.extend({
     // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
     // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
     barcode_cashier_action: function(code){
+        var self = this;
         var users = this.pos.users;
         for(var i = 0, len = users.length; i < len; i++){
             if(users[i].barcode === code.code){
-                this.pos.set_cashier(users[i]);
-                this.chrome.widget.username.renderElement();
-                return true;
+                if (users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin) {
+                    return this.gui.ask_password(users[i].pos_security_pin).then(function(){
+                        self.pos.set_cashier(users[i]);
+                        self.chrome.widget.username.renderElement();
+                        return true;
+                    });
+                } else {
+                    this.pos.set_cashier(users[i]);
+                    this.chrome.widget.username.renderElement();
+                    return true;
+                }
             }
         }
         this.barcode_error_action(code);
@@ -971,6 +980,9 @@ var ProductScreenWidget = ScreenWidget.extend({
             this.product_categories_widget.reset_category();
             this.numpad.state.reset();
         }
+        if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+            this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
+        }
     },
 
     close: function(){
@@ -1045,10 +1057,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox input').on('keypress',function(event){
             clearTimeout(search_timeout);
 
-            var query = this.value;
+            var searchbox = this;
 
             search_timeout = setTimeout(function(){
-                self.perform_search(query,event.which === 13);
+                self.perform_search(searchbox.value, event.which === 13);
             },70);
         });
 
@@ -1116,12 +1128,15 @@ var ClientListScreenWidget = ScreenWidget.extend({
         var self = this;
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
-            if ( this.new_client ) {
+            var default_fiscal_position_id = _.find(this.pos.fiscal_positions, function(fp) {
+                return fp.id === self.pos.config.default_fiscal_position_id[0];
+            });
+            if ( this.new_client && this.new_client.property_account_position_id ) {
                 order.fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
                     return fp.id === self.new_client.property_account_position_id[0];
-                });
+                }) || default_fiscal_position_id;
             } else {
-                order.fiscal_position = undefined;
+                order.fiscal_position = default_fiscal_position_id;
             }
 
             order.set_client(this.new_client);
@@ -1213,9 +1228,14 @@ var ClientListScreenWidget = ScreenWidget.extend({
             self.saved_client_details(partner_id);
         },function(err,event){
             event.preventDefault();
+            var error_body = _t('Your Internet connection is probably down.');
+            if (err.data) {
+                var except = err.data;
+                error_body = except.arguments && except.arguments[0] || except.message || error_body;
+            }
             self.gui.show_popup('error',{
                 'title': _t('Error: Could not Save Changes'),
-                'body': _t('Your Internet connection is probably down.'),
+                'body': error_body,
             });
         });
     },
@@ -1314,6 +1334,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     //             to maintain consistent scroll.
     display_client_details: function(visibility,partner,clickpos){
         var self = this;
+        var searchbox = this.$('.searchbox input');
         var contents = this.$('.client-details-contents');
         var parent   = this.$('.client-list').parent();
         var scroll   = parent.scrollTop();
@@ -1335,6 +1356,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
             var new_height   = contents.height();
 
             if(!this.details_visible){
+                // resize client list to take into account client details
+                parent.height('-=' + new_height);
+
                 if(clickpos < scroll + new_height + 20 ){
                     parent.scrollTop( clickpos - 20 );
                 }else{
@@ -1347,10 +1371,33 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.details_visible = true;
             this.toggle_save_button();
         } else if (visibility === 'edit') {
+            // Connect the keyboard to the edited field
+            if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+                contents.off('click', '.detail');
+                searchbox.off('click');
+                contents.on('click', '.detail', function(ev){
+                    self.chrome.widget.keyboard.connect(ev.target);
+                    self.chrome.widget.keyboard.show();
+                });
+                searchbox.on('click', function() {
+                    self.chrome.widget.keyboard.connect($(this));
+                });
+            }
+
             this.editing_client = true;
             contents.empty();
             contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
             this.toggle_save_button();
+
+            // Browsers attempt to scroll invisible input elements
+            // into view (eg. when hidden behind keyboard). They don't
+            // seem to take into account that some elements are not
+            // scrollable.
+            contents.find('input').blur(function() {
+                setTimeout(function() {
+                    self.$('.window').scrollTop(0);
+                }, 0);
+            });
 
             contents.find('.image-uploader').on('change',function(event){
                 self.load_image_file(event.target.files[0],function(res){
@@ -1364,6 +1411,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             });
         } else if (visibility === 'hide') {
             contents.empty();
+            parent.height('100%');
             if( height > scroll ){
                 contents.css({height:height+'px'});
                 contents.animate({height:0},400,function(){
@@ -1378,6 +1426,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
     },
     close: function(){
         this._super();
+        if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+            this.chrome.widget.keyboard.hide();
+        }
     },
 });
 gui.define_screen({name:'clientlist', widget: ClientListScreenWidget});
@@ -1400,7 +1451,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
 
         this.render_change();
         this.render_receipt();
-
+        this.handle_auto_print();
+    },
+    handle_auto_print: function() {
         if (this.should_auto_print()) {
             this.print();
             if (this.should_close_immediately()){
@@ -1409,7 +1462,6 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         } else {
             this.lock_screen(false);
         }
-
     },
     should_auto_print: function() {
         return this.pos.config.iface_print_auto && !this.pos.get_order()._printed;
@@ -1432,6 +1484,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     print_xml: function() {
         var env = {
             widget:  this,
+            pos: this.pos,
             order: this.pos.get_order(),
             receipt: this.pos.get_order().export_for_printing(),
             paymentlines: this.pos.get_order().get_paymentlines()
@@ -1929,6 +1982,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         order.initialize_validation_date();
+        order.finalized = true;
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
@@ -1936,6 +1990,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.fail(function(error){
                 self.invoicing = false;
+                order.finalized = false;
                 if (error.message === 'Missing Customer') {
                     self.gui.show_popup('confirm',{
                         'title': _t('Please select the Customer'),
@@ -2063,4 +2118,3 @@ return {
 };
 
 });
-

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -83,13 +83,15 @@ msgid ""
 "(Un)archiving a blog automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
+"Απο-αρχειοθέτηση ενός ιστολογίου αυτόματα απο-αρχειοθετούν και οι "
+"δημοσιεύσεις του. Θέλετε να συνεχίσετε;"
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:53
 #, python-format
 msgid "<b>Click on Save</b> to record your changes."
-msgstr "<b>Κλικ στο Αποθήκευση</b> για να καταχωρίσετε τις αλλαγές σας."
+msgstr "<b>Κλικ στο Αποθήκευση</b> για να καταχωρήσετε τις αλλαγές σας."
 
 #. module: website_blog
 #. openerp-web
@@ -120,6 +122,10 @@ msgid ""
 " image or table, set bold or italic, etc. Drag and drop building blocks for "
 "more graphical blogs."
 msgstr ""
+"<b>Γράψτε την ιστορία σας εδώ.</b> Χρησιμοποιήστε την επάνω γραμμή εργαλείων"
+" για να μορφοποιήσετε το κείμενό σας: προσθέστε μια εικόνα ή έναν πίνακα, "
+"ορίστε έντονη ή πλάγια γραφή κλπ. Μεταφέρετε και αποθέστε δομικά στοιχεία "
+"για περισσότερα γραφικά ιστολογίου."
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
@@ -358,6 +364,7 @@ msgstr "Δημιουργήθηκε στις"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_mail_compose_message_path
+#: model:ir.model.fields,field_description:website_blog.field_mail_mail_path
 #: model:ir.model.fields,field_description:website_blog.field_mail_message_path
 #: model:ir.model.fields,field_description:website_blog.field_survey_mail_compose_message_path
 msgid "Discussion Path"
@@ -374,16 +381,6 @@ msgstr "Εμφάνιση Ονόματος"
 #: model:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "Duplicate"
 msgstr "Δημιουργία αντίγραφου"
-
-#. module: website_blog
-#: model:ir.model,name:website_blog.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "Οδηγός Σύνταξης Email"
-
-#. module: website_blog
-#: model:ir.model,name:website_blog.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Οδηγός σύνθεσης email για Έρευνα"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
@@ -934,6 +931,7 @@ msgstr "Χρήση σε:"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_mail_compose_message_path
+#: model:ir.model.fields,help:website_blog.field_mail_mail_path
 #: model:ir.model.fields,help:website_blog.field_mail_message_path
 #: model:ir.model.fields,help:website_blog.field_survey_mail_compose_message_path
 msgid ""
@@ -1015,6 +1013,11 @@ msgid "comments"
 msgstr "σχόλια"
 
 #. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_1
+msgid "functional"
+msgstr "λειτουργικό"
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "has been published on the"
 msgstr "έχει δημοσιοποιηθεί στο"
@@ -1039,3 +1042,8 @@ msgstr "προβολή"
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "views"
 msgstr "προβολές"
+
+#. module: website_blog
+#: model:blog.tag,name:website_blog.blog_tag_2
+msgid "website"
+msgstr "ιστότοπος"

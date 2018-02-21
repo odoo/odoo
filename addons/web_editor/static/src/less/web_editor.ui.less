@@ -1075,8 +1075,15 @@ body.editor_enable {
     background-color: @odoo-brand-secondary;
 
     #wrapwrap {
+        position: relative;
+        display: table;
+        table-layout: fixed;
+        width: 100%;
         height: 100%;
 
+        > * {
+            display: table-row;
+        }
         > main {
             height: 100%;
 

@@ -168,7 +168,7 @@
                 <t t-foreach="invoices" t-as="invoice">
                     <tr>
                         <td class= "cell_overflow">
-                            <a t-att-href="'/report/pdf/account.report_invoice/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
+                            <a t-att-href="'/my/invoices/pdf/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td><span t-field="invoice.date_due"/></td>
@@ -313,7 +313,7 @@
                       <t t-foreach="order.order_line" t-as="ol">
                         <div class="row orders_vertical_align">
                             <div class="col-md-1 text-center">
-                                <img t-att-src="'/web/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
+                                <img t-att-src="ol.product_id.image_small and ('data:image/png;base64,' + ol.product_id.image_small) or '/web/static/src/img/placeholder.png'"/>
                             </div>
                             <div id='product_name' class="col-md-5">
                               <span t-esc="ol.product_id.name"/>

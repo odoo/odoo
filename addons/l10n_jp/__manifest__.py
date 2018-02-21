@@ -34,7 +34,8 @@ need to use these at all under normal circumstances.
         'data/account.account.template.csv',
         'data/account.tax.template.csv',
         'data/account_chart_template_data.xml',
-        'data/account_chart_template_data.yml',
         'data/account.fiscal.position.template.csv',
+        'data/account.fiscal.position.tax.template.csv',
+        'data/account_chart_template_data.yml',
     ],
 }

@@ -174,8 +174,8 @@ var CompletionFieldMixin = {
     init: function() {
         this.limit = 7;
         this.orderer = new utils.DropMisordered();
-        this.can_create = this.node.attrs.can_create || true;
-        this.can_write = this.node.attrs.can_write || true;
+        this.can_create = this.node.attrs.can_create == "false" ? false : true;
+        this.can_write = this.node.attrs.can_write == "false" ? false : true;
     },
     /**
      * Call this method to search using a string.
@@ -716,7 +716,7 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         }
     },
     _toggle_label: function() {
-        var empty = this.get('effective_readonly') && this.is_false();
+        var empty = this.get('effective_readonly') && !this.is_set();
         this.$label.toggleClass('o_form_label_empty', empty).toggleClass('o_form_label_false', this.get('effective_readonly') && this.get('value') === false);
         this.$el.toggleClass('o_form_field_empty', empty);
     },
@@ -728,6 +728,12 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     },
     set_value: function(value_) {
         this.set({'value': value_});
+    },
+    /**
+        Method to set value of a field when loading a record
+    */
+    set_value_from_record: function(record) {
+        this.set_value.call(this, record[this.name] || false);
     },
     get_value: function() {
         return this.get('value');
@@ -755,10 +761,21 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     /**
      * Method useful to implement to ease validity testing. Must return true if the current
      * value is similar to false in OpenERP.
+     * Used at write time, in particular when the field is required
      */
     is_false: function() {
         return this.get('value') === false;
     },
+
+    /**
+     *  Method called at rendering time to determine if the field should be
+     *  displayed (non-empty) or not (empty)
+     *  We test the same thing as is_false but with different semantics
+     */
+    is_set: function() {
+        return !this.is_false();
+    },
+
     _check_css_flags: function() {
         var show_translate = (!this.get('effective_readonly') && this.field_manager.get('actual_mode') !== "create");
         this.$translate.toggleClass('o_translate_active', !!show_translate);

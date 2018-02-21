@@ -16,12 +16,15 @@ class StockPickingType(models.Model):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
         if not mrp_picking_types:
             return
-
-        MrpProduction = self.env['mrp.production']
-        count_mo_waiting = MrpProduction.search_count([('availability', '=', 'waiting')])
-        count_mo_todo = MrpProduction.search_count([('state', 'in', ('confirmed', 'planned', 'progress'))])
-        count_mo_late = MrpProduction.search_count(['&', ('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')])
-        for picking in mrp_picking_types:
-            picking.count_mo_waiting = count_mo_waiting
-            picking.count_mo_todo = count_mo_todo
-            picking.count_mo_late = count_mo_late
+        domains = {
+            'count_mo_waiting': [('availability', '=', 'waiting')],
+            'count_mo_todo': [('state', 'in', ('confirmed', 'planned', 'progress'))],
+            'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
+        }
+        for field in domains:
+            data = self.env['mrp.production'].read_group(domains[field] +
+                [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
+                ['picking_type_id'], ['picking_type_id'])
+            count = dict(map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
+            for record in mrp_picking_types:
+                record[field] = count.get(record.id, 0)

@@ -51,7 +51,11 @@
                             <span t-field="ticket.price_reduce" t-options='{
                              "widget": "monetary",
                              "display_currency": website.pricelist_id.currency_id
-                            }'/>
+                            }' groups="sale.group_show_price_subtotal"/>
+                            <span t-field="ticket.price_reduce_taxinc" t-options='{
+                             "widget": "monetary",
+                             "display_currency": website.pricelist_id.currency_id
+                            }' groups="sale.group_show_price_total"/>
                             <span itemprop="price" style="display:none;" t-esc="ticket.price"/>
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                         </t>
@@ -84,7 +88,7 @@
             class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
     </xpath>
     <xpath expr="//form[@id='registration_form']" position="attributes">
-        <attribute name="t-if">event.event_ticket_ids</attribute>
+        <attribute name="t-if">event.event_ticket_ids and not all([ticket.is_expired for ticket in event.event_ticket_ids])</attribute>
     </xpath>
 </template>
 

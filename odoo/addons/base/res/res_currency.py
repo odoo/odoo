@@ -177,7 +177,7 @@ class Currency(models.Model):
             function += "if (arguments[1] === %s) { %s }" % (currency.id, return_str)
             if (currency == company_currency):
                 company_currency_format = return_str
-        function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
+                function = "if (arguments[1] === false || arguments[1] === undefined) {" + company_currency_format + " }" + function
         return function
 
     def _select_companies_rates(self):
@@ -208,7 +208,7 @@ class CurrencyRate(models.Model):
     rate = fields.Float(digits=(12, 6), help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env.user._get_company())
+                                 default=lambda self: self.env.user.company_id)
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):

@@ -10,7 +10,7 @@ class HrTimesheetSheet(models.Model):
     _inherit = "hr_timesheet_sheet.sheet"
 
     attendances_ids = fields.One2many('hr.attendance', 'sheet_id', 'Attendances')
-    total_attendance = fields.Integer(string='Total Attendance', compute='_compute_total')
+    total_attendance = fields.Float(string='Total Attendance', compute='_compute_total')
     total_timesheet = fields.Float(string='Total Timesheet', compute="_compute_total")
     total_difference = fields.Float(string='Difference', compute="_compute_total")
     period_ids = fields.One2many('hr_timesheet_sheet.sheet.day', 'sheet_id', string='Period', readonly=True)
@@ -165,7 +165,7 @@ class hr_timesheet_sheet_sheet_day(models.Model):
                                 ON r.user_id = u.id
                                 LEFT JOIN res_partner p
                                 ON u.partner_id = p.id
-                            WHERE check_out IS NOT NULL
+                            WHERE a.check_out IS NOT NULL
                             group by (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id, timezone
                         )) AS foo
                         GROUP BY name, sheet_id, timezone

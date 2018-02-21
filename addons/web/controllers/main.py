@@ -17,6 +17,7 @@ import operator
 import os
 import re
 import sys
+import tempfile
 import time
 import werkzeug.utils
 import werkzeug.wrappers
@@ -35,8 +36,9 @@ from odoo.tools.misc import str2bool, xlwt
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
                       serialize_exception as _serialize_exception
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
+from odoo.service import db
 
 _logger = logging.getLogger(__name__)
 
@@ -52,6 +54,8 @@ env.filters["json"] = json.dumps
 
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
+
+DBNAME_PATTERN = '^[a-zA-Z0-9][a-zA-Z0-9_.-]+$'
 
 #----------------------------------------------------------
 # Odoo Web helpers
@@ -579,12 +583,28 @@ class WebClient(http.Controller):
     def version_info(self):
         return odoo.service.common.exp_version()
 
-    @http.route('/web/tests', type='http', auth="none")
+    @http.route('/web/tests', type='http', auth="user")
     def index(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
 
 class Proxy(http.Controller):
+
+    @http.route('/web/proxy/load', type='json', auth="none")
+    def load(self, path):
+        """ Proxies an HTTP request through a JSON request.
+
+        It is strongly recommended to not request binary files through this,
+        as the result will be a binary data blob as well.
+
+        :param path: actual request path
+        :return: file content
+        """
+        from werkzeug.test import Client
+        from werkzeug.wrappers import BaseResponse
+
+        base_url = request.httprequest.base_url
+        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
 
     @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
     def post(self, path):
@@ -609,6 +629,7 @@ class Database(http.Controller):
         d['list_db'] = odoo.tools.config['list_db']
         d['langs'] = odoo.service.db.exp_list_lang()
         d['countries'] = odoo.service.db.exp_list_countries()
+        d['pattern'] = DBNAME_PATTERN
         # databases list
         d['databases'] = []
         try:
@@ -630,22 +651,26 @@ class Database(http.Controller):
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         try:
+            if not re.match(DBNAME_PATTERN, name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code])
             request.session.authenticate(name, post['login'], password)
             return http.local_redirect('/web/')
         except Exception, e:
-            error = "Database creation error: %s" % e
+            error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
 
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
         try:
+            if not re.match(DBNAME_PATTERN, new_name):
+                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database duplication error: %s" % e
+            error = "Database duplication error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
@@ -655,7 +680,7 @@ class Database(http.Controller):
             request._cr = None  # dropping a database leads to an unusable cursor
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database deletion error: %s" % e
+            error = "Database deletion error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
@@ -673,18 +698,21 @@ class Database(http.Controller):
             return response
         except Exception, e:
             _logger.exception('Database.backup')
-            error = "Database backup error: %s" % e
+            error = "Database backup error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
-            data = base64.b64encode(backup_file.read())
-            dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
+            with tempfile.NamedTemporaryFile(delete=False) as data_file:
+                backup_file.save(data_file)
+            db.restore_db(name, data_file.name, str2bool(copy))
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database restore error: %s" % e
+            error = "Database restore error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
+        finally:
+            os.unlink(data_file.name)
 
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):
@@ -692,7 +720,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Master password update error: %s" % e
+            error = "Master password update error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
     @http.route('/web/database/list', type='json', auth='none')
@@ -976,6 +1004,8 @@ class Binary(http.Controller):
         elif status != 200 and download:
             return request.not_found()
 
+        height = int(height or 0)
+        width = int(width or 0)
         if content and (width or height):
             # resize maximum 500*500
             if width > 500:
@@ -1075,12 +1105,19 @@ class Binary(http.Controller):
                 # create an empty registry
                 registry = odoo.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
-                    cr.execute("""SELECT c.logo_web, c.write_date
-                                    FROM res_users u
-                               LEFT JOIN res_company c
-                                      ON c.id = u.company_id
-                                   WHERE u.id = %s
-                               """, (uid,))
+                    company = int(kw['company']) if kw and kw.get('company') else False
+                    if company:
+                        cr.execute("""SELECT logo_web, write_date
+                                        FROM res_company
+                                       WHERE id = %s
+                                   """, (company,))
+                    else:
+                        cr.execute("""SELECT c.logo_web, c.write_date
+                                        FROM res_users u
+                                   LEFT JOIN res_company c
+                                          ON c.id = u.company_id
+                                       WHERE u.id = %s
+                                   """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
                         image_base64 = str(row[0]).decode('base64')
@@ -1217,7 +1254,7 @@ class Export(http.Controller):
         info = {}
         fields = self.fields_get(model)
         if ".id" in export_fields:
-            fields['.id'] = fields.pop('id', {'string': 'ID'})
+            fields['.id'] = fields.get('id', {'string': 'ID'})
 
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is
@@ -1298,7 +1335,7 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
-        Model = request.env[model].with_context(**params.get('context', {}))
+        Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         records = Model.browse(ids) or Model.search(domain, offset=0, limit=False, order=False)
 
         if not Model._is_an_ordinary_table():
@@ -1378,6 +1415,9 @@ class ExcelExport(ExportFormat, http.Controller):
         return base + '.xls'
 
     def from_data(self, fields, rows):
+        if len(rows) > 65535:
+            raise UserError(_('There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 (.xls) format. Consider splitting the export.') % len(rows))
+
         workbook = xlwt.Workbook()
         worksheet = workbook.add_sheet('Sheet 1')
 

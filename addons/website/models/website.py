@@ -175,7 +175,7 @@ class Website(models.Model):
     social_googleplus = fields.Char('Google+ Account')
     google_analytics_key = fields.Char('Google Analytics Key')
 
-    user_id = fields.Many2one('res.users', string='Public User', default=lambda self: self.env.ref('base.public_user').id)
+    user_id = fields.Many2one('res.users', string='Public User', required=True, default=lambda self: self.env.ref('base.public_user').id)
     compress_html = fields.Boolean('Compress HTML') # TODO: REMOVE ME IN SAAS-14
     cdn_activated = fields.Boolean('Activate CDN for assets')
     cdn_url = fields.Char('CDN Base URL', default='')
@@ -392,9 +392,10 @@ class Website(models.Model):
 
     @api.model
     def get_current_website(self):
-        domain_name = request.httprequest.environ.get('HTTP_HOST', '').split(':')[0]
+        domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
         website_id = self._get_current_website_id(domain_name)
-        request.context = dict(request.context, website_id=website_id)
+        if request:
+            request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
     @tools.cache('domain_name')
@@ -526,7 +527,7 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
-        request.context = dict(request.context, **context)
+        request.context = dict(request.context, **self.env.context)
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
