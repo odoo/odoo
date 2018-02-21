@@ -30,7 +30,7 @@ class StockHistory(models.Model):
         # on the individual lines.
         res = super(StockHistory, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         if 'inventory_value' in fields:
-            groupby_list = groupby if not lazy else groupby[:-1]
+            groupby_list = groupby[:1] if lazy else groupby
             date = self._context.get('history_date', fieldsDatetime.now())
 
             # Step 2: retrieve the stock history lines. The result contains the 'expanded'
