@@ -31,11 +31,11 @@
 
         <!-- Task-related subtypes for messaging / Chatter -->
         <record id="mt_task_new" model="mail.message.subtype">
-            <field name="name">Task Opened</field>
+            <field name="name">Task Created</field>
             <field name="res_model">project.task</field>
             <field name="default" eval="False"/>
-            <field name="hidden" eval="False"/>
-            <field name="description">Task opened</field>
+            <field name="hidden" eval="True"/>
+            <field name="description">Task Created</field>
         </record>
         <record id="mt_task_blocked" model="mail.message.subtype">
             <field name="name">Task Blocked</field>
@@ -63,10 +63,10 @@
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->
         <record id="mt_project_task_new" model="mail.message.subtype">
-            <field name="name">Task Opened</field>
+            <field name="name">Task Created</field>
             <field name="sequence">10</field>
             <field name="res_model">project.project</field>
-            <field name="default" eval="True"/>
+            <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_task_new')"/>
             <field name="relation_field">project_id</field>
         </record>

@@ -855,8 +855,6 @@ class Task(models.Model):
             return 'project.mt_task_blocked'
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return 'project.mt_task_ready'
-        elif 'user_id' in init_values and self.user_id:  # assigned -> new
-            return 'project.mt_task_new'
         elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
             return 'project.mt_task_new'
         elif 'stage_id' in init_values:
