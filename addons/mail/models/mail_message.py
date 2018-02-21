@@ -759,7 +759,8 @@ class Message(models.Model):
         tracking_values_cmd = values.pop('tracking_value_ids', False)
         message = super(Message, self).create(values)
         if tracking_values_cmd:
-            message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+            self.env['mail.tracking.value']._create_multi_from_message(message.id, tracking_values_cmd)
+            # message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
         message._invalidate_documents()
 

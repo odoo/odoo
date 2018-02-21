@@ -31,6 +31,43 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
+    def _create_multi_from_message(self, msg_id, values):
+        def _format_value(vals, name, type):
+            value = vals.get(name)
+            if type == 'float':
+                return value if value else 0.0
+            elif type == 'timestamp':
+                return value if value else None
+            elif type == 'integer':
+                if value is True:
+                    return 1
+                return value if value else 0
+            return value
+
+        def _prepare_insert_values(vals):
+            return (vals['field'], vals['field_desc'], vals["field_type"], msg_id,
+                    # old value
+                    _format_value(vals, 'old_value_integer', 'integer'), _format_value(vals, 'old_value_float', 'float'),
+                    _format_value(vals, 'old_value_monetary', 'float'), _format_value(vals, 'old_value_char', 'char'),
+                    _format_value(vals, 'old_value_text', 'char'), _format_value(vals, 'old_value_datetime', 'timestamp'),
+                    # new value
+                    _format_value(vals, 'new_value_integer', 'integer'), _format_value(vals, 'new_value_float', 'float'),
+                    _format_value(vals, 'new_value_monetary', 'float'), _format_value(vals, 'new_value_char', 'char'),
+                    _format_value(vals, 'new_value_text', 'char'), _format_value(vals, 'new_value_datetime', 'timestamp'),
+                    )
+        sql_vals = [_prepare_insert_values(cmd[2]) for cmd in values if len(cmd) == 3 and cmd[0] == 0]
+        field_names = ['field', 'field_desc', 'field_type', 'mail_message_id',
+                       'old_value_integer', 'old_value_float', 'old_value_monetary', 'old_value_char', 'old_value_text', 'old_value_datetime',
+                       'new_value_integer', 'new_value_float', 'new_value_monetary', 'new_value_char', 'new_value_text', 'new_value_datetime']
+        query = """INSERT INTO mail_tracking_value ({}) VALUES {}""".format(
+            ", ".join('"%s"' % name for name in field_names),
+            ", ".join(["(%s)" % ", ".join("%s" for name in field_names)] * len(sql_vals))
+        )
+        # print('query', query)
+        params = [val for vals in sql_vals for val in vals]
+        # print('params', params)
+        self.env.cr.execute(query, params)
+
     @api.model
     def create_tracking_values(self, initial_value, new_value, col_name, col_info):
         tracked = True
