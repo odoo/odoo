@@ -505,7 +505,15 @@ class Channel(models.Model):
             partners_to_add = partners - channel.channel_partner_ids
             channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
             for partner in partners_to_add:
-                notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+                if partner.id != self.env.user.partner_id.id:
+                    notification = _('<div class="o_mail_notification">%(author)s invited %(new_partner)s to <a href="#" class="o_channel_redirect" data-oe-id="%(channel_id)s">#%(channel_name)s</a></div>') % {
+                        'author': self.env.user.display_name,
+                        'new_partner': partner.display_name,
+                        'channel_id': channel.id,
+                        'channel_name': channel.name,
+                    }
+                else:
+                    notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (channel.id, channel.name,)
                 self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
 
         # broadcast the channel header to the added partner

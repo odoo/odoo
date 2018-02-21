@@ -230,7 +230,7 @@ class HrContract(models.Model):
             - 12.0 * contract.internet \
             - 12.0 * (contract.mobile + contract.mobile_plus) \
             - 12.0 * contract.transport_employer_cost \
-            - (1.326 / 1.05 * 12.0) * contract.commission_on_target \
+            - contract.warrants_cost \
             - 220.0 * contract.meal_voucher_paid_by_employer
         gross = remaining_for_gross / (13.0 + 13.0 * 0.3507 + 0.92)
         return gross
