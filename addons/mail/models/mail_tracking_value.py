@@ -87,7 +87,7 @@ class MailTracking(models.Model):
         )
         # params = [val for vals in sql_vals for val in vals]
         # print('params', params)
-        self.env.cr.execute(query, insert_values)
+        # self.env.cr.execute(query, insert_values)
 
         # sql_vals = [_prepare_insert_values(cmd[2]) for cmd in values if len(cmd) == 3 and cmd[0] == 0]
 
