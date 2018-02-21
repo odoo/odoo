@@ -1322,5 +1322,9 @@ return {
     getCssSelectors: getCssSelectors,
     fontIcons: fontIcons,
     computeFonts: computeFonts,
+    click_event: click_event,
+    fontIconsDialog: fontIconsDialog,
+    ImageDialog: ImageDialog,
+    VideoDialog: VideoDialog,
 };
 });
