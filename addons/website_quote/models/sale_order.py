@@ -70,9 +70,16 @@ class SaleOrder(models.Model):
     require_payment = fields.Selection([
         (0, 'Online Signature'),
         (1, 'Online Payment')], default=_get_default_online_payment, string='Confirmation Mode',
+        compute='_compute_require_payment', store=True,
         help="Choose how you want to confirm an order to launch the delivery process. You can either "
              "request a digital signature or an upfront payment. With a digital signature, you can "
              "request the payment when issuing the invoice.")
+    @api.one
+    @api.depends('template_id')
+    def _compute_require_payment(self):
+        # Do not overwrite if the field is already set
+        if self.template_id and (self.require_payment is None or self.require_payment is False):
+            self.require_payment = self.template_id.require_payment
 
     @api.multi
     def copy(self, default=None):

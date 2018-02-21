@@ -478,6 +478,30 @@ var BasicModel = AbstractModel.extend({
         return _t("New");
     },
     /**
+     * Returns true if a record can be abandoned from a list datapoint.
+     *
+     * A record cannot be abandonned if it has been registered as "added"
+     * in the parent's savepoint, otherwise it can be abandonned.
+     *
+     * This is useful when discarding changes on this record, as it means that
+     * we must keep the record even if some fields are invalids (e.g. required
+     * field is empty).
+     *
+     * @param {string} id id for a local resource
+     * @returns {boolean}
+     */
+    canBeAbandoned: function (id) {
+        var data = this.localData[id];
+        var parent = this.localData[data.parentID];
+        var abandonable = true;
+        if (parent) {
+            abandonable = !_.some(parent._savePoint, function (entry) {
+                return entry.operation === 'ADD' && entry.id === id;
+            });
+        }
+        return abandonable;
+    },
+    /**
      * Returns true if a record is dirty. A record is considered dirty if it has
      * some unsaved changes, marked by the _isDirty property on the record or
      * one of its subrecords.
@@ -1428,25 +1452,23 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._applyOnChange(command[2], rec));
                     } else if (command[0] === 4) {
                         // LINK TO
-                        rec = self.localData[list._cache[command[1]]];
-                        if (rec) {
-                            // modifications done on a record are discarded if
-                            // the onchange uses a LINK TO
-                            self.discardChanges(rec.id);
-                        }
-                        // the dataPoint id will be set when the record will be
-                        // fetched (for now, this dataPoint may not exist yet)
-                        list._changes.push({
-                            operation: 'ADD',
-                            id: rec ? rec.id : null,
-                            resID: command[1],
-                        });
+                        linkRecord(list, command[1]);
                     } else if (command[0] === 5) {
                         // DELETE ALL
                         list._changes = [{operation: 'REMOVE_ALL'}];
+                    } else if (command[0] === 6) {
+                        list._changes = [{operation: 'REMOVE_ALL'}];
+                        _.each(command[2], function (resID) {
+                            linkRecord(list, resID);
+                        });
                     }
                 });
-                defs.push(self._readUngroupedList(list));
+                var def = self._readUngroupedList(list).then(function () {
+                    var x2ManysDef = self._fetchX2ManysBatched(list);
+                    var referencesDef = self._fetchReferencesBatched(list);
+                    return $.when(x2ManysDef, referencesDef);
+                });
+                defs.push(def);
             } else {
                 var newValue = self._parseServerValue(field, val);
                 if (newValue !== oldValue) {
@@ -1455,6 +1477,25 @@ var BasicModel = AbstractModel.extend({
             }
         });
         return $.when.apply($, defs);
+
+        // inner function that adds a record (based on its res_id) to a list
+        // dataPoint (used for onchanges that return commands 4 (LINK TO) or
+        // commands 6 (REPLACE WITH))
+        function linkRecord (list, resID) {
+            rec = self.localData[list._cache[resID]];
+            if (rec) {
+                // modifications done on a record are discarded if the onchange
+                // uses a LINK TO or a REPLACE WITH
+                self.discardChanges(rec.id);
+            }
+            // the dataPoint id will be set when the record will be fetched (for
+            // now, this dataPoint may not exist yet)
+            list._changes.push({
+                operation: 'ADD',
+                id: rec ? rec.id : null,
+                resID: resID,
+            });
+        }
     },
     /**
      * When an operation is applied to a x2many field, the field widgets
@@ -1951,7 +1992,9 @@ var BasicModel = AbstractModel.extend({
         _.each(list.data, function (dataPoint) {
             var record = self.localData[dataPoint];
             var value = record.data[fieldName];
-            if (value) {
+            // if the reference field has already been fetched, the value is a
+            // datapoint ID, and in this case there's nothing to do
+            if (value && !self.localData[value]) {
                 var model = value.split(',')[0];
                 var resID = value.split(',')[1];
                 if (!(model in toFetch)) {

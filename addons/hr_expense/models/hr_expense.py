@@ -524,7 +524,7 @@ class HrExpenseSheet(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.address_id = self.employee_id.address_home_id
+        self.address_id = self.employee_id.sudo().address_home_id
         self.department_id = self.employee_id.department_id
 
     @api.depends('expense_line_ids.total_amount_company')

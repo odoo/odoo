@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
-_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/]{3,}=*)([\'"])', re.I)
+_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])', re.I)
 
 
 class Message(models.Model):

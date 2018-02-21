@@ -4,6 +4,7 @@ odoo.define('web_editor.widget', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
+var utils = require('web.utils');
 var weContext = require("web_editor.context");
 
 var QWeb = core.qweb;
@@ -1208,6 +1209,7 @@ var LinkDialog = Dialog.extend({
         if (!$e.length) {
             $e = this.$('input.url-source:first');
         }
+        $e.closest('.form-group').removeClass('has-error');
         var val = $e.val();
         var label = this.$('#o_link_dialog_label_input').val() || val;
 
@@ -1228,8 +1230,7 @@ var LinkDialog = Dialog.extend({
         var size = this.$("select.link-style").val() || '';
         var classes = (this.data.className || "") + (style && style.length ? " btn " : "") + style + " " + size;
         var isNewWindow = this.$('input.window-new').prop('checked');
-
-        if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
+        if ($e.hasClass('email-address') && (_.str.startsWith(val, 'mailto:') || (val.indexOf("@") !== -1 && !_.str.startsWith(val, 'http') && !_.str.startsWith(val, 'www')))) {
             self.get_data_buy_mail(def, $e, isNewWindow, label, classes, test);
         } else {
             self.get_data_buy_url(def, $e, isNewWindow, label, classes, test);
@@ -1238,7 +1239,13 @@ var LinkDialog = Dialog.extend({
     },
     get_data_buy_mail: function (def, $e, isNewWindow, label, classes, test) {
         var val = $e.val();
-        def.resolve(val.indexOf("mailto:") === 0 ? val : 'mailto:' + val, isNewWindow, label, classes);
+        if (utils.is_email(val, true)) {
+            def.resolve(val.indexOf("mailto:") === 0 ? val : 'mailto:' + val, isNewWindow, label, classes);
+        } else {
+            $e.closest('.form-group').addClass('has-error');
+            $e.focus();
+            def.reject();
+        }
     },
     get_data_buy_url: function (def, $e, isNewWindow, label, classes, test) {
         def.resolve($e.val(), isNewWindow, label, classes);
@@ -1322,5 +1329,9 @@ return {
     getCssSelectors: getCssSelectors,
     fontIcons: fontIcons,
     computeFonts: computeFonts,
+    click_event: click_event,
+    fontIconsDialog: fontIconsDialog,
+    ImageDialog: ImageDialog,
+    VideoDialog: VideoDialog,
 };
 });

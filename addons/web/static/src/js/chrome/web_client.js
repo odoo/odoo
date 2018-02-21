@@ -59,7 +59,7 @@ return AbstractWebClient.extend({
     update_logo: function(reload) {
         var company = session.company_id;
         var img = session.url('/web/binary/company_logo' + '?db=' + session.db + (company ? '&company=' + company : ''));
-        this.$('.o_sub_menu_logo img').attr('src', '').attr('src', img + (reload ? "#" + Date.now() : ''));
+        this.$('.o_sub_menu_logo img').attr('src', '').attr('src', img + (reload ? "&t=" + Date.now() : ''));
         this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', session.is_superuser);
     },
     logo_edit: function(ev) {
@@ -83,13 +83,8 @@ return AbstractWebClient.extend({
                             action_buttons: true,
                             headless: true,
                         };
-                        self.action_manager.do_action(result).then(function () {
-                            var form = self.action_manager.dialog_widget.views.form.controller;
-                            form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
-                            form.on('record_saved', self, function() {
-                                self.action_manager.dialog_stop();
-                                self.update_logo();
-                            });
+                        self.action_manager.do_action(result, {
+                            on_close: self.update_logo.bind(self, true),
                         });
                     });
             });
