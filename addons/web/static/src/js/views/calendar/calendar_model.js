@@ -3,6 +3,7 @@ odoo.define('web.CalendarModel', function (require) {
 
 var AbstractModel = require('web.AbstractModel');
 var Context = require('web.Context');
+var config = require('web.config');
 var core = require('web.core');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
@@ -382,7 +383,8 @@ return AbstractModel.extend({
             allDayText: _t("All day"),
             views: {
                 week: {
-                    columnFormat: 'ddd ' + time.getLangDateFormat(),
+                    // Hard coded date format to avoid columns overlapping in mobile devices else it should as per the user prefered format.
+                    columnFormat: config.device.isMobile ? 'ddd \n D' : 'ddd ' + time.getLangDateFormat(),
                     titleFormat: time.getLangTimeFormat(),
                 }
             },

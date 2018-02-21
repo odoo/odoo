@@ -14,6 +14,7 @@ var QuickCreate = require('web.CalendarQuickCreate');
 var dialogs = require('web.view_dialogs');
 var Dialog = require('web.Dialog');
 var core = require('web.core');
+var config = require('web.config');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -66,7 +67,7 @@ var CalendarController = AbstractController.extend({
      */
     renderButtons: function ($node) {
         var self = this;
-        this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
+        this.$buttons = $(QWeb.render("CalendarView.buttons", {'isMobile': config.device.isMobile}));
         this.$buttons.on('click', 'button.o_calendar_button_new', function () {
             self.trigger_up('switch_view', {view_type: 'form'});
         });
@@ -212,7 +213,7 @@ var CalendarController = AbstractController.extend({
             this.quick = null;
         }
 
-        if(!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
+        if (!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
             this.quick = new QuickCreate(this, true, options, data, event.data);
             this.quick.open();
             this.quick.opened(function () {
