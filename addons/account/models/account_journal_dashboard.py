@@ -310,6 +310,9 @@ class account_journal(models.Model):
             if self.company_id.account_opening_date:
                 domain.append(('date', '>=', self.company_id.account_opening_date))
             bank_stmt = self.env['account.bank.statement'].search(domain)
+            new = self.env['account.payment'].search([('payment_method_id', 'in', self.inbound_payment_method_ids.ids), ('payment_date', '>=', self.company_id.account_opening_date)])
+            # receive_id = [lambda self: self.inbound_payment_method_ids.payment_type in ('inbound', 'Inbound')]
+            # updated_bank_stmt = self.env['account.bank.statement'].search(domain)
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',
