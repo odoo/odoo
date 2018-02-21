@@ -362,7 +362,6 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
         pick = so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
@@ -373,7 +372,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         # deliver remaining products, check the so's invoice_status and delivered quantities
         self.assertEqual(len(so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
         pick_2 = so.picking_ids[0]
-        pick_2.force_assign()
         pick_2.move_lines.write({'quantity_done': 4})
         pick_2.button_validate()
 

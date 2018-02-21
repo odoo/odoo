@@ -153,7 +153,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.force_assign()
         picking_out.move_lines.quantity_done = 1
         picking_out.action_done()
 
@@ -196,7 +195,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.force_assign()
         picking_out.move_lines.quantity_done = 1
         picking_out.action_done()
 
