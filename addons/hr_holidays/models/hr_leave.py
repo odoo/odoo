@@ -207,7 +207,7 @@ class HolidaysRequest(models.Model):
             ]
             nholidays = self.search_count(domain)
             if nholidays:
-                raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
+                raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
     @api.constrains('state', 'number_of_days_temp', 'holiday_status_id')
     def _check_holidays(self):
@@ -218,7 +218,7 @@ class HolidaysRequest(models.Model):
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
               float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 raise ValidationError(_('The number of remaining leaves is not sufficient for this leave type.\n'
-                                        'Please verify also the leaves waiting for validation.'))
+                                        'Please also check the leaves waiting for validation.'))
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
@@ -373,9 +373,9 @@ class HolidaysRequest(models.Model):
     def action_draft(self):
         for holiday in self:
             if not holiday.can_reset:
-                raise UserError(_('Only an HR Manager or the concerned employee can reset to draft.'))
+                raise UserError(_('Only an HR Manager or the concerned employee can reset the leave request to draft.'))
             if holiday.state not in ['confirm', 'refuse']:
-                raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+                raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to be reset to draft.'))
             holiday.write({
                 'state': 'draft',
                 'first_approver_id': False,
@@ -414,7 +414,7 @@ class HolidaysRequest(models.Model):
               and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('You must be %s manager to approve this leave') % (holiday.employee_id.name))
             elif validation_type == 'manager' and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                raise UserError(_('You must be a Human Resource Manager to approve this Leave'))
+                raise UserError(_('You must be a Human Resource Manager to approve this leave.'))
 
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()

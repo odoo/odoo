@@ -485,7 +485,7 @@ class account_payment(models.Model):
     @api.multi
     def unlink(self):
         if any(bool(rec.move_line_ids) for rec in self):
-            raise UserError(_("You can not delete a payment that is already posted"))
+            raise UserError(_("You cannot delete a payment that is already posted."))
         if any(rec.move_name for rec in self):
             raise UserError(_('It is not allowed to delete a payment that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(account_payment, self).unlink()
@@ -638,9 +638,9 @@ class account_payment(models.Model):
         """
         journal = journal or self.journal_id
         if not journal.sequence_id:
-            raise UserError(_('Configuration Error !\nThe journal %s does not have a sequence, please specify one.') % journal.name)
+            raise UserError(_('The journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
-            raise UserError(_('Configuration Error !\nThe sequence of journal %s is deactivated.') % journal.name)
+            raise UserError(_('The sequence of journal %s is deactivated.') % journal.name)
         name = self.move_name or journal.with_context(ir_sequence_date=self.payment_date).sequence_id.next_by_id()
         return {
             'name': name,

@@ -322,7 +322,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             for inv in order.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
-                    raise UserError(_("Unable to cancel this purchase order. You must first cancel related vendor bills."))
+                    raise UserError(_("Unable to cancel this purchase order. You must first cancel the related vendor bills."))
         self.write({'state': 'cancel'})
 
     @api.multi

@@ -334,7 +334,7 @@ var ListRenderer = BasicRenderer.extend({
                 var self = this;
                 $button.on("click", function (e) {
                     e.stopPropagation();
-                    self.do_warn(_t("Warning"), _t('Please click on the "save" button first'));
+                    self.do_warn(_t("Warning"), _t('Please click on the "save" button first.'));
                 });
             } else {
                 $button.prop('disabled', true);

@@ -160,7 +160,7 @@ class AccountBankStatementImport(models.TransientModel):
             if currency and currency != journal_currency:
                 statement_cur_code = not currency and company_currency.name or currency.name
                 journal_cur_code = not journal_currency and company_currency.name or journal_currency.name
-                raise UserError(_('The currency of the bank statement (%s) is not the same as the currency of the journal (%s) !') % (statement_cur_code, journal_cur_code))
+                raise UserError(_('The currency of the bank statement (%s) is not the same as the currency of the journal (%s).') % (statement_cur_code, journal_cur_code))
 
         # If we couldn't find / can't create a journal, everything is lost
         if not journal and not account_number:
@@ -221,7 +221,7 @@ class AccountBankStatementImport(models.TransientModel):
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
                 statement_ids.append(BankStatement.create(st_vals).id)
         if len(statement_ids) == 0:
-            raise UserError(_('You have already imported that file.'))
+            raise UserError(_('You already have imported that file.'))
 
         # Prepare import feedback
         notifications = []

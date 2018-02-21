@@ -133,7 +133,7 @@ class HrExpense(models.Model):
     @api.onchange('product_uom_id')
     def _onchange_product_uom_id(self):
         if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-            raise UserError(_('Selected Unit of Measure does not belong to the same category as the product Unit of Measure'))
+            raise UserError(_('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.'))
 
     # ----------------------------------------
     # ORM Overrides
@@ -180,7 +180,7 @@ class HrExpense(models.Model):
         if any(expense.state != 'draft' for expense in self):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
-            raise UserError(_("You cannot report expenses for different employees in the same report!"))
+            raise UserError(_("You cannot report expenses for different employees in the same report."))
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
@@ -553,14 +553,14 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             expense_lines = sheet.mapped('expense_line_ids')
             if expense_lines and any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
-                raise ValidationError(_("Expenses must have been paid by the same entity (Company or employee)"))
+                raise ValidationError(_("Expenses must be paid by the same entity (Company or employee)."))
 
     @api.constrains('expense_line_ids', 'employee_id')
     def _check_employee(self):
         for sheet in self:
             employee_ids = sheet.expense_line_ids.mapped('employee_id')
             if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != sheet.employee_id):
-                raise ValidationError(_('You cannot add expense lines of another employee.'))
+                raise ValidationError(_('You cannot add expenses of another employee.'))
 
     @api.model
     def create(self, vals):

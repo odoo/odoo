@@ -90,7 +90,7 @@ class ProjectTask(models.Model):
         for task in self:
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
-                    raise ValidationError(_("The Sales order line should be one selling a service, and no coming from expense."))
+                    raise ValidationError(_('You cannot link the order item %s - %s to this task because it is a re-invoiced expense.' % (task.sale_line_id.order_id.id, task.sale_line_id.product_id.name))) 
 
     @api.model
     def create(self, values):
@@ -120,7 +120,7 @@ class ProjectTask(models.Model):
     @api.multi
     def unlink(self):
         if any(task.sale_line_id for task in self):
-            raise ValidationError(_('You cannot delete a task related to a Sales Order. You can only archive this task.'))
+            raise ValidationError(_('You cannot delete a task related to a sales order. You can only archive it.'))
         return super(ProjectTask, self).unlink()
 
     @api.multi

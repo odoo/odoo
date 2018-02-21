@@ -219,22 +219,22 @@ class PosConfig(models.Model):
     @api.constrains('company_id', 'stock_location_id')
     def _check_company_location(self):
         if self.stock_location_id.company_id and self.stock_location_id.company_id.id != self.company_id.id:
-            raise ValidationError(_("The company of the stock location is different than the one of point of sale"))
+            raise ValidationError(_("The stock location and the point of sale must belong to the same company."))
 
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
-            raise ValidationError(_("The company of the sales journal is different than the one of point of sale"))
+            raise ValidationError(_("The sales journal and the point of sale must belong to the same company."))
 
     @api.constrains('company_id', 'invoice_journal_id')
     def _check_company_invoice_journal(self):
         if self.invoice_journal_id and self.invoice_journal_id.company_id.id != self.company_id.id:
-            raise ValidationError(_("The invoice journal and the point of sale must belong to the same company"))
+            raise ValidationError(_("The invoice journal and the point of sale must belong to the same company."))
 
     @api.constrains('company_id', 'journal_ids')
     def _check_company_payment(self):
         if self.env['account.journal'].search_count([('id', 'in', self.journal_ids.ids), ('company_id', '!=', self.company_id.id)]):
-            raise ValidationError(_("The company of a payment method is different than the one of point of sale"))
+            raise ValidationError(_("The method payments and the point of sale must belong to the same company."))
 
     @api.constrains('pricelist_id', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'journal_ids')
     def _check_currencies(self):

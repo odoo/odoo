@@ -91,7 +91,7 @@ class MrpProductProduce(models.TransientModel):
         # Nothing to do for lots since values are created using default data (stock.move.lots)
         quantity = self.product_qty
         if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
-            raise UserError(_("The production order for '%s' has no quantity specified") % self.product_id.display_name)
+            raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
         for move in self.production_id.move_raw_ids:
             # TODO currently not possible to guess if the user updated quantity by hand or automatically by the produce wizard.
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel') and move.unit_factor:
@@ -122,7 +122,7 @@ class MrpProductProduce(models.TransientModel):
         produce_move = self.production_id.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel'))
         if produce_move and produce_move.product_id.tracking != 'none':
             if not self.lot_id:
-                raise UserError(_('You need to provide a lot for the finished product'))
+                raise UserError(_('You need to provide a lot for the finished product.'))
             existing_move_line = produce_move.move_line_ids.filtered(lambda x: x.lot_id == self.lot_id)
             if existing_move_line:
                 if self.product_id.tracking == 'serial':

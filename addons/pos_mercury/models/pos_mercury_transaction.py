@@ -18,7 +18,7 @@ class MercuryTransaction(models.Model):
     def _get_pos_session(self):
         pos_session = self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
         if not pos_session:
-            raise UserError(_("No opened point of sale session for user %s found") % self.env.user.name)
+            raise UserError(_("No opened point of sale session for user %s found.") % self.env.user.name)
 
         pos_session.login()
 

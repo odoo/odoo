@@ -169,7 +169,7 @@ class Repair(models.Model):
         if not self.product_id or not self.product_uom:
             return res
         if self.product_uom.category_id != self.product_id.uom_id.category_id:
-            res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
+            res['warning'] = {'title': _('Warning'), 'message': _('The product unit of measure you chose has a different category than the product unit of measure.')}
             self.product_uom = self.product_id.uom_id.id
         return res
 
@@ -227,7 +227,7 @@ class Repair(models.Model):
         @return: True
         """
         if self.filtered(lambda repair: repair.state != 'draft'):
-            raise UserError(_("Can only confirm draft repairs."))
+            raise UserError(_("Only draft repairs can be confirmed."))
         before_repair = self.filtered(lambda repair: repair.invoice_method == 'b4repair')
         before_repair.write({'state': '2binvoiced'})
         to_confirm = self - before_repair
@@ -241,7 +241,7 @@ class Repair(models.Model):
         if self.filtered(lambda repair: repair.state == 'done'):
             raise UserError(_("Cannot cancel completed repairs."))
         if any(repair.invoiced for repair in self):
-            raise UserError(_('Repair order is already invoiced.'))
+            raise UserError(_('The repair order is already invoiced.'))
         self.mapped('operations').write({'state': 'cancel'})
         return self.write({'state': 'cancel'})
 
@@ -290,7 +290,7 @@ class Repair(models.Model):
         Invoice = self.env['account.invoice']
         for repair in self.filtered(lambda repair: repair.state not in ('draft', 'cancel') and not repair.invoice_id):
             if not repair.partner_id.id and not repair.partner_invoice_id.id:
-                raise UserError(_('You have to select a Partner Invoice Address in the repair form!'))
+                raise UserError(_('You have to select an invoice address in the repair form.'))
             comment = repair.quotation_notes
             if repair.invoice_method != 'none':
                 if group and repair.partner_invoice_id.id in invoices_group:
@@ -349,7 +349,7 @@ class Repair(models.Model):
                     else:
                         name = fee.name
                     if not fee.product_id:
-                        raise UserError(_('No product defined on Fees!'))
+                        raise UserError(_('No product defined on fees.'))
 
                     if fee.product_id.property_account_income_id:
                         account_id = fee.product_id.property_account_income_id.id
@@ -581,14 +581,14 @@ class RepairLine(models.Model):
             warning = False
             if not pricelist:
                 warning = {
-                    'title': _('No Pricelist!'),
+                    'title': _('No pricelist found.'),
                     'message':
                         _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
             else:
                 price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
                 if price is False:
                     warning = {
-                        'title': _('No valid pricelist line found !'),
+                        'title': _('No valid pricelist line found.'),
                         'message':
                             _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
                 else:
@@ -639,14 +639,14 @@ class RepairFee(models.Model):
         warning = False
         if not pricelist:
             warning = {
-                'title': _('No Pricelist!'),
+                'title': _('No pricelist found.'),
                 'message':
                     _('You have to select a pricelist in the Repair form !\n Please set one before choosing a product.')}
         else:
             price = pricelist.get_product_price(self.product_id, self.product_uom_qty, partner)
             if price is False:
                 warning = {
-                    'title': _('No valid pricelist line found !'),
+                    'title': _('No valid pricelist line found.'),
                     'message':
                         _("Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")}
             else:

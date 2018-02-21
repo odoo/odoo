@@ -148,7 +148,7 @@ class PosSession(models.Model):
                 ('user_id', '=', self.user_id.id),
                 ('rescue', '=', False)
             ]) > 1:
-            raise ValidationError(_("You cannot create two active sessions with the same responsible!"))
+            raise ValidationError(_("You cannot create two active sessions with the same responsible."))
 
     @api.constrains('config_id')
     def _check_pos_config(self):
@@ -280,7 +280,7 @@ class PosSession(models.Model):
                     if not self.user_has_groups("point_of_sale.group_pos_manager"):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
-                    raise UserError(_("The type of the journal for your payment method should be bank or cash "))
+                    raise UserError(_("The journal type for your payment method should be bank or cash."))
                 st.with_context(ctx).sudo().button_confirm_bank()
         self.with_context(ctx)._confirm_orders()
         self.write({'state': 'closed'})

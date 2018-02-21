@@ -24,7 +24,7 @@ class HolidaysSummaryDept(models.TransientModel):
         self.ensure_one()
         [data] = self.read()
         if not data.get('depts'):
-            raise UserError(_('You have to select at least one Department. And try again.'))
+            raise UserError(_('You have to select at least one department.'))
         departments = self.env['hr.department'].browse(data['depts'])
         datas = {
             'ids': [],

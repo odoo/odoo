@@ -177,7 +177,7 @@ class IrModel(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             for model in self:
                 if model.state != 'manual':
-                    raise UserError(_("Model '%s' contains module data and cannot be removed!") % model.name)
+                    raise UserError(_("Model '%s' contains module data and cannot be removed.") % model.name)
                 # prevent screwing up fields that depend on these models' fields
                 model.field_id._prepare_update()
 

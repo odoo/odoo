@@ -480,7 +480,7 @@ class AccountInvoice(models.Model):
                     if field not in vals and invoice[field]:
                         vals[field] = invoice._fields[field].convert_to_write(invoice[field], invoice)
         if not vals.get('account_id',False):
-            raise UserError(_('Configuration error!\nCould not find any account to create the invoice, are you sure you have a chart of account installed?'))
+            raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
 
         invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
 
@@ -1574,7 +1574,7 @@ class AccountInvoiceLine(models.Model):
         if not part:
             warning = {
                     'title': _('Warning!'),
-                    'message': _('You must first select a partner!'),
+                    'message': _('You must first select a partner.'),
                 }
             return {'warning': warning}
 
@@ -1640,7 +1640,7 @@ class AccountInvoiceLine(models.Model):
             if self.product_id.uom_id.category_id.id != self.uom_id.category_id.id:
                 warning = {
                     'title': _('Warning!'),
-                    'message': _('The selected unit of measure is not compatible with the unit of measure of the product.'),
+                    'message': _('The selected unit of measure has to be in the same category as the product unit of measure.'),
                 }
                 self.uom_id = self.product_id.uom_id.id
         if warning:
@@ -1746,10 +1746,10 @@ class AccountPaymentTerm(models.Model):
     def _check_lines(self):
         payment_term_lines = self.line_ids.sorted()
         if payment_term_lines and payment_term_lines[-1].value != 'balance':
-            raise ValidationError(_('A Payment Terms should have its last line of type Balance.'))
+            raise ValidationError(_('The last line of a Payment Term should have the Balance type.'))
         lines = self.line_ids.filtered(lambda r: r.value == 'balance')
         if len(lines) > 1:
-            raise ValidationError(_('A Payment Terms should have only one line of type Balance.'))
+            raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
 
     @api.one
     def compute(self, value, date_ref=False):
@@ -1829,7 +1829,7 @@ class AccountPaymentTermLine(models.Model):
     @api.constrains('value', 'value_amount')
     def _check_percent(self):
         if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
-            raise ValidationError(_('Percentages for Payment Terms Line must be between 0 and 100.'))
+            raise ValidationError(_('Percentages on the Payment Terms lines must be between 0 and 100.'))
 
     @api.one
     @api.constrains('days')

@@ -21,7 +21,7 @@ class grant_badge_wizard(models.TransientModel):
         uid = self.env.uid
         for wiz in self:
             if uid == wiz.user_id.id:
-                raise exceptions.UserError(_('You can not grant a badge to yourself'))
+                raise exceptions.UserError(_('You can not grant a badge to yourself.'))
 
             #create the badge
             BadgeUser.create({

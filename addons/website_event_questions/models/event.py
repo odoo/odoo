@@ -75,7 +75,7 @@ class EventQuestion(models.Model):
     @api.constrains('event_type_id', 'event_id')
     def _constrains_event(self):
         if any(question.event_type_id and question.event_id for question in self):
-            raise UserError(_('Question should belong to either event category or event but not both'))
+            raise UserError(_('Question cannot belong to both the event category and itself.'))
 
     @api.model
     def create(self, vals):

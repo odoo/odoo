@@ -418,13 +418,13 @@ class PricelistItem(models.Model):
     @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
     def _check_recursion(self):
         if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
-            raise ValidationError(_('Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!'))
+            raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
         return True
 
     @api.constrains('price_min_margin', 'price_max_margin')
     def _check_margin(self):
         if any(item.price_min_margin > item.price_max_margin for item in self):
-            raise ValidationError(_('Error! The minimum margin should be lower than the maximum margin.'))
+            raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
         return True
 
     @api.one

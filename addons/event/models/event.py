@@ -261,7 +261,7 @@ class EventEvent(models.Model):
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):
         if self.date_end < self.date_begin:
-            raise ValidationError(_('Closing Date cannot be set before Beginning Date.'))
+            raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
 
     @api.multi
     @api.depends('name', 'date_begin', 'date_end')

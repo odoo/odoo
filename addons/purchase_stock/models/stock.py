@@ -119,7 +119,7 @@ class StockWarehouse(models.Model):
             buy_route_id = self.env['stock.location.route'].search([('name', 'like', _('Buy'))])
             buy_route_id = buy_route_id[0].id if buy_route_id else False
         if not buy_route_id:
-            raise UserError(_("Can't find any generic Buy route."))
+            raise UserError(_("Can't find any Buy route. Please create a route with the 'Buy' action for your receipts operation types."))
 
         return {
             'name': self._format_routename(_(' Buy')),
