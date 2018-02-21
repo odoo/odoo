@@ -906,7 +906,9 @@ var BasicComposer = Widget.extend({
      * @private
      */
     _onEmojiButtonFocusout: function () {
-        this._hideEmojisTimeout = setTimeout(this._hideEmojis.bind(this), 0);
+        if (this.$emojisContainer) {
+            this._hideEmojisTimeout = setTimeout(this._hideEmojis.bind(this), 0);
+        }
     },
     /**
      * Called when an emoji is focused -> @see _onEmojiButtonFocusout

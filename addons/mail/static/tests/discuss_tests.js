@@ -172,6 +172,7 @@ QUnit.test('@ mention in channel', function (assert) {
                 assert.strictEqual($mention3.find('.o_mention_name').text(), "DemoUser",
                     "third partner mention should display the correct partner name");
 
+                // check DOWN event
                 $input.trigger($.Event('keyup', {which: $.ui.keyCode.DOWN}));
                 assert.notOk($mention1.hasClass('active'),
                     "first partner mention should not be active");
@@ -180,6 +181,7 @@ QUnit.test('@ mention in channel', function (assert) {
                 assert.notOk($mention3.hasClass('active'),
                     "third partner mention should not be active");
 
+                // check UP event
                 $input.trigger($.Event('keyup', {which: $.ui.keyCode.UP}));
                 assert.ok($mention1.hasClass('active'),
                     "first partner mention should be active");
@@ -188,6 +190,7 @@ QUnit.test('@ mention in channel', function (assert) {
                 assert.notOk($mention3.hasClass('active'),
                     "third partner mention should not be active");
 
+                // check TAB event (full cycle, hence 3 TABs)
                 $input.trigger($.Event('keyup', {which: $.ui.keyCode.TAB}));
                 assert.notOk($mention1.hasClass('active'),
                     "first partner mention should not be active");
@@ -212,7 +215,7 @@ QUnit.test('@ mention in channel', function (assert) {
                 assert.notOk($mention3.hasClass('active'),
                     "third partner mention should not be active");
 
-                // $mentionPropositions.find('active').click();
+                // equivalent to $mentionPropositions.find('active').click();
                 $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
                 assert.strictEqual(discuss.$('.o_mention_proposition').length, 0,
                     "should not have any partner mention proposition after ENTER");
@@ -240,6 +243,54 @@ QUnit.test('@ mention in channel', function (assert) {
                         done();
                 });
         });
+    });
+});
+
+QUnit.test('no crash focusout emoji button', function (assert) {
+    assert.expect(3);
+    var done = assert.async();
+
+    // Remove channel throttle to speed up the test
+    var channelThrottle = ChatManager.prototype.CHANNEL_SEEN_THROTTLE;
+    ChatManager.prototype.CHANNEL_SEEN_THROTTLE = 1;
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_chat_sidebar')
+            .find('.o_mail_chat_channel_item[data-channel-id=1]');
+        assert.strictEqual($general.length, 1,
+            "should have the channel item with id 1");
+        assert.strictEqual($general.attr('title'), 'general',
+            "should have the title 'general'");
+
+        // click on general
+        $general.click();
+        discuss.$('.o_composer_button_emoji').focus();
+        try {
+            discuss.$('.o_composer_button_emoji').focusout();
+            assert.ok(true, "should not crash on focusout of emoji button");
+        } finally {
+            // Restore throttle
+            ChatManager.prototype.CHANNEL_SEEN_THROTTLE = channelThrottle;
+            discuss.destroy();
+            done();
+        }
     });
 });
 
