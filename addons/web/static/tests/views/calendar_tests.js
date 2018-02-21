@@ -203,6 +203,52 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('breadcrumbs are updated with the displayed period', function (assert) {
+        assert.expect(3);
+
+        var archs = {
+            'event,1,calendar': '<calendar date_start="start" date_stop="stop" all_day="allday">' +
+                '<field name="name"/>' +
+            '</calendar>',
+            'event,false,search': '<search></search>',
+        };
+
+        var actions = [{
+            id: 1,
+            flags: {
+                initialDate: initialDate,
+            },
+            name: 'Meetings Test',
+            res_model: 'event',
+            type: 'ir.actions.act_window',
+            views: [[1, 'calendar']],
+        }];
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+
+        // displays month mode by default
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (Week 51)', "should display the current week");
+
+        // switch to day mode
+        actionManager.controlPanel.$('.o_calendar_button_day').click();
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (December 12, 2016)', "should display the current day");
+
+        // switch to month mode
+        actionManager.controlPanel.$('.o_calendar_button_month').click();
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (December 2016)', "should display the current month");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('create and change events', function (assert) {
         assert.expect(26);
 
@@ -1771,7 +1817,6 @@ QUnit.module('Views', {
         assert.ok(!$groupBy.is(':visible'), 'groupby menu should not be visible');
         actionManager.destroy();
     });
-
 });
 
 });
