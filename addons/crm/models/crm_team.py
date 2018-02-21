@@ -118,7 +118,7 @@ class Team(models.Model):
     @api.constrains('dashboard_graph_model', 'use_opportunities')
     def _check_graph_model(self):
         if not self.use_opportunities and self.dashboard_graph_model == 'crm.opportunity.report':
-            raise ValidationError(_("Dashboard graph content cannot be Pipeline if the sales channel doesn't use it. (Pipeline is unchecked.)"))
+            raise ValidationError(_("You have to enable the Pipeline on your sales channel to be able to set it as a content for the graph"))
 
     @api.multi
     def write(self, vals):

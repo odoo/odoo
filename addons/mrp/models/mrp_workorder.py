@@ -297,7 +297,7 @@ class MrpWorkorder(models.Model):
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
         if (self.production_id.product_id.tracking != 'none') and not self.final_lot_id and self.move_raw_ids:
-            raise UserError(_('You should provide a lot/serial number for the final product'))
+            raise UserError(_('You should provide a lot/serial number for the final product.'))
 
         # Update quantities done on each raw material line
         # For each untracked component without any 'temporary' move lines,
@@ -320,7 +320,7 @@ class MrpWorkorder(models.Model):
                 move_line.sudo().unlink()
                 continue
             if move_line.product_id.tracking != 'none' and not move_line.lot_id:
-                raise UserError(_('You should provide a lot/serial number for a component'))
+                raise UserError(_('You should provide a lot/serial number for a component.'))
             # Search other move_line where it could be added:
             lots = self.move_line_ids.filtered(lambda x: (x.lot_id.id == move_line.lot_id.id) and (not x.lot_produced_id) and (not x.done_move) and (x.product_id == move_line.product_id))
             if lots:
@@ -487,7 +487,7 @@ class MrpWorkorder(models.Model):
     @api.multi
     def button_done(self):
         if any([x.state in ('done', 'cancel') for x in self]):
-            raise UserError(_('A Manufacturing Order is already done or cancelled!'))
+            raise UserError(_('A Manufacturing Order is already done or cancelled.'))
         self.end_all()
         return self.write({'state': 'done',
                     'date_finished': datetime.now()})

@@ -34,7 +34,7 @@ class ProductionLot(models.Model):
         if active_picking_id:
             picking_id = self.env['stock.picking'].browse(active_picking_id)
             if picking_id and not picking_id.picking_type_id.use_create_lots:
-                raise UserError(_("You are not allowed to create a lot for this picking type"))
+                raise UserError(_("You are not allowed to create a lot for this operation type."))
         return super(ProductionLot, self).create(vals)
 
     @api.multi

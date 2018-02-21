@@ -453,7 +453,7 @@ class AccountVoucherLine(models.Model):
         company = self.env['res.company'].browse(company_id)
         currency = self.env['res.currency'].browse(currency_id)
         if not partner_id:
-            raise UserError(_("You must first select a partner!"))
+            raise UserError(_("You must first select a partner."))
         part = self.env['res.partner'].browse(partner_id)
         if part.lang:
             self = self.with_context(lang=part.lang)

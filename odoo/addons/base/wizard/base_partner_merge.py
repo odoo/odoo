@@ -361,7 +361,7 @@ class MergePartnerAutomatic(models.TransientModel):
                     groups.append(field_name[len(group_by_prefix):])
 
         if not groups:
-            raise UserError(_("You have to specify a filter for your selection"))
+            raise UserError(_("You have to specify a filter for your selection."))
 
         return groups
 

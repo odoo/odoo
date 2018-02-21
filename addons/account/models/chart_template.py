@@ -865,7 +865,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             # we tolerate switching from accounting package (localization module) as long as there isn't yet any accounting
             # entries created for the company.
             if self.existing_accounting(self.company_id):
-                raise UserError(_('Could not install new chart of account as there are already accounting entries existing'))
+                raise UserError(_('Could not install new chart of account as there are already accounting entries existing.'))
 
             # delete accounting properties
             prop_values = ['account.account,%s' % (account_id,) for account_id in existing_accounts.ids]

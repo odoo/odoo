@@ -98,7 +98,7 @@ class ProductAttributeLine(models.Model):
     @api.constrains('value_ids', 'attribute_id')
     def _check_valid_attribute(self):
         if any(line.value_ids > line.attribute_id.value_ids for line in self):
-            raise ValidationError(_('Error ! You cannot use this attribute with the following value.'))
+            raise ValidationError(_('You cannot use this attribute with the following value.'))
         return True
 
     @api.model

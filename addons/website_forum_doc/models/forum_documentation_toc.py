@@ -33,7 +33,7 @@ class Documentation(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error ! You cannot create recursive categories.'))
+            raise ValidationError(_('You cannot create recursive categories.'))
 
 
 class DocumentationStage(models.Model):

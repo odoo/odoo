@@ -48,7 +48,7 @@ class ProductTemplate(models.Model):
             if dict(self._cr.fetchall()) != uoms:
                 products = self.env['product.product'].search([('product_tmpl_id', 'in', self.ids)])
                 if self.env['account.move.line'].search_count([('product_id', 'in', products.ids)]):
-                    raise UserError(_('You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you may deactivate this product.'))
+                    raise UserError(_('You can not change the unit of measure of a product that has been already used in an account journal item. If you need to change the unit of measure, you should archive this product and create a new one.'))
         return res
 
     @api.multi

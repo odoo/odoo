@@ -149,7 +149,7 @@ class StockMoveLine(models.Model):
     @api.constrains('qty_done')
     def _check_positive_qty_done(self):
         if any([ml.qty_done < 0 for ml in self]):
-            raise ValidationError(_('You can not enter negative quantities!'))
+            raise ValidationError(_('You can not enter negative quantities.'))
 
     def _get_similar_move_lines(self):
         self.ensure_one()

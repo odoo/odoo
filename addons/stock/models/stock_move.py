@@ -336,7 +336,7 @@ class StockMove(models.Model):
     def _check_uom(self):
         moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id != move.product_uom.category_id)
         if moves_error:
-            user_warning = _('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
+            user_warning = _('You cannot perform the move because the unit of measure has a different category as the product unit of measure.')
             for move in moves_error:
                 user_warning += _('\n\n%s --> Product UoM is %s (%s) - Move UoM is %s (%s)') % (move.product_id.display_name, move.product_id.uom_id.name, move.product_id.uom_id.category_id.name, move.product_uom.name, move.product_uom.category_id.name)
             user_warning += _('\n\nBlocking: %s') % ' ,'.join(moves_error.mapped('name'))
@@ -488,7 +488,7 @@ class StockMove(models.Model):
 
     def _do_unreserve(self):
         if any(move.state in ('done', 'cancel') for move in self):
-            raise UserError(_('Cannot unreserve a done move'))
+            raise UserError(_('You cannot unreserve a stock move that has been set to \'Done\'.'))
         self.mapped('move_line_ids').unlink()
         return True
 
@@ -663,7 +663,7 @@ class StockMove(models.Model):
                 'warning': {
                     'title': "Unsafe unit of measure",
                     'message': _("You are using a unit of measure smaller than the one you are using in "
-                                 "order to stock your product. This can lead to rounding problem on reserved quantity! "
+                                 "order to stock your product. This can lead to rounding problem on reserved quantity. "
                                  "You should use the smaller unit of measure possible in order to valuate your stock or "
                                  "change its rounding precision to a smaller value (example: 0.00001)."),
                 }
@@ -1137,7 +1137,7 @@ class StockMove(models.Model):
         :returns: id of the backorder move created """
         self = self.with_prefetch() # This makes the ORM only look for one record and not 300 at a time, which improves performance
         if self.state in ('done', 'cancel'):
-            raise UserError(_('You cannot split a move done'))
+            raise UserError(_('You cannot split a stock move that has been set to \'Done\'.'))
         elif self.state == 'draft':
             # we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
             # case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.

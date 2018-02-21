@@ -684,7 +684,7 @@ class SurveyLabel(models.Model):
     def _check_question_not_empty(self):
         """Ensure that field question_id XOR field question_id_2 is not null"""
         if not bool(self.question_id) != bool(self.question_id_2):
-            raise ValidationError(_("A label must be attached to one and only one question"))
+            raise ValidationError(_("A label must be attached to only one question."))
 
 
 class SurveyUserInput(models.Model):
@@ -803,7 +803,7 @@ class SurveyUserInputLine(models.Model):
     def _answered_or_skipped(self):
         for uil in self:
             if not uil.skipped != bool(uil.answer_type):
-                raise ValidationError(_('A question cannot be unanswered and skipped'))
+                raise ValidationError(_('This question cannot be unanswered or skipped.'))
 
     @api.constrains('answer_type')
     def _check_answer_type(self):

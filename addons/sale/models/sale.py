@@ -186,7 +186,7 @@ class SaleOrder(models.Model):
     def unlink(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
-                raise UserError(_('You can not delete a sent quotation or a sales order! Try to cancel it before.'))
+                raise UserError(_('You can not delete a sent quotation or a confirmed sales order. You must first cancel it.'))
         return super(SaleOrder, self).unlink()
 
     @api.multi
@@ -454,11 +454,11 @@ class SaleOrder(models.Model):
                     references[invoices[group_key]] |= order
 
         if not invoices:
-            raise UserError(_('There is no invoiceable line.'))
+            raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
 
         for invoice in invoices.values():
             if not invoice.invoice_line_ids:
-                raise UserError(_('There is no invoiceable line.'))
+                raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
             # If invoice is negative, do a refund invoice instead
             if invoice.amount_untaxed < 0:
                 invoice.type = 'out_refund'

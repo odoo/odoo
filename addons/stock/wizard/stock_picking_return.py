@@ -34,7 +34,7 @@ class ReturnPicking(models.TransientModel):
     @api.model
     def default_get(self, fields):
         if len(self.env.context.get('active_ids', list())) > 1:
-            raise UserError(_("You may only return one picking at a time!"))
+            raise UserError(_("You may only return one picking at a time."))
         res = super(ReturnPicking, self).default_get(fields)
 
         move_dest_exists = False
@@ -43,7 +43,7 @@ class ReturnPicking(models.TransientModel):
         if picking:
             res.update({'picking_id': picking.id})
             if picking.state != 'done':
-                raise UserError(_("You may only return Done pickings"))
+                raise UserError(_("You may only return Done pickings."))
             for move in picking.move_lines:
                 if move.scrapped:
                     continue
@@ -55,7 +55,7 @@ class ReturnPicking(models.TransientModel):
                 product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id, 'uom_id': move.product_id.uom_id.id}))
 
             if not product_return_moves:
-                raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
+                raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': product_return_moves})
             if 'move_dest_exists' in fields:
@@ -108,7 +108,7 @@ class ReturnPicking(models.TransientModel):
         returned_lines = 0
         for return_line in self.product_return_moves:
             if not return_line.move_id:
-                raise UserError(_("You have manually created product lines, please delete them to proceed"))
+                raise UserError(_("You have manually created product lines, please delete them to proceed."))
             # TODO sle: float_is_zero?
             if return_line.quantity:
                 returned_lines += 1

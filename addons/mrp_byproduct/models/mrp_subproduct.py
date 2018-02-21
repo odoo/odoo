@@ -29,7 +29,7 @@ class MrpSubProduct(models.Model):
         if self.product_uom_id and self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
             res['warning'] = {
                 'title': _('Warning'),
-                'message': _('The Product Unit of Measure you chose has a different category than in the product form.')
+                'message': _('The unit of measure you chose is in a different category than the product unit of measure.')
             }
             self.product_uom_id = self.product_id.uom_id.id
         return res

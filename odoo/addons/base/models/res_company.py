@@ -242,7 +242,7 @@ class Company(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error ! You cannot create recursive companies.'))
+            raise ValidationError(_('You cannot create recursive companies.'))
 
     @api.multi
     def open_company_edit_report(self):

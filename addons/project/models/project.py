@@ -84,7 +84,7 @@ class Project(models.Model):
     def unlink(self):
         for project in self:
             if project.tasks:
-                raise UserError(_('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
+                raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
         return super(Project, self).unlink()
 
     def _compute_attached_docs_count(self):
@@ -609,7 +609,7 @@ class Task(models.Model):
     def _check_subtask_level(self):
         for task in self:
             if task.parent_id and task.child_ids:
-                raise ValidationError(_('Task %s can not have a parent task and subtasks. Only one subtask level is allowed.' % (task.name,)))
+                raise ValidationError(_('Task %s cannot have several subtask levels.' % (task.name,)))
 
     @api.multi
     @api.returns('self', lambda value: value.id)

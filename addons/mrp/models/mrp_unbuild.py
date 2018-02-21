@@ -86,7 +86,7 @@ class MrpUnbuild(models.Model):
     def action_unbuild(self):
         self.ensure_one()
         if self.product_id.tracking != 'none' and not self.lot_id.id:
-            raise UserError(_('Should have a lot for the finished product'))
+            raise UserError(_('You should provide a lot number for the final product.'))
 
         if self.mo_id:
             if self.mo_id.state != 'done':

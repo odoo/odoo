@@ -300,7 +300,7 @@ class ProductTemplate(models.Model):
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
         if any(template.uom_id and template.uom_po_id and template.uom_id.category_id != template.uom_po_id.category_id for template in self):
-            raise ValidationError(_('Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
+            raise ValidationError(_('The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
         return True
 
     @api.onchange('uom_id')

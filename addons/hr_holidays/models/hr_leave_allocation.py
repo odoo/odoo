@@ -257,7 +257,7 @@ class HolidaysAllocation(models.Model):
               and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('You must be %s manager to approve this leave') % (holiday.employee_id.name))
             elif validation_type == 'manager' and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                raise UserError(_('You must be a Human Resource Manager to approve this Leave'))
+                raise UserError(_('You must be a Human Resource Manager to approve this Leave.'))
 
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()

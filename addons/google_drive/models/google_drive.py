@@ -39,7 +39,7 @@ class GoogleDrive(models.Model):
         try:
             name_gdocs = name_gdocs % record
         except:
-            raise UserError(_("At least one key cannot be found in your Google Drive name pattern"))
+            raise UserError(_("At least one key cannot be found in your Google Drive name pattern."))
 
         attachments = self.env["ir.attachment"].search([('res_model', '=', model.model), ('name', '=', name_gdocs), ('res_id', '=', res_id)])
         url = False

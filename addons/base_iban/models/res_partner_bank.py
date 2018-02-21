@@ -28,7 +28,7 @@ def get_bban_from_iban(iban):
 def validate_iban(iban):
     iban = normalize_iban(iban)
     if not iban:
-        raise ValidationError(_("No IBAN !"))
+        raise ValidationError(_("There is no IBAN code."))
 
     country_code = iban[:2].lower()
     if country_code not in _map_iban_template:

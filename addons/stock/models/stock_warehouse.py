@@ -140,7 +140,7 @@ class Warehouse(models.Model):
 
         if 'default_resupply_wh_id' in vals:
             if vals.get('default_resupply_wh_id') and any(vals['default_resupply_wh_id'] == warehouse.id for warehouse in warehouses):
-                raise UserError(_('The default resupply warehouse should be different than the warehouse itself!'))
+                raise UserError(_('The default resupply warehouse should be different than itself.'))
             for warehouse in warehouses.filtered(lambda wh: wh.default_resupply_wh_id):
                 # remove the existing resupplying route on the warehouse
                 to_remove_routes = Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)])
@@ -794,7 +794,7 @@ class Orderpoint(models.Model):
     def _check_product_uom(self):
         ''' Check if the UoM has the same category as the product standard UoM '''
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
-            raise ValidationError(_('You have to select a product unit of measure in the same category than the default unit of measure of the product'))
+            raise ValidationError(_('You have to select a product unit of measure that is in the same category than the default unit of measure of the product'))
 
     @api.onchange('warehouse_id')
     def onchange_warehouse_id(self):

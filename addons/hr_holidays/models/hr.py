@@ -145,7 +145,7 @@ class Employee(models.Model):
                 if leave.validation_type == 'both':
                     leave.action_validate()
             elif difference < 0:
-                raise UserError(_('You cannot reduce validated allocation requests'))
+                raise UserError(_('You cannot reduce validated allocation requests.'))
 
     @api.multi
     def _compute_leave_status(self):

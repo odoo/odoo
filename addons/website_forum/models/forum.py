@@ -430,12 +430,12 @@ class Post(models.Model):
         post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
         # deleted or closed questions
         if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
-            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
+            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
         # karma-based access
         if not post.parent_id and not post.can_ask:
-            raise KarmaError('Not enough karma to create a new question')
+            raise KarmaError('You don\'t have enough karma to create a new question.')
         elif post.parent_id and not post.can_answer:
-            raise KarmaError('Not enough karma to answer to a question')
+            raise KarmaError('You don\'t have enough karma to answer a question.')
         if not post.parent_id and not post.can_post:
             post.sudo().state = 'pending'
 
@@ -874,12 +874,12 @@ class Vote(models.Model):
 
         # own post check
         if vote.user_id.id == vote.post_id.create_uid.id:
-            raise UserError(_('Not allowed to vote for its own post'))
+            raise UserError(_('It is not allowed to vote for its own post.'))
         # karma check
         if vote.vote == '1' and not vote.post_id.can_upvote:
-            raise KarmaError('Not enough karma to upvote.')
+            raise KarmaError('You don\'t have enough karma toupvote.')
         elif vote.vote == '-1' and not vote.post_id.can_downvote:
-            raise KarmaError('Not enough karma to downvote.')
+            raise KarmaError('You don\'t have enough karma to downvote.')
 
         if vote.post_id.parent_id:
             karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
@@ -894,12 +894,12 @@ class Vote(models.Model):
             for vote in self:
                 # own post check
                 if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise UserError(_('Not allowed to vote for its own post'))
+                    raise UserError(_('It is not allowed to vote for its own post.'))
                 # karma check
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
-                    raise KarmaError('Not enough karma to upvote.')
+                    raise KarmaError('You don\'t have enough karma to upvote.')
                 elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0') and not vote.post_id.can_downvote:
-                    raise KarmaError('Not enough karma to downvote.')
+                    raise KarmaError('You don\'t have enough karma to downvote.')
 
                 # karma update
                 if vote.post_id.parent_id:
@@ -938,5 +938,5 @@ class Tags(models.Model):
     def create(self, vals):
         forum = self.env['forum.forum'].browse(vals.get('forum_id'))
         if self.env.user.karma < forum.karma_tag_create:
-            raise KarmaError(_('Not enough karma to create a new Tag'))
+            raise KarmaError(_('You don\'t have enough karma to create a new Tag.'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)

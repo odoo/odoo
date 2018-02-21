@@ -127,7 +127,7 @@ class GoogleService(models.TransientModel):
         client_secret = get_param('google_%s_client_secret' % (service,), default=False)
 
         if not client_id or not client_secret:
-            raise UserError(_("The account for the Google service '%s' is not configured") % service)
+            raise UserError(_("The account for the Google service '%s' is not configured.") % service)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {

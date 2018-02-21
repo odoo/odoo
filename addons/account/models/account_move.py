@@ -520,7 +520,7 @@ class AccountMoveLine(models.Model):
     def _check_currency_and_amount(self):
         for line in self:
             if (line.amount_currency and not line.currency_id):
-                raise ValidationError(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
+                raise ValidationError(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' fields."))
 
     @api.multi
     @api.constrains('amount_currency', 'debit', 'credit')
@@ -739,15 +739,15 @@ class AccountMoveLine(models.Model):
             if (line.account_id.internal_type in ('receivable', 'payable')):
                 partners.add(line.partner_id.id)
             if line.reconciled:
-                raise UserError(_('You are trying to reconcile some entries that are already reconciled!'))
+                raise UserError(_('You are trying to reconcile some entries that are already reconciled.'))
         if len(company_ids) > 1:
-            raise UserError(_('To reconcile the entries company should be the same for all entries!'))
+            raise UserError(_('To reconcile the entries company should be the same for all entries.'))
         if len(set(all_accounts)) > 1:
-            raise UserError(_('Entries are not of the same account!'))
+            raise UserError(_('Entries are not from the same account.'))
         if not (all_accounts[0].reconcile or all_accounts[0].internal_type == 'liquidity'):
             raise UserError(_('Account %s (%s) does not allow reconciliation. First change the configuration of this account to allow it.') % (all_accounts[0].name, all_accounts[0].code))
         if len(partners) > 1:
-            raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts!'))
+            raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts.'))
 
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
@@ -891,7 +891,7 @@ class AccountMoveLine(models.Model):
         move = self.env['account.move'].browse(vals['move_id'])
         account = self.env['account.account'].browse(vals['account_id'])
         if account.deprecated:
-            raise UserError(_('The account %s (%s) is deprecated !') %(account.name, account.code))
+            raise UserError(_('The account %s (%s) is deprecated.') %(account.name, account.code))
         journal = vals.get('journal_id') and self.env['account.journal'].browse(vals['journal_id']) or move.journal_id
         vals['date_maturity'] = vals.get('date_maturity') or vals.get('date') or move.date
         ok = not (journal.type_control_ids or journal.account_control_ids)
@@ -951,7 +951,7 @@ class AccountMoveLine(models.Model):
     @api.multi
     def write(self, vals):
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
-            raise UserError(_('You cannot use deprecated account.'))
+            raise UserError(_('You cannot use a deprecated account.'))
         if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
             self._update_check()
         if not self._context.get('allow_amount_currency') and any(key in vals for key in ('amount_currency', 'currency_id')):

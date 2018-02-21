@@ -225,7 +225,7 @@ class HrContract(models.Model):
     @api.onchange('mobile', 'mobile_plus')
     def _onchange_mobile(self):
         if self.mobile_plus and not self.mobile:
-            raise ValidationError(_('You should have a mobile subscription to select an international communication amount!'))
+            raise ValidationError(_('You should have a mobile subscription to select an international communication amount.'))
 
     def _get_internet_amount(self, has_internet):
         if has_internet:

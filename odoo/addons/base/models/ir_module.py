@@ -303,7 +303,7 @@ class Module(models.Model):
             return True
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
-                raise UserError(_('You try to remove a module that is installed or will be installed'))
+                raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
         self.clear_caches()
         return super(Module, self).unlink()
 

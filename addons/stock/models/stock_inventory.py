@@ -148,13 +148,13 @@ class Inventory(models.Model):
         if self.filter == 'none' and self.product_id and self.location_id and self.lot_id:
             return
         if self.filter not in ('product', 'product_owner') and self.product_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise UserError(_('The selected product doesn\'t belong to that owner..'))
         if self.filter != 'lot' and self.lot_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise UserError(_('The selected lot number doesn\'t exist.'))
         if self.filter not in ('owner', 'product_owner') and self.partner_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise UserError(_('The selected owner doesn\'t have the proprietary of that product.'))
         if self.filter != 'pack' and self.package_id:
-            raise UserError(_('The selected inventory options are not coherent.'))
+            raise UserError(_('The selected inventory options are not coherent, the package doesn\'t exist.'))
 
     def action_reset_product_qty(self):
         self.mapped('line_ids').write({'product_qty': 0})

@@ -83,7 +83,7 @@ class StockQuant(models.Model):
     def check_in_date(self):
         for quant in self:
             if quant.in_date and not quant.lot_id:
-                raise ValidationError(_('An incoming date cannot be set to an untracked product.'))
+                raise ValidationError(_('An incoming date cannot be set on an untracked product.'))
 
     @api.constrains('location_id')
     def check_location_id(self):
@@ -419,7 +419,7 @@ class QuantPackage(models.Model):
         for pack in self:
             locations = pack.get_content().filtered(lambda quant: quant.qty > 0.0).mapped('location_id')
             if len(locations) != 1:
-                raise UserError(_('Everything inside a package should be in the same location'))
+                raise UserError(_('Every item inside a package should be in the same location.'))
         return True
 
     def unpack(self):

@@ -160,7 +160,7 @@ class MrpWorkcenter(models.Model):
     def unblock(self):
         self.ensure_one()
         if self.working_state != 'blocked':
-            raise exceptions.UserError(_("It has been unblocked already. "))
+            raise exceptions.UserError(_("It has already been unblocked."))
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': fields.Datetime.now()})
         return {'type': 'ir.actions.client', 'tag': 'reload'}
