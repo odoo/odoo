@@ -1643,10 +1643,6 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_assign()
         self.assertEquals(picking_out.state, "confirmed")
 
-        # force assign on the delivery order, it should be assigned
-        picking_out.force_assign()
-        self.assertEquals(picking_out.state, "assigned")
-
     def test_72_picking_state_partial_reserve(self):
         """ This test will check that the state of the picking is correctly computed according
         to the state of its move lines and its move type.
@@ -1737,10 +1733,6 @@ class TestStockFlow(TestStockCommon):
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
         self.assertEquals(picking_out.state, "confirmed")
-
-        # force assign on the delivery order, it should be assigned
-        picking_out.force_assign()
-        self.assertEquals(picking_out.state, "assigned")
 
     def test_74_move_state_waiting_mto(self):
         """ This test will check that when a move is unreserved, its state changes to 'waiting' if

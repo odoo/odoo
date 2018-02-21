@@ -53,7 +53,6 @@ class TestCreatePicking(common.TestProductCommon):
 
         # Validate first shipment
         self.picking = self.po.picking_ids[0]
-        self.picking.force_assign()
         for ml in self.picking.move_line_ids:
             ml.qty_done = ml.product_uom_qty
         self.picking.action_done()

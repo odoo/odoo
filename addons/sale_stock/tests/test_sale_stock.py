@@ -32,7 +32,6 @@ class TestSaleStock(TestSale):
         # deliver partially, check the so's invoice_status and delivered quantities
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "nothing to invoice" after invoicing')
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 1})
         wiz_act = pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
@@ -52,7 +51,6 @@ class TestSaleStock(TestSale):
                          'Sale Stock: so invoice_status should be "nothing to invoice" after partial delivery and invoicing')
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale Stock: number of pickings should be 2')
         pick_2 = self.so.picking_ids[0]
-        pick_2.force_assign()
         pick_2.move_lines.write({'quantity_done': 1})
         self.assertIsNone(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
@@ -104,7 +102,6 @@ class TestSaleStock(TestSale):
 
         # deliver, check the delivered quantities
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 2})
         self.assertIsNone(pick.button_validate(), 'Sale Stock: complete delivery should not need a backorder')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
@@ -145,7 +142,6 @@ class TestSaleStock(TestSale):
 
         # deliver completely
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 5})
         pick.button_validate()
 
@@ -172,7 +168,6 @@ class TestSaleStock(TestSale):
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Validate picking
-        return_pick.force_assign()
         return_pick.move_lines.write({'quantity_done': 2})
         return_pick.button_validate()
 
@@ -219,7 +214,6 @@ class TestSaleStock(TestSale):
 
         # deliver partially
         pick = self.so.picking_ids
-        pick.force_assign()
         pick.move_lines.write({'quantity_done': 4})
         res_dict = pick.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
@@ -320,7 +314,6 @@ class TestSaleStock(TestSale):
 
         # deliver them
         self.assertEquals(len(self.so.picking_ids), 1)
-        self.so.picking_ids[0].force_assign()
         res_dict = self.so.picking_ids[0].button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
