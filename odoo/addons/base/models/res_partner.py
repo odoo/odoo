@@ -206,7 +206,7 @@ class Partner(models.Model):
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
-        help="Either customer (no user), either shared user. Indicated the current partner is a customer without "
+        help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
