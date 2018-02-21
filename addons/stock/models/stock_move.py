@@ -952,7 +952,8 @@ class StockMove(models.Model):
     def _prepare_extra_move_vals(self, qty):
         vals = {
             'product_uom_qty': qty,
-            'picking_id': self.picking_id.id
+            'picking_id': self.picking_id.id,
+            'price_unit': self.price_unit,
         }
         return vals
 
@@ -1080,6 +1081,7 @@ class StockMove(models.Model):
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
             'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
             'origin_returned_move_id': self.origin_returned_move_id.id,
+            'price_unit': self.price_unit,
         }
         return vals
 

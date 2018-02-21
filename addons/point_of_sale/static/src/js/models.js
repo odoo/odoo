@@ -729,6 +729,7 @@ exports.PosModel = Backbone.Model.extend({
 
             deferred.resolve();
         };
+        img.crossOrigin = 'use-credentials';
         img.src = url;
 
         return deferred;

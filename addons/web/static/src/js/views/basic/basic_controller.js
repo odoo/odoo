@@ -332,7 +332,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 }
                 self.model.discardChanges(recordID);
                 if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
+                    if (self.model.canBeAbandoned(recordID)) {
+                        self._abandonRecord(recordID);
+                    }
                     return;
                 }
                 return self._confirmSave(recordID);
