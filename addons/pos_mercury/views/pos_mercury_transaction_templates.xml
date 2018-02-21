@@ -6,11 +6,11 @@
       <TranType><t t-esc='transaction_type'/></TranType>
       <TranCode><t t-esc='transaction_code'/></TranCode>
       <InvoiceNo><t t-esc='invoice_no'/></InvoiceNo>
-      <Frequency>OneTime</Frequency>
+      <Frequency t-translation="off">OneTime</Frequency>
     </template>
 
     <template id='mercury_transaction'>
-      <TStream>
+      <TStream t-translation="off">
         <Transaction>
           <t t-call='pos_mercury.mercury_common'/>
           <OperatorID><t t-esc='operator_id'/></OperatorID>
@@ -31,7 +31,7 @@
     </template>
 
     <template id='mercury_voidsale'>
-      <TStream>
+      <TStream t-translation="off">
         <Transaction>
           <t t-call='pos_mercury.mercury_common'/>
           <RefNo><t t-esc='ref_no'/></RefNo>
@@ -52,7 +52,7 @@
     </template>
 
     <template id='mercury_return'>
-      <TStream>
+      <TStream t-translation="off">
         <Transaction>
           <t t-call='pos_mercury.mercury_common'/>
           <OperatorID><t t-esc='operator_id'/></OperatorID>
