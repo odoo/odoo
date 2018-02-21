@@ -68,7 +68,14 @@ class SaleOrder(models.Model):
         (0, 'Not mandatory on website quote validation'),
         (1, 'Immediate after website order validation'),
         (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
+    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote", compute='_compute_require_payment', store=True)
+
+    @api.one
+    @api.depends('template_id')
+    def _compute_require_payment(self):
+        # Do not overwrite if the field is already set
+        if self.template_id and (self.require_payment is None or self.require_payment is False):
+            self.require_payment = self.template_id.require_payment
 
     @api.multi
     def copy(self, default=None):
