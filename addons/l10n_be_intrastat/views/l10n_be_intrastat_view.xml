@@ -9,9 +9,11 @@
                 <xpath expr="//field[@name='date_due']" position="after">
                     <field name="incoterm_id" groups="l10n_be_intrastat.intrastat_extended"/>
                 </xpath>
-                <xpath expr="//field[@name='move_id']" position="after">
-                    <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
-                    <field name="intrastat_country_id"/>
+                <xpath expr="//group[@name='sale_pay']" position="after">
+                    <group string="Intrastat Information">
+                        <field name="transport_mode_id" groups="l10n_be_intrastat.intrastat_extended"/>
+                        <field name="intrastat_country_id"/>
+                    </group>
                 </xpath>
             </field>
 

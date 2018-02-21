@@ -28,7 +28,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <field name="user_id" position="after">
+            <field name="client_order_ref" position="after">
                 <field name="tag_ids" widget="many2many_tags"/>
             </field>
             <xpath expr="//group[@name='utm_link']" position="replace">
@@ -37,9 +37,6 @@
                     <field name="medium_id"/>
                     <field name="source_id"/>
                 </group>
-            </xpath>
-            <xpath expr="//group[@name='technical']" position="inside">
-                <field name="opportunity_id" help="Log in the chatter from which opportunity the order originates" groups="base.group_no_one"/>
             </xpath>
         </field>
     </record>
