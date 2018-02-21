@@ -315,7 +315,12 @@ class IrAttachment(models.Model):
                     continue
                 if not (res_model and res_id):
                     if create_uid != self._uid:
-                        require_employee = True
+                        if self.env.user._is_admin():
+                            continue
+                        elif public:
+                            require_employee = True
+                        else:
+                            raise AccessError(_("Sorry, you are not allowed to access this document."))
                     continue
                 model_ids[res_model].add(res_id)
         if values and values.get('res_model') and values.get('res_id'):
