@@ -22,6 +22,10 @@
                             <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
                             <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
                         </t>
+                        <t t-if="widget.has_active_field">
+                            <li><a class="o_column_archive_records" href="#">Archive All</a></li>
+                            <li><a class="o_column_unarchive_records" href="#">Restore All</a></li>
+                        </t>
                     </ul>
                 </span>
                 <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus"/></span>

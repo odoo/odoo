@@ -97,7 +97,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('basic grouped rendering', function (assert) {
-        assert.expect(11);
+        assert.expect(13);
 
         var kanban = createView({
             View: KanbanView,
@@ -135,6 +135,8 @@ QUnit.module('Views', {
                         "should not be able to edit the column");
         assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_delete').length,
                         "should not be able to delete the column");
+        assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_archive_records').length, "should not be able to archive all the records");
+        assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive_records').length, "should not be able to restore all the records");
 
         // the next line makes sure that reload works properly.  It looks useless,
         // but it actually test that a grouped local record can be reloaded without
@@ -142,6 +144,51 @@ QUnit.module('Views', {
         kanban.reload();
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 3,
                         "column should contain " + 3 + " record(s)");
+        kanban.destroy();
+    });
+
+    QUnit.test('basic grouped rendering with active field', function (assert) {
+        assert.expect(9);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="active"/>' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+            intercepts: {
+                env_updated: function (event) {
+                    assert.deepEqual(event.data.env.ids, envIDs,
+                        "should notify the environment with the correct ids");
+                },
+            },
+        });
+
+        // check archive/restore all actions in kanban header's config dropdown
+        assert.ok(kanban.$('.o_kanban_header:first .o_kanban_config .o_column_archive_records').length, "should be able to archive all the records");
+        assert.ok(kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive_records').length, "should be able to restore all the records");
+
+        // archive the records of the first column
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3,
+            "last column should contain 3 records");
+        envIDs = [4];
+        kanban.$('.o_kanban_group:last .o_column_archive_records').click(); // Click on 'Archive All'
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-default').click(); // Click on 'Cancel'
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3, "still last column should contain 3 records");
+        kanban.$('.o_kanban_group:last .o_column_archive_records').click();
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-primary').click(); // Click on 'Ok'
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0, "last column should not contain any records");
         kanban.destroy();
     });
 
@@ -1684,7 +1731,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(29);
+        assert.expect(33);
 
         testUtils.patch(KanbanRenderer, {
             _renderGrouped: function () {
@@ -1741,6 +1788,8 @@ QUnit.module('Views', {
                         "should be able to edit the column");
         assert.ok(kanban.$('.o_kanban_group:first .o_column_delete').length,
                         "should be able to delete the column");
+        assert.ok(!kanban.$('.o_kanban_group:first .o_column_archive_records').length, "should not be able to archive all the records");
+        assert.ok(!kanban.$('.o_kanban_group:first .o_column_unarchive_records').length, "should not be able to restore all the records");
 
         // delete second column (first cancel the confirm request, then confirm)
         kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
@@ -1763,6 +1812,8 @@ QUnit.module('Views', {
             'Undefined column could not be deleted');
         assert.ok(!kanban.$('.o_kanban_group:first .o_column_edit').length,
             'Undefined column could not be edited');
+        assert.ok(!kanban.$('.o_kanban_group:first .o_column_archive_records').length, "Records of undefined column could not be archived");
+        assert.ok(!kanban.$('.o_kanban_group:first .o_column_unarchive_records').length, "Records of undefined column could not be restored");
         assert.verifySteps(['read_group', 'unlink', 'read_group']);
         assert.strictEqual(kanban.renderer.widgets.length, 2,
             "the old widgets should have been correctly deleted");
