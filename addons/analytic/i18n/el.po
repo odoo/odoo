@@ -3,17 +3,17 @@
 # * analytic
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Stefanos Nikou <stefanos.nikou@gmail.com>, 2016
-# Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +28,7 @@ msgstr "Νόμισμα Λογαριασμού"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_active
 msgid "Active"
 msgstr "Ενεργή"
 
@@ -101,7 +102,7 @@ msgstr "Ετικέτες Αναλυτικής"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr "Αρχειοθετημένα"
+msgstr "Αρχειοθετήθηκαν"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -111,7 +112,12 @@ msgstr "Συσχετιζόμενος Συνεργάτης"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
-msgstr "Ισοζύγιο"
+msgstr "Υπόλοιπο"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+msgid "Balance:"
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -126,7 +132,7 @@ msgstr "Κάντε κλικ για να προσθέσετε μια νέα ετ�
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Click to add an analytic account."
-msgstr "Κάντε κλικ για να προσθέσετε έναν αναλυτικό λογαριασμό."
+msgstr "Κάντε κλικ για να προσθέσετε έναν λογαριασμό αναλυτικής."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
@@ -156,8 +162,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Οι δαπάνες θα δημιουργούνται αυτόματα όταν εγγράφετε τιμολόγια\n"
-"προμηθευτή, έξοδα ή φύλλα κατανομής χρόνου."
+"Οι δαπάνες θα δημιουργούνται αυτόματα όταν εγγράφετε τιμολόγια προμηθευτή, "
+"έξοδα ή φύλλα κατανομής χρόνου."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -214,7 +220,7 @@ msgstr "Εμφάνιση Ονόματος"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
-msgstr "Ομαδοποίηση ανά..."
+msgstr "Ομαδοποίηση κατά..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
@@ -236,13 +242,13 @@ msgstr ""
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"In Odoo, sale orders and projects are implemented using\n"
+"In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"Στο odoo, οι παραγγελίες πωλήσεων και τα έργα υλοποιούνται χρησιμοποιώντας "
-"αναλυτική λογιστική. Μπορείτε να παρακολουθείτε τα έξοδα και τα έσοδα για να"
-" αναλύσετε τα περιθωρίων σας εύκολα."
+"Στην Odoo, οι εντολές πωλήσεων και τα έργα υλοποιούνται χρησιμοποιώντας\n"
+"                αναλυτικούς λογαριασμούς. Μπορείτε να παρακολουθείτε τα κόστη και τα έσοδα για να \n"
+"                αναλύσετε τα περιθώρια σας εύκολα.  "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -273,7 +279,7 @@ msgstr "Καμία δραστηριότητα ακόμα για αυτόν το 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
-msgstr "Δεν έχει ακόμη δραστηριότητα."
+msgstr "Δεν υπάρχει ακόμη δραστηριότητα."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -296,17 +302,24 @@ msgstr "Σχετικό"
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
+"                invoices. Customer invoices can be created based on sales orders\n"
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"Τα έσοδα θα δημιουργηθούν αυτόματα όταν δημιουργήσετε τιμολόγια πελατών. Τα τιμολόγια των πελατών μπορεί να δημιουργηθούν με βάση τις παραγγελίες πωλήσεων\n"
-"(σταθερές τιμές τιμολογίων), σε φύλλα (με βάση το έργο που επιτέλεσε) ή για τις δαπάνες (π.χ. ανατιμολόγησης των εξόδων ταξιδιού)."
+"Τα έσοδα θα δημιουργηθούν αυτόματα όταν δημιουργείτε τιμολόγια\n"
+"                πελατών. Τα τιμολόγια πελατών μπορούν να δημιουργηθούν βάσει παραγγελιών πωλήσεων\n"
+"                (τιμολόγια σταθερής τιμής), σε φύλλα εργασίας (βάσει της εργασίας που έχουν \n"
+"                πραγματοποιηθεί) ή σε δαπάνες (π.χ. επαναφορά των εξόδων ταξιδιού)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Αναζήτηση Αναλυτικών Γραμμών"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
+msgid "Set active to false to hide the Analytic Tag without removing it."
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids

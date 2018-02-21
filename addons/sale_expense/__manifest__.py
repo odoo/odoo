@@ -5,19 +5,21 @@
     'name': 'Sales Expense',
     'version': '1.0',
     'category': 'Sales',
-    'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
+    'summary': 'Quotation, Sales Orders, Delivery & Invoicing Control',
     'description': """
-Module used for demo data
-=========================
+Reinvoice Employee Expense
+==========================
 
 Create some products for which you can re-invoice the costs.
-This module does not add any feature, despite a few demo data to
-test the features easily.
+This module allow to reinvoice employee expense, by setting the SO directly on the expense.
 """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['sale', 'hr_expense'],
+    'depends': ['sale_management', 'hr_expense'],
     'data': [
+        'security/ir.model.access.csv',
+        'security/sale_expense_security.xml',
         'views/product_view.xml',
+        'views/hr_expense_views.xml',
     ],
     'demo': ['sale_expense_demo.xml'],
     'test': [],

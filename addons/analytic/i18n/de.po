@@ -3,24 +3,26 @@
 # * analytic
 # 
 # Translators:
-# Tina Rittmüller <tr@ife.de>, 2016
-# Henry Mineehen <info@mineehen.de>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
-# Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# JackTheHunter <Maximilian.N98@gmail.com>, 2016
-# Ermin Trevisan <trevi@twanda.com>, 2016
-# darenkster <inactive+darenkster@transifex.com>, 2016
-# Gustav Gnötken <Heing1980@rhyta.com>, 2016
-# Thomas A. Jaeger <tj@jamotion.ch>, 2016
-# Dejan Dinic <dejan.dinic@bluewin.ch>, 2016
+# Gab_Odoo <gab@odoo.com>, 2017
+# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Gustav Gnötken <Heing1980@rhyta.com>, 2017
+# Renzo Meister <info@jamotion.ch>, 2017
+# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Dejan Dinic <dejan.dinic@bluewin.ch>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +37,7 @@ msgstr "Währung der Kostenbuchung"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_active
 msgid "Active"
 msgstr "Aktiv"
 
@@ -52,7 +55,7 @@ msgstr "Betrag"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Kostenstelle"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -121,6 +124,11 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+msgid "Balance:"
+msgstr "Saldo"
+
+#. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
 msgstr "Kostenstellen"
@@ -178,7 +186,7 @@ msgstr "Erstellt von"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
@@ -243,13 +251,12 @@ msgstr ""
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"In Odoo, sale orders and projects are implemented using\n"
+"In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"In Odoo, Verkaufsaufträge und Projekte sind als Kostenstellen implementiert."
-" Sie können Kosten und Gewinne nach verfolgen, um ihre Margen einfach zu "
-"analysieren."
+"In Odoo werden Kundenaufträge und Projekte mit Hilfe von\n"
+"analytische Konten gepflegt. Sie können einfach Kosten und Erlöse nachverfolgen um ihre Margen zu analysieren."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -303,19 +310,26 @@ msgstr "Referenz"
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
+"                invoices. Customer invoices can be created based on sales orders\n"
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"Gewinne werden automatisch erstellt wenn Sie Kundenrechnungen erstellen. "
-"Kundenrechnungen können basierend auf Verkaufsaufträgen "
-"(Festpreisrechnungen), Stundenzettel (basierend auf geleisteter Arbeit) oder"
-" Spesen (z.B. erneute Abrechnung von Reisekosten) erstellt werden."
+"Erlöse werden automatisch erzeugt, wenn Sie einen Kundenrechnung anlegen.\n"
+"Kundenrechnungen können auf der Grundlage von Kundenaufträgen erstellt werden.\n"
+"(Festpreisrechnungen), auf Stundenzetteln (auf der Grundlage der geleisteten Arbeit) oder\n"
+"auf Spesen (z.B. Neuabrechnung von Reisekosten)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Suche Kostenstellen Buchungen"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
+msgid "Set active to false to hide the Analytic Tag without removing it."
+msgstr ""
+"Setzen Sie active auf false, um das Analytic Tag auszublenden, ohne es zu "
+"entfernen."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -336,7 +350,7 @@ msgstr "Diese Währung entspricht nicht der Unternehmenswährung."
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
-msgstr "Gesamtbetrag"
+msgstr "Total"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id

@@ -17,7 +17,7 @@
                     </group>
                     <field name="assignation_lines" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}">
                         <tree create="false" editable="bottom">
-                            <field name="lead_id" readonly="1"/>
+                            <field name="lead_id" readonly="1" force_save="1" />
                             <field name="lead_location" readonly="1"/>
                             <field name="partner_assigned_id"/>
                             <field name="partner_location" readonly="1"/>

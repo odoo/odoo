@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from dateutil import relativedelta
+from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -44,7 +45,7 @@ class Location(models.Model):
              "\n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)"
              "\n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (vendor or production) is not known yet. This location should be empty when the procurement scheduler has finished running."
              "\n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products"
-             "\n* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations")
+             "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
         'stock.location', 'Parent Location', index=True, ondelete='cascade',
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
@@ -65,6 +66,7 @@ class Location(models.Model):
     removal_strategy_id = fields.Many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
     putaway_strategy_id = fields.Many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
     barcode = fields.Char('Barcode', copy=False, oldname='loc_barcode')
+    quant_ids = fields.One2many('stock.quant', 'location_id')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
@@ -77,7 +79,12 @@ class Location(models.Model):
         else:
             self.complete_name = self.name
 
-    @api.multi
+    def write(self, values):
+        if 'usage' in values and values['usage'] == 'view':
+            if self.mapped('quant_ids'):
+                raise UserError(_("This location's usage cannot be changed to view as it contains products."))
+        return super(Location, self).write(values)
+
     def name_get(self):
         ret_list = []
         for location in self:
@@ -85,9 +92,19 @@ class Location(models.Model):
             name = location.name
             while location.location_id and location.usage != 'view':
                 location = location.location_id
+                if not name:
+                    raise UserError(_('You have to set a name for this location.'))
                 name = location.name + "/" + name
             ret_list.append((orig_location.id, name))
         return ret_list
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        """ search full name and barcode """
+        if args is None:
+            args = []
+        recs = self.search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit)
+        return recs.name_get()
 
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
@@ -99,13 +116,16 @@ class Location(models.Model):
             current_location = current_location.location_id
         return putaway_location
 
-    @api.multi
     @api.returns('stock.warehouse', lambda value: value.id)
     def get_warehouse(self):
         """ Returns warehouse id of warehouse that contains location """
         return self.env['stock.warehouse'].search([
             ('view_location_id.parent_left', '<=', self.parent_left),
             ('view_location_id.parent_right', '>=', self.parent_left)], limit=1)
+
+    def should_bypass_reservation(self):
+        self.ensure_one()
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
 
 class Route(models.Model):
@@ -116,8 +136,12 @@ class Route(models.Model):
     name = fields.Char('Route Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
-    pull_ids = fields.One2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True)
-    push_ids = fields.One2many('stock.location.path', 'route_id', 'Push Rules', copy=True)
+    pull_ids = fields.One2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True, 
+        help="The demand represented by a procurement from e.g. a sale order, a reordering rule, another move, needs to be solved by applying a procurement rule. Depending on the action on the procurement rule,"\
+        "this triggers a purchase order, manufacturing order or another move. This way we create chains in the reverse order from the endpoint with the original demand to the starting point. "\
+        "That way, it is always known where we need to go and that is why they are preferred over push rules.")
+    push_ids = fields.One2many('stock.location.path', 'route_id', 'Push Rules', copy=True, 
+        help="When a move is foreseen to a location, the push rule will automatically create a move to a next location after. This is mainly only needed when creating manual operations e.g. 2/3 step manual purchase order or 2/3 step finished product manual manufacturing order. In other cases, it is important to use pull rules where you know where you are going based on a demand.")
     product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. ")
     product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. ")
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement")
@@ -131,7 +155,6 @@ class Route(models.Model):
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
-    @api.multi
     def write(self, values):
         '''when a route is deactivated, deactivate also its pull and push rules'''
         res = super(Route, self).write(values)
@@ -140,7 +163,6 @@ class Route(models.Model):
             self.mapped('pull_ids').filtered(lambda rule: rule.active != values['active']).write({'active': values['active']})
         return res
 
-    @api.multi
     def view_product_ids(self):
         return {
             'name': _('Products'),
@@ -151,7 +173,6 @@ class Route(models.Model):
             'domain': [('route_ids', 'in', self.ids)],
         }
 
-    @api.multi
     def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
@@ -166,13 +187,13 @@ class Route(models.Model):
 class PushedFlow(models.Model):
     _name = "stock.location.path"
     _description = "Pushed Flow"
-    _order = "name"
+    _order = "sequence, name"
 
     name = fields.Char('Operation Name', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('procurement.order'), index=True)
-    route_id = fields.Many2one('stock.location.route', 'Route')
+        default=lambda self: self.env['res.company']._company_default_get('stock.location.path'), index=True)
+    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     location_from_id = fields.Many2one(
         'stock.location', 'Source Location', index=True, ondelete='cascade', required=True,
         help="This rule can be applied when a move is confirmed that has this location as destination location")
@@ -181,13 +202,13 @@ class PushedFlow(models.Model):
         help="The new location where the goods need to go")
     delay = fields.Integer('Delay (days)', default=0, help="Number of days needed to transfer the goods")
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type', required=True,
-        help="This is the picking type that will be put on the stock moves")
+        'stock.picking.type', 'Operation Type', required=True,
+        help="This is the operation type that will be put on the stock moves")
     auto = fields.Selection([
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',
         default='manual', index=True, required=True,
-        help="The 'Manual Operation' value will create a stock move after the current one."
+        help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     propagate = fields.Boolean('Propagate cancel and split', default=True, help='If checked, when the previous move is cancelled or split, the move generated by this move will too')
     active = fields.Boolean('Active', default=True)
@@ -209,8 +230,8 @@ class PushedFlow(models.Model):
         else:
             new_move_vals = self._prepare_move_copy_values(move, new_date)
             new_move = move.copy(new_move_vals)
-            move.write({'move_dest_id': new_move.id})
-            new_move.action_confirm()
+            move.write({'move_dest_ids': [(4, new_move.id)]})
+            new_move._action_confirm()
 
     def _prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = {
@@ -225,7 +246,6 @@ class PushedFlow(models.Model):
                 'propagate': self.propagate,
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
-                'procurement_id': False,
             }
 
         return new_move_vals

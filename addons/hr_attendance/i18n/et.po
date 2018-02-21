@@ -3,18 +3,19 @@
 # * hr_attendance
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Wanradt Koell <wanradt@gmail.com>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
+# Martin Trigaux, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Wanradt Koell <wanradt@gmail.com>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
+# Egon Raamat <egon@avalah.ee>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: Egon Raamat <egon@avalah.ee>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:55
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "\"Väljaregistreerimise\" aeg ei saa olla enne \"sissekirjutamise\" aega."
+msgstr "\"Väljaregistreerimise\" aeg ei saa olla enne \"sisseregistreerimise\" aega."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:29
@@ -41,6 +42,11 @@ msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
 msgstr "%(empl_name)s alates %(check_in)s kuni %(check_out)s"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Attendance</span>"
+msgstr "<span class=\"o_stat_text\">Kohalolek</span>"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:117
 #, python-format
@@ -52,19 +58,16 @@ msgstr "Üks õun päevas hoiab arsti eemal"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:106
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr "Jälle üks hea päev tööl! Kohtume varsti"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Apply"
-msgstr "Kinnita"
+msgstr "Jälle üks hea tööpäev on möödas! Kohtumiseni!"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_state
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
 msgstr "Kohalviibimine"
 
@@ -75,21 +78,13 @@ msgid "Attendance Analysis"
 msgstr "Kohalviibijate analüüs"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
-msgid "Attendance Settings"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
-msgid "Attendance ids"
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
 msgstr "Kohalviibimised"
 
@@ -97,11 +92,6 @@ msgstr "Kohalviibimised"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
 msgid "Badge ID"
 msgstr "Märgi ID"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Cancel"
-msgstr "Loobu"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -125,13 +115,13 @@ msgstr ""
 "sisse registreerinud juba %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:111
+#: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr "Korraga ei saa registreerida mitut töötajat sisse ja välja."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:125
+#: code:addons/hr_attendance/models/hr_employee.py:122
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -140,12 +130,17 @@ msgid ""
 msgstr ""
 "Töötajat %(empl_name)s ei ole võimalik välja registreerida, sest ei leitud "
 "vastavat töötaja sisse registreerimist. Teie külastust on tõenäoliselt "
-"muudetud inimressursi poolt."
+"muudetud inimese poolt."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
 msgstr "Registreeri sisse"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
+msgid "Check In / Check Out"
+msgstr "Registreeri sisse / Registreeri välja"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
@@ -165,6 +160,11 @@ msgstr "Registreeri sisse"
 #, python-format
 msgid "Check out"
 msgstr "Registreeri välja"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Check-In/Out"
+msgstr "Registreeri sisse/välja"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -195,14 +195,14 @@ msgstr "Registreeris välja"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:27
 #, python-format
 msgid "Click to check in"
-msgstr "Kliki siia, et sisseregistreerida"
+msgstr "Vajuta siia, et sisse registreerida"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:31
 #, python-format
 msgid "Click to check out"
-msgstr "Kliki siia, et välja registreerida"
+msgstr "Vajuta siia, et välja registreerida"
 
 #. module: hr_attendance
 #. openerp-web
@@ -214,9 +214,8 @@ msgstr "Ettevõtte logo"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Configuration"
-msgstr "Seadistus"
+msgstr "Seadistused"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -263,14 +262,14 @@ msgstr "Korralik unetundide arv teeb mehe terveks, rikkaks ja targaks."
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:115
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
-msgstr "Söö hommikut kui kuningas, lõunat kui kaupmees ja õhtut kui kerjaja."
+msgstr "Söö hommikut kui kuningas, lõunat kui kaupmees ja õhtut kui kerjus."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_employee_id
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Employee"
-msgstr "Tootaja"
+msgstr "Töötaja"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
@@ -278,7 +277,8 @@ msgid "Employee Image"
 msgstr "Töötaja pilt"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
 msgstr "Töötaja PIN"
 
@@ -289,7 +289,6 @@ msgid "Employee attendances"
 msgstr "Töötaja kohalviibimised"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
 msgid "Employee's Name"
 msgstr "Töötaja nimi"
@@ -301,26 +300,9 @@ msgid "Employees"
 msgstr "Töötajad"
 
 #. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
-" Mode\"."
-msgstr ""
-
-#. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
-msgstr ""
-
-#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "Luba PIN-koodi kasutamine"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
-msgid "Enable or disable employee PIN identification at check in"
-msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -429,7 +411,7 @@ msgstr "Head lõunat!"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Hr Attendance Search"
-msgstr "Osalejate otsing"
+msgstr "Kohalviibijate otsing"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_id
@@ -458,7 +440,12 @@ msgstr "Vigane päring! Palun naase peamenüüsse"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
 msgid "Kiosk Mode"
-msgstr "Kioski režiim"
+msgstr "Kassarežiim"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
+msgid "Last Attendance"
+msgstr "Viimane kohalviibimine"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
@@ -476,14 +463,9 @@ msgid "Last Updated on"
 msgstr "Viimati uuendatud"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
-msgid "Last attendance id"
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manage Attendances"
-msgstr "Halda kohalviibijaid"
+msgstr "Halda kohalviibimisi"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -492,8 +474,9 @@ msgstr "Juhataja"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
-msgstr "Käsitsi kohalviibime"
+msgstr "Manuaalne kohalviibimine"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -506,7 +489,6 @@ msgid "Month"
 msgstr "Kuu"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
 msgstr "Minu kohalviibimised"
@@ -515,6 +497,11 @@ msgstr "Minu kohalviibimised"
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
 msgstr "Välja registreerimised puuduvad"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+msgid "No attendance records to display."
+msgstr "Kohalviibimise kirjed puuduvad."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
@@ -536,7 +523,7 @@ msgstr "PIN"
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
-"Kioski režiimis kasutatakse PIN koodi sisse ja välja registreerimiseks (kui "
+"Kassarežiimis kasutatakse PIN koodi sisse ja välja registreerimiseks (kui "
 "see on seadetes lubatud)"
 
 #. module: hr_attendance
@@ -567,14 +554,14 @@ msgid "Please return to the main menu."
 msgstr "Palun naaske peamenüüsse."
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.hr_employee_print_badge
+#: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
 msgstr "Prindi märk"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
-msgid "Reports"
-msgstr "Raportid"
+msgid "Reporting"
+msgstr "Raporteerimine"
 
 #. module: hr_attendance
 #. openerp-web
@@ -591,7 +578,12 @@ msgid "Select Employee"
 msgstr "Vali töötaja"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr "Määrake PIN-kood töötaja andmete ankeedil (personali seadetes)"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
 msgid "Settings"
 msgstr "Seaded"
 
@@ -628,7 +620,16 @@ msgid ""
 " out from his session"
 msgstr ""
 "Töötajal on menüüs juurdepääs \"minu kohalviibimistele\", et sessiooni "
-"käigus sisse ja välja registreerida."
+"käigus sisse ja välja registreeruda"
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"Kasutaja saab ligipääsu personali kohalviibimiste menüüle, võimaldades tal "
+"hallata oma kohalviibimisi."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -636,7 +637,7 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
-"Kasutaja peab manuaalseks sisse ja välja registreermiseks sisestama PIN-"
+"Kasutaja peab manuaalseks sisse- ja väljaregistreermiseks sisestama PIN-"
 "koodi ettevõtte ekraanil."
 
 #. module: hr_attendance
@@ -648,6 +649,11 @@ msgstr "Töötajate loomiseks liigu töötajate menüüsse."
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Today"
 msgstr "Täna"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use PIN codes to check in in Kiosk Mode"
+msgstr "Kasuta PIN-koode, et registreeruda sisse ja välja kassarežiimis"
 
 #. module: hr_attendance
 #. openerp-web
@@ -691,25 +697,12 @@ msgstr "Vale PIN-kood"
 #: code:addons/hr_attendance/models/hr_attendance.py:105
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr "Osalemisest ei saa duplikaati teha"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_base_config_settings
-msgid "base.config.settings"
-msgstr ""
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:18
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:37
-#, python-format
-msgid "employee presence<br/>green: checked in<br/>red: checked out"
-msgstr ""
+msgstr "Osalemist ei saa kopeerida."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
-msgstr "Töötajate kohalviibimiste nimekiri"
+msgstr "töötajate kohalviibimiste nimekiri"
 
 #. module: hr_attendance
 #. openerp-web
@@ -724,3 +717,8 @@ msgstr "okei"
 #, python-format
 msgid "or"
 msgstr "või"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

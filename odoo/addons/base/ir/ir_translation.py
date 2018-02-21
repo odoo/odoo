@@ -8,6 +8,7 @@ from difflib import get_close_matches
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules import get_module_path, get_module_resource
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -261,29 +262,9 @@ class IrTranslation(models.Model):
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrTranslation, self)._auto_init()
-        cr = self._cr
-
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
-        indexes = [row[0] for row in cr.fetchall()]
-
-        # Removed because there is a size limit on btree indexed values (problem with column src):
-        # cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
-        # cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
-        #
-        # Removed because hash indexes are not compatible with postgres streaming replication:
-        # cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation USING hash (src)')
-        if set(indexes) & set(['ir_translation_ltns', 'ir_translation_lts', 'ir_translation_src_hash_idx']):
-            cr.execute('DROP INDEX IF EXISTS ir_translation_ltns, ir_translation_lts, ir_translation_src_hash_idx')
-            cr.commit()
-
         # Add separate md5 index on src (no size limit on values, and good performance).
-        if 'ir_translation_src_md5' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_src_md5 ON ir_translation (md5(src))')
-            cr.commit()
-
-        if 'ir_translation_ltn' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
-            cr.commit()
+        tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
+        tools.create_index(self._cr, 'ir_translation_ltn', self._table, ['name', 'lang', 'type'])
         return res
 
     @api.model
@@ -413,10 +394,10 @@ class IrTranslation(models.Model):
         # always pass unicode so we can remove the string encoding/decoding.
         if not lang:
             return tools.ustr(source or '')
-        if isinstance(types, basestring):
+        if isinstance(types, pycompat.string_types):
             types = (types,)
         if res_id:
-            if isinstance(res_id, (int, long)):
+            if isinstance(res_id, pycompat.integer_types):
                 res_id = (res_id,)
             else:
                 res_id = tuple(res_id)
@@ -507,7 +488,7 @@ class IrTranslation(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' strings as a dictionary `{field_name: field_string}`
         """
-        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
         return {field.name: field.field_description for field in fields}
 
     @api.model
@@ -519,7 +500,7 @@ class IrTranslation(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' help as a dictionary `{field_name: field_help}`
         """
-        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
     @api.multi
@@ -550,7 +531,7 @@ class IrTranslation(models.Model):
 
         # check for read/write access on translated field records
         fmode = 'read' if mode == 'read' else 'write'
-        for mname, ids in model_ids.iteritems():
+        for mname, ids in model_ids.items():
             records = self.env[mname].browse(ids)
             records.check_access_rights(fmode)
             records.check_field_access_rights(fmode, model_fields[mname])

@@ -14,14 +14,14 @@
                     </group>
                     <group states="done" colspan="4">
                         <label string="The selected language has been successfully installed.
-You must change the preferences of the user and open a new menu to view the changes."/>
+You must change the preferences of the user to view the changes."/>
                     </group>
                     <footer states="init">
                         <button name="lang_install" string="Load" type="object" class="btn-primary"/>
                         <button special="cancel" string="Cancel" class="btn-default"/>
                     </footer>
                     <footer states="done">
-                        <button special="cancel" string="Close" class="btn-primary"/>
+                        <button name="reload" string="Close" type="object" class="btn-primary"/>
                     </footer>
                 </form>
            </field>

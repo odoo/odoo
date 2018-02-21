@@ -1,3 +1,5 @@
 # -*- coding: utf-8 -*-
-import im_livechat
-import website
+
+from . import im_livechat
+from . import website
+from . import res_config_settings

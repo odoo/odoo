@@ -3,15 +3,16 @@
 # * website_blog
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:28+0000\n"
-"PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +71,7 @@ msgstr "&amp;mdash;"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "&amp;times;"
-msgstr "&amp;φορές"
+msgstr "&amp;times;"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_feed
@@ -83,7 +84,7 @@ msgid ""
 "(Un)archiving a blog automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
-"Απο-αρχειοθέτηση ενός ιστολογίου αυτόματα απο-αρχειοθετούν και οι "
+"Απο-αρχειοθέτηση ενός ιστολογίου αυτόματα θα απο-αρχειοθετούν και οι "
 "δημοσιεύσεις του. Θέλετε να συνεχίσετε;"
 
 #. module: website_blog
@@ -99,7 +100,7 @@ msgstr "<b>Κλικ στο Αποθήκευση</b> για να καταχωρή
 #, python-format
 msgid "<b>Publish your blog post</b> to make it visible to your visitors."
 msgstr ""
-"<b>Δημοσιοποίηση</b> της ανάρτησης ιστολογίου για να την κάνετε ορατή στους "
+"<b>Δημοσίευση της ανάρτησης ιστολογίου</b>  για να την κάνετε ορατή στους "
 "επισκέπτες σας."
 
 #. module: website_blog
@@ -110,8 +111,8 @@ msgid ""
 "<b>That's it, your blog post is published!</b> Discover more features "
 "through the <i>Customize</i> menu."
 msgstr ""
-"<b>Αυτό ήταν, η ανάρτησή σας είναι δημοσιοποιημένη!</b> Ανακαλύψτε "
-"περισσότερα χαρακτηριστικά μέσω του μενού <i>Προσαρμογή</i>."
+"<b>Αυτό ήταν, η ανάρτησή σας είναι δημοσιευμένη!</b> Ανακαλύψτε περισσότερα "
+"χαρακτηριστικά μέσω του μενού <i>Προσαρμογή</i>."
 
 #. module: website_blog
 #. openerp-web
@@ -165,12 +166,12 @@ msgstr "Προσθέτοντας σε κορυφαία τεχνολογία"
 #: model:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Archived"
-msgstr "Αρχειοθετημένα"
+msgstr "Αρχειοθετήθηκαν"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_history
 msgid "Archives"
-msgstr "Αρχειοθετημένα"
+msgstr "Αρχείο"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_2
@@ -205,7 +206,7 @@ msgstr "Συντάκτης"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_author_avatar
 msgid "Avatar"
-msgstr "Αβατάρ"
+msgstr "Άβαταρ"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -228,7 +229,8 @@ msgid "Blog Name"
 msgstr "Όνομα ιστολογίου"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:23
+#: code:addons/website_blog/models/website.py:22
+#: code:addons/website_blog/models/website.py:47
 #: model:ir.model,name:website_blog.model_blog_post
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -237,7 +239,13 @@ msgid "Blog Post"
 msgstr "Ανάρτηση ιστολογίου"
 
 #. module: website_blog
-#: code:addons/website_blog/models/website.py:27
+#: code:addons/website_blog/models/website.py:53
+#, python-format
+msgid "Blog Post <b>%s</b> seems to be calling this file !"
+msgstr "Η ανάρτηση ιστολογίου <b>%s</b> δείχνει να καλεί αυτό το αρχείο !"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website.py:28
 #, python-format
 msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr ""
@@ -251,9 +259,12 @@ msgid "Blog Post Title"
 msgstr "Τίτλος ανάρτησης ιστολογίου"
 
 #. module: website_blog
+#: code:addons/website_blog/models/website.py:24
+#: code:addons/website_blog/models/website.py:49
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 #: model:ir.ui.menu,name:website_blog.menu_page
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_list
+#, python-format
 msgid "Blog Posts"
 msgstr "Αναρτήσεις ιστολογίου"
 
@@ -378,9 +389,9 @@ msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: website_blog
-#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.blog_edit_options
 msgid "Duplicate"
-msgstr "Δημιουργία αντίγραφου"
+msgstr "Δημιουργία Αντίγραφου"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
@@ -455,7 +466,7 @@ msgstr "Πράσινο"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Group By"
-msgstr "Ομαδοποίηση Κατά"
+msgstr "Ομαδοποίηση κατά"
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
@@ -600,7 +611,7 @@ msgstr "στενό"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:21
+#: code:addons/website_blog/static/src/js/website_blog.editor.js:37
 #: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
 msgid "New Blog Post"
@@ -694,7 +705,7 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:263
+#: code:addons/website_blog/controllers/main.py:270
 #, python-format
 msgid "Public user cannot post comments on blog post."
 msgstr ""
@@ -704,28 +715,28 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
 msgid "Published"
-msgstr "Δημοσιοποιημένη"
+msgstr "Δημοσιευμένο"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post_published_date
 msgid "Published Date"
-msgstr "Ημερομηνία Δημοσιοποίησης"
+msgstr "Ημερομηνία Δημοσίευσης"
 
 #. module: website_blog
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
 #: model:mail.message.subtype,name:website_blog.mt_blog_blog_published
 msgid "Published Post"
-msgstr "Δημοσιοποιημένη Ανάρτηση"
-
-#. module: website_blog
-#: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
-msgid "Published date"
-msgstr "Ημερομηνία δημοσιοποίησης"
+msgstr "Δημοσιευμένη Ανάρτηση"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Publishing Options"
-msgstr "Επιλογές Δημοσιοποίησης"
+msgstr "Επιλογές Δημοσίευσης"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_post_date
+msgid "Publishing date"
+msgstr "Ημερομηνία δημοσίευσης"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.website_blog
@@ -794,7 +805,7 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/models/website_blog.py:103
+#: code:addons/website_blog/models/website_blog.py:123
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:52
 #, python-format
 msgid "Start writing here..."
@@ -869,6 +880,15 @@ msgid "The Future of Emails"
 msgstr "Το Μέλλον των emails."
 
 #. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_post_post_date
+msgid ""
+"The blog post will be visible for your visitors as of this date on the "
+"website if it is set as published."
+msgstr ""
+"Η δημοσίευση του ιστολογίου θα είναι ορατή για τους επισκέπτες σας από αυτήν"
+" την ημερομηνία στον ιστότοπο, αν έχει οριστεί ως δημοσιευμένη."
+
+#. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid ""
 "This page is great to improve your <strong>Search Engine Optimization</strong>;\n"
@@ -908,7 +928,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_status
 msgid "Unpublished"
-msgstr "Μη δημοσιοποιημένη"
+msgstr "Μη Δημοσιευμένο"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1020,7 +1040,7 @@ msgstr "λειτουργικό"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "has been published on the"
-msgstr "έχει δημοσιοποιηθεί στο"
+msgstr "έχει δημοσιευτεί στο"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
@@ -1031,7 +1051,7 @@ msgstr "έλξη-δεξιά"
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "unpublished"
-msgstr "μη δημοσιοποιημένη"
+msgstr "μη δημοσιευμένο"
 
 #. module: website_blog
 #: model:ir.ui.view,arch_db:website_blog.blog_post_short

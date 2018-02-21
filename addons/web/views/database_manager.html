@@ -54,8 +54,7 @@
 
 {% macro create_form() -%}
   <p>Odoo is up and running! <br />
-  Create a new database by filling out the form,
-  you'll be able to install your first app in a minute.</p>
+  Fill out this form to create a new database. You will install your first app afterwards.</p>
   {{ master_input() }}
   <div class="form-group">
     <div class="row">
@@ -117,7 +116,11 @@
       <div class="text-center">
         <img src="/web/static/src/img/logo2.png" class="img-responsive center-block"/>
       </div>
-      {% if insecure and databases %}
+      {% if not list_db %}
+      <div class="alert alert-danger text-center">
+      The database manager has been disabled by the administrator
+      </div>
+      {% elif insecure and databases %}
       <div class="alert alert-warning">
       Warning, your Odoo database manager is not protected.
       Please <a href="#" data-toggle="modal" data-target=".o_database_master">set a master password</a>
@@ -127,10 +130,13 @@
       {% if error %}
       <div class="alert alert-danger">{{ error }}</div>
       {% endif %}
-      {% if databases %}
+      {% if list_db and databases %}
         <div class="list-group">
           {% for db in databases %}
-          <a href="/web?db={{ db }}" class="list-group-item">
+          <a href="/web?db={{ db }}" class="list-group-item" >
+            {% if db in incompatible_databases %}
+              <i class="icon fa fa-warning pull-right text-warning" title="This database may not be compatible"></i>
+            {% endif %}
             {{ db }}
             {% if manage %}
             <div class="text-right pull-right">
@@ -159,7 +165,7 @@
           <a href="/web/database/manager">Manage databases</a>
         </div>
         {% endif %}
-      {% else %}
+      {% elif list_db %}
         <form role="form" action="/web/database/create" method="post">
           {{ create_form() }}
           <input type="submit" value="Create database" class="btn btn-primary pull-left"/>
@@ -333,7 +339,7 @@
             </div>
             <div class="form-group">
               <label for="backup_format" class="control-label">Backup Format</label>
-              <select id="backup_format" name="backup_format" id="backup_format" class="form-control" required="required">
+              <select id="backup_format" name="backup_format" class="form-control" required="required">
                 <option value="zip">zip (includes filestore)</option>
                 <option value="dump">pg_dump custom format (without filestore)</option>
               </select>

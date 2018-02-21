@@ -3,23 +3,25 @@
 # * fetchmail
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Friderici Claude <claude@friderici.org>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Olivier Dony <odo@odoo.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2017
+# Bertrand LATOUR <divoir@gmail.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Nancy Bolognesi <nb@microcom.ca>, 2017
+# Lucas Deliege <lud@odoo.com>, 2017
+# Friderici Claude, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Florian Hatat, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,17 +32,17 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "# of emails"
-msgstr "Nb. de courriels"
+msgstr "Nb. d'emails"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "Actions à effectuer à l'arrivée des courriels"
+msgstr "Actions à effectuer à l'arrivée des emails"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
 msgid "Active"
-msgstr "Actif"
+msgstr "Actif/ve"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -59,14 +61,9 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
-msgstr "Paramétrez la passerelle de messagerie pour la réception"
-
-#. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
-msgstr "Confirmée"
+msgstr "Confirmé"
 
 #. module: fetchmail
 #: code:addons/fetchmail/models/fetchmail.py:137
@@ -108,7 +105,7 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom à afficher"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -118,7 +115,7 @@ msgstr "Rapatrier maintenant"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
 msgid "Hostname or IP of the mail server"
-msgstr "Nom de domaine ou adresse IP du serveur de courriels"
+msgstr "Nom de domaine ou adresse IP du serveur mail"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
@@ -143,19 +140,24 @@ msgstr "Si SSL requis"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
 msgid "Inbound Mail Server"
-msgstr "Serveur de courriels entrants"
+msgstr "Serveur d'emails entrants"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Incoming Email Servers"
+msgstr "Serveur de messagerie entrant"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "Serveur de courriels entrant"
+msgstr "Serveur d'email entrant"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "Serveurs de courriels entrant"
+msgstr "Serveurs d'emails entrants"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
@@ -175,7 +177,7 @@ msgstr "Dernière date de rapatriement"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
@@ -196,6 +198,13 @@ msgstr "Serveur local"
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Information de connexion"
+
+#. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr "E-mail : service fetchmail"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -219,14 +228,18 @@ msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
 msgstr ""
-"Action de serveur optionnelle et  personnalisée à déclencher pour chaque "
-"courriel entrant, sur l'enregistrement qui a été créé ou mis à jour par ce "
-"courriel"
+"Action serveur optionnelle à déclencher pour chaque email entrant, sur "
+"l'enregistrement qui a été créé ou mis à jour par ce message"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Outgoing Email Servers"
+msgstr "Serveur de messagerie sortant"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Courriels à envoyer"
+msgstr "Emails à envoyer"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -265,9 +278,9 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Traiter chaque courriel comme une partie de conversation correspondant à ce "
+"Traiter chaque email comme une partie de conversation correspondant à ce "
 "type de documents. Cela créera un nouveau document pour chaque nouvelle "
-"conversation, or attachera les courriels à une conversation (document) "
+"conversation, or attachera les emails à une conversation (document) "
 "existante."
 
 #. module: fetchmail
@@ -293,7 +306,7 @@ msgstr "Script"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "Recherche des serveurs de courriels entrants"
+msgstr "Recherche des serveurs d'emails entrants"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -357,7 +370,7 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"Une copie originale complète de chaque courriel doit être conservée comme "
+"Si une copie originale complète de chaque email doit être conservée comme "
 "référence et attachée à chaque message traité. Cela engendrera le doublement"
 " de la taille de votre base de données des messages."
 
@@ -368,5 +381,5 @@ msgid ""
 "will be stripped of any attachments before being processed"
 msgstr ""
 "Si les pièces jointes doivent être ou non téléchargées. Si cela n'est pas "
-"activé, les courriels entrant seront détachés de leurs pièces jointes avant "
+"activé, les emails entrant seront détachés de leurs pièces jointes avant "
 "d'être traités."

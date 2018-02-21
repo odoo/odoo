@@ -8,10 +8,10 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
-msgstr "Täitmise tähaeg"
+msgstr "Täitmise tähtaeg"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
@@ -51,20 +51,20 @@ msgid "Effective Date"
 msgstr "Tegelik kuupäev"
 
 #. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Quotation"
+msgstr "Pakkumine"
+
+#. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
 msgstr "Nõutud kuupäev"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/models/sale_order.py:56
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
 msgstr ""
-
-#. module: sale_order_dates
-#: model:ir.model,name:sale_order_dates.model_sale_order
-msgid "Sales Order"
-msgstr "Müügitellimus"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
@@ -72,7 +72,7 @@ msgid "Sales Order Line"
 msgstr "Müügikorralduse rida"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/models/sale_order.py:57
+#: code:addons/sale_order_dates/models/sale_order.py:58
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "

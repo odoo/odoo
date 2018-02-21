@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_mrp_line">
+        <t t-foreach="lines" t-as="a">
+            <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
+            <t t-if="a.get('model') == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+            <t t-set="domainClass" t-value="'o_stock_reports_domain_line'"/>
+            <t t-if="a['unfoldable'] == false">
+                <t t-set="domainClass" t-value="'o_stock_reports_domain_line_1'"/>
+            </t>
+            <t t-set="column" t-value="0" />
+            <tr t-att-data-type="a['type']" t-att-data-stream="a['stream']" t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-class="trclass">
+                <t t-set="tdclass" t-value="''" />
+                <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
+                <t t-set="column" t-value="0" />
+                <t t-foreach="a['columns']" t-as="c">
+                    <t t-set="column" t-value="column + 1" />
+                      <td t-att-data-id="a.get('id')" t-att-data-model="a['model']" t-att-data-model_id="a['model_id']" t-att-data-stream="a['stream']" t-att-class="tdclass" t-att-data-level="a['level']" t-att-data-parent_quant="a['parent_quant']">
+                        <t t-if="column == 1">
+                            <span t-att-data-active-id="a['id']" t-att-class="a['type'] + ' ' + domainClass"></span>
+                            <t t-if="a.get('unfoldable')">
+                                <span t-att-data-id="a['id']" class="o_stock_reports_unfoldable o_stock_reports_caret_icon"><i class="fa fa-fw fa-caret-right"></i></span>
+                            </t>
+                        </t>
+                        <span>
+                            <t t-raw="c" />
+                        </span>
+                    </td>
+                </t>
+            <td>
+            </td>
+            </tr>
+        </t>
+    </template>
+
+    <template id="report_stock_inventory">
+        <div class="container o_stock_reports_page o_stock_reports_no_print">
+            <span t-if="lines" class="o_report_heading text-left"><h1>Upstream Traceability</h1></span>
+            <span><t t-esc="context"/></span>
+            <div class="o_stock_reports_table">
+                <t t-if="not lines">
+                    <span class="text-center"><h1>No operation made on this lot.</h1></span>
+                </t>
+                <t t-if="lines">
+                    <table width='100%' class="table-responsive">
+                        <thead>
+                            <tr class="o_report_header">
+                                <th class="o_report_line_header">PRODUCT</th>
+                                <th class="o_report_line_header">LOT/SERIAL NUMBER</th>
+                                <th class="o_report_line_header">DATE</th>
+                                <th class="o_report_line_header">QUANTITY</th>
+                                <th class="o_report_line_header">LOCATION</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-call="stock.report_mrp_line"/>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="assets_stock_print_report" inherit_id="web.assets_common" active="True">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/stock/static/src/less/stock_traceability_report.less" />
+        </xpath>
+    </template>
+
+    <template id="report_stock_inventory_print">
+        <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
+        <t t-call="web.html_container">
+            <t t-call-assets="stock.assets_stock_print_report" t-js="False"/>
+            <t t-call='stock.report_stock_body_print'/>
+        </t>
+    </template>
+
+    <template id="report_stock_body_print">
+        <div class="container o_stock_reports_page o_stock_reports_no_print">
+            <span class="text-left"><h3>Traceability Report</h3></span>
+            <div class="table-responsive">
+                <table width='100%' class="o_stock_reports_table">
+                    <thead>
+                        <tr class="o_report_header">
+                            <th class="o_report_line_header">PRODUCT</th>
+                            <th class="o_report_line_header">LOT/SERIAL NUMBER</th>
+                            <th class="o_report_line_header">DATE</th>
+                            <th class="o_report_line_header">QUANTITY</th>
+                            <th class="o_report_line_header">LOCATION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="space_td" t-value="'margin-left: 0'"/>
+                        <t t-foreach="lines" t-as="a">
+                            <t t-set="space_td" t-value="'margin-left: '+ str(a['level']) + 'px;'"/>
+                            <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
+                            <t t-if="a.get('model') == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+                            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+                            <t t-set="column" t-value="0" />
+                            <tr t-att-data-type="a['type']" t-att-data-stream="a['stream']" t-att-data-id="a['id']" t-att-data-model="a['model']" t-att-class="trclass">
+                                <t t-set="tdclass" t-value="''" />
+                                <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
+                                <t t-set="column" t-value="0" />
+                                <t t-foreach="a['columns']" t-as="c">
+                                    <t t-set="column" t-value="column + 1" />
+                                    <td>
+                                        <t t-if="column == 1">
+                                            <span t-att-style="space_td"></span>
+                                        </t>
+                                        <span>
+                                            <t t-raw="c" />
+                                        </span>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+</odoo>

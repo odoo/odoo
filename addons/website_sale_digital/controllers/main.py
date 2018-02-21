@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from cStringIO import StringIO
+import io
 from werkzeug.utils import redirect
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.website_portal.controllers.main import website_account
+from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
 
 class WebsiteSaleDigitalConfirmation(WebsiteSale):
     @http.route([
@@ -17,19 +18,19 @@ class WebsiteSaleDigitalConfirmation(WebsiteSale):
     def payment_confirmation(self, **post):
         response = super(WebsiteSaleDigitalConfirmation, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
-        digital_content = map(lambda x: x.product_id.type == 'digital', order_lines)
-        response.qcontext.update(digital=any(digital_content))
+        digital_content = any(x.product_id.type == 'digital' for x in order_lines)
+        response.qcontext.update(digital=digital_content)
         return response
 
 
-class WebsiteSaleDigital(website_account):
+class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
     @http.route([
         '/my/orders/<int:order>',
     ], type='http', auth='user', website=True)
-    def orders_followup(self, order=None, **post):
-        response = super(WebsiteSaleDigital, self).orders_followup(order=order, **post)
+    def portal_order_page(self, order=None, **post):
+        response = super(WebsiteSaleDigital, self).portal_order_page(order=order, **post)
         if not 'order' in response.qcontext:
             return response
         order = response.qcontext['order']
@@ -85,8 +86,7 @@ class WebsiteSaleDigital(website_account):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            P = request.env['product.product'].sudo()
-            template_ids = map(lambda x: P.browse(x).product_tmpl_id.id, purchased_products)
+            template_ids = request.env['product.product'].sudo().browse(purchased_products).mapped('product_tmpl_id').ids
             if res_id not in template_ids:
                 return redirect(self.orders_page)
 
@@ -100,7 +100,7 @@ class WebsiteSaleDigital(website_account):
             else:
                 return request.not_found()
         elif attachment["datas"]:
-            data = StringIO(base64.standard_b64decode(attachment["datas"]))
-            return http.send_file(data, filename=attachment['name'].encode('utf-8'), as_attachment=True)
+            data = io.BytesIO(base64.standard_b64decode(attachment["datas"]))
+            return http.send_file(data, filename=attachment['name'], as_attachment=True)
         else:
             return request.not_found()

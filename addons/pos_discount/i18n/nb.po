@@ -3,14 +3,13 @@
 # * pos_discount
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
 # Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
 "Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -32,22 +31,20 @@ msgid "Discount"
 msgstr "Rabatt"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:14
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+msgid "Discount %"
+msgstr "Rabatt %"
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
-#, python-format
 msgid "Discount Percentage"
 msgstr "Rabattprosent"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
 msgstr "Rabattprodukt"
-
-#. module: pos_discount
-#: model:ir.ui.view,arch_db:pos_discount.view_pos_config_form
-msgid "Discounts"
-msgstr "Rabatter"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
@@ -61,7 +58,7 @@ msgstr "Standard rabattprosent"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
-msgid "The product used to model the discount"
+msgid "The product used to model the discount."
 msgstr ""
 
 #. module: pos_discount

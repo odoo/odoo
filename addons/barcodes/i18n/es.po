@@ -3,32 +3,30 @@
 # * barcodes
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Martin Mendoza del Solar <martin@mendozadelsolar.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Glen Sojo <inactive+glen.sojo@transifex.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Miguel Orueta <mo@landoo.es>, 2016
+# Martin Trigaux, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Glen Sojo <inactive+glen.sojo@transifex.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Gustavo Valverde, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2017
+# Sergio Hevia <sah@talleresbernesga.com>, 2017
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Antonio Trueba, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
+# Miguel Orueta <mo@landoo.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Miguel Orueta <mo@landoo.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,8 +80,8 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
-"Una nomenclatura de código de barras define cómo identifica e interpreta un "
-"punto de venta los códigos de barras"
+"Una nomenclatura de código de barras define cómo un punto de venta "
+"identifica e interpreta los códigos de barras"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
@@ -172,11 +170,11 @@ msgstr "Creado el"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Credit Card"
-msgstr "Tarjetas de Crédito"
+msgstr "Tarjeta de Crédito"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:100
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:359
 #, python-format
 msgid "Discard"
 msgstr "Descartar"
@@ -191,7 +189,7 @@ msgstr "Producto con descuento"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre a Mostrar"
 
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
@@ -215,17 +213,29 @@ msgstr "Codificación"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:301
+#, python-format
+msgid "Error : Barcode command is undefined"
+msgstr "Error : El comando de código de barra no se ha definido."
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:63
 #, python-format
 msgid "Error : Document not editable"
 msgstr "Error: Documento no editable"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:332
 #, python-format
 msgid "Error : No last scanned barcode"
 msgstr "Error: El último código de barras no se ha escaneado"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_ir_http
+msgid "HTTP routing"
+msgstr "Enrutado HTTP"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_id
@@ -239,19 +249,19 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr "Última Modificación en"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr "Última Actualización por"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
 msgid "Last Updated on"
-msgstr "Última actualización el"
+msgstr "Última Actualización el"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -312,7 +322,7 @@ msgstr "Reglas"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:86
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:352
 #, python-format
 msgid "Select"
 msgstr "Seleccionar"
@@ -324,7 +334,7 @@ msgstr "Secuencia"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:85
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:351
 #, python-format
 msgid "Set quantity"
 msgstr "Definir cantidad"
@@ -332,12 +342,12 @@ msgstr "Definir cantidad"
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
-msgstr "Mesas"
+msgstr "Tablas"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
 msgid "The barcode matching pattern"
-msgstr "El patrón de casado para el código de barras"
+msgstr "El patrón de coincidencia del código de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
@@ -347,7 +357,7 @@ msgstr "La lista de reglas de códigos de barras"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
 msgid "The matched pattern will alias to this barcode"
-msgstr "El patrón casado será un sobrenombre para este código de barras"
+msgstr "El patrón de coincidencia será un alias para este código de barras"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:196
@@ -368,14 +378,14 @@ msgstr ""
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:64
 #, python-format
 msgid "To modify this document, please first start edition."
 msgstr "Para modificar este documento, inicie primero la edición."
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:333
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr "Para definir la cantidad primero escanee un código de barras."
@@ -423,8 +433,7 @@ msgstr "Unidad de producto"
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
-"Usado para ordenar reglas. Las reglas con menor secuencia son casadas "
-"primero."
+"Usado para ordenar reglas. Las reglas con menor secuencia coinciden primero."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
@@ -434,7 +443,7 @@ msgstr "Valor del último código de barras escaneado."
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Weighted Product"
-msgstr "Producto pesado"
+msgstr "Producto Pesado"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature

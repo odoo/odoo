@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="product_template_quote_1" model="product.template">
+            <field name="name">Functional Training</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">50000.0</field>
+            <field name="list_price">750000.0</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">Learn directly from our team and network of Odoo experts. Choose from the available training sessions for a better functional understanding of Odoo</field>
+        </record>
+
+        <record id="product_product_quote_1" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_quote_1"/>
+            <field name="default_code">QF11</field>
+        </record>
+
+        <record id="product_template_quote_2" model="product.template">
+            <field name="name">Technical Training</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">50000.0</field>
+            <field name="list_price">0.0</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">Learn directly from our team and network of Odoo experts. Choose from the available training sessions for a better technical understanding of Odoo</field>
+        </record>
+
+        <record id="product_product_quote_2" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_quote_2"/>
+            <field name="default_code">QF12</field>
+        </record>
+
+        <record id="product_template_quote_3" model="product.template">
+            <field name="name">Advanced CRM Functional</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="standard_price">50000.0</field>
+            <field name="list_price">750000.0</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description_sale">Learn directly from our team and network of Odoo experts. Choose from the available training sessions for a better functional understanding of Odoo</field>
+        </record>
+
+        <record id="product_product_quote_3" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_quote_3"/>
+            <field name="default_code">QF13</field>
+        </record>
+
+        <record id="website_quote_template_1" model="sale.quote.template">
+            <field name="name">Partnership Contract</field>
+            <field name="number_of_days">45</field>
+            <field name="website_description" type="xml">
+                <section>
+                    <div class="container text-center" style="background-color:#875A7B;color:white">
+                        <h2>Partner Program</h2>
+                        <div class="row">
+                            <div class="col-md-12 mb16 mt16">
+                                <p>
+                                    The Odoo eco system is designed to offer the best customer experience to Odoo users, from the product to implementation services. In order to guarantee that, the Odoo Partner Program ensures that official partners have the resources and knowledge required to offer Odoo implementation services. 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="container text-center" style="background-color:#eeeeee">
+                        <div class="row mt16 mb16">
+                            <div class="col-md-4">
+                                <span class="fa fa-mortar-board fa-5x"></span>
+                                <p class="text-muted">Is fully trained on Odoo</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="fa fa-github fa-5x"></span>
+                                <p class="text-muted">Has access to Odoo Enterprise source code on Github and latest bug fixes</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="fa fa-bug fa-5x"></span>
+                                <p class="text-muted">Has a direct relationship with Odoo SA to escalate issues</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="fa fa-file-text-o fa-5x"></span>
+                                <p class="text-muted">Publishes references directly on Odoo.com</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="fa fa-certificate fa-5x"></span>
+                                <p class="text-muted">Follows a transparent ranking system. Ready - Silver - Gold</p>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="fa fa-refresh fa-5x"></span>
+                                <p class="text-muted">Gets access to training sessions (updated weekly)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="container mt16" style="background-color:#875A7B;color:white;padding-left:10px;">
+                        <h2>Partners Commitment</h2>
+                        <h3>An Odoo official partner commits to:</h3>
+                        <div class="row">
+                            <div class="col-md-7 mb32">
+                                <ul>
+                                    <li>Train their staff by following Odoo training sessions</li>
+                                    <li>Become a Certified Odoo Partner</li>
+                                    <li>Have dedicated resources assigned to Odoo projects</li>
+                                    <li>Be available for periodic review meeting with Odoo SA account managers</li>
+                                    <li>Be the first level of support for his Odoo customers and use Odoo SA for the second level of support (mostly for bug fixes)</li>
+                                    <li>Promote Odoo Enterprise to its customers</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="container" style="background-color:#eeeeee">
+                        <h2 style="color:#741842">Benefits for a partner</h2>
+                        <h3 class="text-muted">Odoo official partners will benefit from:</h3>
+                        <div class="row">
+                            <div class="col-md-12 mb16 mt16">
+                                <ul style="color:#636363">
+                                    <li>The Odoo Enterprise GitHub repositories for all his developers</li>
+                                    <li>The ability to report bugs to be fixed by Odoo on behalf of his customer (Enterprise contracts only)</li>
+                                    <li>Access to an Account Manager at Odoo SA to discuss strategic, sales and service issues</li>
+                                    <li>Visibility and recognition, by being listed as an official partner on Odoo.com Partners page</li>
+                                    <li>Up to 20% commission on Odoo Enterprise sales, depending on the partnership level</li>
+                                    <li>Yearly upgrade training sessions when a new version is released</li>
+                                    <li>Access to the Partners Portal</li>
+                                    <li>Odoo sales training session</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
+        </record>
+
+        <record id="website_sale_order_line_1" model="sale.quote.line">
+            <field name="quote_id" ref="website_quote_template_1"/>
+            <field name="name">Functional Training</field>
+            <field name="product_id" ref="product_product_quote_1"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="price_unit">12950.00</field>
+            <field name="discount">10.00</field>
+            <field name="website_description" type="html">
+                <section>
+                    <h1>Online Training</h1>
+                </section>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12 mb32">
+                            <p>These courses feature the same high quality course content found in our traditional classroom trainings, supplemented with modular sessions and cloud-based labs. Many of our online learning courses also include dozens of recorded webinars and live sessions by our senior instructors.</p>
+                        </div>
+                        <div class="col-md-offset-1">
+                            <h3>Your advantages</h3>
+                            <ul>
+                                <li>Modular approach applied to the learning method</li>
+                                <li>New interactive learning experience</li>
+                                <li>Lower training budget for the same quality courses</li>
+                                <li>Better comfort to facilitate your learning process</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-12">
+                            <h2>Structure of the Training</h2>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1 mt16 mb16">
+                            <img class="img img-responsive" src="/website_quote/static/src/img/online_training.png"/>
+                        </div>
+                        <div class="col-md-6 mt32">
+                            <h4><strong>There are three components to the training</strong></h4>
+                            <ul>
+                                <li>Videos with detailed demos</li>
+                                <li>Hands-on exercises and their solutions</li>
+                                <li>Live Q&amp;A sessions with a trainer</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </field>
+        </record>
+
+        <record id="website_sale_order_line_2" model="sale.quote.line">
+            <field name="quote_id" ref="website_quote_template_1"/>
+            <field name="name">Technical Training</field>
+            <field name="product_id" ref="product_product_quote_2"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="price_unit">00.00</field>
+            <field name="website_description" type="html">
+                <section>
+                    <h1>Technical Training</h1>
+                </section>
+                <section id="whatsuit">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mb8 mt0">
+                                <h2>Course Summary</h2>
+                            </div>
+                            <div class="col-md-12 mt16 mb0">
+                                <p><span style="text-align: -webkit-center; ">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mt0 mb16">
+                                <h2>What you will learn?</h2>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading text-center">
+                                        <h3 style="margin: 0">Day 1</h3>
+                                        <p class="text-muted" style="margin: 0">Introduction to Javascript</p>
+                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Hello World</li>
+                                        <li class="list-group-item">Variables &amp; Operators</li>
+                                        <li class="list-group-item">Dive into Strings</li>
+                                        <li class="list-group-item">Functions</li>
+                                        <li class="list-group-item">Loops</li>
+                                        <li class="list-group-item">Arrays</li>
+                                    </ul>
+                                    <div class="panel-footer text-center">
+                                        <p class="text-muted"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading text-center">
+                                        <h3 style="margin: 0">Day 2</h3>
+
+                                        <p class="text-muted" style="margin: 0">Odoo Web Client</p>
+                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Introduction to JQuery</li>
+                                        <li class="list-group-item">Advanced JQuery</li>
+                                        <li class="list-group-item">Underscore</li>
+                                        <li class="list-group-item">Introduction to QWeb</li>
+                                        <li class="list-group-item">Controllers and Views</li>
+                                        <li class="list-group-item">Bootstrap CSS</li>
+                                        <li class="list-group-item">Calling the ORM</li>
+                                    </ul>
+                                    <div class="panel-footer text-center">
+                                        <p class="text-muted"><i>You will be able to create dynamic page interacting with the ORM.</i></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading text-center">
+                                        <h3 style="margin: 0">Day 3</h3>
+
+                                        <p class="text-muted" style="margin: 0">Building a Full Application</p>
+                                    </div>
+
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Modules</li>
+                                        <li class="list-group-item">Python Objects</li>
+                                        <li class="list-group-item">Report Engine</li>
+                                        <li class="list-group-item">Workflows</li>
+                                        <li class="list-group-item">Training Center Module</li>
+                                        <li class="list-group-item">Integrated Help</li>
+                                        <li class="list-group-item">How to Debug</li>
+                                    </ul>
+                                    <div class="panel-footer text-center">
+                                        <p class="text-muted"><i>You will be able to develop a full application with backend and user interface.</i></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mb16 mt0">
+                                <h2>Requirements</h2>
+                            </div>
+
+                            <div class="col-md-12 mb16 mt16">
+                                <p><strong>Objectives:</strong></p>
+
+                                <p><strong>Having attended this course, participants should be able to:</strong></p>
+
+                                <ul><li>Understand the development concepts and architecture;</li>
+                                    <li>Install and administer your own server;</li>
+                                    <li>Develop a new module for a particular application.</li>
+                                </ul><p>&amp;nbsp;</p>
+
+                                <p><strong>Our prices include:</strong></p>
+
+                                <ul><li>drinks and lunch;</li>
+                                    <li>training material.</li>
+                                </ul><p>&amp;nbsp;</p>
+
+                                <p><strong>Requirements:</strong></p>
+
+                                <ul><li>Bring your own laptop.</li>
+                                    <li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>
+                                    <li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>
+                                </ul><p>&amp;nbsp;</p>
+
+                                <p>To get more information, visit the <a target="_blank" href="https://www.odoo.com/">Odoo Official Website</a>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
+        </record>
+
+        <record id="website_sale_option_line_1" model="sale.quote.option">
+            <field name="template_id" ref="website_quote_template_1"/>
+            <field name="name">Advanced CRM Functional</field>
+            <field name="product_id" ref="product_product_quote_3"/>
+            <field name="quantity">1</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="price_unit">9000.00</field>
+            <field name="discount">10</field>
+        </record>
+</odoo>

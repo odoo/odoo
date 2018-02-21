@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class SaleQuoteTemplate(models.Model):
@@ -18,13 +18,17 @@ class SaleQuoteTemplate(models.Model):
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
     require_payment = fields.Selection([
-        (0, 'Not mandatory on website quote validation'),
-        (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
-    mail_template_id = fields.Many2one('mail.template', 'Confirmation Mail',
+        (0, 'Online Signature'),
+        (1, 'Online Payment')], default=0, string='Confirmation Mode',
+        help="Choose how you want to confirm an order to launch the delivery process. You can either "
+             "request a digital signature or an upfront payment. With a digital signature, you can "
+             "request the payment when issuing the invoice.")
+    mail_template_id = fields.Many2one(
+        'mail.template', 'Confirmation Mail',
+        domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
-
+    active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
+    
     @api.multi
     def open_template(self):
         self.ensure_one()

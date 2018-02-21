@@ -4,34 +4,40 @@ odoo.define('google_calendar.google_calendar', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-var pyeval = require('web.pyeval');
-var CalendarView = require('web_calendar.CalendarView');
+var CalendarRenderer = require('web.CalendarRenderer');
+var CalendarController = require('web.CalendarController');
 
 var _t = core._t;
-var QWeb = core.qweb;
 
-CalendarView.include({
-    init: function(parent, dataset, fields_view, options){
-        var self = this;
-        this._super.apply(this, arguments);
-        this.events = _.extend(this.events || {}, {
-            'click .o_google_sync_button': function() {
-                self.sync_calendar(self.fields_view);
-            },
-        });
-    },
-    sync_calendar: function(res, button) {
-        var self = this;
-        var context = pyeval.eval('context');
-        this.$google_button.prop('disabled', true);
+CalendarController.include({
+    custom_events: _.extend({}, CalendarController.prototype.custom_events, {
+        syncCalendar: '_onSyncCalendar',
+    }),
 
-        this.rpc('/google_calendar/sync_data', {
-            arch: res.arch,
-            fields: res.fields,
-            model: res.model,
-            fromurl: window.location.href,
-            local_context: context,
-        }).done(function(o) {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Try to sync the calendar with Google Calendar. According to the result
+     * from Google API, this function may require an action of the user by the
+     * mean of a dialog.
+     *
+     * @private
+     * @returns {OdooEvent} event
+     */
+    _onSyncCalendar: function (event) {
+        var self = this;
+        var context = this.getSession().user_context;
+
+        this._rpc({
+            route: '/google_calendar/sync_data',
+            params: {
+                model: this.modelName,
+                fromurl: window.location.href,
+                local_context: context,
+            }
+        }).then(function (o) {
             if (o.status === "need_auth") {
                 Dialog.alert(self, _t("You will be redirected to Google to authorize access to your calendar!"), {
                     confirm_callback: function() {
@@ -53,49 +59,88 @@ CalendarView.include({
                     });
                 }
             } else if (o.status === "need_refresh") {
-                self.$calendar.fullCalendar('refetchEvents');
+                self.reload();
             } else if (o.status === "need_reset") {
-                var confirm_text1 = _t("The account you are trying to synchronize (%s) is not the same as the last one used (%s)!");
-                var confirm_text2 = _t("In order to do this, you first need to disconnect all existing events from the old account.");
-                var confirm_text3 = _t("Do you want to do this now?");
-                var text = _.str.sprintf(confirm_text1 + "\n" + confirm_text2 + "\n\n" + confirm_text3, o.info.new_name, o.info.old_name);
+                var confirmText1 = _t("The account you are trying to synchronize (%s) is not the same as the last one used (%s)!");
+                var confirmText2 = _t("In order to do this, you first need to disconnect all existing events from the old account.");
+                var confirmText3 = _t("Do you want to do this now?");
+                var text = _.str.sprintf(confirmText1 + "\n" + confirmText2 + "\n\n" + confirmText3, o.info.new_name, o.info.old_name);
                 Dialog.confirm(self, text, {
                     confirm_callback: function() {
-                        self.rpc('/google_calendar/remove_references', {
-                            model: res.model,
-                            local_context: context,
-                        }).done(function(o) {
-                            if (o.status === "OK") {
-                                Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {
-                                    title: _t('Event disconnection success'),
-                                });
-                            } else if (o.status === "KO") {
-                                Dialog.alert(self, _t("An error occured while disconnecting events from your previous account. Please retry or contact your administrator."), {
-                                    title: _t('Event disconnection error'),
-                                });
-                            } // else NOP
-                        });
+                        self._rpc({
+                                route: '/google_calendar/remove_references',
+                                params: {
+                                    model: self.state.model,
+                                    local_context: context,
+                                },
+                            })
+                            .done(function(o) {
+                                if (o.status === "OK") {
+                                    Dialog.alert(self, _t("All events have been disconnected from your previous account. You can now restart the synchronization"), {
+                                        title: _t('Event disconnection success'),
+                                    });
+                                } else if (o.status === "KO") {
+                                    Dialog.alert(self, _t("An error occured while disconnecting events from your previous account. Please retry or contact your administrator."), {
+                                        title: _t('Event disconnection error'),
+                                    });
+                                } // else NOP
+                            });
                     },
                     title: _t('Accounts'),
                 });
             }
-        }).always(function(o) { self.$google_button.prop('disabled', false); });
-    },
-    extraSideBar: function() {
+        }).always(function () {
+            event.data.on_always();
+        });
+    }
+});
+
+CalendarRenderer.include({
+    events: _.extend({}, CalendarRenderer.prototype.events, {
+        'click .o_google_sync_button': '_onSyncCalendar',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds the Sync with Google button in the sidebar
+     *
+     * @private
+     */
+    _initSidebar: function () {
         var self = this;
-        var result = this._super();
-        this.$google_button = $();
-        if (this.dataset.model === "calendar.event") {
-            return result.then(function() {
-                this.$google_button = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
-                                    .addClass('o_google_sync_button oe_button btn btn-sm btn-default')
-                                    .prepend($('<img/>', {
-                                        src: "/google_calendar/static/src/img/calendar_32.png",
-                                    }))
-                                    .prependTo(self.$('.o_calendar_filter'));
-            });
+        this._super.apply(this, arguments);
+        this.$googleButton = $();
+        if (this.model === "calendar.event") {
+            this.$googleButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
+                                .addClass('o_google_sync_button oe_button btn btn-sm btn-default')
+                                .prepend($('<img/>', {
+                                    src: "/google_calendar/static/src/img/calendar_32.png",
+                                }))
+                                .appendTo(self.$sidebar);
         }
-        return result;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Requests to sync the calendar with Google Calendar
+     *
+     * @private
+     */
+    _onSyncCalendar: function () {
+        var self = this;
+        var context = this.getSession().user_context;
+        this.$googleButton.prop('disabled', true);
+        this.trigger_up('syncCalendar', {
+            on_always: function () {
+                self.$googleButton.prop('disabled', false);
+            },
+        });
     },
 });
 

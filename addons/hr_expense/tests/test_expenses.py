@@ -44,7 +44,7 @@ class TestCheckJournalEntry(TransactionCase):
         # Assign it to the air ticket product
         self.product.write({'property_account_expense_id': account_expense.id})
 
-        # Create Sale Journal
+        # Create Sales Journal
         company = self.env.ref('base.main_company')
         self.env['account.journal'].create({
             'name': 'Purchase Journal - Test',

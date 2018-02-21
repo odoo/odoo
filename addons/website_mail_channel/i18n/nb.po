@@ -3,17 +3,15 @@
 # * website_mail_channel
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Aleksander, 2016
-# Mari Løken <inactive+mari123@transifex.com>, 2016
-# Jorunn D. Newth, 2017
+# Viktor Basso <viktor@voit.no>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Jorunn D. Newth, 2017\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +33,7 @@ msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hei,</p>\n"
 "<p>Vi har mottatt en forespørsel om å melde deg på epostlisten <strong>${object.name}</strong></p>\n"
-"<p>Bekreft at du ønsker dette ved å klikke her:</p>\n"
+"<p>Bekreft påmelding ved å gå hit:</p>\n"
 "<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
 "<p>Hvis dette var en feil, eller du ikke har bedt om å bli påmeldt, kan du se bort fra denne meldingen.</p>\n"
 "</data>"
@@ -53,10 +51,10 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hei,</p>\n"
-"<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>\n"
-"<p>To confirm, please visit the following link:</p>\n"
+"<p>Vi har mottatt en forespørsel om å melde deg av epostlisten <strong>${object.name}</strong></p>\n"
+"<p>Bekreft avmelding ved å gå hit:</p>\n"
 "<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"<p>Hvis dette var en feil, eller du ikke har bedt om å bli avmeldt, kan du se bort fra denne meldingen.</p>\n"
 "</data>"
 
 #. module: website_mail_channel
@@ -66,10 +64,10 @@ msgstr "<span class=\"oe_snippet_thumbnail_title\">Diskusjonsgruppe</span>"
 
 #. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:17
 #, python-format
 msgid "Add a Subscribe Button"
-msgstr "Legg til en Abonner-knapp"
+msgstr "Legg til en påmeldingsknapp"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -79,7 +77,7 @@ msgstr "Vi får gjort så mye mer sammen"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Archives"
-msgstr "Arkiver"
+msgstr "Akriv"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -104,21 +102,11 @@ msgid "Change Discussion List"
 msgstr "Bytt diskusjonsliste"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "Description"
-msgstr "Beskrivelse"
-
-#. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
 #, python-format
 msgid "Discussion List"
 msgstr "Diskusjonsliste"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
-msgstr ""
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
@@ -153,12 +141,6 @@ msgid "Mailing-List"
 msgstr "Epostliste"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
-"Meldingsbeskrivelse: Enten emnelinje, eller begynnelsen på brødteksten"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
@@ -170,12 +152,12 @@ msgstr ""
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Utgående e-poster"
+msgstr "Utgående meldinger"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Please confirm subscription to ${object.name}"
-msgstr "Bekreft abonnement på ${object.name}"
+msgstr "Bekreft påmelding til ${object.name}"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
@@ -187,11 +169,6 @@ msgstr "Bekreft avmelding fra ${object.name}"
 #, python-format
 msgid "Post to"
 msgstr "Legg ut i"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
-msgstr "Publisert"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -210,22 +187,25 @@ msgid "Subscribe"
 msgstr "Abonner"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr "Adressen"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:238
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""
+"Adressen %s er allerede avmeldt eller har aldri vært påmeldt noen epostliste"
+
+#. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
-msgstr "Avslutt abonnement"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid ""
-"Used to display messages in a paragraph-based chatter using a unique path;"
-msgstr ""
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "Synlig som kommentar på nettstedet"
+msgstr "Avmeld"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -253,6 +233,19 @@ msgstr "vedlegg"
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
 msgstr "av"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already\n"
+"                    unsubscribed or was never subscribed to the mailing\n"
+"                    list, you may want to check that the address was\n"
+"                    correct."
+msgstr ""
+"er allerede\n"
+"avmeldt eller var aldri påmeldt epostlisten.\n"
+"Sjekk gjerne at den oppgitte adressen var\n"
+"korrekt."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -293,7 +286,7 @@ msgstr "send epost"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "show"
-msgstr "is"
+msgstr "vis"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -321,24 +314,3 @@ msgstr "avmeldt"
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
 msgstr "din epost..."
-
-#. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
-msgid "The address"
-msgstr "Adressen"
-
-#. module: website_mail_channel
-#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
-msgid ""
-"is already unsubscribed or was never subscribed to the mailing list, you may"
-" want to check that the address was correct."
-msgstr ""
-
-#. module: website_mail_channel
-#: code:addons/website_mail_channel/controllers/main.py:238
-#, python-format
-msgid ""
-"The address %s is already unsubscribed or was never subscribed to any "
-"mailing list"
-msgstr ""
-"Adressen %s er allerede avmeldt eller har aldri vært påmeldt noen epostliste"

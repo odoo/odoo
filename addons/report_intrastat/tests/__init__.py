@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import test_report_intrastat
+from . import test_report_intrastat

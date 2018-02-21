@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common
-from odoo.tools import float_compare
+from odoo import fields
 
 
 class TestPurchaseRequisition(common.TransactionCase):
@@ -43,22 +43,22 @@ class TestPurchaseRequisition(common.TransactionCase):
         self.requisition1.sudo(self.res_users_purchase_requisition_user.id).copy()
 
     def test_02_purchase_requisition(self):
-        # Create the procurement order and run that procurement.
-        procurement_product_hdd3 = self.env['make.procurement'].create({'product_id': self.product_13_id, 'qty': 15, 'uom_id': self.ref('product.product_uom_unit'), 'warehouse_id': self.ref('stock.warehouse0')})
-        procurement_product_hdd3.make_procurement()
-        # Run the scheduler.
-        ProcurementOrder = self.env['procurement.order']
-        ProcurementOrder.run_scheduler()
+        date_planned = fields.Datetime.now()
+        warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
+        product = self.env['product.product'].browse(self.product_13_id)
+        product.write({'route_ids': [(4, self.ref('purchase.route_warehouse0_buy'))]})
+        self.env['procurement.group'].run(product, 14, self.env['product.uom'].browse(self.ref('product.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
+                                          {
+                                            'warehouse_id': warehouse,
+                                            'date_planned': date_planned,
+                                          })
+
         # Check requisition details which created after run procurement.
-        procurements = ProcurementOrder.search([('requisition_id', '!=', False)])
-        for procurement in procurements:
-            requisition = procurement.requisition_id
-            self.assertEqual(requisition.date_end, procurement.date_planned, "End date is not correspond.")
-            self.assertEqual(len(requisition.line_ids), 1, "Requisition Lines should be one.")
-            line = requisition.line_ids[0]
-            self.assertEqual(line.product_id.id, procurement.product_id.id, "Product is not correspond.")
-            self.assertEqual(line.product_uom_id.id, procurement.product_uom.id, "UOM is not correspond.")
-            self.assertEqual(float_compare(line.product_qty, procurement.product_qty, precision_digits=2), 0, "Quantity is not correspond.")
+        line = self.env['purchase.requisition.line'].search([('product_id', '=', self.product_13_id), ('product_qty', '=', 14.0)])
+        requisition = line[0].requisition_id
+        self.assertEqual(requisition.date_end, date_planned, "End date does not correspond.")
+        self.assertEqual(len(requisition.line_ids), 1, "Requisition Lines should be one.")
+        self.assertEqual(line.product_uom_id.id, self.ref('product.product_uom_unit'), "UOM is not correspond.")
 
         # Give access rights of Purchase Requisition User to open requisition
         # Set tender state to choose tendering line.

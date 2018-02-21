@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import json
 from ast import literal_eval
 
 from odoo import models, fields, api
-from odoo.tools import pickle as cPickle
 
 
 class pos_cache(models.Model):
@@ -29,7 +29,7 @@ class pos_cache(models.Model):
                                          lang=self.compute_user_id.lang)
         res = prod_ctx.read(self.get_product_fields())
         datas = {
-            'cache': base64.encodestring(cPickle.dumps(res)),
+            'cache': base64.encodestring(json.dumps(res).encode('utf-8')),
         }
 
         self.write(datas)
@@ -49,8 +49,7 @@ class pos_cache(models.Model):
             self.product_fields = str(fields)
             self.refresh_cache()
 
-        cache = base64.decodestring(self.cache)
-        return cPickle.loads(cache)
+        return json.loads(base64.decodestring(self.cache).decode('utf-8'))
 
 
 class pos_config(models.Model):

@@ -33,8 +33,8 @@ class TestSale(TestMail):
         product_template_id = self.env.ref('sale.advance_product_0').product_tmpl_id
         product_template_id.write({'property_account_income_id': account_rev_id})
 
-        # Create Sale Journal
-        journal_obj.create({'name': 'Sale Journal - Test', 'code': 'STSJ', 'type': 'sale', 'company_id': company_id})
+        # Create Sales Journal
+        journal_obj.create({'name': 'Sales Journal - Test', 'code': 'STSJ', 'type': 'sale', 'company_id': company_id})
 
         # In order to test, I create new user and applied Invoicing & Payments group.
         user = self.env['res.users'].create({
@@ -43,21 +43,21 @@ class TestSale(TestMail):
             'company_id': 1,
             'groups_id': [(6, 0, [group_id])]})
         assert user, "User will not created."
-        # I create partner for sale order.
+        # I create partner for sales order.
         partner = partner_obj.create({
             'name': 'Test Customer',
             'email': 'testcustomer@test.com',
             'property_account_receivable_id': account_recv_id,
         })
 
-        # In order to test I create sale order and confirmed it.
+        # In order to test I create sales order and confirmed it.
         order = self.env['sale.order'].create({
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
             'partner_shipping_id': partner.id,
             'date_order': datetime.today(),
             'pricelist_id': self.env.ref('product.list0').id})
-        assert order, "Sale order will not created."
+        assert order, "Sales order will not created."
         context = {"active_model": 'sale.order', "active_ids": [order.id], "active_id": order.id}
         order.with_context(context).action_confirm()
         # Now I create invoice.
@@ -67,7 +67,7 @@ class TestSale(TestMail):
             'product_id': self.env.ref('sale.advance_product_0').id,
         })
         invoice = payment.with_context(context).create_invoices()
-        assert order.invoice_ids, "No any invoice is created for this sale order"
+        assert order.invoice_ids, "No any invoice is created for this sales order"
         # Now I validate pay invoice wihth Test User(invoicing and payment).
         for invoice in order.invoice_ids:
             invoice.with_context(context).invoice_validate()

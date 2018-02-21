@@ -15,6 +15,10 @@
         <field name="groups_id" eval="[(4, ref('group_website_designer'))]"/>
     </record>
 
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
+    </record>
+
     <record id="website_designer_edit_qweb" model="ir.rule">
         <field name="name">website_designer: Manage Website and qWeb view</field>
         <field name="model_id" ref="base.model_ir_ui_view"/>
@@ -44,5 +48,11 @@
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
+    </record>
+    <record id="website_page_rule_public" model="ir.rule">
+        <field name="name">website.page: portal/public: read published pages</field>
+        <field name="model_id" ref="website.model_website_page"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
     </record>
 </odoo>

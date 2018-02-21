@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email templates -->
+        <record id="mail_template_data_track_confirmation" model="mail.template">
+            <field name="name">Track: Confirmation</field>
+            <field name="subject">Confirmation of ${object.name}</field>
+            <field name="model_id" ref="website_event_track.model_event_track"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="xml">
+<div>
+    <p>
+        Dear <t t-esc="object.partner_name"/>
+    </p><p>
+        We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.
+    </p><p>
+        You will find more details here:
+        <div style="margin-top: 16px;">
+            <a href="/event/${object.event_id.id}/"
+                    style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                View Event
+            </a>
+        </div>
+    </p>
+    <p>Sincerely,</p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="event_sponsor_type1" model="event.sponsor.type">
+            <field name="name">Bronze</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="event_sponsor_type2" model="event.sponsor.type">
+            <field name="name">Silver</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="event_sponsor_type3" model="event.sponsor.type">
+            <field name="name">Gold</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="event_track_stage0" model="event.track.stage">
+            <field name="name">Proposal</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="event_track_stage1" model="event.track.stage">
+            <field name="name">Confirmed</field>
+            <field name="sequence">2</field>
+            <field name="mail_template_id" ref="mail_template_data_track_confirmation"/>
+        </record>
+        <record id="event_track_stage2" model="event.track.stage">
+            <field name="name">Announced</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="event_track_stage3" model="event.track.stage">
+            <field name="name">Published</field>
+            <field name="sequence">4</field>
+            <field name="is_done" eval="True"/>
+        </record>
+        <record id="event_track_stage4" model="event.track.stage">
+            <field name="name">Refused</field>
+            <field name="sequence">5</field>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="event_track_stage5" model="event.track.stage">
+            <field name="name">Cancelled</field>
+            <field name="sequence">6</field>
+            <field name="fold" eval="True"/>
+            <field name="is_cancel" eval="True"/>
+        </record>
+
+        <!-- Event-related subtypes for new track / Chatter -->
+        <record id="mt_event_track" model="mail.message.subtype">
+            <field name="name">New Track</field>
+            <field name="res_model">event.event</field>
+            <field name="description">New Track Created</field>
+            <field name="default" eval="False"/>
+        </record>
+
+        <!-- Track subtypes -->
+        <record id="mt_track_blocked" model="mail.message.subtype">
+            <field name="name">Track Blocked</field>
+            <field name="res_model">event.track</field>
+            <field name="default" eval="False"/>
+            <field name="internal" eval="True"/>
+            <field name="description">Track blocked</field>
+        </record>
+        <record id="mt_track_ready" model="mail.message.subtype">
+            <field name="name">Track Ready</field>
+            <field name="res_model">event.track</field>
+            <field name="default" eval="True"/>
+            <field name="internal" eval="True"/>
+            <field name="description">Track Ready for Next Stage</field>
+        </record>
+    </data>
+</odoo>

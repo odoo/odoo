@@ -95,4 +95,4 @@ class ODSReader(object):
         return self.SHEETS[name]
 
     def getFirstSheet(self):
-        return next(iter(self.SHEETS.itervalues()))
+        return next(iter(self.SHEETS.values()))

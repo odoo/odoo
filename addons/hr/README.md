@@ -49,7 +49,7 @@ Leaves Management
 -----------------
 
 Keep track of the vacation days accrued by each employee. Employees enter their
-requests (paid holidays, sick leave, etc), for managers to approve and
+requests (paid leaves, sick leaves, etc), for managers to approve and
 validate. It's all done in just a few clicks. The agenda of each employee is
 updated accordingly.
 
@@ -76,11 +76,11 @@ Boost Engagement With Gamification
 
 Inspire achievement with challenges, goals and rewards. Define clear objectives
 and provide real time feedback and tangible results. Showcase the top
-performers to the entire team and publicly recognize a job well done.
+performers to the entire channel and publicly recognize a job well done.
 
 ### Leaderboards
 
-Promote leaders and competition amongst sales team with performance ratios.
+Promote leaders and competition amongst sales channel with performance ratios.
 
 ### Personal Objectives
 

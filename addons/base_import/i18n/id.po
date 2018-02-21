@@ -3,19 +3,19 @@
 # * base_import
 # 
 # Translators:
-# William Surya Permana <zarambie_game@yahoo.com>, 2016
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Deddy Ddr <deddy.ddr@gmail.com>, 2016
-# Ryanto The <ry.the77@gmail.com>, 2018
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: William Surya Permana <zarambie_game@yahoo.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,46 +25,47 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:598
+#: code:addons/base_import/static/src/js/import_action.js:535
 #, python-format
 msgid "(%d more)"
 msgstr "(%d lain)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:375
+#: code:addons/base_import/static/src/js/import_action.js:309
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
-"Satu kolom ditemukan dalam file, ini sering berarti file pemisah tidak benar"
+"Hanya satu kolom yang ditemukan dalam file, ini sering berarti file pemisah "
+"tidak benar"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:89
 #, python-format
 msgid "Cancel"
-msgstr "Batalkan"
+msgstr "Batal"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:599
+#: code:addons/base_import/models/base_import.py:596
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "Kolom %s memiliki nilai yang tidak tepat (nilai: %s)"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:619
+#: code:addons/base_import/models/base_import.py:618
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
 msgstr "Kolom %s memiliki nilai yang tidak tepat. Eror pada baris %d: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:245
-#: code:addons/base_import/static/src/js/base_import.js:256
-#: code:addons/base_import/static/src/js/base_import.js:263
-#: code:addons/base_import/static/src/js/base_import.js:275
+#: code:addons/base_import/static/src/js/import_action.js:176
+#: code:addons/base_import/static/src/js/import_action.js:187
+#: code:addons/base_import/static/src/js/import_action.js:194
+#: code:addons/base_import/static/src/js/import_action.js:206
 #, python-format
 msgid "Comma"
 msgstr "Koma"
@@ -106,32 +107,39 @@ msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:152
-#: code:addons/base_import/models/base_import.py:157
+#: code:addons/base_import/models/base_import.py:145
+#: code:addons/base_import/models/base_import.py:150
 #, python-format
 msgid "Database ID"
-msgstr "ID Basisdata"
+msgstr "ID Database"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:125
+#: code:addons/base_import/static/src/js/import_action.js:55
 #, python-format
 msgid "Date Format:"
 msgstr "Format Tanggal:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:126
+#: code:addons/base_import/static/src/js/import_action.js:56
 #, python-format
 msgid "Datetime Format:"
 msgstr "Format Tanggal-waktu:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:128
+#: code:addons/base_import/static/src/js/import_action.js:58
 #, python-format
 msgid "Decimal Separator:"
 msgstr "Pemisah Desimal:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:71
+#, python-format
+msgid "Defer parent/child computation"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
@@ -153,62 +161,51 @@ msgstr "Nama Tampilan"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:419
+#: code:addons/base_import/static/src/js/import_action.js:353
 #, python-format
 msgid "Don't import"
-msgstr "Impor"
+msgstr "Jangan Impor"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:264
-#: code:addons/base_import/static/src/js/base_import.js:282
+#: code:addons/base_import/static/src/js/import_action.js:195
+#: code:addons/base_import/static/src/js/import_action.js:213
 #, python-format
 msgid "Dot"
 msgstr "Titik"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:120
+#: code:addons/base_import/static/src/js/import_action.js:50
 #, python-format
 msgid "Encoding:"
-msgstr ""
-". Masalah \n"
-"adalah biasanya salah file encoding."
+msgstr "Encoding:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:621
+#: code:addons/base_import/models/base_import.py:620
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Error Parsing Tanggal [%s:L%d]: %s"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:234
+#: code:addons/base_import/models/base_import.py:227
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr "Sel eror ditemukan ketika memindai berkas XLS/XLSX: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:575
+#: code:addons/base_import/static/src/js/import_action.js:512
 #, python-format
 msgid "Everything seems valid."
 msgstr "Segalanya tampak sah."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:117
-#: code:addons/base_import/models/base_import.py:151
+#: code:addons/base_import/models/base_import.py:110
+#: code:addons/base_import/models/base_import.py:144
 #, python-format
 msgid "External ID"
-msgstr ""
-"Seperti yang Anda lihat dalam file ini, Fabien dan Laurence\n"
-"                        bekerja untuk perusahaan Bigees (company_1) dan\n"
-"                        Eric bekerja untuk perusahaan organi. relasi\n"
-"                        antara orang-orang dan perusahaan dilakukan dengan menggunakan\n"
-"                        Eksternal ID dari perusahaan. Kami harus awalan\n"
-"                        \"Eksternal ID\" dengan nama tabel untuk menghindari\n"
-"                        konflik ID antara orang dan perusahaan (person_1\n"
-"                        dan company_1 yang berbagi sama ID 1 di orignial yang\n"
-"                        database)."
+msgstr "ID Eksternal"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_file
@@ -228,7 +225,7 @@ msgstr "Jenis Berkas"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import_file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "File untuk memeriksa dan/atau mengimpor, mentah biner (tidak base64)"
+msgstr "File yang dimeriksa dan/atau diimpor, biner (bukan base64)"
 
 #. module: base_import
 #. openerp-web
@@ -239,7 +236,7 @@ msgstr "Untuk berkas CSV, masalah ini dapat berupa encoding yang tidak tepat."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:622
+#: code:addons/base_import/static/src/js/import_action.js:559
 #, python-format
 msgid "Get all possible values"
 msgstr "Dapatkan semua nilai yang mungkin"
@@ -253,7 +250,7 @@ msgstr "Bantuan"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:609
+#: code:addons/base_import/static/src/js/import_action.js:546
 #, python-format
 msgid "Here are the possible values:"
 msgstr "Berikut nilai yang mungkin:"
@@ -263,7 +260,7 @@ msgstr "Berikut nilai yang mungkin:"
 #: code:addons/base_import/static/src/xml/base_import.xml:116
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Inilah awal dari kita tidak bisa mengimpor file:"
+msgstr "Inilah awal dari bagian berkas yang tidak bisa diimpor:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_id
@@ -293,9 +290,9 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
-"Jika file berisi nama-nama kolom, Odoo dapat mencoba auto-mendeteksi bidang "
-"kolom yang sesuai. Hal ini membuat impor yang sederhana terutama ketika file"
-" telah banyak kolom."
+"Jika file berisi nama-nama kolom, Odoo dapat mencoba mendeteksi otomatis "
+"bidang kolom yang sesuai. Hal ini membuat impor lebih sederhana terutama "
+"ketika file memiliki banyak kolom."
 
 #. module: base_import
 #. openerp-web
@@ -306,21 +303,31 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
-"Jika model menggunakan openchatter, sejarah pelacakan akan mengatur "
-"langganan dan mengirim pemberitahuan selama impor, tapi mengarah ke impor "
-"lebih lambat."
+"Jika model menggunakan openchatter, riwayat pelacakan akan mengatur "
+"subskripsi dan mengirim pemberitahuan selama impor, tapi membuat impor lebih"
+" lambat."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:88
-#: code:addons/base_import/static/src/xml/base_import.xml:147
+#: code:addons/base_import/static/src/xml/base_import.xml:69
+#, python-format
+msgid ""
+"If the model uses parent/child relations, computing the"
+"                      parent / child relation occurs on every line, and lead"
+" to a slower import.                     Defering it can speed up import."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:97
+#: code:addons/base_import/static/src/xml/base_import.xml:156
 #, python-format
 msgid "Import"
 msgstr "Impor"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:182
+#: code:addons/base_import/static/src/js/import_action.js:111
 #, python-format
 msgid "Import a File"
 msgstr "Impor Berkas"
@@ -330,7 +337,7 @@ msgstr "Impor Berkas"
 #: code:addons/base_import/static/src/xml/base_import.xml:114
 #, python-format
 msgid "Import preview failed due to:"
-msgstr "Impor Tinjauan gagal karena:"
+msgstr "Tinjauan impor gagal karena:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import___last_update
@@ -384,7 +391,7 @@ msgstr "Terakhir diperbarui oleh"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_date
 msgid "Last Updated on"
-msgstr "Terakhir Diperbaharui pada"
+msgstr "Terakhir diperbarui pada"
 
 #. module: base_import
 #. openerp-web
@@ -403,7 +410,7 @@ msgstr "Petakan kolom anda yang akan diimpor"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
 msgid "Model"
-msgstr "Contoh"
+msgstr "Model"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_name
@@ -419,10 +426,10 @@ msgstr "Tidak ada berkas yang dipilih..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:485
+#: code:addons/base_import/static/src/js/import_action.js:418
 #, python-format
 msgid "Normal Fields"
-msgstr "Normal kolom"
+msgstr "Kolom Normal"
 
 #. module: base_import
 #. openerp-web
@@ -434,19 +441,19 @@ msgstr "Opsi..."
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
 msgid "Other Variable"
-msgstr "Variabel lainnya"
+msgstr "Variabel Lainnya"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
-msgid "Parent id"
-msgstr ""
+msgid "Parent"
+msgstr "Induk"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:486
+#: code:addons/base_import/static/src/js/import_action.js:419
 #, python-format
 msgid "Relation Fields"
-msgstr "Bidang hubungan"
+msgstr "Kolom Relasi"
 
 #. module: base_import
 #. openerp-web
@@ -464,17 +471,17 @@ msgstr "Pilih berkas CSV atau Excel untuk diimpor"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:246
+#: code:addons/base_import/static/src/js/import_action.js:177
 #, python-format
 msgid "Semicolon"
-msgstr "Tanda titik koma"
+msgstr "Titik Koma"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:121
+#: code:addons/base_import/static/src/js/import_action.js:51
 #, python-format
 msgid "Separator:"
-msgstr "Separator"
+msgstr "Pemisah:"
 
 #. module: base_import
 #. openerp-web
@@ -486,25 +493,32 @@ msgstr "Tampilkan kolom dari kolom relasi (lanjutan)"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
 msgid "Some Value"
-msgstr "Beberapa nilai"
+msgstr "Beberapa Nilai"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:248
+#: code:addons/base_import/static/src/js/import_action.js:179
 #, python-format
 msgid "Space"
 msgstr "Spasi"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:247
+#: code:addons/base_import/static/src/js/import_action.js:178
 #, python-format
 msgid "Tab"
-msgstr "tab"
+msgstr "Tab"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:122
+#: code:addons/base_import/static/src/xml/base_import.xml:86
+#, python-format
+msgid "Test Import"
+msgstr "Tes Impor"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:52
 #, python-format
 msgid "Text Delimiter:"
 msgstr "Pemisah Teks:"
@@ -520,7 +534,7 @@ msgstr "Baris pertama memuat label dari tiap kolom"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:127
+#: code:addons/base_import/static/src/js/import_action.js:57
 #, python-format
 msgid "Thousands Separator:"
 msgstr "Pemisah Ribuan:"
@@ -530,10 +544,10 @@ msgstr "Pemisah Ribuan:"
 #: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
 msgid "Track history during import"
-msgstr "Melacak sejarah selama impor"
+msgstr "Lacak riwayat selama impor"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:199
+#: code:addons/base_import/models/base_import.py:192
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
@@ -541,20 +555,13 @@ msgstr ""
 "\"{modname}\""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:200
+#: code:addons/base_import/models/base_import.py:193
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
 "Format berkas tidak didukung \"{}\", impor hanya mendukung CSV, ODS, XLS dan"
 " XLSX"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:86
-#, python-format
-msgid "Validate"
-msgstr "Validasi"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
@@ -573,17 +580,17 @@ msgid "Value"
 msgstr "Nilai"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:537
+#: code:addons/base_import/models/base_import.py:534
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "Anda harus mengkonfigurasi setidaknya satu bidang untuk mengimpor"
+msgstr "Anda harus mengkonfigurasi setidaknya satu kolom untuk diimpor"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:592
+#: code:addons/base_import/static/src/js/import_action.js:529
 #, python-format
 msgid "at row %d"
-msgstr "di baris% d"
+msgstr "pada baris %d"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
@@ -657,7 +664,7 @@ msgstr "base_import.tests.models.preview"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:594
+#: code:addons/base_import/static/src/js/import_action.js:531
 #, python-format
 msgid "between rows %d and %d"
-msgstr "antara baris% d dan% d"
+msgstr "antara baris %d dan %d"

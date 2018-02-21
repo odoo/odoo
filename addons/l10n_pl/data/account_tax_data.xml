@@ -218,6 +218,7 @@
       <field name="refund_account_id" ref="chart22030400"/>
       <field name="account_id" ref="chart22030400"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_09'), ref('l10n_pl.tag_pl_30')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vs_kraj_22" model="account.tax.template">
@@ -230,6 +231,7 @@
       <field name="refund_account_id" ref="chart22030100"/>
       <field name="account_id" ref="chart22030100"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_09'), ref('l10n_pl.tag_pl_30')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_22"/>
     </record>
 
     <record id="vs_kraj_8" model="account.tax.template">
@@ -242,6 +244,7 @@
       <field name="refund_account_id" ref="chart22030500"/>
       <field name="account_id" ref="chart22030500"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_08'), ref('l10n_pl.tag_pl_29')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_8"/>
     </record>
 
     <record id="vs_kraj_7" model="account.tax.template">
@@ -254,6 +257,7 @@
       <field name="refund_account_id" ref="chart22030200"/>
       <field name="account_id" ref="chart22030200"/>
       <field name="tag_ids" eval="[ref('l10n_pl.tag_pl_08'), ref('l10n_pl.tag_pl_29')]"/>
+                <field name="tax_group_id" ref="tax_group_vat_7"/>
     </record>
 
     <record id="vs_kraj_5" model="account.tax.template">
@@ -266,6 +270,7 @@
       <field name="refund_account_id" ref="chart22030600"/>
       <field name="account_id" ref="chart22030600"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_07'), ref('l10n_pl.tag_pl_28')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_5"/>
     </record>
 
     <record id="vs_kraj_3" model="account.tax.template">
@@ -278,6 +283,7 @@
       <field name="refund_account_id" ref="chart22030300"/>
       <field name="account_id" ref="chart22030300"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_07'), ref('l10n_pl.tag_pl_28')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_3"/>
     </record>
 
     <record id="vs_kraj_0" model="account.tax.template">
@@ -288,6 +294,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_05')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vs_kraj_zw" model="account.tax.template">
@@ -298,6 +305,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_02')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vs_kraj_usl_23" model="account.tax.template">
@@ -310,6 +318,7 @@
       <field name="refund_account_id" ref="chart22030400"/>
       <field name="account_id" ref="chart22030400"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_09'), ref('l10n_pl.tag_pl_30')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vs_kraj_usl_22" model="account.tax.template">
@@ -322,6 +331,7 @@
       <field name="refund_account_id" ref="chart22030100"/>
       <field name="account_id" ref="chart22030100"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_09'), ref('l10n_pl.tag_pl_30')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_22"/>
     </record>
 
     # VAT domestic purchase
@@ -337,6 +347,7 @@
       <field name="refund_account_id" ref="chart22020400"/>
       <field name="account_id" ref="chart22020400"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vz_kraj_22" model="account.tax.template">
@@ -349,6 +360,7 @@
       <field name="refund_account_id" ref="chart22020100"/>
       <field name="account_id" ref="chart22020100"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_22"/>
     </record>
 
     <record id="vz_kraj_8" model="account.tax.template">
@@ -361,6 +373,7 @@
       <field name="refund_account_id" ref="chart22020500"/>
       <field name="account_id" ref="chart22020500"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_8"/>
     </record>
 
     <record id="vz_kraj_7" model="account.tax.template">
@@ -373,6 +386,7 @@
       <field name="refund_account_id" ref="chart22020200"/>
       <field name="account_id" ref="chart22020200"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_7"/>
     </record>
 
     <record id="vz_kraj_5" model="account.tax.template">
@@ -385,6 +399,7 @@
       <field name="refund_account_id" ref="chart22020600"/>
       <field name="account_id" ref="chart22020600"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_5"/>
     </record>
 
     <record id="vz_kraj_3" model="account.tax.template">
@@ -397,6 +412,7 @@
       <field name="refund_account_id" ref="chart22020300"/>
       <field name="account_id" ref="chart22020300"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_3"/>
     </record>
 
     <record id="vz_kraj_0" model="account.tax.template">
@@ -407,6 +423,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_kraj_zw" model="account.tax.template">
@@ -417,6 +434,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_kraj_usl_23" model="account.tax.template">
@@ -429,6 +447,7 @@
       <field name="refund_account_id" ref="chart22020400"/>
       <field name="account_id" ref="chart22020400"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vz_kraj_usl_22" model="account.tax.template">
@@ -441,6 +460,7 @@
       <field name="refund_account_id" ref="chart22020100"/>
       <field name="account_id" ref="chart22020100"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42'), ref('l10n_pl.tag_pl_20')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_22"/>
     </record>
 
     # Vehicle leasing
@@ -457,6 +477,7 @@
       <field name="account_id" ref="chart22020400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_43')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vp_leas_purchase_1" model="account.tax.template">
@@ -470,6 +491,7 @@
       <field name="account_id" ref="chart22020400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vp_leas_sale_2" model="account.tax.template">
@@ -482,6 +504,7 @@
       <field name="refund_account_id" ref="chart76140000"/>
       <field name="account_id" ref="chart76140000"/>
       <field name="type_tax_use">none</field>
+                        <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vp_leas_purchase_2" model="account.tax.template">
@@ -494,6 +517,7 @@
       <field name="refund_account_id" ref="chart76140000"/>
       <field name="account_id" ref="chart76140000"/>
       <field name="type_tax_use">none</field>
+                        <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vp_leas_sale" model="account.tax.template">
@@ -506,6 +530,7 @@
       <field name="type_tax_use">sale</field>
       <field name="children_tax_ids" eval="[(6, 0, [ref('vp_leas_sale_1'), ref('vp_leas_sale_2')])]"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_21')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     <record id="vp_leas_purchase" model="account.tax.template">
@@ -518,6 +543,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="children_tax_ids" eval="[(6, 0, [ref('vp_leas_purchase_1'), ref('vp_leas_purchase_2')])]"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_20')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_23"/>
     </record>
 
     # Steel trade
@@ -530,6 +556,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_17')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_stal_podatek_naliczony" model="account.tax.template">
@@ -543,6 +570,7 @@
       <field name="account_id" ref="chart22020400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_stal_podatek_nalezny" model="account.tax.template">
@@ -556,6 +584,7 @@
       <field name="account_id" ref="chart22030400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_35')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_stal" model="account.tax.template">
@@ -567,6 +596,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="children_tax_ids" eval="[(6, 0, [ref('vz_stal_podatek_naliczony'), ref('vz_stal_podatek_nalezny')])]"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_20'), ref('l10n_pl.tag_pl_16')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     # Eurpean Union
@@ -580,6 +610,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_10')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_unia_podatek_naliczony" model="account.tax.template">
@@ -593,6 +624,7 @@
       <field name="account_id" ref="chart22020400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_unia_podatek_nalezny" model="account.tax.template">
@@ -606,6 +638,7 @@
       <field name="account_id" ref="chart22030400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_31')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_unia" model="account.tax.template">
@@ -617,6 +650,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="children_tax_ids" eval="[(6, 0, [ref('vz_unia_podatek_naliczony'), ref('vz_unia_podatek_nalezny')])]"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_20'), ref('l10n_pl.tag_pl_12')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vs_dostu" model="account.tax.template">
@@ -627,6 +661,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_04')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_nabu_podatek_naliczony" model="account.tax.template">
@@ -640,6 +675,7 @@
       <field name="account_id" ref="chart22020400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_nabu_2" model="account.tax.template">
@@ -653,6 +689,7 @@
       <field name="account_id" ref="chart22030400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_34')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_nabu" model="account.tax.template">
@@ -664,6 +701,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="children_tax_ids" eval="[(6, 0, [ref('vz_nabu_podatek_naliczony'), ref('vz_nabu_2')])]"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_20'),ref('l10n_pl.tag_pl_15')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
 
@@ -678,6 +716,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_11')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_imp_tow_podatek_naliczony" model="account.tax.template">
@@ -691,6 +730,7 @@
       <field name="account_id" ref="chart22020400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_imp_tow_podatek_nalezny" model="account.tax.template">
@@ -704,6 +744,7 @@
       <field name="account_id" ref="chart22030400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_32')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_imp_tow" model="account.tax.template">
@@ -715,6 +756,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="children_tax_ids" eval="[(6, 0, [ref('vz_imp_tow_podatek_naliczony'), ref('vz_imp_tow_podatek_nalezny')])]"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_13'), ref('l10n_pl.tag_pl_20')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vs_ekspu" model="account.tax.template">
@@ -725,6 +767,7 @@
       <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_03')])]"/>
+                <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_impu_podatek_naliczony" model="account.tax.template">
@@ -738,6 +781,7 @@
       <field name="account_id" ref="chart22020400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_42')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_impu_podatek_nalezny" model="account.tax.template">
@@ -751,6 +795,7 @@
       <field name="account_id" ref="chart22030400"/>
       <field name="type_tax_use">none</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_33')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
     <record id="vz_impu" model="account.tax.template">
@@ -762,6 +807,7 @@
       <field name="type_tax_use">purchase</field>
       <field name="children_tax_ids" eval="[(6, 0, [ref('vz_impu_podatek_naliczony'), ref('vz_impu_podatek_nalezny')])]"/>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_pl.tag_pl_14'), ref('l10n_pl.tag_pl_20')])]"/>
+                        <field name="tax_group_id" ref="tax_group_vat_0"/>
     </record>
 
 

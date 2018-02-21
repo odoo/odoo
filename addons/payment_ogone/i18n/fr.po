@@ -3,22 +3,21 @@
 # * payment_ogone
 # 
 # Translators:
-# dekkra <dekkra67@free.fr>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Cyrille de Lambert <cdelambert@auguria.net>, 2016
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Clo <clo@odoo.com>, 2016
+# dekkra <dekkra67@free.fr>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
+# Cyrille de Lambert <cdelambert@auguria.net>, 2017
+# Clo <clo@odoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -28,13 +27,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:241
+#: code:addons/payment_ogone/models/payment.py:240
 #, python-format
 msgid "; multiple order found"
 msgstr "; plusieurs commandes trouvées"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:239
+#: code:addons/payment_ogone/models/payment.py:238
 #, python-format
 msgid "; no order found"
 msgstr "; aucune commande trouvée"
@@ -66,13 +65,13 @@ msgstr "Numéro de carte"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Confirmer <span class=\"fa fa-long-arrow-right\"/>"
+msgid "Cardholder name"
+msgstr "Nom du titulaire de la carte"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Expires"
-msgstr "Expiration"
+msgid "Expires (MM / YY)"
+msgstr "Date d'expiration (MM/AA)"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
@@ -86,33 +85,23 @@ msgid ""
 " to the customer as the reason you want to keep his payment data"
 msgstr ""
 "Si vous souhaitez utiliser les alias Ogone, cette utilisation des alias par "
-"défaut sera présentée au client comme la raison pour laquelle vous voulez "
-"garder ses données de paiement"
+"défaut sera présentée au client comme la raison pour laquelle vous souhaitez"
+" conserver ses données de paiement"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "MM / YY"
-msgstr "MM/AA"
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Name"
-msgstr "Nom"
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:248
+#: code:addons/payment_ogone/models/payment.py:247
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
 msgstr "Ogone: SHASIGN invalide, %s reçu, %s calculé, pour les données %s"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:237
+#: code:addons/payment_ogone/models/payment.py:236
 #, python-format
 msgid "Ogone: received data for reference %s"
 msgstr "Ogone : données reçues pour la référence %s"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:230
+#: code:addons/payment_ogone/models/payment.py:229
 #, python-format
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "

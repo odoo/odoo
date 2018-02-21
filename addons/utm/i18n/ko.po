@@ -3,17 +3,15 @@
 # * utm
 # 
 # Translators:
-# 방상우 <mrroom@gmail.com>, 2017
-# 종현 엄 <whd5367@naver.com>, 2017
 # Martin Trigaux, 2017
-# 최재호 <hwangtog@gmail.com>, 2017
+# Up Link <linkup.way@gmail.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +23,7 @@ msgstr ""
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium_active
 msgid "Active"
-msgstr "사용"
+msgstr "활성화"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -38,18 +36,18 @@ msgstr "사용"
 #: model:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model:ir.ui.view,arch_db:utm.utm_campaign_tree
 msgid "Campaign"
-msgstr "캠페인"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_name
 msgid "Campaign Name"
-msgstr "캠페인명"
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_campaign_act
 #: model:ir.ui.menu,name:utm.menu_utm_campaign_act
 msgid "Campaigns"
-msgstr "캠페인"
+msgstr ""
 
 #. module: utm
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_form
@@ -60,7 +58,7 @@ msgstr "채널"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium_name
 msgid "Channel Name"
-msgstr "채널 이름"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
@@ -105,14 +103,19 @@ msgid "Display Name"
 msgstr "표시 이름"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
+msgid "Email Campaign - Products"
+msgstr ""
+
+#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "이메일 캠페인 - 서비스"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_facebook
 msgid "Facebook"
-msgstr "페이스북"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -157,7 +160,7 @@ msgstr "링크 트랙커"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
 msgid "Mailing Partner"
-msgstr "파트너 메일 발송"
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
@@ -171,23 +174,22 @@ msgstr "파트너 메일 발송"
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
 #: model:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Medium"
-msgstr "중간"
+msgstr ""
 
 #. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
-msgstr "뉴스레터"
+msgstr ""
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr "판매"
+msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
 msgid "Search engine"
-msgstr "검색 엔진"
+msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
@@ -198,12 +200,12 @@ msgstr "검색 엔진"
 #: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
-msgstr "자재"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_name
 msgid "Source Name"
-msgstr "소스명"
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
@@ -219,9 +221,9 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "이것은 다른 캠페인 활동을 추적할 때 도움을 주는 이름입니다.  예시: Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_account_invoice_medium_id
@@ -230,7 +232,7 @@ msgstr "이것은 다른 캠페인 활동을 추적할 때 도움을 주는 이�
 #: model:ir.model.fields,help:utm.field_link_tracker_medium_id
 #: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
 
 #. module: utm
@@ -241,14 +243,14 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
 msgid ""
-"This is the source of the link Ex:Search Engine, another domain,or name of "
-"email list"
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
 msgstr ""
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_twitter
 msgid "Twitter"
-msgstr "트위터"
+msgstr ""
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.marketing_utm

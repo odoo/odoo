@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="send_sms_view_form" model="ir.ui.view">
+        <field name="name">sms_send_sms.form</field>
+        <field name="model">sms.send_sms</field>
+        <field name="arch" type="xml">
+            <form string="Send an SMS">
+                <sheet>
+                    <group>
+                        <field name="recipients"/>
+                        <field name="message" widget="sms_widget"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <group>
+                        <span>
+                            <button string="Send" type="object" class="oe_highlight" name="action_send_sms"/>
+                            <button string="Cancel" class="oe_link" special="cancel" />
+                        </span>
+                    </group>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="send_sms_form_action" model="ir.actions.act_window">
+        <field name="name">Send SMS</field>
+        <field name="res_model">sms.send_sms</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <act_window id="send_sms_action"
+        name="Send SMS"
+        src_model="res.partner"
+        res_model="sms.send_sms"
+        view_type="form"
+        view_mode="form"
+        key2="client_action_multi"
+        target="new"/>
+
+</odoo>

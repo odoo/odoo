@@ -2,13 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
-import werkzeug
+import werkzeug.urls
 
+from collections import defaultdict
 from datetime import datetime, timedelta
-from urlparse import urljoin
 
-from odoo import api, fields, models, _
-
+from odoo import api, exceptions, fields, models, _
 
 class SignupError(Exception):
     pass
@@ -16,7 +15,7 @@ class SignupError(Exception):
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
+    return ''.join(random.SystemRandom().choice(chars) for _ in range(20))
 
 def now(**kwargs):
     dt = datetime.now() + timedelta(**kwargs)
@@ -52,7 +51,7 @@ class ResPartner(models.Model):
             the url state components (menu_id, id, view_type) """
 
         res = dict.fromkeys(self.ids, False)
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for partner in self:
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
@@ -88,14 +87,29 @@ class ResPartner(models.Model):
                 fragment['res_id'] = res_id
 
             if fragment:
-                query['redirect'] = base + werkzeug.url_encode(fragment)
+                query['redirect'] = base + werkzeug.urls.url_encode(fragment)
 
-            res[partner.id] = urljoin(base_url, "/web/%s?%s" % (route, werkzeug.url_encode(query)))
+            res[partner.id] = werkzeug.urls.url_join(base_url, "/web/%s?%s" % (route, werkzeug.urls.url_encode(query)))
         return res
 
     @api.multi
     def action_signup_prepare(self):
         return self.signup_prepare()
+
+    def signup_get_auth_param(self):
+        """ Get a signup token related to the partner if signup is enabled.
+            If the partner already has a user, get the login parameter.
+        """
+        res = defaultdict(dict)
+
+        allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'true'
+        for partner in self:
+            if allow_signup and not partner.user_ids:
+                partner.signup_prepare()
+                res[partner.id]['auth_signup_token'] = partner.signup_token
+            elif partner.user_ids:
+                res[partner.id]['auth_login'] = partner.user_ids[0].login
+        return res
 
     @api.multi
     def signup_cancel(self):
@@ -125,11 +139,11 @@ class ResPartner(models.Model):
         partner = self.search([('signup_token', '=', token)], limit=1)
         if not partner:
             if raise_exception:
-                raise SignupError("Signup token '%s' is not valid" % token)
+                raise exceptions.UserError(_("Signup token '%s' is not valid") % token)
             return False
         if check_validity and not partner.signup_valid:
             if raise_exception:
-                raise SignupError("Signup token '%s' is no longer valid" % token)
+                raise exceptions.UserError(_("Signup token '%s' is no longer valid") % token)
             return False
         return partner
 

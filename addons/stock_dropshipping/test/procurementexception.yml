@@ -20,18 +20,15 @@
         product_uom_qty: 1
         route_id: route_drop_shipping
 -
-  I confirm the sales order.
+  I confirm the sales order, but it will raise an error
 -
   !python {model: sale.order, id: sale_order_route_dropship01}: |
-    self.action_confirm()
--
-  I check there is a procurement in exception that has the procurement group of the sales order created before.
--
-  !python {model: procurement.order, id: False}: |
-    self.run_scheduler()
-    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
-    procs = self.search([('group_id.name', '=', sale_order.name), ('state', '=', 'exception')])
-    assert procs, 'No Procurement!'
+    b=False
+    try:
+      self.action_confirm()
+    except:
+      b=True
+    assert b, 'SO confirmation should throw error'
 -
   I set the at least one supplier on the product.
 -
@@ -41,24 +38,13 @@
         name: base.res_partner_2
         min_qty: 2.0
 -
-  I run the Procurement.
+  I confirm the sales order, no error this time
 -
-  !python {model: procurement.order, id: False}: |
-    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
-    procs = self.search([('group_id.name', '=', sale_order.name), ('state', '=', 'exception')])
-    procs.run()
--
-  I check the status changed there is no procurement order in exception any more from that procurement group
--
-  !python {model: procurement.order, id: False}: |
-    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
-    procs = self.search([('group_id.name', '=', sale_order.name), ('state', '=', 'exception')])
-    assert not procs, 'Procurement should be in running state'
+  !python {model: sale.order, id: sale_order_route_dropship01}: |
+    self.action_confirm()
 -
   I check a purchase quotation was created.
 -
-  !python {model: procurement.order, id: False}: |
-    sale_order = self.env['sale.order'].browse(ref("sale_order_route_dropship01"))
-    procs = self.search([('group_id.name', '=', sale_order.name)])
-    purchase_id = [proc.purchase_line_id.order_id for proc in procs if proc.purchase_line_id]
-    assert purchase_id, 'No Purchase Quotation is created'
+  !python {model: sale.order, id: sale_order_route_dropship01}: |
+    purchase = self.env['purchase.order.line'].search([('sale_line_id', '=', self.order_line.ids[0])]).order_id
+    assert purchase, 'No Purchase Quotation is created'

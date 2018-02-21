@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import ast
-from urlparse import urlparse
-from lxml import html
-
-from .qweb import QWeb, Contextifier
-from .assetsbundle import AssetsBundle
-from lxml import etree
+import json
+import logging
 from collections import OrderedDict
+from time import time
+
+from lxml import html
+from lxml import etree
+from werkzeug import urls
+
+from odoo.tools import pycompat
 
 from odoo import api, models, tools
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-import json
-from time import time
 
-import logging
+from .qweb import QWeb, Contextifier
+from .assetsbundle import AssetsBundle
+
 _logger = logging.getLogger(__name__)
 
 
@@ -67,7 +71,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('id_or_xml_id', 'tuple(map(options.get, self._get_template_cache_keys()))'),
+        tools.ormcache('id_or_xml_id', 'tuple(options.get(k) for k in self._get_template_cache_keys())'),
     )
     def compile(self, id_or_xml_id, options):
         return super(IrQWeb, self).compile(id_or_xml_id, options=options)
@@ -89,7 +93,7 @@ class IrQWeb(models.AbstractModel, QWeb):
             view = self.env['ir.ui.view'].browse(view_id)
             return view.inherit_id is not None
 
-        if isinstance(name, (int, long)) or is_child_view(name):
+        if isinstance(name, pycompat.integer_types) or is_child_view(name):
             for node in etree.fromstring(template):
                 if node.get('t-name'):
                     node.set('t-name', str(name))
@@ -119,7 +123,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     def _compile_directive_call_assets(self, el, options):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
         if len(el):
-            raise "t-call-assets cannot contain children nodes"
+            raise SyntaxError("t-call-assets cannot contain children nodes")
 
         # self._get_asset(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
         return [
@@ -165,8 +169,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if field_options and 'monetary' in field_options:
             try:
                 options = "{'widget': 'monetary'"
-                for k, v in json.loads(field_options).iteritems():
-                    print k, v
+                for k, v in json.loads(field_options).items():
                     if k in ('display_currency', 'from_currency'):
                         options = "%s, '%s': %s" % (options, k, v)
                     else:
@@ -215,15 +218,15 @@ class IrQWeb(models.AbstractModel, QWeb):
         files = []
         remains = []
         for el in html.fragments_fromstring(template):
-            if isinstance(el, basestring):
-                remains.append(el)
+            if isinstance(el, pycompat.string_types):
+                remains.append(pycompat.to_text(el))
             elif isinstance(el, html.HtmlElement):
                 href = el.get('href', '')
                 src = el.get('src', '')
                 atype = el.get('type')
                 media = el.get('media')
 
-                can_aggregate = not urlparse(href).netloc and not href.startswith('/web/content')
+                can_aggregate = not urls.url_parse(href).netloc and not href.startswith('/web/content')
                 if el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet' and can_aggregate):
                     if href.endswith('.sass'):
                         atype = 'text/sass'
@@ -231,19 +234,19 @@ class IrQWeb(models.AbstractModel, QWeb):
                         atype = 'text/less'
                     if atype not in ('text/less', 'text/sass'):
                         atype = 'text/css'
-                    path = filter(None, href.split('/'))
+                    path = [segment for segment in href.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
                 elif el.tag == 'script':
                     atype = 'text/javascript'
-                    path = filter(None, src.split('/'))
+                    path = [segment for segment in src.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:
-                    remains.append(html.tostring(el))
+                    remains.append(html.tostring(el, encoding='unicode'))
             else:
                 try:
-                    remains.append(html.tostring(el))
+                    remains.append(html.tostring(el, encoding='unicode'))
                 except Exception:
                     # notYETimplementederror
                     raise NotImplementedError

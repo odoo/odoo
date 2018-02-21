@@ -1,4 +1,4 @@
-.modal {
+.modal.o_technical_modal {
 
     .modal-content {
         border-radius: 0;
@@ -33,7 +33,7 @@
             text-align: left;
         }
     }
-    
+
 
     @media (min-width: @screen-sm-min) {
         .modal-dialog {
@@ -54,8 +54,34 @@
                     overflow: auto;
                     // fix iOS issue https://github.com/scottjehl/Device-Bugs/issues/8
                     -webkit-transform: translate3d(0, 0, 0);
+                    min-height: 0;
+
+                    &.o_dialog_error {
+                        overflow: visible;
+                        .o-flex-display();
+                        .o-flex-flow(column, nowrap);
+
+                        > .alert, > button {
+                            .o-flex(0, 0, auto);
+                        }
+
+                        > .o_error_detail {
+                            .o-flex(1, 1, auto);
+                            min-height: 0;
+                            overflow: auto;
+                        }
+                    }
                 }
             }
         }
     }
 }
+
+// Temporary fix for modals which are not instantiated thanks to the Dialog
+// JS classes (deprecated case) (see bootstrap_overridden.less) + Frontend.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// :not(body) > .modal {
+//     z-index: @zindex-modal-background + 1;
+// }

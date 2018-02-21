@@ -3,15 +3,16 @@
 # * fetchmail
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 # Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -52,14 +53,9 @@ msgid "Configuration"
 msgstr "Διαμόρφωση"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
-msgstr "Ρυθμίσετε τον διακομιστή εισερχόμενων emails"
-
-#. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
-msgstr "Επιβεβαιωμένο"
+msgstr "Επιβεβαιώθηκε"
 
 #. module: fetchmail
 #: code:addons/fetchmail/models/fetchmail.py:137
@@ -140,6 +136,11 @@ msgid "Inbound Mail Server"
 msgstr "Διακομιστής Εισερχόμενης Αλληλογραφίας"
 
 #. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Incoming Email Servers"
+msgstr "Διακομιστής Εισερχόμενης Αλληλογραφίας"
+
+#. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
@@ -192,6 +193,13 @@ msgid "Login Information"
 msgstr "Πληροφορίες Σύνδεσης"
 
 #. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr "Αλληλογραφία: Υπηρεσία λήψης"
+
+#. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
 msgid "Messages"
@@ -216,6 +224,11 @@ msgstr ""
 "Προαιρετική προσαρμοσμένη ενέργεια διακομιστή για την ενεργοποίηση για κάθε "
 "εισερχόμενο email, σχετικά με την δημιουργία ή ενημέρωση εγγραφής από αυτό "
 "το email"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Outgoing Email Servers"
+msgstr "Διακομιστές Εξερχόμενης Αλληλογραφίας"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail

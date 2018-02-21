@@ -8,7 +8,7 @@ Odoo Guidelines
 
 This page introduces the new Odoo Coding Guidelines. Those aim to improve the quality of the code (e.g. better readability of source) and Odoo Apps. Indeed, proper code eases maintenance, aids debugging, lowers complexity and promotes reliability.
 
-These guidelines should be applied to every new module, and new developpment. These guidelines will be applied to old module **only** in case of code refactoring (migration to new API, big refactoring, ...).
+These guidelines should be applied to every new module, and new development.
 
 .. warning::
 
@@ -23,7 +23,7 @@ Module structure
 
 Directories
 -----------
-A module is organised in important directories. Those contain the business logic; having a look at them should make understand the purpose of the module.
+A module is organised in important directories. Those contain the business logic; having a look at them should make you understand the purpose of the module.
 
 - *data/* : demo and data xml
 - *models/* : models definition
@@ -163,7 +163,9 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 - Try to group the record by model. In case of dependencies between
   action/menu/views, this convention may not be applicable.
 - Use naming convention defined at the next point
-- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``
+- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``.
+  If there is only not-updatable data in the file, the ``noupdate=1`` can be
+  set on the ``<odoo>`` tag and do not set a ``<data>`` tag.
 
 .. code-block:: xml
 
@@ -182,7 +184,6 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 Odoo supports custom tags acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
-- workflow: the <workflow> tag sends a signal to an existing workflow.
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use it if the record notation can't do what you want
@@ -409,7 +410,7 @@ Idiomatics Python Programming
 .. code-block:: python
 
     value = my_dict.get('key', None) # very very redundant
-    value= my_dict.get('key') # good
+    value = my_dict.get('key') # good
 
 Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
 meaning, be sure that you're using the right one.
@@ -451,11 +452,8 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
     # better
     for key in my_dict:
             "do something..."
-    # creates a temporary list
+    # accessing the key,value pair
     for key, value in my_dict.items():
-            "do something..."
-    # only iterates
-    for key, value in my_dict.iteritems():
             "do something..."
 
 - Use dict.setdefault
@@ -489,12 +487,11 @@ Programming in Odoo
   ease code reading and performance.
 
 
-Make your method works in batch
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Make your method work in batch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 When adding a function, make sure it can process multiple records. Typically,
-such method is decorated with ``api.multi`` decorator (or takes a list of *id*,
-if written in old api). Then you will have to iterate on ``self`` to treat each
-record.
+such methods are decorated with the ``api.multi`` decorator. Then you will have
+to iterate on ``self`` to treat each record.
 
 .. code-block:: python
 
@@ -524,8 +521,8 @@ is recommended to use ``read_group`` method, to compute all value in only one re
 
 Propagate the context
 ~~~~~~~~~~~~~~~~~~~~~
-In new API, the context is a ``frozendict`` that cannot be modified. To call
-a method with a different context, the ``with_context`` method should be used :
+The context is a ``frozendict`` that cannot be modified. To call a method with
+a different context, the ``with_context`` method should be used :
 
 .. code-block:: python
 
@@ -791,8 +788,7 @@ Symbols and Conventions
     - When defining *report* model (SQL views e.i.) : use
       ``<related_base_model>.report.<action>``, based on the Transient convention.
 
-- Odoo Python Class : use camelcase for code in api v8 (Object-oriented style),
-  underscore lowercase notation for old api (SQL style).
+- Odoo Python Class : use camelcase for code.
 
 
 .. code-block:: python
@@ -800,15 +796,11 @@ Symbols and Conventions
     class AccountInvoice(models.Model):
         ...
 
-    class account_invoice(osv.osv):
-        ...
-
 - Variable name :
     - use camelcase for model variable
     - use underscore lowercase notation for common variable.
-    - since new API works with record or recordset instead of id list, don't
-      suffix variable name with *_id* or *_ids* if they not contain id or list
-      of id.
+    - Odoo works with a record or a recordset, don't suffix variable names with
+      *_id* or *_ids* if they don't contain an id or a list of ids.
 
 .. code-block:: python
 

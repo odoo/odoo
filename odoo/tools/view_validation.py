@@ -2,11 +2,17 @@
 
 import collections
 import logging
+import os
+
+from lxml import etree
+from odoo import tools
 
 _logger = logging.getLogger(__name__)
 
 
 _validators = collections.defaultdict(list)
+_relaxng_cache = {}
+
 def valid_view(arch):
     for pred in _validators[arch.tag]:
         if not pred(arch):
@@ -24,6 +30,31 @@ def validate(*view_types):
         return fn
     return decorator
 
+
+def relaxng(view_type):
+    """ Return a validator for the given view type, or None. """
+    if view_type not in _relaxng_cache:
+        with tools.file_open(os.path.join('base', 'rng', '%s_view.rng' % view_type)) as frng:
+            try:
+                relaxng_doc = etree.parse(frng)
+                _relaxng_cache[view_type] = etree.RelaxNG(relaxng_doc)
+            except Exception:
+                _logger.exception('Failed to load RelaxNG XML schema for views validation')
+                _relaxng_cache[view_type] = None
+    return _relaxng_cache[view_type]
+
+
+@validate('calendar', 'diagram', 'gantt', 'graph', 'pivot', 'search', 'tree')
+def schema_valid(arch):
+    """ Get RNG validator and validate RNG file."""
+    validator = relaxng(arch.tag)
+    if validator and not validator.validate(arch):
+        result = True
+        for error in validator.error_log:
+            _logger.error(tools.ustr(error))
+            result = False
+        return result
+    return True
 
 @validate('form')
 def valid_page_in_book(arch):

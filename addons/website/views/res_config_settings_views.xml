@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.website</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="20"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Website" string="Website" data-key="website" groups="website.group_website_designer">
+                            <field name="website_id" invisible="1"/>
+                            <h2>Website</h2>
+                            <div class="row mt16 o_settings_container" id="webmaster_settings">
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="domain_setting">
+                                    <div class="o_setting_right_pane">
+                                        <label string="Website Title"/>
+                                        <div class="text-muted">
+                                            Name and favicon of your website
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="row mt16">
+                                                <label class="col-md-3 o_light_label" string="Name"/>
+                                                <field name="website_name"/>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-md-3 o_light_label" for="favicon" />
+                                                <field name="favicon" widget="image" class="pull-left oe_avatar"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="languages_setting">
+                                    <div class="o_setting_right_pane">
+                                        <label for="language_ids"/>
+                                        <div class="text-muted">
+                                            Languages available on your website
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="mt16">
+                                                <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                                            </div>
+                                            <field name="language_count" invisible="1"/>
+                                            <div class="mt8" attrs="{'invisible':[('language_count', '&lt;', 2)]}">
+                                                <label class="o_light_label mr8" string="Default" for="default_lang_id"/>
+                                                <field name="default_lang_id" widget="selection"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button type="action" name="%(base.action_view_base_language_install)d" string="Install new language" class="btn-link" icon="fa-arrow-right"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_setting">
+                                    <div class="o_setting_left_pane">
+                                        <field name="has_google_analytics"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="has_google_analytics"/>
+                                        <div class="text-muted">
+                                            Track visits in Google Analytics
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                            <div class="row mt16">
+                                                <label class="col-md-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
+                                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
+                                                    attrs="{'required': [('google_management_client_id', '!=', False)]}"/>
+                                            </div>
+                                        </div>
+                                        <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                            <a href="https://www.odoo.com/documentation/user/11.0/website/optimize/google_analytics.html"
+                                                    class="oe_link fa fa-arrow-right" target="_blank">
+                                                How to get my Tracking ID
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                    <div class="o_setting_left_pane">
+                                        <field name="has_google_analytics_dashboard"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="has_google_analytics_dashboard"/>
+                                        <div class="text-muted">
+                                            See Google Analytics data on your Website Dashboard
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
+                                            <div class="row mt16">
+                                                <label class="col-md-3 o_light_label" string="Client ID" for="google_management_client_id"/>
+                                                <field name="google_management_client_id"/>
+                                            </div>
+                                            <div class="row">
+                                                <label class="col-md-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
+                                                <field name="google_management_client_secret"/>
+                                            </div>
+                                        </div>
+                                        <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
+                                            <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
+                                                class="oe_link fa fa-arrow-right" target="_blank">
+                                                How to get my Client ID
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_maps_setting">
+                                    <div class="o_setting_left_pane">
+                                        <field name="has_google_maps"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="has_google_maps"/>
+                                        <div class="text-muted">
+                                            Show your address on a map in the <a href="/contactus">Contact Us</a> page
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
+                                            <div class="row mt16">
+                                                <label class="col-md-3 o_light_label" string="API Key" for="google_maps_api_key"/>
+                                                <field name="google_maps_api_key"/>
+                                            </div>
+                                        </div>
+                                        <div attrs="{'invisible': [('has_google_maps', '=', False)]}">
+                                            <a class="btn-link fa fa-arrow-right" target="_blank"
+                                               href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
+                                                Create a Google Project and Get a Key
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_website_version" widget="upgrade_boolean"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="module_website_version"/>
+                                        <div class="text-muted">
+                                            Create several versions of your website pages
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="auth_signup_uninvited"/>
+                                        <div class="text-muted">
+                                            Let your customers log in to see their documents
+                                        </div>
+                                        <div class="mt8">
+                                            <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="mt16">
+                                                <button type="object" name="open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
+                                    <div class="o_setting_left_pane">
+                                        <field name="cdn_activated"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="cdn_activated" string="Content Delivery Network (CDN)"/>
+                                        <div class="text-muted">
+                                            Use a CDN to optimize the availability of your website's content
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
+                                            <div class="row mt16">
+                                                <label class="col-md-3 o_light_label" for="cdn_url"/>
+                                                <field name="cdn_url"
+                                                       attrs="{'required': [('cdn_activated', '=', True)]}"
+                                                       placeholder="//mycompany.mycdn.com/"
+                                                       t-translation="off"/>
+                                            </div>
+                                            <div class="row" >
+                                                <label class="col-md-3 o_light_label" for="cdn_filters"/>
+                                                <field name="cdn_filters" class="oe_inline"
+                                                       attrs="{'required': [('cdn_activated', '=', True)]}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_website_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'website'}</field>
+        </record>
+
+        <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"
+            sequence="100" name="Configuration" groups="base.group_system"/>
+        <menuitem name="Settings"
+            id="menu_website_website_settings"
+            action="action_website_configuration"
+            parent="menu_website_global_configuration"
+            groups="base.group_system"/>
+
+        <menuitem name="Pages"
+            id="menu_website_pages_list"
+            action="action_website_pages_list"
+            parent="menu_website_global_configuration"
+            sequence="20"
+            groups="base.group_no_one"/>
+
+        <menuitem name="Redirects"
+            id="menu_website_redirect_list"
+            action="action_website_redirect_list"
+            parent="menu_website_global_configuration"
+            sequence="30"
+            groups="base.group_no_one"/>
+
+</odoo>

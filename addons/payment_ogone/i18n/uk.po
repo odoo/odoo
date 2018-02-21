@@ -3,17 +3,17 @@
 # * payment_ogone
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Yaroslav Molochko <onorua@gmail.com>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
-# LoganDowns <k0mna80@gmail.com>, 2016
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
+# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
+# Yaroslav Molochko <onorua@gmail.com>, 2017
+# LoganDowns <k0mna80@gmail.com>, 2017
 # Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -23,13 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:241
+#: code:addons/payment_ogone/models/payment.py:240
 #, python-format
 msgid "; multiple order found"
 msgstr "; знайдено декілька замовлень"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:239
+#: code:addons/payment_ogone/models/payment.py:238
 #, python-format
 msgid "; no order found"
 msgstr "; не знайдено жодного замовлення"
@@ -61,13 +61,13 @@ msgstr "Номер картки"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Підтвердити <span class=\"fa fa-long-arrow-right\"/>"
+msgid "Cardholder name"
+msgstr ""
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Expires"
-msgstr "Термін дії"
+msgid "Expires (MM / YY)"
+msgstr ""
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
@@ -85,29 +85,19 @@ msgstr ""
 "зберегти свої дані платежу."
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "MM / YY"
-msgstr "ММ / РР"
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Name"
-msgstr "Назва"
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:248
+#: code:addons/payment_ogone/models/payment.py:247
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
 msgstr "Ogone: недійсний shasign, отриманий%s, обчислений%s, для даних %s"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:237
+#: code:addons/payment_ogone/models/payment.py:236
 #, python-format
 msgid "Ogone: received data for reference %s"
 msgstr "Ogone: отримані дані для довідки %s"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:230
+#: code:addons/payment_ogone/models/payment.py:229
 #, python-format
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "

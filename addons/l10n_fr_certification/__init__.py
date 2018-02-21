@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import models
-from openerp import api, SUPERUSER_ID
-from models.res_company import UNALTERABLE_COUNTRIES
+from . import models
+from odoo import api, SUPERUSER_ID
+from .models.res_company import UNALTERABLE_COUNTRIES
 
 
 def _setup_inalterability(cr, registry):

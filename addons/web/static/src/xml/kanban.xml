@@ -1,0 +1,122 @@
+<template>
+
+<t t-name="KanbanView.buttons">
+    <div>
+        <button type="button" class="btn btn-primary btn-sm o-kanban-button-new" accesskey="c">
+            <t t-esc="create_text || _t('Create')"/>
+        </button>
+    </div>
+</t>
+
+<t t-name="KanbanView.Group">
+    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id">
+        <div class="o_kanban_header">
+            <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
+                <span class="o_column_title"><t t-esc="widget.title"/></span>
+                <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
+                <span class="o_kanban_config dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                        <t t-if="widget.grouped_by_m2o">
+                            <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
+                            <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
+                        </t>
+                        <t t-if="widget.has_active_field">
+                            <li><a class="o_column_archive" href="#">Archive Records</a></li>
+                            <li><a class="o_column_unarchive" href="#">Restore Records</a></li>
+                        </t>
+                    </ul>
+                </span>
+                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
+            </div>
+        </div>
+        <div t-if="widget.remaining > 0" class="o_kanban_load_more">
+            <t t-call="KanbanView.LoadMore"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="KanbanView.LoadMore">
+    <a href="#">Load more... (<t t-esc="widget.remaining"/> remaining)</a>
+</t>
+
+<t t-name="KanbanView.ColumnQuickCreate">
+    <div class="o_column_quick_create">
+        <div class="o_column_header">
+            <span class="o_kanban_add_column"><i class="fa fa-plus"/></span>
+            <span class="o_kanban_title">Add new Column</span>
+        </div>
+        <div class="o_kanban_quick_create">
+            <div class="input-group">
+              <input type="text" class="form-control o_input" placeholder="Column title"/>
+              <span class="input-group-btn">
+                <button class="btn btn-primary o_kanban_add" type="button">Add</button>
+              </span>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="KanbanView.QuickCreate">
+    <div class="o_kanban_quick_create">
+        <input type="text" class="o_input" placeholder="Title"/>
+        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-sm btn-primary o_kanban_edit">Edit</button>
+        <button class="btn btn-sm btn-default o_kanban_cancel ml8">Discard</button>
+    </div>
+</t>
+
+<t t-name="KanbanColorPicker">
+    <li t-foreach="12" t-as="color">
+        <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
+    </li>
+</t>
+<t t-name="KanbanView.nocontent">
+    <div class="oe_view_nocontent">
+        <t t-raw="content"/>
+    </div>
+</t>
+
+<t t-name="GraphCustomTooltip">
+    <table>
+        <tbody>
+            <tr>
+                <td class="legend-color-guide">
+                    <div t-attf-style="background-color: #{color};"></div>
+                </td>
+                <td class="key"><t t-esc="key" /></td>
+                <td class="value"><t t-esc="value" /></td>
+            </tr>
+        </tbody>
+    </table>
+</t>
+
+<t t-name="KanbanView.ColumnProgressBar">
+    <div class="o_kanban_counter">
+        <div class="o_kanban_counter_progress progress">
+            <t t-foreach="widget.colors" t-as="color">
+                <t t-set="count" t-value="widget.subgroupCounts and widget.subgroupCounts[color] or 0"/>
+                <div t-attf-class="progress-bar transition-off bg-#{color_value}-full#{count ? ' o_bar_has_records' : ''}#{widget.activeFilter ? ' active progress-bar-striped' : ''}"
+                    t-att-data-filter="color"
+                    t-attf-data-original-title="#{count} #{color}"
+                    t-attf-style="width: #{count ? (count * 100 / widget.groupCount) : 0}%;"/>
+            </t>
+        </div>
+        <div class="o_kanban_counter_side"><b><t t-esc="widget.totalCounterValue || 0"/></b></div>
+    </div>
+</t>
+
+<!-- Mobile templates -->
+
+<t t-name="KanbanView.MobileTabs">
+    <div class="o_kanban_mobile_tabs">
+        <t t-foreach="data" t-as="group">
+            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
+                <span class="o_column_title"><t t-esc="group.value"/></span>
+            </div>
+        </t>
+    </div>
+</t>
+
+</template>

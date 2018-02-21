@@ -3,26 +3,27 @@
 # * analytic
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# Ali zuaby <ali@zuaby.net>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Mazen Abu Ghali <mabughali@yahoo.com>, 2016
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# hoxhe Aits <hoxhe0@gmail.com>, 2016
-# Akram Alfusayal <akram_ma@hotmail.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# amrnegm <amrnegm.01@gmail.com>, 2016
-# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
-# SaFi J. <safi2266@gmail.com>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
+# Akram Alfusayal <akram_ma@hotmail.com>, 2017
+# Islam Eldeeb <islameldeb@gmail.com>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
+# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2017
+# Zuhair Hammadi <zuhair12@gmail.com>, 2017
+# Mazen Abu Ghali <mabughali@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Ghaith Gammar <g.gammar@saharaifs.net>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Mazen Abu Ghali <mabughali@yahoo.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,7 @@ msgstr "العملة للحساب"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_active
 msgid "Active"
 msgstr "نشط"
 
@@ -44,7 +46,7 @@ msgstr "نشط"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr "المبلغ"
+msgstr "الزمن"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -72,7 +74,7 @@ msgstr "حسابات تحليلية"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Accounts Tags"
-msgstr "تصنيفات الحسابات التحليلية"
+msgstr "وسوم الحسابات التحليلية"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -90,12 +92,12 @@ msgstr "قيد تحليلي"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "البند التحليلي"
+msgstr "البنود التحليلية"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
 msgid "Analytic Lines"
-msgstr "سطور تحليلية"
+msgstr "البنود التحليلية"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
@@ -105,7 +107,7 @@ msgstr "علامة تحليلية"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_tag
 msgid "Analytic Tags"
-msgstr "العلامات التحليلية"
+msgstr "الوسوم التحليلية"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -121,6 +123,11 @@ msgstr "شريك متحد"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
 msgstr "الرصيد"
+
+#. module: analytic
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+msgid "Balance:"
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -140,13 +147,13 @@ msgstr "انقر لإضافة الحساب التحليلي"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
 msgid "Color Index"
-msgstr "اللون"
+msgstr "لون الرقم التسلسلى"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
 msgid "Company"
-msgstr "المؤسسة"
+msgstr "الشركة"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -218,13 +225,13 @@ msgstr "الوصف"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
-msgstr "تجميع حسب ..."
+msgstr "تجميع حسب.."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
@@ -244,15 +251,10 @@ msgstr "اذا تم وضع الحقل النشط لخطأ, ستسمح لك بإ�
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
-"In Odoo, sale orders and projects are implemented using\n"
+"In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"في أودو، يتم تنفيذ أوامر بيع والمشاريع باستخدام\n"
-"\n"
-"الحسابات التحليلية. يمكنك تتبع التكاليف والإيرادات لتحليل\n"
-"\n"
-"الفرق بين سعر الشراء و سعر البيع بسهولة."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -288,7 +290,7 @@ msgstr "لا يوجد أي نشاط حتى الان."
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
 msgid "Partner"
-msgstr "شريك"
+msgstr "الشريك"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
@@ -299,26 +301,27 @@ msgstr "كمية"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
 msgid "Reference"
-msgstr "مرجع"
+msgstr "المرجع"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
+"                invoices. Customer invoices can be created based on sales orders\n"
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"سيتم إنشاء إيرادات تلقائيا عند إنشاء الفواتير\n"
-"العملاء. يمكن إنشاء فواتير العملاء بناء على أوامر بيع\n"
-"(الفواتير الثابتة السعر)، على الجداول الزمنية (على أساس العمل المنجز) أو\n"
-"(على سبيل المثال إعادة الفواتير من تكاليف السفر)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "بحث الخطوط التحليلية"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
+msgid "Set active to false to hide the Analytic Tag without removing it."
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids

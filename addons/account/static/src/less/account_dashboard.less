@@ -1,0 +1,35 @@
+.o_kanban_view.o_kanban_dashboard.o_account_kanban {
+
+    &:not(.o_kanban_nocontent) .o_account_dashboard_header{
+        margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
+    }
+
+    .o_account_dashboard_header {
+        .o-flex(1, 0, 100%);
+        background-color: @odoo-view-background-color;
+
+        h4 {
+            font-size: @font-size-base;
+            font-weight: 500;
+        }
+
+        .fa-gift {
+            color: #eeeeee;
+            &:hover {
+                color: #555555;
+            }
+        }
+
+        .o_arrow_button.btn-default {
+            color: @gray-dark;
+
+            &.o_action_done {
+                color: @text-muted;
+
+                .fa-check {
+                    color: @brand-success;
+                }
+            }
+        }
+    }
+}

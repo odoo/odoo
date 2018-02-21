@@ -21,8 +21,9 @@ class Rating(http.Controller):
             1: _("highly dissatisfied"),
             10: _("satisfied")
         }
-        rating.sudo().write({'rating': rate, 'consumed': True})
-        return request.render('rating.rating_external_page_submit', {
+        rating.write({'rating': rate, 'consumed': True})
+        lang = rating.partner_id.lang or 'en_US'
+        return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_submit', {
             'rating': rating, 'token': token,
             'rate_name': rate_names[rate], 'rate': rate
         })
@@ -34,7 +35,8 @@ class Rating(http.Controller):
             return request.not_found()
         record_sudo = request.env[rating.res_model].sudo().browse(rating.res_id)
         record_sudo.rating_apply(rate, token=token, feedback=kwargs.get('feedback'))
-        return request.render('rating.rating_external_page_view', {
+        lang = rating.partner_id.lang or 'en_US'
+        return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_view', {
             'web_base_url': request.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             'rating': rating,
         })

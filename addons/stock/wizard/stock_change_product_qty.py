@@ -29,7 +29,10 @@ class ProductChangeQuantity(models.TransientModel):
         elif not res.get('product_id') and self.env.context.get('active_id') and self.env.context.get('active_model') == 'product.product' and self.env.context.get('active_id'):
             res['product_id'] = self.env['product.product'].browse(self.env.context['active_id']).id
         if 'location_id' in fields and not res.get('location_id'):
-            res['location_id'] = self.env.ref('stock.stock_location_stock').id
+            company_user = self.env.user.company_id
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
+            if warehouse:
+                res['location_id'] = warehouse.lot_stock_id.id
         return res
 
     @api.onchange('location_id', 'product_id')
@@ -44,8 +47,7 @@ class ProductChangeQuantity(models.TransientModel):
         if self.product_id:
             self.product_tmpl_id = self.onchange_product_id_dict(self.product_id.id)['product_tmpl_id']
 
-    @api.multi
-    def _prepare_inventory_line(self):
+    def _action_start_line(self):
         product = self.product_id.with_context(location=self.location_id.id, lot_id=self.lot_id.id)
         th_qty = product.qty_available
 
@@ -77,13 +79,12 @@ class ProductChangeQuantity(models.TransientModel):
         if any(wizard.new_quantity < 0 for wizard in self):
             raise UserError(_('Quantity cannot be negative.'))
 
-    @api.multi
     def change_product_qty(self):
         """ Changes the Product Quantity by making a Physical Inventory. """
         Inventory = self.env['stock.inventory']
         for wizard in self:
             product = wizard.product_id.with_context(location=wizard.location_id.id, lot_id=wizard.lot_id.id)
-            line_data = wizard._prepare_inventory_line()
+            line_data = wizard._action_start_line()
 
 
             if wizard.product_id.id and wizard.lot_id.id:

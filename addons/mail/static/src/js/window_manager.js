@@ -14,7 +14,7 @@ var QWeb = core.qweb;
 
 // chat window management
 //----------------------------------------------------------------
-var CHAT_WINDOW_WIDTH = 300 + 5;  // 5 pixels between windows
+var CHAT_WINDOW_WIDTH = 325 + 5;  // 5 pixels between windows
 var chat_sessions = [];
 var new_chat_session;
 var display_state = {
@@ -272,6 +272,7 @@ function render_hidden_sessions_dropdown () {
         sessions: display_state.hidden_sessions,
         open: display_state.windows_dropdown_is_open,
         unread_counter: display_state.hidden_unread_counter,
+        widget: {isMobile: config.device.isMobile},
     }));
     return $dropdown;
 }

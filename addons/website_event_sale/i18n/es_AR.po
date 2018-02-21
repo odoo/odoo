@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2016-02-19 19:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/"
@@ -19,9 +19,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Código Intrastat"
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>Free</span>"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>Unlimited</span>"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>left</span>"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -29,14 +39,20 @@ msgid "Only"
 msgstr "Sólo"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
-msgstr "Pídala ahora"
-
-#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Producto"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Quotation"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:56
+#, python-format
+msgid "Registration"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -44,15 +60,23 @@ msgid "Remaining"
 msgstr "Restante"
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sales Order"
-msgstr "Orden de Ventas"
-
-#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
 msgstr "Agotado"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:71
+#, python-format
+msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:77
+#, python-format
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
+"ticket for the %(event)s event."
+msgstr ""
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:39

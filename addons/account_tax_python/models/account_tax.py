@@ -66,11 +66,11 @@ class AccountTaxTemplatePython(models.Model):
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
 
-    def _get_tax_vals(self, company):
+    def _get_tax_vals(self, company, tax_template_to_tax):
         """ This method generates a dictionnary of all the values for the tax that will be created.
         """
         self.ensure_one()
-        res = super(AccountTaxTemplatePython, self)._get_tax_vals(company)
+        res = super(AccountTaxTemplatePython, self)._get_tax_vals(company, tax_template_to_tax)
         res['python_compute'] = self.python_compute
         res['python_applicable'] = self.python_applicable
         return res

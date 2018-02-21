@@ -4,7 +4,10 @@
 ## this functions are taken from the setuptools package (version 0.6c8)
 ## http://peak.telecommunity.com/DevCenter/PkgResources#parsing-utilities
 
+from __future__ import print_function
 import re
+
+from odoo.tools import pycompat
 
 component_re = re.compile(r'(\d+ | [a-z]+ | \.| -)', re.VERBOSE)
 replace = {'pre':'c', 'preview':'c','-':'final-','_':'final-','rc':'c','dev':'@','saas':'','~':''}.get
@@ -63,20 +66,16 @@ def parse_version(s):
     return tuple(parts)
 
 if __name__ == '__main__':
-        
-        def cmp(a, b):
-            msg = '%s < %s == %s' % (a, b, a < b)
-            assert a < b, msg
-            return b
-
         def chk(lst, verbose=False):
             pvs = []
             for v in lst:
                 pv = parse_version(v)
                 pvs.append(pv)
                 if verbose:
-                    print v, pv
-            reduce(cmp, pvs)
+                    print(v, pv)
+
+            for a, b in pycompat.izip(pvs, pvs[1:]):
+                assert a < b, '%s < %s == %s' % (a, b, a < b)
         
         chk(('0', '4.2', '4.2.3.4', '5.0.0-alpha', '5.0.0-rc1', '5.0.0-rc1.1', '5.0.0_rc2', '5.0.0_rc3', '5.0.0'), False)
         chk(('5.0.0-0_rc3', '5.0.0-1dev', '5.0.0-1'), False) 

@@ -3,16 +3,16 @@
 # * im_livechat
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Giota Dandidou <giotadandidou@gmail.com>, 2017
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,7 @@ msgstr "# των ομιλητών"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
-msgstr "% Χαρούμενος"
+msgstr "% Ευχαριστημένοι"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
@@ -44,7 +44,7 @@ msgid ""
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
 "* 'Εμφάνιση κουμπιού' εμφανίζει το κουμπί συνομιλίας στις σελίδες.\n"
-"* Το 'Αυτόματη αναδυόμενη προβολή' εμφανίζει το κουμπί και ανοίγει αυτόματα το παράθυρο συνομιλίας.\n"
+"* Το 'Αυτόματα αναδυόμενο παράθυρο' εμφανίζει το κουμπί και ανοίγει αυτόματα το παράθυρο συνομιλίας.\n"
 "* 'Απόκρυψη κουμπιού' κρύβει το κουμπί συζήτησης στις σελίδες."
 
 #. module: im_livechat
@@ -53,9 +53,14 @@ msgid ""
 "<span>Define rules for your live support channel. You can apply an action "
 "(disable the support, automatically open your support, or just make the "
 "button available) for the given URL, and per country.<br/>To identify the "
-"country, GeoIP must be install on your server, otherwise, the countries of "
-"the rule will not be taken into account.</span>"
+"country, GeoIP must be installed on your server, otherwise, the countries of"
+" the rule will not be taken into account.</span>"
 msgstr ""
+"Ορίστε κανόνες για το ζωντανό κανάλι υποστήριξης. Μπορείτε να εφαρμόσετε μια"
+" ενέργεια (απενεργοποιήστε την υποστήριξη, ανοίξτε αυτόματα την υποστήριξή "
+"σας ή απλά κάντε το κουμπί διαθέσιμο) για τη συγκεκριμένη διεύθυνση URL και "
+"ανά χώρα.<br/>Για να προσδιορίσετε τη χώρα, πρέπει να εγκατασταθεί το GeoIP "
+"στον διακομιστή σας, οι χώρες του κανόνα δεν θα ληφθούν υπόψη."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
@@ -74,7 +79,7 @@ msgstr "Είσαι εντός του πίνακα;"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:27
+#: code:addons/im_livechat/static/src/js/im_livechat.js:48
 #, python-format
 msgid "Ask something ..."
 msgstr "Ρωτήστε κάτι ..."
@@ -83,17 +88,17 @@ msgstr "Ρωτήστε κάτι ..."
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
-msgstr "Παρεβρισκόμενοι"
+msgstr "Συμμετέχοντες"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Auto popup"
-msgstr "Αυτόματη αναδυόμενη προβολή"
+msgstr "Αυτόματα αναδυόμενο παράθυρο"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
 msgid "Auto popup timer"
-msgstr "Αυτόματος χρονομετρητής"
+msgstr "Χρονομετρητής για Αυτόματα αναδυόμενο παράθυρο"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_duration
@@ -172,11 +177,11 @@ msgstr "Κανάλια"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_input_placeholder
 msgid "Chat Input Placeholder"
-msgstr "Κράτηση θέσης Εισόδου Chat"
+msgstr "Κείμενο κράτησης θέσης"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:29
+#: code:addons/im_livechat/static/src/js/im_livechat.js:50
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Συνομιλήστε με έναν από τους συνεργάτες μας"
@@ -190,7 +195,8 @@ msgstr "Κάντε κλικ για να δημιουργήσετε μια νέα
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid "Click to define a new website live chat channel."
 msgstr ""
-"Κάντε κλικ για να ορίσετε ένα νέο κανάλι ζωντανής συνομιλίας στον ιστότοπο."
+"Κάντε κλικ για να ορίσετε ένα νέο κανάλι ζωντανής συνομιλίας  για τον "
+"ιστότοπο."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_technical_name
@@ -208,6 +214,21 @@ msgstr "Διαμόρφωση"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_channel_id
 msgid "Conversation"
 msgstr "Συζήτηση"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/js/copy_clipboard.js:32
+#, python-format
+msgid "Copied !"
+msgstr "Αντιγράφηκε !"
+
+#. module: im_livechat
+#. openerp-web
+#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:6
+#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:12
+#, python-format
+msgid "Copy Text"
+msgstr "Αντιγραφή Κειμένου"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -243,7 +264,6 @@ msgstr "Ημερομηνία δημιουργίας (ημέρα)"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Creation date (hour)"
 msgstr "Ημερομηνία δημιουργίας (ώρα)"
 
@@ -269,11 +289,22 @@ msgid "Creation date (year)"
 msgstr "Ημερομηνία δημιουργίας (έτος)"
 
 #. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
+#: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
+msgid "Customer Ratings"
+msgstr "Αξιολογήσεις Πελατών"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
+msgid "Customer ratings on livechat session."
+msgstr "Αξιολογήσεις πελατών σε συνεδρίες ζωντανής συνομιλίας"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
 msgid "Default text displayed on the Livechat Support Button"
 msgstr ""
 "Το προεπιλεγμένο κείμενο που θα εμφανίζεται στο κουμπί υποστήριξης της "
-"Ζωντανής Συζήτησης"
+"Ζωντανής Συνομιλίας"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
@@ -337,9 +368,13 @@ msgstr "Εξηγήστε τη σημείωσή σας"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "For website built with Odoo CMS, please install the website_livechat module."
-" Then go to Settings &gt; Website Settings and select the Website Live Chat "
-"Channel you want to add on your website."
+" Then go to Website Admin &gt; Configuration &gt; Settings and select the "
+"Website Live Chat Channel you want to add on your website."
 msgstr ""
+"Σε ιστότοπο που δημιουργήθηκε με το Odoo CMS, εγκαταστήστε το άρθρωμα "
+"web_livechat. Στη συνέχεια, μεταβείτε στην διαχειριστή του Ιστοτόπου και "
+"επιλέξτε το κανάλι Ζωντανής Συνομιλίας που θέλετε να προσθέσετε στον "
+"ιστότοπό σας."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -363,12 +398,7 @@ msgstr "Καλό"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Group By..."
-msgstr "Ομαδοποίηση ανά..."
-
-#. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
-msgid "Has a Rating"
-msgstr ""
+msgstr "Ομαδοποίηση κατά..."
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -385,11 +415,11 @@ msgstr "Ιστορικό"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date_hour
 msgid "Hour of start Date of session"
-msgstr "Ώρα έναρξης της συνεδρίας"
+msgstr "Ώρα έναρξης συνεδρίας"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:30
+#: code:addons/im_livechat/static/src/js/im_livechat.js:51
 #, python-format
 msgid "How may I help you?"
 msgstr "Πώς μπορώ να σας βοηθήσω;"
@@ -437,17 +467,17 @@ msgid "Last 24h"
 msgstr "Τελευταίες 24 ώρες"
 
 #. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
+msgid "Last 7 days"
+msgstr "Τελευταίες 7 ημέρες"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator___last_update
 msgid "Last Modified on"
 msgstr "Τελευταία τροποποίηση στις"
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_mail_channel_partner
-msgid "Last Seen Many2many"
-msgstr "Εμφανίστηκαν τελευταία Many2many"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
@@ -465,12 +495,12 @@ msgstr "Τελευταία Ενημέρωση στις"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Last Week"
-msgstr "Προηγούμενη Εβδομάδα"
+msgstr "Προηγ.  Εβδομάδα"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr "Άδεια"
+msgstr "Αποχώρηση"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -478,9 +508,14 @@ msgid "Leave Channel"
 msgstr "Αποχώρηση από Κανάλι"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Listeners of a Channel"
+msgstr "Ακροατές ενός Καναλιού"
+
+#. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 msgid "Live Chat"
-msgstr "Live Συνομιλία"
+msgstr "Ζωντανή Συνομιλία"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -490,12 +525,14 @@ msgstr "Ζωντανή Υποστήριξη"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:9
+#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:21
 #, python-format
 msgid "Livechat"
-msgstr "Ζωντανής Συνομιλία"
+msgstr "Ζωντανή Συνομιλία"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
+#: model:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
 msgstr "Κανάλι Ζωντανής Συνομιλίας"
 
@@ -540,7 +577,7 @@ msgstr "Διευθυντής"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_sequence
 msgid "Matching order"
-msgstr "Σειρά Aντιστοιχίας"
+msgstr "Σειρά Αντιστοιχίας"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_medium
@@ -569,8 +606,14 @@ msgid "Name"
 msgstr "Περιγραφή"
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:125
+#, python-format
+msgid "No history found"
+msgstr "Δεν βρέθηκε ιστορικό"
+
+#. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:117
+#: code:addons/im_livechat/static/src/js/im_livechat.js:150
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
@@ -582,7 +625,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_nbr_channel
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_nbr_channel
 msgid "Number of conversation"
-msgstr "Αριθμός συνομιλιών"
+msgstr "Πλήθος συνομιλιών"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_speaker
@@ -612,7 +655,7 @@ msgstr "Χειριστής"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
 msgid "Operator Analysis"
-msgstr "Ανάλυση χειριστή"
+msgstr "Ανάλυση Χειριστή"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_user_ids
@@ -626,7 +669,7 @@ msgid ""
 "Operators\n"
 "                                            <br/>\n"
 "                                            <i class=\"fa fa-comments\"/>"
-msgstr "Χειριστές<br/> class=\"fa fa-comments\"/>"
+msgstr "Χειριστές<br/><i class=\"fa fa-comments\"/>"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -649,15 +692,37 @@ msgstr "Ποσοστό ευχαριστημένων βαθμολογήσεων �
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
-msgstr "Αξιολόγηση"
+msgstr "Βαθμολόγηση"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:309
+#: code:addons/im_livechat/static/src/js/im_livechat.js:344
 #, python-format
 msgid "Rating: :rating_%d"
 msgstr "Βαθμολογία: :βαθμολογία_%d"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Rating: Bad"
+msgstr "Βαθμολογία: Κακή"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Rating: Great"
+msgstr "Βαθμολογία: Καλή"
+
+#. module: im_livechat
+#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Rating: Okay"
+msgstr "Βαθμολογία: Μέτρια"
+
+#. module: im_livechat
+#: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
+msgid "Ratings for livechat channel"
+msgstr "Αξιολογήσεις για κανάλι Ζωντανής Συνομιλίας"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
@@ -695,6 +760,12 @@ msgid "Search report"
 msgstr "Αναφορά αναζήτησης"
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:113
+#, python-format
+msgid "See 15 last visited pages"
+msgstr "Δείτε τις 15 τελευταίες σελίδες που επισκέφτηκαν"
+
+#. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Session Date"
@@ -703,7 +774,7 @@ msgstr "Ημερομηνία Συνεδρίας"
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 msgid "Session Form"
-msgstr "Από Συνεδρία"
+msgstr "Από Συνεδρίας"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_channel
@@ -716,7 +787,7 @@ msgstr "Στατιστικά Συνεδρίας"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Sessions"
-msgstr "Βάρδιες"
+msgstr "Συνεδρίες"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.session_history
@@ -787,6 +858,11 @@ msgid "The user will be able to join support channels."
 msgstr "Ο χρήστης θα είναι θέση να συμμετάσχει σε κανάλια υποστήριξης."
 
 #. module: im_livechat
+#: model:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
+msgid "There is no rating for this channel at the moment."
+msgstr "Δεν υπάρχει βαθμολογία για αυτό το κανάλι έως τώρα."
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image
 msgid ""
 "This field holds the image used as photo for the group, limited to "
@@ -846,7 +922,7 @@ msgstr "Χρήστης"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:37
-#: code:addons/im_livechat/static/src/js/im_livechat.js:28
+#: code:addons/im_livechat/static/src/js/im_livechat.js:49
 #, python-format
 msgid "Visitor"
 msgstr "Επισκέπτης"
@@ -859,7 +935,7 @@ msgstr "Ιστοσελίδα"
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr "Ζωντανά Κανάλια Chat Ιστότοπου"
+msgstr "Κανάλια Ζωντανής Συνομιλίας Ιστότοπου"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message

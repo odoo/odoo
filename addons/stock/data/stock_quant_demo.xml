@@ -1,0 +1,12 @@
+<odoo>
+    <record id="test_quant_product" model="product.product">
+        <field name="name">Whiteboard</field>
+        <field name="type">product</field>
+    </record>
+    <record id="test_quant_quant" model="stock.quant">
+        <field name="product_id" ref="stock.test_quant_product"/>
+        <field name="product_uom_id" ref="product.product_uom_unit"/>
+        <field name="location_id" ref="stock_location_stock"/>
+        <field name="quantity">10.0</field>
+    </record>
+</odoo>

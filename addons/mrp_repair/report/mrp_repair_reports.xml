@@ -8,6 +8,9 @@
             name="mrp_repair.report_mrprepairorder2"
             file="mrp_repair.report_mrprepairorder" 
             report_type="qweb-pdf"
+            print_report_name="(
+                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or
+                'Repair Order - %s' % (object.name))"
         />
     </data>
 </odoo>

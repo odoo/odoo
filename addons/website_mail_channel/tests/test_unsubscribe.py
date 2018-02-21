@@ -3,7 +3,7 @@ import requests
 
 from odoo.api import Environment
 from odoo.tests import common
-from odoo.tools.misc import mute_logger
+from odoo.tools.misc import mute_logger, ustr
 
 
 class TestConfirmUnsubscribe(common.HttpCase):
@@ -64,8 +64,7 @@ class TestConfirmUnsubscribe(common.HttpCase):
             self.mailing_list.id, self.partner.id,
             self.token
         )
-        # FIXME: may need to be altered during 11.0 forward port
         r = self.url_open(url)
-        body = r.read().decode('utf-8')
+        body = ustr(r.content)
         # normalize space to make matching simpler
         self.assertIn(text, u' '.join(body.split()))

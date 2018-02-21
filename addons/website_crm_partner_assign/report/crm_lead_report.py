@@ -16,7 +16,7 @@ class CrmLeadReportAssign(models.Model):
     grade_id = fields.Many2one('res.partner.grade', 'Grade', readonly=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     date_assign = fields.Date('Assign Date', readonly=True)
     create_date = fields.Datetime('Create Date', readonly=True)

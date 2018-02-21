@@ -3,16 +3,18 @@
 # * product_email_template
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: oon arfiandwi <oon.arfiandwi@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +130,7 @@ msgid ""
 "                    </ul>\n"
 "                </td>\n"
 "                <td style=\"width:50%;\">\n"
-"                        The introduction exercises have been created to help you discover Odoo in an easy way. Their main objective is to present the different applications, menus, view types, shortcuts, field types, wizards, actions, etc.  It will help you to discover how to navigate in Odoo!<br/></br>\n"
+"                        The introduction exercises have been created to help you discover Odoo in an easy way. Their main objective is to present the different applications, menus, view types, shortcuts, field types, wizards, actions, etc.  It will help you to discover how to navigate in Odoo!<br/><br/>\n"
 "                        Therefore, the Introduction is compulsory for everyone, even if you need to learn a specific module given on an other date. This obligation has been made to make sure that you are not lost if you arrive in the middle of the training for another module.\n"
 "                </td>\n"
 "            </tr>\n"
@@ -191,7 +193,7 @@ msgid ""
 "                <td style=\"width:50%;\">\n"
 "                    <strong>CRM & Sales management:</strong>\n"
 "                    <ul>\n"
-"                        <li>From an opportunity to a sale order</li>\n"
+"                        <li>From an opportunity to a sales order</li>\n"
 "                        <li>Claims</li>\n"
 "                        <li>Aftersale communication</li>\n"
 "                    </ul>\n"
@@ -350,7 +352,7 @@ msgid ""
 "                        <li>Control the invoicing process</li>\n"
 "                        <li>Work with purchase requisitions to ask different vendors to submit quotations</li>\n"
 "                    </ul>\n"
-"                    <strong>About Holidays:</strong>\n"
+"                    <strong>About Leaves:</strong>\n"
 "                    <ul>\n"
 "                        <li>Track the number of vacation days accrued by each employee</li>\n"
 "                        <li>Allow managers to approve leave requests and plan backups for their teams</li>\n"
@@ -369,7 +371,7 @@ msgid ""
 "                    <ul>\n"
 "                        <li>Contracts</li>\n"
 "                        <li>Invoicing methods\n"
-"                            <li>Sale orders</li>\n"
+"                            <li>Sales orders</li>\n"
 "                            <li>Timesheets</li>\n"
 "                            <li>Expenses</li>\n"
 "                        </li>\n"
@@ -448,7 +450,7 @@ msgid ""
 "                    </ul>\n"
 "                </td>\n"
 "                <td style=\"width:50%;\">\n"
-"                    From the sales perspective, you will have a manufacturing order generated based on a request coming from a customer without any manual operation. This integration of those two aplications allows you to perform the following flow in an automated way: Sale order –> Stock level verification –> Production of the missing units –> Receival in stock of the finished goods –> Delivery to the customer.\n"
+"                    From the sales perspective, you will have a manufacturing order generated based on a request coming from a customer without any manual operation. This integration of those two aplications allows you to perform the following flow in an automated way: Sales order –> Stock level verification –> Production of the missing units –> Receival in stock of the finished goods –> Delivery to the customer.\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -622,24 +624,20 @@ msgid "Body"
 msgstr "Badan"
 
 #. module: product_email_template
+#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
+msgid "Email"
+msgstr "Email"
+
+#. module: product_email_template
 #: model:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
+#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
 msgid "Email Template"
 msgstr "Template Email"
 
 #. module: product_email_template
 #: model:ir.model,name:product_email_template.model_account_invoice
 msgid "Invoice"
-msgstr "Tagihan"
-
-#. module: product_email_template
-#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
-msgid "Invoice Confirmation Email"
-msgstr ""
-
-#. module: product_email_template
-#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
-msgid "Miscellaneous"
-msgstr "Data Lain-lain"
+msgstr "Invoice"
 
 #. module: product_email_template
 #: model:mail.template,subject:product_email_template.product_online_training_email_template
@@ -649,6 +647,7 @@ msgid "Online Training"
 msgstr "Pelatihan online"
 
 #. module: product_email_template
+#: model:ir.model.fields,field_description:product_email_template.field_product_product_email_template_id
 #: model:ir.model.fields,field_description:product_email_template.field_product_template_email_template_id
 msgid "Product Email Template"
 msgstr "Templete Email Produk"
@@ -659,6 +658,12 @@ msgid "Product Template"
 msgstr "Templete produk"
 
 #. module: product_email_template
+#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
+msgid "Send a product-specific email once the invoice is paid"
+msgstr "Kirim email produk tertentu setelah faktur dibayar"
+
+#. module: product_email_template
+#: model:ir.model.fields,help:product_email_template.field_product_product_email_template_id
 #: model:ir.model.fields,help:product_email_template.field_product_template_email_template_id
 msgid ""
 "When validating an invoice, an email will be sent to the customer based on "

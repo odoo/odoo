@@ -3,14 +3,14 @@
 # * payment_authorize
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2016\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,19 +29,9 @@ msgid "API Transaction Key"
 msgstr "API Transaction Key"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/authorize_request.py:66
-#, python-format
-msgid ""
-"Authorize.net Error Message(s):\n"
-" %s"
-msgstr ""
-"Authorize.net Μηνύματα Λάθους:\n"
-" %s"
-
-#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr "Authorize.net Αναγνωριστικό Προφίλ"
+msgstr "Αναγνωριστικό Προφίλ Authorize.net "
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:167
@@ -50,7 +40,7 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
-"Authorize: λήφθησαν δεδομένα με ελλειπή αναφορά (%s) ή trans_id (%s) ή "
+"Authorize: λήφθηκαν δεδομένα αλλά λείπει η αναφορά (%s) ή trans_id (%s) ή "
 "fingerprint  (%s)"
 
 #. module: payment_authorize
@@ -65,30 +55,26 @@ msgstr "Αριθμός κάρτας"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Επιβεβαίωση <span class=\"fa fa-long-arrow-right\"/>"
+msgid "Cardholder name"
+msgstr "Όνομα ιδιοκτήτη κάρτας"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Expires"
-msgstr "Λήξη"
+msgid "Expires (MM / YY)"
+msgstr "Λήγει (MM / ΕΕ)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+msgid "How to get paid with Authorize.Net"
+msgstr "Πώς να πληρωθείτε με Authorize.Net"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:61
+#, python-format
 msgid ""
-"How to configure your Authorize.Net account (look for Getting Started Guide)"
-" ?"
+"If you don't have any account, please ask your salesperson to update your "
+"profile. "
 msgstr ""
-
-#. module: payment_authorize
-#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "MM / YY"
-msgstr "ΜΜ / ΕΕ"
-
-#. module: payment_authorize
-#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Name"
-msgstr "Περιγραφή"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -101,10 +87,40 @@ msgid "Payment Transaction"
 msgstr "Συναλλαγή Πληρωμής"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:347
+#: code:addons/payment_authorize/controllers/main.py:63
+#, python-format
+msgid "Please complete your profile. "
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:58
+#, python-format
+msgid "Please sign in to complete your profile."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_provider
+msgid "Provider"
+msgstr "Πάροχος"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
+msgid "Save Cards"
+msgstr "Αποθήκευση Καρτών"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:372
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "Η δημιουργία του Προφίλ Πελάτη στο Authorize.NET απέτυχε."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:55
+#, python-format
+msgid ""
+"The transaction cannot be processed because some contact details are missing"
+" or invalid: "
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -114,6 +130,15 @@ msgid ""
 msgstr ""
 "Αυτό περιέχει τη μοναδική αναφορά αυτού του συνδυασμού αναγνωριστικών "
 "συνεργάτη/πληρωμής στο σύστημα του Authorize.net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
+msgid ""
+"This option allows customers to save their credit card as a payment token "
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

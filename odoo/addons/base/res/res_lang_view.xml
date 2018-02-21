@@ -12,7 +12,7 @@
                     <field name="direction"/>
                     <field name="translatable"/>
                     <field name="active"/>
-                    <button name="%(base.action_wizard_update_translations)d"
+                    <button name="%(base.action_view_base_language_install)d"
                     string="Update Terms" type="action" icon="fa-refresh" help="Update Language Terms"
                     attrs="{'invisible': [('active', '=', False)]}"/>
                 </tree>
@@ -102,6 +102,6 @@
             <field name="context">{'active_test': False}</field>
             <field name="search_view_id" ref="res_lang_search"/>
         </record>
-        <menuitem action="res_lang_act_window" id="menu_res_lang_act_window" parent="menu_translation" groups="base.group_no_one" sequence="1"/>
+        <menuitem action="res_lang_act_window" id="menu_res_lang_act_window" parent="menu_translation" sequence="1"/>
     </data>
 </odoo>

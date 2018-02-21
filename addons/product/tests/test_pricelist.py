@@ -83,7 +83,6 @@ class TestPricelist(TransactionCase):
 
         self.env['product.pricelist.item'].create({
             'pricelist_id': self.public_pricelist.id,
-            'sequence': 10,
             'applied_on': '0_product_variant',
             'compute_price': 'formula',
             'base': 'list_price',  # based on public price

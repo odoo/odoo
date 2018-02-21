@@ -10,7 +10,7 @@ def webservice(f):
     def wrap(*args, **kw):
         try:
             return f(*args, **kw)
-        except Exception, e:
+        except Exception as e:
             return Response(response=str(e), status=500)
     return wrap
 

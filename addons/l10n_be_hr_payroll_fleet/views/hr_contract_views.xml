@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form"</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_be_hr_payroll.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='transport_mode']" position="after">
+                <field name="new_car" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('available_cars_amount', '&gt;', 3)]}"/>
+                <label for="car_id" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}"/>
+                <div attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}">
+                    <field name="car_id" nolabel="1" attrs="{'invisible': [('new_car', '=', True)]}"/>
+                    <field name="available_cars_amount" invisible="1"/>
+                </div>
+                <field name="new_car_model_id" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', False)]}"/>
+                <field name="max_unused_cars" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='car_atn']" position="after">
+                <field name="company_car_total_depreciated_cost" invisible="1"/>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>

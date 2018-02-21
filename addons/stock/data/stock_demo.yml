@@ -91,12 +91,12 @@
         picking_type_id: stock.picking_type_out
         location_id: stock.stock_location_stock
         location_dest_id: stock.stock_location_customers
-    pack_operation_ids:
-      - product_id: product.product_product_6
-        product_qty: 100
-        product_uom_id: product.product_uom_unit
-        location_id: stock.stock_location_stock
-        location_dest_id: stock.stock_location_customers
+        move_line_ids:
+          - product_id: product.product_product_6
+            qty_done: 100
+            product_uom_id: product.product_uom_unit
+            location_id: stock.stock_location_stock
+            location_dest_id: stock.stock_location_customers
 -
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse2}:
     picking_type_id: stock.picking_type_out
@@ -131,7 +131,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment for test'
     location_id: stock_location_suppliers
     location_dest_id: stock_location_stock
 -
@@ -146,7 +145,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment1}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
@@ -160,7 +158,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment2}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment main_warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
@@ -174,7 +171,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment3}:
     picking_type_id: stock.picking_type_in
-    origin: 'incoming_shipment your_company warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
@@ -188,7 +184,6 @@
 -
  !record {model: stock.picking, id: incomming_shipment4}:
    picking_type_id: stock.picking_type_in
-   origin: 'incoming_shipment_main_warehouse'
    partner_id: base.res_partner_1
    location_id: stock.stock_location_suppliers
    location_dest_id: stock.stock_location_stock
@@ -219,7 +214,6 @@
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse1}:
     picking_type_id: chi_picking_type_in
-    origin: 'incoming_shipment_chicago_warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
@@ -231,16 +225,15 @@
         location_id: stock.stock_location_suppliers
         location_dest_id: stock.stock_location_shop0
         state: done
-    pack_operation_ids:
-      - product_id: product.product_delivery_01
-        product_qty: 100
-        product_uom_id: product.product_uom_unit
-        location_id: stock.stock_location_suppliers
-        location_dest_id: stock.stock_location_shop0
+        move_line_ids:
+          - product_id: product.product_delivery_01
+            qty_done: 100
+            product_uom_id: product.product_uom_unit
+            location_id: stock.stock_location_suppliers
+            location_dest_id: stock.stock_location_shop0
 -
  !record {model: stock.picking, id: incomming_chicago_warehouse2}:
     picking_type_id: chi_picking_type_in
-    origin: 'incoming_shipment chicago_warehouse'
     partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
@@ -296,12 +289,12 @@
         picking_type_id: chi_picking_type_out
         location_id: stock.stock_location_shop0
         location_dest_id: stock.stock_location_customers
-    pack_operation_ids:
-      - product_id: product.product_product_6
-        product_qty: 100
-        product_uom_id: product.product_uom_unit
-        location_id: stock.stock_location_shop0
-        location_dest_id: stock.stock_location_customers
+        move_line_ids:
+          - product_id: product.product_product_6
+            qty_done: 100
+            product_uom_id: product.product_uom_unit
+            location_id: stock.stock_location_shop0
+            location_dest_id: stock.stock_location_customers
 -
  !record {model: stock.picking, id: outgoing_chicago_warehouse2}:
     picking_type_id: chi_picking_type_out

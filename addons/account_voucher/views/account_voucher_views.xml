@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
                                             'posted': 'success'}}"/>
                                         </span>
                                     </div>
@@ -234,7 +234,7 @@
                             <field name="pay_now" required="1"/>
                             <field name="payment_journal_id"
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
-                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" groups="account.group_account_user"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -244,6 +244,7 @@
                                    groups="account.group_account_user"/>
                             <field name="date"/>
                             <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                            <field name="account_date"/>
                             <field name="name" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="paid" invisible="1"/>
                         </group>
@@ -254,7 +255,7 @@
                                 <tree string="Voucher Lines" editable="bottom">
                                     <field name="product_id"/>
                                     <field name="name"/>
-                                    <field name="account_id"/>
+                                    <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
@@ -264,17 +265,16 @@
                                     <field name="company_id" invisible="1"/>
                                 </tree>
                             </field>
-			                <group>
+                            <group>
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="tax_amount"/>
                                     <field name="amount"/>
                                 </group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
-			                </group>
+                            </group>
                         </page>
-                        <page string="Journal Items">
+                        <page string="Journal Items" groups="account.group_account_user">
                             <group>
-                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>
@@ -322,7 +322,7 @@
 
         <menuitem id="menu_action_sale_receipt"
             action="action_sale_receipt"
-            parent="account.menu_finance_receivables"
+            parent="account.menu_finance_receivables_documents"
             sequence="10"/>
 
         <!--  Purchase Vouchers -->
@@ -351,11 +351,12 @@
                             <field name="pay_now" required="1"/>
                             <field name="payment_journal_id"
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
-                            <field name="account_id" groups="account.group_account_user" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="account_id" groups="account.group_account_user" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" />
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="reference"/>
                         </group>
                         <group>
+                            <field name="account_date"/>
                             <field name="journal_id"
                                    domain="[('type','=','purchase')]"
                                    widget="selection"
@@ -372,7 +373,7 @@
                                 <tree string="Voucher Lines" editable="bottom">
                                     <field name="product_id"/>
                                     <field name="name"/>
-                                    <field name="account_id"/>
+                                    <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
@@ -391,9 +392,8 @@
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                             </group>
                         </page>
-                        <page string="Journal Items">
+                        <page string="Journal Items" groups="account.group_account_user">
                             <group>
-                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>
@@ -438,5 +438,5 @@
         </record>
 
         <menuitem id="menu_action_purchase_receipt"
-            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="4"/>
+            action="action_purchase_receipt" parent="account.menu_finance_payables_documents" sequence="4"/>
 </odoo>

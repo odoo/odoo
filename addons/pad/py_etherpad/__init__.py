@@ -1,8 +1,10 @@
 """Module to talk to EtherpadLite API."""
+import requests
+import logging
 
-import json
-import urllib
-import urllib2
+from odoo.tools import html2plaintext
+
+_logger = logging.getLogger(__name__)
 
 
 class EtherpadLiteClient:
@@ -31,23 +33,11 @@ class EtherpadLiteClient:
         url = '%s/%d/%s' % (self.baseUrl, self.API_VERSION, function)
 
         params = arguments or {}
-        params.update({'apikey': self.apiKey})
-        data = urllib.urlencode(params, True)
+        params['apikey'] = self.apiKey
 
-        try:
-            opener = urllib2.build_opener()
-            request = urllib2.Request(url=url, data=data)
-            response = opener.open(request, timeout=self.TIMEOUT)
-            result = response.read()
-            response.close()
-        except urllib2.HTTPError:
-            raise
-
-        result = json.loads(result)
-        if result is None:
-            raise ValueError("JSON response could not be decoded")
-
-        return self.handleResult(result)
+        r = requests.post(url, data=params, timeout=self.TIMEOUT)
+        r.raise_for_status()
+        return self.handleResult(r.json())
 
     def handleResult(self, result):
         """Handle API call result"""
@@ -185,6 +175,15 @@ class EtherpadLiteClient:
             "padID": padID,
             "text": text
         })
+
+    def setHtmlFallbackText(self, padID, html):
+        try:
+            # Prevents malformed HTML errors
+            html_wellformed = '<html><body>' + html + '</body></html>'
+            return self.setHtml(padID, html_wellformed)
+        except Exception:
+            _logger.exception('Falling back to setText. SetHtml failed with message:')
+            return self.setText(padID, html2plaintext(html).encode('UTF-8'))
 
     def setHtml(self, padID, html):
         """sets the text of a pad from html"""

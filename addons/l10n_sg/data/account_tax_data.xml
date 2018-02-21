@@ -205,6 +205,7 @@
         <field name="refund_account_id" ref="account_account_791"/>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_23'),ref('tag_sg_32')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_sale_tax_ds_7" model="account.tax.template">
@@ -218,6 +219,7 @@
         <field name="refund_account_id" ref="account_account_792"/>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_06'), ref('tag_sg_29')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     <record id="sg_sale_tax_esn_0" model="account.tax.template">
@@ -231,6 +233,7 @@
         <field name="refund_account_id" ref="account_account_793"/>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_24'),ref('tag_sg_33')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_sale_tax_os_0" model="account.tax.template">
@@ -244,6 +247,7 @@
         <field name="refund_account_id" ref="account_account_794"/>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_20'),ref('tag_sg_47')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_sale_tax_zr_0" model="account.tax.template">
@@ -257,6 +261,7 @@
         <field name="refund_account_id" ref="account_account_795"/>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_04'), ref('tag_sg_30')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_sale_tax_sr_7" model="account.tax.template">
@@ -270,6 +275,7 @@
         <field name="refund_account_id" ref="account_account_796"/>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_05'),ref('tag_sg_28')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     <!-- Purchases Tax -->
@@ -285,6 +291,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_09'), ref('tag_sg_36')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     <record id="sg_purchase_tax_txe33_7" model="account.tax.template">
@@ -298,6 +305,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_10'),ref('tag_sg_37')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     <record id="sg_purchase_tax_bl_7" model="account.tax.template">
@@ -311,6 +319,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_11'),ref('tag_sg_38')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     <record id="sg_purchase_tax_im_7" model="account.tax.template">
@@ -324,6 +333,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_12'),ref('tag_sg_39')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     <record id="sg_purchase_tax_txre_7" model="account.tax.template">
@@ -337,6 +347,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_13'),ref('tag_sg_40')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     <record id="sg_purchase_tax_me_0" model="account.tax.template">
@@ -350,6 +361,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_14'),ref('tag_sg_41')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_purchase_tax_nr_0" model="account.tax.template">
@@ -363,6 +375,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_15'),ref('tag_sg_42')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_purchase_tax_zp_0" model="account.tax.template">
@@ -376,6 +389,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_16'),ref('tag_sg_43')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_purchase_tax_op_0" model="account.tax.template">
@@ -389,6 +403,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_19'),ref('tag_sg_46')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_purchase_tax_ep_0" model="account.tax.template">
@@ -402,6 +417,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_22'),ref('tag_sg_45')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_purchase_tax_mes_0" model="account.tax.template">
@@ -415,6 +431,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_17'),ref('tag_sg_44')])]"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 
     <record id="sg_purchase_tax_tx7_7" model="account.tax.template">
@@ -428,6 +445,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="sg_chart_template"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_sg_08'),ref('tag_sg_35')])]"/>
+        <field name="tax_group_id" ref="tax_group_7"/>
     </record>
 
     </data>

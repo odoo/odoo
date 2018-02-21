@@ -16,7 +16,7 @@ Display best tweets
     'data': [
         'security/ir.model.access.csv',
         'data/website_twitter_data.xml',
-        'views/website_twitter_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/website_twitter_snippet_templates.xml'
     ],
     'installable': True,

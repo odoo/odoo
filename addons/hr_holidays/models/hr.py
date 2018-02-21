@@ -77,7 +77,7 @@ class Employee(models.Model):
     current_leave_id = fields.Many2one('hr.holidays.status', compute='_compute_leave_status', string="Current Leave Type")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
-    leaves_count = fields.Integer('Number of Leaves', compute='_compute_leaves_count')
+    leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count')
     show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
 
@@ -215,3 +215,15 @@ class Employee(models.Model):
             ('type', '=', 'remove')
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]
+
+    def write(self, values):
+        res = super(Employee, self).write(values)
+        if 'parent_id' in values or 'department_id' in values:
+            holidays = self.env['hr.holidays'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
+            hr_vals = {}
+            if values.get('parent_id') is not None:
+                hr_vals['manager_id'] = values['parent_id']
+            if values.get('department_id') is not None:
+                hr_vals['department_id'] = values['department_id']
+            holidays.write(hr_vals)
+        return res

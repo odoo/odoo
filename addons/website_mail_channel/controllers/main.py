@@ -8,7 +8,8 @@ from dateutil import relativedelta
 
 from odoo import http, fields, tools, _
 from odoo.http import request
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
+
 
 class MailGroup(http.Controller):
     _thread_per_page = 20
@@ -115,10 +116,9 @@ class MailGroup(http.Controller):
             channel.sudo()._send_confirmation_email(partner_ids, unsubscribe)
             return "email"
 
-
     @http.route([
-        "/groups/<model('mail.channel'):group>",
-        "/groups/<model('mail.channel'):group>/page/<int:page>"
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>''',
+        '''/groups/<model('mail.channel'):group>/page/<int:page>'''
     ], type='http', auth="public", website=True)
     def thread_headers(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         if group.channel_type != 'channel':
@@ -153,7 +153,7 @@ class MailGroup(http.Controller):
         return request.render('website_mail_channel.group_messages', values)
 
     @http.route([
-        '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
     ], type='http', auth="public", website=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         if group.channel_type != 'channel':
@@ -180,7 +180,7 @@ class MailGroup(http.Controller):
         return request.render('website_mail_channel.group_message', values)
 
     @http.route(
-        '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
         type='json', auth="public", methods=['POST'], website=True)
     def render_messages(self, group, message, **post):
         if group.channel_type != 'channel':

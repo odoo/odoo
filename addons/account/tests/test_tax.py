@@ -1,6 +1,4 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
-from openerp.tests.common import TransactionCase
-from openerp.tools import float_compare
 import time
 
 
@@ -158,7 +156,6 @@ class TestTax(AccountTestUsers):
         }
         move = self.env['account.move'].with_context(apply_taxes=True).create(vals)
 
-
         aml_fixed_tax = move.line_ids.filtered(lambda l: l.tax_line_id.id == self.fixed_tax.id)
         aml_percent_tax = move.line_ids.filtered(lambda l: l.tax_line_id.id == self.percent_tax.id)
         aml_fixed_tax_bis = move.line_ids.filtered(lambda l: l.tax_line_id.id == self.fixed_tax_bis.id)
@@ -168,7 +165,7 @@ class TestTax(AccountTestUsers):
         self.assertEquals(aml_percent_tax.credit, 20)
         self.assertEquals(len(aml_fixed_tax_bis), 1)
         self.assertEquals(aml_fixed_tax_bis.credit, 15)
-        
+
         aml_with_taxes = move.line_ids.filtered(lambda l: set(l.tax_ids.ids) == set([self.group_tax.id, self.fixed_tax_bis.id]))
         self.assertEquals(len(aml_with_taxes), 1)
         self.assertEquals(aml_with_taxes.credit, 190)

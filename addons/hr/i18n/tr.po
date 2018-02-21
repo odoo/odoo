@@ -3,29 +3,22 @@
 # * hr
 # 
 # Translators:
-# gezgin biri <gezginbiri@hotmail.com>, 2016
-# Murat Kaplan <muratk@projetgrup.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
-# Ediz Duman <neps1192@gmail.com>, 2016
-# alisan alacam <alisanalacam@gmail.com>, 2016
-# Yigit Aga <yagabey@gmail.com>, 2016
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
-# Doğan Altunbay <doganaltunbay@gmail.com>, 2016
-# Esin Kandemir <esaykandemir@gmail.com>, 2016
-# Saban Yildiz <sabany@projetgrup.com>, 2016
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Azar Huseynli <azerbay1984@gmail.com>, 2016
-# cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Levent Karakaş <levent@mektup.at>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Esin Kandemir <esaykandemir@gmail.com>, 2017
+# alisan alacam <alisanalacam@gmail.com>, 2017
+# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Levent Karakaş <levent@mektup.at>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/models/hr.py:75
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -82,18 +75,18 @@ msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
 "                                    <span class=\"o_following\">Following</span>"
 msgstr ""
-"<span class=\"o_unfollow\">İzlemekten Vazgeç</span>\n"
-"<span class=\"o_following\">Takip Etme</span>"
+"<span class=\"o_unfollow\">Takipten Vazgeç</span>\n"
+"<span class=\"o_following\">Takip Ediliyor</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "<span>Reports</span>"
-msgstr "<span>Raporlar</span>"
+msgid "<span>Reporting</span>"
+msgstr "<span>Raporlama</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr "<span>Onaylama</span>"
+msgstr "<span>Onaylanacak</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -130,7 +123,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
-msgstr "Etkin"
+msgstr "Aktif"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -138,20 +131,10 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "Analitik Hesap"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr "Arşiv"
-
-#. module: hr
-#: model:ir.model,name:hr.model_event_registration
-msgid "Attendee"
-msgstr "Katılımcı"
+msgstr "Arşivlendi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -200,22 +183,17 @@ msgstr "İcra Kurulu Başkanı"
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr "Baş Teknik Sorumlusu"
+msgstr "Teknolojiden Sorumlu Başkan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
 msgid "Child Departments"
-msgstr "Alt Departmenler"
+msgstr "Alt Departmanlar"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
 msgstr "Vatandaşlık & Diğer Bilgiler"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_city
-msgid "City"
-msgstr "Semt/İlçe"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -248,19 +226,14 @@ msgstr "Mükemmele yakın ..."
 #: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
-msgstr "Çalıştırıcı"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_code
-msgid "Code"
-msgstr "Kodu"
+msgstr "Yetiştiren"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_color
 msgid "Color Index"
-msgstr "Renk İndeksi"
+msgstr "Renk"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_tree
@@ -269,12 +242,21 @@ msgstr "Şirketler"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_company_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
+msgid "Company Working Hours"
+msgstr "Şirket Çalışma Saatleri"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+msgid "Complete Name"
+msgstr "Tam Adı"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -285,6 +267,11 @@ msgstr "Yapılandırma"
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
 msgstr "Danışman"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -317,7 +304,7 @@ msgstr "Oluşturulma"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
 msgid "Current Number of Employees"
-msgstr "Personel Mevcut Sayısı"
+msgstr "Mevcut Personel Sayısı"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
@@ -330,11 +317,6 @@ msgstr "Doğum Tarihi"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Define a clear communication strategy"
 msgstr "Açık bir iletişim stratejisi tanımlayın"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_calendar_id
-msgid "Define the schedule of resource"
-msgstr "Kaynağın planlamasını tanımla"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -363,17 +345,12 @@ msgid "Departments"
 msgstr "Departmanlar"
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
-msgstr "Tartışma kanalı"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr "Adı Göstermek"
+msgstr "Görünüm Adı"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -381,19 +358,9 @@ msgid "Divorced"
 msgstr "Boşanmış"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
-msgid "Efficiency Factor"
-msgstr "Verimlilik Çarpanı"
-
-#. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
 msgstr "Eposta Rumuzları"
-
-#. module: hr
-#: model:ir.model,name:hr.model_mail_thread
-msgid "Email Thread"
-msgstr "E-posta İşlemleri"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -416,12 +383,12 @@ msgstr "Personel Etiketi"
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
-msgstr "Personel Etiketi"
+msgstr "Personel Etiketleri"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
 msgid "Employee bank salary account"
-msgstr "Personel maaşı banka hesabı"
+msgstr "Personel banka maaş hesabı"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -437,6 +404,7 @@ msgstr "Personel Adı"
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_tree
 #: model:ir.ui.view,arch_db:hr.view_partner_tree2
@@ -454,21 +422,25 @@ msgid "Employees Tags"
 msgstr "Personel Etiketleri"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:254
+#: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
+msgid ""
+"Enter here the private address of the employee, not the one linked to your "
+"company."
+msgstr ""
+"Buraya personelin kişisel adresini giriniz, şirketinizle ilişkili olanı "
+"değil."
+
+#. module: hr
+#: code:addons/hr/models/hr.py:303
 #, python-format
 msgid "Error! You cannot create recursive departments."
-msgstr "Hata! Özyinelemeli bölümler oluşturamazsınız."
+msgstr "Hata! İçiçe departmanlar oluşturamazsınız."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:167
+#: code:addons/hr/models/hr.py:184
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "Hata! Personel(ler)a özyinelemeli sıradüzeni oluşturmazsınız."
-
-#. module: hr
-#: model:ir.model,name:hr.model_event_event
-msgid "Event"
-msgstr "Etkinlik"
+msgstr "Hata! Personel(ler) için içiçe sıradüzeni oluşturamazsınız."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -479,7 +451,7 @@ msgstr "Beklenen Yeni Personel"
 #: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr "Yeni işe alım sonra bu iş pozisyonu için beklenen pesonel sayısı."
+msgstr "Yeni işe alım sonrası bu iş pozisyonu için beklenen pesonel sayısı."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -505,16 +477,6 @@ msgstr "Geliştirme bölümünü izleyin ve kontrol edin"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Takipçiler"
-
-#. module: hr
-#: model:ir.model,name:hr.model_gamification_badge
-msgid "Gamification badge"
-msgstr "Ödüllendirme Rozeti"
-
-#. module: hr
-#: model:ir.model,name:hr.model_gamification_challenge
-msgid "Gamification challenge"
-msgstr "Ödüllendirme"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
@@ -568,6 +530,11 @@ msgid "Group By"
 msgstr "Grupla"
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "HR Department"
+msgstr "İK Departmanı"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "İK Ayarları"
@@ -595,27 +562,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
 msgid "Hired Employees"
-msgstr "İşe Alınan Personel"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
-msgid "Home Address"
-msgstr "Ev Adresi"
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "Hr Department"
-msgstr "IK Departmanı"
+msgstr "İşe Alınan Çalışanlar"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr "İK"
+msgstr "İnsan Kaynakları"
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "İnsan Kaynakları Yönetimi"
+msgstr "İnsan Kaynakları Yöneticisi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -628,7 +585,7 @@ msgstr "ID"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
 msgid "Identification No"
-msgstr "Identification No"
+msgstr "Kimlik No"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_active
@@ -649,12 +606,12 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
-msgstr "Poziyon"
+msgstr "İşe Alımı Kapalı"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
-msgstr "İşe Alım"
+msgstr "İşe Alımı Devam Eden"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -671,11 +628,6 @@ msgid "Increase the visibility of the product"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "Araç ile ilgili bilgileri"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model:ir.ui.view,arch_db:hr.view_hr_job_tree
@@ -690,6 +642,8 @@ msgstr "İş Açıklaması"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
 msgstr "İş Pozisyonu"
 
@@ -712,16 +666,10 @@ msgstr ""
 "                takip edebilirsiniz."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Title"
-msgstr "İş Ünvanı"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
-msgstr "İnsan Kaynakları"
+msgstr "İşler"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department___last_update
@@ -748,11 +696,6 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
-msgid "Latest Connection"
-msgstr "Son Bağlantı"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
 msgstr "İşe Alım Sürecini Başlat"
@@ -773,11 +716,6 @@ msgid "Launch new products, marketing campaigns and offers"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_login
-msgid "Login"
-msgstr "Giriş"
-
-#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "Bay"
@@ -791,11 +729,6 @@ msgid "Manager"
 msgstr "Yönetici"
 
 #. module: hr
-#: model:res.groups,name:hr.group_hr_attendance
-msgid "Manual Attendance"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
 msgid "Marital Status"
 msgstr "Medeni Durumu"
@@ -807,8 +740,8 @@ msgstr "Pazarlama ve Topluluk Yöneticisi"
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married"
-msgstr "Evli"
+msgid "Married (or similar)"
+msgstr "Evli (veya benzer)"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -841,12 +774,7 @@ msgstr "Üyeler"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
-msgstr "Mesajlar"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Daha <i class=\"fa fa-caret-down\"/>"
+msgstr "Mesajlar "
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -862,7 +790,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 msgid "Name"
-msgstr "Adı"
+msgstr "İsim"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
@@ -883,7 +811,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr "İşe Alım Sonlandı"
+msgstr "İşe Alıma Kapalı"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -909,15 +837,18 @@ msgstr "İşe alım aşamasında bu iş pozisyonu için işe alınan personel sa
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "İşe almak için beklediğiniz yeni personel sayısı."
+msgstr "İşe alınacak yeni personel sayısı."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc."
+"                leaves, recruitments, etc."
 msgstr ""
+"Odoo'nun departman yapısı ilişkili çalışanların bütün\n"
+"                bilgilerini yönetmeniz için kullanılır: giderler, zaman çizelgeleri,\n"
+"                masraflar, işe alım, vb."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -932,7 +863,7 @@ msgstr "Diğer"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
-msgstr "Diğer Bilgileri ..."
+msgstr "Diğer Bilgiler ..."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -951,11 +882,6 @@ msgid "Parent Department"
 msgstr "Üst Departman"
 
 #. module: hr
-#: model:ir.model,name:hr.model_res_partner
-msgid "Partner"
-msgstr "İş Ortağı"
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
 msgstr ""
@@ -966,14 +892,9 @@ msgid "Passport No"
 msgstr "Pasaport No"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Personal Information"
-msgstr "Kişisel Bilgileri"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image
 msgid "Photo"
-msgstr "Resim"
+msgstr "Fotoğraf "
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -989,7 +910,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
-msgstr "Pozisyonu"
+msgstr "Pozisyon"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -999,9 +920,14 @@ msgid "Preferably 1 year of experience"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+msgid "Private Address"
+msgstr "Kişisel Adres"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Public Information"
-msgstr "Genel Bilgiler"
+msgid "Private Information"
+msgstr "Kişisel Bilgiler"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1012,6 +938,11 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_developer
 msgid "Quick and autonomous learner"
 msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "İşe Alım Süreci"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -1031,32 +962,17 @@ msgstr "İlgili personeller"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Erişimini yönetmek için kaynak için ilgili kullanıcı adı."
+msgstr "Kaynağın erişimini yönetmek için ilişkilendirilmiş kullanıcı"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
-msgid "Reports"
-msgstr "Raporlar"
+msgid "Reporting"
+msgstr "Raporlama"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
 msgid "Requirements"
 msgstr "Gereksinimler"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
-msgid "Resource"
-msgstr "Kaynak"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-msgid "Resource Name"
-msgstr "Kaynak Adı"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
-msgid "Resource Type"
-msgstr "Kaynak Tipi"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1072,12 +988,12 @@ msgstr "Sorumluluklar"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
 msgid "SIN No"
-msgstr "SGK No"
+msgstr "Bağkur No"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_ssnid
 msgid "SSN No"
-msgstr "SGK No"
+msgstr "SGK Sicil No"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1087,15 +1003,40 @@ msgid "Scale our events organization all around the world"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"Set default calendar used to compute time allocation for leaves, timesheets,"
+" ..."
+msgstr ""
+"İzinler ve zaman çizelgeleri için kullanılacak varsayılan takvimi seçiniz."
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr "Bu işe alım bu iş pozisyonu için açık mı kapalı mı belirleyin."
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.hr_config_settings_action
+#: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
 msgstr "Ayarlar"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
+msgid "Show Organizational Chart"
+msgstr "Organizasyon Şemasını Göster"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form"
+msgstr "Personel sayfasında organizasyon şemasını göster"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form."
+msgstr "Personel formunda organizasyon şemasını göster."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1132,7 +1073,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
 msgid "Social Insurance Number"
-msgstr "Sosyal Güvenlik Numarası"
+msgstr "Bağkur Sicil Numarası"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_ssnid
@@ -1159,7 +1100,7 @@ msgstr "Alt Sıradüzeni"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
 msgid "Subordinates"
-msgstr "Emrindekiler"
+msgstr "Astları"
 
 #. module: hr
 #: sql_constraint:hr.employee.category:0
@@ -1182,34 +1123,14 @@ msgid "Team spirit and good communication"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_test
-msgid "Test Mail Model"
-msgstr "Test Posta Model"
+#: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
+msgid "The employee adress has a company linked"
+msgstr "Personelin şirket ile ilişkili adresi var"
 
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr "Firmanın her bölümü için iş poziyonu adı benzersiz olmalı!"
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_attendance
-msgid ""
-"The user will gain access to the human resources attendance menu, enabling "
-"him to manage his own attendance."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
-msgstr ""
-"This field depict the efficiency of the resource to complete tasks. e.g "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+msgstr "Şirketin her bölümü için iş pozisyonu adı benzersiz olmalı!"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -1223,7 +1144,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Tahmini Personel Toplamı"
+msgstr "Öngörülen Personel Toplamı"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -1244,9 +1165,15 @@ msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr "Sisteme giriş için kullanılmış"
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"Use here the home address of the employee.\n"
+"                                            This private address is used in the expense report reimbursement document.\n"
+"                                            It should be different from the work address."
+msgstr ""
+"Burayı personelin ev adresi için kullanın.\n"
+"                                            Bu kişisel adres masraf ödemesi belgelerinde kullanılacaktır..\n"
+"                                            İş adresinden farklı olmalıdır."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1257,6 +1184,21 @@ msgstr "Kullanıcı"
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
 msgstr "Kullanıcılar"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies :"
+msgstr "Boşluk :"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
+msgid "Visa Expire Date"
+msgstr "Vize Bitiş Tarihi"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
+msgid "Visa No"
+msgstr "Vize No"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1353,9 +1295,19 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+msgid "Work Address"
+msgstr "İş Adresi"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
 msgstr "İş E-postası"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr "İş Bilgileri"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -1368,19 +1320,24 @@ msgid "Work Mobile"
 msgstr "İş Mobil"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Work Organization"
+msgstr "İş Organizasyonu"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr "Çalışma İzni"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
+msgid "Work Permit No"
+msgstr "Çalışma İzin No"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
 msgid "Work Phone"
 msgstr "İş Telefonu"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
-msgid "Working Address"
-msgstr "İş Adresi"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
-msgid "Working Time"
-msgstr "Çalışma Süresi"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -1578,15 +1535,9 @@ msgstr ""
 "iletişime geçiniz."
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "alias %s does not accept unknown employees"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr "departmen"
+msgstr "departman"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1599,15 +1550,20 @@ msgid "e.g. Sales Manager"
 msgstr "ör. Satış Müdürü"
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "skipping"
-msgstr "atlama"
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "mail.alias.mixin"
+msgstr "mail.alias.mixin"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "the user will be able to approve document created by employees."
-msgstr "Kullanıcı çalışanlar tarafından oluşturulan belgeyi onaylaması."
+msgstr ""
+"kullanıcı çalışanlar tarafından oluştutulan belgeyi onaylayabilecektir."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager

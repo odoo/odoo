@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Snippets' Assets  -->
+<template id="website_hr_recuitment_snippets_assets" name="Website HR Recruitment Snippets Assets" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/website_hr_recruitment/static/src/less/s_hr_rating.less"/>
+    </xpath>
+</template>
+
+<!-- Snippets' Templates  -->
+<template id="s_hr_rating" name="HR Rating">
+    <div class="s_hr_rating s_hr_rating_stars s_hr_rating_3">
+        <h6 class="mb0">Job Security:</h6>
+        <i class="fa"/>
+        <i class="fa"/>
+        <i class="fa"/>
+        <i class="fa"/>
+        <i class="fa"/>
+        <div class="s_hr_rating_bar"/>
+    </div>
+</template>
+
+<!-- Add Snippets' into library  -->
+<template id="website_hr_recuitment_snippets_include" inherit_id="website.snippets" name="Website HR Recruitment Snippets Include">
+    <xpath expr="//div[@id='snippet_content']/div[hasclass('o_panel_body')]/*[1]" position="before">
+        <t t-snippet="website_hr_recruitment.s_hr_rating" t-thumbnail="/website_hr_recruitment/static/src/img/ui/s_hr_rating_thumb.jpg"/>
+    </xpath>
+</template>
+
+<!-- Snippets' Options  -->
+<template id="s_hr_rating_options" inherit_id="website.snippet_options" name="Website HR Rectuitment s_hr_rating options">
+  <xpath expr="." position="inside">
+    <div data-js='s_hr_rating_option_type' data-selector=".s_hr_rating" data-drop-in="[class^='col-']">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Rating type</a>
+            <ul class="dropdown-menu">
+                <li data-select_class="s_hr_rating_stars"><a href="#"><i class="fa fa-star"/> Stars</a></li>
+                <li data-select_class="s_hr_rating_bolts"><a href="#"><i class="fa fa-bolt"/> Bolts</a></li>
+                <li data-select_class="s_hr_rating_hearts"><a href="#"><i class="fa fa-heart"/> Hearts</a></li>
+                <li data-select_class="s_hr_rating_bar"><a href="#"><i class="fa fa-tasks"/> Bar</a></li>
+            </ul>
+        </li>
+    </div>
+    <div data-js='s_hr_rating_option_value' data-selector=".s_hr_rating">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Rating value</a>
+            <ul class="dropdown-menu">
+                <li data-select_class=""><a href="#">0</a></li>
+                <li data-select_class="s_hr_rating_1"><a href="#">1/5</a></li>
+                <li data-select_class="s_hr_rating_2"><a href="#">2/5</a></li>
+                <li data-select_class="s_hr_rating_3"><a href="#">3/5</a></li>
+                <li data-select_class="s_hr_rating_4"><a href="#">4/5</a></li>
+                <li data-select_class="s_hr_rating_5"><a href="#">5/5</a></li>
+            </ul>
+        </li>
+    </div>
+  </xpath>
+</template>
+
+</odoo>

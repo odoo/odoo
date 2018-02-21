@@ -18,7 +18,7 @@
 
         <menuitem
             id="menu_hr_reporting_timesheet"
-            name="Reports"
+            name="Reporting"
             parent="menu_hr_root"
             groups="group_hr_manager,group_hr_user"
             sequence="99"/>
@@ -44,24 +44,25 @@
                                     options='{"terminology": "archive"}'/>
                             </button>
                         </div>
+                        <div id="o_employee_container"><div id="o_employee_main">
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" placeholder="Employee's Name"/>
+                                <field name="name" placeholder="Employee's Name" required="True"/>
                             </h1>
                         </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
+                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>
                         <notebook>
-                            <page name="public" string="Public Information">
+                            <page name="public" string="Work Information">
                                 <group>
                                     <group string="Contact Information">
                                         <field name="address_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="mobile_phone"/>
                                         <field name="work_location"/>
                                         <field name="work_email" widget="email"/>
+                                        <field name="mobile_phone"/>
                                         <field name="work_phone"/>
                                     </group>
                                     <group string="Position">
@@ -69,12 +70,12 @@
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
-                                        <field name="calendar_id"/>
+                                        <field name="resource_calendar_id"/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
-                            <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
+                            <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Citizenship &amp; Other Information">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
@@ -86,6 +87,13 @@
                                         <field name="address_home_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="is_address_home_a_company" invisible="1"/>
+                                        <div class="text-warning" groups="hr.group_hr_user"
+                                             attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
+                                            Use here the home address of the employee.
+                                            This private address is used in the expense report reimbursement document.
+                                            It should be different from the work address.
+                                        </div>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>
@@ -93,6 +101,11 @@
                                     </group>
                                     <group string="Birth">
                                         <field name="birthday"/>
+                                    </group>
+                                    <group string="Work Permit" name="work_permit">
+                                        <field name="visa_no"/>
+                                        <field name="permit_no"/>
+                                        <field name="visa_expire"/>
                                     </group>
                                 </group>
                             </page>
@@ -105,6 +118,7 @@
                                 </group>
                             </page>
                         </notebook>
+                        </div></div>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -144,11 +158,11 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter name="group_manager" string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter name="group_coach" string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
+                        <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter name="group_job" string="Job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
              </field>
@@ -160,7 +174,7 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <kanban class="o_hr_employee_kanban">
-                <field name="last_login"/>
+                <field name="id"/>
                 <field name="message_is_follower"/>
                 <field name="message_follower_ids"/>
                 <field name="message_ids"/>
@@ -168,9 +182,8 @@
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
-                        <field name="category_ids"/>
                         <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
+                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
                             <div class="o_employee_summary_icons">
                                 <t t-if="record.message_needaction_counter.raw_value">
                                     <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
@@ -180,12 +193,17 @@
                             </div>
                         </div>
                         <div class="oe_kanban_details">
-                            <strong>
-                                <field name="name"/>
-                            </strong>
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <span t-if="record.job_id.raw_value" class="o_kanban_record_subtitle"><field name="job_id"/></span>
+                                </div>
+                            </div>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <ul>
                                 <li id="last_login"/>
-                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                 <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                 <li t-if="record.work_email.raw_value"><i class="fa fa-envelope"></i> <field name="work_email"/></li>
                                 <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
@@ -272,22 +290,16 @@
             </field>
         </record>
 
+        <!-- TODO remove me in master -->
         <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
             <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
+            <field name="domain">['|', ('id','in',active_ids), ('parent_id', 'in', active_ids)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_partner_tree2"/>
-        </record>
-
-        <record id="hr_employee_action_subordinate_hierachy_mutli" model="ir.values">
-            <field name="name">Subordinate Hierarchy</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('hr_employee_action_subordinate_hierachy'))"/>
-            <field name="key">action</field>
-            <field name="key2">client_action_multi</field>
-            <field name="model">hr.employee</field>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
         </record>
 
         <!-- Employee Category -->
@@ -345,8 +357,9 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
                         </div>
-                        <group name="employee_data">
-                            <group>
+                        <group>
+                            <group string="Recruitment" name="recruitment">
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="department_id"/>
                                 <field name="no_of_recruitment"/>
                             </group>
@@ -377,6 +390,32 @@
                     <field name="state"/>
                     <field name="message_needaction" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="hr_job_view_kanban" model="ir.ui.view">
+            <field name="name">hr.job.kanban</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div>
+                                    <span><field name="department_id"/></span>
+                                </div>
+                                <div>
+                                    <span>Vacancies : <field name="expected_employees"/></span>
+                                    <span class="pull-right label label-default"><field name="state"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -511,16 +550,16 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)}">
-                                <div class="o_kanban_card_header">
+                                <div t-attf-class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><field name="name"/></div>
-                                        <div class="o_secondary"><field name="company_id"/></div>
+                                        <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
                                     </div>
                                     <div class="o_kanban_manage_button_section">
-                                        <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                        <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content o_visible">
+                                <div class="container o_kanban_card_content">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>
@@ -528,7 +567,7 @@
                                         <div class="col-xs-6 o_kanban_primary_right">
                                         </div>
                                     </div>
-                                </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                </div><div class="container o_kanban_card_manage_pane">
                                     <div class="row">
                                         <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_do">
                                             <div class="o_kanban_card_manage_title">
@@ -542,7 +581,7 @@
                                         </div>
                                         <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
                                             <div class="o_kanban_card_manage_title">
-                                                <span>Reports</span>
+                                                <span>Reporting</span>
                                             </div>
                                         </div>
                                     </div>
@@ -576,7 +615,7 @@
               </p><p>
                 Odoo's department structure is used to manage all documents
                 related to employees by departments: expenses, timesheets,
-                leaves and holidays, recruitments, etc.
+                leaves, recruitments, etc.
               </p>
             </field>
         </record>

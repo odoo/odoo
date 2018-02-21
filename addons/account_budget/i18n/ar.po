@@ -3,21 +3,23 @@
 # * account_budget
 # 
 # Translators:
-# Islam Eldeeb <islameldeb@gmail.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# amrnegm <amrnegm.01@gmail.com>, 2016
-# hoxhe Aits <hoxhe0@gmail.com>, 2016
-# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
+# Mustafa Rawi <mustafa@cubexco.com>, 2017
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
+# Islam Eldeeb <islameldeb@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
+# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"Last-Translator: hamza tayseer atieh <hamza.atieh@minervadata.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +49,7 @@ msgstr "الحسابات"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_percentage
 msgid "Achievement"
-msgstr "إنجاز"
+msgstr "الإنجاز"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_analytic_account
@@ -84,6 +86,7 @@ msgstr "خط الموازنة"
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account_crossovered_budget_line
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_crossovered_budget_line
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_crossovered_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_project_project_crossovered_budget_line
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
@@ -109,6 +112,7 @@ msgstr "وضع الموازنة"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+#: model:ir.ui.view,arch_db:account_budget.res_config_settings_view_form
 msgid "Budgetary Positions"
 msgstr "مراكز الموازنة"
 
@@ -185,7 +189,7 @@ msgstr "أنشئ في"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_display_name
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_display_name
 msgid "Display Name"
-msgstr "عرض الاسم"
+msgstr "الاسم المعروض"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -269,12 +273,12 @@ msgstr "المبلغ الفعلى"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Reset to Draft"
-msgstr "إعادة التعيين لمسودة"
+msgstr "إعادة الى وضع المسودة"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_creating_user_id
 msgid "Responsible"
-msgstr "المسئول"
+msgstr "مسئول"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_from
@@ -285,13 +289,13 @@ msgstr "تاريخ البدء"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_state
 msgid "Status"
-msgstr "الحاله "
+msgstr "الحالة "
 
 #. module: account_budget
-#: code:addons/account_budget/models/account_budget.py:89
+#: code:addons/account_budget/models/account_budget.py:31
 #, python-format
-msgid "The Budget '%s' has no accounts!"
-msgstr "الميزانية '%s' ليس لديها حسابات!"
+msgid "The budget must have at least one account."
+msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount
@@ -317,4 +321,4 @@ msgstr "للموافقة علي الموازنة"
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr "تم التحقق"
+msgstr "تم الإعتماد"

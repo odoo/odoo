@@ -3,18 +3,14 @@
 # * account_test
 # 
 # Translators:
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Eric Antones <eantones@users.noreply.github.com>, 2016
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Joan Macaya <j.mac.solanes@gmail.com>, 2016
+# Quim - eccit <quim@eccit.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Joan Macaya <j.mac.solanes@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,19 +30,19 @@ msgstr ""
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr "<strong>Nom:</strong>"
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
-#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
+#: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Proves comptables"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr "Proves de comptabilitat en"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
@@ -57,8 +53,6 @@ msgstr "Actiu"
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
-"Comprovar si les línies de moviment estan compensades i tenen la mateixa "
-"data i període"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -66,8 +60,6 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
-"Comprovar en els extractes bancaris que el saldo de tancament = saldo "
-"d'inici + suma de les línies del extracte"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -90,23 +82,23 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
-"Comprovar que la factura conciliada per vendes/compres té apunts conciliats "
-"pels comptes a cobrar i a pagar"
+"Comprovar que la factura conciliada per vendes/compres te apunts conciliats "
+"per els comptes a cobrar i a pagar"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Comprovar el saldo : suma del deure = suma del haver"
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr "Clic per crear un test de comptabilitat."
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr "Ajuda del codi"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -132,23 +124,6 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"El codi sempre ha d'establir una variable anomenada 'result' amb el resultat de la prova, que pot ser una llista o un diccionari. Si 'result és una llista buida, significa que la prova ha estat satisfactòria. En cas contrari, es tractarà de traduir i imprimir el que hi ha dintre de 'result'.\n"
-"\n"
-"Si el resultat de la prova és un diccionari, es pot establir una variable anomenada 'column_order' per elegir en quin ordre es volen imprimir el contingut de 'result'.\n"
-"\n"
-"En cas de necessitar-les, es poden utilitzar les següents variables al codi:\n"
-"* cr: cursor a la base de dades\n"
-"* uid: ID de l'usuari actual\n"
-"\n"
-"En qualsevol cas, el codi ha de ser sentencies Python legals amb correcta indentació (si fos necessari).\n"
-"\n"
-"Exemple:\n"
-"sql = '''SELECT id, name, ref, date\n"
-"FROM account_move_line\n"
-"WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
-"'''\n"
-"cr.execute(sql)\n"
-"result=cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -174,7 +149,7 @@ msgstr "Mostrar Nom"
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
-msgstr "Expressió"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
@@ -186,27 +161,27 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
 msgid "Last Modified on"
-msgstr "Última modificació el "
+msgstr "Darrera modificació feta el"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
 msgid "Last Updated by"
-msgstr "Última actualització per"
+msgstr "Actualitzat per última vegada per"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
 msgid "Last Updated on"
-msgstr "Última actualització el"
+msgstr "Actualitzat per última vegada el dia"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
-msgstr "Codi Python"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
 msgid "Python code"
-msgstr "Codi de Python"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
@@ -216,12 +191,12 @@ msgstr "Seqüència"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr "Prova 1 : Balanç general"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr "Prova 3 : Línies de moviment"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
@@ -244,36 +219,36 @@ msgstr "Prova 6 : Estat de la factura"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr "Test 7: Saldo de tancament en extractes bancaris"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
 msgid "Test Description"
-msgstr "Descripció de la prova"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
 msgid "Test Name"
-msgstr "Nom de la prova"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 #: model:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
-msgstr "Test"
+msgstr ""
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:51
+#: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
-msgstr "La prova ha estat superada satisfactòriament"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr "accounting.assert.test"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr "report.account_test.report_accounttest"
+msgstr ""

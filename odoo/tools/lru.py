@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # taken from http://code.activestate.com/recipes/252524-length-limited-o1-lru-cache-implementation/
 import threading
-from func import synchronized
+
+from .func import synchronized
 
 __all__ = ['LRU']
 
@@ -92,6 +93,7 @@ class LRU(object):
     def __len__(self):
         return len(self.d)
 
+    # FIXME: should this have a P2 and a P3 version or something?
     @synchronized()
     def iteritems(self):
         cur = self.first
@@ -99,6 +101,7 @@ class LRU(object):
             cur2 = cur.next
             yield cur.me
             cur = cur2
+    items = iteritems
 
     @synchronized()
     def iterkeys(self):
@@ -106,12 +109,11 @@ class LRU(object):
 
     @synchronized()
     def itervalues(self):
-        for i,j in self.iteritems():
-            yield j
+        return iter(self.d.values())
 
     @synchronized()
     def keys(self):
-        return self.d.keys()
+        return list(self.d)
 
     @synchronized()
     def pop(self,key):

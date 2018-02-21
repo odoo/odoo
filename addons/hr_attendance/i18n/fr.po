@@ -3,24 +3,27 @@
 # * hr_attendance
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Jerther, 2016
-# Henri Cornuau <hcornuau@gmail.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Frédéric LIETART <stuff@tifred.fr>, 2016
-# Magali <mch@openerp.com>, 2016
-# Olivier Dony <odo@odoo.com>, 2016
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# Frédéric LIETART <stuff@tifred.fr>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Magali <mch@openerp.com>, 2017
+# Jerther, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Henri Cornuau <hcornuau@gmail.com>, 2017
+# Florian Hatat, 2017
+# fr rev <e2ffr02@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -48,6 +51,11 @@ msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
 msgstr "%(empl_name)s de %(check_in)s jusque %(check_out)s"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Attendance</span>"
+msgstr "<span class=\"o_stat_text\">Présence</span>"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:117
 #, python-format
@@ -62,16 +70,13 @@ msgid "Another good day's work! See you soon!"
 msgstr "Encore une bonne journée de travail ! À bientôt !"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Apply"
-msgstr "Appliquer"
-
-#. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_state
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
 msgstr "Présence"
 
@@ -82,21 +87,13 @@ msgid "Attendance Analysis"
 msgstr "Analyse des présences"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
-msgid "Attendance Settings"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
-msgid "Attendance ids"
-msgstr "Présences"
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
 msgstr "Présences"
 
@@ -106,11 +103,6 @@ msgid "Badge ID"
 msgstr "ID du badge"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Cancel"
-msgstr "Annuler"
-
-#. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
 #, python-format
 msgid ""
@@ -118,7 +110,7 @@ msgid ""
 "checked out since %(datetime)s"
 msgstr ""
 "Impossible de créer un enregistrement de présence pour %(empl_name)s, "
-"l'employé(e) n'a pas effectué de pointage à la sortie depuis le %(datetime)s"
+"l'employé n'a pas pointé à la sortie depuis le %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -129,25 +121,25 @@ msgid ""
 "already checked in on %(datetime)s"
 msgstr ""
 "Impossible de créer un enregistrement de présence pour %(empl_name)s, "
-"l'employé(e) a déjà effectué un pointage à l'entrée le %(datetime)s"
+"l'employé avait déjà pointé à l'entrée le %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:111
+#: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr ""
-"Impossible d'effectuer un pointage à l'entrée ou à la sortie sur plusieurs "
+"Impossible d'effectuer un pointage à l'entrée ou à la sortie pour plusieurs "
 "employés."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:125
+#: code:addons/hr_attendance/models/hr_employee.py:122
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"Impossible d'effectuer un pointage à la sortie sur %(empl_name)s, le "
+"Impossible d'effectuer un pointage à la sortie pour %(empl_name)s, le "
 "pointage d'entrée correspondant est introuvable. Vos présences ont "
 "probablement été modifiées manuellement par les ressources humaines."
 
@@ -155,6 +147,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
 msgstr "Arrivée"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
+msgid "Check In / Check Out"
+msgstr "Check In / Check Out"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
@@ -174,6 +171,11 @@ msgstr "Arriver"
 #, python-format
 msgid "Check out"
 msgstr "Sortir"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Check-In/Out"
+msgstr "Check-In/Out"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -223,7 +225,6 @@ msgstr "Logo de la société"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -259,7 +260,7 @@ msgstr "Département"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Nom à afficher"
 
 #. module: hr_attendance
 #. openerp-web
@@ -290,7 +291,8 @@ msgid "Employee Image"
 msgstr "Photo de l'employé"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
 msgstr "Code pour employé"
 
@@ -301,7 +303,6 @@ msgid "Employee attendances"
 msgstr "Pointages des employés"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
 msgid "Employee's Name"
 msgstr "Nom de l'employé"
@@ -313,26 +314,9 @@ msgid "Employees"
 msgstr "Employés"
 
 #. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
-" Mode\"."
-msgstr ""
-
-#. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
-msgstr ""
-
-#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "Activer l'utilisation de code PIN"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
-msgid "Enable or disable employee PIN identification at check in"
-msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -408,7 +392,7 @@ msgstr "Au revoir"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Group By"
-msgstr "Grouper par"
+msgstr "Regroupé par"
 
 #. module: hr_attendance
 #. openerp-web
@@ -473,9 +457,14 @@ msgid "Kiosk Mode"
 msgstr "Mode kiosque"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
+msgid "Last Attendance"
+msgstr "Dernière présence"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_uid
@@ -486,11 +475,6 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
-msgid "Last attendance id"
-msgstr ""
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
@@ -504,6 +488,7 @@ msgstr "Gestionnaire"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "Présence manuelle"
 
@@ -518,7 +503,6 @@ msgid "Month"
 msgstr "Mois"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
 msgstr "Mes présences"
@@ -529,10 +513,15 @@ msgid "No Check Out"
 msgstr "Aucun pointage à la sortie"
 
 #. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+msgid "No attendance records to display."
+msgstr "Aucun enregistrement de présence à afficher."
+
+#. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
 #, python-format
 msgid "No employee corresponding to barcode %(barcode)s"
-msgstr "Pas d'employé correspondant au code-barre %(barcode)s"
+msgstr "Pas d'employé correspondant au code-barres %(barcode)s"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -548,22 +537,22 @@ msgstr "Code"
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
-"Code PIN utilisé pour le pointage à l'entrée/à la sortie en mode kiosque (si"
-" cette option est activée dans Configuration)."
+"Code PIN utilisé pour pointer à l'entrée/à la sortie en mode kiosque (si "
+"cette option est activée dans Configuration)."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:62
 #, python-format
 msgid "Please enter your PIN to check in"
-msgstr "Saisissez votre code PIN pour effectuer un pointage à l'entrée"
+msgstr "Saisissez votre code PIN pour pointer à l'entrée"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:59
 #, python-format
 msgid "Please enter your PIN to check out"
-msgstr "Saisissez votre code PIN pour effectuer un pointage à la sortie"
+msgstr "Saisissez votre code PIN pour pointer à la sortie"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -581,14 +570,14 @@ msgid "Please return to the main menu."
 msgstr "Retournez au menu principal."
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.hr_employee_print_badge
+#: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
 msgstr "Imprimer le Badge"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
-msgid "Reports"
-msgstr "Rapports"
+msgid "Reporting"
+msgstr "Rapport"
 
 #. module: hr_attendance
 #. openerp-web
@@ -605,7 +594,14 @@ msgid "Select Employee"
 msgstr "Sélectionner un employé"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr ""
+"Définissez les codes PIN dans le formulaire d'informations de l'employé "
+"(dans l'onglet Paramètres RH)."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
 msgid "Settings"
 msgstr "Configuration"
 
@@ -646,13 +642,22 @@ msgstr ""
 "l'entrée et à la sortie pour sa session"
 
 #. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"L'utilisateur pourra accéder au menu de présence des ressources humaines "
+"afin de gérer sa propre présence."
+
+#. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
-"L'utilisateur devra saisir son code PIN pour effectuer un pointage à "
-"l'entrée ou à la sortie sur l'écran de l'entreprise."
+"L'utilisateur devra saisir son code PIN pour pointer à l'entrée ou à la "
+"sortie sur l'écran de l'entreprise."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -663,6 +668,11 @@ msgstr "Pour créer des employés, accédez au menu Employés."
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Today"
 msgstr "Aujourd'hui"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use PIN codes to check in in Kiosk Mode"
+msgstr "Utilisez les codes PIN pour le check in en mode kiosque"
 
 #. module: hr_attendance
 #. openerp-web
@@ -709,19 +719,6 @@ msgid "You cannot duplicate an attendance."
 msgstr "Vous ne pouvez pas dupliquer une présence."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:18
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:37
-#, python-format
-msgid "employee presence<br/>green: checked in<br/>red: checked out"
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
 msgstr "liste de présences pour l'employé"
@@ -739,3 +736,8 @@ msgstr "ok"
 #, python-format
 msgid "or"
 msgstr "ou"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

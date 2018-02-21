@@ -8,14 +8,14 @@
             <input type="hidden" name="import_id"/>
             <div class="oe_import_box col-sm-9">
                 <div class="col-sm-12">
-                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/10.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
+                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/11.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
                 </div>
                 <div class="col-sm-10">
                     <div class="input-group">
                       <input type="text" class="oe_import_file_show form-control" placeholder="No file chosen..."/>
                       <span class="input-group-btn">
                         <label class="btn btn-primary" for="my-file-selector">
-                        <input accept=".csv, .xls, .xlsx, .ods" id-attf-id="file_#{_id}"
+                        <input accept=".csv, .xls, .xlsx, .xlsm, .ods" id-attf-id="file_#{_id}"
                        name="file" id="my-file-selector" class="oe_import_file" type="file" style="display:none;"/>
                         Load File
                         </label>
@@ -63,6 +63,15 @@
                         Track history during import
                     </label>
                 </div>
+                <div title="If the model uses parent/child relations, computing the 
+                    parent / child relation occurs on every line, and lead to a slower import.
+                    Defering it can speed up import."
+                    class="oe_import_deferparentstore">
+                    <input type="checkbox" id="oe_import_deferparentstore" checked="checked"/>
+                    <label for="oe_import_deferparentstore">
+                        Defer parent/child computation
+                    </label>
+                </div>
                 <input type="checkbox" class="oe_import_has_header"
                        id="oe_import_has_header" checked="checked"/>
                 <label for="oe_import_has_header">The first row
@@ -83,7 +92,7 @@
 
     <t t-name="ImportView.buttons">
         <button type="button" class="btn btn-sm btn-primary o_import_button o_import_validate"
-                disabled="disabled">Validate</button>
+                disabled="disabled">Test Import</button>
         <button type="button" class="btn btn-sm btn-default o_import_button o_import_import"
                 disabled="disabled">Import</button>
         <button type="button" class="btn btn-sm btn-default o_import_cancel">Cancel</button>
@@ -144,7 +153,7 @@
         <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
     </t>
     <t t-name="ImportView.import_button">
-        <button t-if='widget.options.import_enabled' type="button" class="btn btn-sm btn-default o_button_import">
+        <button t-if='widget and widget.importEnabled' type="button" class="btn btn-sm btn-default o_button_import">
             Import
         </button>
     </t>

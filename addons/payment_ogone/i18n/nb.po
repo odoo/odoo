@@ -3,16 +3,13 @@
 # * payment_ogone
 # 
 # Translators:
-# Aleksander <aleksander@provendo.no>, 2016
-# Roy Edvard Ellingsen <roy@royedvard.com>, 2016
-# Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2017
 # Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -22,13 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:241
+#: code:addons/payment_ogone/models/payment.py:240
 #, python-format
 msgid "; multiple order found"
 msgstr "; flere ordrer funnet"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:239
+#: code:addons/payment_ogone/models/payment.py:238
 #, python-format
 msgid "; no order found"
 msgstr "; ingen ordre funnet"
@@ -60,13 +57,13 @@ msgstr "Kortnummer"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Bekreft <span class=\"fa fa-long-arrow-right\"/>"
+msgid "Cardholder name"
+msgstr "Korteiers navn"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Expires"
-msgstr ""
+msgid "Expires (MM / YY)"
+msgstr "Utløper (MM/YY)"
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
@@ -81,29 +78,19 @@ msgid ""
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "MM / YY"
-msgstr ""
-
-#. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
-msgid "Name"
-msgstr "Navn"
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:248
+#: code:addons/payment_ogone/models/payment.py:247
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:237
+#: code:addons/payment_ogone/models/payment.py:236
 #, python-format
 msgid "Ogone: received data for reference %s"
 msgstr "Ogone: Mottatt data for referanse %s"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment.py:230
+#: code:addons/payment_ogone/models/payment.py:229
 #, python-format
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
@@ -120,7 +107,7 @@ msgstr "PSPID"
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsinnløser"
+msgstr "Betalingsløsning"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction

@@ -1,0 +1,65 @@
+.s_hr_rating {
+    @star: "\f005";
+    @star-o: "\f006";
+    @bolt: "\f0e7";
+    @bolt-o: "_";
+    @heart: "\f004";
+    @heart-o: "\f08a";
+
+    .s_hr_rating_generate_icons (@off, @on) {
+        .fa:before {
+            content: @off;
+        }
+        .loop(@counter) when (@counter > 0) {
+            &.s_hr_rating_@{counter} {
+                .fa:nth-of-type(-n+@{counter}):before {
+                    content: @on;
+                }
+            }
+            .loop((@counter - 1));
+        }
+        .loop(5);
+    }
+
+    &.s_hr_rating_stars {
+        .s_hr_rating_generate_icons(@star-o, @star);
+    }
+
+    &.s_hr_rating_bolts {
+        .s_hr_rating_generate_icons(@bolt-o, @bolt);
+    }
+
+    &.s_hr_rating_hearts {
+        .s_hr_rating_generate_icons(@heart-o, @heart);
+    }
+
+    &.s_hr_rating_bar {
+        .fa {
+            display: none;
+        }
+
+        .s_hr_rating_bar {
+            height: 15px;
+            padding: 1px;
+            background-color: @gray-lighter;
+            border-radius: 2px;
+            &:before {
+                content: "";
+                border-radius: 2px;
+                background-color: @brand-primary;
+                display: block;
+                .size(0, 100%);
+            }
+        }
+
+        .loop(@counter) when (@counter > 0) {
+            &.s_hr_rating_@{counter} {
+                .s_hr_rating_bar:before {
+                    width: percentage(@counter/5);
+                }
+            }
+            .loop((@counter - 1));
+        }
+        .loop(5);
+    }
+}

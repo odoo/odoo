@@ -3,15 +3,13 @@
 # * rating_project
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Up Link <linkup.way@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Up Link <linkup.way@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -88,14 +86,86 @@ msgid ""
 "                    <p>This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></p>\n"
 "                % endif\n"
 "                % if object.project_id.rating_status == 'periodic':\n"
-"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.\n"
+"                    <p>This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</p>\n"
 "                % endif\n"
-"                <p>Email automatically sent by <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"                <p>Email automatically sent by <a target=\"_blank\" href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    만족도 조사\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>안녕하세요!</p>\n"
+"                <p>잠시만 시간을 내어 관련 작업에 대한 서비스를 평가 부탁드립니다. \"<strong>${object.name}</strong>\"\n"
+"                   assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+"                <p>피드백에 감사드립니다. 지속적인 개선을 위해 노력하겠습니다.</p>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:10px 20px\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                    <tr>\n"
+"                        <td style=\"text-align:center;\">\n"
+"                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                서비스에 대한 느낌을 말씀해주세요 :\n"
+"                            </h2>\n"
+"                            <div style=\"text-color: #888888\">(click on one of these smileys)</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:10px 10px;\">\n"
+"                            <table style=\"width:100%;text-align:center;\">\n"
+"                                <tr>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/10\">\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/5\">\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/1\">\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
+"                % if object.project_id.rating_status == 'stage':\n"
+"                    <p>이 고객 설문조사는 귀하의 작업단계가 완료되어 전송되었습니다.<b>${object.stage_id.name}</b></p>\n"
+"                % endif\n"
+"                % if object.project_id.rating_status == 'periodic':\n"
+"                    <p>이 고객 설문조사는 <b>${object.project_id.rating_status_period}</b> 작업이  <b>${object.stage_id.name}</b>스테이지에 있는 동안 전송이 됩니다.</p>\n"
+"                % endif\n"
+"                <p>이메일은 <a target=\"_blank\" href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Project</a>에서 자동전송 되었습니다. <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
@@ -108,6 +178,11 @@ msgid "% On tasks"
 msgstr ""
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
+msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
+msgstr ""
+
+#. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
 msgstr "자동 칸반 상태"
@@ -115,18 +190,22 @@ msgstr "자동 칸반 상태"
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback request for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
 
 #. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
 msgstr "고객 평가"
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
+msgid "Customer Ratings on tasks"
+msgstr "업무에 대한 고객 평가"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -136,7 +215,7 @@ msgid ""
 msgstr ""
 
 #. module: rating_project
-#: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
 msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
@@ -150,7 +229,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Daily"
-msgstr "일간"
+msgstr "일별"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -180,6 +259,19 @@ msgid ""
 msgstr ""
 
 #. module: rating_project
+#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
+msgid ""
+"If set and if the project's rating configuration is 'Rating when changing "
+"stage', then an email will be sent to the customer when the task reaches "
+"this step."
+msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
+msgid "Last 30 days"
+msgstr "최근 30일"
+
+#. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
 msgstr ""
@@ -197,11 +289,6 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
-
-#. module: rating_project
-#: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
-msgid "No rating yet"
 msgstr ""
 
 #. module: rating_project
@@ -223,8 +310,16 @@ msgstr ""
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Project"
 msgstr "프로젝트"
+
+#. module: rating_project
+#: model:ir.actions.server,name:rating_project.ir_cron_rating_project_ir_actions_server
+#: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
+#: model:ir.cron,name:rating_project.ir_cron_rating_project
+msgid "Project: Send rating"
+msgstr ""
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -232,6 +327,12 @@ msgid "Quarterly"
 msgstr "분기 별"
 
 #. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.project_task_view_search
+msgid "Rated tasks"
+msgstr "평가 완료 업무"
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
 msgid "Rating"
 msgstr "평가"
@@ -248,8 +349,13 @@ msgstr "평가 빈도"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
-msgid "Rating request deadline"
-msgstr ""
+msgid "Rating Request Deadline"
+msgstr "평가 요청 마감일"
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
+msgid "Rating for tasks"
+msgstr "작업 평가"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -262,16 +368,25 @@ msgid "Ratings"
 msgstr "평가"
 
 #. module: rating_project
-#: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
-msgid ""
-"Select an email template. An email will be sent to the customer when the "
-"task reach this step."
+#: code:addons/rating_project/models/project.py:107
+#, python-format
+msgid "Ratings of %s"
+msgstr "%s 에 대한 평가"
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
+msgid "Ratings on tasks"
 msgstr ""
+
+#. module: rating_project
+#: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
+msgid "Set Email Template to Stages"
+msgstr "해당 단계에 이메일 서식 설정"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
 msgid "Task"
-msgstr "업무"
+msgstr "작업"
 
 #. module: rating_project
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
@@ -282,7 +397,17 @@ msgstr "작업 평가"
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
 msgid "Task Stage"
-msgstr "업무 단계"
+msgstr "작업 단계"
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
+msgid "There is no rating for tasks of this project at the moment."
+msgstr "현재 이 프로젝트의 작업에 대한 평가가 없습니다."
+
+#. module: rating_project
+#: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating
+msgid "There is no rating for this object at the moment."
+msgstr "현재 이 대상에 대한 평가가 없습니다."
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -292,9 +417,9 @@ msgstr "월 2회"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Weekly"
-msgstr "주간"
+msgstr "매주"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
-msgstr "연간"
+msgstr "매년"

@@ -3,16 +3,16 @@
 # * pos_discount
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Ermin Trevisan <trevi@twanda.com>, 2016
-# Fabian Liesch <fabian.liesch@gmail.com>, 2016
+# Martin Trigaux, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Fabian Liesch <fabian.liesch@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -36,22 +36,20 @@ msgid "Discount"
 msgstr "Rabatt"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:14
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+msgid "Discount %"
+msgstr "Rabatt %"
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
-#, python-format
 msgid "Discount Percentage"
 msgstr "% Rabatt"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
 msgstr "Produktrabatt"
-
-#. module: pos_discount
-#: model:ir.ui.view,arch_db:pos_discount.view_pos_config_form
-msgid "Discounts"
-msgstr "Rabatte"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
@@ -65,8 +63,8 @@ msgstr "Der Standard-Rabattprozentsatz"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
-msgid "The product used to model the discount"
-msgstr "Das Produkt zur Abbildung des Rabatts"
+msgid "The product used to model the discount."
+msgstr "Das Produkt zur Abbildung des Rabatts."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config

@@ -1,0 +1,193 @@
+body.l10n_ch_isr {
+    /*
+        all elements are positionned for A4 format (210 x 297mm) but the viewport
+        is bigger than this, hence we zoom the whole page to be bigger than the viewport
+        which will then be resized down by wkhtmltopdf to get back to an A4 format
+     */
+    zoom: 1.25;
+
+    &.o_in_iframe {
+        zoom: 1;
+
+        /* display dummy check bacground in html rendering to help see the end result */
+        #isr {
+            background: url(/l10n_ch/static/src/img/background_virgin_isr.png) bottom no-repeat;
+            background-size: 100%;
+
+            &.isr-print-bank {
+                background-image: url(/l10n_ch/static/src/img/background_virgin_isr_bank.png);
+            }
+        }
+    }
+}
+
+/* content outside isr needs margins to not overlap header */
+body.l10n_ch_isr #content_outside_isr {
+    padding: 15px;
+    padding-top: 150px;
+}
+
+body.l10n_ch_isr #isr {
+    height: 106mm;
+    width: 210mm;
+
+    position: absolute;
+    /* position bvr at bottom of page */
+    top: 297 - 106mm;
+    left: 0;
+
+    overflow: hidden;
+    font-family: "Work Sans", Verdana, Geneva, sans-serif;
+    font-size: 13px;
+
+    p, address {
+        line-height: 15px;
+    }
+
+    #voucher {
+        height: 4in;
+        width: 2 + 4/10in;
+
+        position: absolute;
+        /* header title of BVR section */
+        top: 1/6in;
+        /* right of voucher corresponds to left of slip */
+        right: 5 + 9/10in;
+    }
+
+    #voucher > * {
+        position: absolute;
+        /* default left margin for fields content */
+        left: 1/10in;
+
+        &#voucher-for-contact {
+            top: 3/10in;
+        }
+
+        &#voucher-for-bank {
+            top: 3/20in;
+        }
+
+        &#voucher-for-bank + #voucher-for-contact {
+            top: 4/6in;
+        }
+
+        &#voucher-bank {
+            top: 9/6in;
+            left: 11/10in;
+        }
+
+        &#voucher-currency {
+            top: 9/6 + 3/20in;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        &#voucher-amount_units {
+            width: 15/10in;
+            top: 11/6in;
+
+            text-align: right;
+            line-height: 1/6in;
+            font-weight: 14px;
+        }
+
+        &#voucher-amount_cents {
+            width: 4/10in;
+            top: 11/6in;
+            left: 19/10in;
+
+            line-height: 1/6in;
+            font-weight: 14px;
+        }
+
+        &#voucher-by {
+            top: 26/12in;
+        }
+    }
+
+    #slip {
+        height: 4in;
+        width: 5 + 9/10in;
+
+        position: absolute;
+        /* header title of BVR section */
+        top: 1/6in;
+        /* right of slip corresponds to right of slip */
+        right: 0;
+    }
+
+    #slip > * {
+        position: absolute;
+        /* default left margin for fields content */
+        left: 1/10in;
+
+        &#slip-for-contact {
+            top: 3/10in;
+        }
+
+        &#slip-for-bank {
+            top: 3/20in;
+        }
+
+        &#slip-for-bank + #slip-for-contact {
+            top: 4/6in;
+        }
+
+        &#slip-bank {
+            top: 9/6in;
+            left: 11/10in;
+        }
+
+        &#slip-currency {
+            top: 9/6 + 3/20in;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        &#slip-amount_units {
+            width: 15/10in;
+            top: 11/6in;
+
+            text-align: right;
+            line-height: 1/6in;
+            font-weight: 14px;
+        }
+
+        &#slip-amount_cents {
+            width: 4/10in;
+            top: 11/6in;
+            left: 19/10in;
+
+            line-height: 1/6in;
+            font-weight: 14px;
+        }
+
+        &#slip-reference {
+            width: 3 + 3/10in;
+            top: 7/6in;
+            left: 2 + 5/10in;
+            text-align: center;
+        }
+
+        &#slip-by {
+            top: 11/6in;
+            left: 2 + 5/10in;
+        }
+
+        &#slip-optical {
+            right: 3/10in;
+            bottom: 4/6in;
+
+            text-align: right;
+
+            /* Letter spacing is set for OCRB of Tsukurimashou Font Family */
+            font-family: OCRB, Courier, monospace;
+            line-height: 0.1in;
+            font-size: 10pt;
+            letter-spacing: -0.3px;
+        }
+    }
+}

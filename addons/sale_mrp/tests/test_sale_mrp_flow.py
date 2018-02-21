@@ -20,7 +20,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.ProductUom = self.env['product.uom']
         self.MrpProduction = self.env['mrp.production']
         self.Product = self.env['product.product']
-        self.ProcurementOrder = self.env['procurement.order']
         self.Inventory = self.env['stock.inventory']
         self.InventoryLine = self.env['stock.inventory.line']
         self.ProductProduce = self.env['mrp.product.produce']
@@ -30,7 +29,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.categ_kgm = self.env.ref('product.product_uom_categ_kgm')
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.warehouse = self.env.ref('stock.warehouse0')
-        self.procurement_jit = self.env.ref('base.module_procurement_jit')
 
     def test_00_sale_mrp_flow(self):
         """ Test sale to mrp flow with diffrent unit of measure."""
@@ -111,7 +109,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id, 'make_to_stock')
 
         # ----------------------------------------
-        # Create sale order of 10 Dozen product A.
+        # Create sales order of 10 Dozen product A.
         # ----------------------------------------
 
         order = self.SaleOrder.create({
@@ -128,11 +126,11 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_uom_qty': 10,
             'product_uom': self.uom_dozen.id
         })
-        self.assertTrue(order, "Sale order not created.")
+        self.assertTrue(order, "Sales order not created.")
         order.action_confirm()
 
         # ===============================================================================
-        #  Sale order of 10 Dozen product A should create production order
+        #  Sales order of 10 Dozen product A should create production order
         #  like ..
         # ===============================================================================
         #    Product A  10 Dozen.
@@ -163,18 +161,14 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Check manufacturing order for product A.
         # <><><><><><><><><><><><><><><><><><><><>
 
-        # Run procurement.
-        # ----------------
-        self.ProcurementOrder.run_scheduler()
-
-        mnf_product_a = self.ProcurementOrder.search([('product_id', '=', product_a.id), ('group_id', '=', order.procurement_group_id.id), ('production_id', '!=', False)]).production_id
-
         # Check quantity, unit of measure and state of manufacturing order.
         # -----------------------------------------------------------------
+        self.env['procurement.group'].run_scheduler()
+        mnf_product_a = self.env['mrp.production'].search([('product_id', '=', product_a.id)])
 
         self.assertTrue(mnf_product_a, 'Manufacturing order not created.')
-        self.assertEqual(mnf_product_a.product_qty, 10, 'Wrong product quantity in manufacturing order.')
-        self.assertEqual(mnf_product_a.product_uom_id.id, self.uom_dozen.id, 'Wrong unit of measure in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_qty, 120, 'Wrong product quantity in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_uom_id.id, self.uom_unit.id, 'Wrong unit of measure in manufacturing order.')
         self.assertEqual(mnf_product_a.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
         # ------------------------------------------------------------------------------------------
@@ -226,11 +220,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Manufacturing order for product D (20 unit).
         # <><><><><><><><><><><><><><><><><><><><><><>
 
-        procurement_d = self.ProcurementOrder.search([('product_id', '=', product_d.id), ('group_id', '=', order.procurement_group_id.id)])
-        # Check total consume line with product c and uom kg.
-        self.assertEqual(len(procurement_d), 1, 'Procurement order not generated.')
-        self.assertTrue(procurement_d.production_id, 'Production order not generated from procurement.')
-        mnf_product_d = procurement_d.production_id
+        # FP Todo: find a better way to look for the production order
+        mnf_product_d = self.MrpProduction.search([('product_id', '=', product_d.id), ('move_dest_ids.group_id', '=', order.procurement_group_id.id)], order='id desc', limit=1)
         # Check state of production order D.
         self.assertEqual(mnf_product_d.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
@@ -253,7 +244,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_id': product_c.id,
             'filter': 'product'})
 
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         self.InventoryLine.create({
             'inventory_id': inventory.id,
@@ -303,7 +294,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_id': product_c.id,
             'filter': 'product'})
 
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         self.InventoryLine.create({
             'inventory_id': inventory.id,
@@ -344,6 +335,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.partner = self.env.ref('base.res_partner_1')
         self.product = self.env.ref('mrp.product_product_build_kit')
         self.product.invoice_policy = 'delivery'
+        # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
+        self.product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})
         so_vals = {
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -365,11 +358,10 @@ class TestSaleMrpFlow(common.TransactionCase):
         # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
         pick = self.so.picking_ids
         pick.force_assign()
-        pick.pack_operation_product_ids.write({'qty_done': 1})
-        wiz_act = pick.do_new_transfer()
+        pick.move_lines.write({'quantity_done': 1})
+        wiz_act = pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
         wiz.process()
-
         self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
         self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
@@ -377,8 +369,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
         pick_2 = self.so.picking_ids[0]
         pick_2.force_assign()
-        pick_2.pack_operation_product_ids.write({'qty_done': 4})
-        pick_2.do_new_transfer()
+        pick_2.move_lines.write({'quantity_done': 4})
+        pick_2.button_validate()
 
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')

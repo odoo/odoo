@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mail_activity_demo_followup_quote" model="mail.activity.type">
+        <field name="name">Follow-up Quote</field>
+        <field name="icon">fa-file-text-o</field>
+        <field name="res_model_id" ref="crm.model_crm_lead"/>
+        <field name="days">30</field>
+    </record>
+    <record id="mail_activity_demo_make_quote" model="mail.activity.type">
+        <field name="name">Make Quote</field>
+        <field name="icon">fa-file-text-o</field>
+        <field name="res_model_id" ref="crm.model_crm_lead"/>
+        <field name="days">15</field>
+    </record>
+    <record id="mail_activity_demo_call_demo" model="mail.activity.type">
+        <field name="name">Call for Demo</field>
+        <field name="icon">fa-phone</field>
+        <field name="res_model_id" ref="crm.model_crm_lead"/>
+        <field name="days">10</field>
+    </record>
+</odoo>

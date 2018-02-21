@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import res_groups
+from . import mail_thread
+from . import mail_message
+from . import portal_mixin

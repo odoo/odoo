@@ -5,13 +5,16 @@ import logging
 import time
 from os import listdir
 from os.path import join
-from Queue import Queue, Empty
+try:
+    from queue import Queue, Empty
+except ImportError:
+    from Queue import Queue, Empty # pylint: disable=deprecated-module
 from select import select
 from threading import Thread, Lock
 
 from odoo import http
 
-import odoo.addons.hw_proxy.controllers.main as hw_proxy
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 

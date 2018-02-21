@@ -3,19 +3,15 @@
 # * note
 # 
 # Translators:
-# oihane <oihanecruce@gmail.com>, 2017
-# Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# ibinka lete <ilete@fpbidasoa.net>, 2017
-# Gorka Toledo <gorka.toledo@gmail.com>, 2017
 # Eneko <eastigarraga@codesyntax.com>, 2018
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Mikel Lizarralde <mikellizarralde@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +24,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note_open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "Gaituta"
+msgstr ""
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -59,7 +55,7 @@ msgstr ""
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "Konfigurazioa"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_create_uid
@@ -73,7 +69,7 @@ msgstr "Nork sortua"
 #: model:ir.model.fields,field_description:note.field_note_stage_create_date
 #: model:ir.model.fields,field_description:note.field_note_tag_create_date
 msgid "Created on"
-msgstr "Noiz sortua"
+msgstr "Created on"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_date_done
@@ -83,7 +79,7 @@ msgstr ""
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
-msgstr "Ezabatu"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_display_name
@@ -99,8 +95,13 @@ msgstr ""
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "Taldekatu"
+msgstr "Group By"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_id
@@ -121,14 +122,19 @@ msgstr "Azken aldaketa"
 #: model:ir.model.fields,field_description:note.field_note_stage_write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag_write_uid
 msgid "Last Updated by"
-msgstr "Nork eguneratua"
+msgstr "Last Updated by"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_date
 #: model:ir.model.fields,field_description:note.field_note_stage_write_date
 #: model:ir.model.fields,field_description:note.field_note_tag_write_date
 msgid "Last Updated on"
-msgstr "Noiz eguneratua"
+msgstr "Last Updated on"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
@@ -137,14 +143,13 @@ msgid "Later"
 msgstr ""
 
 #. module: note
-#: model:note.stage,name:note.note_stage_00
-msgid "New"
-msgstr "Berria"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr ""
 
 #. module: note
-#: code:addons/note/models/note.py:129
-#, python-format
-msgid "New Note"
+#: model:note.stage,name:note.note_stage_00
+msgid "New"
 msgstr ""
 
 #. module: note
@@ -152,7 +157,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "Oharra"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
@@ -180,7 +185,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
-msgstr "Oharrak"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
@@ -198,6 +203,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Sekuentzia"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -247,20 +257,26 @@ msgstr "Etiketaren izena existitzen da jada!"
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
 #: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "Etiketak"
+msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
-msgstr "Aste honetan"
+msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
-msgstr "Gaur"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_02
@@ -285,7 +301,7 @@ msgstr ""
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
-msgstr "Erabiltzaileak"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note

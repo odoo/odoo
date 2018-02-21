@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
-import utm
-import ir_http
+from . import utm
+from . import ir_http

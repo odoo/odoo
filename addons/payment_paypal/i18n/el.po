@@ -3,15 +3,14 @@
 # * payment_paypal
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2016
-# Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Γιώργος Μηντζιλώνης <gi_orgos1986@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +39,15 @@ msgid "Payment Acquirer"
 msgstr "Αποδέκτης Πληρωμής"
 
 #. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid ""
+"Payment Data Transfer allows you to receive notification of successful "
+"payments as they are made."
+msgstr ""
+"Η Μεταφορά Δεδομένων Πληρωμής σας επιτρέπει να λαμβάνετε ειδοποιήσεις "
+"σχετικά με τις επιτυχημένες πληρωμές όταν αυτές πραγματοποιούνται."
+
+#. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Συναλλαγή Πληρωμής"
@@ -47,7 +55,7 @@ msgstr "Συναλλαγή Πληρωμής"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
 msgid "Paypal Email ID"
-msgstr "Κωδικός Paypal Email"
+msgstr "Paypal Email ID"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
@@ -57,18 +65,18 @@ msgstr "Άμεση Ειδοποίηση Πληρωμής Paypal"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
 msgid "Paypal Merchant ID"
-msgstr "Κωδικός Εμπόρου Paypal"
+msgstr "Paypal Merchant ID"
 
 #. module: payment_paypal
-#: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
-msgid "Paypal TX Details"
-msgstr "Λεπτομέρειες Paypal TX"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid "Paypal PDT Token"
+msgstr "Paypal PDT Token"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:134
+#: code:addons/payment_paypal/models/payment.py:138
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr "Paypal: ληφθέντα δεδομένα με αναφορά που λείπει (%s) ή txn_id (%s)"
+msgstr "Paypal: λήφθηκαν δεδομένα αλλά λείπει η αναφορά (%s) ή txn_id (%s)"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password

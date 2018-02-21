@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.KanbanActivity">
+    <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
+        <a class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
+            <span class="fa fa-clock-o fa-lg fa-fw"/>
+        </a>
+        <ul class="dropdown-menu o_activity" role="menu">
+        </ul>
+    </div>
+</t>
+
+<t t-name="mail.KanbanActivityLoading">
+    <li class="text-center o_no_activity">
+        <span class="fa fa-spinner fa-spin fa-2x" />
+    </li>
+</t>
+
+<t t-name="mail.KanbanActivityDropdown">
+    <li t-if="_.isEmpty(records)" class="text-center o_no_activity">
+        <span>No activities planned.</span>
+    </li>
+    <li t-if="!_.isEmpty(records)">
+        <ul class="nav o_activity_log">
+            <t t-foreach="_.keys(records)" t-as="key">
+                <t t-set="logs" t-value="records[key]" />
+                <li class="o_activity_label">
+                    <strong t-attf-class="o_activity_color_#{key}">
+                        <t t-esc="selection[key]" /> (<t t-esc="logs.length"/>)
+                    </strong>
+                </li>
+                <li t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="o_schedule_activity">
+                    <div class="o_activity_title pull-left">
+                        <span t-attf-class="fa #{log.icon} fa-fw" />
+                        <strong>
+                            <t t-esc="log.title_action or log.activity_type_id[1]" />
+                        </strong>
+                        <div>
+                            <span class="fa fa-clock-o fa-fw" />
+                            <span t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></span>
+                            <t t-if="log.user_id[0] != uid">
+                                <span class="ml4 fa fa-user" />
+                                <span><t t-esc="log.user_id[1]" /></span>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <span class="o_mark_as_done o_activity_link o_activity_link_kanban fa fa-check-circle fa-2x mt4" t-att-data-activity-id="log.id" title="Mark as done" />
+                    </div>
+                </li>
+            </t>
+        </ul>
+    </li>
+    <li class="o_schedule_activity text-center">
+        <strong>Schedule an activity</strong>
+    </li>
+</t>
+
+</templates>

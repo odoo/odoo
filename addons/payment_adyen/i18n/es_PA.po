@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2015-09-19 08:17+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Panama) (http://www.transifex.com/odoo/odoo-9/"
@@ -19,6 +19,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:186
+#, python-format
+msgid "; multiple order found"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:184
+#, python-format
+msgid "; no order found"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:234
+#, python-format
+msgid "Adyen: feedback error"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:196
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:182
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr ""
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:175
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference (%s)"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
+msgid "Merchant Account"
+msgstr ""
+
+#. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Método de pago"
@@ -27,3 +74,13 @@ msgstr "Método de pago"
 #: model:ir.model,name:payment_adyen.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transacción de pago"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
+msgid "Skin Code"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr ""

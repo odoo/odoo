@@ -48,7 +48,7 @@ class AccountInvoice(models.Model):
             if mod == int(bbacomm[-2:]):
                 return True
 
-    @api.onchange('partner_id', 'type')
+    @api.onchange('partner_id', 'type', 'reference_type')
     def _onchange_partner_id(self):
         result = super(AccountInvoice, self)._onchange_partner_id()
         reference = False
@@ -62,7 +62,6 @@ class AccountInvoice(models.Model):
         self.reference = reference
         return result
 
-    @api.multi
     def generate_bbacomm(self, type, reference_type, partner_id, reference):
         reference = reference or ''
         algorithm = False

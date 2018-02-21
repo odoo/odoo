@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="escompte_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
         <field name="name">Escompte</field>
         <field name="account_id" ref="a653"/>
         <field name="amount_type">percentage</field>
@@ -8,6 +9,7 @@
         <field name="label">Escompte accordé</field>
     </record>
     <record id="frais_bancaires_htva_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
         <field name="name">Frais bancaires HTVA</field>
         <field name="account_id" ref="a656" />
         <field name="amount_type">percentage</field>
@@ -15,6 +17,7 @@
         <field name="label">Frais bancaires HTVA</field>
     </record>
     <record id="frais_bancaires_tva21_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
         <field name="name">Frais bancaires TVA21</field>
         <field name="account_id" ref="a656"/>
         <field name="amount_type">percentage</field>
@@ -23,6 +26,7 @@
         <field name="label">Frais bancaires TVA21</field>
     </record>
     <record id="virements_internes_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="l10nbe_chart_template"/>
         <field name="name">Virements internes</field>
         <field name="account_id" ref="trans"/>
         <field name="amount_type">percentage</field>

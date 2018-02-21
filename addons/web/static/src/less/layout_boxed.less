@@ -1,0 +1,73 @@
+.o_boxed_footer, .o_boxed_header, .o_report_layout_boxed {
+    font-family: 'Lato';
+    color: @gray;
+    font-size: 12px;
+}
+.o_boxed_header {
+    border-bottom: 1px solid @gray-lighter;
+    img {
+        max-height: 100px;
+    }
+    h4 {
+        color: @o-we-color-text-normal;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+}
+.o_boxed_footer {
+    white-space: nowrap;
+    border-top: 3px solid @gray;
+    ul {
+        margin: 4px 0;
+    }
+}
+.o_report_layout_boxed {
+    // This is not a general rule since the id is not used in all the reports,
+    // we should make a general structure for report body to use it everywhere
+    #informations {
+        border: 1px solid @gray;
+        padding-top: 10px;
+        margin: 0;
+    }
+    > h2 {
+        text-transform: uppercase;
+    }
+    table {
+        border: 1px solid @gray;
+        thead {
+            tr th {
+                border-bottom: 3px solid @gray !important;
+                text-transform: uppercase;
+            }
+        }
+        tbody {
+            color: @gray;
+            tr {
+                td {
+                    border-top: none;
+                    border-right: 1px solid @gray;
+                }
+                td:last-child {
+                    background-color: @gray-lighter;
+                }
+            }
+        }
+    }
+    /*Total table*/
+    .row > .col-xs-4 > table {
+        td {
+            border-right: none;
+        }
+        tr:last-child td, tr:first-child td {
+            /*we could get rid of this rule if .border-black td would be terminated in report.less*/
+            border-top: none !important;
+        }
+        tr:first-child td {
+            background-color: transparent;
+        }
+        tr:last-child td {
+            background-color: @gray;
+            color: #fff;
+        }
+    }
+}

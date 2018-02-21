@@ -3,9 +3,10 @@
 import json
 import logging
 import pprint
-import urllib
-import urllib2
+
+import requests
 import werkzeug
+from werkzeug import urls
 
 from odoo import http
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -23,28 +24,28 @@ class PaypalController(http.Controller):
         """ Extract the return URL from the data coming from paypal. """
         return_url = post.pop('return_url', '')
         if not return_url:
-            custom = json.loads(urllib.unquote_plus(post.pop('custom', False) or post.pop('cm', False) or '{}'))
+            custom = json.loads(urls.url_unquote_plus(post.pop('custom', False) or post.pop('cm', False) or '{}'))
             return_url = custom.get('return_url', '/')
         return return_url
 
     def _parse_pdt_response(self, response):
-        """ Parse a text response for a PDT verification .
+        """ Parse a text response for a PDT verification.
 
-            :param response str: text response, structured in the following way:
+            :param str response: text response, structured in the following way:
                 STATUS\nkey1=value1\nkey2=value2...\n
              or STATUS\nError message...\n
             :rtype tuple(str, dict)
             :return: tuple containing the STATUS str and the key/value pairs
                      parsed as a dict
         """
-        lines = filter(None, response.split('\n'))
+        lines = [line for line in response.split('\n') if line]
         status = lines.pop(0)
 
         pdt_post = {}
         for line in lines:
             split = line.split('=', 1)
             if len(split) == 2:
-                pdt_post[split[0]] = urllib.unquote_plus(split[1]).decode('utf8')
+                pdt_post[split[0]] = urls.url_unquote_plus(split[1])
             else:
                 _logger.warning('Paypal: error processing pdt response: %s', line)
 
@@ -62,7 +63,7 @@ class PaypalController(http.Controller):
 
         Once data is validated, process it. """
         res = False
-        new_post = dict(post, cmd='_notify-validate')
+        new_post = dict(post, cmd='_notify-validate', charset='UTF-8')
         reference = post.get('item_number')
         tx = None
         if reference:
@@ -72,18 +73,18 @@ class PaypalController(http.Controller):
         if pdt_request:
             # this means we are in PDT instead of DPN like before
             # fetch the PDT token
-            new_post['at'] = request.env['ir.config_parameter'].sudo().get_param('payment_paypal.pdt_token')
+            new_post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
             new_post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
         validate_url = paypal_urls['paypal_form_url']
-        urequest = urllib2.Request(validate_url, werkzeug.url_encode(new_post))
-        uopen = urllib2.urlopen(urequest)
-        resp = uopen.read()
+        urequest = requests.post(validate_url, new_post)
+        urequest.raise_for_status()
+        resp = urequest.text
         if pdt_request:
             resp, post = self._parse_pdt_response(resp)
-        if resp == 'VERIFIED' or pdt_request and resp == 'SUCCESS':
+        if resp in ['VERIFIED', 'SUCCESS']:
             _logger.info('Paypal: validated data')
             res = request.env['payment.transaction'].sudo().form_feedback(post, 'paypal')
-        elif resp == 'INVALID' or pdt_request and resp == 'FAIL':
+        elif resp in ['INVALID', 'FAIL']:
             _logger.warning('Paypal: answered INVALID/FAIL on data verification')
         else:
             _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED/SUCCESS or INVALID/FAIL (validation: %s)' % (resp, 'PDT' if pdt_request else 'IPN/DPN'))

@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 
+from datetime import datetime, timedelta
+
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
@@ -127,7 +129,11 @@ class TestCalendar(TransactionCase):
             'duration': 0.5,
             'stop': '2017-07-12 15:00:00',
         })
-
+        self.assertEqual(
+            (m.start_datetime, m.stop_datetime),
+            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
+            "Sanity check"
+        )
         values = {
             'allday': False,
             'name': u'wheee',
@@ -155,3 +161,117 @@ class TestCalendar(TransactionCase):
             (records.start_datetime, records.stop_datetime),
             (u'2017-07-10 15:30:00', u'2017-07-10 16:00:00'),
         )
+
+    def test_event_order(self):
+        """ check the ordering of events when searching """
+        def create_event(name, date):
+            return self.CalendarEvent.create({
+                'name': name,
+                'start': date + ' 12:00:00',
+                'stop': date + ' 14:00:00',
+                'duration': 2.0,
+            })
+        foo1 = create_event('foo', '2011-04-01')
+        foo2 = create_event('foo', '2011-06-01')
+        bar1 = create_event('bar', '2011-05-01')
+        bar2 = create_event('bar', '2011-06-01')
+        domain = [('id', 'in', (foo1 + foo2 + bar1 + bar2).ids)]
+
+        # sort them by name only
+        events = self.CalendarEvent.search(domain, order='name')
+        self.assertEqual(events.mapped('name'), ['bar', 'bar', 'foo', 'foo'])
+        events = self.CalendarEvent.search(domain, order='name desc')
+        self.assertEqual(events.mapped('name'), ['foo', 'foo', 'bar', 'bar'])
+
+        # sort them by start date only
+        events = self.CalendarEvent.search(domain, order='start')
+        self.assertEqual(events.mapped('start'), (foo1 + bar1 + foo2 + bar2).mapped('start'))
+        events = self.CalendarEvent.search(domain, order='start desc')
+        self.assertEqual(events.mapped('start'), (foo2 + bar2 + bar1 + foo1).mapped('start'))
+
+        # sort them by name then start date
+        events = self.CalendarEvent.search(domain, order='name asc, start asc')
+        self.assertEqual(list(events), [bar1, bar2, foo1, foo2])
+        events = self.CalendarEvent.search(domain, order='name asc, start desc')
+        self.assertEqual(list(events), [bar2, bar1, foo2, foo1])
+        events = self.CalendarEvent.search(domain, order='name desc, start asc')
+        self.assertEqual(list(events), [foo1, foo2, bar1, bar2])
+        events = self.CalendarEvent.search(domain, order='name desc, start desc')
+        self.assertEqual(list(events), [foo2, foo1, bar2, bar1])
+
+        # sort them by start date then name
+        events = self.CalendarEvent.search(domain, order='start asc, name asc')
+        self.assertEqual(list(events), [foo1, bar1, bar2, foo2])
+        events = self.CalendarEvent.search(domain, order='start asc, name desc')
+        self.assertEqual(list(events), [foo1, bar1, foo2, bar2])
+        events = self.CalendarEvent.search(domain, order='start desc, name asc')
+        self.assertEqual(list(events), [bar2, foo2, bar1, foo1])
+        events = self.CalendarEvent.search(domain, order='start desc, name desc')
+        self.assertEqual(list(events), [foo2, bar2, bar1, foo1])
+
+    def test_event_activity(self):
+        # ensure meeting activity type exists
+        meeting_act_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        if not meeting_act_type:
+            meeting_act_type = self.env['mail.activity.type'].create({
+                'name': 'Meeting Test',
+                'category': 'meeting',
+            })
+
+        # have a test model inheriting from activities
+        test_record = self.env['res.partner'].create({
+            'name': 'Test',
+        })
+        now = datetime.now()
+        test_user = self.env.ref('base.user_demo')
+        test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
+
+        # create using default_* keys
+        test_event = self.env['calendar.event'].sudo(test_user).with_context(
+            default_res_model=test_record._name,
+            default_res_id=test_record.id,
+        ).create({
+            'name': test_name,
+            'description': test_description,
+            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
+            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'user_id': self.env.user.id,
+        })
+        self.assertEqual(test_event.res_model, test_record._name)
+        self.assertEqual(test_event.res_id, test_record.id)
+        self.assertEqual(len(test_record.activity_ids), 1)
+        self.assertEqual(test_record.activity_ids.summary, test_name)
+        self.assertEqual(test_record.activity_ids.note, test_description)
+        self.assertEqual(test_record.activity_ids.user_id, self.env.user)
+        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-1)).date()))
+
+        # updating event should update activity
+        test_event.write({
+            'name': '%s2' % test_name,
+            'description': test_description2,
+            'start': fields.Datetime.to_string(now + timedelta(days=-2)),
+            'user_id': test_user.id,
+        })
+        self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
+        self.assertEqual(test_record.activity_ids.note, test_description2)
+        self.assertEqual(test_record.activity_ids.user_id, test_user)
+        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-2)).date()))
+
+        # deleting meeting should delete its activity
+        test_record.activity_ids.unlink()
+        self.assertEqual(self.env['calendar.event'], self.env['calendar.event'].search([('name', '=', test_name)]))
+
+        # create using active_model keys
+        test_event = self.env['calendar.event'].sudo(self.env.ref('base.user_demo')).with_context(
+            active_model=test_record._name,
+            active_id=test_record.id,
+        ).create({
+            'name': test_name,
+            'description': test_description,
+            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
+            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'user_id': self.env.user.id,
+        })
+        self.assertEqual(test_event.res_model, test_record._name)
+        self.assertEqual(test_event.res_id, test_record.id)
+        self.assertEqual(len(test_record.activity_ids), 1)

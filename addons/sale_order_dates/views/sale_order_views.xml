@@ -16,7 +16,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
-            <field name="date_order" position="after">
+            <field name="confirmation_date" position="after">
                 <field name="requested_date"/>
                 <field name="commitment_date"/>
             </field>

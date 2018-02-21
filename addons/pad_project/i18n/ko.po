@@ -3,14 +3,13 @@
 # * pad_project
 # 
 # Translators:
-# 최재호 <hwangtog@gmail.com>, 2017
 # Up Link <linkup.way@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Up Link <linkup.way@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +24,27 @@ msgid "Pad URL"
 msgstr "패드 URL"
 
 #. module: pad_project
+#: model:ir.model,name:pad_project.model_project_project
+msgid "Project"
+msgstr "프로젝트"
+
+#. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task
 msgid "Task"
 msgstr "업무"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_task_use_pad
+msgid "Use collaborative pad"
+msgstr "협업 패드 사용"
+
+#. module: pad_project
+#: model:ir.model.fields,help:pad_project.field_project_project_use_pads
+#: model:ir.model.fields,help:pad_project.field_project_task_use_pad
+msgid "Use collaborative pad for the tasks on this project."
+msgstr "이 프로젝트의 작업을 위해 협업패드를 사용합니다."
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project_use_pads
+msgid "Use collaborative pads"
+msgstr "협업 패드를 사용합니다."

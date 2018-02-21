@@ -3,16 +3,16 @@
 # * website_hr_recruitment
 # 
 # Translators:
-# ТАрас <tratatuta@i.ua>, 2016
-# Bohdan Lisnenko, 2016
-# Zoriana Zaiats, 2016
+# ТАрас <tratatuta@i.ua>, 2017
+# Bohdan Lisnenko, 2017
+# Zoriana Zaiats, 2017
 # Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,19 @@ msgid "$15k"
 msgstr "$15k"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "1/5"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "10  / 40 people"
 msgstr "10  / 40 людей"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "2/5"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -37,9 +47,44 @@ msgid "3 months"
 msgstr "3 місяці"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "3/5"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "4/5"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "5/5"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "50% YoY"
 msgstr "50% YoY"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-bolt\"/> Bolts"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-heart\"/> Hearts"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-star\"/> Stars"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-tasks\"/> Bar"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -47,18 +92,27 @@ msgid ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Submit</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
 msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Відправити</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid ""
+"<span>\n"
+"                                            We usually reply between one and three days.<br/>\n"
+"                                            Feel free to contact him/her if you have further questions.\n"
+"                                        </span>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "<strong>Challenges</strong>"
-msgstr "<strong>Виклики</strong>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "<strong>Must Have</strong>"
-msgstr "<strong>Обов'язковий</strong>"
+msgstr "<strong>Потрібно мати</strong>"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -135,12 +189,21 @@ msgid "Company Maturity:"
 msgstr "Зростання компанії:"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Congratulations!"
+msgstr "Вітаємо!"
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Contact us"
 msgstr "Зв'яжіться з нами"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
 msgid "Continue To Our Website"
 msgstr "Перейти на наш сайт"
 
@@ -158,8 +221,6 @@ msgid ""
 "Direct coordination with functional consultants for qualification and follow"
 " ups"
 msgstr ""
-"Особиста координація з функціональними консультантами для отримання "
-"кваліфікації та подальшої діяльності"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -174,7 +235,7 @@ msgstr "Їжа та напої"
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Full sales cycle"
-msgstr "Повний цикл продажу"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -189,6 +250,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "High commissions for good performers"
 msgstr "Високі комісії для хороших виконавців"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "In the meantime,"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -212,6 +280,7 @@ msgstr "Вакансія"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating
 msgid "Job Security:"
 msgstr "Безпека роботи:"
 
@@ -251,6 +320,13 @@ msgid ""
 msgstr ""
 "Великі додатки: CRM, MRP, Бухгалтерський облік, інвентаризація, HR, "
 "Управління проектом тощо."
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Look around on our website:"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -297,8 +373,6 @@ msgstr "PTOs"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Peet's and Philz coffee provided all day to order and pantry snacks"
 msgstr ""
-"Кава Peet та Philz забезпечували цілий день замовленням і кошиками для "
-"закусок"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -313,17 +387,27 @@ msgstr "Грайте в будь-який спорт з колегами, і р�
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Pre-tax commuter benefitsbr <br/>(parking and transit)"
-msgstr "Передмістя податкових переваг <br/>(паркінг та транзит)"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Prime location"
-msgstr "Головне місце розташування"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Profitable"
 msgstr "Прибутковий"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "Rating type"
+msgstr ""
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "Rating value"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -355,10 +439,10 @@ msgid ""
 "                product demos."
 msgstr ""
 "Короткий огляд роботи: робота з продажу для розумних людей і може\n"
-"швидко навчити новій практиці управління виробництвом. Ви будете\n"
-"відповідати за повний цикл продажів від \n"
-"кваліфікації нагод до переговорів, переживати дивовижні\n"
-"демонстраційні товари."
+"                 швидко навчити новій практиці управління виробництвом. Ви будете\n"
+"                 відповідати за повний цикл продажів від \n"
+"                 кваліфікації нагод до переговорів, переживати дивовижні\n"
+"                 демонстраційні товари."
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_recruitment_source
@@ -379,11 +463,6 @@ msgstr "Спортивна діяльність"
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Team / Company Size:"
 msgstr "Команда/Розмір компанії:"
-
-#. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-msgid "Thank you!"
-msgstr "Дякую!"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -415,8 +494,8 @@ msgstr "Параметри URL"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Vacation, Sick, and Holiday paid leaves"
-msgstr "Відпустка, Хвороба, та оплачувані свята"
+msgid "Vacation, Sick, and paid leaves"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -444,8 +523,6 @@ msgid ""
 "You sell management software to directors of SMEs: interesting projects and "
 "people"
 msgstr ""
-"Ви продаєте програмне забезпечення для керування директорами МСП: цікаві "
-"проекти та люди"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -464,12 +541,17 @@ msgstr "Ваш телефон"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-msgid ""
-"Your job application has been successfully registered,\n"
-"                        we will get back to you soon."
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Your application has been posted successfully."
 msgstr ""
-"Ваша заявка на роботу успішно відправлена,\n"
-"ми невдовзі з Вами зв'яжемось."
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Your application has been sent to:"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index

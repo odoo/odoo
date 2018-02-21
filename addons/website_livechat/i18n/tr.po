@@ -3,17 +3,16 @@
 # * website_livechat
 # 
 # Translators:
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
-# Ediz Duman <neps1192@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +23,12 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
-msgstr "<span>Canlı Sohbet Kanalı</span>"
+msgstr "<span>Canlı Yardım Kanalı</span>"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Channel"
+msgstr "Kanal"
 
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
@@ -32,19 +36,29 @@ msgid "Description of the channel displayed on the website page"
 msgstr "Websitesinde gösterilen kanal açıklaması"
 
 #. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live Chat"
+msgstr "Canlı Sohbet"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid "Live chat channel of your website"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr "Canlı Sohbet Kanalı"
+msgstr "Canlı Yardım Kanalı"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.header_footer_custom
 msgid "Livechat Support"
-msgstr "Canlı Sohbet Destek"
+msgstr "Canlı Yardım Destek"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "Livechat Support Channels"
-msgstr "Canlı Sohbet Destek Kanalları"
+msgstr "Canlı Yardım Destek Kanalları"
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -64,7 +78,7 @@ msgstr "Ekip"
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
-msgstr "Gösterilecek genele açık canlı sohbet kanalı bulunmamaktadır."
+msgstr "Gösterilecek genele açık canlı yardım kanalı bulunmamaktadır."
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -74,13 +88,17 @@ msgstr "Şu anda bu kanal için herhangi bir değerlendirme yok."
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
-msgstr "Web Sitesi"
+msgstr "Websitesi"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings_channel_id
+msgid "Website Live Channel"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
-#: model:ir.model.fields,field_description:website_livechat.field_website_config_settings_channel_id
 msgid "Website Live Chat Channel"
-msgstr "Websitesi Canlı Sohbet Kanalı"
+msgstr "Websitesi Canlı Yardım Kanalı"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel_website_description
@@ -93,6 +111,6 @@ msgid "last feedbacks"
 msgstr "son geri bildirimler"
 
 #. module: website_livechat
-#: model:ir.model,name:website_livechat.model_website_config_settings
-msgid "website.config.settings"
-msgstr "website.config.settings"
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

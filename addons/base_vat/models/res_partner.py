@@ -48,7 +48,7 @@ _ref_vat = {
     'lu': 'LU12345613',
     'lv': 'LV41234567891',
     'mt': 'MT12345634',
-    'mx': 'MXABC123456T1B',
+    'mx': 'ABC123456T1B',
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
     'pe': 'PER10254824220 or PED10254824220',
@@ -116,7 +116,7 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.constrains("vat")
+    @api.constrains('vat', 'commercial_partner_country_id')
     def check_vat(self):
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
@@ -131,31 +131,26 @@ class ResPartner(models.Model):
         for partner in self:
             if not partner.vat:
                 continue
+            #check with country code as prefix of the TIN
             vat_country, vat_number = self._split_vat(partner.vat)
             if not check_func(vat_country, vat_number):
-                _logger.info("Importing VAT Number [%s] is not valid !" % vat_number)
-                msg = partner._construct_constraint_msg()
-                raise ValidationError(msg)
+                #if fails, check with country code from country
+                country_code = partner.commercial_partner_id.country_id.code
+                if country_code:
+                    if not check_func(country_code.lower(), partner.vat):
+                        msg = partner._construct_constraint_msg(country_code.lower())
+                        raise ValidationError(msg)
 
-    def _construct_constraint_msg(self):
+    def _construct_constraint_msg(self, country_code):
         self.ensure_one()
-
-        def default_vat_check(cn, vn):
-            # by default, a VAT number is valid if:
-            #  it starts with 2 letters
-            #  has more than 3 characters
-            return len(cn) == 2 and cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
-
-        vat_country, vat_number = self._split_vat(self.vat)
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
-        if default_vat_check(vat_country, vat_number):
-            vat_no = _ref_vat[vat_country] if vat_country in _ref_vat else vat_no
-            if self.env.context.get('company_id'):
-                company = self.env['res.company'].browse(self.env.context['company_id'])
-            else:
-                company = self.env.user.company_id
-            if company.vat_check_vies:
-                return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (self.vat, self.name, vat_no)
+        vat_no = _ref_vat.get(country_code) or vat_no
+        if self.env.context.get('company_id'):
+            company = self.env['res.company'].browse(self.env.context['company_id'])
+        else:
+            company = self.env.user.company_id
+        if company.vat_check_vies:
+            return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (self.vat, self.name, vat_no)
         return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
@@ -187,7 +182,7 @@ class ResPartner(models.Model):
         match = self.__check_vat_ch_re2.match(vat)
         if match:
             # For new TVA numbers, do a mod11 check
-            num = filter(lambda s: s.isdigit(), match.group(1))        # get the digits only
+            num = [s for s in match.group(1) if s.isdigit()]        # get the digits only
             factor = (5, 4, 3, 2, 7, 6, 5, 4)
             csum = sum([int(num[i]) * factor[i] for i in range(8)])
             check = (11 - (csum % 11)) % 11
@@ -225,11 +220,11 @@ class ResPartner(models.Model):
 
     # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
-    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
-                                   r"[ \-_]?" \
-                                   r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
-                                   r"[ \-_]?" \
-                                   r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    __check_vat_mx_re = re.compile(br"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
+                                   br"[ \-_]?" \
+                                   br"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
+                                   br"[ \-_]?" \
+                                   br"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
 
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification

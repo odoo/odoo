@@ -3,15 +3,17 @@
 # * payment_stripe
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# hman tsao <herman.tsao@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# Eddie Lim <bhweelim@yahoo.com>, 2017
+# hman tsao <herman.tsao@gmail.com>, 2017
+# niulin lnc. <admin@niulin.net>, 2017
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +21,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
+#, python-format
+msgid "&times;"
+msgstr "&times;"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer_stripe_image_url
@@ -36,13 +45,13 @@ msgstr "信用卡认证编号"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Card Holder Name"
-msgstr "卡持有人姓名"
+msgid "Card number"
+msgstr "卡号"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Card Number"
-msgstr "卡号"
+msgid "Cardholder name"
+msgstr "持卡人姓名"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_image_url
@@ -57,11 +66,6 @@ msgid "Close"
 msgstr "关闭"
 
 #. module: payment_stripe
-#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "确认<span class=\"fa fa-long-arrow-right\"/>"
-
-#. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
 #, python-format
@@ -70,13 +74,15 @@ msgstr "错误"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Expiration Date"
-msgstr "到期日期"
+msgid "Expires (MM / YY)"
+msgstr "到期日 (MM / YY)"
 
 #. module: payment_stripe
-#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "MM / YY"
-msgstr "MM / YY"
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:32
+#, python-format
+msgid "Just one more second, confirming your payment..."
+msgstr "正在确认您的付款，只需再等一秒钟..."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -90,40 +96,52 @@ msgstr "付款交易"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:43
+#: code:addons/payment_stripe/static/src/js/stripe.js:57
 #, python-format
 msgid "Payment error"
 msgstr "付款错误"
 
 #. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:167
+#, python-format
+msgid ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
+msgstr "或许再次检查您的信用卡详细信息或联系您的银行能够解决该问题？"
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
-msgid "Stripe publishable key"
-msgstr ""
+msgid "Stripe Publishable Key"
+msgstr "Stripe 公钥"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_secret_key
-msgid "Stripe secret key"
-msgstr ""
+msgid "Stripe Secret Key"
+msgstr "Stripe 密钥"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:120
+#: code:addons/payment_stripe/models/payment.py:165
+#, python-format
+msgid "Stripe gave us the following info about the problem: '%s'"
+msgstr "Stripe 为我们提供了以下关于问题的信息：'%s'"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:177
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr "Stripe：已找到 %s 个可用于参考 %s 的订单"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:111
-#, python-format
-msgid ""
-"Stripe: invalid reply received from provider, missing reference. Additional "
-"message: %s"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:116
+#: code:addons/payment_stripe/models/payment.py:173
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr "Stripe：未找到可用于参考 %s 的订单"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:163
+#, python-format
+msgid "We're sorry to report that the transaction has failed."
+msgstr "很遗憾地告诉您，交易已失败。"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token

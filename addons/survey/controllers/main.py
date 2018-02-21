@@ -32,7 +32,7 @@ class WebsiteSurvey(http.Controller):
 
         # If there is no pages
         if not survey.page_ids:
-            return request.render("survey.nopages")
+            return request.render("survey.nopages", {'survey': survey})
 
         # Everything seems to be ok
         return None
@@ -109,9 +109,8 @@ class WebsiteSurvey(http.Controller):
             return errpage
 
         # Load the user_input
-        try:
-            user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
-        except IndexError:  # Invalid token
+        user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
+        if not user_input:  # Invalid token
             return request.render("website.403")
 
         # Do not display expired survey (even if some pages have already been
@@ -174,7 +173,7 @@ class WebsiteSurvey(http.Controller):
                     answer_tag = "%s_%s" % (answer_tag, 'comment')
                     answer_value = answer.value_text
                 elif answer.answer_type == 'number':
-                    answer_value = answer.value_number.__str__()
+                    answer_value = str(answer.value_number)
                 elif answer.answer_type == 'date':
                     answer_value = answer.value_date
                 elif answer.answer_type == 'suggestion' and not answer.value_suggested_row:

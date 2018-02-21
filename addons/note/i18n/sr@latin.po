@@ -1,30 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
-# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2015
+# Nemanja Dragovic <nemanjadragovic94@gmail.com>, 2017
+# Djordje Marjanovic <djordje_m@yahoo.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ljubisa Jovev <ljubisa.jovev@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2015-11-11 08:31+0000\n"
-"Last-Translator: Nemanja Dragovic <nemanjadragovic94@gmail.com>\n"
-"Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
-"language/sr@latin/)\n"
-"Language: sr@latin\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Ljubisa Jovev <ljubisa.jovev@gmail.com>, 2017\n"
+"Language-Team: Serbian (Latin) (https://www.transifex.com/odoo/teams/41243/sr%40latin/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: sr@latin\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "Aktivno"
+msgstr "Aktivan"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -50,12 +51,12 @@ msgstr "Klikni da dodaš ličnu zabilješku."
 #: model:ir.model.fields,field_description:note.field_note_note_color
 #: model:ir.model.fields,field_description:note.field_note_tag_color
 msgid "Color Index"
-msgstr "Indeks boja"
+msgstr "Indeks boje"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "Podešavanja"
+msgstr "Postavka"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_create_uid
@@ -69,7 +70,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:note.field_note_stage_create_date
 #: model:ir.model.fields,field_description:note.field_note_tag_create_date
 msgid "Created on"
-msgstr "Kreirano dana"
+msgstr "Datum kreiranja"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_date_done
@@ -86,7 +87,7 @@ msgstr "Obriši"
 #: model:ir.model.fields,field_description:note.field_note_stage_display_name
 #: model:ir.model.fields,field_description:note.field_note_tag_display_name
 msgid "Display Name"
-msgstr "Ime za prikaz"
+msgstr "Naziv za prikaz"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_fold
@@ -95,8 +96,13 @@ msgstr "Podrazumjevano je uvučeno"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "Grupisano po"
+msgstr "Grupiši po"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_id
@@ -110,21 +116,26 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:note.field_note_stage___last_update
 #: model:ir.model.fields,field_description:note.field_note_tag___last_update
 msgid "Last Modified on"
-msgstr "Zadnja izmjena"
+msgstr "Zadnja promena"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_uid
 #: model:ir.model.fields,field_description:note.field_note_stage_write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag_write_uid
 msgid "Last Updated by"
-msgstr "Zadnja izmjena"
+msgstr "Promenio"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_date
 #: model:ir.model.fields,field_description:note.field_note_stage_write_date
 #: model:ir.model.fields,field_description:note.field_note_tag_write_date
 msgid "Last Updated on"
-msgstr "Zadnja izmjena"
+msgstr "Vreme promene"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
@@ -133,22 +144,21 @@ msgid "Later"
 msgstr "Kasnije"
 
 #. module: note
-#: model:note.stage,name:note.note_stage_00
-msgid "New"
-msgstr "Novo"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr ""
 
 #. module: note
-#: code:addons/note/models/note.py:129
-#, python-format
-msgid "New Note"
-msgstr "Nova zabilješka"
+#: model:note.stage,name:note.note_stage_00
+msgid "New"
+msgstr "Novi"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "Napomena"
+msgstr "Zabilješka"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
@@ -193,7 +203,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
-msgstr "Sekvenca"
+msgstr "Prioritet"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -243,6 +258,7 @@ msgstr "Naziv oznake već postoji !"
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
 #: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Oznake"
@@ -259,6 +275,11 @@ msgid "Today"
 msgstr "Danas"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_02
 msgid "Tomorrow"
 msgstr "Sutra"
@@ -267,10 +288,8 @@ msgstr "Sutra"
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""

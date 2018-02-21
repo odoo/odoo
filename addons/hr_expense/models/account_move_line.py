@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools import float_compare
 
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
+
+    expense_id = fields.Many2one('hr.expense', string='Expense', copy=False, help="Expense where the move line come from")
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):

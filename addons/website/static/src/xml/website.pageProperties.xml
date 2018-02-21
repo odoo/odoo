@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Tooltip Dependencies -->
+
+<t t-name="website.get_tooltip_dependencies">
+    <t t-foreach="dependencies" t-as="dep">
+        <b><t t-esc="dep"/></b>
+        <ul class="popover_dep">
+            <t t-foreach="dep_value" t-as="item">
+                <li><a t-att-href="item_value['link']"><t t-esc="item_value['item']"/></a></li>
+            </t>
+        </ul>
+    </t>
+</t>
+<t t-name="website.show_page_key_dependencies">
+    <div class="col-sm-9 col-sm-offset-3">
+        <span class="text-muted" id="warn_about_call_message">
+            <t t-set="depTooltip">
+                <t t-call="website.get_tooltip_dependencies"/>
+            </t>
+            It looks like your file is being called by
+            <a href="#" data-toggle="popover" t-att-data-content="depTooltip" data-html="true" title="Dependencies"><t t-esc="dep_text" /></a>.
+            Changing its name will break these calls.
+        </span>
+    </div>
+</t>
+<t t-name="website.show_page_dependencies">
+    <t t-set="depTooltip">
+        <t t-call="website.get_tooltip_dependencies"/>
+    </t>
+    (could be used in <a href="#" data-toggle="popover" t-att-data-content="depTooltip" data-html="true" title="Dependencies"><t t-esc="dep_text" /></a>)
+</t>
+
+<!-- Page Properties -->
+
+<div t-name="website.pagesMenu.page_info" class="o_page_management_info">
+    <form class="form-horizontal">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#basic_page_info">Name</a></li>
+            <li><a data-toggle="tab" href="#advances_page_info">Publish</a></li>
+        </ul>
+        <div class="tab-content mt16">
+            <div id="basic_page_info" class="tab-pane fade in active">
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="page_name">Page Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control input-sm" id="page_name" t-att-value="widget.page.name" />
+                    </div>
+                </div>
+                <div class="form-group warn_about_call"></div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="page_url">Page URL</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <span class="input-group-addon" t-att-title="widget.serverUrl"><small><t t-esc="widget.serverUrlTrunc" /></small></span>
+                            <input type="text" class="form-control input-sm" id="page_url" t-att-value="widget.page.url" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group ask_for_redirect">
+                    <label class="control-label col-sm-3" for="create_redirect">Redirect Old URL</label>
+                    <div class="col-sm-2">
+                        <a>
+                            <label class="o_switch" for="create_redirect" >
+                                <input type="checkbox" id="create_redirect"/>
+                                <span/>
+                            </label>
+                        </a>
+                    </div>
+                    <div class="col-sm-7 mt4">
+                        <span class="text-muted" id="dependencies_redirect"></span>
+                    </div>
+                </div>
+                <div class="form-group ask_for_redirect">
+                    <label class="control-label col-sm-3 redirect_type" for="redirect_type">Type</label>
+                    <div class="col-sm-6 redirect_type">
+                        <select class="form-control" id="redirect_type">
+                            <option t-foreach="widget.fields.type.selection" t-as="field" t-att-value="field[0]"><t t-esc="field[0] + ': ' + field[1]" /></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="advances_page_info" class="tab-pane fade">
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="is_menu">Show in Top Menu</label>
+                    <div class="col-sm-2">
+                        <a>
+                            <label class="o_switch" for="is_menu" >
+                                <input type="checkbox" t-att-checked="widget.page.menu_ids.length > 0 ? true : undefined" id="is_menu"/>
+                                <span/>
+                            </label>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="is_homepage">Use as Homepage</label>
+                    <div class="col-sm-2">
+                        <a>
+                            <label class="o_switch" for="is_homepage" >
+                                <input type="checkbox" t-att-checked="widget.page.is_homepage ? true : undefined" id="is_homepage"/>
+                                <span/>
+                            </label>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="is_indexed">
+                        Indexed
+                        <i class="fa fa-question-circle-o" title="Hide this page from search results" aria-hidden="true"></i>
+                    </label>
+                    <div class="col-sm-2">
+                        <a>
+                            <label class="o_switch" for="is_indexed" >
+                                <input type="checkbox" t-att-checked="widget.page.website_indexed ? true : undefined" id="is_indexed"/>
+                                <span/>
+                            </label>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="is_published">Publish</label>
+                    <div class="col-sm-2">
+                        <a>
+                            <label class="o_switch js_publish_btn" for="is_published" >
+                                <input type="checkbox" t-att-checked="widget.page.website_published ? true : undefined" id="is_published"/>
+                                <span/>
+                            </label>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="date_publish">Publishing Date</label>
+                    <div class="col-sm-9">
+                        <div class='input-group date' id='date_publish_container'>
+                            <input type='text' class="form-control" name="date_publish" id="date_publish" />
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</templates>

@@ -3,23 +3,18 @@
 # * account_test
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Martin Trigaux, 2017
+# Antonio Trueba, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Antonio Trueba, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +38,7 @@ msgstr "<strong>Nombre:</strong>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
-#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
+#: model:ir.actions.report,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
 msgstr "Pruebas contables"
@@ -71,8 +66,8 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
-"Comprobar en los extractos bancarios que el saldo de cierre = saldo de "
-"inicio + suma de las líneas del extracto"
+"Comprobar en los extractos bancarios que el saldo de cierre = Saldo de "
+"Inicio + suma de las líneas del extracto"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -101,7 +96,7 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Comprobar el saldo: suma del debe = suma del haber"
+msgstr "Comprobar el saldo: suma del debe = suma del Haber"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -145,7 +140,7 @@ msgstr ""
 "    * cr: cursor a la base de datos\n"
 "    * uid: id. del usuario actual\n"
 "\n"
-"En cualquier caso, el código debe ser sentencias Python legales con correcta indentación (si fuera necesario).\n"
+"En cualquier caso, el código debe ser declaraciones de Python legales con correcta indentación (si fuera necesario).\n"
 "\n"
 "Ejemplo: \n"
 "    sql = '''SELECT id, name, ref, date\n"
@@ -163,7 +158,7 @@ msgstr "Creado por"
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
 msgid "Created on"
-msgstr "Creado el"
+msgstr "Creado en"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -174,7 +169,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -185,7 +180,7 @@ msgstr "Expresión"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
 msgid "ID"
-msgstr "ID"
+msgstr "ID (identificación)"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
@@ -268,7 +263,7 @@ msgid "Tests"
 msgstr "Tests"
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:51
+#: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
 msgstr "La prueba fue superada satisfactoriamente"

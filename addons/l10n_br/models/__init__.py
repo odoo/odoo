@@ -3,4 +3,4 @@
 
 # Copyright (C) 2009  Renato Lima - Akretion
 
-import account
+from . import account

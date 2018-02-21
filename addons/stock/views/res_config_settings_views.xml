@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.stock</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="30"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside" >
+                    <div class="app_settings_block" data-string="Inventory" string="Inventory" data-key="stock" groups="stock.group_stock_manager">
+                        <h2>Operations</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_stock_barcode"/>
+                                    <div class="text-muted">
+                                        Process operations faster with barcodes
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="use_product_barcode"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Put your products in packs (e.g. parcels, boxes) and track them">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_tracking_lot"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_tracking_lot"/>
+                                    <div class="text-muted">
+                                        Put your products in packs (e.g. parcels, boxes) and track them
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_stock_picking_batch"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_stock_picking_batch"/>
+                                    <div class="text-muted">
+                                        Process picking in batch per worker
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="warning_info">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_warning_stock"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_warning_stock"/>
+                                    <div class="text-muted">
+                                        Get informative or blocking warnings on partners
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Shipping Connectors</h2>
+                        <div class="row mt16 o_settings_container" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_ups"/>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with UPS
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_ups"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_dhl"/>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with DHL
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_dhl"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_fedex"/>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with FedEx
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_fedex"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_usps"/>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with USPS
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_usps"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_delivery_bpost" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_delivery_bpost"/>
+                                    <div class="text-muted">
+                                        Compute shipping costs and ship with bpost
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="stock_delivery_bpost"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Products</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_product_variant"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_product_variant"/>
+                                    <div class="text-muted">
+                                        Set product attributes (e.g. color, size) to manage variants
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('group_product_variant', '=', False)]}">
+                                            <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_uom"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_uom"/>
+                                    <div class="text-muted">
+                                        Sell and purchase products in different units of measure
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('group_uom', '=', False)]}">
+                                            <button name="%(product.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_packaging"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_packaging"/>
+                                    <div class="text-muted">
+                                        Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('group_stock_packaging', '=', False)]}">
+                                            <button name="%(product.action_packaging_view)d" icon="fa-arrow-right" type="action" string="Product Packages" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Traceability</h2>
+                        <div class="row mt16 o_settings_container" id="production_lot_info">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_production_lot"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_production_lot"/>
+                                    <div class="text-muted">
+                                        Get a full traceability from vendors to customers
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" title="Track following dates on lots &amp; serial numbers: best before, removal, end of life, alert. Such dates are set automatically at lot/serial number creation based on values set on the product (in days).">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_product_expiry"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_product_expiry"/>
+                                    <div class="text-muted">
+                                        Set expiration dates on lots &amp; serial numbers
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_tracking_owner"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_tracking_owner"/>
+                                    <div class="text-muted">
+                                        Set owner on stored products
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="mt32">Warehouse</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_multi_locations"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_multi_locations"/>
+                                    <div class="text-muted">
+                                        Track product location in your warehouse
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                                            <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Locations" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_multi_warehouses"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_multi_warehouses"/>
+                                    <div class="text-muted">
+                                        Manage several warehouses
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
+                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Warehouses" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Add and customize route operations to process product moves in your warehouse(s): e.g. unload &gt; quality control &gt; stock for incoming products, pick &gt; pack &gt; ship for outgoing products. You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_stock_adv_location"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_stock_adv_location"/>
+                                    <div class="text-muted">
+                                        Use your own routes and putaway strategies
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
+                                            <button name="%(stock.action_warehouse_form)d" icon="fa-arrow-right" type="action" string="Set Warehouse Routes" class="btn-link"/><br/>
+                                            <button name="%(stock.action_location_form)d" icon="fa-arrow-right" type="action" string="Set Putaway Strategies on Locations" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 id="schedule_info">Advanced Scheduling</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div id="sale_security_lead"/>
+                            <div id="purchase_po_lead"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="propagation_info" title="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. This option allows to not propagate the rescheduling if the change is not critical.">
+                                <div class="o_setting_left_pane">
+                                    <field name="use_propagation_minimum_delta"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="use_propagation_minimum_delta"/>
+                                    <div class="text-muted">
+                                        Don’t propagate scheduling changes through chains of operations
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16" attrs="{'invisible': [('use_propagation_minimum_delta', '=', False)]}">
+                                            <span>Change must be higher than <field name="propagation_minimum_delta" class="oe_inline"/> days to be propagated</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_stock_config_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'stock'}</field>
+        </record>
+
+        <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
+            sequence="100" groups="group_stock_manager"/>
+        <menuitem id="menu_stock_general_settings" name="Settings" parent="menu_stock_config_settings"
+            sequence="0" action="action_stock_config_settings" groups="base.group_system"/>
+    </data>
+</odoo>

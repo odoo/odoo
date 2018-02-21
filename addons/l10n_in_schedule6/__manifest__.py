@@ -18,10 +18,11 @@ Sheet, now only Vertical format has been permitted Which is Supported By OpenERP
   """,
     'category': 'Localization',
     'depends': [
-        'account',
+        'account_tax_python',
     ],
     'demo': [],
     'data': [
+        'account_data.xml',
         'l10n_in_schedule6_chart.xml',
         'l10n_in_schedule6_tax_template.xml',
         'account_chart_template.yml',

@@ -92,8 +92,8 @@
 
 
         <record model="gamification.goal.definition" id="definition_crm_nbr_customer_refunds">
-            <field name="name">Customer Refunds</field>
-            <field name="description">Refund the least customers (lower than)</field>
+            <field name="name">Customer Credit Notes</field>
+            <field name="description">Add credit note to the least customers (lower than)</field>
             <field name="computation_mode">count</field>
             <field name="condition">lower</field>
             <field name="suffix">invoices</field>
@@ -102,8 +102,8 @@
             <field name="domain">[('state','!=','cancel'),('user_id','=',user.id),('type','=','out_refund')]</field>
         </record>
         <record model="gamification.goal.definition" id="definition_crm_tot_customer_refunds">
-            <field name="name">Total Customer Refunds</field>
-            <field name="description">The total refunded value is a negative value. Validated when higher (min refunded).</field>
+            <field name="name">Total Customer Credit Notes</field>
+            <field name="description">The total credit note value is negative. Validated when higher (min credit note value).</field>
             <field name="computation_mode">sum</field>
             <field name="condition">higher</field>
             <field name="monetary">True</field>

@@ -5,7 +5,7 @@
 
 {
     'name': 'France - Accounting',
-    'version': '1.2',
+    'version': '2.0',
     'category': 'Localization',
     'description': """
 This is the module to manage the accounting chart for France in Odoo.
@@ -29,12 +29,18 @@ configuration of their taxes and fiscal positions manually.
 
 **Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.
 """,
-    'depends': ['base_iban', 'account', 'base_vat'],
+    'depends': [
+        'account',
+        'base_iban',
+        'base_vat',
+    ],
     'data': [
         'data/l10n_fr_chart_data.xml',
         'data/account_chart_template_data.xml',
         'views/l10n_fr_view.xml',
+        'data/account_data.xml',
         'data/account_tax_data.xml',
+        'data/res_country_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.yml',

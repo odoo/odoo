@@ -8,7 +8,8 @@ class AccountAnalyticTag(models.Model):
     _name = 'account.analytic.tag'
     _description = 'Analytic Tags'
     name = fields.Char(string='Analytic Tag', index=True, required=True)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', default=10)
+    active = fields.Boolean(default=True, help="Set active to false to hide the Analytic Tag without removing it.")
 
 
 class AccountAnalyticAccount(models.Model):

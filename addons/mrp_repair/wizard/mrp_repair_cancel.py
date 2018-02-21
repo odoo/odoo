@@ -30,7 +30,7 @@ class RepairCancel(models.TransientModel):
         repair = self.env['mrp.repair'].browse(repair_id)
         if not repair.invoiced:
             res['arch'] = """
-                <form string="Cancel Repair" version="7.0">
+                <form string="Cancel Repair">
                     <header>
                         <button name="cancel_repair" string="_Yes" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>

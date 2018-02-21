@@ -30,28 +30,15 @@ class ProductionLot(models.Model):
 
     @api.model
     def create(self, vals):
-        pack_id = self.env.context.get('active_pack_operation', False)
-        if pack_id:
-            pack = self.env['stock.pack.operation'].browse(pack_id)
-            if pack.picking_id and not pack.picking_id.picking_type_id.use_create_lots:
+        active_picking_id = self.env.context.get('active_picking_id', False)
+        if active_picking_id:
+            picking_id = self.env['stock.picking'].browse(active_picking_id)
+            if picking_id and not picking_id.picking_type_id.use_create_lots:
                 raise UserError(_("You are not allowed to create a lot for this picking type"))
         return super(ProductionLot, self).create(vals)
 
     @api.one
-    @api.depends('quant_ids.qty')
     def _product_qty(self):
-        self.product_qty = sum(self.quant_ids.mapped('qty'))
-
-    @api.multi
-    def action_traceability(self):
-        move_ids = self.mapped('quant_ids').mapped('history_ids').ids
-        if not move_ids:
-            return False
-        return {
-            'domain': [('id', 'in', move_ids)],
-            'name': _('Traceability'),
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'context': {'tree_view_ref': 'stock.view_move_tree'},
-            'res_model': 'stock.move',
-            'type': 'ir.actions.act_window'}
+        # We only care for the quants in internal or transit locations.
+        quants = self.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
+        self.product_qty = sum(quants.mapped('quantity'))

@@ -8,7 +8,7 @@ from odoo.modules.module import get_module_resource
 class TestCRMLead(TestCrmCases):
 
     def test_crm_lead_cancel(self):
-        # I set a new sale team giving access rights of salesman.
+        # I set a new sales team giving access rights of salesman.
         team = self.env['crm.team'].sudo(self.crm_salemanager.id).create({'name': "Phone Marketing"})
         lead = self.env.ref('crm.crm_case_1')
         lead.sudo(self.crm_salemanager.id).write({'team_id': team.id})

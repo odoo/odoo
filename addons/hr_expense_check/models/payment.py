@@ -4,7 +4,7 @@ from odoo import models, fields, api
 
 
 class HrExpenseRegisterPaymentWizard(models.TransientModel):
-    _inherit = "hr.expense.register.payment.wizard"
+    _inherit = "hr.expense.sheet.register.payment.wizard"
 
     check_amount_in_words = fields.Char(string="Amount in Words")
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
@@ -27,10 +27,10 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
     def _onchange_amount(self):
         if hasattr(super(HrExpenseRegisterPaymentWizard, self), '_onchange_amount'):
             super(HrExpenseRegisterPaymentWizard, self)._onchange_amount()
-        self.check_amount_in_words = self.env['account.payment']._get_check_amount_in_words(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
 
-    def get_payment_vals(self):
-        res = super(HrExpenseRegisterPaymentWizard, self).get_payment_vals()
+    def _get_payment_vals(self):
+        res = super(HrExpenseRegisterPaymentWizard, self)._get_payment_vals()
         if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
             res.update({
                 'check_amount_in_words': self.check_amount_in_words,

@@ -3,18 +3,19 @@
 # * payment_stripe
 # 
 # Translators:
-# darenkster <inactive+darenkster@transifex.com>, 2016
-# Wolfgang Taferner, 2016
-# Martin Trigaux, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Wolfgang Taferner, 2017
+# Martin Trigaux, 2017
 # Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,14 +24,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer_stripe_image_url
 msgid ""
 "A relative or absolute URL pointing to a square image of your brand or "
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
-"Eine relative oder absolute URL weist auf ein quadratisches Bild Ihrer Marke"
-" oder Produkt hin. Wie in Ihrem Stripe-Profil definiert. Siehe: "
+"Eine relative oder absolute URL, die auf ein quadratisches Bild Ihrer Marke "
+"oder Ihres Produkts verweist, wie in Ihrem Stripe-Profil definiert. Siehe: "
 "https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
@@ -40,18 +48,18 @@ msgstr "CVC"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Card Holder Name"
-msgstr ""
+msgid "Card number"
+msgstr "Kartennummer"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Card Number"
-msgstr "Kartennummer"
+msgid "Cardholder name"
+msgstr "Name des Karteninhabers"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_image_url
 msgid "Checkout Image URL"
-msgstr "Abmelde-Bild-URL"
+msgstr "URL des Kaufabwicklungsbildes"
 
 #. module: payment_stripe
 #. openerp-web
@@ -59,11 +67,6 @@ msgstr "Abmelde-Bild-URL"
 #, python-format
 msgid "Close"
 msgstr "Schließen"
-
-#. module: payment_stripe
-#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Bestätigen <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: payment_stripe
 #. openerp-web
@@ -74,13 +77,15 @@ msgstr "Fehler"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "Expiration Date"
-msgstr "Ablaufdatum"
+msgid "Expires (MM / YY)"
+msgstr "Ablauf (MM/JJ)"
 
 #. module: payment_stripe
-#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
-msgid "MM / YY"
-msgstr "MM / YY"
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:32
+#, python-format
+msgid "Just one more second, confirming your payment..."
+msgstr "Nur noch eine Sekunde, Ihre Zahlung wird bestätigt …"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -94,40 +99,55 @@ msgstr "Zahlungstransaktion"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:43
+#: code:addons/payment_stripe/static/src/js/stripe.js:57
 #, python-format
 msgid "Payment error"
 msgstr "Zahlungsfehler"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
-msgid "Stripe publishable key"
+#: code:addons/payment_stripe/models/payment.py:167
+#, python-format
+msgid ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
 msgstr ""
+"Vielleicht kann das Problem gelöst werden, wenn Sie Ihre "
+"Kreditkarteninformationen erneut überprüfen oder Ihre Bank kontaktieren?"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
+msgid "Stripe Publishable Key"
+msgstr "Veröffentlichbarer Stripe-Schlüssel"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_secret_key
-msgid "Stripe secret key"
-msgstr ""
+msgid "Stripe Secret Key"
+msgstr "Geheimer Stripe-Schlüssel"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:120
+#: code:addons/payment_stripe/models/payment.py:165
+#, python-format
+msgid "Stripe gave us the following info about the problem: '%s'"
+msgstr "Stripe hat uns folgende Informationen über das Problem gegeben: %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:177
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr "Stripe: %s gefundene Aufträge für Referenz %s"
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:111
-#, python-format
-msgid ""
-"Stripe: invalid reply received from provider, missing reference. Additional "
-"message: %s"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:116
+#: code:addons/payment_stripe/models/payment.py:173
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr "Stripe: kein Auftrag für Referenz %s gefunden"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:163
+#, python-format
+msgid "We're sorry to report that the transaction has failed."
+msgstr ""
+"Leider müssen wir Ihnen mitteilen, dass die Transaktion fehlgeschlagen ist."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
