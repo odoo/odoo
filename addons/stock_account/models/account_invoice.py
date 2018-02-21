@@ -70,9 +70,9 @@ class AccountInvoice(models.Model):
         for invoice in self:
             company_currency = invoice.company_id.currency_id
             if invoice.company_id.anglo_saxon_accounting:
-                invoice_stock_moves = self._get_related_stock_moves()
+                invoice_stock_moves = invoice._get_related_stock_moves()
                 all_stock_move_invoices = invoice_stock_moves._get_related_invoices()
-                for product in self._get_products_set():
+                for product in invoice._get_products_set():
                     if product.valuation == 'real_time' and product.cost_method == 'fifo':
                         # We first get the invoices move lines (taking the invoice and the previous ones into account)...
                         product_interim_account = invoice._get_anglosaxon_interim_account(product)
