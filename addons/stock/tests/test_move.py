@@ -1698,10 +1698,6 @@ class StockMove(TransactionCase):
         move2._action_assign()
         self.assertEqual(move2.state, 'confirmed')
 
-        # force assign the second one
-        move2._force_assign()
-        self.assertEqual(move2.state, 'assigned')
-
         # use the product from the first one
         move2.write({'move_line_ids': [(0, 0, {
             'product_id': self.product1.id,
@@ -1758,10 +1754,6 @@ class StockMove(TransactionCase):
         move2._action_confirm()
         move2._action_assign()
         self.assertEqual(move2.state, 'confirmed')
-
-        # force assign the second one
-        move2._force_assign()
-        self.assertEqual(move2.state, 'assigned')
 
         # use the product from the first one
         move2.write({'move_line_ids': [(0, 0, {
@@ -3024,7 +3016,6 @@ class StockMove(TransactionCase):
             'product_uom_qty': 2.0,
         })
         (move1 + move2)._action_confirm()
-        (move1 + move2)._force_assign()
         (move1 + move2).write({'quantity_done': 1})
         self.assertEqual(move1.quantity_done, 1)
         self.assertEqual(move2.quantity_done, 1)

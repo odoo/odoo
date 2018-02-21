@@ -351,7 +351,7 @@ class StockMove(models.Model):
     @api.model
     def default_get(self, fields_list):
         # We override the default_get to make stock moves created after the picking was confirmed
-        # directly as available (like a force_assign). This allows to create extra move lines in
+        # directly as available. This allows to create extra move lines in
         # the fp view.
         defaults = super(StockMove, self).default_get(fields_list)
         if self.env.context.get('default_picking_id'):
@@ -789,13 +789,6 @@ class StockMove(models.Model):
             'warehouse_id': self.warehouse_id or self.picking_id.picking_type_id.warehouse_id or self.picking_type_id.warehouse_id,
             'priority': self.priority,
         }
-
-    def _force_assign(self):
-        """ Allow to work on stock move lines even if the reservationis not possible. We just mark
-        the move as assigned, so the view does not block the user.
-        """
-        for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available', 'assigned']):
-            move.write({'state': 'assigned'})
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         self.ensure_one()

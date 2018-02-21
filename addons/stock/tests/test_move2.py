@@ -1377,7 +1377,6 @@ class TestSinglePicking(TestStockCommon):
         })
 
         delivery_order.action_confirm()
-        delivery_order.force_assign()
         delivery_order.move_lines.quantity_done = 2
         # do not set a lot_id or lot_name, it should work
         delivery_order.action_done()
@@ -1412,7 +1411,6 @@ class TestSinglePicking(TestStockCommon):
         })
 
         delivery_order.action_confirm()
-        delivery_order.force_assign()
         delivery_order.move_lines.quantity_done = 2
         move_line = delivery_order.move_lines.move_line_ids
 
@@ -1454,7 +1452,6 @@ class TestSinglePicking(TestStockCommon):
         })
 
         delivery_order.action_confirm()
-        delivery_order.force_assign()
         delivery_order.move_lines.quantity_done = 2
         move_line = delivery_order.move_lines.move_line_ids
 
@@ -1496,7 +1493,6 @@ class TestSinglePicking(TestStockCommon):
         })
 
         delivery_order.action_confirm()
-        delivery_order.force_assign()
         delivery_order.move_lines.quantity_done = 2
         move_line = delivery_order.move_lines.move_line_ids
 
