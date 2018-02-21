@@ -179,3 +179,19 @@ class Orderpoint(models.Model):
         for poline in self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)]):
             res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
         return res
+
+    def action_view_purchase(self):
+        """ This function returns an action that display existing
+        purchase orders of given orderpoint.
+        """
+        action = self.env.ref('purchase.purchase_rfq')
+        result = action.read()[0]
+
+        # Remvove the context since the action basically display RFQ and not PO.
+        result['context'] = {}
+        order_line_ids = self.env['purchase.order.line'].search([('orderpoint_id', '=', self.id)])
+        purchase_ids = order_line_ids.mapped('order_id')
+
+        result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
+
+        return result
