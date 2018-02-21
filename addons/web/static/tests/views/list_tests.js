@@ -843,7 +843,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('archiving one record', function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
         // add active field on foo model and make all records active
         this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
@@ -872,7 +872,13 @@ QUnit.module('Views', {
 
         assert.verifySteps(['/web/dataset/search_read']);
         list.sidebar.$('a:contains(Archive)').click();
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-default').click(); // Click on 'Cancel'
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 4, "still should have 4 records");
 
+        list.sidebar.$('a:contains(Archive)').click();
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-primary').click(); // Click on 'Ok'
         assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3, "should have 3 records");
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/write', '/web/dataset/search_read']);
         list.destroy();

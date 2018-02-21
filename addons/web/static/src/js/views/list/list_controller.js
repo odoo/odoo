@@ -10,6 +10,7 @@ odoo.define('web.ListController', function (require) {
 var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
+var Dialog = require('web.Dialog');
 var pyeval = require('web.pyeval');
 var Sidebar = require('web.Sidebar');
 
@@ -136,6 +137,7 @@ var ListController = BasicController.extend({
      * @param {jQuery Node} $node
      */
     renderSidebar: function ($node) {
+        var self = this;
         if (this.hasSidebar) {
             var other = [{
                 label: _t("Export"),
@@ -144,7 +146,11 @@ var ListController = BasicController.extend({
             if (this.archiveEnabled) {
                 other.push({
                     label: _t("Archive"),
-                    callback: this._onToggleArchiveState.bind(this, true)
+                    callback: function () {
+                        Dialog.confirm(self, _t("Are you sure that you want to archive all the selected records?"), {
+                            confirm_callback: self._onToggleArchiveState.bind(self, true),
+                        });
+                    }
                 });
                 other.push({
                     label: _t("Unarchive"),
