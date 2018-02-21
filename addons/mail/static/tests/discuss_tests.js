@@ -63,7 +63,7 @@ QUnit.test('basic rendering', function (assert) {
 });
 
 QUnit.test('@ mention in channel', function (assert) {
-    assert.expect(12);
+    assert.expect(34);
     var done = assert.async();
 
     // Remove throttles to speed up the test
@@ -96,7 +96,11 @@ QUnit.test('@ mention in channel', function (assert) {
         mockRPC: function (route, args) {
             if (args.method === 'channel_fetch_listeners') {
                 fetchListenersDef.resolve();
-                return $.when([ {id: 2, name: 'TestUser'} ]);
+                return $.when([
+                    {id: 1, name: 'Admin'},
+                    {id: 2, name: 'TestUser'},
+                    {id: 3, name: 'DemoUser'}
+                ]);
             }
             if (args.method === 'message_post') {
                 var data = {
@@ -138,18 +142,81 @@ QUnit.test('@ mention in channel', function (assert) {
                 assert.strictEqual(discuss.$('.dropup.o_composer_mention_dropdown.open').length, 1,
                 "dropup menu for partner mentions should be open");
 
-                var $mentionProposition = discuss.$('.o_mention_proposition');
-                assert.strictEqual($mentionProposition.length, 1,
-                    "should display one partner mention proposition");
-                assert.strictEqual($mentionProposition.data('id'), 2,
-                    "partner mention should link to the correct partner id");
-                assert.strictEqual($mentionProposition.find('.o_mention_name').text(), "TestUser",
-                    "partner mention should display the correct partner name");
+                var $mentionPropositions = discuss.$('.o_mention_proposition');
+                assert.strictEqual($mentionPropositions.length, 3,
+                    "should display 3 partner mention propositions");
 
-                $mentionProposition.click();
+                var $mention1 = $mentionPropositions.first();
+                var $mention2 = $mentionPropositions.first().next();
+                var $mention3 = $mentionPropositions.first().next().next();
+
+                // correct 1st mention proposition
+                assert.ok($mention1.hasClass('active'),
+                    "first partner mention should be active");
+                assert.strictEqual($mention1.data('id'), 1,
+                    "first partner mention should link to the correct partner id");
+                assert.strictEqual($mention1.find('.o_mention_name').text(), "Admin",
+                    "first partner mention should display the correct partner name");
+                // correct 2nd mention proposition
+                assert.notOk($mention2.hasClass('active'),
+                    "second partner mention should not be active");
+                assert.strictEqual($mention2.data('id'), 2,
+                    "second partner mention should link to the correct partner id");
+                assert.strictEqual($mention2.find('.o_mention_name').text(), "TestUser",
+                    "second partner mention should display the correct partner name");
+                // correct 3rd mention proposition
+                assert.notOk($mention3.hasClass('active'),
+                    "third partner mention should not be active");
+                assert.strictEqual($mention3.data('id'), 3,
+                    "third partner mention should link to the correct partner id");
+                assert.strictEqual($mention3.find('.o_mention_name').text(), "DemoUser",
+                    "third partner mention should display the correct partner name");
+
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.DOWN}));
+                assert.notOk($mention1.hasClass('active'),
+                    "first partner mention should not be active");
+                assert.ok($mention2.hasClass('active'),
+                    "second partner mention should be active");
+                assert.notOk($mention3.hasClass('active'),
+                    "third partner mention should not be active");
+
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.UP}));
+                assert.ok($mention1.hasClass('active'),
+                    "first partner mention should be active");
+                assert.notOk($mention2.hasClass('active'),
+                    "second partner mention should not be active");
+                assert.notOk($mention3.hasClass('active'),
+                    "third partner mention should not be active");
+
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.TAB}));
+                assert.notOk($mention1.hasClass('active'),
+                    "first partner mention should not be active");
+                assert.ok($mention2.hasClass('active'),
+                    "second partner mention should be active");
+                assert.notOk($mention3.hasClass('active'),
+                    "third partner mention should not be active");
+
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.TAB}));
+                assert.notOk($mention1.hasClass('active'),
+                    "first partner mention should not be active");
+                assert.notOk($mention2.hasClass('active'),
+                    "second partner mention should not be active");
+                assert.ok($mention3.hasClass('active'),
+                    "third partner mention should be active");
+
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.TAB}));
+                assert.ok($mention1.hasClass('active'),
+                    "first partner mention should be active");
+                assert.notOk($mention2.hasClass('active'),
+                    "second partner mention should not be active");
+                assert.notOk($mention3.hasClass('active'),
+                    "third partner mention should not be active");
+
+                // $mentionPropositions.find('active').click();
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
                 assert.strictEqual(discuss.$('.o_mention_proposition').length, 0,
-                    "should not have any partner mention proposition after clicking on it");
-                assert.strictEqual($input.find('a').text() , "@TestUser",
+                    "should not have any partner mention proposition after ENTER");
+                assert.strictEqual($input.find('a').text() , "@Admin",
                     "should have the correct mention link in the composer input");
 
                 // send message
@@ -163,7 +230,7 @@ QUnit.test('@ mention in channel', function (assert) {
                         assert.strictEqual(discuss.$('.o_thread_message_content a').length, 1,
                             "should contain a link in the message content");
                         assert.strictEqual(discuss.$('.o_thread_message_content a').text(),
-                            "@TestUser", "should have correct mention link in the message content");
+                            "@Admin", "should have correct mention link in the message content");
 
                         // Restore throttles and window.getSelection
                         BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
