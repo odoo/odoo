@@ -20,7 +20,7 @@
                                     <t t-if="tx_id.state == 'posted' or (tx_id.state == 'draft' and tx_id.capture)">
                                         <t t-raw="tx_id.acquirer_id.done_msg"/>
                                     </t>
-                                    <t t-elif="tx_id.state == 'pending'">
+                                    <t t-elif="tx_id.pending">
                                         <t t-raw="tx_id.acquirer_id.pending_msg"/>
                                     </t>
                                     <t t-elif="tx_id.state == 'cancelled'">

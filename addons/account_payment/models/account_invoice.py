@@ -12,6 +12,10 @@ class AccountInvoice(models.Model):
     @api.depends('payment_ids')
     def _compute_payment_ids_nbr(self):
         '''Compute the number of payments for each invoice in self.'''
+        self = self.filtered(lambda r: not isinstance(r.id, models.NewId))
+        if not self:
+            return
+
         self.check_access_rights('write')
         self.env['account.payment'].check_access_rights('read')
 

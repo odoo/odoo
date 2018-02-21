@@ -15,8 +15,24 @@ class SaleOrder(models.Model):
 
     @api.depends('payment_ids')
     def _compute_payment_ids_nbr(self):
-        for so in self:
-            so.payment_ids_nbr = len(so.payment_ids)
+        '''Compute the number of payments for each sale order in self.'''
+        self = self.filtered(lambda r: not isinstance(r.id, models.NewId))
+        if not self:
+            return
+
+        self.check_access_rights('write')
+        self.env['account.payment'].check_access_rights('read')
+
+        self._cr.execute('''
+            SELECT so.id, COUNT(rel.account_payment_id)
+            FROM sale_order so
+            LEFT JOIN account_payment_sale_order_rel rel ON so.id = rel.sale_order_id
+            WHERE so.id IN %s
+            GROUP BY so.id
+        ''', [tuple(self.ids)])
+        records = dict((r.id, r) for r in self)
+        for res in self._cr.fetchall():
+            records[res[0]].payment_ids_nbr = res[1]
 
     @api.multi
     def get_portal_transactions(self):

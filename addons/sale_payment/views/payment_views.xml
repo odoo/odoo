@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="payment_transaction_action_pending" model="ir.actions.act_window">
-        <field name="name">Pending Payment Transactions</field>
-        <field name="res_model">payment.transaction</field>
-        <field name='view_type'>form</field>
-        <field name='view_mode'>tree,form</field>
-        <field name='domain'>[('sale_order_id.team_id', '=', active_id), ('state', '=', 'pending')]</field>
-    </record>
-
-    <record id="payment_transaction_action_capture" model="ir.actions.act_window">
-        <field name="name">Payment Transactions to Capture</field>
-        <field name="res_model">payment.transaction</field>
-        <field name='view_type'>form</field>
-        <field name='view_mode'>tree,form</field>
-        <field name='domain'>[('sale_order_id.team_id', '=', active_id), ('capture', '=', True)]</field>
-    </record>
-
     <record id="view_sale_payment_form_inherit_payment" model="ir.ui.view">
         <field name="name">view.sale.payment.form.inherit.payment</field>
         <field name="model">account.payment</field>
@@ -31,3 +15,4 @@
         </field>
     </record>
 </odoo>
+

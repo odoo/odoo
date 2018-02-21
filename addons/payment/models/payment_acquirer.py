@@ -672,7 +672,7 @@ class PaymentTransaction(models.Model):
         '''
         if any(trans.state != 'draft' for trans in self):
             raise UserError(_('Some transactions can\'t be processed because they are not linked to draft payment.'))
-        self.post()
+        self.payment_id.post()
         self.write({'pending': True})
 
         # Validate invoices automatically upon the transaction is posted.
@@ -689,10 +689,10 @@ class PaymentTransaction(models.Model):
         '''
         if any(trans.state != 'draft' for trans in self):
             raise UserError(_('Some transactions can\'t be cancelled because they are not linked to draft payment.'))
-        self.cancel()
+        self.payment_id.cancel()
         self.filtered(lambda t: not t.pending).write({'pending': True})
-        self._log_payment_transaction_received()
         self.filtered(lambda t: t.capture).write({'capture': False})
+        self._log_payment_transaction_received()
 
     @api.multi
     def on_change_partner_id(self, partner_id):
@@ -749,9 +749,9 @@ class PaymentTransaction(models.Model):
     def _compute_reference(self, vals=None):
         '''Compute a unique reference for the transaction.
         If some invoices:
-            <inv_number_0>.number,<inv_number_1>,...,<inv_number_n>#x
+            <inv_number_0>.number,<inv_number_1>,...,<inv_number_n>-x
         If some sale orders:
-            <so_name_0>.number,<so_name_1>,...,<so_name_n>#x
+            <so_name_0>.number,<so_name_1>,...,<so_name_n>-x
         :param vals: values passed on the create function.
         :return: A unique reference for the transaction.
         '''
@@ -760,7 +760,7 @@ class PaymentTransaction(models.Model):
             return ','.join(dic[ref_field] for dic in many_list)
 
         separator = '-'
-        reference = None
+        reference = ''
         if vals and vals.get('invoice_ids'):
             reference = as_reference('invoice_ids', 'number')
         elif vals and vals.get('sale_order_ids'):
