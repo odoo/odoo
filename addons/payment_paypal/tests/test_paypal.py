@@ -6,6 +6,7 @@ from odoo.addons.payment_paypal.controllers.main import PaypalController
 from werkzeug import urls
 
 from odoo.tools import mute_logger
+import odoo.tests
 
 from lxml import objectify
 
@@ -30,6 +31,7 @@ class PaypalCommon(PaymentAcquirerCommon):
         self.switch_polo = (('6331101999990016', '123'))
 
 
+@odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
 class PaypalForm(PaypalCommon):
 
     def test_10_paypal_form_render(self):
@@ -172,26 +174,23 @@ class PaypalForm(PaypalCommon):
             'currency_id': self.currency_euro.id,
             'reference': 'test_ref_2',
             'partner_name': 'Norbert Buyer',
+            'partner_id': self.buyer_id,
             'partner_country_id': self.country_france.id})
 
         # validate it
         tx.form_feedback(paypal_post_data, 'paypal')
         # check
-        self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
+        self.assertTrue(tx.pending, 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertFalse(tx.date_validate, 'paypal: validation date should not be updated whenr receiving pending notification')
 
         # update tx
-        tx.write({
-            'state': 'draft',
-            'acquirer_reference': False})
+        tx.write({'acquirer_reference': False})
 
         # update notification from paypal
         paypal_post_data['payment_status'] = 'Completed'
         # validate it
         tx.form_feedback(paypal_post_data, 'paypal')
         # check
-        self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
+        self.assertEqual(tx.state, 'posted', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertEqual(tx.date_validate, '2013-11-18 11:21:19', 'paypal: wrong validation date')

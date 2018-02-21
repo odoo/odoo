@@ -166,12 +166,12 @@
     <!-- duplicata of the template payment.payment_confirmation_status. 
         The duplication avoid to break an existing installation in stable version-->
     <template id="payment_confirmation_status">
-        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'posted'" class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
         </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
+        <div t-if="payment_tx_id and payment_tx_id.pending" class="alert alert-warning alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
@@ -180,11 +180,11 @@
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
         </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'cancelled'" class="alert alert-danger alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
         </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
+        <div t-if="payment_tx_id and payment_tx_id.authorized" class="alert alert-success alert-dismissable">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             Your payment has been authorized.
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
@@ -218,7 +218,7 @@
                                   </a>
                               </div>
                           </div>
-                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
+                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'posted')" style="padding: 10px">
                               <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <i class="fa fa-check"></i> Pay Now
                               </a>
@@ -378,7 +378,7 @@
                         </div>
                       </div>
 
-                      <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancel'">
+                      <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancelled'">
                           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
                       </div>
@@ -396,7 +396,7 @@
                               <i class="fa fa-times"></i> Reject
                           </a>
                       </div>
-                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
+                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'posted')" style="padding: 10px">
                           <a class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
                               <i class="fa fa-check"></i> Pay Now
                           </a>

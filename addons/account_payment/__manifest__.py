@@ -15,7 +15,6 @@ enable payment.
     'depends': ['payment', 'account'],
     'data': [
         'views/account_invoice_views.xml',
-        'views/payment_views.xml',
         'views/account_portal_templates.xml',
     ],
     'installable': True,

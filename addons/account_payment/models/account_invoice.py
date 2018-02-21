@@ -1,40 +1,63 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    payment_tx_ids = fields.One2many('payment.transaction', 'account_invoice_id', string='Transactions')
-    payment_tx_id = fields.Many2one('payment.transaction', string='Last Transaction', copy=False)
-    payment_acquirer_id = fields.Many2one(
-        'payment.acquirer', string='Payment Acquirer',
-        related='payment_tx_id.acquirer_id', store=True)
-    payment_tx_count = fields.Integer(string="Number of payment transactions", compute='_compute_payment_tx_count')
+    payment_ids_nbr = fields.Integer(string='# of Payments', compute='_compute_payment_ids_nbr')
 
-    def _compute_payment_tx_count(self):
-        tx_data = self.env['payment.transaction'].read_group(
-            [('account_invoice_id', 'in', self.ids)],
-            ['account_invoice_id'], ['account_invoice_id']
-        )
-        mapped_data = dict([(m['account_invoice_id'][0], m['account_invoice_id_count']) for m in tx_data])
-        for invoice in self:
-            invoice.payment_tx_count = mapped_data.get(invoice.id, 0)
+    @api.depends('payment_ids')
+    def _compute_payment_ids_nbr(self):
+        '''Compute the number of payments for each invoice in self.'''
+        self = self.filtered(lambda r: not isinstance(r.id, models.NewId))
+        if not self:
+            return
 
-    def action_view_transactions(self):
+        self.check_access_rights('write')
+        self.env['account.payment'].check_access_rights('read')
+
+        self._cr.execute('''
+            SELECT inv.id, COUNT(rel.payment_id)
+            FROM account_invoice inv
+            LEFT JOIN account_invoice_payment_rel rel ON inv.id = rel.invoice_id
+            WHERE inv.id IN %s
+            GROUP BY inv.id
+        ''', [tuple(self.ids)])
+        records = dict((r.id, r) for r in self)
+        for res in self._cr.fetchall():
+            records[res[0]].payment_ids_nbr = res[1]
+
+    @api.multi
+    def get_portal_transactions(self):
+        '''Retrieve the transactions to display in the portal.
+        The transactions must be 'posted' (e.g. success with Paypal) or 'draft' + pending (Wire Transfer)
+        but not in 'capture' (the user must capture the amount manually to get paid and set the transaction to
+        'posted').
+
+        :return: The transactions to display in the portal.
+        '''
+        return self.sudo().mapped('payment_ids.payment_transaction_id')\
+            .filtered(lambda trans: trans.state == 'posted' or (trans.state == 'draft' and trans.pending))
+
+    @api.multi
+    def get_portal_last_transaction(self):
+        return self.sudo().payment_tx_id
+
+    def action_view_payments(self):
         action = {
-            'name': _('Payment Transactions'),
+            'name': _('Payments'),
             'type': 'ir.actions.act_window',
-            'res_model': 'payment.transaction',
+            'res_model': 'account.payment',
             'target': 'current',
         }
-        tx = self.env['payment.transaction'].search([('account_invoice_id', 'in', self.ids)])
-        if len(tx) == 1:
-            action['res_id'] = tx.ids[0]
+        payment_ids = self.mapped('payment_ids')
+        if len(payment_ids) == 1:
+            action['res_id'] = payment_ids.ids[0]
             action['view_mode'] = 'form'
         else:
             action['view_mode'] = 'tree,form'
-            action['domain'] = [('account_invoice_id', 'in', self.ids)]
+            action['domain'] = [('id', 'in', payment_ids.ids)]
         return action

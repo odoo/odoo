@@ -2,6 +2,7 @@
 
 from lxml import objectify
 import time
+import odoo.tests
 
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
@@ -11,6 +12,7 @@ from werkzeug import urls
 from odoo.tools import mute_logger
 
 
+@odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
 class OgonePayment(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -130,15 +132,24 @@ class OgonePayment(PaymentAcquirerCommon):
             'currency_id': self.currency_euro.id,
             'reference': 'test_ref_2',
             'partner_name': 'Norbert Buyer',
+            'partner_id': self.buyer_id,
             'partner_country_id': self.country_france.id})
         # validate it
         tx.form_feedback(ogone_post_data)
         # check state
-        self.assertEqual(tx.state, 'done', 'ogone: validation did not put tx into done state')
+        self.assertEqual(tx.state, 'posted', 'ogone: validation did not put tx into done state')
         self.assertEqual(tx.ogone_payid, ogone_post_data.get('PAYID'), 'ogone: validation did not update tx payid')
 
         # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'ogone_payid': False})
+        tx.unlink()
+        tx = self.env['payment.transaction'].create({
+            'amount': 1.95,
+            'acquirer_id': self.ogone.id,
+            'currency_id': self.currency_euro.id,
+            'reference': 'test_ref_2',
+            'partner_name': 'Norbert Buyer',
+            'partner_id': self.buyer_id,
+            'partner_country_id': self.country_france.id})
 
         # now ogone post is ok: try to modify the SHASIGN
         ogone_post_data['SHASIGN'] = 'a4c16bae286317b82edb49188d3399249a784691'
@@ -150,7 +161,7 @@ class OgonePayment(PaymentAcquirerCommon):
         ogone_post_data['SHASIGN'] = 'a4c16bae286317b82edb49188d3399249a784691'
         tx.form_feedback(ogone_post_data)
         # check state
-        self.assertEqual(tx.state, 'error', 'ogone: erroneous validation did not put tx into error state')
+        self.assertEqual(tx.state, 'cancelled', 'ogone: erroneous validation did not put tx into error state')
 
     def test_30_ogone_s2s(self):
         test_ref = 'test_ref_%.15f' % time.time()

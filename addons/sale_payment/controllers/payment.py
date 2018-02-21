@@ -19,32 +19,30 @@ class PaymentPortal(http.Controller):
         success_url = kwargs.get('success_url', '/my')
         callback_method = kwargs.get('callback_method', '')
 
-        order_sudo = request.env['sale.order'].sudo().browse(order_id)
-        if not order_sudo:
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order:
             return False
 
         try:
-            acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
+            acquirer_id = int(acquirer_id)
         except:
             return False
 
-        token = request.env['payment.token'].sudo()  # currently no support of payment tokens
-        tx = request.env['payment.transaction'].sudo()._check_or_create_sale_tx(
-            order_sudo,
-            acquirer,
-            payment_token=token,
-            tx_type='form_save' if save_token else 'form',
-            add_tx_values={
-                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order_sudo._name)], limit=1).id,
-                'callback_res_id': order_sudo.id,
-                'callback_method': callback_method,
-            })
+        # Create transaction
+        vals = {
+            'acquirer_id': acquirer_id,
+            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order._name)], limit=1).id,
+            'callback_res_id': order.id,
+            'callback_method': callback_method,
+        }
 
-        # set the transaction id into the session
-        request.session['portal_sale_%s_transaction_id' % order_sudo.id] = tx.id
+        if save_token:
+            vals['type'] = 'form_save'
 
-        return tx.render_sale_button(
-            order_sudo,
+        transaction = order.create_payment_transaction(vals)
+
+        return transaction.render_sale_button(
+            order,
             success_url,
             submit_txt=_('Pay'),
             render_values={
@@ -70,33 +68,21 @@ class PaymentPortal(http.Controller):
             return request.redirect(_build_url_w_params(error_url, params))
 
         try:
-            token = request.env['payment.token'].sudo().browse(int(pm_id))
+            pm_id = int(pm_id)
         except (ValueError, TypeError):
-            token = False
-        if not token:
             params['error'] = 'pay_sale_invalid_token'
             return request.redirect(_build_url_w_params(error_url, params))
 
-        # find an existing tx or create a new one
-        tx = request.env['payment.transaction'].sudo()._check_or_create_sale_tx(
-            order_sudo,
-            token.acquirer_id,
-            payment_token=token,
-            tx_type='server2server',
-            add_tx_values={
-                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order_sudo._name)], limit=1).id,
-                'callback_res_id': order_sudo.id,
-                'callback_method': callback_method,
-            })
+        # Create transaction
+        vals = {
+            'payment_token_id': pm_id,
+            'type': 'server2server',
+            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order_sudo._name)], limit=1).id,
+            'callback_res_id': order_sudo.id,
+            'callback_method': callback_method,
+        }
 
-        # set the transaction id into the session
-        request.session['portal_sale_%s_transaction_id' % order_sudo.id] = tx.id
+        order_sudo.create_payment_transaction(vals)
 
-        # proceed to the payment
-        res = tx.confirm_sale_token()
-        if tx.state != 'authorized' or not tx.acquirer_id.capture_manually:
-            if res is not True:
-                params['error'] = res
-                return request.redirect(_build_url_w_params(error_url, params))
-            params['success'] = 'pay_sale'
+        params['success'] = 'pay_sale'
         return request.redirect(_build_url_w_params(success_url, params))
