@@ -560,8 +560,6 @@ class HrExpenseSheet(models.Model):
             return 'hr_expense.mt_expense_refused'
         elif 'state' in init_values and self.state == 'done':
             return 'hr_expense.mt_expense_paid'
-        elif 'user_id' in init_values:
-            return 'hr_expense.mt_expense_responsible'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
     def _get_users_to_subscribe(self, employee=False):
