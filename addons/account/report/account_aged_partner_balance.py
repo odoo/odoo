@@ -223,4 +223,6 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             'time': time,
             'get_partner_lines': movelines,
             'get_direction': total,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }
