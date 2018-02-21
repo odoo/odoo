@@ -77,7 +77,7 @@ class PurchaseOrder(models.Model):
         company_id = self.env.context.get('company_id') or self.env.user.company_id.id
         types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
         if not types:
-            types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
+            types = type_obj.search([('code', '=', 'incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', 'in', self.env.user.company_ids.ids)])
         return types[:1]
 
     @api.depends('order_line.move_ids')
