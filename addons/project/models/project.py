@@ -394,7 +394,8 @@ class Task(models.Model):
     @api.onchange('project_id')
     def _onchange_project(self):
         if self.project_id:
-            self.partner_id = self.project_id.partner_id
+            if self.project_id.partner_id:
+                self.partner_id = self.project_id.partner_id
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
             self.stage_id = False
