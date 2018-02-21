@@ -403,7 +403,8 @@ class task(osv.osv):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project.exists():
-                values['partner_id'] = project.partner_id.id
+                if project.partner_id:
+                    values['partner_id'] = project.partner_id.id
                 values['stage_id'] = self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
         else:
             values['stage_id'] = False
