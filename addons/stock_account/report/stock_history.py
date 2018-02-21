@@ -39,7 +39,9 @@ class StockHistory(models.Model):
             fields_2 = set(
                 ['id', 'product_id', 'price_unit_on_quant', 'company_id', 'quantity'] + groupby_list
             )
-            tables, where_clause, where_clause_params = self._where_calc(domain).get_sql()
+            query = self._where_calc(domain)
+            self._apply_ir_rules(query, 'read')
+            tables, where_clause, where_clause_params = query.get_sql()
             select = "SELECT %s FROM %s WHERE %s "
             query = select % (','.join(fields_2), tables, where_clause)
             self._cr.execute(query, where_clause_params)
