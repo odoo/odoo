@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-import math
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
@@ -497,7 +496,7 @@ class MrpProduction(models.Model):
 
         for operation in bom.routing_id.operation_ids:
             # create workorder
-            cycle_number = math.ceil(bom_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
+            cycle_number = float_round(bom_qty / operation.workcenter_id.capacity, precision_digits=0, rounding_method='UP')
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)

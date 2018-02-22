@@ -2,14 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    "name" : "Product extension to track sales and purchases",
+    "name" : "Product Extension: Compute price from BoM",
     "version" : "1.0",
     "depends" : ["mrp", "stock_account"],
     "category" : "Manufacturing",
     "description": """
-Product extension. This module adds:
-  * Computes standard price from the BoM of the product with a button on the product variant based
-    on the materials in the BoM and the work centers.  It can create the necessary accounting entries when necessary.
+Allows to compute the standard price of the product based on its BoM,
+using the prices of its components and the cost linked to the work centers.
+It adds a button on the product itself but also an action in the list view of the products.
+If the automated inventory valuation is active, the required accounting entries will be created.
 """,
     "init_xml" : [],
     "demo_xml" : [],
