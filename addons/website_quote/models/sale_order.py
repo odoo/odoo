@@ -49,6 +49,15 @@ class SaleOrder(models.Model):
     def _get_default_template_id(self):
         return self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
 
+    def _default_require_payment(self):
+        default_template = self._get_default_template_id()
+        if self.template_id:
+            return self.template_id.require_payment
+        elif default_template:
+            return default_template.require_payment
+        else:
+            return 0
+
     access_token = fields.Char(
         'Security Token', copy=False, default=lambda self: str(uuid.uuid4()),
         required=True)
@@ -68,14 +77,7 @@ class SaleOrder(models.Model):
         (0, 'Not mandatory on website quote validation'),
         (1, 'Immediate after website order validation'),
         (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote", compute='_compute_require_payment', store=True)
-
-    @api.one
-    @api.depends('template_id')
-    def _compute_require_payment(self):
-        # Do not overwrite if the field is already set
-        if self.template_id and (self.require_payment is None or self.require_payment is False):
-            self.require_payment = self.template_id.require_payment
+    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote", default=_default_require_payment)
 
     @api.multi
     def copy(self, default=None):
