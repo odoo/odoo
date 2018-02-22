@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.tests import common
 
 
@@ -70,7 +71,9 @@ class TestMrpByProduct(common.TransactionCase):
 
         # I consume and produce the production of products.
         # I create record for selecting mode and quantity of products to produce.
-        product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 2.00})
+        produce_form = Form(self.env['mrp.product.produce'].with_context(context))
+        produce_form.product_qty = 2.00
+        product_consume = produce_form.save()
         # I finish the production order.
         self.assertEqual(len(mnf_product_a.move_raw_ids), 1, "Wrong consume move on production order.")
         product_consume.do_produce()
