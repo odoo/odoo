@@ -225,6 +225,9 @@ var PosDB = core.Class.extend({
         if(partner.email){
             str += '|' + partner.email;
         }
+        if(partner.vat){
+            str += '|' + partner.vat;
+        }
         str = '' + partner.id + ':' + str.replace(':','') + '\n';
         return str;
     },
