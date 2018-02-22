@@ -5,8 +5,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import http, fields, _
 from odoo.http import request
-
 from odoo.tools import float_round
+
+DEFAULT_MONTH_RANGE = 3
 
 
 class SaleTimesheetController(http.Controller):
@@ -115,6 +116,88 @@ class SaleTimesheetController(http.Controller):
         values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
 
+        #
+        # Table grouped by SO / SOL / Employees
+        #
+        if not projects:
+            return values
+
+        # build SQL query and fetch raw data
+        query, query_params = self._table_rows_sql_query(projects)
+        request.env.cr.execute(query, query_params)
+        raw_data = request.env.cr.dictfetchall()
+        rows_employee = self._table_rows_get_employee_lines(projects, raw_data)
+        default_row_vals = self._table_row_default(projects)
+
+        empty_line_ids, empty_order_ids = self._table_get_empty_so_lines(projects)
+
+        # extract row labels
+        sale_line_ids = set()
+        sale_order_ids = set()
+        for key_tuple, row in rows_employee.items():
+            if row[0]['sale_line_id']:
+                sale_line_ids.add(row[0]['sale_line_id'])
+            if row[0]['sale_order_id']:
+                sale_order_ids.add(row[0]['sale_order_id'])
+
+        sale_order_lines = request.env['sale.order.line'].sudo().browse(sale_line_ids | empty_line_ids)
+        map_so_names = {so.id: so.name for so in request.env['sale.order'].sudo().browse(sale_order_ids | empty_order_ids)}
+        map_sol = {sol.id: sol for sol in sale_order_lines}
+        map_sol_names = {sol.id: sol.name.split('\n')[0] if sol.name else _('No Sale Order Line') for sol in sale_order_lines}
+        map_sol_so = {sol.id: sol.order_id.id for sol in sale_order_lines}
+
+        rows_sale_line = {}  # (so, sol) -> [INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted]
+        for sale_line_id in empty_line_ids:  # add service SO line having no timesheet
+            sale_line_row_key = (map_sol_so.get(sale_line_id), sale_line_id)
+            rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line_id, _('No Sale Order Line')), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line'}] + default_row_vals[:]
+            rows_sale_line[sale_line_row_key][-2] = map_sol.get(sale_line_id).product_uom_qty if sale_line_id in map_sol else 0.0
+
+        for row_key, row_employee in rows_employee.items():
+            sale_line_id = row_key[1]
+            sale_order_id = row_key[0]
+            # sale line row
+            sale_line_row_key = (sale_order_id, sale_line_id)
+            if sale_line_row_key not in rows_sale_line:
+                sale_line = map_sol.get(sale_line_id, request.env['sale.order.line'])
+                rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line.id) if sale_line else _('No Sale Order Line'), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
+                rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom_qty or 0.0
+
+            for index in range(len(rows_employee[row_key])):
+                if index != 0:
+                    rows_sale_line[sale_line_row_key][index] += rows_employee[row_key][index]
+                    rows_sale_line[sale_line_row_key][-1] = rows_sale_line[sale_line_row_key][-2] - rows_sale_line[sale_line_row_key][5]
+
+        rows_sale_order = {}  # so -> [INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted]
+        for row_key, row_sale_line in rows_sale_line.items():
+            sale_order_id = row_key[0]
+            # sale order row
+            if sale_order_id not in rows_sale_order:
+                rows_sale_order[sale_order_id] = [{'label': map_so_names.get(sale_order_id, _('No Sale Order')), 'res_id': sale_order_id, 'res_model': 'sale.order', 'type': 'sale_order'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
+
+            for index in range(len(rows_sale_line[row_key])):
+                if index != 0:
+                    rows_sale_order[sale_order_id][index] += rows_sale_line[row_key][index]
+
+        # remaining computation of SO row, as Sold - Done (timesheet total)
+        for sale_order_id, sale_order_row in rows_sale_order.items():
+            sale_order_row[-1] = sale_order_row[-2] - sale_order_row[5]
+
+        # group rows SO, SOL and their related employee rows.
+        timesheet_forecast_table_rows = []
+        for sale_order_id, sale_order_row in rows_sale_order.items():
+            timesheet_forecast_table_rows.append(sale_order_row)
+            for sale_line_row_key, sale_line_row in rows_sale_line.items():
+                if sale_order_id == sale_line_row_key[0]:
+                    timesheet_forecast_table_rows.append(sale_line_row)
+                    for employee_row_key, employee_row in rows_employee.items():
+                        if sale_order_id == employee_row_key[0] and sale_line_row_key[1] == employee_row_key[1]:
+                            timesheet_forecast_table_rows.append(employee_row)
+
+        # complete table data
+        values['timesheet_forecast_table'] = {
+            'header': self._table_header(projects),
+            'rows': timesheet_forecast_table_rows
+        }
         return values
 
     def _table_header(self, projects):
@@ -129,7 +212,7 @@ class SaleTimesheetController(http.Controller):
         return header
 
     def _table_row_default(self, projects):
-        lenght = self._table_header(projects)
+        lenght = len(self._table_header(projects))
         return [0.0] * (lenght - 1)  # before, M1, M2, M3, Done, Sold, Remaining
 
     def _table_rows_sql_query(self, projects):
@@ -195,6 +278,11 @@ class SaleTimesheetController(http.Controller):
                 rows_employee[row_key][index] += data['number_hours']
                 rows_employee[row_key][5] += data['number_hours']
         return rows_employee
+
+    def _table_get_empty_so_lines(self, projects):
+        """ get the Sale Order Lines having no timesheet but having generated a task or a project """
+        so_lines = projects.mapped('sale_line_id.order_id.order_line').filtered(lambda sol: sol.is_service)
+        return set(so_lines.ids), set(so_lines.mapped('order_id').ids)
 
     # --------------------------------------------------
     # Actions: Stat buttons, ...

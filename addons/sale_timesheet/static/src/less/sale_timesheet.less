@@ -74,5 +74,39 @@
         }
     }
 
+    .o_project_plan_project_timesheet_forecast {
+        th{
+            text-align: center;
+        }
+        th.o_right_bordered, td.o_right_bordered {
+            border-right: 2px solid @odoo-brand-optional;
+            text-align: center;
+        }
+
+        .o_timesheet_forecast_sale_order{
+            font-weight: bold;
+            & > td:first-child {
+                color: @odoo-brand-optional;
+            }
+        }
+        .o_timesheet_forecast_sale_order_line{
+            td:first-child > span {
+                margin-left: 15px;
+            }
+            td:first-child > a {
+                margin-left: 15px;
+                cursor: pointer;
+            }
+        }
+        .o_timesheet_forecast_hr_employee{
+            td:first-child > span {
+                margin-left: 30px;
+            }
+        }
+
+        .o_timesheet_plan_redirect {
+            cursor: pointer;
+        }
+    }
 
 }
