@@ -910,7 +910,7 @@ class Lead(models.Model):
     def get_empty_list_help(self, help):
         help_title, sub_title = "", ""
         if self._context.get('default_type') == 'lead':
-            help_title = _('Click here to add new Leads')
+            help_title = _('Add a new lead')
         else:
             help_title = _('Create a new opportunity to add it to your pipeline')
         alias_record = self.env['mail.alias'].search([
