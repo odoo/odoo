@@ -108,11 +108,14 @@ odoo.define('payment_stripe.stripe', function(require) {
 
 
         if ($('.o_website_payment').length !== 0) {
-            var create_tx = ajax.jsonRpc('/website_payment/transaction', 'call', {
-                    reference: $("input[name='invoice_num']").val(),
-                    amount: amount, // exact amount, not stripe cents
-                    currency_id: currency_id,
+            var invoice_num = $("input[name='invoice_num']").val();
+            var url = _.str.sprintf("/website_payment/transaction/%s/%f/%s",
+                invoice_num, amount, currency_id);
+
+            var create_tx = ajax.jsonRpc(url, 'call', {
                     acquirer_id: acquirer_id
+            }).then(function (data) {
+                try { provider_form[0].innerHTML = data; } catch (e) {}
             });
         }
         else if ($('.o_website_quote').length !== 0) {

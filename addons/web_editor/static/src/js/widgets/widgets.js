@@ -5,6 +5,7 @@ var base = require('web_editor.base');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
+var utils = require('web.utils');
 var weContext = require("web_editor.context");
 
 var QWeb = core.qweb;
@@ -1531,5 +1532,9 @@ return {
     AltDialog: AltDialog,
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
+    click_event: click_event,
+    fontIconsDialog: fontIconsDialog,
+    ImageDialog: ImageDialog,
+    VideoDialog: VideoDialog,
 };
 });
