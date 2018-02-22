@@ -287,7 +287,7 @@ class AccountBankStatement(models.Model):
 
         sql_query = """SELECT stl.id
                         FROM account_bank_statement_line stl
-                        WHERE account_id IS NULL AND stl.amount != 0.0 AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
+                        WHERE account_id IS NULL AND stl.amount != 0.0 AND date >= self.company_id.account_opening_date AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
                             AND company_id = %s
                 """
         params = (self.env.user.company_id.id,)
@@ -327,6 +327,8 @@ class AccountBankStatement(models.Model):
             st_line = self.env['account.bank.statement.line']
             for line in results:
                 st_line.browse(line.get('id')).write({'partner_id': line.get('partner_id')})
+
+        print ("st_lines_left.ids",st_lines_left)
 
         return {
             'st_lines_ids': st_lines_left.ids,
@@ -485,6 +487,7 @@ class AccountBankStatementLine(models.Model):
         ret = []
 
         for st_line in self:
+
             aml_recs = st_line.get_reconciliation_proposition(excluded_ids=excluded_ids)
             target_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.journal_id.company_id.currency_id
             rp = aml_recs.prepare_move_lines_for_reconciliation_widget(target_currency=target_currency, target_date=st_line.date)
@@ -493,6 +496,7 @@ class AccountBankStatementLine(models.Model):
                 'st_line': st_line.get_statement_line_for_reconciliation_widget(),
                 'reconciliation_proposition': rp
             })
+            print ("account.bank.statement.line", st_line) 
         return ret
 
     def get_statement_line_for_reconciliation_widget(self):
@@ -600,7 +604,10 @@ class AccountBankStatementLine(models.Model):
             additional_domain = expression.normalize_domain(additional_domain)
         domain = expression.AND([domain, additional_domain])
 
-        return self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
+        xyz = self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
+        print ("account.move.line", xyz)
+
+        return xyz
 
     def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, split = False):
         acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"
