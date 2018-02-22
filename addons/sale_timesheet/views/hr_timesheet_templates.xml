@@ -201,6 +201,56 @@
                                 </table>
                             </t>
                         </div>
+
+                        <!-- NOTE: this template to display a table works whatever the length of the rows, as project_timesheet_forecast_sale extends the table to add forecasts -->
+                        <div class="o_project_plan_project_timesheet_forecast">
+                            <t t-if="timesheet_forecast_table and timesheet_forecast_table['rows']">
+                                <h3 name="table_plan_title">Timesheets</h3>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <t t-foreach="timesheet_forecast_table['header']" t-as="header_val">
+                                                <th t-att-class="'o_right_bordered' if header_val_index in [5,10] else ''">
+                                                    <span><t t-esc="header_val"/></span>
+                                                </th>
+                                            </t>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="timesheet_forecast_table['rows']" t-as="row">
+                                            <t t-set="row_type" t-value="row[0].get('type')"/>
+                                            <tr t-att-class="'o_timesheet_forecast_' + row_type">
+                                                <t t-foreach="row" t-as="row_value">
+                                                    <td t-att-class="'o_right_bordered' if row_value_index in [5,10] else '' + ' text-center' if row_value_index != 0 else ''">
+                                                        <t t-if="row_value_index == 0">
+                                                            <t t-if="row_type == 'sale_order'">
+                                                                <a t-att-data-oe-model="row_value['res_model']" t-att-data-oe-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">
+                                                                    <t t-esc="row_value.get('label')"/>
+                                                                </a>
+                                                            </t>
+                                                            <t t-if="row_type != 'sale_order'">
+                                                                <span><t t-esc="row_value.get('label')"/></span>
+                                                            </t>
+                                                        </t>
+                                                        <t t-if="row_value_index != 0">
+                                                            <t t-if="row_value_index &gt; 10">
+                                                                <t t-if="row_type == 'sale_order'">
+                                                                    <t t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                                </t>
+                                                            </t>
+                                                            <t t-if="row_value_index &lt;= 10">
+                                                                <t t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                            </t>
+                                                        </t>
+                                                    </td>
+                                                </t>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+
                     </div>
                 </div>
             </div>
