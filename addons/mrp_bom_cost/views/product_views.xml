@@ -7,14 +7,13 @@
             <field name="inherit_id" ref="product.product_template_only_form_view" />
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <div name="standard_price_uom" position="after">
-                    <button name="compute_price"
-                        string="Compute from BOM" type="object"
-                        attrs="{'invisible': ['|', '|', ('cost_method', '!=', 'standard'), ('bom_count', '=', 0), ('product_variant_count', '!=', 1)]}"
+                <xpath expr="//div[@name='update_cost_price']" position="inside">
+                    <button name="button_bom_cost"
+                        string="Compute Price from BoM" type="object"
+                        attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
                         help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
-                        class="oe_link oe_read_only"
-                        colspan="2"/>
-                </div>
+                        class="oe_link oe_read_only"/>
+                </xpath>
             </field>
         </record>
 
@@ -25,34 +24,55 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-               <div name="standard_price_uom" position="after">
-                    <button name="compute_price"
-                        string="Compute from BOM" type="object"
-                        attrs="{'invisible': ['|', ('cost_method', '!=', 'standard'), ('bom_count', '=', 0)]}"
+                <xpath expr="//div[@name='update_cost_price']" position="inside">
+                    <button name="button_bom_cost"
+                        string="Compute Price from BoM" type="object"
+                        attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
                         help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
                         class="oe_link oe_read_only"
                         colspan="2"/>
-                </div>
+                </xpath>
             </field>
         </record>
 
-        <record id="product_product_view_form_easy_inherit_extended" model="ir.ui.view">
-            <field name="name">product.product.view.form.easy.inherit.extended</field>
+        <record id="product_variant_easy_edit_view_bom_inherit" model="ir.ui.view">
+            <field name="name">product.product.product.view.form.easy.bom.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
-            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-               <field name="standard_price" position="after">
-                   <field name="cost_method" invisible='1'/>
-                   <field name="bom_count" invisible='1'/>
-                    <button name="compute_price"
-                        string="Compute from BOM" type="object"
-                        attrs="{'invisible': ['|', ('cost_method', '!=', 'standard'), ('bom_count', '=', 0)]}"
+                <data>
+                <xpath expr="//div[@name='update_cost_price']" position="inside">
+                    <field name="bom_count" invisible="1"/>
+                    <button name="button_bom_cost"
+                        string="Compute Price from BoM"
+                        type="object"
+                        attrs="{'invisible': ['|', ('bom_count', '=', 0), '&amp;', ('valuation', '=', 'real_time'), ('cost_method', '=', 'fifo')]}"
                         help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
-                        class="oe_link oe_read_only"
-                        colspan="2"/>
-                </field>
+                        class="oe_link oe_read_only"/>
+                </xpath>
+                </data>
             </field>
         </record>
 
+        <record id="action_compute_price_bom_template" model="ir.actions.server">
+            <field name="name">Compute Price from BoM</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_bom_cost()
+            </field>
+        </record>
+
+        <record id="action_compute_price_bom_product" model="ir.actions.server">
+            <field name="name">Compute Price from BoM</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_bom_cost()
+            </field>
+        </record>
 </odoo>
