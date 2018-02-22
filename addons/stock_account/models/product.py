@@ -176,7 +176,7 @@ class ProductProduct(models.Model):
         return sum(moves.mapped('remaining_value'))
 
     @api.multi
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'product_tmpl_id.cost_method')
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price')
     def _compute_stock_value(self):
         for product in self:
             if product.cost_method in ['standard', 'average']:
