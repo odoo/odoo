@@ -63,7 +63,7 @@ class ProductTemplate(models.Model):
         if self.property_cost_method == 'fifo' and self.cost_method in ['average', 'standard']:
             # Cannot use the `stock_value` computed field as it's already invalidated when
             # entering this method.
-            valuation = sum([variant._sum_remaining_values() for variant in self.product_variant_ids])
+            valuation = sum([variant._sum_remaining_values()[0] for variant in self.product_variant_ids])
             qty_available = self.with_context(company_owned=True).qty_available
             if qty_available:
                 self.standard_price = valuation / qty_available
@@ -111,6 +111,12 @@ class ProductProduct(models.Model):
 
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
+    qty_at_date = fields.Float(
+        'Quantity', compute='_compute_stock_value')
+    stock_fifo_real_time_aml_ids = fields.Many2many(
+        'account.move.line', compute='_compute_stock_value')
+    stock_fifo_manual_move_ids = fields.Many2many(
+        'stock.move', compute='_compute_stock_value')
 
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
@@ -173,16 +179,66 @@ class ProductProduct(models.Model):
         StockMove = self.env['stock.move']
         domain = [('product_id', '=', self.id)] + StockMove._get_all_base_domain()
         moves = StockMove.search(domain)
-        return sum(moves.mapped('remaining_value'))
+        return sum(moves.mapped('remaining_value')), moves
 
     @api.multi
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price')
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price', 'product_tmpl_id.property_valuation', 'product_tmpl_id.categ_id.property_valuation')
     def _compute_stock_value(self):
+        StockMove = self.env['stock.move']
+        to_date = self.env.context.get('to_date')
+
+        self.env['account.move.line'].check_access_rights('read')
+        fifo_automated_values = {}
+        query = """SELECT aml.product_id, aml.account_id, sum(aml.debit) - sum(aml.credit), sum(quantity), array_agg(aml.id)
+                     FROM account_move_line AS aml
+                    WHERE aml.product_id IS NOT NULL AND aml.company_id=%%s %s
+                 GROUP BY aml.product_id, aml.account_id"""
+        params = (self.env.user.company_id.id,)
+        if to_date:
+            query = query % ('AND aml.date <= %s',)
+            params = params + (to_date,)
+        else:
+            query = query % ('',)
+        self.env.cr.execute(query, params=params)
+
+        res = self.env.cr.fetchall()
+        for row in res:
+            fifo_automated_values[(row[0], row[1])] = (row[2], row[3], list(row[4]))
+
         for product in self:
             if product.cost_method in ['standard', 'average']:
-                product.stock_value = product.standard_price * product.with_context(company_owned=True).qty_available
+                qty_available = product.with_context(company_owned=True).qty_available
+                price_used = product.standard_price
+                if to_date:
+                    price_used = product.get_history_price(
+                        self.env.user.company_id.id,
+                        date=to_date,
+                    )
+                product.stock_value = price_used * qty_available
+                product.qty_at_date = qty_available
             elif product.cost_method == 'fifo':
-                product.stock_value = product._sum_remaining_values()
+                if to_date:
+                    if product.product_tmpl_id.valuation == 'manual_periodic':
+                        domain = [('product_id', '=', product.id), ('date', '<=', to_date)] + StockMove._get_all_base_domain()
+                        moves = StockMove.search(domain)
+                        product.stock_value = sum(moves.mapped('value'))
+                        product.qty_at_date = product.with_context(company_owned=True).qty_available
+                        product.stock_fifo_manual_move_ids = StockMove.browse(moves.ids)
+                    elif product.product_tmpl_id.valuation == 'real_time':
+                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
+                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
+                        product.stock_value = value
+                        product.qty_at_date = quantity
+                        product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
+                else:
+                    product.stock_value, moves = product._sum_remaining_values()
+                    product.qty_at_date = product.with_context(company_owned=True).qty_available
+                    if product.product_tmpl_id.valuation == 'manual_periodic':
+                        product.stock_fifo_manual_move_ids = moves
+                    elif product.product_tmpl_id.valuation == 'real_time':
+                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
+                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
+                        product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
 
     @api.multi
     def action_open_product_moves(self):
