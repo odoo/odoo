@@ -63,6 +63,15 @@ Best Regards,'''))
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
     account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
 
+    has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
+    has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
+
+    @api.depends('chart_template_id')
+    def _compute_has_chart_of_accounts(self):
+        self.has_chart_of_accounts = bool(self.chart_template_id)
+        self.chart_template_id = self.chart_template_id or False
+        self.has_accounting_entries = self.env['wizard.multi.charts.accounts'].existing_accounting(self)
+
     @api.model
     def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
         company = self.browse(company_id)
@@ -150,24 +159,40 @@ Best Regards,'''))
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar."""
         company = self.env.user.company_id
-        view_id = self.env.ref('account.setup_bank_journal_form').id
 
         res = {
             'type': 'ir.actions.act_window',
             'name': _('Bank Account'),
-            'view_mode': 'form',
             'res_model': 'account.journal',
-            'target': 'new',
-            'views': [[view_id, 'form']],
+            'context': {'default_type': 'bank'}
         }
 
-        # If some bank journal already exists, we open it in the form, so the user can edit it.
+        # If some bank journal already exists, we open it in the tree view.
         # Otherwise, we just open the form in creation mode.
-        bank_journal = self.env['account.journal'].search([('company_id','=', company.id), ('type','=','bank')], limit=1)
-        if bank_journal:
-            res['res_id'] = bank_journal.id
+        bank_journal = self.env['account.journal'].search([('company_id','=', company.id), ('type','=','bank')])
+
+        if len(bank_journal) > 1:
+            view_id_tree = self.env.ref('account.view_account_bank_journal_tree').id
+            view_id_form = self.env.ref('account.view_account_bank_journal_form').id
+            res.update({
+                'view_mode': 'tree',
+                'views': [(view_id_tree, 'list'), (view_id_form, 'form')],
+                'view_id': view_id_tree,
+                'domain': [('type', '=', 'bank')],
+                'view_type': 'list'
+                })
+            """ Mark the 'bank setup' step as done in the setup bar and in the company."""
+            company.account_setup_bank_data_done = True
+
         else:
-            res['context'] = {'default_type': 'bank'}
+            view_id = self.env.ref('account.setup_bank_journal_form').id
+            res.update({
+                'res_id': bank_journal.id or False,
+                'view_mode': 'form',
+                'views': [[view_id, 'form']],
+                'target': 'new',
+                'view_type': 'form'
+            })
         return res
 
     @api.model
@@ -274,6 +299,21 @@ Best Regards,'''))
 
     def mark_company_setup_as_done_action(self):
         """ Marks the 'company' setup step as completed."""
+        if self.chart_template_id and self.has_accounting_entries == False:
+            wizard = self.env['wizard.multi.charts.accounts'].create({
+                'company_id': self.id,
+                'chart_template_id': self.chart_template_id.id,
+                'transfer_account_id': self.chart_template_id.transfer_account_id.id,
+                'code_digits': self.chart_template_id.code_digits,
+                'sale_tax_rate': 15.0,
+                'purchase_tax_rate': 15.0,
+                'complete_tax_set': self.chart_template_id.complete_tax_set,
+                'currency_id': self.currency_id.id,
+                'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,
+                'cash_account_code_prefix': self.chart_template_id.cash_account_code_prefix,
+            })
+            wizard.onchange_chart_template_id()
+            wizard.execute()
         self.account_setup_company_data_done = True
 
     def unmark_company_setup_as_done_action(self):

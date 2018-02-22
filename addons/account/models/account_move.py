@@ -883,6 +883,7 @@ class AccountMoveLine(models.Model):
             ret_line['total_amount_str'] = formatLang(self.env, abs(total_amount), currency_obj=target_currency)
             ret_line['amount_currency_str'] = amount_currency and formatLang(self.env, abs(amount_currency), currency_obj=line_currency) or ""
             ret_line['total_amount_currency_str'] = total_amount_currency and formatLang(self.env, abs(total_amount_currency), currency_obj=line_currency) or ""
+            print ("ret_line", ret_line)
             ret.append(ret_line)
         return ret
 
