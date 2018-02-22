@@ -30,7 +30,6 @@ window.top.odoo[callback + '_updown'] = function (value, fields_values, field_na
 editor.Class.include({
     start: function () {
         this.on('rte:start', this, function () {
-            this.$('form').hide();
 
             if (window.top.odoo[callback + '_editor']) {
                 window.top.odoo[callback + '_editor'](this);
