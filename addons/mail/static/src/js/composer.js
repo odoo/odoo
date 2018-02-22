@@ -311,6 +311,14 @@ var MentionManager = Widget.extend({
                 .addClass('open')
                 .find('ul').css("max-width", this.composer.$input.width())
                 .find('.o_mention_proposition').first().addClass('active');
+            this.$el.children().each(function () {
+                var offset = $(this).offset();
+                if (offset.top < 0) {
+                    offset.top += $(this).height();
+                    offset.left -= $(this).width();
+                }
+                $(this).css({position: 'fixed', top: offset.top, left: offset.left, bottom: "auto"});
+            });
             this.open = true;
         } else {
             this.$el.removeClass('open');
