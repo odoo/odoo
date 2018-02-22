@@ -73,6 +73,7 @@ class ProjectTask(models.Model):
         return sale_line_id
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False)]")
+    sale_order_id = fields.Many2one('sale.order', 'Sales Order', related='sale_line_id.order_id', store=True, readonly=True)
 
     @api.onchange('project_id')
     def _onchange_project(self):
