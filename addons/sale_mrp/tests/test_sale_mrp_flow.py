@@ -267,8 +267,12 @@ class TestSaleMrpFlow(common.TransactionCase):
         # produce product D.
         # ------------------
 
-        produce_d = self.ProductProduce.with_context({'active_ids': [mnf_product_d.id], 'active_id': mnf_product_d.id}).create({
-            'product_qty': 20})
+        produce_form = Form(self.ProductProduce.with_context({
+            'active_id': mnf_product_d.id,
+            'active_ids': [mnf_product_d.id],
+        }))
+        produce_form.product_qty = 20
+        produce_d = produce_form.save()
         # produce_d.on_change_qty()
         produce_d.do_produce()
         mnf_product_d.post_inventory()
