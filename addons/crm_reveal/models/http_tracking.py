@@ -29,3 +29,9 @@ class HTTPPageView(models.Model):
     _inherit = 'http.pageview'
 
     crm_reveal_scanned = fields.Boolean(string='CRM Reveal IP Scanned')
+
+    def is_trackable(self, view, url):
+        res = super(HTTPPageView, self).is_trackable(view, url)
+        if not res and view and self.env['http.url.track'].sudo().match_url(url):
+            return True
+        return res
