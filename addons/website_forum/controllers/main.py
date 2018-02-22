@@ -225,9 +225,9 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/get_url_title', type='json', auth="user", methods=['POST'], website=True)
     def get_url_title(self, **kwargs):
         try:
-            req = requests.get(kwargs.get('url'), stream=True)
+            req = requests.get(kwargs.get('url'))
             req.raise_for_status()
-            arch = lxml.html.parse(req.raw)
+            arch = lxml.html.fromstring(req.content)
             return arch.find(".//title").text
         except IOError:
             return False

@@ -58,6 +58,10 @@ function checkXML(xml) {
  * @returns {string} formatted xml
  */
 function formatXML(xml) {
+    // do nothing if an inline script is present to avoid breaking it
+    if (/<script(?: [^>]*)?>[^<][\s\S]*<\/script>/i.test(xml)) {
+        return xml;
+    }
     return window.vkbeautify.xml(xml, 4);
 }
 /**
