@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
         return template and template.active and template or False
 
     def _get_default_online_payment(self):
-        default_template = self._get_default_template_id()
+        default_template = self._get_default_template()
         if self.template_id:
             return self.template_id.require_payment
         elif default_template:
