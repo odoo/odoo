@@ -1532,9 +1532,5 @@ return {
     AltDialog: AltDialog,
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
-    click_event: click_event,
-    fontIconsDialog: fontIconsDialog,
-    ImageDialog: ImageDialog,
-    VideoDialog: VideoDialog,
 };
 });
