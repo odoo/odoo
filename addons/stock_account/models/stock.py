@@ -402,6 +402,13 @@ class StockMove(models.Model):
                 if remaining_value_before_vacuum < 0:
                     corrected_value += remaining_value_before_vacuum
 
+                # If `corrected_value` is 0, absolutely do *not* call `_account_entry_move`. We
+                # force the amount in the context, but in the case it is 0 it'll create an entry
+                # for the entire cost of the move. This case happens when the candidates moves
+                # entirely compensate the problematic move.
+                if not corrected_value:
+                    continue
+
                 if move._is_in():
                     # If we just compensated an IN move that has a negative remaining
                     # quantity, it means the move has returned more items than it received.
