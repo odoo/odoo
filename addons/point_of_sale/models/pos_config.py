@@ -103,6 +103,8 @@ class PosConfig(models.Model):
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Prices'), ('total', 'Tax-Included Prices')], "Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
+    iface_available_categ_ids = fields.Many2many('pos.category', string='Available Category Tree',
+        help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -160,6 +162,7 @@ class PosConfig(models.Model):
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     barcode_scanner = fields.Boolean("Barcode Scanner")
     start_category = fields.Boolean("Set Start Category")
+    limit_categories = fields.Boolean("Limit Available Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
@@ -258,6 +261,11 @@ class PosConfig(models.Model):
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
 
+    @api.onchange('iface_available_categ_ids')
+    def _onchange_iface_available_categ_ids(self):
+        if self.iface_start_categ_id not in self.iface_available_categ_ids:
+            self.iface_start_categ_id = False
+
     @api.onchange('picking_type_id')
     def _onchange_picking_type_id(self):
         if self.picking_type_id.default_location_src_id.usage == 'internal' and self.picking_type_id.default_location_dest_id.usage == 'customer':
@@ -320,6 +328,11 @@ class PosConfig(models.Model):
     def _onchange_start_category(self):
         if not self.start_category:
             self.iface_start_categ_id = False
+
+    @api.onchange('limit_categories')
+    def _onchange_limit_categories(self):
+        if not self.limit_categories:
+            self.iface_available_categ_ids = [(5, 0, 0)]
 
     @api.onchange('is_header_or_footer')
     def _onchange_header_footer(self):
