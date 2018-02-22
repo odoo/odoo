@@ -12,7 +12,6 @@ var BasicComposer = Composers.BasicComposer;
 var createBusService = mailTestUtils.createBusService;
 var createDiscuss = mailTestUtils.createDiscuss;
 var patchWindowGetSelection = testUtils.patchWindowGetSelection;
-var unpatchWindowGetSelection = testUtils.unpatchWindowGetSelection;
 
 QUnit.module('mail', {}, function () {
 
@@ -113,7 +112,7 @@ QUnit.test('@ mention in channel', function (assert) {
         // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
         $input.focus();
         $input.text("@");
-        patchWindowGetSelection();
+        var unpatchWindowGetSelection = patchWindowGetSelection();
         $input.trigger('keyup');
 
         fetchListenersDef
