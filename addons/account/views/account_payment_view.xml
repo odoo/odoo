@@ -290,22 +290,44 @@
             <field name="model">account.register.payments</field>
             <field name="arch" type="xml">
                 <form string="Register Payment">
-                    <field name="payment_type" invisible="1"/>
-                    <field name="partner_type" invisible="1"/>
-                    <field name="partner_id" invisible="1"/>
                     <group>
+                        <field name="payment_type" invisible="1"/>
+                        <field name="partner_type" invisible="1"/>
+                        <field name="invoice_ids" invisible="1"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="multi" invisible="1"/>
                         <group>
-                            <field name="journal_id" widget="selection"/>
+                            <label for="amount"/>
+                            <div name="amount_div" class="o_row">
+                                <field name="amount" attrs="{'readonly': [('multi', '=', True)]}"/>
+                                <field name="currency_id"
+                                       attrs="{'readonly': [('multi', '=', True)]}"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       groups="base.group_multi_currency"/>
+                            </div>
+                            <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
                             <field name="hide_payment_method" invisible="1"/>
-                            <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
+                            <field name="payment_method_id" widget="radio" attrs="{'invisible': ['|', ('hide_payment_method', '=', True), ('amount', '=', 0.0)]}"/>
                             <field name="payment_method_code" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="multi" invisible="1"/>
-                            <field name="amount" attrs="{'readonly': [('multi', '=', True)]}"/>
                         </group>
                         <group>
                             <field name="payment_date"/>
                             <field name="communication"/>
+                        </group>
+                        <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
+                            <label for="payment_difference"/>
+                            <div>
+                                <field name="payment_difference"/>
+                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                                <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
+                                    <label for="writeoff_account_id" class="oe_edit_only" string="Post Difference In"/>
+                                    <field name="writeoff_account_id" string="Post Difference In" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                    <label string="Journal" attrs="{'invisible': [('amount', '!=', 0)]}"/>
+                                    <field name="journal_id" string="Journal" widget="selection" attrs="{'invisible': [('amount', '!=', 0)]}"/>
+                                    <label for="writeoff_label" class="oe_edit_only" string="Label"/>
+                                    <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                </div>
+                            </div>
                         </group>
                     </group>
                     <footer>
