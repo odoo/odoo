@@ -23,11 +23,19 @@ class AccountInvoice(models.Model):
         purchase_line_ids = self.invoice_line_ids.mapped('purchase_line_id')
         purchase_ids = self.invoice_line_ids.mapped('purchase_id').filtered(lambda r: r.order_line <= purchase_line_ids)
 
-        result['domain'] = {'purchase_id': [
-            ('invoice_status', '=', 'to invoice'),
-            ('partner_id', 'child_of', self.partner_id.id),
-            ('id', 'not in', purchase_ids.ids),
-            ]}
+        # In the case of a refund, it must be possible to select invoiced purchases
+        if self.type == 'in_refund':
+            result['domain'] = {'purchase_id': [
+                ('invoice_status', 'in', ('to invoice', 'invoiced')),
+                ('partner_id', 'child_of', self.partner_id.id),
+                ('id', 'not in', purchase_ids.ids),
+                ]}
+        else:
+            result['domain'] = {'purchase_id': [
+                ('invoice_status', '=', 'to invoice'),
+                ('partner_id', 'child_of', self.partner_id.id),
+                ('id', 'not in', purchase_ids.ids),
+                ]}
         return result
 
     def _prepare_invoice_line_from_po_line(self, line):
