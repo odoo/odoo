@@ -5,6 +5,7 @@ import time
 from openerp import api, fields, models
 from openerp import tools
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.sql_db import TestCursor
 
 from openerp.addons.bus.models.bus import TIMEOUT
 
@@ -53,4 +54,5 @@ class BusPresence(models.Model):
             with tools.mute_logger('openerp.sql_db'):
                 presence.write(values)
         # avoid TransactionRollbackError
-        self.env.cr.commit() # TODO : check if still necessary
+        if not isinstance(self.env.cr, TestCursor):
+            self.env.cr.commit() # TODO : check if still necessary
