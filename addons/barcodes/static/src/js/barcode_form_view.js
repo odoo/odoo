@@ -225,6 +225,7 @@ FormController.include({
             handle: this.handle,
             target: event.target,
             widget: event.target.attrs && event.target.attrs.widget,
+            setQuantityWithKeypress: !! event.data.setQuantityWithKeypress,
             fieldName: event.data.fieldName,
             quantity: event.data.quantity,
             commands: event.data.commands || {},
@@ -319,7 +320,7 @@ FormController.include({
 
         // only catch the event if we're not focused in
         // another field and it's a number
-        if (!$(event.target).is('body') || !/[0-9]/.test(character)) {
+        if (!$(event.target).is('body, .modal') || !/[0-9]/.test(character)) {
             return;
         }
 
