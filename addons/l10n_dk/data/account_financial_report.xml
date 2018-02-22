@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- 
+            (c) 2018 Odoo House ApS
+            Financial Reports
+            display_detail:
+            no_detail
+            detail_flat
+            detail_with_hierarchy
+        -->
+        
+    <!--Delete all old entries-->
+    <delete model="account.financial.report" search="[('type','=','account_report')]"/>
+    <delete model="account.financial.report" search="[('id','>',0)]"/>
+
+    <record id="account_financial_report_resultat" model="account.financial.report">
+        <field name="name">RESULTAT</field>
+        <field name="sign" eval="1" />
+        <field name="type">sum</field>
+        <field name="display_detail">detail_flat</field>
+        <field name="style_overwrite" eval="1"/>
+        <field name="sequence">101</field>
+    </record>
+        <record id="account_financial_report_ekstraordinaertresultatfoerskat" model="account.financial.report">
+            <field name="name">Ekstraordinært resultat før skat</field>
+            <field name="sign" eval="1" />
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_resultat"/>
+            <field name="display_detail">detail_flat</field>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">102</field>
+        </record>
+            <record id="account_financial_report_ordinaertresultatfoerskat" model="account.financial.report">
+                <field name="name">Ordinært resultat før skat</field>
+                <field name="sign" eval="1" />
+                <field name="type">sum</field>
+                <field name="parent_id" ref="account_financial_report_ekstraordinaertresultatfoerskat"/>
+                <field name="style_overwrite" eval="2"/>
+                <field name="sequence">103</field>
+            </record>   
+                <record id="account_financial_report_driftresultat" model="account.financial.report">
+                    <field name="name">Driftresultat</field>
+                    <field name="sign" eval="1" />
+                    <field name="type">sum</field>
+                    <field name="parent_id" ref="account_financial_report_ordinaertresultatfoerskat"/>
+                    <field name="display_detail">detail_flat</field>
+                    <field name="style_overwrite" eval="2"/>
+                    <field name="sequence">104</field>
+                </record>
+                    <record id="account_financial_report_daekningsbidrag" model="account.financial.report">
+                        <field name="name">Dækningsbidrag</field>
+                        <field name="sign" eval="1" />
+                        <field name="type">sum</field>
+                        <field name="parent_id" ref="account_financial_report_driftresultat"/>
+                        <field name="style_overwrite" eval="2"/>
+                        <field name="sequence">105</field>
+                    </record>
+                        <record id="account_financial_report_omsaetning" model="account.financial.report">
+                            <field name="name">Omsætning</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_daekningsbidrag"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_revenue'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">106</field>
+                        </record>
+                        <record id="account_financial_report_direkteomkostninger" model="account.financial.report">
+                            <field name="name">Direkte omkostninger</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_daekningsbidrag"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_direct_costs'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">107</field>
+                        </record>
+                        <record id="account_financial_report_omkostninger" model="account.financial.report">
+                            <field name="name">Omkostninger</field>
+                            <field name="sign" eval="1" />
+                            <field name="type">sum</field>
+                            <field name="parent_id" ref="account_financial_report_driftresultat"/>
+                            <field name="style_overwrite" eval="2"/>
+                            <field name="sequence">108</field>
+                        </record>
+                        <record id="account_financial_report_personaleomkostninger" model="account.financial.report">
+                            <field name="name">Personaleomkostninger</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_omkostninger"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_staff_costs'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">109</field>
+                        </record>
+                        <record id="account_financial_report_salgsfremmendeomkostninger" model="account.financial.report">
+                            <field name="name">Salgsfremmende omkostninger</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_omkostninger"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_sales_promotions_costs'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">110</field>
+                        </record>
+                        <record id="account_financial_report_bilerogdriftmidler" model="account.financial.report">
+                            <field name="name">Biler og driftmidler</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_omkostninger"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_cars_equipment_costs'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">111</field>
+                        </record>
+                        <record id="account_financial_report_lokaleomkostninger" model="account.financial.report">
+                            <field name="name">Lokaleomkostninger</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_omkostninger"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_rooms_costs'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">112</field>
+                        </record>
+                        <record id="account_financial_report_administrationsomkostninger" model="account.financial.report">
+                            <field name="name">Administrationsomkostninger</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_omkostninger"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_administration_costs'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">113</field>
+                        </record>
+                        <record id="account_financial_report_afognedskrivninger" model="account.financial.report">
+                            <field name="name">Af- og nedskrivninger</field>
+                            <field name="sign" eval="1" />
+                            <field name="parent_id" ref="account_financial_report_omkostninger"/>
+                            <field name="display_detail">detail_with_hierarchy</field>
+                            <field name="type">account_type</field>
+                            <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_depreciation'))]"/>
+                            <field name="style_overwrite" eval="3"/>
+                            <field name="sequence">114</field>
+                        </record>
+                <record id="account_financial_report_finansielleposter" model="account.financial.report">
+                    <field name="name">Finansielle poster</field>
+                    <field name="sign" eval="1" />
+                    <field name="type">sum</field>
+                    <field name="parent_id" ref="account_financial_report_ordinaertresultatfoerskat"/>
+                    <field name="style_overwrite" eval="2"/>
+                    <field name="sequence">115</field>
+                </record>
+                    <record id="account_financial_report_finansielleindtaegter" model="account.financial.report">
+                        <field name="name">Finansielle indtægter</field>
+                        <field name="sign" eval="1" />
+                        <field name="parent_id" ref="account_financial_report_finansielleposter"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">account_type</field>
+                        <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_financial_income'))]"/>
+                        <field name="style_overwrite" eval="3"/>
+                        <field name="sequence">116</field>
+                    </record>
+                    <record id="account_financial_report_finansielleudgifter" model="account.financial.report">
+                        <field name="name">Finansielle udgifter</field>
+                        <field name="sign" eval="1" />
+                        <field name="parent_id" ref="account_financial_report_finansielleposter"/>
+                        <field name="display_detail">detail_with_hierarchy</field>
+                        <field name="type">account_type</field>
+                        <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_financial_expenses'))]"/>
+                        <field name="style_overwrite" eval="3"/>
+                        <field name="sequence">117</field>
+                    </record>
+            <record id="account_financial_report_ekstraordinaereposter" model="account.financial.report">
+                <field name="name">Ekstraordinære poster</field>
+                <field name="sign" eval="1" />
+                <field name="type">sum</field>
+                <field name="parent_id" ref="account_financial_report_ekstraordinaertresultatfoerskat"/>
+                <field name="style_overwrite" eval="2"/>
+                <field name="sequence">118</field>
+            </record>
+                <record id="account_financial_report_ekstraordinaereindtaegter" model="account.financial.report">
+                    <field name="name">Ekstraordinære indtægter</field>
+                    <field name="sign" eval="1" />
+                    <field name="parent_id" ref="account_financial_report_ekstraordinaereposter"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_extraordinary_income'))]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">119</field>
+                </record>                    
+                <record id="account_financial_report_ekstraordinaereudgifter" model="account.financial.report">
+                    <field name="name">Ekstraordinære udgifter</field>
+                    <field name="sign" eval="1" />
+                    <field name="parent_id" ref="account_financial_report_ekstraordinaereposter"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_extraordinary_expenses'))]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">120</field>
+                </record>
+                           
+
+        
+        
+                    
+<record id="account_financial_report_balance" model="account.financial.report">
+    <field name="name">BALANCE</field>
+    <field name="type">sum</field>
+    <field name="style_overwrite" eval="1"/>
+    <field name="sequence">121</field>
+</record>
+    <record id="account_financial_report_aktiver" model="account.financial.report">
+        <field name="name">Aktiver</field>
+        <field name="type">sum</field>
+        <field name="parent_id" ref="account_financial_report_balance"/>
+        <field name="style_overwrite" eval="1"/>
+        <field name="sequence">122</field>        
+    </record>
+        <record id="account_financial_report_anlaegsaktiver" model="account.financial.report">
+            <field name="name">Anlægsaktiver</field>
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_aktiver"/>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">123</field>        
+        </record>
+            <record id="account_financial_report_immaterielleanlaegsaktiver" model="account.financial.report">
+                <field name="name">Immaterielle anlægsaktiver</field>
+                <field name="type">sum</field>
+                <field name="parent_id" ref="account_financial_report_anlaegsaktiver"/>
+                <field name="style_overwrite" eval="2"/>
+                <field name="sequence">124</field>        
+            </record>
+                <record id="account_financial_report_goodwilllicensermm" model="account.financial.report">
+                    <field name="name">Goodwill, licenser mm.</field>
+                    <field name="parent_id" ref="account_financial_report_immaterielleanlaegsaktiver"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_Goodwill_licenses_etc'))]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">125</field>        
+               </record>
+             <record id="account_financial_report_materielleanlaegsaktiver" model="account.financial.report">
+                <field name="name">Materielle anlægsaktiver</field>
+                <field name="type">sum</field>
+                <field name="parent_id" ref="account_financial_report_anlaegsaktiver"/>
+                <field name="style_overwrite" eval="2"/>
+                <field name="sequence">125</field>        
+            </record>            
+                <record id="account_financial_report_grundeogbygninger" model="account.financial.report">
+                    <field name="name">Grunde og bygninger</field>
+                    <field name="parent_id" ref="account_financial_report_materielleanlaegsaktiver"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_land_buildings'))]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">126</field>        
+                </record>
+                <record id="account_financial_report_andreanlaegdriftmaterieoginventar" model="account.financial.report">
+                    <field name="name">Andre anlæg, driftsmateriel og inventar</field>
+                    <field name="parent_id" ref="account_financial_report_materielleanlaegsaktiver"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_other_equipment_tools_inventory'))]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">127</field>        
+                </record>
+        <record id="account_financial_report_omsaetningsaktiver" model="account.financial.report">
+            <field name="name">Omsætningsaktiver</field>
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_aktiver"/>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">128</field>        
+        </record>
+            <record id="account_financial_report_varebeholdninger" model="account.financial.report">
+                <field name="name">Varebeholdninger</field>
+                <field name="parent_id" ref="account_financial_report_omsaetningsaktiver"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_inventories'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">129</field>        
+            </record>
+            <record id="account_financial_report_tilgodehavender" model="account.financial.report">
+                <field name="name">Tilgodehavender</field>
+                <field name="type">sum</field>
+                <field name="parent_id" ref="account_financial_report_omsaetningsaktiver"/>
+                <field name="style_overwrite" eval="2"/>
+                <field name="sequence">130</field>        
+            </record>
+                <record id="account_financial_report_igangvaerendearbejder" model="account.financial.report">
+                    <field name="name">Igangværende arbejder</field>
+                    <field name="parent_id" ref="account_financial_report_tilgodehavender"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_work_in_progress'))]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">131</field>        
+                </record>
+                <record id="account_financial_report_forudbetalingtilleverandoer" model="account.financial.report">
+                    <field name="name">Forudbetaling til leverandør</field>
+                    <field name="parent_id" ref="account_financial_report_tilgodehavender"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_prepayments'))]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">132</field>        
+                </record>
+                <record id="account_financial_report_tilgodehavenderfrasalgogtjenesteydelser" model="account.financial.report">
+                    <field name="name">Tilgodehavender fra salg og tjenesteydelser</field>
+                    <field name="parent_id" ref="account_financial_report_tilgodehavender"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('account.data_account_type_receivable')) ]"/>
+                    <field name="style_overwrite" eval="3"/>
+                    <field name="sequence">133</field>        
+                </record>
+                <record id="account_financial_report_andretilgodehavender" model="account.financial.report">
+                    <field name="name">Andre tilgodehavender</field>
+                    <field name="parent_id" ref="account_financial_report_tilgodehavender"/>
+                    <field name="display_detail">detail_with_hierarchy</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_other_receivables')) ]"/>
+                    <field name="style_overwrite" eval="1"/>
+                    <field name="sequence">134</field>        
+                </record>
+            <record id="account_financial_report_liquidity" model="account.financial.report">
+                <field name="name">Likvide beholdninger</field>
+                <field name="parent_id" ref="account_financial_report_omsaetningsaktiver"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('account.data_account_type_liquidity')) ]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">135</field>        
+            </record>
+
+    <record id="account_financial_report_passiver" model="account.financial.report">
+        <field name="name">Passiver</field>
+        <field name="type">sum</field>
+        <field name="parent_id" ref="account_financial_report_balance"/>
+        <field name="style_overwrite" eval="1"/>
+        <field name="sequence">136</field>        
+    </record>
+        <record id="account_financial_report_egenkapital" model="account.financial.report">
+            <field name="name">Egenkapital</field>
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_passiver"/>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">137</field>        
+        </record>
+            <record id="account_financial_report_enkeltmandsvirksomhed" model="account.financial.report">
+                <field name="name">Enkeltmandsvirksomhed</field>
+                <field name="parent_id" ref="account_financial_report_egenkapital"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_equity_individual_enterprices'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">138</field>        
+            </record>
+            <record id="account_financial_report_selskaber" model="account.financial.report">
+                <field name="name">Selskaber</field>
+                <field name="parent_id" ref="account_financial_report_egenkapital"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_equity_corporations'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">139</field>        
+            </record>
+            <record id="account_financial_report_profitloss_toreport0" model="account.financial.report">
+                <field name="name">Årets foreløbige resultat</field>
+                <field name="parent_id" ref="account_financial_report_egenkapital"/>
+                <field name="type">sum</field>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">140</field>        
+            </record>
+                <record id="account_financial_report_profitloss_toreport1" model="account.financial.report">
+                    <field name="name">Udregning resultat alle år</field>
+                    <field name="parent_id" ref="account_financial_report_profitloss_toreport0"/>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">account_report</field>
+                    <field name="account_report_id" ref="account_financial_report_resultat"/>
+                    <field name="style_overwrite" eval="4"/>
+                    <field name="sequence">141</field>        
+                </record>
+              <record id="account_financial_report_profitloss_toreport2" model="account.financial.report">
+                    <field name="name">Udregning resultat tidligere år</field>
+                    <field name="parent_id" ref="account_financial_report_profitloss_toreport0"/>
+                    <field name="display_detail">no_detail</field>
+                    <field name="type">account_type</field>
+                    <field name="account_type_ids" eval="[(4,ref('account.data_unaffected_earnings'))]"/>
+                    <field name="style_overwrite" eval="4"/>
+                    <field name="sequence">142</field>        
+                </record>
+
+    <record id="account_financial_report_gaeldoghensatteforpligtelser" model="account.financial.report">
+        <field name="name">Gæld og hensatte forpligtelserfield</field>
+        <field name="type">sum</field>
+        <field name="parent_id" ref="account_financial_report_passiver"/>
+        <field name="style_overwrite" eval="2"/>
+        <field name="sequence">143</field>        
+    </record>
+        <record id="account_financial_report_langfristetgaeld" model="account.financial.report">
+            <field name="name">Langfristet Gæld</field>
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_gaeldoghensatteforpligtelser"/>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">144</field>        
+        </record>
+            <record id="account_financial_report_kreditinstitutter" model="account.financial.report">
+                <field name="name">Kreditinstitutter</field>
+                <field name="parent_id" ref="account_financial_report_langfristetgaeld"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_credit_institutions'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">145</field>        
+            </record>
+      <record id="account_financial_report_kortfristetgaeld" model="account.financial.report">
+            <field name="name">Kortfristet Gæld</field>
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_gaeldoghensatteforpligtelser"/>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">146</field>        
+        </record>
+            <record id="account_financial_report_bankgaeld" model="account.financial.report">
+                <field name="name">Bankgæld</field>
+                <field name="parent_id" ref="account_financial_report_kortfristetgaeld"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[ (4,ref('l10n_dk.account_type_bank_loans'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">147</field>        
+            </record>
+            <record id="account_financial_report_forudbetalingerfrakunder" model="account.financial.report">
+                <field name="name">Forudbetaling fra kunder</field>
+                <field name="parent_id" ref="account_financial_report_kortfristetgaeld"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[ (4,ref('l10n_dk.account_type_prepayments_from_customers'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">148</field>        
+            </record>
+            <record id="account_financial_report_leverandoergaeld" model="account.financial.report">
+                <field name="name">Leverandørgæld</field>
+                <field name="parent_id" ref="account_financial_report_kortfristetgaeld"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_payables')),(4,ref('account.data_account_type_payable'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">149</field>        
+            </record>
+            <record id="account_financial_report_momsogafgifter" model="account.financial.report">
+                <field name="name">Moms og afgifter</field>
+                <field name="parent_id" ref="account_financial_report_kortfristetgaeld"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_vat_taxes'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">150</field>        
+            </record>
+            <record id="account_financial_report_loenrelateretgaeld" model="account.financial.report">
+                <field name="name">Løn relateret gæld</field>
+                <field name="parent_id" ref="account_financial_report_kortfristetgaeld"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_Payroll_related_liabilities'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">151</field>        
+            </record>
+           <record id="account_financial_report_andenkortfristetgaeld" model="account.financial.report">
+                <field name="name">Anden kortfristet gæld</field>
+                <field name="parent_id" ref="account_financial_report_kortfristetgaeld"/>
+                <field name="display_detail">detail_with_hierarchy</field>
+                <field name="type">account_type</field>
+                <field name="account_type_ids" eval="[(4,ref('l10n_dk.account_type_other_current_liabilities'))]"/>
+                <field name="style_overwrite" eval="3"/>
+                <field name="sequence">152</field>        
+            </record>
+
+
+        <record id="account_financial_report_moms_indberetning" model="account.financial.report">
+            <field name="name">MOMSINDBERETNING</field>
+            <field name="sign" eval="1" />
+            <field name="type">sum</field>
+            <field name="display_detail">detail_flat</field>
+            <field name="style_overwrite" eval="0"/>
+            <field name="sequence">900</field>
+        </record>
+
+        <record id="account_financial_report_momsialt" model="account.financial.report">
+            <field name="name">Moms i alt (Positivt beløb = betale, negativ beløb = penge til gode)</field>
+            <field name="sign" eval="-1" />
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_moms_indberetning"/>
+            <field name="display_detail">detail_flat</field>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">901</field>
+        </record>
+        <record id="account_financial_report_supplerendeoplysninger" model="account.financial.report">
+            <field name="name">Supplerende oplysninger. Rubrik A, B og C (Denne linie medtages ikke i indberetning)</field>
+            <field name="sign" eval="-1" />
+            <field name="type">sum</field>
+            <field name="parent_id" ref="account_financial_report_moms_indberetning"/>
+            <field name="display_detail">detail_flat</field>
+            <field name="style_overwrite" eval="2"/>
+            <field name="sequence">910</field>
+        </record>
+        <record id="account_financial_report_salgsmoms(Udgaendemoms)" model="account.financial.report">
+            <field name="name">Salgsmoms (Udgående moms)</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_momsialt"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+           <field name="account_ids" eval="[(4,ref('l10n_dk.a8720')),(4,ref('l10n_dk.a8725'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">902</field>
+        </record>
+
+        <record id="account_financial_report_moms_af_varekob_i_udlandet_" model="account.financial.report">
+            <field name="name">Moms af varekøb i udlandet (både EU og tredjelande)</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_momsialt"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8730'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">904</field>
+        </record>
+        
+         <record id="account_financial_report_moms_af_ydelseskob_i_udlandet_" model="account.financial.report">
+            <field name="name">Moms af ydelseskøb i udlandet med omvendt betalingspligt</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_momsialt"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8731'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">905</field>
+        </record>
+
+        <record id="account_financial_report_kobsmoms(indgaende_moms)" model="account.financial.report">
+            <field name="name">Købsmoms (indgående moms)</field>
+            <field name="sign" eval="1" />
+            <field name="parent_id" ref="account_financial_report_momsialt"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8740'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">906</field>
+        </record>
+
+        <record id="account_financial_report_rubrik_a_varer" model="account.financial.report">
+            <field name="name">Rubrik A - varer. Værdien uden moms af varekøb i andre EU-lande (EU erhvervelser)</field>
+            <field name="sign" eval="1" />
+            <field name="parent_id" ref="account_financial_report_supplerendeoplysninger"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8750'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">911</field>
+        </record>
+
+        <record id="account_financial_report_rubrik_a_ydelser" model="account.financial.report">
+            <field name="name">Rubrik A - ydelser. Værdien uden moms af ydelseskøb i andre EU-lande</field>
+            <field name="sign" eval="1" />
+            <field name="parent_id" ref="account_financial_report_supplerendeoplysninger"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8751'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">912</field>
+        </record>
+
+        <record id="account_financial_report_rubrik_b_vare_til_EUmoms" model="account.financial.report">
+            <field name="name">Rubrik B - vare - indberettes til 'EU-salg uden moms'. Værdien af varesalg uden moms til andre EU-lande.</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_supplerendeoplysninger"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8754'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">913</field>
+        </record>
+
+        <record id="account_financial_report_rubrik_b_vareikke_til_EU_moms" model="account.financial.report">
+            <field name="name">Rubrik B - vare - indberettes ikke til  'EU-salg uden moms'. Værdien til ikke momsregistrerede kunder uden moms til andre EU-lande.</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_supplerendeoplysninger"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">914</field>
+        </record>
+
+        <record id="account_financial_report_rubrik_b_ydelser" model="account.financial.report">
+            <field name="name">Rubrik B - ydelser. Værdien af visse ydelsessalg uden moms til andre EU-lande. Indberettes til 'EU-salg uden moms'.</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_supplerendeoplysninger"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8755'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">915</field>
+        </record>
+
+        <record id="account_financial_report_rubrik_c_ydelser" model="account.financial.report">
+            <field name="name">Rubrik C - ydelser. Værdien af andre vare og ydelser, der leveres uden afgift her i landet, i andre EU-lande og i lande uden for EU.</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_supplerendeoplysninger"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_dk.a8758')),(4,ref('l10n_dk.a8759'))]"/>
+            <field name="style_overwrite" eval="4"/>
+            <field name="sequence">916</field>
+        </record>
+
+    </data>
+</odoo>

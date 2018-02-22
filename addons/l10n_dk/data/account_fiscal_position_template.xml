@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- (c) 2018 Odoo House ApS -->
+        <!-- Fiscal Position Templates -->
+        <record id="fiscal_position_template_eu_taxid" model="account.fiscal.position.template">
+            <field name="name">EU lande (Virksomhed)</field>
+            <field name="chart_template_id" ref="dk_chart_template" />
+        </record>
+        <record id="fiscal_position_template_eu" model="account.fiscal.position.template">
+            <field name="name">EU lande (Privat)</field>
+            <field name="chart_template_id" ref="dk_chart_template" />
+        </record>
+        <record id="fiscal_position_template_3lande" model="account.fiscal.position.template">
+            <field name="name">3. lande (Virksomhed / Privat)</field>
+            <field name="chart_template_id" ref="dk_chart_template" />
+        </record>
+
+    </data>
+</odoo>
