@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo.exceptions import UserError
+from odoo.fields import Date
 from odoo.tests.common import TransactionCase
 
 
@@ -3085,3 +3088,479 @@ class TestStockValuation(TransactionCase):
         with self.assertRaises(UserError):
             move2._action_done()
 
+    def test_at_date_standard_1(self):
+        self.product1.product_tmpl_id.cost_method = 'standard'
+
+        now = Date.from_string(Date.today())
+        date1 = now - timedelta(days=8)
+        date2 = now - timedelta(days=7)
+        date3 = now - timedelta(days=6)
+        date4 = now - timedelta(days=5)
+        date5 = now - timedelta(days=4)
+        date6 = now - timedelta(days=3)
+        date7 = now - timedelta(days=2)
+        date8 = now - timedelta(days=1)
+
+        # set the standard price to 10
+        self.product1.product_tmpl_id.standard_price = 10
+        self.env['product.price.history'].search([('product_id', '=', self.product1.id)], order='datetime desc, id DESC', limit=1).datetime = date1
+
+        # receive 10
+        move1 = self.env['stock.move'].create({
+            'name': 'in 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10
+        move1._action_done()
+        move1.date = date2
+
+        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product1.stock_value, 100)
+
+        # receive 20
+        move2 = self.env['stock.move'].create({
+            'name': 'in 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 20,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 20
+        move2._action_done()
+        move2.date = date3
+
+        self.assertEqual(self.product1.qty_available, 30)
+        self.assertEqual(self.product1.stock_value, 300)
+
+        # send 15
+        move3 = self.env['stock.move'].create({
+            'name': 'out 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 15,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 15
+        move3._action_done()
+        move3.date = date4
+
+        self.assertEqual(self.product1.qty_available, 15)
+        self.assertEqual(self.product1.stock_value, 150)
+
+        # set the standard price to 5
+        self.product1.product_tmpl_id.standard_price = 5
+        self.env['product.price.history'].search([('product_id', '=', self.product1.id)], order='datetime desc, id DESC', limit=1).datetime = date5
+
+        self.assertEqual(self.product1.qty_available, 15)
+        self.assertEqual(self.product1.stock_value, 75)
+
+        # send 20
+        move4 = self.env['stock.move'].create({
+            'name': 'out 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 20,
+        })
+        move4._action_confirm()
+        move4._action_assign()
+        move4.move_line_ids.qty_done = 20
+        move4._action_done()
+        move4.date = date6
+
+        self.assertEqual(self.product1.qty_available, -5)
+        self.assertEqual(self.product1.stock_value, -25)
+
+        # set the standard price to 7.5
+        self.product1.product_tmpl_id.standard_price = 7.5
+        self.env['product.price.history'].search([('product_id', '=', self.product1.id)], order='datetime desc, id DESC', limit=1).datetime = date7
+
+        # receive 100
+        move5 = self.env['stock.move'].create({
+            'name': 'in 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100,
+        })
+        move5._action_confirm()
+        move5._action_assign()
+        move5.move_line_ids.qty_done = 100
+        move5._action_done()
+        move5.date = date8
+
+        self.assertEqual(self.product1.qty_available, 95)
+        self.assertEqual(self.product1.stock_value, 712.5)
+
+        # Quantity at date
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_available, 0)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_available, 30)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_available, 15)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_available, 15)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_available, -5)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date7)).qty_available, -5)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date8)).qty_available, 95)
+
+        # Valuation at date
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, 300)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, 150)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 75)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -25)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date8)).stock_value, 712.5)
+
+        # edit the done quantity of move1, decrease it
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 10)
+        move1.quantity_done = 5
+
+        # the quantity at date will reflect the change directly
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 5)
+
+        # as when we decrease a quantity on a recreipt, we consider it as a out move with the price
+        # of today, the value will be decrease of 100 - (5*7.5)
+        self.assertEqual(move1.value, 62.5)
+
+        # the valuatin at date will take the qty at date * the standard price at date, that's why
+        # it is different.
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 50)
+
+        # edit move 4, send 15 instead of 20
+        # we now have +5 + 20 - 15 -20 = -10 * a standard price of 5
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -50)
+        move4.quantity_done = 15
+
+        # -(20*5) + (5*7.5)
+        self.assertEqual(move4.value, -62.5)
+        # we now have +5 + 20 - 15 -15 = -5 * a standard price of 5
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -25)
+
+    def test_at_date_fifo_1(self):
+        """ Make some operations at different dates, check that the results of the valuation at
+        date wizard are consistent. Afterwards, edit the done quantity of some operations. The
+        valuation at date results should take these changes into account.
+        """
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        now = Date.from_string(Date.today())
+        date1 = now - timedelta(days=8)
+        date2 = now - timedelta(days=7)
+        date3 = now - timedelta(days=6)
+        date4 = now - timedelta(days=5)
+        date5 = now - timedelta(days=4)
+        date6 = now - timedelta(days=3)
+
+        # receive 10@10
+        move1 = self.env['stock.move'].create({
+            'name': 'in 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10
+        move1._action_done()
+        move1.date = date1
+        move1.account_move_ids.write({'date': date1})
+
+        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product1.stock_value, 100)
+
+        # receive 10@12
+        move2 = self.env['stock.move'].create({
+            'name': 'in 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10,
+            'price_unit': 12,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 10
+        move2._action_done()
+        move2.date = date2
+        move2.account_move_ids.write({'date': date2})
+
+        self.assertEqual(self.product1.qty_available, 20)
+        self.assertEqual(self.product1.stock_value, 220)
+
+        # send 15
+        move3 = self.env['stock.move'].create({
+            'name': 'out 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 15,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 15
+        move3._action_done()
+        move3.date = date3
+        move3.account_move_ids.write({'date': date3})
+
+        self.assertEqual(self.product1.qty_available, 5)
+        self.assertEqual(self.product1.stock_value, 60)
+
+        # send 20
+        move4 = self.env['stock.move'].create({
+            'name': 'out 10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 20,
+        })
+        move4._action_confirm()
+        move4._action_assign()
+        move4.move_line_ids.qty_done = 20
+        move4._action_done()
+        move4.date = date4
+        move4.account_move_ids.write({'date': date4})
+
+        self.assertEqual(self.product1.qty_available, -15)
+        self.assertEqual(self.product1.stock_value, -180)
+
+        # receive 100@15
+        move5 = self.env['stock.move'].create({
+            'name': 'in 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100,
+            'price_unit': 15,
+        })
+        move5._action_confirm()
+        move5._action_assign()
+        move5.move_line_ids.qty_done = 100
+        move5._action_done()
+        move5.date = date5
+        move5.account_move_ids.write({'date': date5})
+
+        self.assertEqual(self.product1.qty_available, 85)
+        self.assertEqual(self.product1.stock_value, 1320)
+
+        # run the vacuum to compensate the negative stock move
+        self.env['stock.move']._run_fifo_vacuum()
+        move4.account_move_ids[0].write({'date': date6})
+
+        self.assertEqual(self.product1.qty_available, 85)
+        self.assertEqual(self.product1.stock_value, 1275)
+
+        # Edit the quantity done of move1, increase it.
+        move1.quantity_done = 20
+
+        # ---------------------------------------------------------------------
+        # ending: manual valuation
+        # ---------------------------------------------------------------------
+        self.product1.product_tmpl_id.valuation = 'manual_periodic'
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 200)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 30)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 320)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, 15)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, 160)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, -5)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, -125)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 95)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 1375)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 95)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 1375)
+        self.assertEqual(self.product1.qty_at_date, 95)
+        self.assertEqual(self.product1.stock_value, 1375)
+
+        # ---------------------------------------------------------------------
+        # ending: perpetual valuation
+        # ---------------------------------------------------------------------
+        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 220)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, 5)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, 60)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, -15)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, -180)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 85)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 1320)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 85)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 1275)
+        self.assertEqual(self.product1.qty_at_date, 95)
+        self.assertEqual(self.product1.stock_value, 1375)
+
+    def test_at_date_fifo_2(self):
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+
+        now = Date.from_string(Date.today())
+        date1 = now - timedelta(days=8)
+        date2 = now - timedelta(days=7)
+        date3 = now - timedelta(days=6)
+        date4 = now - timedelta(days=5)
+        date5 = now - timedelta(days=4)
+        date6 = now - timedelta(days=3)
+
+        # receive 10@10
+        move1 = self.env['stock.move'].create({
+            'name': 'in 10@10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10
+        move1._action_done()
+        move1.date = date1
+        move1.account_move_ids.write({'date': date1})
+
+        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product1.stock_value, 100)
+
+        # receive 10@15
+        move2 = self.env['stock.move'].create({
+            'name': 'in 10@15',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10,
+            'price_unit': 15,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 10
+        move2._action_done()
+        move2.date = date2
+        move2.account_move_ids.write({'date': date2})
+
+        self.assertEqual(self.product1.qty_available, 20)
+        self.assertEqual(self.product1.stock_value, 250)
+
+        # send 30
+        move3 = self.env['stock.move'].create({
+            'name': 'out 30',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 30,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.move_line_ids.qty_done = 30
+        move3._action_done()
+        move3.date = date3
+        move3.account_move_ids.write({'date': date3})
+
+        self.assertEqual(self.product1.qty_available, -10)
+        self.assertEqual(self.product1.stock_value, -150)
+
+        # receive 10@20
+        move4 = self.env['stock.move'].create({
+            'name': 'in 10@20',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10,
+            'price_unit': 20,
+        })
+        move4._action_confirm()
+        move4._action_assign()
+        move4.move_line_ids.qty_done = 10
+        move4._action_done()
+        move4.date = date4
+        move4.account_move_ids.write({'date': date4})
+
+        self.assertEqual(self.product1.qty_available, 0)
+        self.assertEqual(self.product1.stock_value, 50)
+
+        # receive 10@10
+        move5 = self.env['stock.move'].create({
+            'name': 'in 10@10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10,
+            'price_unit': 10,
+        })
+        move5._action_confirm()
+        move5._action_assign()
+        move5.move_line_ids.qty_done = 10
+        move5._action_done()
+        move5.date = date5
+        move5.account_move_ids.write({'date': date5})
+
+        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product1.stock_value, 150)
+
+        # run the vacuum to compensate the negative stock move
+        self.env['stock.move']._run_fifo_vacuum()
+        move3.account_move_ids[0].write({'date': date6})
+
+        self.assertEqual(self.product1.qty_available, 10)
+        self.assertEqual(self.product1.stock_value, 100)
+
+         # ---------------------------------------------------------------------
+        # ending: manual valuation
+        # ---------------------------------------------------------------------
+        self.product1.product_tmpl_id.valuation = 'manual_periodic'
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 250)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, -10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, -200)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, 0)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, 0)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 100)
+        self.assertEqual(self.product1.qty_at_date, 10)
+        self.assertEqual(self.product1.stock_value, 100)
+
+        # ---------------------------------------------------------------------
+        # ending: perpetual valuation
+        # ---------------------------------------------------------------------
+        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 250)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, -10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, -150)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, 0)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, 50)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 150)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 100)
+        self.assertEqual(self.product1.qty_at_date, 10)
+        self.assertEqual(self.product1.stock_value, 100)
