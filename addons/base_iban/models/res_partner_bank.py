@@ -2,7 +2,7 @@
 
 import re
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -42,6 +42,8 @@ def validate_iban(iban):
 
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
+
+    acc_type = fields.Selection(selection_add=[("iban", "IBAN")])
 
     @api.one
     @api.depends('acc_number')
