@@ -17,6 +17,12 @@ except ImportError:
                     "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
+try:
+    import stdnum.eu.vat as stdnum_vat
+except ImportError:
+    _logger.warning('Python `stdnum` library not found. Defaulting to naïve VAT number compacting.')
+    stdnum_vat = None
+
 from odoo import api, models, fields, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError, Warning
@@ -74,16 +80,24 @@ class ResPartner(models.Model):
 
     @api.model
     def compact_vat_number(self, vat):
-        """ Returns the vat number given in parameter, with all non-alphanumeric
-        characters removed (so, it allows removing all separators and spaces
-        from the VAT number).
+        """ Returns the vat number given in parameter, with all non-significative
+        characters removed, raising an excpetion if vat's format is incorrect.
+        If stdnum is not install, this function instead returns vat without
+        any blank or non-alphanumerical character.
         """
+        if stdnum_vat: # We use stdnum if it is available, as it has individual compact functions applying the specificities of each country
+            return stdnum_vat.compact(vat)
+
         return re.sub('\W', '', vat)
 
     @api.model
     def _split_vat(self, vat):
-        vat_country, vat_number = vat[:2].lower(), self.compact_vat_number(vat[2:])
-        return vat_country, vat_number
+        try:
+            compacted_vat = self.compact_vat_number(vat)
+            vat_country, vat_number = compacted_vat[:2], compacted_vat[2:]
+            return vat_country, vat_number
+        except:
+            return None, None
 
     @api.model
     def simple_vat_check(self, country_code, vat_number):
@@ -197,12 +211,14 @@ class ResPartner(models.Model):
         """
         # We first check with the prefix of the TIN as country code
         vat_country, vat_number = self._split_vat(self.vat)
-        check_rslt = check_func(vat_country, vat_number)
+        check_rslt = vat_country and check_func(vat_country, vat_number) or False
         if not check_rslt:
             # If it fails, we check with the country code of the commercial partner's country
             country_code = self.commercial_partner_id.country_id.code
             if country_code:
-                check_rslt = check_func(country_code.lower(), self.vat)
+                # We recall split, so that the vat number is re-compacted in accordance with the country code
+                vat_country, vat_number = self._split_vat(country_code + self.vat)
+                check_rslt = vat_country and check_func(vat_country, vat_number) or False
 
         return check_rslt
 
