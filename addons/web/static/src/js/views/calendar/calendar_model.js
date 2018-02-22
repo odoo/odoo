@@ -21,6 +21,9 @@ function dateToServer (date) {
 }
 
 return AbstractModel.extend({
+    /**
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         this.end_date = null;
@@ -229,9 +232,15 @@ return AbstractModel.extend({
 
         return this.preload_def.then(this._loadCalendar.bind(this));
     },
+    /**
+     * Move the current date range to the next period
+     */
     next: function () {
         this.setDate(this.data.target_date.clone().add(1, this.data.scale));
     },
+    /**
+     * Move the current date range to the previous period
+     */
     prev: function () {
         this.setDate(this.data.target_date.clone().add(-1, this.data.scale));
     },
@@ -240,7 +249,8 @@ return AbstractModel.extend({
      *
      * @override
      * @param {any} _handle ignored
-     * @param {any} _params ignored ? really ?
+     * @param {Object} params
+     * @param {Array} [params.domain]
      * @returns {Deferred}
      */
     reload: function (_handle, params) {
@@ -274,6 +284,9 @@ return AbstractModel.extend({
             this.data.highlight_date = this.data.target_date;
         }
     },
+    /**
+     * @param {string} scale the scale to set
+     */
     setScale: function (scale) {
         if (!_.contains(scales, scale)) {
             scale = "week";
@@ -281,9 +294,15 @@ return AbstractModel.extend({
         this.data.scale = scale;
         this.setDate(this.data.target_date);
     },
+    /**
+     * Move the current date range to the period containing today
+     */
     today: function () {
         this.setDate(moment(new Date()));
     },
+    /**
+     * Toggle the sidebar (containing the mini calendar)
+     */
     toggleFullWidth: function () {
         var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== 'true';
         this.call('local_storage', 'setItem', 'calendar_fullWidth', fullWidth);
@@ -362,6 +381,7 @@ return AbstractModel.extend({
         return domain;
     },
     /**
+     * @private
      * @returns {Object}
      */
     _getFullCalendarOptions: function () {
@@ -411,6 +431,7 @@ return AbstractModel.extend({
         return domain;
     },
     /**
+     * @private
      * @returns {Deferred}
      */
     _loadCalendar: function () {
@@ -439,6 +460,7 @@ return AbstractModel.extend({
         });
     },
     /**
+     * @private
      * @param {any} element
      * @param {any} events
      * @returns {Deferred}
@@ -455,6 +477,7 @@ return AbstractModel.extend({
         return $.Deferred().resolve();
     },
     /**
+     * @private
      * @param {any} filter
      * @returns {Deferred}
      */
@@ -516,6 +539,7 @@ return AbstractModel.extend({
             });
     },
     /**
+     * @private
      * @param {any} element
      * @param {any} events
      * @returns {Deferred}
@@ -598,6 +622,7 @@ return AbstractModel.extend({
     /**
      * parse the server values to javascript framwork
      *
+     * @private
      * @param {Object} data the server data to parse
      */
     _parseServerData: function (data) {
@@ -610,6 +635,9 @@ return AbstractModel.extend({
     },
     /**
      * Transform OpenERP event object to fullcalendar event object
+     *
+     * @private
+     * @param {Object} evt
      */
     _recordToCalendarEvent: function (evt) {
         var date_start;

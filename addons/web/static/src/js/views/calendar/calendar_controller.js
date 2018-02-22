@@ -10,24 +10,24 @@ odoo.define('web.CalendarController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
-var QuickCreate = require('web.CalendarQuickCreate');
-var dialogs = require('web.view_dialogs');
-var Dialog = require('web.Dialog');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
+var dialogs = require('web.view_dialogs');
+var QuickCreate = require('web.CalendarQuickCreate');
 
 var _t = core._t;
 var QWeb = core.qweb;
 
 var CalendarController = AbstractController.extend({
     custom_events: _.extend({}, AbstractController.prototype.custom_events, {
-        quickCreate: '_onQuickCreate',
-        openCreate: '_onOpenCreate',
-        openEvent: '_onOpenEvent',
-        dropRecord: '_onDropRecord',
-        updateRecord: '_onUpdateRecord',
         changeDate: '_onChangeDate',
         changeFilter: '_onChangeFilter',
+        dropRecord: '_onDropRecord',
+        openCreate: '_onOpenCreate',
+        openEvent: '_onOpenEvent',
+        quickCreate: '_onQuickCreate',
         toggleFullWidth: '_onToggleFullWidth',
+        updateRecord: '_onUpdateRecord',
         viewUpdated: '_onViewUpdated',
     }),
     /**
@@ -118,6 +118,7 @@ var CalendarController = AbstractController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
      * @param {OdooEvent} event
      */
     _onChangeDate: function (event) {
@@ -140,6 +141,7 @@ var CalendarController = AbstractController.extend({
         this.reload();
     },
     /**
+     * @private
      * @param {OdooEvent} event
      */
     _onChangeFilter: function (event) {
@@ -148,42 +150,14 @@ var CalendarController = AbstractController.extend({
         }
     },
     /**
+     * @private
      * @param {OdooEvent} event
      */
     _onDropRecord: function (event) {
         this._updateRecord(event.data);
     },
     /**
-     * Handles saving data coming from quick create box
-     *
      * @private
-     * @param {OdooEvent} event
-     */
-    _onQuickCreate: function (event) {
-        var self = this;
-        if (this.quickCreating) {
-            return;
-        }
-        this.quickCreating = true;
-        this.model.createRecord(event)
-            .then(function () {
-                self.quick.destroy();
-                self.quick = null;
-                self.reload();
-            })
-            .fail(function (error, errorEvent) {
-                // This will occurs if there are some more fields required
-                // Preventdefaulting the error event will prevent the traceback window
-                errorEvent.preventDefault();
-                event.data.options.disableQuickCreate = true;
-                event.data.data.on_save = self.quick.destroy.bind(self.quick);
-                self._onOpenCreate(event.data);
-            })
-            .always(function () {
-                self.quickCreating = false;
-            });
-    },
-    /**
      * @param {OdooEvent} event
      */
     _onOpenCreate: function (event) {
@@ -219,7 +193,7 @@ var CalendarController = AbstractController.extend({
             this.quick = null;
         }
 
-        if(!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
+        if (!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
             this.quick = new QuickCreate(this, true, options, data, event.data);
             this.quick.open();
             this.quick.opened(function () {
@@ -256,6 +230,7 @@ var CalendarController = AbstractController.extend({
         }
     },
     /**
+     * @private
      * @param {OdooEvent} event
      */
     _onOpenEvent: function (event) {
@@ -331,13 +306,46 @@ var CalendarController = AbstractController.extend({
         open_dialog(true);
     },
     /**
+     * Handles saving data coming from quick create box
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onQuickCreate: function (event) {
+        var self = this;
+        if (this.quickCreating) {
+            return;
+        }
+        this.quickCreating = true;
+        this.model.createRecord(event)
+            .then(function () {
+                self.quick.destroy();
+                self.quick = null;
+                self.reload();
+            })
+            .fail(function (error, errorEvent) {
+                // This will occurs if there are some more fields required
+                // Preventdefaulting the error event will prevent the traceback window
+                errorEvent.preventDefault();
+                event.data.options.disableQuickCreate = true;
+                event.data.data.on_save = self.quick.destroy.bind(self.quick);
+                self._onOpenCreate(event.data);
+            })
+            .always(function () {
+                self.quickCreating = false;
+            });
+    },
+    /**
      * Called when we want to open or close the sidebar.
+     *
+     * @private
      */
     _onToggleFullWidth: function () {
         this.model.toggleFullWidth();
         this.reload();
     },
     /**
+     * @private
      * @param {OdooEvent} event
      */
     _onUpdateRecord: function (event) {
@@ -347,6 +355,7 @@ var CalendarController = AbstractController.extend({
      * The internal state of the calendar (mode, period displayed) has changed,
      * so update the control panel buttons and breadcrumbs accordingly.
      *
+     * @private
      * @param {OdooEvent} event
      */
     _onViewUpdated: function (event) {
