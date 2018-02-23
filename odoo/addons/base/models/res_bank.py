@@ -63,7 +63,7 @@ class ResPartnerBank(models.Model):
     acc_number = fields.Char('Account Number', required=True)
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
     acc_holder_name = fields.Char(string='Account Holder Name', help="Account holder name, in case it is different than the name of the Account Holder")
-    partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)])
+    partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', index=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)], required=True)
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name')
     bank_bic = fields.Char(related='bank_id.bic')
