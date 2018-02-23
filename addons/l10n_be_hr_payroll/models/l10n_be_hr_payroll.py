@@ -95,7 +95,7 @@ class HrContract(models.Model):
                     + 12.0 * contract.internet \
                     + 12.0 * (contract.mobile + contract.mobile_plus) \
                     + 12.0 * contract.transport_employer_cost \
-                    + (1.326 / 1.05 * 12.0) * contract.commission_on_target \
+                    + contract.warrants_cost \
                     + 220.0 * contract.meal_voucher_paid_by_employer
                 contract.final_yearly_costs = yearly_cost / (1.0 - (contract.holidays - 20.0) / 231.0)
                 contract.wage = contract._get_gross_from_employer_costs(contract.final_yearly_costs)
