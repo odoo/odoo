@@ -15,9 +15,8 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
-from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
-from odoo.tools.float_utils import float_compare, float_repr
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, ustr
+from odoo.tools.float_utils import float_compare, float_repr, float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -470,7 +469,7 @@ class PaymentTxOgone(models.Model):
             self.write({
                 'state': new_state,
                 'acquirer_reference': tree.get('PAYID'),
-                'html_3ds': base64.b64decode(tree.HTML_ANSWER.decode('ascii')),
+                'html_3ds': ustr(base64.b64decode(tree.HTML_ANSWER.text)),
             })
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)
