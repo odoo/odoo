@@ -626,7 +626,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             return;
         }
         if(event.keyCode === 13) {
-            if (_.findWhere(this.model.lines, {mode: 'create'}).balance.amount) {
+            var created_lines = _.findWhere(this.model.lines, {mode: 'create'});
+            if (created_lines && created_lines.balance.amount) {
                 this._onCreateProposition();
             }
             return;
