@@ -46,32 +46,22 @@
             <div class="wrap">
                 <div class="container o_website_payment">
                     <h1>Payment</h1>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="oe_structure"></div>
-                            <div>
-                                <div class="form-horizontal row o_website_payment_new_payment" t-att-data-acquirer_id="acquirer.id" t-att-data-currency_id="currency.id" t-att-data-reference="reference" t-att-data-amount="amount">
-                                    <div class="form-group">
-                                        <label for="form_reference" class="col-sm-3 control-label">Reference</label>
-                                        <div class="col-sm-9">
-                                            <span name="form_reference" class="form-control" t-esc="reference"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="form_amount" class="col-sm-3 control-label">Amount</label>
-                                        <div class="col-sm-9">
-                                            <span name="form_amount" class="form-control" t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-9 col-sm-offset-3 text-muted mt16" t-raw="acquirer.pre_msg"/>
-                                    <div class="col-sm-12 o_website_payment_form" t-raw="payment_form"/>
-                                    <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
-                                        <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
-                                        <span>Processed by <t t-esc="acquirer.name"/>.</span>
-                                    </div>
-                                </div>
+                    <div t-if="error_msg" class="alert alert-danger col-md-7">
+                        <t t-esc="error_msg"/>
+                    </div>
+                    <div class="row mt32 mb32">
+                        <div class="col-md-7">
+                            <p><b>Reference:</b> <t t-esc="reference"/></p>
+                            <p><b>Amount:</b> <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></p>
+                            <t t-call="payment.payment_tokens_list" t-if="reference and amount and currency">
+                                <t t-set="mode" t-value="'payment'"/>
+                                <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/' + reference + '/' + str(amount) + '/' + str(currency.id)"/>
+                                <t t-set="form_action" t-value="'/website_payment/token/' + reference + '/' + str(amount) + '/' + str(currency.id)"/>
+                            </t>
+                            <div t-if="not (s2s_acquirers or form_acquirers)" class="alert alert-danger">
+                                <p>No payment acquirer found.</p>
+                                <p>Please configure a payment acquirer.</p>
                             </div>
-                            <div class="oe_structure"/>
                         </div>
                     </div>
                 </div>

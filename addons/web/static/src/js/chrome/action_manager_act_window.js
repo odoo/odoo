@@ -329,7 +329,7 @@ ActionManager.include({
     _generateActionFlags: function (action) {
         var popup = action.target === 'new';
         var inline = action.target === 'inline';
-        var form = _.str.startsWith(action.view_mode, 'form');
+        var form = action.views[0][1] === 'form';
         return _.defaults({}, action.flags, {
             disableCustomFilters: action.context && action.context.search_disable_custom_filters,
             footerToButtons: popup,

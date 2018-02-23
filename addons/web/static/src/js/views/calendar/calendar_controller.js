@@ -57,6 +57,13 @@ var CalendarController = AbstractController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @returns {string}
+     */
+    getTitle: function () {
+        return this.get('title');
+    },
+    /**
      * Render the buttons according to the CalendarView.buttons template and
      * add listeners on it. Set this.$buttons with the produced jQuery element
      *

@@ -66,7 +66,6 @@ QUnit.module('ActionManager', {
             res_model: 'partner',
             target: 'new',
             type: 'ir.actions.act_window',
-            view_mode: 'form',
             views: [[false, 'form']],
         }, {
             id: 6,
@@ -75,7 +74,6 @@ QUnit.module('ActionManager', {
             res_model: 'partner',
             target: 'inline',
             type: 'ir.actions.act_window',
-            view_mode: 'form',
             views: [[false, 'form']],
         }, {
             id: 7,
@@ -135,7 +133,6 @@ QUnit.module('ActionManager', {
 
         this.actions[3].views = [[false, 'form']];
         this.actions[3].target = 'inline';
-        this.actions[3].view_mode = 'form';
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -1319,6 +1316,45 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             'load_views',
             '/web/dataset/search_read',
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('handle server actions returning false', function (assert) {
+        assert.expect(9);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (route === '/web/action/run') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // execute an action in target="new"
+        actionManager.doAction(5, {
+            on_close: assert.step.bind(assert, 'close handler'),
+        });
+        assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
+            "should have rendered a form view in a modal");
+
+        // execute a server action that returns false
+        actionManager.doAction(2);
+        assert.strictEqual($('.o_technical_modal').length, 0,
+            "should have closed the modal");
+        assert.verifySteps([
+            '/web/action/load', // action 5
+            'load_views',
+            'default_get',
+            '/web/action/load', // action 2
+            '/web/action/run',
+            'close handler',
         ]);
 
         actionManager.destroy();

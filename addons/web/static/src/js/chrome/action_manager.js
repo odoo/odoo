@@ -510,6 +510,7 @@ var ActionManager = Widget.extend({
             },
         });
         return this.dp.add(runDef).then(function (action) {
+            action = action || { type: 'ir.actions.act_window_close' };
             return self.doAction(action, options);
         });
     },

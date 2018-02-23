@@ -116,8 +116,8 @@ class HrContract(models.Model):
     @api.depends('commission_on_target')
     def _compute_warrants_cost(self):
         for contract in self:
-            contract.warrants_cost = contract.commission_on_target * 1.326 / 1.05 * 12.0
-            contract.warrant_value_employee = contract.warrants_cost * 0.54
+            contract.warrants_cost = contract.commission_on_target * 1.05 * 12.0
+            contract.warrant_value_employee = contract.commission_on_target * (1.00 - 0.535) * 12.0
 
     @api.depends('wage', 'fuel_card', 'representation_fees', 'transport_employer_cost',
         'internet', 'mobile', 'mobile_plus')
@@ -230,7 +230,7 @@ class HrContract(models.Model):
             - 12.0 * contract.internet \
             - 12.0 * (contract.mobile + contract.mobile_plus) \
             - 12.0 * contract.transport_employer_cost \
-            - (1.326 / 1.05 * 12.0) * contract.commission_on_target \
+            - contract.warrants_cost \
             - 220.0 * contract.meal_voucher_paid_by_employer
         gross = remaining_for_gross / (13.0 + 13.0 * 0.3507 + 0.92)
         return gross

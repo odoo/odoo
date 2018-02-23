@@ -83,24 +83,6 @@ var KanbanController = BasicController.extend({
         return this.renderer.updateRecord(this.model.get(id));
     },
     /**
-     * The column quick create should be displayed in kanban iff grouped by an
-     * m2o field and group_create action enabled.
-     *
-     * @private
-     * @param {Object} state the current state
-     * @returns {boolean}
-     */
-    _isCreateColumnEnabled: function (state) {
-        var groupCreate = this.is_action_enabled('group_create');
-        if (!groupCreate) {
-            // pre-return to avoid a lot of the following processing
-            return false;
-        }
-        var groupByField = state.fields[state.groupedBy[0]];
-        var groupedByM2o = groupByField && (groupByField.type === 'many2one');
-        return !!groupedByM2o;
-    },
-    /**
      * This method calls the server to ask for a resequence.  Note that this
      * does not rerender the user interface, because in most case, the
      * resequencing operation has already been displayed by the renderer.
@@ -136,7 +118,7 @@ var KanbanController = BasicController.extend({
     _updateButtons: function () {
         if (this.$buttons) {
             var state = this.model.get(this.handle, {raw: true});
-            var createHidden = state.data.length === 0 && this._isCreateColumnEnabled(state);
+            var createHidden = this.is_action_enabled('group_create') && state.isGroupedByM2ONoColumn;
             this.$buttons.find('.o-kanban-button-new').toggleClass('o_hidden', createHidden);
         }
     },

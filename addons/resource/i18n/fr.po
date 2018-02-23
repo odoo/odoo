@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
@@ -14,13 +14,14 @@
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Eloïse Stilmant <est@odoo.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: fr trans <e2ftrans1@yahoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +90,7 @@ msgstr "Jour de la semaine"
 #: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Heures de travail par défaut"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
@@ -160,7 +161,7 @@ msgstr "Vendredi Matin"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "Congés globaux"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -334,7 +335,7 @@ msgstr "Congés de la ressource"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "Combinaison de ressources"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
@@ -428,13 +429,13 @@ msgstr "Dimanche"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
 msgid "Test Resource Model"
-msgstr ""
+msgstr "Tester le modèle de ressource"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "Le facteur de rendement ne peut pas être égal à 0."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
@@ -471,7 +472,7 @@ msgstr "Jeudi Matin "
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Le rendement temporal doit être strictement positif."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_tz
@@ -484,6 +485,8 @@ msgid ""
 "Timezone used when encoding the leave. It is used to correctlylocalize leave"
 " hours when computing time intervals."
 msgstr ""
+"Fuseau horaire utilisé lors de la saisie du congé. Permet de déterminer les "
+"heures de congé exactes lors du calcul des intervalles de temps."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -543,7 +546,7 @@ msgstr "Détail du travail"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "Ressources de travail"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
@@ -570,7 +573,7 @@ msgstr "Heures de travail"
 #: code:addons/resource/models/resource.py:60
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "Heures de travail de %s"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search

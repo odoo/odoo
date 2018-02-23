@@ -729,6 +729,7 @@ exports.PosModel = Backbone.Model.extend({
 
             deferred.resolve();
         };
+        img.crossOrigin = 'use-credentials';
         img.src = url;
 
         return deferred;
@@ -1989,7 +1990,7 @@ exports.Order = Backbone.Model.extend({
         if (json.partner_id) {
             client = this.pos.db.get_partner_by_id(json.partner_id);
             if (!client) {
-                console.error('ERROR: trying to load a parner not available in the pos');
+                console.error('ERROR: trying to load a partner not available in the pos');
             }
         } else {
             client = null;
