@@ -5,7 +5,7 @@ import logging
 import re
 from math import floor, log10
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.addons.iap import jsonrpc
 from odoo.addons.crm.models import crm_stage
 
@@ -25,6 +25,7 @@ class CRMLeadRule(models.Model):
 
     # Website Traffic Filter
     country_ids = fields.Many2many('res.country', string='Countries')
+    regex_url = fields.Char(string='URL Regex')
 
     # Company Criteria Filter
     industry_tag_ids = fields.Many2many('crm.reveal.industry', string="Industry Tags")
@@ -50,8 +51,6 @@ class CRMLeadRule(models.Model):
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority')
     lead_ids = fields.One2many('crm.lead', 'reveal_rule_id', string="Generated Lead / Opportunity")
     leads_count = fields.Integer(compute='_compute_leads_count', string="Number of Generated Leads")
-
-    url_regex_id = fields.Many2one('http.url.track', delegate=True, required=True, ondelete='restrict')
 
     _sql_constraints = [
         ('limit_extra_contacts', 'check(extra_contacts >= 0 and extra_contacts <= 5)', "Maximum 5 extra contacts are allowed!"),
@@ -95,6 +94,16 @@ class CRMLeadRule(models.Model):
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
         action['domain'] = [('id', 'in', self.lead_ids.ids)]
         return action
+
+    @api.model
+    @tools.ormcache()
+    def get_regex(self):
+        return self.search([]).mapped('regex_url')
+
+    def match_url(self, url):
+        if re.findall('|'.join([rg for rg in self.get_regex() if rg]), url):
+            return True
+        return False
 
     @api.model
     def process_lead_generation(self):
