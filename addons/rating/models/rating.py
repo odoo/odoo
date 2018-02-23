@@ -156,6 +156,14 @@ class RatingMixin(models.AbstractModel):
 SELECT DISTINCT ON (res_id) rating.id FROM rating_rating rating
 ORDER BY rating.write_date DESC
 WHERE rating.res_model = %s AND rating.res_id IN %s""", (self._name, self.ids,))
+# SELECT R.res_id, R.id, T.max_write_date
+# FROM (
+#  SELECT res_id, MAX(write_date) as max_write_date
+#  FROM rating_rating
+#  GROUP BY res_id
+# ) T
+# INNER JOIN rating_rating R 
+# ON R.res_id = T.res_id AND R.write_date = T.max_write_date
 
     @api.multi
     @api.depends('rating_ids')
