@@ -145,39 +145,6 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('basic grouped rendering with active field', function (assert) {
-        assert.expect(2);
-
-        // add active field on partner model and make all records active
-        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
-
-        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
-                        '<field name="active"/>' +
-                        '<field name="bar"/>' +
-                        '<templates><t t-name="kanban-box">' +
-                        '<div><field name="foo"/></div>' +
-                    '</t></templates></kanban>',
-            groupBy: ['bar'],
-            intercepts: {
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
-        });
-
-        // archive the records of the first column
-        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3,
-            "last column should contain 3 records");
-        envIDs = [4];
-        kanban.destroy();
-    });
-
     QUnit.test('pager should be hidden in grouped mode', function (assert) {
         assert.expect(1);
 
@@ -2107,7 +2074,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper when no data', function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         var records = this.data.partner.records;
 
@@ -2138,9 +2105,6 @@ QUnit.module('Views', {
 
         this.data.partner.records = records;
         kanban.reload();
-
-        assert.notOk(kanban.$el.hasClass('o_view_nocontent_container'),
-            "$el should have removed no content class");
 
         assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
@@ -2467,8 +2431,8 @@ QUnit.module('Views', {
             "there should be no columns");
         assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
             "there should be no records");
-        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
-            "there should be a nocontent helper");
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should not be a nocontent helper");
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 0,
             "there should not be a column quick create");
         kanban.destroy();
@@ -2738,34 +2702,6 @@ QUnit.module('Views', {
         $firstRecord = kanban.$('.o_kanban_record:first()'); // First record is reloaded here
         assert.ok($firstRecord.is('.oe_kanban_color_9'),
             "the first record should have the color 9");
-
-        kanban.destroy();
-    });
-
-    QUnit.test('archive kanban column, when active field is not in the view', function (assert) {
-        assert.expect(0);
-
-        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
-
-        var writeOnActive;
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban>' +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                    '<div><field name="foo"/></div>' +
-                '</t></templates>' +
-            '</kanban>',
-            groupBy: ['product_id'],
-            mockRPC: function (route, args) {
-                if (args.method === 'write' && 'active' in args.args[1]) {
-                    writeOnActive = true;
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
 
         kanban.destroy();
     });

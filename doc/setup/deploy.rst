@@ -214,6 +214,13 @@ Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
 the :option:`normal HTTP port <odoo-bin --http-port>`
 
+To achieve such a thing, you'll need to deploy a reverse proxy in front of Odoo,
+like nginx or apache. When doing so, you'll need to forward some more http Headers
+to Odoo, and activate the proxy_mode in Odoo configuration to have Odoo read those
+headers.
+
+
+
 Configuration sample
 --------------------
 
@@ -316,16 +323,18 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
    # log
    access_log /var/log/nginx/odoo.access.log;
    error_log /var/log/nginx/odoo.error.log;
-   
+
+   # Redirect longpoll requests to odoo longpolling port
+   location /longpolling {
+   proxy_pass http://odoochat;
+   }
+
    # Redirect requests to odoo backend server
    location / {
      proxy_redirect off;
      proxy_pass http://odoo;
    }
-   location /longpolling {
-       proxy_pass http://odoochat;
-   }
- 
+
    # common gzip
    gzip_types text/css text/less text/plain text/xml application/xml application/json application/javascript;
    gzip on;

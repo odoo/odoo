@@ -100,24 +100,6 @@ var MentionManager = Widget.extend({
         return selections;
     },
 
-    proposition_navigation: function (keycode) {
-        var $active = this.$('.o_mention_proposition.active');
-        if (keycode === $.ui.keyCode.ENTER) { // selecting proposition
-            $active.click();
-        } else { // navigation in propositions
-            var $to;
-            if (keycode === $.ui.keyCode.DOWN) {
-                $to = $active.nextAll('.o_mention_proposition').first();
-            } else {
-                $to = $active.prevAll('.o_mention_proposition').first();
-            }
-            if ($to.length) {
-                $active.removeClass('active');
-                $to.addClass('active');
-            }
-        }
-    },
-
     /**
      * Detects if the user is currently typing a mention word
      * @return the search string if it is, false otherwise
@@ -215,7 +197,10 @@ var MentionManager = Widget.extend({
         });
     },
 
-    // Private functions
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * Returns the matches (as RexExp.exec does) for the mention in the input text
      *
@@ -228,7 +213,7 @@ var MentionManager = Widget.extend({
         // create the regex of all mention's names
         var names = _.pluck(listener.selection, 'name');
         var escaped_names = _.map(names, function (str) {
-            return "("+_.str.escapeRegExp(listener.delimiter+str)+")(?= |&nbsp;)";
+            return "("+_.str.escapeRegExp(listener.delimiter+str)+")";
         });
         var regex_str = escaped_names.join('|');
         // extract matches
@@ -268,6 +253,32 @@ var MentionManager = Widget.extend({
             return range.startOffset + rangeCount;
         }
         return -1;
+    },
+    /**
+     * @private
+     * @param {integer} keycode
+     */
+    _propositionNavigation: function (keycode) {
+        var $active = this.$('.o_mention_proposition.active');
+        if (keycode === $.ui.keyCode.ENTER) { // selecting proposition
+            $active.click();
+        } else { // navigation in propositions
+            var $to;
+            if (keycode === $.ui.keyCode.DOWN) {
+                $to = $active.nextAll('.o_mention_proposition').first();
+            } else if (keycode === $.ui.keyCode.UP) {
+                $to = $active.prevAll('.o_mention_proposition').first();
+            } else if (keycode === $.ui.keyCode.TAB) {
+                $to = $active.nextAll('.o_mention_proposition').first();
+                if (!$to.length) {
+                    $to = $active.prevAll('.o_mention_proposition').last();
+                }
+            }
+            if ($to && $to.length) {
+                $active.removeClass('active');
+                $to.addClass('active');
+            }
+        }
     },
     _render_suggestions: function () {
         var suggestions = [];
@@ -583,6 +594,7 @@ var BasicComposer = Widget.extend({
             // UP, DOWN: prevent moving cursor if navigation in mention propositions
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN:
+            case $.ui.keyCode.TAB:
                 if (this.mention_manager.is_open()) {
                     event.preventDefault();
                 }
@@ -627,12 +639,13 @@ var BasicComposer = Widget.extend({
                     this.trigger_up("escape_pressed");
                 }
                 break;
-            // ENTER, UP, DOWN: check if navigation in mention propositions
+            // ENTER, UP, DOWN, TAB: check if navigation in mention propositions
             case $.ui.keyCode.ENTER:
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN:
+            case $.ui.keyCode.TAB:
                 if (this.mention_manager.is_open()) {
-                    this.mention_manager.proposition_navigation(event.which);
+                    this.mention_manager._propositionNavigation(event.which);
                 }
                 break;
             // Otherwise, check if a mention is typed
@@ -893,7 +906,9 @@ var BasicComposer = Widget.extend({
      * @private
      */
     _onEmojiButtonFocusout: function () {
-        this._hideEmojisTimeout = setTimeout(this._hideEmojis.bind(this), 0);
+        if (this.$emojisContainer) {
+            this._hideEmojisTimeout = setTimeout(this._hideEmojis.bind(this), 0);
+        }
     },
     /**
      * Called when an emoji is focused -> @see _onEmojiButtonFocusout

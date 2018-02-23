@@ -29,6 +29,7 @@ var ODOOBOT_ID = "ODOOBOT"; // default author_id for messages
 var ChatManager =  AbstractService.extend({
     name: 'chat_manager',
     dependencies: ['ajax', 'bus_service'],
+    CHANNEL_SEEN_THROTTLE: 3000,
     /**
      * @override
      */
@@ -73,7 +74,7 @@ var ChatManager =  AbstractService.extend({
                 }, {
                     shadow: true
                 });
-        }, 3000);
+        }, self.CHANNEL_SEEN_THROTTLE);
 
         this._isReady = this._initMessaging();
 
@@ -352,7 +353,6 @@ var ChatManager =  AbstractService.extend({
      *              => list containing a list of members (cached by chat_manager)
      */
     getMentionPartnerSuggestions: function (channel) {
-        var self = this;
         if (!channel) {
             return this.mentionPartnerSuggestions;
         }
@@ -365,14 +365,7 @@ var ChatManager =  AbstractService.extend({
                     shadow: true
                 })
                 .then(function (members) {
-                    var suggestions = [];
-                    _.each(self.mentionPartnerSuggestions, function (partners) {
-                        suggestions.push(_.filter(partners, function (partner) {
-                            return !_.findWhere(members, { id: partner.id });
-                        }));
-                    });
-
-                    return [suggestions];
+                    return [members];
                 });
         }
         return channel.membersDeferred;
@@ -1642,7 +1635,7 @@ var ChatManager =  AbstractService.extend({
             web_client.set_title_part("_chat", tabTitle);
         }
 
-        this._sendNotification(web_client, title, content);
+        this.call('bus_service', 'sendNotification', web_client, title, content);
     },
     /**
      * Removes channel

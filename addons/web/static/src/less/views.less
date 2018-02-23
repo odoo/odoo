@@ -39,18 +39,11 @@
 }
 
 // No content helper
-.o_view_nocontent_container {
-    .o-flex-display();
-    height: 100%;
-    padding: 0;
-}
-
 .o_view_nocontent {
-    &.o_kanban_view_nocontent {
-        .o-position-absolute(20%, 0, 0, 0);        
-        pointer-events: none;
-    }
-
+    .o-position-absolute(20%, 0, 0, 0);        
+    pointer-events: none;
+    z-index: 1;
+    
     .o_nocontent_help {
         pointer-events: auto;
         max-width: 650px;

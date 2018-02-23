@@ -41,6 +41,7 @@
             <field eval="35" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Expenses" class="o_expense_form">
+                <field name="state" invisible="True"/>
                 <sheet>
                     <div class="oe_title">
                         <label for="name"/>
@@ -62,7 +63,7 @@
                             <field name="reference"/>
                             <field name="date"/>
                             <field name="account_id" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
-                            <field name="employee_id"/>
+                            <field name="employee_id" groups="hr_expense.group_hr_expense_user"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>

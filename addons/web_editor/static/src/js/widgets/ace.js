@@ -58,6 +58,10 @@ function checkXML(xml) {
  * @returns {string} formatted xml
  */
 function formatXML(xml) {
+    // do nothing if an inline script is present to avoid breaking it
+    if (/<script(?: [^>]*)?>[^<][\s\S]*<\/script>/i.test(xml)) {
+        return xml;
+    }
     return window.vkbeautify.xml(xml, 4);
 }
 /**
@@ -567,7 +571,7 @@ var ViewEditor = Widget.extend({
             Dialog.alert(this, '', {
                 title: _t("Server error"),
                 $content: $('<div/>').html(
-                    _t("A server error occured. Please check you correctly signed in and that the file you are saving is well-formed.")
+                    _t("A server error occured. Please check you correctly signed in and that the file you are saving is correctly formatted.")
                     + '<br/>'
                     + error
                 )

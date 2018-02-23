@@ -327,15 +327,14 @@ class MailThread(models.AbstractModel):
         if alias:
             email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.name_get()[0][1]}
             if nothing_here:
-                return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>%(static_help)s" % {
-                    'static_help': help or '',
-                    'dyn_help': _("Add new %(document)s or send an email to %(email_link)s") % {
+                return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
+                    'dyn_help': _("Add a new %(document)s or send an email to %(email_link)s") % {
                         'document': document_name,
                         'email_link': email_link
                     }
                 }
             return "%(static_help)s<p>%(dyn_help)s</p>" % {
-                    'static_help': help or '',
+                    'static_help': help,
                     'dyn_help': _("Create a new %(document)s by sending an email to %(email_link)s") %  {
                         'document': document_name,
                         'email_link': email_link,
@@ -343,8 +342,7 @@ class MailThread(models.AbstractModel):
                 }
 
         if nothing_here:
-            return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>%(static_help)s" % {
-                'static_help': help or '',
+            return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
                 'dyn_help': _("Create a new %(document)s") % {
                     'document': document_name,
                 }
@@ -1819,7 +1817,7 @@ class MailThread(models.AbstractModel):
                 return RecordModel.browse(self.ids).message_post(
                     body=body, subject=subject, message_type=message_type,
                     subtype=subtype, parent_id=parent_id, attachments=attachments,
-                    content_subtype=content_subtype, **kwargs)
+                    content_subtype=content_subtype, notif_layout=notif_layout, **kwargs)
 
         # 0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')

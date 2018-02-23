@@ -5,14 +5,23 @@ var MockServer = require('web.MockServer');
 
 MockServer.include({
     /**
+     * Param 'data' may have a key 'initMessaging' which contains
+     * a partial overwrite of the result from mockInitMessaging.
+     *
+     * Note: we must delete this key, so that this is not
+     * handled as a model definition.
+     *
      * @override
+     * @param {Object} [data.initMessaging] 
      */
-    _performRpc: function (route, args) {
-        if (route === '/mail/init_messaging') {
-            return $.when(this._mockInitMessaging(args));
+    init: function (data, options) {
+        if (data && data.initMessaging) {
+            this.initMessagingData = data.initMessaging;
+            delete data.initMessaging;
         }
-        return this._super(route, args);
+        this._super.apply(this, arguments);
     },
+
     /**
      * Simulate the '/mail/init_messaging' route
      *
@@ -20,7 +29,7 @@ MockServer.include({
      * @return {Object}
      */
     _mockInitMessaging: function () {
-        return {
+        return _.defaults(this.initMessagingData || {}, {
             'needaction_inbox_counter': 0,
             'starred_counter': 0,
             'channel_slots': [],
@@ -28,7 +37,25 @@ MockServer.include({
             'mention_partner_suggestions': [],
             'shortcodes': [],
             'menu_id': false,
-        };
+        });
+    },
+    /**
+     * @override
+     */
+    _performRpc: function (route, args) {
+        if (route === '/mail/init_messaging') {
+            return $.when(this._mockInitMessaging(args));
+        }
+        if (args.method === 'message_fetch') {
+            return $.when([]);
+        }
+        if (args.method === 'channel_fetch_listeners') {
+            return $.when([]);
+        }
+        if (args.method === 'channel_seen') {
+            return $.when();
+        }
+        return this._super(route, args);
     },
 });
 

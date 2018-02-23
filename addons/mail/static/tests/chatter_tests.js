@@ -369,6 +369,8 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 QUnit.test('chatter: post, receive and star messages', function (assert) {
     var done = assert.async();
     assert.expect(28);
+    
+    var unpatchWindowGetSelection = testUtils.patchWindowGetSelection();
 
     var bus = new Bus();
     var BusService = createBusService(bus);
@@ -533,7 +535,10 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
             assert.strictEqual($(".o_composer_input a").length, 1, "mention is 'green' in edit mode");
 
             BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
+
+            //cleanup
             form.destroy();
+            unpatchWindowGetSelection();
             done();
         });
 });

@@ -101,9 +101,10 @@ var PivotView = AbstractView.extend({
             _findView(params.action && params.action.views, 'form'),
         ];
         function _findView(views, viewType) {
-            return _.find(views, function (view) {
-                return view[1] === viewType;
-            }) || [false, viewType];
+            var view = _.find(views, function (view) {
+                return view.type === viewType;
+            });
+            return [view ? view.viewID : false, viewType];
         }
     },
 });

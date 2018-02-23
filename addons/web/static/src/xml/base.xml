@@ -488,8 +488,10 @@
     </div>
 </t>
 <div t-name="GraphView.error" class="o_view_nocontent" >
-    <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
-    <p><t t-esc="description"/></p>
+    <div class="o_nocontent_help">
+        <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
+        <p><t t-esc="description"/></p>
+    </div>
 </div>
 
 <div t-name="PivotView" class="o_pivot">
@@ -539,14 +541,16 @@
         </t>
     </ul>
 </t>
-<div t-name="PivotView.nodata" class="o_view_nocontent_container" >
+<div t-name="PivotView.nodata">
     <div class="o_view_nocontent">
-        <p class="o_view_nocontent_empty_folder">
-            No data to display
-        </p><p>
-            Try to add some records, or make sure
-            that there is at least one measure and no active filter in the search bar.
-        </p>
+        <div class="o_nocontent_help">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p><p>
+                Try to add some records, or make sure
+                that there is at least one measure and no active filter in the search bar.
+            </p>
+        </div>
     </div>
 </div>
 

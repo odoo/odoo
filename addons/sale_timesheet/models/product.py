@@ -39,7 +39,7 @@ class ProductTemplate(models.Model):
     def _inverse_service_policy(self):
         for product in self:
             policy = product.service_policy
-            if not policy:
+            if not policy and not product.invoice_policy =='delivery':
                 product.invoice_policy = 'order'
                 product.service_type = 'manual'
             elif policy == 'ordered_timesheet':

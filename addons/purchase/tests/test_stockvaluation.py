@@ -198,3 +198,76 @@ class TestStockValuation(TransactionCase):
         self.assertAlmostEqual(move1.price_unit, price_unit_usd_new_rate, places=2)
 
         self.assertAlmostEqual(self.product1.stock_value, price_unit_usd_new_rate * 10, delta=0.1)
+
+    def test_extra_move_fifo_1(self):
+        """ Check that the extra move when over processing a receipt is correctly merged back in
+        the original move.
+        """
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+
+        picking1 = po1.picking_ids[0]
+        move1 = picking1.move_lines[0]
+        move1.quantity_done = 15
+        res_dict = picking1.button_validate()
+        self.assertEqual(res_dict['res_model'], 'stock.overprocessed.transfer')
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard.action_confirm()
+
+        # there should be only one move
+        self.assertEqual(len(picking1.move_lines), 1)
+        self.assertEqual(move1.price_unit, 100)
+        self.assertEqual(move1.product_qty, 15)
+        self.assertEqual(self.product1.stock_value, 1500)
+
+    def test_backorder_fifo_1(self):
+        """ Check that the backordered move when under processing a receipt correctly keep the
+        price unit of the original move.
+        """
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+
+        picking1 = po1.picking_ids[0]
+        move1 = picking1.move_lines[0]
+        move1.quantity_done = 5
+        res_dict = picking1.button_validate()
+        self.assertEqual(res_dict['res_model'], 'stock.backorder.confirmation')
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard.process()
+
+        self.assertEqual(len(picking1.move_lines), 1)
+        self.assertEqual(move1.price_unit, 100)
+        self.assertEqual(move1.product_qty, 5)
+
+        picking2 = po1.picking_ids.filtered(lambda p: p.backorder_id)
+        move2 = picking2.move_lines[0]
+        self.assertEqual(len(picking2.move_lines), 1)
+        self.assertEqual(move2.price_unit, 100)
+        self.assertEqual(move2.product_qty, 5)
+

@@ -612,7 +612,7 @@ class SupplierInfo(models.Model):
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        help="If not set, the vendor price will apply to all variants of this products.")
+        help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
         index=True, ondelete='cascade', oldname='product_id')

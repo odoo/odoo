@@ -74,7 +74,6 @@ var KanbanModel = BasicModel.extend({
                     domain: parent.domain.concat([[groupBy,"=",result[0]]]),
                     fields: parent.fields,
                     fieldsInfo: parent.fieldsInfo,
-                    groupedBy: parent.groupedBy,
                     isOpen: true,
                     limit: parent.limit,
                     parentID: parent.id,
@@ -132,7 +131,11 @@ var KanbanModel = BasicModel.extend({
         });
     },
     /**
-     * Add the key `tooltipData` (kanban specific) when performing a `geŧ`.
+     * Add the following (kanban specific) keys when performing a `get`:
+     * 
+     *  - tooltipData
+     *  - progressBarValues
+     *  - isGroupedByM2ONoColumn
      *
      * @override
      * @see _readTooltipFields
@@ -141,11 +144,19 @@ var KanbanModel = BasicModel.extend({
     get: function () {
         var result = this._super.apply(this, arguments);
         var dp = result && this.localData[result.id];
-        if (dp && dp.tooltipData) {
-            result.tooltipData = $.extend(true, {}, dp.tooltipData);
-        }
-        if (dp && dp.progressBarValues) {
-            result.progressBarValues = $.extend(true, {}, dp.progressBarValues);
+        if (dp) {
+            if (dp.tooltipData) {
+                result.tooltipData = $.extend(true, {}, dp.tooltipData);
+            }
+            if (dp.progressBarValues) {
+                result.progressBarValues = $.extend(true, {}, dp.progressBarValues);
+            }
+            if (dp.fields[dp.groupedBy[0]]) {
+                var groupedByM2O = dp.fields[dp.groupedBy[0]].type === 'many2one';
+                result.isGroupedByM2ONoColumn = !dp.data.length && groupedByM2O;
+            } else {
+                result.isGroupedByM2ONoColumn = false;
+            }
         }
         return result;
     },
