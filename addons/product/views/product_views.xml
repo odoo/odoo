@@ -339,7 +339,8 @@
                     </field>
                 </field>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                    <field name="attribute_value_ids" widget="many2many_tags" readonly="1"
+                        groups="product.group_product_variant"/>
                 </xpath>
             </field>
         </record>
