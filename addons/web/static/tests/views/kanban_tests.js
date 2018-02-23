@@ -145,39 +145,6 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('basic grouped rendering with active field', function (assert) {
-        assert.expect(2);
-
-        // add active field on partner model and make all records active
-        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
-
-        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
-                        '<field name="active"/>' +
-                        '<field name="bar"/>' +
-                        '<templates><t t-name="kanban-box">' +
-                        '<div><field name="foo"/></div>' +
-                    '</t></templates></kanban>',
-            groupBy: ['bar'],
-            intercepts: {
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
-        });
-
-        // archive the records of the first column
-        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3,
-            "last column should contain 3 records");
-        envIDs = [4];
-        kanban.destroy();
-    });
-
     QUnit.test('pager should be hidden in grouped mode', function (assert) {
         assert.expect(1);
 
@@ -2735,90 +2702,6 @@ QUnit.module('Views', {
         $firstRecord = kanban.$('.o_kanban_record:first()'); // First record is reloaded here
         assert.ok($firstRecord.is('.oe_kanban_color_9'),
             "the first record should have the color 9");
-
-        kanban.destroy();
-    });
-
-    QUnit.test('archive kanban column, when active field is not in the view', function (assert) {
-        assert.expect(0);
-
-        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
-
-        var writeOnActive;
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban>' +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                    '<div><field name="foo"/></div>' +
-                '</t></templates>' +
-            '</kanban>',
-            groupBy: ['product_id'],
-            mockRPC: function (route, args) {
-                if (args.method === 'write' && 'active' in args.args[1]) {
-                    writeOnActive = true;
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        kanban.destroy();
-    });
-
-    QUnit.test('archive new kanban column', function (assert) {
-        assert.expect(15);
-
-        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
-
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban>' +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                    '<div><field name="foo"/></div>' +
-                '</t></templates>' +
-            '</kanban>',
-            groupBy: ['product_id'],
-            mockRPC: function (route) {
-                assert.step(route);
-                return this._super.apply(this, arguments);
-            },
-        });
-        var rpcs = ['/web/dataset/call_kw/partner/read_group', '/web/dataset/search_read', '/web/dataset/search_read'];
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 2,
-            "there should be 2 columns");
-
-        // create a column
-        kanban.$('.o_column_quick_create').click();
-        kanban.$('.o_column_quick_create input').val('new colum');
-        kanban.$('.o_column_quick_create button.o_kanban_add').click();
-        rpcs.push('/web/dataset/call_kw/product/name_create');
-        assert.verifySteps(rpcs);
-
-        // add a record inside
-        kanban.$('.o_kanban_group:eq(2) .o_kanban_quick_add i').click();
-        var $quickCreate = kanban.$('.o_kanban_group:eq(2) .o_kanban_quick_create');
-        $quickCreate.find('input').val('new record');
-        $quickCreate.find('button.o_kanban_add').click();
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 3,
-            "there should be 3 columns");
-        rpcs.push('/web/dataset/call_kw/partner/name_create');
-        rpcs.push('/web/dataset/call_kw/partner/read');
-        assert.verifySteps(rpcs);
-
-        var $newColumn = kanban.$('.o_kanban_group:eq(2)');
-        assert.strictEqual($newColumn.find('.o_kanban_record').length, 1,
-            "there should be 1 record in the new column");
-        $newColumn.find('.o_column_archive').click();
-        assert.strictEqual($newColumn.find('.o_kanban_record').length, 0,
-            "there should not be partners anymore");
-        rpcs.push('/web/dataset/call_kw/partner/write');
-        rpcs.push('/web/dataset/search_read');
-        assert.verifySteps(rpcs, "a search_read should be done after archiving the records");
 
         kanban.destroy();
     });
