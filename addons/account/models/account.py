@@ -795,7 +795,7 @@ class AccountTax(models.Model):
         oldname='use_cash_basis',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
-    cash_basis_account = fields.Many2one(
+    cash_basis_account_id = fields.Many2one(
         'account.account',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
