@@ -2525,6 +2525,35 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
     });
+
+    QUnit.test('doAction resolved with an action', function (assert) {
+        assert.expect(4);
+        var done = assert.async();
+
+        this.actions.push({
+            id: 21,
+            name: 'A Close Action',
+            type: 'ir.actions.act_window_close',
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(21).then(function (action) {
+            assert.ok(action, "doAction should be resolved with an action");
+            assert.strictEqual(action.id, 21,
+                "should be resolved with correct action id");
+            assert.strictEqual(action.name, 'A Close Action',
+                "should be resolved with correct action name");
+            assert.strictEqual(action.type, 'ir.actions.act_window_close',
+                "should be resolved with correct action type");
+            actionManager.destroy();
+            done();
+        });
+    });
 });
 
 });
