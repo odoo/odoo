@@ -140,9 +140,10 @@ var ActionManager = Widget.extend({
      *   is useful when we come from a loadState())
      * @param {boolean} [options.replace_last_action=false] set to true to
      *   replace last part of the breadcrumbs with the action
-     * @return {Deferred} resolved when the action is loaded and appended to the
-     *   DOM ; rejected if the action can't be executed (e.g. if doAction has
-     *   been called to execute another action before this one was complete).
+     * @return {$.Deferred<Object>} resolved with the action when the action is
+     *   loaded and appended to the DOM ; rejected if the action can't be
+     *   executed (e.g. if doAction has been called to execute another action
+     *   before this one was complete).
     */
     doAction: function (action, options) {
         var self = this;
@@ -179,7 +180,9 @@ var ActionManager = Widget.extend({
 
             self._preprocessAction(action, options);
 
-            return self._handleAction(action, options);
+            return self._handleAction(action, options).then(function () {
+                return action;
+            });
         });
     },
     /**
