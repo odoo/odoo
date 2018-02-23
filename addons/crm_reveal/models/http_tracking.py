@@ -17,16 +17,18 @@ class HTTPPageView(models.Model):
 
     def is_trackable(self, view, request):
         res = super(HTTPPageView, self).is_trackable(view, request)
-        if view and self.env['crm.reveal.rule'].sudo().match_url(res.get('url', '')):
-            res.update({
-                'reveal': True,
-                'trakable': True
-            })
+        url = res.get('url', '')
+        if self.env['crm.reveal.rule'].sudo().match_url(url):
+            with self.pool.cursor() as pv_cr:
+                pv_cr.execute('''
+                    UPDATE http_pageview SET view_date=%s , reveal=True  WHERE session_id=%s AND url=%s RETURNING id;
+                    ''', (res.get('view_date'), res.get('session_id', 0), url))
+                fetch = pv_cr.fetchone()
+                if fetch:
+                    return res
+                else:
+                    res.update({
+                        'reveal': True,
+                        'trakable': True
+                    })
         return res
-
-    # def get_vals(self, request):
-    #     res = super(HTTPPageView, self).get_vals(request)
-    #     res.update({
-    #         'reveal': True
-    #     })
-    #     return res
