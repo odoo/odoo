@@ -240,7 +240,7 @@ class MailActivity(models.Model):
             record.message_post_with_view(
                 'mail.message_activity_done',
                 values={'activity': activity},
-                subtype_id=self.env.ref('mail.mt_activities').id,
+                subtype_id=self.env['mail.message.subtype']._get_subtype_id('activity'),
                 mail_activity_type_id=activity.activity_type_id.id,
             )
             message |= record.message_ids[0]
