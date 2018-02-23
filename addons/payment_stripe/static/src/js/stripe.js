@@ -109,8 +109,8 @@ odoo.define('payment_stripe.stripe', function(require) {
 
         if ($('.o_website_payment').length !== 0) {
             var invoice_num = $("input[name='invoice_num']").val();
-            var url = _.str.sprintf("/website_payment/transaction/%s/%f/%s",
-                invoice_num, amount, currency_id);
+            var url = _.str.sprintf("/website_payment/transaction/v2/%f/%s/%s",
+                amount, currency_id, invoice_num);
 
             var create_tx = ajax.jsonRpc(url, 'call', {
                     acquirer_id: acquirer_id
