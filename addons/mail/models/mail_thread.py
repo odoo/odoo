@@ -461,7 +461,7 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()
         # get the subtype of the comment Message
-        subtype_comment = self.env.ref('mail.mt_comment')
+        subtype_comment = self.env['mail.message.subtype']._get_subtype_id('discussion')
 
         # get the ids of the comment and not-comment of the thread
         # TDE check: sudo on mail.message, to be sure all messages are moved ?
@@ -1994,7 +1994,7 @@ class MailThread(models.AbstractModel):
             'message_type': 'notification',
             'partner_ids': partner_ids,
             'model': False,
-            'subtype_id': self.env['ir.model.data'].sudo().xmlid_to_res_id('mail.mt_note'),
+            'subtype_id': self.env['mail.message.subtype']._get_subtype_id('note'),
             'record_name': False,
             'reply_to': self.env['mail.thread'].sudo()._notify_get_reply_to([0])[0],
             'message_id': tools.generate_tracking_message_id('message-notify'),

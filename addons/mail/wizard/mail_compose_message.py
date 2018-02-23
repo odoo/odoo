@@ -123,7 +123,7 @@ class MailComposer(models.TransientModel):
         domain="[('model', '=', model)]")
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
-    subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
+    subtype_id = fields.Many2one(default=lambda self: self.env['mail.message.subtype']._get_subtype_id('discussion'))
 
     @api.multi
     def check_access_rule(self, operation):
@@ -239,7 +239,7 @@ class MailComposer(models.TransientModel):
             elif wizard.subtype_id:
                 subtype_id = wizard.subtype_id.id
             else:
-                subtype_id = self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id
+                subtype_id = self.env['mail.message.subtype']._get_subtype_id('discussion')
 
             for res_ids in sliced_res_ids:
                 batch_mails = Mail
