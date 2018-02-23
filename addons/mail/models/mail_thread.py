@@ -1931,7 +1931,7 @@ class MailThread(models.AbstractModel):
             return
         for record in self:
             values['object'] = record
-            rendered_template = views.render(values, engine='ir.qweb')
+            rendered_template = views.render(values, engine='ir.qweb', minimal_qcontext=True)
             kwargs['body'] = rendered_template
             record.message_post_with_template(False, **kwargs)
 
@@ -2148,7 +2148,7 @@ class MailThread(models.AbstractModel):
             values = {
                 'object': record,
             }
-            assignation_msg = assignation_tpl.render(values, engine='ir.qweb')
+            assignation_msg = assignation_tpl.render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
             record.message_notify(
                 subject='You have been assigned to %s' % record.display_name,
