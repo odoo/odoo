@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import OperationalError, Error
+from itertools import groupby
+from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -377,25 +379,83 @@ class QuantPackage(models.Model):
             package.current_picking_id = True
             package.current_source_location_id = package.current_picking_move_line_ids[:1].location_id
             package.current_destination_location_id = package.current_picking_move_line_ids[:1].location_dest_id
-            package.is_processed = not bool(package.current_picking_move_line_ids.filtered(lambda ml: ml.qty_done < ml.product_uom_qty))
+
+            is_processed = False
+            move_lines = self.env['stock.picking'].browse(picking_id).move_line_ids
+            grouped_quants, grouped_ml = package._group_move_lines_and_package_quants(move_lines)
+            if all(sum(grouped_quants.get(key, self.env['stock.quant']).mapped('quantity')) -
+                   sum(grouped_ml.get(key, self.env['stock.move.line']).mapped('qty_done')) == 0 for key in grouped_quants) or\
+               all(sum(grouped_quants.get(key, self.env['stock.quant']).mapped('quantity')) -
+                   sum(grouped_ml.get(key, self.env['stock.move.line']).mapped('qty_done')) == 0 for key in grouped_ml):
+                is_processed = True
+            package.is_processed = is_processed
+
+    def _group_move_lines_and_package_quants(self, move_lines):
+        pack_move_lines = move_lines.filtered(lambda ml: ml.package_id == self)
+
+        def _keys_in_sorted(o):
+            return (o.product_id.id, o.lot_id.id, o.location_id.id, o.owner_id.id)
+
+        keys = ['product_id', 'lot_id', 'location_id', 'owner_id']
+
+        grouped_quants = {}
+        for k, g in groupby(sorted(self.quant_ids, key=_keys_in_sorted), key=itemgetter(*keys)):
+            grouped_quants[k] = self.env['stock.quant'].concat(*list(g))
+
+        grouped_ml = {}
+        for k, g in groupby(sorted(pack_move_lines, key=_keys_in_sorted), key=itemgetter(*keys)):
+            grouped_ml[k] = self.env['stock.move.line'].concat(*list(g))
+        return grouped_quants, grouped_ml
+
+    def _get_quantity_by_move_line_and_missing_quantity(self, pack_move_lines):
+
+        grouped_quants, grouped_move_line = self._group_move_lines_and_package_quants(pack_move_lines)
+
+        qty_done_by_move_lines = {}
+        missing_quantity_by_quant = {}
+        # Try to fill the existing move line with the same characteristics
+        # than the quants in package.
+        for product_lot, quants in grouped_quants.items():
+            for quant in quants:
+                move_lines = set(grouped_move_line.get(product_lot, self.env['stock.quant']).sorted(lambda ml: ml.product_qty))
+                quantity = quant.quantity
+                while move_lines and quantity:
+                    move_line = move_lines.pop()
+                    qty_on_move_line = move_line.product_qty and min(move_line.product_qty - move_line.qty_done, quantity) or quantity
+                    if qty_on_move_line:
+                        qty_done_by_move_lines[move_line] = qty_on_move_line
+                        quantity -= qty_on_move_line
+                if quantity:
+                    missing_quantity_by_quant[quant] = quantity
+        return qty_done_by_move_lines, missing_quantity_by_quant
 
     def action_toggle_processed(self):
         """ This method set the quantity done to the reserved quantity of all move lines of a package or to 0 if the package is already processed"""
-        picking_id = self.env.context.get('picking_id')
+        picking_id = self.env['stock.picking'].browse(self.env.context.get('picking_id'))
+        destination_location = self.env.context.get('destination_location')
+
         if picking_id:
             self.ensure_one()
-            move_lines = self.current_picking_move_line_ids
-            if move_lines.filtered(lambda ml: ml.qty_done < ml.product_uom_qty):
-                destination_location = self.env.context.get('destination_location')
-                for ml in move_lines:
-                    vals = {'qty_done': ml.product_uom_qty}
+
+            if not self.is_processed:
+                pack_move_lines = self.current_picking_move_line_ids
+                qty_done_by_move_lines, missing_quantity_by_quant = self._get_quantity_by_move_line_and_missing_quantity(pack_move_lines)
+                for move_line, quantity in qty_done_by_move_lines.items():
+                    vals = {'qty_done': quantity}
                     if destination_location:
                         vals['location_dest_id'] = destination_location
-                    ml.write(vals)
+                    move_line.write(vals)
+                for quant, quantity in missing_quantity_by_quant.items():
+                    # Create a new move line if all existing move lines
+                    # have a reserved quantity but not enough for the
+                    # quant linked to the package.
+                    move_values, move_line_values = self.env['stock.pick.packages']._pick_quant(quant, picking_id, self, quantity=quantity)
+                    move_id = self.env['stock.move'].create(move_values)
+                    move_line_values.update({'move_id': move_id.id})
+                    self.env['stock.move.line'].create(move_line_values)
             else:
-                for ml in move_lines:
+                for ml in self.current_picking_move_line_ids:
                     ml.qty_done = 0
-
 
     def _search_owner(self, operator, value):
         if value:
@@ -451,3 +511,4 @@ class QuantPackage(models.Model):
                 res[quant.product_id] = 0
             res[quant.product_id] += quant.qty
         return res
+
