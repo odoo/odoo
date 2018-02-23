@@ -72,11 +72,13 @@ _ref_vat = {
 
 VIES_WSDL_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl'
 
+VAT_CHECK_ANSWERS = [('verified', 'Verified'), ('wrong', 'Wrong'), ('unknown', 'Unknown')]
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    base_vat_vies_check_status = fields.Selection(selection=[('verified', 'Verified'), ('wrong', 'Wrong'), ('unknown', 'Unknown')], string='VAT Verification Status', compute='_compute_base_vat_vies_check_status', store=True, default='unknown')
+    base_vat_check_status = fields.Selection(selection=VAT_CHECK_ANSWERS, string='VAT Verification Status', compute='compute_base_vat_check_status')
+    base_vat_vies_answer = fields.Selection(selection=VAT_CHECK_ANSWERS, string='Cached Answer from VIES', help="Technical field containing the answer received from VIES regarding this partner's VAT number, if the service has been contacted for it. None otherwise.")
 
     @api.model
     def compact_vat_number(self, vat):
@@ -154,53 +156,46 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.depends('vat', 'commercial_partner_id.country_id')
-    def _compute_base_vat_vies_check_status(self):
+    @api.onchange('vat', 'commercial_partner_id')
+    def _onchange_invalidate_vies_answer(self):
+        """ On change invalidating the cached answer from VIES, since the data related
+        to the VAT number have changed, so we will need to recall VIES next time
+        we need to get base_vat_check_status with a company having vat_check_vies
+        option set to True.
+        """
+        self.base_vat_vies_answer = False
+
+    @api.onchange('country_id')
+    def _onchange_invalidate_vies_answer_on_children(self):
+        """ On change invalidating the cached answer from VIES for this partner's
+        children, since the country code of their parent has changed (and it was
+        possibly used to check their vat number), so we will need to recall VIES next time
+        we need to get base_vat_check_status with a company having vat_check_vies
+        option set to True.
+        """
+        for record in self.child_ids:
+            record.base_vat_vies_answer = False
+
+    @api.depends('vat', 'commercial_partner_id.country_id', 'base_vat_vies_answer')
+    def compute_base_vat_check_status(self):
         for partner in self:
             company = self.env.context.get('company_id')
             if not company:
                 company = self.env.user.company_id
 
-            check_rslt = None
+            check_rslt = 'wrong'
             if partner.vat:
                 if partner.parent_id and partner.vat == partner.parent_id.vat:
-                    partner.base_vat_vies_check_status = partner.parent_id.base_vat_vies_check_status
-                    continue
+                    check_rslt = partner.parent_id.base_vat_check_status
                 elif company.vat_check_vies:
-                    check_rslt = partner._check_vat(self.vies_vat_check)
+                    if not partner.base_vat_vies_answer: # We only call the webservice if we haven't called it before, otherwise we use cached data
+                        partner.base_vat_vies_answer = partner._check_vat(self.vies_vat_check)
 
-            if check_rslt == None:
-                partner.base_vat_vies_check_status = 'unknown'
-            else:
-                partner.base_vat_vies_check_status = check_rslt and 'verified' or 'wrong'
+                    check_rslt = partner.base_vat_vies_answer
+                else:
+                    check_rslt = partner._check_vat(self.simple_vat_check)
 
-    @api.constrains('vat', 'commercial_partner_id')
-    def vat_constraint(self):
-        company = self.env.context.get('company_id')
-        if not company:
-            company = self.env.user.company_id
-
-        european_countries = self.env.ref('base.europe').country_ids
-        for record in self.filtered(lambda x: x.vat):
-            record_vat_country_code = self._split_vat(record.vat)[0]
-            commercial_partner_country_code = record.commercial_partner_id.country_id and record.commercial_partner_id.country_id.code.lower() or False
-            vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
-            vat_no = _ref_vat.get(record_vat_country_code) or _ref_vat.get(commercial_partner_country_code) or vat_no
-
-            if company.vat_check_vies and record.country_id in european_countries:
-                if record.base_vat_vies_check_status == 'wrong':
-                    raise ValidationError(_('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or does not respect the expected format %s.') % (record.vat, record.name, vat_no))
-            elif not record._check_vat(self.simple_vat_check):
-                raise ValidationError(_('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (record.vat, record.name, vat_no))
-
-    @api.onchange('vat', 'commercial_partner_id')
-    def _onchange_base_vat_vies_check_status(self):
-        company = self.env.context.get('company_id')
-        if not company:
-            company = self.env.user.company_id
-
-        if self.vat and company.vat_check_vies and self.base_vat_vies_check_status == 'unknown':
-            return {'warning':{'message':_("The VAT number could not be verified as the VIES service did not respond. You can try again by re-saving the contact."), 'title':_('VIES unavailable')}}
+            partner.base_vat_check_status = check_rslt
 
     def _check_vat(self, check_func):
         """ Checks the VAT number of this partner.
@@ -220,7 +215,7 @@ class ResPartner(models.Model):
                 vat_country, vat_number = self._split_vat(country_code + self.vat)
                 check_rslt = vat_country and check_func(vat_country, vat_number) or False
 
-        return check_rslt
+        return (check_rslt == None) and 'unknown' or check_rslt and 'verified' or 'wrong'
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
     __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')

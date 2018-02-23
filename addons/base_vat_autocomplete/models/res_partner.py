@@ -46,7 +46,7 @@ class ResPartner(models.Model):
 
         try:
             partner_vat = partner.compact_vat_number(partner.vat)
-            result = partner.vies_vat_check(partner_vat[:2], partner_vat[2:], except_to_simple_check=False)
+            result = partner.vies_vat_check(partner_vat[:2], partner_vat[2:])
         except:
             # Avoid blocking the client when the service is unreachable/unavailable
             return False, {}
@@ -96,7 +96,7 @@ class ResPartner(models.Model):
                 continue
             # If a field is not set in the response, wipe it anyway
             non_set_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
-            if len(partner.vat) > 5 and partner.vat[:2].lower() in eu_country_codes:
+            if len(partner.vat) > 5 and partner.vat[:2].upper() in eu_country_codes:
                 partner_name, partner_address = self._get_partner_vals(partner.vat)
 
                 if not partner.name and partner_name:

@@ -5,8 +5,20 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="attributes">
-                    <attribute name="string">VAT</attribute>
+                <xpath expr="//field[@name='vat']" position="replace">
+                </xpath>
+
+                <xpath expr="//label[@for='street']" position="before">
+                    <field name="base_vat_check_status" invisible="0"/>
+                    <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': ['|', ('base_vat_check_status', '!=', 'wrong'), ('vat','=',False)]}"/>
+                    <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_check_status', '!=', 'verified')]}"/>
+                    <field name="vat" string="VAT" attrs="{'invisible': [('vat','!=',False)]}"/>
+
+                    <label string="VAT" style="font-weight: bold;" attrs="{'invisible': ['|', ('base_vat_check_status', '!=', 'unknown'), ('vat','=',False)]}"/>
+                    <div class="o_row" attrs="{'invisible': ['|', ('base_vat_check_status', '!=', 'unknown'), ('vat','=',False)]}">
+                        <field name="vat" string="VAT" style="color:Orange;"/>
+                        <button id="base_vat_recheck_vies" string="Recheck" type="object" name="compute_base_vat_check_status" class="oe_read_only btn-default"/>
+                    </div>
                 </xpath>
             </field>
         </record>
@@ -16,8 +28,20 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_short_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="attributes">
-                    <attribute name="string">VAT</attribute>
+                <xpath expr="//field[@name='vat']" position="replace">
+                </xpath>
+
+                <xpath expr="//label[@for='street']" position="before">
+                    <field name="base_vat_check_status" invisible="1"/>
+                    <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': ['|', ('base_vat_check_status', '!=', 'wrong'), ('vat','=',False)]}"/>
+                    <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_check_status', '!=', 'verified')]}"/>
+                    <field name="vat" string="VAT" attrs="{'invisible': [('vat','!=',False)]}"/>
+
+                    <label string="VAT" style="font-weight: bold;" attrs="{'invisible': ['|', ('base_vat_check_status', '!=', 'unknown'), ('vat','=',False)]}"/>
+                    <div class="o_row" attrs="{'invisible': ['|', ('base_vat_check_status', '!=', 'unknown'), ('vat','=',False)]}">
+                        <field name="vat" string="VAT" style="color:Orange;"/>
+                        <button id="base_vat_recheck_vies" string="Recheck" type="object" name="compute_base_vat_check_status" class="oe_read_only btn-default"/>
+                    </div>
                 </xpath>
             </field>
         </record>
