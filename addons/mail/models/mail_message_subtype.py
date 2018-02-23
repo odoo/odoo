@@ -46,14 +46,17 @@ class MailMessageSubtype(models.Model):
         self.clear_caches()
         return super(MailMessageSubtype, self).create(vals)
 
+    @api.multi
     def write(self, vals):
         self.clear_caches()
         return super(MailMessageSubtype, self).write(vals)
 
+    @api.multi
     def unlink(self):
         self.clear_caches()
         return super(MailMessageSubtype, self).unlink()
 
+    @api.model
     def auto_subscribe_subtypes(self, model_name):
         """ Retrieve the header subtypes and relations for the given model. """
         subtype_ids, relations = self._auto_subscribe_subtypes(model_name)
@@ -65,6 +68,7 @@ class MailMessageSubtype(models.Model):
         subtypes = self.search(domain)
         return subtypes.ids, set(subtype.relation_field for subtype in subtypes if subtype.relation_field)
 
+    @api.model
     def default_subtypes(self, model_name):
         """ Retrieve the default subtypes (all, internal, external) for the given model. """
         subtype_ids, internal_ids, external_ids = self._default_subtypes(model_name)
