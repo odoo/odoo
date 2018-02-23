@@ -14,6 +14,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
     def _get_partner_move_lines(self, account_type, date_from, target_move, period_length):
         periods = {}
+        where_clause = ''
         start = datetime.strptime(date_from, "%Y-%m-%d")
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
@@ -33,25 +34,31 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             move_state = ['posted']
         arg_list = (tuple(move_state), tuple(account_type))
         #build the reconciliation clause to see what partner needs to be printed
-        reconciliation_clause = '(l.reconciled IS FALSE)'
+        reconciliation_clause = '(account_move_line.reconciled IS FALSE)'
         cr.execute('SELECT debit_move_id, credit_move_id FROM account_partial_reconcile where create_date > %s', (date_from,))
         reconciled_after_date = []
         for row in cr.fetchall():
             reconciled_after_date += [row[0], row[1]]
         if reconciled_after_date:
-            reconciliation_clause = '(l.reconciled IS FALSE OR l.id IN %s)'
+            reconciliation_clause = '(account_move_line.reconciled IS FALSE OR account_move_line.id IN %s)'
             arg_list += (tuple(reconciled_after_date),)
         arg_list += (date_from, user_company)
+        if self._context.get('search_domain'):
+            query = self.env['account.move.line']._where_calc(self._context['search_domain'])
+            tables, where_clause, where_clause_params = query.get_sql()
+            where_clause = 'AND ' + where_clause
+            arg_list += tuple(where_clause_params)
         query = '''
-            SELECT DISTINCT l.partner_id, UPPER(res_partner.name)
-            FROM account_move_line AS l left join res_partner on l.partner_id = res_partner.id, account_account, account_move am
-            WHERE (l.account_id = account_account.id)
-                AND (l.move_id = am.id)
+            SELECT DISTINCT account_move_line.partner_id, UPPER(res_partner.name)
+            FROM account_move_line left join res_partner on account_move_line.partner_id = res_partner.id, account_account, account_move am
+            WHERE (account_move_line.account_id = account_account.id)
+                AND (account_move_line.move_id = am.id)
                 AND (am.state IN %s)
                 AND (account_account.internal_type IN %s)
                 AND ''' + reconciliation_clause + '''
-                AND (l.date <= %s)
-                AND l.company_id = %s
+                AND (account_move_line.date <= %s)
+                AND account_move_line.company_id = %s
+                ''' + where_clause + '''
             ORDER BY UPPER(res_partner.name)'''
         cr.execute(query, arg_list)
 
