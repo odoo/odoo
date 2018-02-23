@@ -3804,14 +3804,14 @@ var BasicModel = AbstractModel.extend({
 
         // for multi-pages list datapoints, we might need to read the
         // order field first to apply the order on all pages
-        if (list.res_ids.length > list.limit) {
-            if (!list.orderedResIDs && list.orderedBy.length) {
+        if (list.res_ids.length > list.limit && list.orderedBy.length) {
+            if (!list.orderedResIDs) {
                 var fieldNames = _.pluck(list.orderedBy, 'name');
                 def = this._readMissingFields(list, _.filter(list.res_ids, _.isNumber), fieldNames);
-                def.then(function () {
-                    self._sortList(list);
-                });
             }
+            def.then(function () {
+                self._sortList(list);
+            });
         }
         return def.then(function () {
             var resIDs = [];
