@@ -136,7 +136,9 @@ class RatingMixin(models.AbstractModel):
     _description = "Rating Mixin"
 
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
-    rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
+    rating_last_value = fields.Float(
+        string='Rating Last Value',  store=False,
+        compute='_compute_rating_last_value', compute_sudo=True, search='_search_rating_last_value')
     rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback')
     rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image')
     rating_count = fields.Integer('Rating count', compute="_compute_rating_count")
@@ -148,6 +150,12 @@ class RatingMixin(models.AbstractModel):
             ratings = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', record.id)], limit=1)
             if ratings:
                 record.rating_last_value = ratings.rating
+
+    def _search_rating_last_value(self, operator, value):
+        self.env.cr.execute("""
+SELECT DISTINCT ON (res_id) rating.id FROM rating_rating rating
+ORDER BY rating.write_date DESC
+WHERE rating.res_model = %s AND rating.res_id IN %s""", (self._name, self.ids,))
 
     @api.multi
     @api.depends('rating_ids')

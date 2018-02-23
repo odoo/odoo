@@ -48,7 +48,7 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <separator/>
-                    <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
+                    <filter string="Rated tasks" name="rating_task" domain="[('rating_ids', '!=', False)]" groups="project.group_project_rating"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" name="task" context="{'group_by':'name'}"/>
