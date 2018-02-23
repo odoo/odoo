@@ -423,7 +423,8 @@ class Module(models.Model):
         """
         modules_to_remove = self.mapped('name')
         self.env['ir.model.data']._module_data_uninstall(modules_to_remove)
-        self.write({'state': 'uninstalled', 'latest_version': False})
+        with self.env.norecompute():
+            self.write({'state': 'uninstalled', 'latest_version': False})
         return True
 
     @api.multi
