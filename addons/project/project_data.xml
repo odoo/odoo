@@ -111,7 +111,7 @@
 
     <data noupdate="1">
 
-        <record id="project_project_data" model="project.project">
+        <record forcecreate="False" id="project_project_data" model="project.project">
             <field name="name">Start here to discover Odoo</field>
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_root"/>
@@ -124,25 +124,25 @@
             <field name="alias_parent_model_id" ref="model_project_project"/>
         </record>
 
-        <record id="project_stage_data_0" model="project.task.type">
+        <record forcecreate="False" id="project_stage_data_0" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">New</field>
             <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
         </record>
 
-        <record id="project_stage_data_1" model="project.task.type">
+        <record forcecreate="False" id="project_stage_data_1" model="project.task.type">
             <field name="sequence">2</field>
             <field name="name">Basic</field>
             <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
         </record>
 
-        <record id="project_stage_data_2" model="project.task.type">
+        <record forcecreate="False" id="project_stage_data_2" model="project.task.type">
             <field name="sequence">3</field>
             <field name="name">Advanced</field>
             <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
         </record>
 
-        <record id="project_task_data_0" model="project.task">
+        <record forcecreate="False" id="project_task_data_0" model="project.task">
             <field name="sequence">1</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -153,7 +153,7 @@
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
-        <record id="project_task_data_1" model="project.task">
+        <record forcecreate="False" id="project_task_data_1" model="project.task">
             <field name="sequence">2</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -163,7 +163,7 @@
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
-        <record id="project_task_data_5" model="project.task">
+        <record forcecreate="False" id="project_task_data_5" model="project.task">
             <field name="sequence">3</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -173,7 +173,7 @@
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
-        <record id="project_task_data_2" model="project.task">
+        <record forcecreate="False" id="project_task_data_2" model="project.task">
             <field name="sequence">4</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -183,7 +183,7 @@
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
-        <record id="project_task_data_4" model="project.task">
+        <record forcecreate="False" id="project_task_data_4" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
@@ -192,7 +192,7 @@
             <field name="stage_id" ref="project_stage_data_2"/>
         </record>
 
-        <record id="msg_task_4" model="mail.message">
+        <record forcecreate="False" id="msg_task_4" model="mail.message">
             <field name="subject">Converse with your customers and colleagues</field>
             <field name="model">project.task</field>
             <field name="author_id" ref="base.partner_root"/>
@@ -202,12 +202,12 @@
             <field name="subtype_id" ref="mail.mt_comment"/>
         </record>
 
-        <record id="project_tag_data" model="project.tags">
+        <record forcecreate="False" id="project_tag_data" model="project.tags">
             <field name="name">NeedAssistance</field>
             <field name="color" eval="5"/>
         </record>
 
-        <record id="project_task_data_6" model="project.task">
+        <record forcecreate="False" id="project_task_data_6" model="project.task">
             <field name="sequence">3</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -219,7 +219,7 @@
             <field name="tag_ids" eval="[(6,0,[ref('project.project_tag_data')])]"/>
         </record>
 
-        <record id="project_task_data_12" model="project.task">
+        <record forcecreate="False" id="project_task_data_12" model="project.task">
             <field name="sequence">4</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -230,7 +230,7 @@
             <field name="stage_id" ref="project_stage_data_1"/>
         </record>
 
-        <record id="project_task_data_13" model="project.task">
+        <record forcecreate="False" id="project_task_data_13" model="project.task">
             <field name="sequence">5</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -240,7 +240,7 @@
             <field name="stage_id" ref="project_stage_data_1"/>
         </record>
 
-        <record id="project_task_data_8" model="project.task">
+        <record forcecreate="False" id="project_task_data_8" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
@@ -249,7 +249,7 @@
             <field name="description">Click on the bar in the upper right corner</field>
         </record>
 
-        <record id="msg_task_data_8_attach" model="ir.attachment">
+        <record forcecreate="False" id="msg_task_data_8_attach" model="ir.attachment">
             <field name="name">planner_icon.png</field>
             <field name="datas_fname">planner_icon.png</field>
             <field name="datas" type="base64" file="project/static/src/img/planner_icon.png"></field>
@@ -257,7 +257,7 @@
             <field name="res_id" ref="project_task_data_8"/>
         </record>
         
-        <record id="msg_task_data_8" model="mail.message">
+        <record forcecreate="False" id="msg_task_data_8" model="mail.message">
             <field name="subject">How to open the implementation guide ?</field>
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_data_8"/>
@@ -268,11 +268,11 @@
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_8_attach')])]"/>
         </record>
 
-        <record id="project_task_data_8" model="project.task">
+        <record forcecreate="False" id="project_task_data_8" model="project.task">
             <field name="displayed_image_id" ref="msg_task_data_8_attach"/>
         </record>
 
-        <record id="project_task_data_7" model="project.task">
+        <record forcecreate="False" id="project_task_data_7" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
@@ -281,7 +281,7 @@
             <field name="description">Click on the gear icon on the column, to archive the stage, with all the tasks in it. You can also archive one card only, by clicking on the button in the task form view.</field>
         </record>
 
-        <record id="project_task_data_9" model="project.task">
+        <record forcecreate="False" id="project_task_data_9" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
@@ -290,7 +290,7 @@
             <field name="description">Click on the last column to create a stage. The name depends on the process. For example, in a customer service process, a stage name may be 'Backlog', 'Waiting Customer Feedback' or 'Done'.</field>
         </record>
 
-        <record id="project_task_data_11" model="project.task">
+        <record forcecreate="False" id="project_task_data_11" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
@@ -299,7 +299,7 @@
             <field name="date_deadline" eval="datetime.now()+timedelta(days=30)"/>
         </record>
 
-        <record id="project_task_data_14" model="project.task">
+        <record forcecreate="False" id="project_task_data_14" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
@@ -308,7 +308,7 @@
             <field name="description">In the chatter, sending an email with an attachment will display the picture on the card. When there are several image attachments, you can choose which one you want to display.</field>
         </record>
 
-        <record id="msg_task_data_14_attach" model="ir.attachment">
+        <record forcecreate="False" id="msg_task_data_14_attach" model="ir.attachment">
             <field name="name">bird.jpg</field>
             <field name="datas_fname">bird.jpg</field>
             <field name="datas" type="base64" file="project/static/src/img/bird.jpg"></field>
@@ -316,7 +316,7 @@
             <field name="res_id" ref="project_task_data_14"/>
         </record>
 
-        <record id="msg_task_data_14" model="mail.message">
+        <record forcecreate="False" id="msg_task_data_14" model="mail.message">
             <field name="subject">How to open the planner ?</field>
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_data_14"/>
@@ -326,7 +326,7 @@
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_14_attach')])]"/>
         </record>
 
-        <record id="project_task_data_14" model="project.task">
+        <record forcecreate="False" id="project_task_data_14" model="project.task">
             <field name="displayed_image_id" ref="msg_task_data_14_attach"/>
         </record>
 

@@ -416,8 +416,8 @@ return Widget.extend({
     },
     get_groupable_fields: function (fields) {
         var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
-        var filter_group_field = _.filter(fields, function(field, name) {
-            if (field.store && _.contains(groupable_types, field.type)) {
+        var filter_group_field = _.filter(fields, function (field, name) {
+            if (field.sortable && _.contains(groupable_types, field.type)) {
                 field.name = name;
                 return field;
             }

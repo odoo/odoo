@@ -6,7 +6,7 @@ from openerp.tools.translate import _
 
 
 class website_account(http.Controller):
-    @http.route(['/my', '/my/home'], type='http', auth="public", website=True)
+    @http.route(['/my', '/my/home'], type='http', auth="user", website=True)
     def account(self, **kw):
         partner = request.env.user.partner_id
 
@@ -46,7 +46,7 @@ class website_account(http.Controller):
                         'country_id': post.pop('country_id'),
                         'state_id': post.pop('state_id')
                     }
-                    partner.commercial_partner_id.write(address_fields)
+                    partner.commercial_partner_id.sudo().write(address_fields)
                 partner.sudo().write(post)
                 if redirect:
                     return request.redirect(redirect)

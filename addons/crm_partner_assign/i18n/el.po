@@ -3,14 +3,14 @@
 # * crm_partner_assign
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2016-01-02 20:46+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-17 20:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +53,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n<p> Γεια σας, </ p> \n\n\nΈχουμε έρθει σε επαφή με αυτές τις προοπτικές που βρίσκονται στην περιοχή σας. Έτσι, οι ακόλουθες συστάσεις έχουν ανατεθεί σε $ ${ctx['partner_id'].name}: </ p> \n\n<ol>\n\n% για συστάσεις \n<li><a href=\"${lead.lead_link}\">${lead.lead_id.name ή 'Subject Undefined'}</a>, ${lead.lead_id.partner_name ή lead.lead_id.contact_name ή 'Contact Name Undefined'}, ${lead.lead_id.country_id και lead.lead_id.country_id.name ή 'Country Undefined' }, ${lead.lead_id.email_from ή 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>\n% τέλους για\n</ol>\n% αν ctx.get('partner_in_portal'):\n<p>Παρακαλώ συνδεθείτε στο <a href=\"${object.get_portal_url()}\">Διαδικτυακή Πύλη του Συνεργάτη</a> για να πάρετε λεπτομέρειες. Σε κάθε μολύβι υπάρχουν δύο κουμπιά στην πάνω αριστερή γωνία τα οποία πρέπει να πατήσετε αφού έρθετε σε επαφή με διευθυντή: \"Με ενδιαφέρει & δεν με ενδιαφέρει\". </p>\n% αλλιώς: <p>\nΔεν έχετε ακόμα μία πύλη πρόσβασης στην βάση δεδομένων μας. Παρακαλώ επικοινωνήστε ${ctx['partner_id'].user_id και ctx['partner_id'].user_id.email και 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) ή 'us'}.\n</p>\n% τέλος αν\n<p>Η καθοδήγηση θα σταλεί σε άλλο συνεργάτη αν δεν επικοινωνήσετε με τον διευθυντή προ 20 ημερών. </p>\n\n<p>Ευχαριστούμε</p>\n\n<pre>\n${ctx['partner_id'].user_id και ctx['partner_id'].user_id.signature | safe ή ''}\n</pre>\n% αν όχι ctx['partner_id'].user_id:\nΥ.Γ.: Φένεται πως δεν έχετε έναν λογαριασμό διαχειριστή αναθετημένο σε εσάς, παρακαλούμε επικοινωνήστε μας.\n% τέλος αν:"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_nbr
@@ -90,7 +90,7 @@ msgstr "<p>Δεν ενδιαφέρομαι για αυτήν την Σύστασ
 msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">Β </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">Ν </span>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -99,7 +99,7 @@ msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">Α </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">Δ </span>\n                                <span class=\"oe_grey\">) </span>"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_activation
@@ -442,6 +442,11 @@ msgid "Invoice Account Date"
 msgstr "Ημερομηνία Λογαριασμού Τιμολογίου"
 
 #. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr ""
+
+#. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested___last_update
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_forward_to_partner___last_update
@@ -542,13 +547,13 @@ msgstr "Επίπεδο"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_name
 msgid "Level Name"
-msgstr ""
+msgstr "Όνομα Επιπέδου"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Βαρύτητα Επιπέδου"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -702,7 +707,7 @@ msgstr "Ημερομηνία Συνεργασίας"
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnerships"
-msgstr ""
+msgstr "Συνεργασίες"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_planned_revenue
@@ -761,13 +766,13 @@ msgstr "Ιεράρχηση"
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:84
 #, python-format
 msgid "Set an email address for the partner %s"
-msgstr ""
+msgstr "Ορίστε ένα email για τον συνεργάτη %s"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:82
 #, python-format
 msgid "Set an email address for the partner(s): %s"
-msgstr ""
+msgstr "Ορίστε ένα email για τον συνεργάτη(ες): %s"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id
@@ -863,7 +868,7 @@ msgstr "ένας ενιαίος συνεργάτης: χειροκίνητη ε�
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_assignation
 msgid "crm.lead.assignation"
-msgstr ""
+msgstr "crm.lead.assignation"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_channel_interested
@@ -873,12 +878,12 @@ msgstr ""
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "crm.lead.forward.to.partner"
-msgstr ""
+msgstr "crm.lead.forward.to.partner"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr ""
+msgstr "π.χ. Χρυσός Συνεργάτης"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_res_partner_activation

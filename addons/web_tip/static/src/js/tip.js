@@ -15,6 +15,7 @@ var Tips = Class.extend({
         var self = this;
 
         this.tips = [];
+        this.tipObjects = {};
         this.view = null;
 
         var Tips = new Model('web.tip');
@@ -27,69 +28,47 @@ var Tips = Class.extend({
         bus.on('view_shown', this, function(view) {
             if (_.keys(view.fields_view).length === 0) {
                 view.on('view_loaded', this, function(fields_view) {
-                    self.view = view;
-                    self.on_view();
+                    if (this.view && this._eval_tips) {
+                        this.view.off('chatter_messages_displayed', this, this._eval_tips);
+                        this.view.off('to_edit_mode', this, this._remove_tips);
+                        this.view.off('to_view_mode', this, this._eval_tips);
+                        this.view.off('view_list_rendered', this, this._eval_tips);
+                    }
+                    this.view = view;
                 });
             } else {
-                self.view = view;
-                self.on_view();
+                this.view = view;
             }
         });
-    },
 
-    on_view: function() {
-        var self = this;
+        bus.on('DOM_updated', this, function() {
+            if (!this.view) return;
 
-        if (this._DOM_updated) {
-            bus.off('DOM_updated', this, this._DOM_updated);
-        }
-        this._DOM_updated = function() {
-            var action_id = self.view.ViewManager.action ? self.view.ViewManager.action.id : null;
-            var model = self.view.fields_view.model;
-            var mode = self.view.fields_view.type;
+            var self = this;
+            var action_id = this.view.ViewManager.action ? this.view.ViewManager.action.id : null;
+            var model = this.view.fields_view.model;
+            var mode = this.view.fields_view.type;
+            var type = this.view.datarecord ? this.view.datarecord.type : null;
+
+            this._eval_tips = function() { self.eval_tips(action_id, model, mode, type); };
+            this._remove_tips = function() { self.remove_tips(); };
 
             if (mode == 'form') {
-                self.on_form_view(action_id, model);
-            }
-            else if (self.view.hasOwnProperty('editor')) {
-                if (self._view_list_rendered) {
-                    self.view.off('view_list_rendered', self, self._view_list_rendered);
+                if ($('.oe_chatter').length > 0) {
+                    this.view.on('chatter_messages_displayed', this, this._eval_tips);
+                } else {
+                    this._eval_tips();
                 }
-                self._view_list_rendered = function() { self.eval_tips(action_id, model, mode); };
-                self.view.on('view_list_rendered', self, self._view_list_rendered);
+                this.view.on('to_edit_mode', this, this._remove_tips);
+                this.view.on('to_view_mode', this, this._eval_tips);
+            }
+            else if (this.view.hasOwnProperty('editor')) {
+                this.view.on('view_list_rendered', this, this._eval_tips);
             }
             else {
-                self.eval_tips(action_id, model, mode);
+                this._eval_tips();
             }
-        };
-        bus.on('DOM_updated', this, this._DOM_updated);
-    },
-
-    on_form_view: function(action_id, model) {
-        var self = this;
-        var type = this.view.datarecord ? this.view.datarecord.type : null
-
-        if ($('.oe_chatter').length > 0) {
-            if (this._chatter_messages_displayed) {
-                this.view.off('chatter_messages_displayed', this, this._chatter_messages_displayed);
-            }
-            this._chatter_messages_displayed = function() { self.eval_tips(action_id, model, 'form', type); };
-            this.view.on('chatter_messages_displayed', this, this._chatter_messages_displayed);
-        } else {
-            this.eval_tips(action_id, model, 'form', type);
-        }
-
-        if (this._to_edit_mode) {
-            this.view.off('to_edit_mode', this, this._to_edit_mode);
-        }
-        this._to_edit_mode = function() { self.remove_tips(); };
-        this.view.on('to_edit_mode', this, this._to_edit_mode);
-
-        if (this._to_view_mode) {
-            this.view.off('to_view_mode', this, this._to_view_mode);
-        }
-        this._to_view_mode = function() { self.eval_tips(action_id, model, 'form', type); };
-        this.view.on('to_view_mode', this, this._to_view_mode);
+        });
     },
 
     eval_tips: function(action_id, model, mode, type) {
@@ -109,7 +88,7 @@ var Tips = Class.extend({
         filter.is_consumed = false;
         tips = _.where(self.tips, filter);
         // To take into account a tip without fixed model : e.g. a generic tip on the breadcrumb
-        tips = tips.concat(_.where(self.tips, {mode: mode, is_consumed: false, model:false}))
+        tips = tips.concat(_.where(self.tips, {mode: mode, is_consumed: false, model:false}));
 
         if (type) {
             tips = _.filter(tips, function(tip) {
@@ -123,14 +102,21 @@ var Tips = Class.extend({
         valid_tips = _.uniq(valid_tips.concat(tips));
         _.each(valid_tips, function(tip) {
             if (!tip.is_consumed) {
-                var t = new Tip(tip);
-                t.do_tip();
+                if (self.tipObjects[tip.id]) {
+                    self.tipObjects[tip.id].destroy();
+                } else {
+                    self.tipObjects[tip.id] = new Tip(tip);
+                }
+                self.tipObjects[tip.id].do_tip();
             }
         });
     },
 
     remove_tips: function() {
-        $('.oe_breathing').remove();
+        for (var k in this.tipObjects) {
+            this.tipObjects[k].destroy();
+        }
+        this.tipObjects = {};
     },
 });
 
@@ -275,27 +261,9 @@ var Tip = Class.extend({
     },
 
     end_tip: function() {
-        var Tips = new Model('web.tip');
-
-        this.$element.popover('destroy');
-        this.$element.removeClass('oe_tip_show_element');
-        this.$breathing.remove();
-        this.$helper.remove();
-        this.$overlay.remove();
-        this.$cross.remove();
-
-        $('.oe_tip_fix_parent').each(function() {
-            $(this).removeClass('oe_tip_fix_parent');
-        });
-        $(document).off('keyup.web_tip');
-
-        bus.off('resize', this, this._resize_position);
-        bus.off('resize', this, this._resize);
-        bus.off('image_loaded', this, this._resize);
-        bus.off('please_reposition_tip', this, this._resize);
-
-        Tips.call('consume', [this.tip.id], {});
+        new Model('web.tip').call('consume', [this.tip.id], {});
         this.tip.is_consumed = true;
+        this.destroy();
     },
 
     _set_breathing_position: function() {
@@ -326,6 +294,31 @@ var Tip = Class.extend({
                 $('.popover-content').prepend(this.$cross);
             }
         }
+    },
+
+    destroy: function () {
+        if (this.$element) {
+            this.$element.popover('destroy');
+            this.$element.removeClass('oe_tip_show_element');
+        }
+        if (this.$breathing) {
+            this.$breathing.off().remove();
+        }
+        if (this.$helper) {
+            this.$helper.off().remove();
+            this.$overlay.off().remove();
+            this.$cross.off().remove();
+        }
+
+        $('.oe_tip_fix_parent').each(function() {
+            $(this).removeClass('oe_tip_fix_parent');
+        });
+        $(document).off('keyup.web_tip');
+
+        bus.off('resize', this, this._resize_position);
+        bus.off('resize', this, this._resize);
+        bus.off('image_loaded', this, this._resize);
+        bus.off('please_reposition_tip', this, this._resize);
     },
 });
 

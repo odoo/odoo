@@ -137,12 +137,10 @@ class AccountConfigSettings(models.TransientModel):
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
             'This installs the module account_bank_statement_import_ofx.')
 
-
     @api.model
     def _default_has_default_company(self):
         count = self.env['res.company'].search_count([])
         return bool(count == 1)
-
 
     @api.onchange('company_id')
     def onchange_company_id(self):
@@ -226,10 +224,8 @@ class AccountConfigSettings(models.TransientModel):
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
-        if self.default_sale_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
-        if self.default_purchase_tax_id:
-            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id] if self.default_sale_tax_id else False, for_all_users=True, company_id=self.company_id.id)
+        ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id] if self.default_purchase_tax_id else False, for_all_users=True, company_id=self.company_id.id)
 
     @api.multi
     def set_chart_of_accounts(self):

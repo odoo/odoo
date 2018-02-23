@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+# Copyright 2015 Eezee-It
+
 import json
 import logging
 import werkzeug
@@ -32,7 +34,7 @@ class SipsController(http.Controller):
 
         sips = acquirer_obj.search([('provider', '=', 'sips')], limit=1)
 
-        security = sips._sips_generate_shasign(post)
+        security = sips.sudo()._sips_generate_shasign(post)
         if security == post['Seal']:
             _logger.debug('Sips: validated data')
             res = tx_obj.sudo().form_feedback(post, 'sips')

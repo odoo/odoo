@@ -40,7 +40,7 @@ class ir_http(orm.AbstractModel):
     def _auth_method_public(self):
         if not request.session.uid:
             website = self.pool['website'].get_current_website(request.cr, openerp.SUPERUSER_ID, context=request.context)
-            if website:
+            if website and website.user_id:
                 request.uid = website.user_id.id
             else:
                 request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
@@ -132,13 +132,12 @@ class ir_http(orm.AbstractModel):
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
+                is_a_bot = self.is_a_bot()
                 nearest_lang = not func and self.get_nearest_lang(path[1])
                 url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or self.get_nearest_lang(request.lang)
+                                  or (not is_a_bot and self.get_nearest_lang(request.lang))
                                   or request.website.default_lang_code)
-
-                is_a_bot = self.is_a_bot()
 
                 request.lang = request.context['lang'] = nearest_lang or preferred_lang
                 # if lang in url but not the displayed or default language --> change or remove
@@ -161,7 +160,7 @@ class ir_http(orm.AbstractModel):
                     request.uid = None
                     path.pop(1)
                     return self.reroute('/'.join(path) or '/')
-            if path[1] == request.website.default_lang_code:
+            if request.lang == request.website.default_lang_code:
                 request.context['edit_translations'] = False
             if not request.context.get('tz'):
                 request.context['tz'] = request.session.get('geoip', {}).get('time_zone')
@@ -346,6 +345,8 @@ class PageConverter(werkzeug.routing.PathConverter):
         query = query and query.startswith('website.') and query[8:] or query
         if query:
             domain += [('key', 'like', query)]
+        website_id = request.context.get('website_id') or request.registry['website'].search(cr, uid, [], limit=1)[0]
+        domain += ['|', ('website_id', '=', website_id), ('website_id', '=', False)]
 
         views = View.search_read(cr, uid, domain, fields=['key', 'priority', 'write_date'], order='name', context=context)
         for view in views:
@@ -354,7 +355,7 @@ class PageConverter(werkzeug.routing.PathConverter):
             # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
             if xid=='homepage': continue
             record = {'loc': xid}
-            if view['priority'] <> 16:
+            if view['priority'] != 16:
                 record['__priority'] = min(round(view['priority'] / 32.0,1), 1)
             if view['write_date']:
                 record['__lastmod'] = view['write_date'][:10]

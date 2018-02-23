@@ -459,7 +459,7 @@ class ir_import(orm.TransientModel):
 
         _logger.info('importing %d rows...', len(data))
         import_result = self.pool[record.res_model].load(
-            cr, uid, import_fields, data, context=context)
+            cr, uid, import_fields, data, context=dict(context, import_file=True))
         _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise

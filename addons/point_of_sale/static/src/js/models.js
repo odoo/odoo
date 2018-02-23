@@ -203,7 +203,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'account.tax',
         fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
-        domain: null,
+        domain: function(self) {return [['company_id', '=', self.company && self.company.id || false]]},
         loaded: function(self, taxes){
             self.taxes = taxes;
             self.taxes_by_id = {};
@@ -240,6 +240,7 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.db.set_uuid(self.config.uuid);
+            self.cashier = self.get_cashier();
 
             var orders = self.db.get_orders();
             for (var i = 0; i < orders.length; i++) {
@@ -514,7 +515,7 @@ exports.PosModel = Backbone.Model.extend({
                                     .then(function(){ load_model(index + 1); },
                                           function(err){ loaded.reject(err); });
                             }catch(err){
-                                console.error(err.stack);
+                                console.error(err.message, err.stack);
                                 loaded.reject(err);
                             }
                         },function(err){
@@ -579,11 +580,12 @@ exports.PosModel = Backbone.Model.extend({
 
     // returns the user who is currently the cashier for this point of sale
     get_cashier: function(){
-        return this.cashier || this.user;
+        return this.db.get_cashier() || this.cashier || this.user;
     },
     // changes the current cashier
     set_cashier: function(user){
         this.cashier = user;
+        this.db.set_cashier(this.cashier);
     },
     //creates a new empty order and sets it as the current order
     add_new_order: function(){
@@ -682,6 +684,8 @@ exports.PosModel = Backbone.Model.extend({
             flushed.always(function(ids){
                 pushed.resolve();
             });
+
+            return flushed;
         });
         return pushed;
     },
@@ -782,6 +786,11 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
 
+        // Keep the order ids that are about to be sent to the
+        // backend. In between create_from_ui and the success callback
+        // new orders may have been added to it.
+        var order_ids_to_sync = _.pluck(orders, 'id');
+
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
         var posOrderModel = new Model('pos.order');
@@ -796,8 +805,8 @@ exports.PosModel = Backbone.Model.extend({
                 timeout: timeout
             }
         ).then(function (server_ids) {
-            _.each(orders, function (order) {
-                self.db.remove_order(order.id);
+            _.each(order_ids_to_sync, function (order_id) {
+                self.db.remove_order(order_id);
             });
             self.set('failed',false);
             return server_ids;
@@ -1081,7 +1090,8 @@ exports.Orderline = Backbone.Model.extend({
     init_from_JSON: function(json) {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         if (!this.product) {
-            console.error('ERROR: attempting to recover product not available in the point of sale');
+            console.error('ERROR: attempting to recover product ID', json.product_id,
+                'not available in the point of sale. Correct the product or clean the browser cache.');
         }
         this.price = json.price_unit;
         this.set_discount(json.discount);
@@ -1100,6 +1110,7 @@ exports.Orderline = Backbone.Model.extend({
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
+        orderline.price = this.price;
         orderline.type = this.type;
         orderline.selected = false;
         return orderline;
@@ -1242,7 +1253,9 @@ exports.Orderline = Backbone.Model.extend({
         this.trigger('change',this);
     },
     get_unit_price: function(){
-        return round_di(this.price || 0, this.pos.dp['Product Price'])
+        var digits = this.pos.dp['Product Price'];
+        // round and truncate to mimic _sybmbol_set behavior
+        return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
     },
     get_unit_display_price: function(){
         if (this.pos.config.iface_tax_included) {
@@ -1335,7 +1348,7 @@ exports.Orderline = Backbone.Model.extend({
         }
         return false;
     },
-    compute_all: function(taxes, price_unit, quantity, currency_rounding) {
+    compute_all: function(taxes, price_unit, quantity, currency_rounding, no_map_tax) {
         var self = this;
         var list_taxes = [];
         var currency_rounding_bak = currency_rounding;
@@ -1346,7 +1359,12 @@ exports.Orderline = Backbone.Model.extend({
         var total_included = total_excluded;
         var base = total_excluded;
         _(taxes).each(function(tax) {
-            tax = self._map_tax_fiscal_position(tax);
+            if (!no_map_tax){
+                tax = self._map_tax_fiscal_position(tax);
+            }
+            if (!tax){
+                return;
+            }
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
                 total_excluded = ret.total_excluded;
@@ -1782,7 +1800,7 @@ exports.Order = Backbone.Model.extend({
     },
 
     initialize_validation_date: function () {
-        this.validation_date = this.validation_date || new Date();
+        this.validation_date = new Date();
     },
 
     set_tip: function(tip) {
@@ -1803,6 +1821,27 @@ exports.Order = Backbone.Model.extend({
         this.orderlines.remove(line);
         this.select_orderline(this.get_last_orderline());
     },
+
+    fix_tax_included_price: function(line){
+        if(this.fiscal_position){
+            var unit_price = line.price;
+            var taxes = line.get_taxes();
+            var mapped_included_taxes = [];
+            _(taxes).each(function(tax) {
+                var line_tax = line._map_tax_fiscal_position(tax);
+                if(tax.price_include && tax.id != line_tax.id){
+
+                    mapped_included_taxes.push(tax);
+                }
+            })
+
+            unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+
+            line.set_unit_price(unit_price);
+        }
+
+    },
+
     add_product: function(product, options){
         if(this._printed){
             this.destroy();
@@ -1818,9 +1857,14 @@ exports.Order = Backbone.Model.extend({
         if(options.quantity !== undefined){
             line.set_quantity(options.quantity);
         }
+
         if(options.price !== undefined){
             line.set_unit_price(options.price);
         }
+
+        //To substract from the unit price the included taxes mapped by the fiscal position
+        this.fix_tax_included_price(line);
+
         if(options.discount !== undefined){
             line.set_discount(options.discount);
         }

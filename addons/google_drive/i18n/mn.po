@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-15 12:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-07-28 03:05+0000\n"
+"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgid ""
 "                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
 "                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
-msgstr ""
+msgstr "<b>Шинэ шүүлтүүр үүсгэхэд:</b><br/>\n                                - Шүүх хүсэлтэй Odoo баримт руу очно. Жишээлбэл, Боломж руу очоод Борлуулалтын хэлтсийг хайх.<br/>\n                                - Энэ \"Хайх\" дэлгэц дээр, \"Энэ шүүлтүүрийг хадгал\" -г сонгоод, нэрийг оруулна (Ж: Борлуулалтын хэлтэс)<br/>\n                                - Хэрэв \"Бүх хэрэглэгчтэй хуваалцах\" -г сонговол, \"Илүү\" сонголт дээрх google баримтын холбоосыг Борлуулалтын Хэлтсийн боломжийн бүх хэрэглэгчдэд харуулна.<br/>\n                                - \"Бүх хэрэглэгчтэй хуваалцах\" -г сонгохгүй бол, \"Илүү\" сонголт дээрх google баримтын холбоосыг Борлуулалтын Хэлтсийн боломжийн бусад хэрэглэгчдэд харуулахгүй.<br/>\n                                - Шүүлтүүрийг тодорхойлоогүй бол, google баримтын холбоосыг бүх боломжийн бүх хэрэглэгчийн \"Илүү\" сонголт дээр харуулна."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
@@ -37,29 +37,29 @@ msgstr "Идэвхитэй"
 #: code:addons/google_drive/google_drive.py:34
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr ""
+msgstr "Таны Google Drive нэрээс нэг ч түлхүүр олдохгүй байна"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "Зөвшөөрөх Код"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
-msgstr ""
+msgstr "Google -н тал дээр шинэ google drive -н нэрийг оруулна уу. Ж. gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Click to add a new template."
-msgstr ""
+msgstr "Шинэ үлгэр нэмэх бол дарна уу."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
 msgid "Configure your templates"
-msgstr ""
+msgstr "Үлгэрүүдийг тохируулах"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
@@ -75,7 +75,7 @@ msgstr "Үүсгэсэн"
 #: code:addons/google_drive/google_drive.py:141
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "Google drive - г нэг нэгээр нь л үүсгэх боломжтой."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -107,30 +107,30 @@ msgstr ""
 #. module: google_drive
 #: model:ir.ui.menu,name:google_drive.menu_google_drive_config
 msgid "Google Drive"
-msgstr ""
+msgstr "Google Drive"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "Google Drive Тохиргоо"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
-msgstr ""
+msgstr "Google Drive Нэр"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:55
 #: code:addons/google_drive/google_drive.py:75
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "Google Drive - г тохируулаагүй байна. Админтай холбогдоно уу."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
 msgid "Google Drive templates config"
-msgstr ""
+msgstr "Google Drive үлгэрийн тохиргоо"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_id
@@ -160,7 +160,7 @@ msgid ""
 "spreadsheet to control the quality of your product or review the delivery "
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
-msgstr ""
+msgstr "Өөрийн google drive үлгэрийг аль ч Odoo баримттай холбох боломжтой. Хэрэв танд хамтрагчаараа бөглүүлэх маш тодорхой баримт байгаа бол, ж.нь. Барааны чанарыг хянахад эсвэл гадаад улс дахь захиалга бүрийн хүргэлтийн шалгах хуудсыг шалгахад хүснэгт ашиглах, ... Эдгээрийг удирдах, Odoo -той холбох, ажилчидтай хамтрахад ашиглахад маш хялбар."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
@@ -178,7 +178,7 @@ msgstr ""
 #: code:addons/google_drive/google_drive.py:173
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "Зөв Google баримтын холбоос оруулна уу."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
@@ -191,7 +191,7 @@ msgstr "Нөөц Id"
 msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
-msgstr ""
+msgstr "Тасалбарыг боловсруулах үед алдаа гарлаа. Дахин зөвшөөрлийн код хүснэ үү."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -201,7 +201,7 @@ msgstr "Тэмплэйт Нэр"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
 msgid "Template URL"
-msgstr ""
+msgstr "Үлгэр холбоос"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
@@ -213,12 +213,12 @@ msgstr "Үлгэрүүд"
 #: code:addons/google_drive/google_drive.py:90
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr ""
+msgstr "Google Үлгэр олдсонгүй. Устгагдсан байж магадгүй."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_base_config_settings_google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr ""
+msgstr "Google -ээс зөвшөөрлийн код авах холбоос"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -227,7 +227,7 @@ msgid ""
 "                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
-msgstr ""
+msgstr "Хавсаргасан баримтын нэрд тогтсон эсвэл хувьсагч өгөгдөл ашиглах боломжтой. Google Drive дээрх баримтуудыг ялгахын тулд тогтсон үг ба талбарыг ашиглана уу. Жишээлбэл, дээрх жишээнд хэрэв та Google Drive нэрийн талбарт Agrolait_%(name)s_Sales гэж бичвэл таны Google Drive болон Odoo хавсралт дахь баримт 'Agrolait_SO0001_Sales' гэж нэрлэгдэнэ."
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:117
@@ -235,12 +235,12 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
+msgstr "Баримт дээр 'холбоостой хүн болгон' -ы 'уншигч' эрхийг бичээгүй байна"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #. module: google_drive
 #: code:addons/google_drive/google_drive.py:52
@@ -248,12 +248,12 @@ msgstr ""
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
-msgstr ""
+msgstr "Та google -ээс өгөх 'Зөвшөөрлийн Код' -г тохируулаагүй байна. Кодыг авч тохируулна уу."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
 msgid "and paste it here"
-msgstr ""
+msgstr "энд тавь"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_base_config_settings
@@ -264,4 +264,4 @@ msgstr "base.config.settings"
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-msgstr ""
+msgstr "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

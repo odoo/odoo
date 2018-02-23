@@ -28,8 +28,8 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Category')
-    asset_start_date = fields.Date(string='Asset End Date', compute='_get_asset_date', readonly=True, store=True)
-    asset_end_date = fields.Date(string='Asset Start Date', compute='_get_asset_date', readonly=True, store=True)
+    asset_start_date = fields.Date(string='Asset Start Date', compute='_get_asset_date', readonly=True, store=True)
+    asset_end_date = fields.Date(string='Asset End Date', compute='_get_asset_date', readonly=True, store=True)
     asset_mrr = fields.Float(string='Monthly Recurring Revenue', compute='_get_asset_date', readonly=True, digits=dp.get_precision('Account'), store=True)
 
     @api.one
@@ -77,7 +77,11 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
             self.account_id = self.asset_category_id.account_asset_id.id
         elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.account_depreciation_id.id
+            #DO NOT FORWARDPORT
+            if self.asset_category_id.account_income_recognition_id:
+                self.account_id = self.asset_category_id.account_asset_id.id
+            else:
+                self.account_id = self.asset_category_id.account_depreciation_id.id
 
     @api.onchange('uom_id')
     def _onchange_uom_id(self):

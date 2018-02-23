@@ -5,7 +5,7 @@
 # Translators:
 # Jens Metschkoll <jmetschkoll@snej-production.de>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# darenkster <renkosp@gmail.com>, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-07-13 06:03+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-01-31 14:51+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -142,7 +142,7 @@ msgstr "<span class=\"o_stat_text\">Start</span>\n<span class=\"o_stat_text\">Be
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"/>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1130,11 +1130,6 @@ msgid "Messages"
 msgstr "Mitteilungen"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_message_ids
-msgid "Messages and communication history"
-msgstr "Nachrichten und Kommunikations-Historie"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
 msgid "Mobile"
 msgstr "Mobil"
@@ -1366,8 +1361,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Regel für den Versand von Mitteilungen über das E-Mail-Gateways.\n- Alle Benutzer: Jeder kann  uneingeschränkt Mails senden\n- Authentifizierte Partner: Nur angemeldete Partner\n- Nur Verfolger: Nur Verfolger dieses Dokuments\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr "Richtlinie zum Posten einer Dokument-Mitteilung über das E-Mail-Gateway.\n- Jeder: jeder kann posten\n- Partner: nur bestätigte Partner\n- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job

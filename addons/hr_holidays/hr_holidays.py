@@ -18,6 +18,7 @@ from dateutil.relativedelta import relativedelta
 from openerp.exceptions import UserError, AccessError
 from openerp import tools
 from openerp.osv import fields, osv
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -299,10 +300,6 @@ class hr_holidays(osv.osv):
         the date_from.
         Also update the number_of_days.
         """
-        # date_to has to be greater than date_from
-        if (date_from and date_to) and (date_from > date_to):
-            raise UserError(_('The start date must be anterior to the end date.'))
-
         result = {'value': {}}
 
         # No date_to set so far: automatically compute one 8 hours later
@@ -323,10 +320,6 @@ class hr_holidays(osv.osv):
         """
         Update the number_of_days.
         """
-        # date_to has to be greater than date_from
-        if (date_from and date_to) and (date_from > date_to):
-            raise UserError(_('The start date must be anterior to the end date.'))
-
         result = {'value': {}}
 
         # Compute and update the number of days
@@ -494,7 +487,8 @@ class hr_holidays(osv.osv):
             if record.holiday_type != 'employee' or record.type != 'remove' or not record.employee_id or record.holiday_status_id.limit:
                 continue
             leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
-            if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
+            if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
+              float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 return False
         return True
 
@@ -531,8 +525,8 @@ class hr_holidays(osv.osv):
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(hr_holidays, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
-        app_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': ids[0], 'signal': 'validate'})
-        ref_action = '/mail/workflow?%s' % url_encode({'model': self._name, 'res_id': ids[0], 'signal': 'refuse'})
+        app_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/hr_holidays/validate', context=context)
+        ref_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/hr_holidays/refuse', context=context)
 
         holiday = self.browse(cr, uid, ids[0], context=context)
         actions = []

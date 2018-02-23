@@ -3,14 +3,15 @@
 # * portal_sale
 # 
 # Translators:
+# Ermin Trevisan <trevi@twanda.com>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-22 11:24+0000\n"
-"PO-Revision-Date: 2016-07-23 10:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-05-12 12:23+0000\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +86,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n<p>Guten Tag ${object.partner_id.name},</p>\n\n<p>Eine neue Rechnung wurde für Sie erstellt: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>REFERENZ</strong><br />\n&nbsp;&nbsp;Rechnungsnummer: <strong>${object.number}</strong><br />\n&nbsp;&nbsp;Rechnungssumme: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n&nbsp;&nbsp;Rechnungsdatum: ${object.date_invoice}<br />\n% if object.origin:\n&nbsp;&nbsp;Auftragsnummer: ${object.origin}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Ihr Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Rechnung%20${object.number}\">${object.user_id.name}</a>\n% endif\n</p> \n\n% set signup_url = object.get_signup_url()\n% if signup_url:\n<p>\nÜber unser Kundenportal können Sie Ihre Rechnung einsehen und online bezahlen:\n</p>\n<a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\nhref=\"${signup_url}\">Rechnung ansehen</a>\n% endif\n\n% if object.paypal_url:\n<br/>\n<p>Sie können direkt mit PayPal bezahlen:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Bitte kontaktieren Sie uns bei Fragen.</p>\n<p>Vielen Dank, dass Sie ${object.company_id.name or 'uns'} gewählt haben!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nPhone:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nWeb :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n% endif\n<p></p>\n</div>\n</div>"
 
 #. module: portal_sale
 #: model:mail.template,body_html:portal_sale.email_template_edi_sale

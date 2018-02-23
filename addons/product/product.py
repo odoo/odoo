@@ -364,12 +364,12 @@ class product_attribute_line(osv.osv):
         # search on a m2o and one on a m2m, probably this will quickly become
         # difficult to compute - check if performance optimization is required
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            new_args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
-        else:
-            new_args = args
+            args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+            return self.name_get(cr, uid, ids, context=context)
         return super(product_attribute_line, self).name_search(
             cr, uid, name=name,
-            args=new_args,
+            args=args,
             operator=operator, context=context, limit=limit)
 
 
@@ -447,7 +447,7 @@ class product_template(osv.osv):
             names = [names]
         res = {id: {} for id in ids}
         templates = self.browse(cr, uid, ids, context=context)
-        unique_templates = [template.id for template in templates if template.product_variant_count == 1]
+        unique_templates = [template.id for template in templates if len(template.product_variant_ids) == 1]
         for template in templates:
             for name in names:
                 res[template.id][name] = getattr(template.product_variant_ids[0], name) if template.id in unique_templates else 0.0
@@ -456,7 +456,7 @@ class product_template(osv.osv):
     def _set_product_template_field(self, cr, uid, product_tmpl_id, name, value, args, context=None):
         ''' Set the standard price modification on the variant if there is only one variant '''
         template = self.pool['product.template'].browse(cr, uid, product_tmpl_id, context=context)
-        if template.product_variant_count == 1:
+        if len(template.product_variant_ids) == 1:
             variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
             return variant.write({name: value})
         return {}
@@ -561,7 +561,7 @@ class product_template(osv.osv):
             else:
                 company_id = context.get('force_company') or product.env.user.company_id.id
                 product = product.with_context(force_company=company_id)
-                res[product.id] = res[product.id] = product.sudo()[ptype]
+                res[product.id] = product.sudo()[ptype]
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
@@ -778,7 +778,7 @@ class product_product(osv.osv):
     _description = "Product"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread']
-    _order = 'default_code,name_template'
+    _order = 'default_code,name_template,id'
 
     def _product_price(self, cr, uid, ids, name, arg, context=None):
         plobj = self.pool.get('product.pricelist')
@@ -917,9 +917,11 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
+    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=None, uom_id=False, context=None):
         if context is None:
             context = {}
+        if date is None:
+            date = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
         res = self.pool.get('product.supplierinfo').browse(cr, uid, [])
         for seller in product_id.seller_ids:
             # Set quantity in UoM of seller
@@ -1077,8 +1079,7 @@ class product_product(osv.osv):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                if variant:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
                 if not sellers:
                     sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
             if sellers:
@@ -1177,15 +1178,6 @@ class product_product(osv.osv):
         if context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
         return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-
-    def open_product_template(self, cr, uid, ids, context=None):
-        """ Utility method used to add an "Open Template" button in product views """
-        product = self.browse(cr, uid, ids[0], context=context)
-        return {'type': 'ir.actions.act_window',
-                'res_model': 'product.template',
-                'view_mode': 'form',
-                'res_id': product.product_tmpl_id.id,
-                'target': 'new'}
 
     def create(self, cr, uid, vals, context=None):
         ctx = dict(context or {}, create_product_product=True)

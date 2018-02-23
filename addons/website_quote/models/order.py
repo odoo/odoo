@@ -189,12 +189,15 @@ class sale_order(osv.osv):
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
+            date = time.strftime('%Y-%m-%d')
             res = self.pool.get('sale.order.line').product_id_change(cr, uid, False,
                 False, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
-                line.product_uom_id.id, line.name, partner, False, True, time.strftime('%Y-%m-%d'),
+                line.product_uom_id.id, line.name, partner, False, True, date,
                 False, fiscal_position_id, True, context)
             data = res.get('value', {})
             if pricelist_id:
+                pricelist = self.pool['product.pricelist'].browse(cr, uid, [pricelist_id], context=context)[0]
+                data.update(self.pool['sale.order.line']._get_purchase_price(cr, uid, pricelist, line.product_id, line.product_uom_id, date, context=context))
                 uom_context = context.copy()
                 uom_context['uom'] = line.product_uom_id.id
                 price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]

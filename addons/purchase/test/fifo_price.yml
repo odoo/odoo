@@ -1,8 +1,9 @@
 -
   Set the company currency as EURO for the sake of repeatibility
 -
-  !record {model: res.company, id: base.main_company}:
-    currency_id: base.EUR
+  !python {model: res.company}: |
+    company = self.browse(cr, uid, ref('base.main_company'))
+    company.currency_id = company.env['res.currency'].browse(ref('base.EUR'))
 -
   Set a product as using fifo price
 -
@@ -19,13 +20,13 @@
     valuation: real_time
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
+    supplier_taxes_id: []
     description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
   I create a draft Purchase Order for first in move for 10 kg at 50 euro
 - 
   !record {model: purchase.order, id: purchase_order_fifo1}:
     partner_id: base.res_partner_3
-    currency_id: base.EUR
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 10.0
@@ -268,6 +269,7 @@
     valuation: real_time
     property_stock_account_input: o_expense
     property_stock_account_output: o_income
+    supplier_taxes_id: []
     description: 
 - 
   Create outpicking.  We create delivery order of 100 kg.

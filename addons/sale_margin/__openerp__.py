@@ -18,4 +18,5 @@ Price and Cost Price.
     'data':['security/ir.model.access.csv','sale_margin_view.xml'],
     'auto_install': False,
     'installable': True,
+    'uninstall_hook': "uninstall_hook",
 }

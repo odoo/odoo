@@ -3,12 +3,13 @@
 # * hr
 # 
 # Translators:
+# jl2035 <jaka.luthar@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 10:41+0000\n"
-"PO-Revision-Date: 2016-02-20 10:36+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-18 00:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -187,7 +188,7 @@ msgstr "Podrejeni oddelki"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
-msgstr ""
+msgstr "Državljanstvo in druge informacije "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
@@ -197,28 +198,28 @@ msgstr "Kraj"
 #. module: hr
 #: model:web.tip,description:hr.hr_tip_2
 msgid "Click here to change the recruitment goal!"
-msgstr ""
+msgstr "Kliknite za spremembo kadrovskega cilja."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
-msgstr ""
+msgstr "S klikom ustvarite novega Zaposlenega."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr ""
+msgstr "S klikom ustvarite nov oddelek."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid "Click to define a new department."
-msgstr ""
+msgstr "S klikom definirate nov oddelek."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
-msgstr ""
+msgstr "S klikom definirate novo delovno mesto."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -438,14 +439,12 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr "Napaka! Ne morete kreirati rekurzivnih oddelkov."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Error! You cannot create recursive hierarchy of Employee(s)."
 
@@ -508,6 +507,11 @@ msgid "Gender"
 msgstr "Spol"
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
 msgstr ""
@@ -556,7 +560,7 @@ msgstr "Združeno po"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr ""
+msgstr "Kadrovski Oddelek"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -744,11 +748,6 @@ msgstr "Datum zadnjega sporočila"
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
 msgstr "Zadnjič spremenjeno"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_last_website_so_id
-msgid "Last Online Sale Order"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
@@ -979,6 +978,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
 msgstr "Nadrejeni oddelek"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Partner"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1352,7 +1356,7 @@ msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
-msgstr ""
+msgstr "Z vpogledom v Odoo kadrovski sistem\nlahko enostavno in hitro najdete vse informacije za vsako osebo;\nkontaktni podatki, oddelek, odsotnost, itd."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1376,7 +1380,7 @@ msgstr "Službena e-pošta"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
 msgid "Work Location"
-msgstr ""
+msgstr "Lokacija Delovnega mesta"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone

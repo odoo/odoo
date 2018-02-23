@@ -5,22 +5,22 @@
 # Translators:
 # fausthuang, 2015
 # fausthuang, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2015
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2015-2016
 # Kai Zhu <parahexen@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
 # liyes <bodetools@gmail.com>, 2015
-# lttlsnk <lttlsnk@gmail.com>, 2016
-# lttlsnk <lttlsnk@gmail.com>, 2016
-# wxb <bd5dml@gmail.com>, 2016
+# 菜小蛇 <lttlsnk@gmail.com>, 2016
+# 菜小蛇 <lttlsnk@gmail.com>, 2016
+# xiaobin wu <bd5dml@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2016-06-22 02:43+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2018-01-22 04:08+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -885,6 +885,13 @@ msgid "Error"
 msgstr "错误"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr "错误：不正确的域"
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1153,6 +1160,15 @@ msgstr "不可用"
 #, python-format
 msgid "Invalid data"
 msgstr "无效的数据"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr "数据库名称无效。只允许字母数字字符，下划线，连字符和点。"
 
 #. module: web
 #. openerp-web
@@ -1513,8 +1529,8 @@ msgstr "无选择的记录"
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr "找不到该字段的值 "
+msgid "No value found for the field %s for value %s"
+msgstr "找不到该字段%s的值 %s"
 
 #. module: web
 #. openerp-web
@@ -1794,8 +1810,8 @@ msgstr "打印工作流"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "数量"
+msgid "Count"
+msgstr "个数"
 
 #. module: web
 #. openerp-web
@@ -2094,6 +2110,13 @@ msgstr "稍安勿躁, <br />r\n\n大菜烹饪中 : )"
 #, python-format
 msgid "Technical Translation"
 msgstr "技术性翻译"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr "该域名是错误的。"
 
 #. module: web
 #. openerp-web
@@ -2473,6 +2496,12 @@ msgstr "错误输入值!"
 #, python-format
 msgid "XML ID:"
 msgstr "XML ID："
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "错误的登录名/密码"
 
 #. module: web
 #. openerp-web

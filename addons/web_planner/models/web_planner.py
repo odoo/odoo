@@ -65,6 +65,8 @@ class Planner(models.Model):
             module = self.env['ir.module.module'].sudo().search([('name', '=', module_name)], limit=1)
             if module:
                 params['id'] = module.id
+            else:
+                return "#show_enterprise"
         return "/web#%s" % (urlencode(params),)
 
     @api.model

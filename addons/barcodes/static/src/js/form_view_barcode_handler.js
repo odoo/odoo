@@ -27,6 +27,8 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         this.__quantity_listener = _.bind(this._set_quantity_listener, this);
         BarcodeHandlerMixin.init.apply(this, arguments);
 
+        this.process_barcode_mutex = new utils.Mutex();
+
         return this._super.apply(this, arguments);
     },
 
@@ -50,6 +52,11 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
             this.map_barcode_method['O-CMD.PAGER-PREV'] = _.bind(this.form_view.pager.previous, this.form_view.pager);
             this.map_barcode_method['O-CMD.PAGER-NEXT'] = _.bind(this.form_view.pager.next, this.form_view.pager);
         }
+    },
+
+    destroy: function () {
+        this.stop_listening();
+        this._super.apply(this, arguments);
     },
 
     _display_no_edit_mode_warning: function() {
@@ -76,7 +83,7 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
                 if (this.last_scanned_barcode) {
                     var new_qty = window.prompt(_t('Set quantity'), character) || "0";
                     new_qty = new_qty.replace(',', '.');
-                    var record = this._get_records(field).find(function(record) {
+                    var record = _.find(this._get_records(field), function (record) {
                         return record.get('product_barcode') === self.last_scanned_barcode;
                     });
                     if (record) {
@@ -131,31 +138,46 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         else if (this.form_view.get('actual_mode') === 'view')
             this._display_no_edit_mode_warning();
         else {
-            // Call hook method possibly implemented by subclass
-            this.pre_onchange_hook(barcode).then(function(proceed) {
-                if (proceed === true) {
-                    // Wait for hypothetical ongoing onchange to finish
-                    self.form_view.onchanges_mutex.exec(function() {
-                        // A real onchange is triggered when a value actually changes (which can correspond
-                        // to a widget's blur event per example). Commit the value of fields before
-                        // programmatically triggering an onchange to be consistent with this.
-                        var mutex_commit_value = new utils.Mutex();
-                        _.each(self.form_view.fields, function(field) {
-                            mutex_commit_value.exec(_.bind(field.commit_value, field));
-                        });
-                        return mutex_commit_value.def.then(function(){
-                            // Trigger the barcode onchange
-                            self.set_value(barcode);
-                        });
-                    });
+            var process_barcode = function () {
+                // this function can be passed to `Mutex.exec` in order to make sure
+                // that every ongoing onchanges in the form view are done
+                var form_onchanges_mutex = function () {
+                    return self.form_view.onchanges_mutex.def;
                 }
-            });
+
+                // before setting the barcode field with the received barcode, we commit
+                // every fields of the form view and we wait for their hypothetical ongoing
+                // onchanges to finish
+                var commit_mutex = new utils.Mutex();
+                _.each(self.form_view.fields, function (field) {
+                    commit_mutex.exec(function () {
+                        return field.commit_value();
+                    });
+                    commit_mutex.exec(form_onchanges_mutex);
+                });
+
+                return commit_mutex.def.then(function () {
+                    return self.pre_onchange_hook(barcode).then(function (proceed) {
+                        if (proceed) {
+                            self.set_value(barcode);       // set the barcode field with the received one
+                            return form_onchanges_mutex(); // wait for its onchange to finish
+                        }
+                    });
+                });
+            };
+
+            this.process_barcode_mutex.exec(process_barcode);
         }
     },
 
     _get_records: function(field) {
-        return field.viewmanager.active_view.controller.records || // tree view
-            field.viewmanager.active_view.controller.widgets; // kanban view
+        var active_view = field.viewmanager.active_view;
+        if (active_view.type === "kanban") {
+            return active_view.controller.widgets;
+        } else {
+             // tree view case
+            return active_view.controller.records.records;
+        }
     },
 });
 

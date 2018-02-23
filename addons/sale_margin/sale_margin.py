@@ -18,6 +18,19 @@ class sale_order_line(osv.osv):
         price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
         return price
 
+    @api.model
+    def _get_purchase_price(self, pricelist, product, product_uom, date):
+        frm_cur = self.env.user.company_id.currency_id
+        to_cur = pricelist.currency_id
+        purchase_price = product.standard_price
+        if product_uom != product.uom_id:
+            purchase_price = self.env['product.uom']._compute_price(product.uom_id.id, purchase_price, to_uom_id=product_uom.id)
+        ctx = self.env.context.copy()
+        ctx['date'] = date
+        price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
+        return {'purchase_price': price}
+
+
     @api.onchange('product_id', 'product_uom')
     def product_id_change_margin(self):
         if not self.order_id.pricelist_id or not self.product_id or not self.product_uom:
@@ -44,7 +57,16 @@ class sale_order_line(osv.osv):
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = 0
             if line.product_id:
-                tmp_margin = line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uom_qty)
+                price = line.purchase_price
+
+                if not price:
+                    from_cur = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
+                    cost = line.product_id.standard_price
+                    ctx = context.copy()
+                    ctx['date'] = line.order_id.date_order
+                    price = self.pool['res.currency'].compute(cr, uid, from_cur.id, cur.id, cost, round=False, context=ctx)
+
+                tmp_margin = line.price_subtotal - (price * line.product_uom_qty)
                 res[line.id] = cur_obj.round(cr, uid, cur, tmp_margin)
         return res
 

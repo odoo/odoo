@@ -256,6 +256,8 @@ class AccountBankStatement(models.Model):
     def button_journal_entries(self):
         context = dict(self._context or {})
         context['journal_id'] = self.journal_id.id
+        aml = self.env['account.move.line'].search([('statement_id', 'in', self.ids)])
+        aml |= aml.mapped('move_id').mapped('line_ids')
         return {
             'name': _('Journal Items'),
             'view_type': 'form',
@@ -263,7 +265,7 @@ class AccountBankStatement(models.Model):
             'res_model': 'account.move.line',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'domain': [('statement_id', 'in', self.ids)],
+            'domain': [('id', 'in', aml.ids)],
             'context': context,
         }
 
@@ -272,12 +274,12 @@ class AccountBankStatement(models.Model):
         """ Changes statement state to Running."""
         for statement in self:
             if not statement.name:
-                context = {'ir_sequence_date', statement.date}
+                context = {'ir_sequence_date': statement.date}
                 if statement.journal_id.sequence_id:
-                    st_number = statement.journal_id.sequence_id.with_context(context).next_by_id()
+                    st_number = statement.journal_id.sequence_id.with_context(**context).next_by_id()
                 else:
                     SequenceObj = self.env['ir.sequence']
-                    st_number = SequenceObj.with_context(context).next_by_code('account.bank.statement')
+                    st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
                 statement.name = st_number
             statement.state = 'open'
 
@@ -349,7 +351,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, sequence"
+    _order = "statement_id desc, sequence, id desc"
     _inherit = ['ir.needaction_mixin']
 
     name = fields.Char(string='Memo', required=True)
@@ -373,6 +375,7 @@ class AccountBankStatementLine(models.Model):
     journal_entry_ids = fields.One2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True)
     amount_currency = fields.Monetary(help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
+    state = fields.Selection(related='statement_id.state' , string='Status', readonly=True)
 
     @api.one
     @api.constrains('amount')
@@ -415,21 +418,20 @@ class AccountBankStatementLine(models.Model):
 
     @api.multi
     def button_cancel_reconciliation(self):
-        moves_to_unbind = self.env['account.move']
         moves_to_cancel = self.env['account.move']
         payment_to_unreconcile = self.env['account.payment']
         for st_line in self:
-            moves_to_unbind |= st_line.journal_entry_ids
+            moves_to_unbind = st_line.journal_entry_ids
             for move in st_line.journal_entry_ids:
                 if any(line.payment_id for line in move.line_ids):
                     for line in move.line_ids:
                         payment_to_unreconcile |= line.payment_id
                     continue
                 moves_to_cancel |= st_line.journal_entry_ids
-        if moves_to_unbind:
-            moves_to_unbind.write({'statement_line_id': False})
-            for move in moves_to_unbind:
-                move.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
+            if moves_to_unbind:
+                moves_to_unbind.write({'statement_line_id': False})
+                for move in moves_to_unbind:
+                    move.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
 
         if moves_to_cancel:
             for move in moves_to_cancel:
@@ -468,7 +470,7 @@ class AccountBankStatementLine(models.Model):
                 'details': {
                     'name': _("Automatically reconciled items"),
                     'model': 'account.move',
-                    'ids': automatic_reconciliation_entries.ids
+                    'ids': automatic_reconciliation_entries.mapped('journal_entry_ids').ids
                 }
             }]
         return {
@@ -641,8 +643,9 @@ class AccountBankStatementLine(models.Model):
         # Look for a single move line with the same amount
         field = currency and 'amount_residual_currency' or 'amount_residual'
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
+        liquidity_amt_clause = currency and '%(amount)s' or 'abs(%(amount)s)'
         sql_query = self._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = %(amount)s)) \
+                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
                 ORDER BY date_maturity asc, aml.id asc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
@@ -745,7 +748,7 @@ class AccountBankStatementLine(models.Model):
         }
 
     def _prepare_reconciliation_move_line(self, move, amount):
-        """ Prepare the dict of values to create the move line from a statement line.
+        """ Prepare the dict of values to balance the move.
 
             :param recordset move: the account.move to link the move line
             :param float amount: the amount of transaction that wasn't already reconciled
@@ -753,25 +756,29 @@ class AccountBankStatementLine(models.Model):
         company_currency = self.journal_id.company_id.currency_id
         statement_currency = self.journal_id.currency_id or company_currency
         st_line_currency = self.currency_id or statement_currency
-
         amount_currency = False
-        if statement_currency != company_currency or st_line_currency != company_currency:
-            # First get the ratio total mount / amount not already reconciled
-            if statement_currency == company_currency:
-                total_amount = self.amount
-            elif st_line_currency == company_currency:
-                total_amount = self.amount_currency
-            else:
-                total_amount = statement_currency.with_context({'date': self.date}).compute(self.amount, company_currency, round=False)
-            if float_compare(total_amount, amount, precision_digits=company_currency.rounding) == 0:
-                ratio = 1.0
-            else:
-                ratio = total_amount / amount
-            # Then use it to adjust the statement.line field that correspond to the move.line amount_currency
-            if statement_currency != company_currency:
-                amount_currency = self.amount * ratio
-            elif st_line_currency != company_currency:
-                amount_currency = self.amount_currency * ratio
+        st_line_currency_rate = self.currency_id and (self.amount_currency / self.amount) or False
+        # We have several use case here to compure the currency and amount currency of counterpart line to balance the move:
+        if st_line_currency != company_currency and st_line_currency == statement_currency:
+            # company in currency A, statement in currency B and transaction in currency B
+            # counterpart line must have currency B and correct amount is inverse of already existing lines
+            amount_currency = -sum([x.amount_currency for x in move.line_ids])
+        elif st_line_currency != company_currency and statement_currency == company_currency:
+            # company in currency A, statement in currency A and transaction in currency B
+            # counterpart line must have currency B and correct amount is inverse of already existing lines
+            amount_currency = -sum([x.amount_currency for x in move.line_ids])
+        elif st_line_currency != company_currency and st_line_currency != statement_currency:
+            # company in currency A, statement in currency B and transaction in currency C
+            # counterpart line must have currency B and use rate between B and C to compute correct amount
+            amount_currency = -sum([x.amount_currency for x in move.line_ids])/st_line_currency_rate
+        elif st_line_currency == company_currency and statement_currency != company_currency:
+            # company in currency A, statement in currency B and transaction in currency A
+            # counterpart line must have currency B and amount is computed using the rate between A and B
+            amount_currency = amount/st_line_currency_rate
+        
+        # last case is company in currency A, statement in currency A and transaction in currency A
+        # and in this case counterpart line does not need any second currency nor amount_currency
+
         return {
             'name': self.name,
             'date': self.date,
@@ -871,7 +878,7 @@ class AccountBankStatementLine(models.Model):
 
         # Fully reconciled moves are just linked to the bank statement
         for aml_rec in payment_aml_rec:
-            aml_rec.write({'statement_id': self.statement_id.id})
+            aml_rec.with_context(check_move_validity=False).write({'statement_id': self.statement_id.id})
             aml_rec.move_id.write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
 
@@ -884,6 +891,10 @@ class AccountBankStatementLine(models.Model):
             # Create the move
             self.sequence = self.statement_id.line_ids.ids.index(self.id) + 1
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
+            # Ensure no duplicate is created
+            if self.env['account.move'].search([('name', '=', move_name)]):
+                count = self.env['account.move'].search_count([('name', '=like', move_name + '/%')])
+                move_name = u'{}/{}'.format(move_name, count + 1)
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
             counterpart_moves = (counterpart_moves | move)
@@ -917,7 +928,22 @@ class AccountBankStatementLine(models.Model):
                     aml_dict['currency_id'] = statement_currency.id
 
             # Create write-offs
+            # When we register a payment on an invoice, the write-off line contains the amount
+            # currency if all related invoices have the same currency. We apply the same logic in
+            # the manual reconciliation.
+            counterpart_aml = self.env['account.move.line']
+            for aml_dict in counterpart_aml_dicts:
+                counterpart_aml |= aml_dict.get('move_line', self.env['account.move.line'])
+            new_aml_currency = False
+            if counterpart_aml\
+                    and len(counterpart_aml.mapped('currency_id')) == 1\
+                    and counterpart_aml[0].currency_id\
+                    and counterpart_aml[0].currency_id != company_currency:
+                new_aml_currency = counterpart_aml[0].currency_id
             for aml_dict in new_aml_dicts:
+                if new_aml_currency and not aml_dict.get('currency_id'):
+                    aml_dict['currency_id'] = new_aml_currency.id
+                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], new_aml_currency)
                 aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
@@ -934,8 +960,7 @@ class AccountBankStatementLine(models.Model):
 
                 (new_aml | counterpart_move_line).reconcile()
 
-            # Create the move line for the statement line using the bank statement line as the remaining amount
-            # This leaves out the amount already reconciled and avoids rounding errors from currency conversion
+            # Balance the move
             st_line_amount = -sum([x.balance for x in move.line_ids])
             aml_obj.with_context(check_move_validity=False).create(self._prepare_reconciliation_move_line(move, st_line_amount))
 

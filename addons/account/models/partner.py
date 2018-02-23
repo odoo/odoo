@@ -234,15 +234,17 @@ class ResPartner(models.Model):
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params
-        self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.amount_residual)
-                      FROM account_move_line l
-                      LEFT JOIN account_account a ON (l.account_id=a.id)
+        if where_clause:
+            where_clause = 'AND ' + where_clause
+        self._cr.execute("""SELECT account_move_line.partner_id, act.type, SUM(account_move_line.amount_residual)
+                      FROM account_move_line
+                      LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
                       WHERE act.type IN ('receivable','payable')
-                      AND l.partner_id IN %s
-                      AND l.reconciled IS FALSE
+                      AND account_move_line.partner_id IN %s
+                      AND account_move_line.reconciled IS FALSE
                       """ + where_clause + """
-                      GROUP BY l.partner_id, act.type
+                      GROUP BY account_move_line.partner_id, act.type
                       """, where_params)
         for pid, type, val in self._cr.fetchall():
             partner = self.browse(pid)
@@ -294,7 +296,7 @@ class ResPartner(models.Model):
         all_partner_ids = []
         for partner in self:
             # price_total is in the company currency
-            all_partners_and_children[partner] = self.search([('id', 'child_of', partner.id)]).ids
+            all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
             all_partner_ids += all_partners_and_children[partner]
 
         # searching account.invoice.report via the orm is comparatively expensive
@@ -304,7 +306,7 @@ class ResPartner(models.Model):
 
         # generate where clause to include multicompany rules
         where_query = account_invoice_report._where_calc([
-            ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
+            ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']),
             ('type', 'in', ('out_invoice', 'out_refund'))
         ])
         account_invoice_report._apply_ir_rules(where_query, 'read')
@@ -347,12 +349,9 @@ class ResPartner(models.Model):
     def _compute_issued_total(self):
         """ Returns the issued total as will be displayed on partner view """
         today = fields.Date.context_today(self)
-        for partner in self:
-            domain = partner.get_followup_lines_domain(today, overdue_only=True)
-            issued_total = 0
-            for aml in self.env['account.move.line'].search(domain):
-                issued_total += aml.amount_residual
-            partner.issued_total = issued_total
+        domain = self.get_followup_lines_domain(today, overdue_only=True)
+        for aml in self.env['account.move.line'].search(domain):
+            aml.partner_id.issued_total += aml.amount_residual
 
     @api.one
     def _compute_has_unreconciled_entries(self):

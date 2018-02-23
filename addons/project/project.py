@@ -16,7 +16,7 @@ from openerp.exceptions import UserError
 class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Task Stage'
-    _order = 'sequence'
+    _order = 'sequence, id'
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
@@ -49,7 +49,6 @@ class project_task_type(osv.osv):
         'sequence': 1,
         'project_ids': _get_default_project_ids,
     }
-    _order = 'sequence'
 
 
 class project(osv.osv):
@@ -258,7 +257,8 @@ class project(osv.osv):
         res = super(project, self).copy(cr, uid, id, default, context)
         for follower in proj.message_follower_ids:
             self.message_subscribe(cr, uid, res, partner_ids=[follower.partner_id.id], subtype_ids=[subtype.id for subtype in follower.subtype_ids])
-        self.map_tasks(cr, uid, id, res, context=context)
+        if 'tasks' not in default:
+            self.map_tasks(cr, uid, id, res, context=context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -402,12 +402,12 @@ class task(osv.osv):
         values = {}
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
-            if project and project.partner_id:
+            if project.exists():
+                if project.partner_id:
                     values['partner_id'] = project.partner_id.id
-            values['stage_id'] = self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
+                values['stage_id'] = self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
         else:
             values['stage_id'] = False
-            values['partner_id'] = False
         return {'value': values}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):

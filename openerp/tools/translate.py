@@ -305,12 +305,16 @@ def html_translate(callback, value):
     if not value:
         return value
 
-    parser = etree.HTMLParser(encoding='utf-8')
-    trans = XMLTranslator(callback, 'html', parser)
-    wrapped = "<div>%s</div>" % encode(value)
-    root = etree.fromstring(wrapped, parser)
-    trans.process(root[0][0])               # html > body > div
-    return trans.get_done()[5:-6]           # remove tags <div> and </div>
+    try:
+        parser = etree.HTMLParser(encoding='utf-8')
+        trans = XMLTranslator(callback, 'html', parser)
+        wrapped = "<div>%s</div>" % encode(value)
+        root = etree.fromstring(wrapped, parser)
+        trans.process(root[0][0])               # html > body > div
+        value = trans.get_done()[5:-6]           # remove tags <div> and </div>
+    except ValueError:
+        _logger.exception("Cannot translate malformed HTML, using source value instead")
+    return value
 
 
 #
@@ -954,7 +958,8 @@ def trans_generate(lang, modules, cr):
     def get_module_from_path(path):
         for (mp, rec) in path_list:
             mp = os.path.join(mp, '')
-            if rec and path.startswith(mp) and os.path.dirname(path) != mp:
+            dirname = os.path.join(os.path.dirname(path), '')
+            if rec and path.startswith(mp) and dirname != mp:
                 path = path[len(mp):]
                 return path.split(os.path.sep)[0]
         return 'base' # files that are not in a module are considered as being in 'base' module

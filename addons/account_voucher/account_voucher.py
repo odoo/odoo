@@ -244,6 +244,7 @@ class AccountVoucher(models.Model):
                 'date': self.date,
                 'tax_ids': [(4,t.id) for t in line.tax_ids],
                 'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
+                'currency_id': company_currency != current_currency and current_currency or False,
             }
 
             self.env['account.move.line'].create(move_line)
@@ -269,7 +270,7 @@ class AccountVoucher(models.Model):
             move = self.env['account.move'].create(voucher.account_move_get())
             # Get the name of the account_move just created
             # Create the first line of the voucher
-            move_line = self.env['account.move.line'].with_context(ctx).create(voucher.first_move_line_get(move.id, company_currency, current_currency))
+            move_line = self.env['account.move.line'].with_context(ctx).create(voucher.with_context(ctx).first_move_line_get(move.id, company_currency, current_currency))
             line_total = move_line.debit - move_line.credit
             if voucher.voucher_type == 'sale':
                 line_total = line_total - voucher._convert_amount(voucher.tax_amount)
@@ -364,7 +365,7 @@ class account_voucher_line(models.Model):
             if product.description_purchase:
                 values['name'] += '\n' + product.description_purchase
         else:
-            values['price_unit'] = product.lst_price
+            values['price_unit'] = price_unit or product.lst_price
             taxes = product.taxes_id or account.tax_ids
             if product.description_sale:
                 values['name'] += '\n' + product.description_sale
@@ -374,7 +375,7 @@ class account_voucher_line(models.Model):
         if company and currency:
             if company.currency_id != currency:
                 if type == 'purchase':
-                    values['price_unit'] = product.standard_price
+                    values['price_unit'] = price_unit or product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}

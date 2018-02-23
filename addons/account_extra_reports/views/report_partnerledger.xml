@@ -36,7 +36,7 @@
                                 <th>Debit</th>
                                 <th>Credit</th>
                                 <th>Balance</th>
-                                <th t-if="amount_currency">Currency</th>
+                                <th t-if="data['form']['amount_currency']">Currency</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,8 +77,10 @@
                                 <td class="text-right">
                                     <span t-esc="line['progress']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
-                                <td t-if="amount_currency">
-                                    <span t-esc="line['amount_currency']" t-esc-options='{"widget": "monetary", "display_currency": "line[\"currency_id\"]"}'/>
+                                <td class="text-right" t-if="data['form']['amount_currency']">
+                                    <t t-if="line['currency_id']">
+                                        <span t-esc="line['amount_currency']" t-esc-options='{"widget": "monetary", "display_currency": "line[\"currency_id\"]"}'/>
+                                    </t>
                                 </td>
                             </tr>
                         </tbody>

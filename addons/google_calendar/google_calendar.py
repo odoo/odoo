@@ -201,8 +201,8 @@ class google_calendar(osv.AbstractModel):
         if not context:
             context = {}
         if event.allday:
-            start_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context).isoformat('T').split('T')[0]
-            final_date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.stop, tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=1), context=context).isoformat('T').split('T')[0]
+            start_date = event.start_date
+            final_date = (datetime.strptime(event.stop_date, tools.DEFAULT_SERVER_DATE_FORMAT) + timedelta(days=1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             type = 'date'
             vstype = 'dateTime'
         else:
@@ -525,7 +525,7 @@ class google_calendar(osv.AbstractModel):
         if type == "write":
             res = calendar_event.write(cr, uid, event['id'], result, context=context)
         elif type == "copy":
-            result['recurrence'] = True
+            result['recurrency'] = True
             res = calendar_event.write(cr, uid, [event['id']], result, context=context)
         elif type == "create":
             res = calendar_event.create(cr, uid, result, context=context)
@@ -954,7 +954,7 @@ class google_calendar(osv.AbstractModel):
 
     def get_minTime(self, cr, uid, context=None):
         number_of_week = int(self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.week_synchro', default=13))
-        return datetime.now() - timedelta(weeks=number_of_week)
+        return datetime.now() - timedelta(weeks=int(number_of_week))
 
     def get_need_synchro_attendee(self, cr, uid, context=None):
         return self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_synchro_attendee', default=True)

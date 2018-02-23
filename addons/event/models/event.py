@@ -55,7 +55,7 @@ class event_event(models.Model):
             'interval_unit': 'now',
             'interval_type': 'after_sub',
             'template_id': self.env.ref('event.event_subscription')
-        })]
+        })] if self.user_has_groups('event.group_email_scheduling') else []
 
     # Seats and computation
     seats_max = fields.Integer(

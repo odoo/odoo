@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-04-30 18:51+0000\n"
+"PO-Revision-Date: 2017-11-30 20:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/language/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -58,7 +58,7 @@ msgstr "Anonymiserte Felter"
 #: code:addons/anonymization/anonymization.py:431
 #, python-format
 msgid "Anonymized value can not be empty."
-msgstr ""
+msgstr "Anonymisert verdi can ikke være tomt."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:283
@@ -66,7 +66,7 @@ msgstr ""
 msgid ""
 "Before executing the anonymization process, you should make a backup of your"
 " database."
-msgstr ""
+msgstr "Ta kopi av database, før start av anonymiserings jobb"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:427
@@ -74,7 +74,7 @@ msgstr ""
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr ""
+msgstr "Felter av type \"binary, many2many, many2one, one2many, reference\" kan ikke anonymiseres."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -136,7 +136,7 @@ msgstr "Fullført"
 #: code:addons/anonymization/anonymization.py:431
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Feil!"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -194,7 +194,7 @@ msgstr "Importer."
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr ""
+msgstr "Det er ikke mulig å reversere anonymiserings jobben uten å bruke den anonymiserte eksport filen."
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization___last_update
@@ -296,7 +296,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr ""
+msgstr "Databasen anonymisering er i udefinert modus. Noen felt er anonymiserte, mens andre felt er ikke anonymiserte. Fiks dette problemet før opprettelse av nye, modifisere eller sletting av felt."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:341
@@ -305,7 +305,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr ""
+msgstr "Databasen anonymisering er i udefinert modus. Noen felt er anonymiserte, mens andre felt er ikke anonymiserte. Fiks dette problemet før du gjør noe annet."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:374
@@ -315,13 +315,13 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr ""
+msgstr "Databasen anonymisering er i udefinert modus. Noen felt er anonymiserte, mens andre felt er ikke anonymiserte. Prøv å fiks dette problemet før du gjør noe annet."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:372
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr ""
+msgstr "Databasen er anonymisert, ikke mulig å anonymisere engang til"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:72
@@ -329,7 +329,7 @@ msgstr ""
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
 "fields."
-msgstr ""
+msgstr "Databasen er anonymisert, opprettelse, endring eller sletting av felter er ikke mulig."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:510
@@ -337,7 +337,7 @@ msgstr ""
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
 "anonymization."
-msgstr ""
+msgstr "Databasen er ikke anonymisert, reversering av anonymisering er ikke mulig"
 
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import

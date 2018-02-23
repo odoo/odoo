@@ -3,14 +3,14 @@
 # * sale_order_dates
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-01-02 21:05+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"PO-Revision-Date: 2018-01-17 12:42+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,19 +29,19 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr ""
+msgstr "Ημερομηνία κατά την οποία ο πελάτης ζήτησε την παράδοση των ειδών.\nΌταν επιβεβαιωθεί αυτή η παραγγελία, η αναμενόμενη ημερομηνία  παράδοσης της παραγγελίας θα υπολογιστεί βάσει αυτής της ημερομηνίας και την καθυστέρηση ασφαλείας της εταιρείας.\nΑφήστε αυτό το πεδίο κενό αν θέλετε να επεξεργαστείτε την παραγγελία παράδοσης το συντομότερο δυνατό. Στην περίπτωση αυτή, η αναμενόμενη ημερομηνία θα υπολογιστεί χρησιμοποιώντας την προεπιλεγμένη μέθοδο: με βάση τους χρόνους παραγωγής προϊόντος και την καθυστέρηση ασφαλείας της εταιρείας."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr ""
+msgstr "Ημερομηνία μέχρι την οποία τα προϊόντα είναι βέβαιο ότι θα παραδοθούν. Αυτή είναι μια ημερομηνία που μπορείτε να υποσχεθείτε στον πελάτη, με βάση τις ώρες παραγωγής προϊόντος."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Ημερομηνία κατά την οποία δημιουργήθηκε η πρώτη εντολή παράδοσης."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
@@ -75,4 +75,4 @@ msgstr "Γραμμή Παραγγελίας"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
+msgstr "Η ημερομηνία που ζητά ο πελάτης είναι νωρίτερα από την ημερομηνία δέσμευσης. Μπορεί να μην μπορείτε να ικανοποιήσετε το αίτημα του πελάτη."

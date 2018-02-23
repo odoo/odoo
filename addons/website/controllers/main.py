@@ -98,6 +98,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
+        current_website = request.website
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         ira = request.registry['ir.attachment']
         iuv = request.registry['ir.ui.view']
@@ -112,8 +113,8 @@ class Website(openerp.addons.web.controllers.main.Home):
                 name=url,
                 url=url,
             ), context=context)
-
-        sitemap = ira.search_read(cr, uid, [('url', '=' , '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'), context=context)
+        dom = [('url', '=' , '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
+        sitemap = ira.search_read(cr, uid, dom, ('datas', 'create_date'), context=context)
         if sitemap:
             # Check if stored version is still valid
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -124,7 +125,9 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
-            sitemap_ids = ira.search(cr, uid, [('url', '=like' , '/sitemap%.xml'), ('type', '=', 'binary')], context=context)
+            dom = [('type', '=', 'binary'), '|', ('url', '=like' , '/sitemap-%d-%%.xml' % current_website.id),
+                   ('url', '=' , '/sitemap-%d.xml' % current_website.id)]
+            sitemap_ids = ira.search(cr, uid, dom, context=context)
             if sitemap_ids:
                 ira.unlink(cr, uid, sitemap_ids, context=context)
 
@@ -139,20 +142,24 @@ class Website(openerp.addons.web.controllers.main.Home):
                 if urls.strip():
                     content = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
                     pages += 1
-                    last = create_sitemap('/sitemap-%d.xml' % pages, content)
+                    last = create_sitemap('/sitemap-%d-%d.xml' % (current_website.id, pages), content)
                 else:
                     break
             if not pages:
                 return request.not_found()
             elif pages == 1:
-                ira.write(cr, uid, last, dict(url="/sitemap.xml", name="/sitemap.xml"), context=context)
+                # rename the -id-page.xml => -id.xml
+                ira.write(cr, uid, last, dict(url="/sitemap-%d.xml" % current_website.id, name="/sitemap-%d.xml" % current_website.id), context=context)
             else:
+                # TODO: in master/saas-15, move current_website_id in template directly
+                pages_with_website = map(lambda p: "%d-%d" % (current_website.id, p), range(1, pages + 1))
+
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
-                    pages=range(1, pages + 1),
+                    pages=pages_with_website,
                     url_root=request.httprequest.url_root,
                 ), context=context)
-                create_sitemap('/sitemap.xml', content)
+                create_sitemap('/sitemap-%d.xml' % current_website.id, content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 

@@ -304,7 +304,7 @@ class Field(object):
     _slots = {
         'args': EMPTY_DICT,             # the parameters given to __init__()
         '_attrs': EMPTY_DICT,           # the field's non-slot attributes
-        'setup_full_done': False,       # whether the field has been fully setup
+        '_setup_done': None,            # the field's setup state: None, 'base' or 'full'
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
@@ -346,7 +346,7 @@ class Field(object):
         kwargs['string'] = string
         args = {key: val for key, val in kwargs.iteritems() if val is not None}
         self.args = args or EMPTY_DICT
-        self.setup_full_done = False
+        self._setup_done = None
 
     def new(self, **kwargs):
         """ Return a field of the same type as ``self``, with its own parameters. """
@@ -398,14 +398,15 @@ class Field(object):
 
     def setup_base(self, model, name):
         """ Base setup: things that do not depend on other models/fields. """
-        if self.setup_full_done and not self.related:
+        if self._setup_done and not self.related:
             # optimization for regular fields: keep the base setup
-            self.setup_full_done = False
+            self._setup_done = 'base'
         else:
             # do the base setup from scratch
             self._setup_attrs(model, name)
             if not self.related:
                 self._setup_regular_base(model)
+            self._setup_done = 'base'
 
     #
     # Setup field parameter attributes
@@ -490,12 +491,12 @@ class Field(object):
 
     def setup_full(self, model):
         """ Full setup: everything else, except recomputation triggers. """
-        if not self.setup_full_done:
+        if self._setup_done != 'full':
             if not self.related:
                 self._setup_regular_full(model)
             else:
                 self._setup_related_full(model)
-            self.setup_full_done = True
+            self._setup_done = 'full'
 
     #
     # Setup of non-related fields
@@ -629,7 +630,8 @@ class Field(object):
 
             if field is self:
                 self.recursive = True
-                continue
+                if not i:
+                    continue            # self directly depends on self, give up
 
             # add trigger on field and its inverses to recompute self
             model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
@@ -849,11 +851,11 @@ class Field(object):
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
-            record._cache[self] = value
+            env.cache[self][record.id] = value
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
                     invf._update(value, record)
-                record._set_dirty(self.name)
+                env.dirty[record].add(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -861,9 +863,11 @@ class Field(object):
             env.invalidate(spec)
 
         else:
-            # simply write to the database, and update cache
+            # Write to database
             record.write({self.name: self.convert_to_write(value)})
-            record._cache[self] = value
+            # Update the cache unless value contains a new record
+            if all(getattr(value, '_ids', ())):
+                env.cache[self][record.id] = value
 
     ############################################################################
     #
@@ -942,7 +946,7 @@ class Field(object):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            self._compute_value(record)
+            self.compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
 
@@ -1057,6 +1061,7 @@ class Integer(Field):
     }
 
     _related_group_operator = property(attrgetter('group_operator'))
+    _description_group_operator = property(attrgetter('group_operator'))
     _column_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1109,6 +1114,7 @@ class Float(Field):
     _related_group_operator = property(attrgetter('group_operator'))
 
     _description_digits = property(attrgetter('digits'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
@@ -1147,17 +1153,19 @@ class Monetary(Field):
     _related_group_operator = property(attrgetter('group_operator'))
 
     _description_currency_field = property(attrgetter('currency_field'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     _column_currency_field = property(attrgetter('currency_field'))
     _column_group_operator = property(attrgetter('group_operator'))
 
-    def _setup_regular_base(self, model):
-        super(Monetary, self)._setup_regular_base(model)
-        if not self.currency_field:
-            self.currency_field = 'currency_id'
-
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
+        if not self.currency_field:
+            # pick a default, trying in order: 'currency_id', 'x_currency_id'
+            if 'currency_id' in model._fields:
+                self.currency_field = 'currency_id'
+            elif 'x_currency_id' in model._fields:
+                self.currency_field = 'x_currency_id'
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
@@ -1219,7 +1227,7 @@ class _String(Field):
             return self.translate(callback, value)
         else:
             return value
-    
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
@@ -1717,6 +1725,10 @@ class Many2one(_Relational):
     def convert_to_display_name(self, value, record=None):
         return ustr(value.display_name)
 
+    def convert_to_onchange(self, value, fnames=None):
+        if not value.id:
+            return False
+        return super(Many2one, self).convert_to_onchange(value, fnames)
 
 class UnionUpdate(SpecialValue):
     """ Placeholder for a value update; when this value is taken from the cache,
@@ -1788,7 +1800,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_write(self, value):
         # make result with new and existing records
-        result = [(5,)]
+        result = [(6, 0, [])]
         for record in value:
             if not record.id:
                 values = dict(record._cache)
@@ -1799,7 +1811,7 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
             else:
-                result.append((4, record.id))
+                result[0][2].append(record.id)
         return result
 
     def convert_to_onchange(self, value, fnames=None):
@@ -1905,9 +1917,8 @@ class One2many(_RelationalMulti):
     _column_limit = property(attrgetter('limit'))
 
     def convert_to_onchange(self, value, fnames=None):
-        if fnames:
-            # do not serialize self's inverse field
-            fnames = [name for name in fnames if name != self.inverse_name]
+        fnames = set(fnames or ())
+        fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, fnames)
 
 

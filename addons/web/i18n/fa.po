@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 04:43+0000\n"
-"PO-Revision-Date: 2016-08-28 19:53+0000\n"
-"Last-Translator: Sahar Daraye <sahar.daraye.1369@gmail.com>\n"
+"PO-Revision-Date: 2018-01-25 10:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,7 +195,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:106
 #, python-format
 msgid "(Community Edition)"
-msgstr ""
+msgstr "(نسخه عمومی)"
 
 #. module: web
 #. openerp-web
@@ -876,6 +876,13 @@ msgid "Error"
 msgstr "خطا"
 
 #. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr ""
+
+#. module: web
 #: code:addons/web/controllers/main.py:838
 #, python-format
 msgid "Error, password not changed !"
@@ -1143,6 +1150,15 @@ msgstr "غیرفعال"
 #: code:addons/web/static/src/js/views/graph_widget.js:197
 #, python-format
 msgid "Invalid data"
+msgstr ""
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
 msgstr ""
 
 #. module: web
@@ -1504,7 +1520,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
+msgid "No value found for the field %s for value %s"
 msgstr ""
 
 #. module: web
@@ -1576,14 +1592,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:1675
 #, python-format
 msgid "Odoo Enterprise"
-msgstr ""
+msgstr "اودو سازمانی"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:117
 #, python-format
 msgid "Odoo S.A."
-msgstr ""
+msgstr "سایت اودوو "
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.qunit_suite
@@ -1755,7 +1771,7 @@ msgstr "قدرت گرفته توسط"
 #. module: web
 #: model:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr ""
+msgstr "راه اندازی شده به وسیله <span>اُدو</span>"
 
 #. module: web
 #. openerp-web
@@ -1785,8 +1801,8 @@ msgstr "چاپ گردش کار"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "تعداد"
+msgid "Count"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2088,6 +2104,13 @@ msgstr "ترجمه فنی"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:1208
 #, python-format
 msgid "The field is empty, there's nothing to save !"
@@ -2249,7 +2272,7 @@ msgstr "نوع:"
 #: code:addons/web/static/src/js/views/list_view.js:309
 #, python-format
 msgid "Unarchive"
-msgstr ""
+msgstr "برگشت از بایگانی"
 
 #. module: web
 #. openerp-web
@@ -2329,7 +2352,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:1658
 #, python-format
 msgid "Upgrade now"
-msgstr ""
+msgstr "حالا ارتقاء بده"
 
 #. module: web
 #. openerp-web
@@ -2464,6 +2487,12 @@ msgstr "مقدار وارد‌شده اشتباه است!"
 #, python-format
 msgid "XML ID:"
 msgstr "شناسه XML:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr ""
 
 #. module: web
 #. openerp-web

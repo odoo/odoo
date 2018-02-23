@@ -67,7 +67,7 @@ class config(osv.Model):
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
             content = urllib2.urlopen(req, timeout=TIMEOUT).read()
         except urllib2.HTTPError:
-            if user_is_admin:
+            if self.pool['res.users']._is_admin(cr, uid, [uid]):
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
                 msg = _("Something went wrong during the token generation. Please request again an authorization code .")
                 raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
@@ -142,7 +142,7 @@ class config(osv.Model):
         # check if a model is configured with a template
         config_ids = self.search(cr, uid, [('model_id', '=', res_model)], context=context)
         configs = []
-        for config in self.browse(cr, uid, config_ids, context=context):
+        for config in self.browse(cr, SUPERUSER_ID, config_ids, context=context):
             if config.filter_id:
                 if (config.filter_id.user_id and config.filter_id.user_id.id != uid):
                     #Private

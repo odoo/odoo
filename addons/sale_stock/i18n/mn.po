@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-10-01 09:22+0000\n"
+"PO-Revision-Date: 2017-05-27 13:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Худалдааны нөхцөл:</strong>"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -31,7 +31,7 @@ msgstr "Хүргэлтийн зардал нэмэхийг зөвшөөрөх"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr ""
+msgstr "Захиалгын мөр бүр дээр үйлдвэрлйлийн тохиргоог зөвшөөрөх (дэвшилтэт)"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -41,7 +41,7 @@ msgstr "Борлуулалтынм захиалгын мөрүүдэд пайз 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "Choose specific routes on sales order lines (advanced)"
-msgstr ""
+msgstr "Борлуулалтын захиалгын мөр дээр тусгай маршрут сонгох (дэвшилтэт)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -51,7 +51,7 @@ msgstr "Компаниуд"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr ""
+msgstr "Үндсэн Хүргэлтийн Бодлого"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -76,7 +76,7 @@ msgstr "Хүргэх захиалгууд"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr ""
+msgstr "Үйлдвэрлэлийн үзүүлэлтийг хэрэглэхгүй (хялбарчлах тохиолдолд зөвлөх)"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -130,18 +130,18 @@ msgstr "Захиалагчид амласан огнооны зөрүүний а
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr ""
+msgstr "Захиалгын тусгай захиалуулах эсвэл шууд хүргэх маршрут алга"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr ""
+msgstr "Борлуулалтын захиалга дээр хүргэлтийн өртөг байхгүй"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:141
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Бараа материал хүрэлцээгүй!"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:42
@@ -152,13 +152,13 @@ msgstr "Зөвхөн администратор л тохиргоог өөрчл
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order Routing"
-msgstr ""
+msgstr "Захиалгын Маршрут"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:152
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Захиалсан тоо багассан!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -183,7 +183,7 @@ msgstr "Барааны үлгэр"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
-msgstr ""
+msgstr "SO мөрүүд дээрх үзүүлэлтүүд"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -218,7 +218,7 @@ msgstr "Борлуулалтын захиалгын шинжилгээ"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Борлуулалтын Аюулгүй Хоног"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -228,12 +228,12 @@ msgstr "Борлуулалтын захиалгын мөрүүд дээр сон
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship all products at once, without back orders"
-msgstr ""
+msgstr "Бүх барааг бөөнд нь хүргэх, дутагдлын захиалгагүй"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr ""
+msgstr "Бараануудын зарим нь бэлэн болоход хүргэх, дутагдлын захиалгыг зөвшөөрөх"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
@@ -244,7 +244,7 @@ msgstr "Хүргэлт"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr ""
+msgstr "Хүргэлтийн Мэдээлэл"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -265,7 +265,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Шилжүүлэх"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -277,7 +277,7 @@ msgstr "Агуулах"
 #: code:addons/sale_stock/sale_stock.py:193
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Анхааруулга"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:153
@@ -285,7 +285,7 @@ msgstr ""
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr ""
+msgstr "Захиалсан тоо хэмжээг та буурууллаа! Хүргэлтийн захиалгыг шаардлагатай бол гараараа шинэчилэхээ мартаж болохгүй шүү."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:142

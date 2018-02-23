@@ -268,7 +268,7 @@ class product_pricelist(osv.osv):
 class product_pricelist_item(osv.osv):
     _name = "product.pricelist.item"
     _description = "Pricelist item"
-    _order = "applied_on, min_quantity desc, categ_id desc"
+    _order = "applied_on, min_quantity desc, categ_id desc, id"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for obj_list in self.browse(cr, uid, ids, context=context):
@@ -284,6 +284,13 @@ class product_pricelist_item(osv.osv):
             if item.price_max_margin and item.price_min_margin and (item.price_min_margin > item.price_max_margin):
                 return False
         return True
+
+    def _get_product_pricelist(self, cr, uid, ids, context=None):
+        result = set()
+        for pricelist in self.pool['product.pricelist'].browse(cr, uid, ids, context=context):
+            for item in pricelist.item_ids:
+                result.add(item.id)
+        return list(result)
 
     _columns = {
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
@@ -315,9 +322,15 @@ class product_pricelist_item(osv.osv):
         'price_max_margin': fields.float('Max. Price Margin',
             digits_compute= dp.get_precision('Product Price'), help='Specify the maximum amount of margin over the base price.'),
         'company_id': fields.related('pricelist_id','company_id',type='many2one',
-            readonly=True, relation='res.company', string='Company', store=True),
+            readonly=True, relation='res.company', string='Company', store={
+                'product.pricelist': (_get_product_pricelist, ['company_id'], 30),
+                'product.pricelist.item': (lambda self, cr, uid, ids, c=None: ids, ['pricelist_id'], 30),
+            }),
         'currency_id': fields.related('pricelist_id', 'currency_id', type='many2one',
-            readonly=True, relation='res.currency', string='Currency', store=True),
+            readonly=True, relation='res.currency', string='Currency', store={
+                'product.pricelist': (_get_product_pricelist, ['currency_id'], 30),
+                'product.pricelist.item': (lambda self, cr, uid, ids, c=None: ids, ['pricelist_id'], 30),
+            }),
         'date_start': fields.date('Start Date', help="Starting date for the pricelist item validation"),
         'date_end': fields.date('End Date', help="Ending valid for the pricelist item validation"),
         'compute_price': fields.selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], select=True, default='fixed'),

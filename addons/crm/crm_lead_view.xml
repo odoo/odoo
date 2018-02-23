@@ -633,6 +633,9 @@
                             ]"/>
                     <filter string="Overdue Activities" name="overdue"
                             domain="[('date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Overdue Opportunities" name="overdue_opp"
+                            domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            help="Show all opportunities with a deadline for which the next action date is before today"/>
                     <separator/>
                     <filter string="Follow-up" name="follow_up"
                             domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"

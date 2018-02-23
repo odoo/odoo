@@ -23,16 +23,22 @@
                     </group>
                     <group string="Journal Entries">
                         <field name="journal_id"/>
+                        <!-- DO NOT FORWARDPORT -->
                         <div>
-                            <label for="account_asset_id" string="Depreciation Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_asset_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_asset_id" string="Deferred Revenue Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
                         <div>
-                            <label for="account_depreciation_id" string="Depreciation Expense Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
-                            <label for="account_depreciation_id" string="Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                            <label for="account_depreciation_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
+                        <div>
+                            <label for="account_income_recognition_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_income_recognition_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                        </div>
+                        <field name="account_income_recognition_id" nolabel="1"/>
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     </group>
                     <group string="Periodicity">

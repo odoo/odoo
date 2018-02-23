@@ -9,7 +9,7 @@ from openerp.addons.website_portal.controllers.main import website_account
 
 
 class website_account(website_account):
-    @http.route(['/my/home'], type='http', auth="user", website=True)
+    @http.route()
     def account(self, **kw):
         """ Add sales documents to main account page """
         response = super(website_account, self).account()
@@ -27,7 +27,7 @@ class website_account(website_account):
         ])
         invoices = res_invoices.search([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['open', 'paid', 'cancelled'])
+            ('state', 'in', ['open', 'paid', 'cancel'])
         ])
 
         response.qcontext.update({

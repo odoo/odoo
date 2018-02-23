@@ -61,11 +61,11 @@ refer to :ref:`setup/enterprise` (except for :ref:`setup/install/source`).
 If you wish to access the Enterprise installers/source code, you can:
 
 * Go to the Download_ page and log in with your customer credentials
-* Download the source on GitHub using git_
+* Download the source on GitHub using git_(available to partners only)
 
 .. note:: If you do not have access to our Enterprise repository, you can request
     it be e-mailing your sales representative or our online support with
-    your subscription number and GitHub username.
+    your subscription number and GitHub username. (available to partners only)
 
 .. warning:: Enterprise deb and rpm packages do not have repositories, so automatic
     update will not work. Reinstalling the latest package version will be needed

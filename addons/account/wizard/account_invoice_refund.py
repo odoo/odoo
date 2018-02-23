@@ -58,7 +58,6 @@ class AccountInvoiceRefund(models.TransientModel):
                 date = form.date or False
                 description = form.description or inv.name
                 refund = inv.refund(form.date_invoice, date, description, inv.journal_id.id)
-                refund.compute_taxes()
 
                 created_inv.append(refund.id)
                 if mode in ('cancel', 'modify'):
@@ -75,7 +74,7 @@ class AccountInvoiceRefund(models.TransientModel):
                     for tmpline in refund.move_id.line_ids:
                         if tmpline.account_id.id == inv.account_id.id:
                             to_reconcile_lines += tmpline
-                            to_reconcile_lines.reconcile()
+                    to_reconcile_lines.reconcile()
                     if mode == 'modify':
                         invoice = inv.read(
                                     ['name', 'type', 'number', 'reference',

@@ -49,6 +49,7 @@ var PlannerDialog = Widget.extend({
     category_selector: 'div[menu-category-id]',
     events: {
         'click li a[href^="#"]:not([data-toggle="collapse"])': 'change_page',
+        'click a[href^="#show_enterprise"]': 'show_enterprise',
         'click button.mark_as_done': 'click_on_done',
         'click a.btn-next': 'change_to_next_page',
         'click .o_planner_close_block span': 'close_modal',
@@ -65,10 +66,17 @@ var PlannerDialog = Widget.extend({
      */
     willStart: function() {
         var self = this;
+        var context = session.user_context;
+        // fallback context for frontend
+        if(_.isEmpty(context)) {
+            context = {
+                lang: (document.documentElement.getAttribute('lang')||'').replace('-', '_'),
+            };
+        }
         var res = this._super.apply(this, arguments).then(function() {
             return (new Model('web.planner')).call('render',
                 [self.planner.view_id[0], self.planner.planner_application],
-                {context: session.user_context});
+                {context: context});
         }).then(function(template) {
             self.$res = $(template);
         });
@@ -420,7 +428,40 @@ var PlannerDialog = Widget.extend({
     destroy: function() {
         this.$el.modal('hide');
         return this._super.apply(this, arguments);
-    }
+    },
+    show_enterprise: function(ev) {
+        ev.preventDefault();
+        var message = $(QWeb.render('EnterpriseUpgrade'));
+        var buttons = [
+            {
+                text: _t("Upgrade now"),
+                classes: 'btn-primary',
+                close: true,
+                click: this.confirm_upgrade,
+            },
+            {
+                text: _t("Cancel"),
+                close: true,
+            },
+        ];
+        var dialog = new Dialog(this, {
+            size: 'medium',
+            buttons: buttons,
+            $content: $('<div>', {
+                html: message,
+            }),
+            title: _t("Odoo Enterprise"),
+        }).open();
+
+        // force dialog to be hover the planner
+        dialog.$el.parents('.modal').css('z-index', 1052);
+        return dialog;
+    },
+    confirm_upgrade: function() {
+        new Model("res.users").call("search_count", [[["share", "=", false]]]).then(function(data) {
+            window.location = "https://www.odoo.com/odoo-enterprise/upgrade?utm_medium=community_upgrade&num_users=" + data;
+        });
+    },
 });
 
 return {

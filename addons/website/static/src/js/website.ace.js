@@ -149,7 +149,7 @@ var ViewEditor = Widget.extend({
         var args = {
             key: $(document.documentElement).data('view-xmlid'),
             full: true,
-            bundles: !!$('script[src*=".assets_common"]').length
+            bundles: this.$('.js_include_bundles')[0].checked
         };
         return ajax
             .jsonRpc('/website/customize_template_get', 'call', args)

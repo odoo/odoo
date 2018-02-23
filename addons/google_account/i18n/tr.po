@@ -3,13 +3,13 @@
 # * google_account
 # 
 # Translators:
-# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2016
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 13:41+0000\n"
-"PO-Revision-Date: 2016-01-14 10:12+0000\n"
+"POT-Creation-Date: 2017-08-16 15:23+0000\n"
+"PO-Revision-Date: 2017-08-16 17:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "Son Güncellenen"
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
-msgstr ""
+msgstr "Kimliğinizi üretirken bir şeyler ters gitti. Yetkilendirme Kodunuz geçersiz olabilir"
 
 #. module: google_account
 #: code:addons/google_account/google_account.py:37
@@ -67,7 +67,7 @@ msgstr ""
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
-msgstr ""
+msgstr "Kimliğinizi üretirken bir şeyler ters gitti. Belki Yetkilendirme Kodunuz geçersiz veya süresi dolmuş"
 
 #. module: google_account
 #: code:addons/google_account/google_account.py:128
@@ -75,7 +75,7 @@ msgstr ""
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
-msgstr ""
+msgstr "Kimliğinizi üretirken bir şeyler ters gitti. Belki Yetkilendirme Kodunuz geçti veya süresi dolmuş [1%s]"
 
 #. module: google_account
 #: code:addons/google_account/google_account.py:173
@@ -84,6 +84,12 @@ msgid "Something went wrong with your request to google"
 msgstr "Google da yaptığınız isteğinizle ilgili bir şeyler yanlış gitti"
 
 #. module: google_account
+#: code:addons/google_account/google_account.py:109
+#, python-format
+msgid "The account for the Google service '%s' is not configured"
+msgstr ""
+
+#. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "google.service"
-msgstr ""
+msgstr "google.service"

@@ -20,8 +20,8 @@
             <field name="arch" type="xml">
                 <form string="Employee">
                     <sheet>
-                        <div class="oe_button_box" name="button_box" groups="base.group_hr_user">
-                            <button name="toggle_active" type="object"
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="base.group_hr_user"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
@@ -62,7 +62,7 @@
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
-                                        <field name="bank_account_id"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                     </group>
                                     <group string="Contact Information">
                                         <field name="address_home_id"
@@ -465,7 +465,7 @@
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

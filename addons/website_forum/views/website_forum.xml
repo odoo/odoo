@@ -3,7 +3,7 @@
     <data>
 
 <!-- Editor custom -->
-<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets" groups="base.group_user">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_forum/static/src/js/website_tour_forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
@@ -667,7 +667,7 @@
 
 <!-- Edition: post a reply -->
 <template id="post_reply">
-    <div class="css_editable_mode_hidden" groups="base.group_user">
+    <div class="css_editable_mode_hidden">
         <form t-attf-id="reply#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse js_website_submit_form"
             t-attf-action="/forum/#{ slug(forum) }/#{slug(object)}/reply" method="post" role="form">
             <h3 class="mt8">Your Reply</h3>
