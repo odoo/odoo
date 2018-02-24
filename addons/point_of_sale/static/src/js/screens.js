@@ -502,7 +502,9 @@ var OrderWidget = PosBaseWidget.extend({
             }else if( mode === 'discount'){
                 order.get_selected_orderline().set_discount(val);
             }else if( mode === 'price'){
-                order.get_selected_orderline().set_unit_price(val);
+                var selected_orderline = order.get_selected_orderline();
+                selected_orderline.price_manually_set = true;
+                selected_orderline.set_unit_price(val);
             }
     	}
     },

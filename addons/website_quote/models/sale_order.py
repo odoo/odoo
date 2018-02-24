@@ -52,7 +52,15 @@ class SaleOrder(models.Model):
         return template and template.active and template or False
 
     def _get_default_online_payment(self):
-        return 1 if self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay' else 0
+        default_template = self._get_default_template()
+        if self.template_id:
+            return self.template_id.require_payment
+        elif default_template:
+            return default_template.require_payment
+        elif self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay':
+            return 1
+        else:
+            return 0
 
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',

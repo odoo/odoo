@@ -3063,6 +3063,108 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange on one2many containing x2many in form view', function (assert) {
+        assert.expect(16);
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.turtles = [[0, false, {turtle_foo: 'new record'}]];
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="partner_ids">' +
+                                '<tree editable="top">' +
+                                    '<field name="foo"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</form>' +
+                    '</field>' +
+                 '</form>',
+            archs: {
+                 'partner,false,list': '<tree><field name="foo"/></tree>',
+                 'partner,false,search': '<search></search>',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "the onchange should have created one record in the relation");
+
+        // open the created o2m record in a form view, and add a m2m subrecord
+        // in its relation
+        form.$('.o_data_row').click();
+
+        assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
+        assert.strictEqual($('.modal .o_data_row').length, 0,
+            "there should be no record in the one2many in the dialog");
+
+        // add a many2many subrecord
+        $('.modal .o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual($('.modal').length, 2,
+            "should have opened a second dialog");
+
+        // select a many2many subrecord
+        $('.modal:nth(1) .o_list_view .o_data_cell:first').click();
+
+        assert.strictEqual($('.modal').length, 1,
+            "second dialog should be closed");
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            "there should be one record in the one2many in the dialog");
+        assert.notOk($('.modal .o_x2m_control_panel .o_cp_pager div').is(':visible'),
+            'm2m pager should be hidden');
+
+        // click on 'Save & Close'
+        $('.modal .modal-footer .btn-primary:first').click();
+
+        assert.strictEqual($('.modal').length, 0, "dialog should be closed");
+
+        // reopen o2m record, and another m2m subrecord in its relation, but
+        // discard the changes
+        form.$('.o_data_row').click();
+
+        assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            "there should be one record in the one2many in the dialog");
+
+        // add another m2m subrecord
+        $('.modal .o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual($('.modal').length, 2,
+            "should have opened a second dialog");
+
+        $('.modal:nth(1) .o_list_view .o_data_cell:first').click();
+
+        assert.strictEqual($('.modal').length, 1,
+            "second dialog should be closed");
+        assert.strictEqual($('.modal .o_data_row').length, 2,
+            "there should be two records in the one2many in the dialog");
+
+        // click on 'Discard'
+        $('.modal .modal-footer .btn-default').click();
+
+        assert.strictEqual($('.modal').length, 0, "dialog should be closed");
+
+        // reopen o2m record to check that second changes have properly been discarded
+        form.$('.o_data_row').click();
+
+        assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            "there should be one record in the one2many in the dialog");
+
+        form.destroy();
+    });
+
     QUnit.test('embedded one2many with handle widget with minimum setValue calls', function (assert) {
         var done = assert.async();
         assert.expect(20);
