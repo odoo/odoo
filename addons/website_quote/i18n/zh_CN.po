@@ -85,36 +85,19 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
-"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 "
-"auto; background: #FFFFFF repeat top /100%;color:#777777\"><table "
-"cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td "
-"valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: "
-"12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: "
-"auto; width: 80px;\" "
-"alt=\"${user.company_id.name}\"></td></tr></tbody></table><table "
-"cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td "
-"valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\"><div><hr "
-"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
-"none;clear:both;display:block;font-size:0px;min-height:1px;line-"
-"height:0;margin:15px "
-"auto;padding:0\"></div></td></tr></tbody></table></div><div "
-"style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%;color:#777777\"><table "
-"cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify;"
-" margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\"><tbody><tr><td style=\"padding:0px 10px 5px 5px;font-size: "
-"14px;\"><p></p><br/><p><a "
-"href=\"/quote/${object.id}/${object.access_token}\"></a></p><br/><p><a style"
-"=\"text-decoration:none; color: #875A7B;\" "
-"href=\"/my/home\"></a></p><br/><p></p><br/><p></p></td></tr><tr><td "
-"style=\"padding:0px 10px 5px 5px;font-size: 14px;\"><p style=\"font-size: "
-"14px;\"></p><p style=\"font-size: 11px;\"><strong><a "
-"href=\"${user.company_id.website}\" style=\"text-decoration:none; color: "
-"#875A7B;\"><strong></strong></a><a href=\"www.odoo.com\" style=\"text-"
-"decoration:none; color: "
-"#875A7B;\"><strong></strong></a></strong></p></td></tr></tbody></table></div>"
+"% if user.signature\n"
+" ${user.signature | safe}\n"
+" \n"
+" % endif\n"
+" 由\n"
+" \n"
+" ${user.company_id.name}\n"
+" 使用 Odo<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td></tr></tbody></table>o 发送\n"
+" \n"
+" \n"
+" \n"
+" \n"
+"<table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\"><div><hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\"></div></td></tr></tbody></table></div><div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td style=\"padding:0px 10px 5px 5px;font-size: 14px;\"><p></p><br/><p><a href=\"/quote/${object.id}/${object.access_token}\"></a></p><br/><p><a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\"></a></p><br/><p></p><br/><p></p></td></tr><tr><td style=\"padding:0px 10px 5px 5px;font-size: 14px;\"><p style=\"font-size: 14px;\"></p><p style=\"font-size: 11px;\"><strong><a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\"><strong></strong></a><a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong></strong></a></strong></p></td></tr></tbody></table></div>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -362,12 +345,12 @@ msgstr "关于我们"
 msgid ""
 "Access to an Account Manager at Odoo SA to discuss strategic, sales and "
 "service issues"
-msgstr ""
+msgstr "可跟Odoo位于香港的客户经理商谈策略, 销售及服务等事宜"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Partners Portal"
-msgstr ""
+msgstr "访问 合作伙伴门户"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_active
@@ -408,7 +391,7 @@ msgstr "折扣前金额"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "An Odoo official partner commits to:"
-msgstr ""
+msgstr "Odoo 官方合作伙伴承诺："
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
@@ -449,19 +432,19 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Be available for periodic review meeting with Odoo SA account managers"
-msgstr ""
+msgstr "可与香港的客户经理进行周期性评估"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Be the first level of support for his Odoo customers and use Odoo SA for the"
 " second level of support (mostly for bug fixes)"
-msgstr ""
+msgstr "成为你Odoo顾客的第一阶段支援, 并提供由Odoo SA提供的第二阶段支援(大部分情况为错误修复)"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Become a Certified Odoo Partner"
-msgstr ""
+msgstr "成为认证的Odoo合作伙伴"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -722,7 +705,7 @@ msgstr "功能"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Gets access to training sessions (updated weekly)"
-msgstr ""
+msgstr "获得培训课程（每周更新）"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
@@ -755,18 +738,18 @@ msgstr "实际操作练习和他们的解决方案"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Has a direct relationship with Odoo SA to escalate issues"
-msgstr ""
+msgstr "与 Odoo SA 直接联系 上报问题"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Has access to Odoo Enterprise source code on Github and latest bug fixes"
-msgstr ""
+msgstr "有权访问 Github 上的 Odoo 企业版源代码和最新的错误修复"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Have dedicated resources assigned to Odoo projects"
-msgstr ""
+msgstr "已向 Odoo 项目分配专用资源"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -875,7 +858,7 @@ msgstr "Qweb介绍"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Is fully trained on Odoo"
-msgstr ""
+msgstr "接受了有关 Odoo 的完整培训"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option___last_update
@@ -1404,7 +1387,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "The Odoo Enterprise GitHub repositories for all his developers"
-msgstr ""
+msgstr "Odoo 企业版 GitHub 资源库适用于所有开发人员"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1414,6 +1397,8 @@ msgid ""
 "guarantee that, the Odoo Partner Program ensures that official partners have"
 " the resources and knowledge required to offer Odoo implementation services."
 msgstr ""
+"Odoo 生态系统旨在为 Odoo 用户提供从产品到实施服务的最佳客户体验。为了保证这一点，Odoo 合作伙伴计划需确保官方合作伙伴拥有提供 Odoo "
+"实施服务所需的资源和知识。"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1

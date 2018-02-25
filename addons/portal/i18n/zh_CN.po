@@ -60,10 +60,29 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
-"<p></p><p></p><p></p><ul></ul><p></p><ul><li><a "
-"href=\"${object.user_id.signup_url}\"></a></li></ul><p><li></li><li><a "
-"href=\"${&apos;portal_url&apos; in ctx and ctx[&apos;portal_url&apos;] or "
-"&apos;&apos;}\"></a></li><li/>"
+"\n"
+"\n"
+" 亲爱的 ${object.user_id.name or ''}，\n"
+"\n"
+"\n"
+" 您已获得访问 ${user.company_id.name} ${object.wizard_id.portal_id.name} 的权限。\n"
+"\n"
+"\n"
+" 您的登录账户信息为：\n"
+"\n"
+"<p></p>\n"
+" <li>用户名：${object.user_id.login or ''}</li>\n"
+" <li>门户：<a href=\"${&apos;portal_url&apos; in ctx and ctx[&apos;portal_url&apos;] or &apos;&apos;}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+" <li>数据库：${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"\n"
+"\n"
+" 您可以通过以下 URL 设置或更改密码：\n"
+"\n"
+"\n"
+" ${object.user_id.signup_url}\n"
+"\n"
+"\n"
+"${object.wizard_id.welcome_message or ''}<p></p><p></p><ul></ul><p></p><ul><li><a href=\"${object.user_id.signup_url}\"></a></li></ul><p>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -73,7 +92,7 @@ msgstr "<b>登录</b>"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
-msgstr "<span id=\"search_label\"/><span class=\"caret\"/>"
+msgstr "<span id=\"search_label\">搜索</span><span class=\"caret\"/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -112,7 +131,7 @@ msgstr "清除"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "单击此处查看您的文件。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -167,7 +186,7 @@ msgstr "创建时间"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "客户门户 URL"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -181,7 +200,7 @@ msgstr "显示名称"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "绘制您的签名"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -198,7 +217,7 @@ msgstr "Email线程"
 #: code:addons/portal/wizard/portal_wizard.py:130
 #, python-format
 msgid "Group %s is not a portal"
-msgstr ""
+msgstr "组 %s 不是门户"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -279,7 +298,7 @@ msgstr "下一个"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:38
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "哎哟！出错了。请尝试重新加载页面并登录。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -305,7 +324,7 @@ msgstr "门户访问管理"
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "门户访问 URL"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -322,7 +341,7 @@ msgstr "前一个"
 #: code:addons/portal/static/src/js/portal_chatter.js:101
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "已在 %s 上发布"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -393,7 +412,7 @@ msgstr "用户能够添加或删除的门户"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "目前没有任何评论。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -580,7 +599,7 @@ msgstr "你的个人设置里必须要输入电子邮件地址才能发送邮件
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "您的联系人详细信息"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
@@ -591,7 +610,7 @@ msgstr "你的详细信息"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "您的文件"
 
 #. module: portal
 #. openerp-web
@@ -642,7 +661,7 @@ msgstr "登入"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "portal.mixin"
-msgstr ""
+msgstr "portal.mixin"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
