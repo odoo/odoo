@@ -18,6 +18,7 @@
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
 # Dejan Dinic, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -113,7 +114,7 @@ msgstr "Vertragsart"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
 msgid "Agreement Types"
-msgstr "Vertragsart"
+msgstr "Vertragsarten"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -258,9 +259,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
-"Für einen Blankoauftrag können Sie eine Vereinbarung für eine bestimmte Zeitspanne\n"
-" (z. B. ein Jahr) aufzeichnen, weiterhin Produkte innerhalb dieser Vereinbarung bestellen und von den verhandelten\n"
-" Preisen profitieren."
+"Für einen Blankoauftrag können Sie eine Vereinbarung für eine bestimmte "
+"Zeitspanne (z. B. ein Jahr) aufzeichnen, weiterhin Produkte innerhalb dieser"
+" Vereinbarung bestellen und von den verhandelten Preisen profitieren."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -282,8 +283,10 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
-"In der Ausschreibung können Sie die zu beschaffenden Produkte eingeben,\n"
-" und bei verschiedenen Wettbewerbern Angebote anfragen. Sobald die Ausschreibungen fertig sind, können Sie die Angebote prüfen und miteinander vergleichen, bevor Sie einige bestellen und andere verwerfen."
+"In der Ausschreibung können Sie die zu beschaffenden Produkte eingeben und "
+"bei verschiedenen Lieferanten Angebote anfragen. Sobald die Ausschreibungen "
+"fertig sind, können Sie die Angebote prüfen und miteinander vergleichen, "
+"bevor Sie einige bestellen und andere verwerfen."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -540,11 +543,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Wählen Sie die einfache Angebotsanfrage (Exklusiv): Bei Bestätigung einer "
-"Bestellung werden alle verbleibenden abgebrochen und gelöscht. Wählen Sie "
-"mehrfach Anfragen: In diesem Fall kann es multiple Bestellungen geben. Durch"
-" die Bestätigung einer Bestellung werden allerdings keine der verbleibenden "
-"Bestellungen storniert oder gelöscht."
+"Nur eine Angebotsanfrage auswählen (exklusiv): Bei Bestätigung einer Bestellung werden alle verbleibenden storniert. \n"
+"\n"
+"Mehrere Anfragen auswählen: In diesem Fall kann es multiple Beschaffungsaufträge geben. Durch die Bestätigung eines Beschaffungsauftrags werden allerdings keine der verbleibenden Beschaffungsaufträge storniert."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
@@ -608,7 +609,7 @@ msgstr "Vertragspositionen verwenden"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr "Vereinbarungspositionen verwenden"
+msgstr "Vereinbarungsmengen verwenden"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

@@ -17,6 +17,7 @@
 # Philipp Hug <philipp@hug.cx>, 2017
 # Andi, 2017
 # e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f_KAZ <e2fKAZ@outlook.com>, 2018
 msgid ""
 msgstr ""
@@ -64,8 +65,8 @@ msgid ""
 "Affect landed costs on receipt operations and split them among products to "
 "update their cost price."
 msgstr ""
-"Einstandskosten auf Wareneingangsabwicklung anwenden und auf Produkte "
-"aufteilen, um die Kosten zu aktualisieren."
+"Wenden Sie Einstandskosten auf die Wareneingangsabwicklung an und teilen Sie"
+" sie auf Produkte auf, um die Herstellungskosten zu aktualisieren."
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
@@ -126,8 +127,8 @@ msgid ""
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
 "Das Ändern der Kostenmethode ist eine wichtige Änderung, die sich auf Ihre "
-"Lagerbewertung auswirkt. Sind Sie sicher, dass Sie diese Änderung vornehmen "
-"möchten?"
+"Bestandsbewertung auswirkt. Sind Sie sicher, dass Sie diese Änderung "
+"vornehmen möchten?"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -302,7 +303,7 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company."
 msgstr ""
 "Manuell: Die Buchungen zur Bewertung des Lagerbestands werden nicht automatisch gebucht.\n"
-" Automatisch: Eine Buchung wird automatisch erstellt, um den Lagerbestand zu bewerten, wenn ein Produkt im Unternehmen ankommt oder das Unternehmen verlässt."
+"Automatisch: Eine Buchung wird automatisch erstellt, um den Lagerbestand zu bewerten, wenn ein Produkt im Unternehmen ankommt oder das Unternehmen verlässt."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -312,7 +313,7 @@ msgid ""
 "        "
 msgstr ""
 "Manuell: Die Buchungen zur Bewertung des Lagerbestands werden nicht automatisch erstellt.\n"
-" Automatisch: Eine Buchung wird automatisch erstellt, um den Lagerbestand zu bewerten, wenn ein Produkt im Unternehmen ankommt oder das Unternehmen verlässt."
+"Automatisch: Eine Buchung wird automatisch erstellt, um den Lagerbestand zu bewerten, wenn ein Produkt im Unternehmen ankommt oder das Unternehmen verlässt."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
@@ -417,7 +418,7 @@ msgstr "Standardpreis"
 #: code:addons/stock_account/models/product.py:150
 #, python-format
 msgid "Standard Price changed  - %s"
-msgstr "Standardpreis geändert - %s"
+msgstr "Standardpreis geändert – %s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -428,8 +429,8 @@ msgid ""
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first."
 msgstr ""
 "Standardpreis: Die Produkte werden nach für das Produkt definierten Standard-Kosten berechnet.\n"
-" Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten Durchschnittskosten berechnet.\n"
-" First In – First Out (FIFO): Die Produkte werden unter der Annahme bewertet, dass die Produkte, die zuerst im Unternehmen ankommen, auch zuerst das Unternehmen verlassen."
+"Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten Durchschnittskosten berechnet.\n"
+"First In – First Out (FIFO): Die Produkte werden unter der Annahme bewertet, dass die Produkte, die zuerst im Unternehmen ankommen, auch zuerst das Unternehmen verlassen."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -500,7 +501,7 @@ msgstr "Lagerbewertungskonto (Ausgehend)"
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
 msgid "Stock Valuation Report"
-msgstr "Lagerbewertungsbericht"
+msgstr "Bestandsbewertungsbericht"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -515,7 +516,7 @@ msgid ""
 " of your product to avoid an incorrect valuation."
 msgstr ""
 "Die Kosten von %s entsprechen derzeit 0. Ändern Sie die Kosten oder "
-"Konfiguration Ihres Produktes, um eine fehlerhafte Bewertung zu vermeiden."
+"Konfiguration Ihres Produkts, um eine fehlerhafte Bewertung zu vermeiden."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:309
@@ -547,13 +548,13 @@ msgid ""
 "origin or destination company."
 msgstr ""
 "Die Buchungszeilen weisen keinen konsistenten Status auf: Sie spiegeln nicht"
-" dasselbe Ursprungs- oder Ziel-Unternehmen wider."
+" dasselbe Ursprungs- oder Zielunternehmen wider."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line_to_refund
 msgid "To Refund (update SO/PO)"
-msgstr "Zur Erstattung (Verkaufsauftrag/Bestellung aktualisieren)"
+msgstr "Zurückzuerstatten (Verkaufsauftrag/Beschaffungsauftrag aktualisieren)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
@@ -568,7 +569,7 @@ msgid ""
 " Order/Purchase Order"
 msgstr ""
 "Auslösen einer Minderung der gelieferten/erhaltenen Menge im zugehörigen "
-"Verkaufsauftrag/in der zugehörigen Bestellung"
+"Verkaufsauftrag/Beschaffungsauftrag"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
