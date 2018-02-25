@@ -17,6 +17,7 @@
 # Melanie Bernard <mbe@odoo.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
 # Florian Hatat, 2017
+# fr rev <e2ffr02@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Add pickings to a batch picking"
-msgstr "Ajouter des préparations à un lot de préparations"
+msgstr "Ajouter des préparations à une préparation par lots "
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -62,23 +63,23 @@ msgstr "Mode groupé"
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
 msgid "Batch Picking"
-msgstr "Lot de préparations"
+msgstr "Préparation par lots "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_name
 msgid "Batch Picking Name"
-msgstr "Nom du lot de préparations"
+msgstr "Nom de la préparation par lots "
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Pickings"
-msgstr "Lots de préparations"
+msgstr "Préparations par lots "
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Pickings not finished"
-msgstr "Lots de préparations non terminés"
+msgstr "Préparations par lots  non terminées"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_id_8938
@@ -104,7 +105,7 @@ msgstr "Annulé"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Click to create a Batch Picking."
-msgstr "Cliquez ici pour créer un lot de préparations."
+msgstr "Cliquez ici pour créer des préparations par lots "
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -218,7 +219,7 @@ msgstr "Liste des préparations associées à ce lot"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_name
 msgid "Name of the batch picking"
-msgstr "Nom du lot de préparations"
+msgstr "Nom de la préparation par lots "
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:52
@@ -229,17 +230,17 @@ msgstr "Rien à imprimer."
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_user_id
 msgid "Person responsible for this batch picking"
-msgstr "Personne responsable de ce lot de préparations"
+msgstr "Personne responsable de cette préparation par lots "
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
 msgid "Pick To Backorder"
-msgstr "Préparer avec reliquat"
+msgstr "Préparer un reliquat"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
 msgid "Picking to backorder"
-msgstr "Préparation avec reliquat"
+msgstr "Préparation d'un reliquat"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_picking_ids
@@ -265,7 +266,7 @@ msgstr "En cours"
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Picking"
-msgstr "Rechercher un lot de préparations"
+msgstr "Rechercher une préparation par lots "
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -320,7 +321,7 @@ msgstr "Statut"
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Picking"
-msgstr "Lot de préparations"
+msgstr "Préparation par lots du stock"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -330,7 +331,7 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"L'objectif d'un lot de préparations est de regrouper les opérations pouvant\n"
+"L'objectif d'une préparation par lots  est de regrouper les opérations pouvant\n"
 " (ou devant) être effectuées en même temps pour accroître leur efficacité.\n"
 " Cette stratégie peut également être utile pour attribuer des tâches (une personne = un lot) ou\n"
 " pour faciliter la gestion du calendrier des opérations (tâches à effectuer à 13 heures)."

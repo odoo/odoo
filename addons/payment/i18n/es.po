@@ -28,6 +28,8 @@
 # oihane <oihanecruce@gmail.com>, 2017
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2018
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# ES R1 <e2fes@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
 msgid ""
@@ -62,7 +64,7 @@ msgstr "<i class=\"fa fa-lock\"> Pagar</i>"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr "<i class=\"fa fa-plus-circle\">Añadir una nueva tarjeta</i>"
+msgstr "<i class=\"fa fa-plus-circle\"> Añadir una tarjeta nueva</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -106,7 +108,7 @@ msgstr ""
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
 msgstr ""
-"<p>Esta tarjeta está actualmente vinculado a los siguientes registros:<p/>"
+"<p>Esta tarjeta está actualmente vinculada a los siguientes registros:<p/>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -278,7 +280,7 @@ msgstr "Importe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr "Autorizar el mecanismo permitido"
+msgstr "Compatible con el mecanismo de Authorize"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -306,7 +308,7 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_res_id
 msgid "Callback Document ID"
-msgstr "Identificación del documento de retrollamada"
+msgstr "ID del documento de retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_model_id
@@ -360,7 +362,7 @@ msgstr "Capturar transacción"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr "Capturar la cantidad de Odoo cuando se complete la entrega."
+msgstr "Capturar el importe de Odoo cuando se complete la entrega."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -404,7 +406,7 @@ msgstr "Configurar"
 #: code:addons/payment/static/src/js/payment_form.js:322
 #, python-format
 msgid "Confirm Deletion"
-msgstr "Confirmar la cancelación"
+msgstr "Confirmar la eliminación"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -789,7 +791,7 @@ msgstr "Mensajes"
 #: code:addons/payment/models/payment_acquirer.py:395
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr "Falta la referencia del cliente para crear un nuevo token de pago"
+msgstr "Falta la referencia de la empresa para crear un nuevo token de pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
@@ -835,7 +837,7 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
-"Nota: Las suscripciones no tienen en cuenta este campo, utilizan un servidor"
+"Nota: Las suscripciones no tienen en cuenta este campo; utilizan un servidor"
 " por defecto."
 
 #. module: payment
@@ -991,12 +993,12 @@ msgid ""
 "                templates to do it in one-click."
 msgstr ""
 "Los pagos se registrarán en este diario. Si desea recibir el pago directamente en su cuenta bancaria,\n"
-" seleccione su cuenta bancaria. Si desea recibir el pago por lotes en varias transacciones, cree un diario\n"
-" de pago específico para este medio de pago para gestionar fácilmente la conciliación bancaria. La cantidad\n"
-" se mantiene en una cuenta temporal para la transferencia de sus movimientos (que se crea automáticamente cuando crea\n"
-" el diario de pago). Después, cuando reciba el pago en su cuenta bancaria por el medio de pago, conciliará\n"
-" la línea del extracto bancario con esta cuenta temporal para la transferencia. Utilice las plantillas\n"
-" de conciliación para hacerlo en solo un clic."
+"seleccione su cuenta bancaria. Si desea recibir el pago por lotes en varias transacciones, cree un diario\n"
+"de pago específico para este medio de pago a fin de gestionar fácilmente la conciliación bancaria. La cantidad\n"
+"se mantiene en una cuenta temporal para la transferencia de sus movimientos (que se crea automáticamente cuando crea\n"
+"el diario de pago). Después, cuando reciba el pago en su cuenta bancaria por el medio de pago, conciliará\n"
+"la línea del extracto bancario con esta cuenta temporal para la transferencia. Utilice las plantillas\n"
+"de conciliación para hacerlo en solo un clic."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1090,7 +1092,7 @@ msgstr "Reembolsado"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunding"
-msgstr "Reembolsar"
+msgstr "Reembolsando"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -1105,7 +1107,7 @@ msgstr "Plantilla de formulario S2S"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Save Cards"
-msgstr "Guardar las tarjetas"
+msgstr "Guardar tarjetas"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1276,8 +1278,8 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
-"Esta pasarela de pago está disponible para los países seleccionados. Si no "
-"hay ninguno seleccionado, esta está disponible para todos los países."
+"Esta pasarela de pago está disponible para ciertos países. Si no hay ninguno"
+" disponible, significa que está disponible para todos los países."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

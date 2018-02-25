@@ -47,9 +47,13 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
-"<p/><p/><p><a href=\"__URL__\" style=\"margin-left: 85px; padding:5px 10px; "
-"border-radius: 3px; background-color:#875A7B; text-align:center; text-"
-"decoration:none; color:#F7FBFD;\"/></p><p/>"
+"\n"
+" <p>\n"
+" 您好，\n"
+" 我们</p><p>正在开展一项调查，期望得到您的意见反馈。\n"
+" 请点击</p><p><a href=\"__URL__\" style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\">此处开始调查\n"
+" 非常</a></p><p>感谢您的参与！</p>\n"
+" \n"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -266,12 +270,12 @@ msgstr "有效"
 msgid ""
 "Add a list of email of recipients (will not be converted into contacts). "
 "Separated by commas, semicolons or newline..."
-msgstr ""
+msgstr "添加电子邮件收件人列表（不会转化为联系人）。采用逗号、分号或新行分隔..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Add existing contacts..."
-msgstr ""
+msgstr "添加现有联系人..."
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_3
@@ -342,7 +346,7 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
-msgstr "附件是通过模型  / res_id 连接到文档中并通过该字段链接到消息上。"
+msgstr "附件是通过模型 / res_id 连接到文档中并通过该字段链接到消息上。"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -520,7 +524,7 @@ msgstr "截止日"
 msgid ""
 "Deadline to which the invitation to respond for this survey is valid. If the"
 " field is empty,        the invitation is still valid."
-msgstr ""
+msgstr "对此调查反馈邀请的期限有效。如果此字段为空，那么邀请仍然有效。"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -1299,7 +1303,7 @@ msgstr "开发人员的问题"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
 msgid "Quizz Mode"
-msgstr ""
+msgstr "Quizz 模式"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1626,7 +1630,7 @@ msgstr "调查页面"
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
 msgid "Survey: Clean test answers"
-msgstr ""
+msgstr "调查：清除测试答案"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -1644,7 +1648,7 @@ msgstr "测试"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
 msgid "Test Entry"
-msgstr ""
+msgstr "测试问卷"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
@@ -1760,6 +1764,8 @@ msgid ""
 "These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
+"这些问题与 Odoo 的分化和易用性相关。尝试提醒 Odoo 中的第一天以及\n"
+" 您的困难。"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_2
@@ -1788,7 +1794,7 @@ msgstr "答案必须为邮件地址"
 #: code:addons/survey/tests/test_survey.py:107
 #, python-format
 msgid "This is not a date"
-msgstr ""
+msgstr "这不是日期"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:565
@@ -1802,7 +1808,7 @@ msgstr "这不是一个数字"
 msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
-msgstr ""
+msgstr "此电子邮件收件人列表不会转换为联系人。电子邮件必须由逗号、分号或新行分隔。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -1905,7 +1911,7 @@ msgstr "答案类型"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Upcoming Activities"
-msgstr ""
+msgstr "即将开始的活动"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1916,7 +1922,7 @@ msgstr "使用模板"
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
 "Use this field to add         additional explanations about your question"
-msgstr ""
+msgstr "使用此字段增加 关于问题的额外解释"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
@@ -2041,7 +2047,7 @@ msgstr "哪个模块你现在在使用或测试?"
 msgid ""
 "YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\"/>"
-msgstr "<i class=\"fa fa-calendar fa-2x\"/>"
+msgstr "YYYY<i class=\"fa fa-calendar fa-2x\"/>-MM-DD\n"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
@@ -2074,6 +2080,7 @@ msgid ""
 "want with the public web link (in this case, the \"Login Required\" setting "
 "must be disabled)."
 msgstr ""
+"您可以分享调查的网络链接和/或给您的观众发送私人邀请。每次邀请只可回答一次，且每次他们想要使用网络链接回答时（在这种情况下，必须禁用“必须登录”设置）。"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:316

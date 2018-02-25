@@ -18,6 +18,7 @@
 # Gab_Odoo <gab@odoo.com>, 2017
 # Andi, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -53,21 +54,20 @@ msgid ""
 "</p>\n"
 msgstr ""
 "\n"
-"Hallo,\n"
-"\n"
-" ${user.name} hat ${object.slide_type} ${object.name} mit Ihnen geteilt!<p></p> \n"
-"\n"
-"\n"
-" \n"
-" \n"
-" \n"
-"\n"
-"\n"
-" \n"
-" Anzeigen ${object.name}\n"
-" \n"
-"\n"
-"<p><strong></strong></p><p style=\"text-align: center; margin-top: 10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"><strong></strong></a></p>"
+"<p>Hallo,</p>\n"
+"<p>\n"
+"    ${user.name} hat ${object.slide_type} <strong>${object.name}</strong> mit Ihnen geteilt!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        <strong>${object.name}</strong> anzeigen\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -89,21 +89,20 @@ msgid ""
 "</p>\n"
 msgstr ""
 "\n"
-"Hallo,\n"
-"\n"
-" Ein neues ${object.slide_type} ${object.name} wurde veröffentlicht auf ${object.channel_id.name} um ${format_tz(object.write_date, tz=user.tz)}\n"
-"\n"
-"\n"
-" \n"
-" \n"
-" \n"
-"\n"
-"\n"
-" \n"
-" Anzeigen ${object.name}\n"
-" \n"
-"\n"
-"<p></p><p><strong></strong></p><p style=\"text-align: center; margin-top: 10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"><strong></strong></a></p>"
+"<p>Hallo,</p>\n"
+"<p>\n"
+"${object.slide_type} <strong>${object.name}</strong> wurde neu veröffentlicht auf ${object.channel_id.name} um ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        <strong>${object.name}</strong> anzeigen\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -131,8 +130,9 @@ msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
 msgstr ""
-"Das (Un-)Archivieren eines Kanals (un-)archiviert automatisch dessen Folien."
-" Möchten Sie fortfahren?"
+"Das Archivieren bzw. Aufheben einer Archivierung eines Kanals archiviert "
+"automatisch auch dessen Folien bzw. hebt deren Archivierung auf. Möchten Sie"
+" fortfahren?"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -371,7 +371,7 @@ msgstr "Nur authentifizierte Benutzer"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
-msgstr "Awesome Timesheet von Odoo"
+msgstr "Fantastische Zeiterfassung von Odoo"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
@@ -495,7 +495,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
-msgstr "Erstellen Sie ein Google-Projekt und einen Schlüssel"
+msgstr "Erstellen Sie ein Google-Projekt und erhalten Sie einen Schlüssel"
 
 #. module: website_slides
 #. openerp-web
@@ -553,7 +553,7 @@ msgstr "Verwerfen"
 #: model:slide.slide,description:website_slides.slide_6
 msgid "Discover how easy marketing your business can be with Odoo"
 msgstr ""
-"Entdecken Sie, wie leicht mit Odoo das Marketing für Ihr Unternehmens sein "
+"Entdecken Sie, wie leicht mit Odoo das Marketing für Ihr Unternehmen sein "
 "kann."
 
 #. module: website_slides
@@ -567,7 +567,7 @@ msgid ""
 msgstr ""
 "Entdecken Sie, wie Sie MRP, PLM, Qualität und Wartung in eine einzigen Anwendung integrieren können, um so die Effizienz Ihrer Fertigungsvorgänge zu maximieren.\n"
 "\n"
-" Erfahren Sie mehr über die Funktionen unter: https://www.odoo.com/page/manufacturing-features\n"
+"Erfahren Sie mehr über die Funktionen unter: https://www.odoo.com/page/manufacturing-features\n"
 "\n"
 "Entdecken Sie Odoo MRP: https://www.odoo.com/page/manufacturing"
 
@@ -591,7 +591,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
 msgid "Dislikes"
-msgstr "Dislikes"
+msgstr "Abneigungen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
@@ -642,7 +642,7 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
-"Laden Sie Awesome Timesheet von Odoo herunter und entdecken Sie, wie einfach Zeiterfassung und Mitarbeitermanagement sein können. \n"
+"Laden Sie die fantastische Zeiterfassung von Odoo herunter und entdecken Sie, wie einfach Zeiterfassung und Mitarbeitermanagement sein können. \n"
 "\n"
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
@@ -904,8 +904,7 @@ msgstr "Name"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
-msgstr ""
-"Neue ${object.slide_type} veröffentlicht von ${object.channel_id.name}"
+msgstr "${object.slide_type} neu veröffentlicht von ${object.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -964,7 +963,7 @@ msgstr "Anzahl Videos"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
 msgid "Odoo All-in-One Software Demonstration"
-msgstr "Odoo All-in-One Software-Demonstration"
+msgstr "Odoo-All-in-One-Software-Demonstration"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
@@ -1000,17 +999,17 @@ msgstr "Odoo Verkauf"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr "Odoo Sign Demonstration"
+msgstr "Odoo Signatur-Demonstration"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
 msgid "Open Days 2014 Infographic"
-msgstr "Open Days 2018 Infographic"
+msgstr "Infografik Open Days 2014"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_11
 msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr "OpenSource CMS, Leistungsvergleich – Mantavya Gajjar"
+msgstr "Open-Source-CMS, Leistungsvergleich – Mantavya Gajjar"
 
 #. module: website_slides
 #. openerp-web
@@ -1237,7 +1236,7 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
-"Lassen Sie das manuelle Drucken und Scannen hinter sich. Verwenden Sie mit Odoo Sign elektronische Signaturen! \n"
+"Lassen Sie das manuelle Drucken und Scannen hinter sich. Verwenden Sie mit Odoo Signatur elektronische Signaturen! \n"
 "\n"
 "Erfahren Sie mehr unter https://www.odoo.com/page/sign"
 
@@ -1446,7 +1445,7 @@ msgid ""
 msgstr ""
 "Lagerverwaltungssoftware für das 21. Jahrhundert.\n"
 "\n"
-"Entdecken Sie Odoo Inventory: https://www.odoo.com/page/warehouse"
+"Entdecken Sie Odoo Bestand: https://www.odoo.com/page/warehouse"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
