@@ -310,6 +310,8 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
+"副産物を部品表に加えます。 これは、いくつかの完成品を得るためにも使用されます。 このオプションを指定しないと、A + B = "
+"Cとなるのみですが、オプションを指定するとA + B = C + Dとなります。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -332,12 +334,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
 msgid "Allowed to Post Inventory"
-msgstr ""
+msgstr "在庫転記を許可"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
 msgid "Allowed to Unreserve Inventory"
-msgstr ""
+msgstr "引当済在庫のキャンセルを許可"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -532,7 +534,7 @@ msgstr "先月ブロックした時間"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 msgid "BoM Components"
-msgstr ""
+msgstr "部品表構成品"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
@@ -759,7 +761,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_consumed_less_than_planned
 msgid "Consumed Less Than Planned"
-msgstr ""
+msgstr "消費計画より少ない"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -879,7 +881,7 @@ msgstr "デフォルト所要時間"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr ""
+msgstr "初期設定の製造リードタイム"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -1175,12 +1177,12 @@ msgstr "添付あり"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Has Been Produced"
-msgstr ""
+msgstr "生産完了"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
 msgid "Has Moves"
-msgstr ""
+msgstr "移動あり"
 
 #. module: mrp
 #: selection:mrp.document,priority:0
@@ -1287,7 +1289,7 @@ msgstr "参考、マッチングには使用されていません"
 #: code:addons/mrp/models/mrp_unbuild.py:187
 #, python-format
 msgid "Insufficient Quantity"
-msgstr ""
+msgstr "不十分な数量"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form
@@ -1321,7 +1323,7 @@ msgstr "ブロック理由"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "Is a Blocking Reason?"
-msgstr ""
+msgstr "ブロック理由"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_public
@@ -1331,7 +1333,7 @@ msgstr "パブリックドキュメント"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
 msgid "Is the Current User Working"
-msgstr ""
+msgstr "現在のユーザ作業"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:162
@@ -1503,7 +1505,7 @@ msgstr "ロット/シリアル番号"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
 msgid "Lot/Serial number"
-msgstr ""
+msgstr "ロット/シリアル番号"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_active_move_line_ids
@@ -1580,7 +1582,7 @@ msgstr "製造リードタイム"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manu_type_id
 msgid "Manufacturing Operation Type"
-msgstr ""
+msgstr "製造オペレーションタイプ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
@@ -1736,7 +1738,7 @@ msgstr "MRPワークセンター"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr ""
+msgstr "MRP:計画製造オーダ"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2601,7 +2603,7 @@ msgstr "廃棄品"
 #: model:product.product,name:mrp.product_product_computer_desk_screw
 #: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
 msgid "Screw"
-msgstr ""
+msgstr "スクリュー"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
@@ -3140,7 +3142,7 @@ msgstr "合計仕掛中オーダー"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Total duration"
-msgstr ""
+msgstr "トータル期間"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
@@ -3662,6 +3664,8 @@ msgid ""
 "material.             If you want to cancel this MO, please change the "
 "consumed quantities to 0."
 msgstr ""
+"既に材料を使用している場合は製造オーダーの中止が出来ません。\n"
+"製造オーダーをキャンセルするには材料の消費量を０にしてください。"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:202
@@ -3670,18 +3674,20 @@ msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
+"おなじシリアルナンバーを２度使用することはできません。\n"
+"別の付番に修正してください。"
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:129
 #, python-format
 msgid "You cannot produce the same serial number twice."
-msgstr ""
+msgstr "おなじシリアルナンバーを２度作成することはできません"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:93
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "製造指示を元に戻して作成することはできません"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:46
@@ -3695,6 +3701,8 @@ msgid ""
 "You have consumed less material than what was planned. Are you sure you want"
 " to close this MO?"
 msgstr ""
+"計画よりも材料の消費が少ないです。\n"
+"本当に製造を終了してもよろしいですか？"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:392
@@ -3736,13 +3744,13 @@ msgstr "完製品にロット番号を付与する必要があります "
 #: code:addons/mrp/models/mrp_workorder.py:314
 #, python-format
 msgid "You should provide a lot/serial number for a component"
-msgstr ""
+msgstr "各部品に異なるシリアル番号を付与する必要があります"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:291
 #, python-format
 msgid "You should provide a lot/serial number for the final product"
-msgstr ""
+msgstr "最終製造のロット/シリアルナンバーを付与する必要があります"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:95
@@ -3750,7 +3758,7 @@ msgstr ""
 msgid ""
 "You should specify a manufacturing order in order to find the correct "
 "tracked products."
-msgstr ""
+msgstr "正確な製品追跡を行うために製造指示を特定する必要があります。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3813,12 +3821,12 @@ msgstr "stock.scrap"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "在庫追跡情報"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "stock.warn.insufficient.qty.unbuild"
-msgstr ""
+msgstr "警告、在庫不足のため製造が出来ません。"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action

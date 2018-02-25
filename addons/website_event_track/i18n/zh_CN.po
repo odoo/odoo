@@ -54,12 +54,23 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<?xml version=\"1.0\"?><div><p><t "
-"t-esc=\"object.partner_name\"/></p><p></p><p><div style=\"margin-top: "
-"16px;\"><a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px;"
-" font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-"
-"weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-"
-"radius:3px\"></a></div></p><p></p></div>"
+"<?xml version=\"1.0\"?>\n"
+"\n"
+" \n"
+" 亲爱的 \n"
+" \n"
+" 我们很高兴通知您，您的建议 ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.\n"
+" \n"
+" You will find more details here:\n"
+" \n"
+" \n"
+" View Event\n"
+" \n"
+" \n"
+" \n"
+" Sincerely,\n"
+"\n"
+"<div><p><t t-esc=\"object.partner_name\"/></p><p></p><p><div style=\"margin-top: 16px;\"><a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\"></a></div></p><p></p></div>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -459,7 +470,7 @@ msgstr "绿色"
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "灰色"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search

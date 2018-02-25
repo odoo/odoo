@@ -1592,7 +1592,7 @@ msgstr "Zählung"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Zählung von Lieferrückständen"
+msgstr "Anzahl Kommissionen mit Lieferrückständen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_draft
@@ -2883,8 +2883,8 @@ msgid ""
 " or done quantities (for a done picking)."
 msgstr ""
 "Wenn die Kommissionierung freigeschaltet ist, können Sie die "
-"Anfangsnachfrage (für einen Kommissionierungs-Entwurf) oder entnommene "
-"Mengen (für eine getätigte Kommissionierung) bearbeiten."
+"Anfangsnachfrage (für einen Kommissionierungs-Entwurf) oder erledigte Mengen"
+" (für eine getätigte Kommissionierung) bearbeiten."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -3427,7 +3427,7 @@ msgstr "Ist Anfangsnachfrage editierbar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_is_quantity_done_editable
 msgid "Is quantity done editable"
-msgstr "Ist die getätigte Menge editierbar"
+msgstr "Ist die erledigte Menge editierbar"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4883,7 +4883,7 @@ msgstr "Pivot"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Planned Transfer"
-msgstr "Geplante Übertragung"
+msgstr "Geplanter Transfer"
 
 #. module: stock
 #: model:ir.model,name:stock.model_web_planner
@@ -5438,7 +5438,7 @@ msgstr "RAM SR5"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
 msgid "Rate Picking Backorders"
-msgstr "Gebühren für die Kommissionierung von Lieferrückständen"
+msgstr "Rate der Kommissionierungen mit Lieferrückständen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
@@ -6797,10 +6797,10 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"Wenn Sie manuell über diesen Vorgangstyp eine Abholung erstellen, ist dies "
-"der Standard-Zielort. Es ist jedoch möglich, diesen zu ändern oder in den "
-"Routen einen anderen Ort anzugeben. Wenn das Feld leer ist, wird nach dem "
-"Kunden-Standort des Partners gesucht."
+"Wenn Sie manuell über diesen Vorgangstyp eine Kommissionierung erstellen, "
+"ist dies der Standard-Zielort. Es ist jedoch möglich, diesen zu ändern oder "
+"in den Routen einen anderen Ort anzugeben. Wenn das Feld leer ist, wird nach"
+" dem Kunden-Standort des Partners gesucht."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_src_id
@@ -6810,10 +6810,10 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"Wenn Sie manuell über diesen Vorgangstyp eine Abholung erstellen, ist dies "
-"der Standard-Quellort. Es ist jedoch möglich, diesen zu ändern oder in den "
-"Routen einen anderen Ort anzugeben. Wenn das Feld leer ist, wird nach dem "
-"Lieferanten-Standort des Partners gesucht."
+"Wenn Sie manuell über diesen Vorgangstyp eine Kommissionierung erstellen, "
+"ist dies der Standard-Quellort. Es ist jedoch möglich, diesen zu ändern oder"
+" in den Routen einen anderen Ort anzugeben. Wenn das Feld leer ist, wird "
+"nach dem Lieferanten-Standort des Partners gesucht."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -6904,11 +6904,11 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"Diese Abholung scheint mit einem anderen Vorgang verbunden zu sein. Wenn Sie"
-" später die Ware erhalten, für die Sie jetzt die Rücknahme buchen, stellen "
-"Sie sicher, dass Sie die zurückgegebene Buchung <b>wieder rückgängig "
-"machen,</b> um zu verhindern, dass Logistikregeln erneut angewandt werden "
-"(was duplizierte Vorgänge erzeugen würde)."
+"Diese Kommissionierung scheint mit einem anderen Vorgang verbunden zu sein. "
+"Wenn Sie später die Ware erhalten, für die Sie jetzt die Rücknahme buchen, "
+"stellen Sie sicher, dass Sie die zurückgegebene Kommissionierung <b>wieder "
+"rückgängig machen,</b> um zu verhindern, dass Logistikregeln erneut "
+"angewandt werden (was duplizierte Vorgänge erzeugen würde)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty_new_quantity
@@ -7037,7 +7037,7 @@ msgid ""
 "Reordering</strong> on"
 msgstr ""
 "Um diese zu erstellen, klicken Sie auf <strong><span class=\"fa fa-"
-"refresh\"/>Nachbestellung</strong> am"
+"refresh\"/>Nachbestellung</strong> für"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7047,8 +7047,8 @@ msgid ""
 "in the"
 msgstr ""
 "Um genauere Einheiten wie Pfund oder Kilogramm zu verwenden, aktivieren Sie "
-"<i>„Einige Produkte können in verschieden Maßeinheiten ein-/verkauft werden "
-"(erweitert)“</i> unter"
+"<i>Einige Produkte können in verschieden Maßeinheiten ein-/verkauft werden "
+"(erweitert)</i> in den"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -7627,7 +7627,7 @@ msgid ""
 msgstr ""
 "Wenn die Kommissionierung nicht erfolgt, kann die Anfangsnachfrage geändert "
 "werden. Wenn die Kommissionierung vorgenommen wird, können Sie die "
-"entnommenen Mengen ändern."
+"erledigten Mengen ändern."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -7795,7 +7795,7 @@ msgid ""
 "correct the done quantities."
 msgstr ""
 "Sie können keine Produktbuchungen löschen, wenn die Kommissionierung "
-"stattfindet. Sie können nur die entnommenen Mengen korrigieren."
+"stattfindet. Sie können nur die erledigten Mengen korrigieren."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:116
@@ -7820,13 +7820,14 @@ msgstr "Sie können lediglich Lieferungen im Entwurf Status löschen."
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
-"Sie können nur 1,0 %s für Produkte mit einer eindeutigen Seriennummer "
+"Sie können nur 1,0 %s Produkte mit einer eindeutigen Seriennummer "
 "verarbeiten."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "You can review and edit the predefined units via the"
-msgstr "Sie können die vordefinierten Einheiten prüfen und bearbeiten über"
+msgstr ""
+"Sie können die vordefinierten Einheiten prüfen und bearbeiten über das"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:936
@@ -7977,7 +7978,7 @@ msgid ""
 "You haven't entered <i>done</i> quantities, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
-"Sie haben keine <i>entnommene</i> Menge eingetragen. Indem Sie auf "
+"Sie haben keine <i>erledigte</i> Menge eingetragen. Indem Sie auf "
 "<i>Anwenden</i> klicken, verarbeitet Odoo alle <i>reservierten</i> Mengen."
 
 #. module: stock
@@ -8124,7 +8125,7 @@ msgid ""
 "either by manually updating the Done quantity on the product lines, or let "
 "Odoo do it automatically while validating"
 msgstr ""
-"indem Sie entweder manuell die entnommene Menge in den Produktpositionen "
+"indem Sie entweder manuell die erledigte Menge in den Produktpositionen "
 "aktualisieren oder es Odoo automatisch bei der Validierung tun lassen"
 
 #. module: stock
@@ -8134,7 +8135,7 @@ msgid ""
 "them with the Odoo Barcode app, or let Odoo do it automatically while "
 "validating"
 msgstr ""
-"indem Sie entweder manuell die entnommene Menge in den Produktpositionen "
+"indem Sie entweder manuell die erledigte Menge in den Produktpositionen "
 "aktualisieren oder sie mit der Odoo-Barcode-App scannen oder es Odoo "
 "automatisch bei der Validierung tun lassen"
 
@@ -8175,7 +8176,7 @@ msgstr "iPod"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "in"
-msgstr "Ein"
+msgstr "in"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -8183,7 +8184,7 @@ msgid ""
 "is displayed on the transfer if your products supply chain is properly "
 "configured. Otherwise, <strong>Check the availability</strong> manually"
 msgstr ""
-"wird in der Lieferung angezeigt, wenn die Lieferkette für Ihre Produkte "
+"wird im Transfer angezeigt, wenn die Lieferkette für Ihre Produkte "
 "ordnungsgemäß konfiguriert ist. Andernfalls <strong>können Sie die "
 "Verfügbarkeit manuell prüfen</strong>."
 

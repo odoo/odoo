@@ -6,17 +6,17 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Martin Trigaux, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
-# Marek Pontus, 2018
+# Marek Pontus, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Marek Pontus, 2018\n"
+"Last-Translator: Marek Pontus, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,28 +143,28 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "Päevade arv tähtajani"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 #: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "Ülesannete arv"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "Määratavate tööpäevade arv"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "Tööpäevade arv sulgemiseni"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr ""
+msgstr "Ülesannete arv"
 
 #. module: project
 #: code:addons/project/models/project.py:244
@@ -226,13 +226,15 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
+"<b>Kutsu kolleege</b> e-kirja teel.<br/><i>Sisesta üks e-posti aadress rea "
+"kohta.</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Tähista ülesandeid</b>, et näidata nende prioriteetsust."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -298,6 +300,10 @@ msgid ""
 "                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> Ekraani kohandamine</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -316,6 +322,10 @@ msgid ""
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> Loo kohandatud aruanded</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -334,6 +344,10 @@ msgid ""
 "                                            <strong> Workflow Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"/>\n"
+"                                            <strong> Tööprotsesside kohandamine</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -372,6 +386,10 @@ msgid ""
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> Ülesanded</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -707,7 +725,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>Soovitatud tegevused:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -832,7 +850,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "Võta e-kirju vastu"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -868,7 +886,7 @@ msgstr "Tegevused"
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Tegevuste tüübid"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -983,7 +1001,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
 msgid "Assignation Date"
-msgstr ""
+msgstr "Määramise kuupäev"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1354,7 +1372,7 @@ msgstr "Loo uus projekt."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Loo uus ülesanne"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2456,7 +2474,7 @@ msgstr "Nimi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Ülesannete nimetus :"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2591,7 +2609,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "Ainult kutsel"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
@@ -3008,7 +3026,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_project_report
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr "Raporteerimine"
+msgstr "Analüüs"
 
 #. module: project
 #. openerp-web
@@ -3234,7 +3252,7 @@ msgstr "Etapid"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr ""
+msgstr "Tähistatud"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
@@ -3260,7 +3278,7 @@ msgstr "Alguskuupäev"
 #: model:ir.model.fields,field_description:project.field_project_project_subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Alamülesannete projekt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
@@ -3655,7 +3673,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_hr_timesheet
 msgid "Timesheets"
-msgstr "Tööajalehed"
+msgstr "Tööajaarvestus"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3826,14 +3844,14 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "Nähtav kõigile töötajatele"
 
 #. module: project
 #: code:addons/project/models/project.py:202
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "Nähtav järgmistele klientidele"
 
 #. module: project
 #. openerp-web

@@ -9,10 +9,10 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Marek Pontus, 2017
 # Mattias Põldaru <mahfiaz@gmail.com>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Gert Valdek <gert@airobot.ee>, 2017
-# Marek Pontus, 2017
 # Hedi Hunt <Hedi.Hunt@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -1551,12 +1551,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_type_form
 #: model:ir.model.fields,field_description:account.field_account_financial_report_account_type_ids
 msgid "Account Types"
-msgstr "Konto tüübid"
+msgstr "Kontoliigid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr "Lubatud kontotüübid"
+msgstr "Lubatud kontoliigid"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -1649,17 +1649,17 @@ msgstr "Raamatupidamine"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting App Options"
-msgstr "Raamatupidamise Äppi valikud"
+msgstr "Raamatupidamise mooduli valikud"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Accounting Application Configuration"
-msgstr "Raamatupidamise taotlemise seaded"
+msgstr "Raamatupidamise mooduli seaded"
 
 #. module: account
 #: model:web.planner,tooltip_planner:account.planner_account
 msgid "Accounting Configuration: a step-by-step guide."
-msgstr "Raamatupidamise seadistamine samm-sammult juhend."
+msgstr "Raamatupidamise seadistamine: samm-sammult juhend."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -3531,8 +3531,8 @@ msgid ""
 "Could not install new chart of account as there are already accounting "
 "entries existing"
 msgstr ""
-"Ei saanud paigaldada uut kontoplaani, sest praegusega on tehtud "
-"raamatupidamise kandeid"
+"Ei saanud paigaldada uut kontoplaani, sest juba on tehtud raamatupidamise "
+"kandeid"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_counterpart
@@ -3554,7 +3554,7 @@ msgstr "Riik"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_country_group_id
 msgid "Country Group"
-msgstr "Maa grupp"
+msgstr "Riikide grupp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
@@ -5222,7 +5222,7 @@ msgstr "Peida sularaha baasil võimalus"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "How do account types affect your reports?"
-msgstr "Kuidas konto tüübid mõjutavad aruandeid?"
+msgstr "Kuidas kontoliigid mõjutavad aruandeid?"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6670,7 +6670,7 @@ msgstr "Kahjumi vahetuskursi konto"
 #: code:addons/account/models/chart_template.py:190
 #, python-format
 msgid "MISC"
-msgstr "VARIA"
+msgstr "MUU"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8266,7 +8266,7 @@ msgstr "Kasumi konto"
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit and Loss"
-msgstr "Kasum ja kahjum"
+msgstr "Kasumiaruanne"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:135
@@ -9066,7 +9066,7 @@ msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
 msgstr ""
-"Kliendi väljavõtete (maksmata arved) manuaalne saatmine ülemineku perioodil"
+"Kliendi väljavõtete (maksmata arvete) käsitsi saatmine ülemineku perioodil"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9160,7 +9160,7 @@ msgstr "Seaded"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Setup"
-msgstr "Seadistamine"
+msgstr "Seadistus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bar_closed
@@ -9751,8 +9751,8 @@ msgid ""
 "Technical field used to determine at which date this reconciliation needs to"
 " be shown on the aged receivable/payable reports."
 msgstr ""
-"tehniline väli, mida kasutatakse selleks, et näidata millisel kuupäeval "
-"sobitamine tuleb näidata aruannetes."
+"Tehniline väli, mida kasutatakse selleks, et näidata millisel kuupäeval "
+"sobitamine tuleb näidata aegunud nõuete/kohustuste aruannetes."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_hide_payment_method
@@ -10022,9 +10022,9 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"Kulu kajastatakse siis, kui müüja arve on valideeritud, välja arvatud anglo "
-"saksoni arvestus koos püsiva inventuuriarvestusega, millisel juhul "
-"kajastatakse arveldusarve valideerimisel kulu (kulu müüdud konto)."
+"Kulu kajastatakse siis, kui tarnija arve on valideeritud, välja arvatud "
+"anglo- saksi arvestus koos püsiva laoarvestusega, millisel juhul "
+"kajastatakse kulu (müüdud kaupade kulu konto) müügiarve valideerimisel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product_property_account_expense_id
@@ -10036,10 +10036,10 @@ msgid ""
 "validation. If the field is empty, it uses the one defined in the product "
 "category."
 msgstr ""
-"Kulu kajastatakse siis, kui müüja arve on valideeritud, välja arvatud anglo "
-"saksoni arvestus koos püsiva inventuuriarvestusega, millisel juhul "
-"kajastatakse arveldusarve valideerimisel kulu (kulu müüdud konto). Kui väli "
-"on tühi, kasutab see tooterühma määratletud toodet."
+"Kulu kajastatakse siis, kui tarnija arve on valideeritud, välja arvatud "
+"anglo- saksi arvestus koos püsiva laoarvestusega, millisel juhul "
+"kajastatakse kulu (müüdud kaupade kulu konto) müügiarve valideerimisel. Kui "
+"väli on tühi, kasutatakse tootekategoorial määratud seadistust."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10307,7 +10307,7 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
-"Need tüübid määratakse vastavalt riigile. Tüüp sisaldab rohkem infot konto "
+"Need liigid määratakse vastavalt riigile. Liik sisaldab rohkem infot konto "
 "ning selle eripärade kohta. "
 
 #. module: account
@@ -11116,10 +11116,10 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Kasutatakse aruannetes, et saada teada, kas peaksime arvesse võtma andmiku "
-"elemente täiesti algusest või ainult aruandeaasta.  Kontotüübid, mis tuleks "
-"iga aruandeaasta lähtestada nullini (nagu kulud, tulud ...), ei peaks seda "
-"võimalust omama."
+"Kasutatakse aruannetes, saamaks teada, kas peaksime arvesse võtma andmiku "
+"kirjeid täiesti algusest või ainult aruandeaastast.  Kontoliigid, mis tuleks"
+" igal aruandeaastal nullida (nagu kulud, tulud ...), ei peaks seda võimalust"
+" omama."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_reference
@@ -11264,7 +11264,7 @@ msgstr "Tarnija kreeditarve - %s"
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Vendor Credit Notes"
-msgstr "Kreeditarved"
+msgstr "Tarnijate kreeditarved"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1229
