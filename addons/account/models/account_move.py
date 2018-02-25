@@ -715,21 +715,21 @@ class AccountMoveLine(models.Model):
         return []
 
     @api.model
-    def domain_move_lines_for_reconciliation(self, str):
+    def domain_move_lines_for_reconciliation(self, search_str):
         """ Returns the domain from the str search
-            :param str: search string
+            :param search_str: search string
         """
-        if not str:
+        if not search_str:
             return []
         str_domain = [
-            '|', ('move_id.name', 'ilike', str),
-            '|', ('move_id.ref', 'ilike', str),
-            '|', ('date_maturity', 'like', str),
-            '&', ('name', '!=', '/'), ('name', 'ilike', str)
+            '|', ('move_id.name', 'ilike', search_str),
+            '|', ('move_id.ref', 'ilike', search_str),
+            '|', ('date_maturity', 'like', search_str),
+            '&', ('name', '!=', '/'), ('name', 'ilike', search_str)
         ]
-        if str[0] in ['-', '+']:
+        if search_str[0] in ['-', '+']:
             try:
-                amounts_str = str.split('|')
+                amounts_str = search_str.split('|')
                 for amount_str in amounts_str:
                     amount = amount_str[0] == '-' and float(amount_str) or float(amount_str[1:])
                     amount_domain = [
@@ -743,7 +743,7 @@ class AccountMoveLine(models.Model):
                 pass
         else:
             try:
-                amount = float(str)
+                amount = float(search_str)
                 amount_domain = [
                     '|', ('amount_residual', '=', amount),
                     '|', ('amount_residual_currency', '=', amount),
@@ -759,22 +759,22 @@ class AccountMoveLine(models.Model):
                 pass
         return str_domain
 
-    def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False):
+    def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False):
         """ Create domain criteria that are relevant to manual reconciliation. """
         domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
         if partner_id:
             domain = expression.AND([domain, [('partner_id', '=', partner_id)]])
         if excluded_ids:
             domain = expression.AND([[('id', 'not in', excluded_ids)], domain])
-        if str:
-            str_domain = self.domain_move_lines_for_reconciliation(str=str)
+        if search_str:
+            str_domain = self.domain_move_lines_for_reconciliation(search_str)
             domain = expression.AND([domain, str_domain])
         return domain
 
     @api.model
-    def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, str=False, offset=0, limit=None, target_currency_id=False):
+    def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False, offset=0, limit=None, target_currency_id=False):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
-        domain = self._domain_move_lines_for_manual_reconciliation(account_id, partner_id, excluded_ids, str)
+        domain = self._domain_move_lines_for_manual_reconciliation(account_id, partner_id, excluded_ids, search_str)
         lines = self.search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
         if target_currency_id:
             target_currency = self.env['res.currency'].browse(target_currency_id)
