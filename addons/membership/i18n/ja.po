@@ -3,19 +3,21 @@
 # * membership
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # どりる <drill.dev@outlook.jp>, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# morioka hiromichi <hiromichi.morioka@pro-spire.co.jp>, 2018
+# Masako Ogawa <masako.ogawa@pro-spire.co.jp>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Last-Translator: Masako Ogawa <masako.ogawa@pro-spire.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +87,7 @@ msgstr "関連取引先"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
-msgstr ""
+msgstr "会員資格の購入"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
@@ -226,12 +228,12 @@ msgstr "会員終了日"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Ending Month Of Membership"
-msgstr ""
+msgstr "会員の終了月"
 
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "警告！終了日は開始日より前に設定することはできません。"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:159
@@ -344,6 +346,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"メンバーシップのステータスを示します。\n"
+"-メンバーではない：どのメンバーシップにも申し込まなかったメンバー。\n"
+"- キャンセルされたメンバー：メンバーシップをキャンセルしたメンバー。\n"
+"- 古いメンバー：メンバーシップ日付が期限切れになったメンバー。\n"
+"- 待っているメンバー：メンバーシップおよび作成されようとしている送り状申し込んだメンバー。\n"
+"- 送り状を送られたメンバー：送り状が作成されたメンバー。\n"
+"- 支払われたメンバー：メンバーシップ料を支払ったメンバー。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -506,6 +515,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"Odooは、あなたのメンバーに関連するすべての活動について容易に追跡することを手助けします。\n"
+"現在のメンバーシップステータス、討議、メンバーシップの歴史など。"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -604,7 +615,7 @@ msgstr "パートナ別交渉価格"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "このメモは見積に表示されます。"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search

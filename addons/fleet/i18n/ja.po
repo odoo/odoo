@@ -1269,6 +1269,9 @@ msgid ""
 "                vehicles. Costs are created automatically from services,\n"
 "                contracts (fixed or recurring) and fuel logs."
 msgstr ""
+"Odooは、さまざまな車両のコスト管理に役立ちます。\n"
+"                サービス、契約（固定または定期的）、燃料ログから自動的に\n"
+"                コストが生成されます。"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1277,6 +1280,8 @@ msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
 msgstr ""
+"Odooは、さまざまな車両のコスト管理に役立ちます。\n"
+"          コストは一般にサービスと契約から作成され、ここに表示されます。"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -1561,6 +1566,7 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"ブランドの小型ロゴ。アスペクト比が保存された64x64pxイメージとして自動的にサイズが変更されます。小さな画像が必要な場所なら、このフィールドを使用します。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -1644,6 +1650,8 @@ msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
 msgstr ""
+"さまざまなフィルターのおかげで、Odooは実効コストを印刷し、\n"
+"          タイプ別と車両別に並べ替えて表示できます。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
@@ -1657,7 +1665,7 @@ msgstr "温度計交換"
 msgid ""
 "This field holds the image used as logo for the brand, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "このフィールドは、ブランドのロゴとして使用される画像を保持します（1024x1024pxに限定）。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -1700,12 +1708,12 @@ msgstr "総費用（付加価値税を除く）"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_total
 msgid "Total of contracts due or overdue minus one"
-msgstr ""
+msgstr "期限が到来したまたは期限切れの契約の合計"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
 msgid "Touring Assistance"
-msgstr ""
+msgstr "ツーリングアシスタンス"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_transmission
@@ -1715,22 +1723,22 @@ msgstr "トランスミッション"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_47
 msgid "Transmission Filter Replacement"
-msgstr ""
+msgstr "トランスミッションフィルタの交換"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_48
 msgid "Transmission Fluid Replacement"
-msgstr ""
+msgstr "トランスミッションフルード交換"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_49
 msgid "Transmission Replacement"
-msgstr ""
+msgstr "伝送交換"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_transmission
 msgid "Transmission Used by the vehicle"
-msgstr ""
+msgstr "車両で使用されるトランスミッション"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_subtype_id
@@ -1743,12 +1751,12 @@ msgstr "タイプ"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
 msgid "Type of services available on a vehicle"
-msgstr ""
+msgstr "車両の利用可能なサービスの種類"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_vin_sn
 msgid "Unique number written on the vehicle motor (VIN/SN number)"
-msgstr ""
+msgstr "固有の番号が車両のモータに書き込まれます（VIN / SN番号）"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_unit
@@ -1767,7 +1775,7 @@ msgstr "単位"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2930
 msgid "Unit of the odometer "
-msgstr ""
+msgstr "オドメーターの単位"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
@@ -1782,7 +1790,7 @@ msgstr "ユーザ"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_car_value
 msgid "Value of the bought vehicle"
-msgstr ""
+msgstr "購入した車両の価値"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_vehicle_id
@@ -1804,12 +1812,12 @@ msgstr "車両"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Vehicle Costs"
-msgstr ""
+msgstr "車両コスト"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Vehicle Costs by Month"
-msgstr ""
+msgstr "月あたりの車両費用"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
@@ -1833,7 +1841,7 @@ msgstr "車両ステータス"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
 msgid "Vehicle Tags"
-msgstr ""
+msgstr "車のタグ"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
@@ -1841,12 +1849,12 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_vehicle_id
 msgid "Vehicle concerned by this log"
-msgstr ""
+msgstr "このログに関係する車両"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
 msgid "Vehicle costs"
-msgstr ""
+msgstr "車両コスト"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
@@ -1860,7 +1868,7 @@ msgstr "車両"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vehicles Contracts"
-msgstr ""
+msgstr "車両契約"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_action
@@ -1873,13 +1881,13 @@ msgstr "車両の燃料履歴"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Vehicles Odometer"
-msgstr ""
+msgstr "車両走行距離計"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
 msgid "Vehicles Services Logs"
-msgstr ""
+msgstr "車両サービスログ"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_indicative_view_graph
@@ -1894,7 +1902,7 @@ msgstr "車両費用"
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "車両走行距離計"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_insurer_id
@@ -1912,7 +1920,7 @@ msgstr "仕入先"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_days_left
 msgid "Warning Date"
-msgstr ""
+msgstr "警告日"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50
@@ -1927,12 +1935,12 @@ msgstr "週次"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_51
 msgid "Wheel Alignment"
-msgstr ""
+msgstr "ホイールアライメント"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_52
 msgid "Wheel Bearing Replacement"
-msgstr ""
+msgstr "ホイールベアリングの交換"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_53

@@ -124,6 +124,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').ersetzen('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -921,6 +923,9 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Wenn der Verkauf abgeschlossen ist, können Sie diesen nicht mehr ändern. "
+"Allerdings können Sie immer noch eine Rechnung ausstellen oder eine "
+"Lieferung vornehmen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1067,6 +1072,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Rechnungen werden als Entwürfe erstellt, damit Sie sie\n"
+" vor der Validierung überprüfen können."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1191,6 +1198,9 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Manuell das Ablaufdatum Ihres Angebots festlegen oder das Datum wird "
+"automatisch auf Grundlage der Vorlage festgelegt, wenn Online-Angebote "
+"installiert sind."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -1331,6 +1341,8 @@ msgstr "<i/>"
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"Sobald Ihr Angebot fertig ist, können Sie es per E-Mail speichern, drucken "
+"oder versenden."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1407,6 +1419,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Bestellte Menge: Rechnung basierend auf der Menge, die der Kunde bestellt hat.\n"
+" Gelieferte Menge: Fakturiert basierend auf der Menge, die der Lieferant ausgeliefert hat (Zeit oder Lieferungen)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1729,7 +1743,7 @@ msgstr "Angebote und Verkäufe"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Spesen neu berechnen"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -2480,7 +2494,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Hier finden Sie alle fakturierbaren Aufträge."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams

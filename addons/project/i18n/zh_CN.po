@@ -1144,6 +1144,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"在每一个阶段，员工可以阻止或者让任务／议题准备进入下一阶段。\n"
+" 您可以在这里定义标签来替代 \n"
+" 默认的标签。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2038,6 +2041,12 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"保持当前项目任务或问题的能见度：\n"
+"- 仅基于邀请：员工可能仅查看下列项目、任务或问题 \n"
+"- 所有员工可见的：员工可能查看的所有项目、任务或问题 \n"
+"- 以下客户可见的：员工可以查看每一件事；\n"
+" 如果网站已激活，门户用户可能查看项目、任务或问题，其次是 \n"
+" 他们或他们公司的某个人 \n"
 
 #. module: project
 #: code:addons/project/models/project.py:567
@@ -2098,7 +2107,7 @@ msgstr "定义议题和阻塞点更加容易"
 msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
-msgstr ""
+msgstr "当任务或问题到达这一步时，设置发送电子邮件给客户。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2912,7 +2921,7 @@ msgstr "准备已经被文档化过的取消"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "${object.name}的招待会"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3475,6 +3484,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"这设置了项目和任务所使用的度量单位。\n"
+" 如果您使用连接到项目上的工作表，请不要忘记在员工中设置正确的度量单位。"
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3759,7 +3770,7 @@ msgstr "一年下来工作小时数的平均数是多少？"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "不管这个项目是否显示在仪表板"
 
 #. module: project
 #. openerp-web
@@ -3851,7 +3862,7 @@ msgstr "你的目标"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Odoo 项目应用程序已启动并开始运行"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3876,7 +3887,7 @@ msgstr "和有效的"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "例如，办公场所"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3922,7 +3933,7 @@ msgstr "去描述<br/> 你的经验，以及改进建议 !"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "同。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
