@@ -673,55 +673,46 @@ class AccountReconciliation(models.AbstractModel):
         return Account_move_line
 
     @api.model
-    def _get_move_line_reconciliation_proposition(self, account_id, partner_id=False):
+    def _get_move_line_reconciliation_proposition(self, account_id, partner_id=None):
         """ Returns two lines whose amount are opposite """
 
         Account_move_line = self.env['account.move.line']
-        rec_prop = self.env['account.move.line']
 
-        partner_id_condition = partner_id and 'AND a.partner_id = %(partner_id)s' or ''
+        ir_rules_query = Account_move_line._where_calc([])
+        Account_move_line._apply_ir_rules(ir_rules_query, 'read')
+        from_clause, where_clause, where_clause_params = ir_rules_query.get_sql()
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
 
         # Get pairs
-        move_line_id = self.env.context.get('move_line_id', False) # see open_payment_matching_screen in account.payment
-        if move_line_id:
-            move_line = Account_move_line.browse(move_line_id)
-            amount = move_line.amount_residual;
-            rec_prop = move_line
-            query = """
-                    SELECT a.id, a.id FROM account_move_line a
-                    WHERE a.amount_residual = -%(amount)s
-                    AND NOT a.reconciled
-                    AND a.account_id = %(account_id)s
-                    AND a.id != %(move_line_id)s
-                    {partner_id_condition}
-                    ORDER BY a.date desc
-                    LIMIT 10
-                """.format(**locals())
-        else:
-            partner_id_condition = partner_id_condition and partner_id_condition+' AND b.partner_id = %(partner_id)s' or ''
-            query = """
-                    SELECT a.id, b.id
-                    FROM account_move_line a, account_move_line b
-                    WHERE a.amount_residual = -b.amount_residual
-                    AND NOT a.reconciled AND NOT b.reconciled
-                    AND a.account_id = %(account_id)s AND b.account_id = %(account_id)s
-                    {partner_id_condition}
-                    ORDER BY a.date desc
-                    LIMIT 10
-                """.format(**locals())
+        query = """
+            SELECT a.id, b.id
+            FROM account_move_line a, account_move_line b
+            WHERE a.id != b.id
+            AND a.amount_residual = -b.amount_residual
+            AND NOT a.reconciled
+            AND a.account_id = %s
+            AND (%s IS NULL AND b.account_id = %s)
+            AND (%s IS NULL AND NOT b.reconciled OR b.id = %s)
+            AND (%s is NULL OR (a.partner_id = %s AND b.partner_id = %s))
+            AND a.id IN (SELECT id FROM {0})
+            AND b.id IN (SELECT id FROM {0})
+            ORDER BY a.date desc
+            LIMIT 1
+            """.format(from_clause + where_str)
+        move_line_id = self.env.context.get('move_line_id') or None
+        params = [
+            account_id,
+            move_line_id, account_id,
+            move_line_id, move_line_id,
+            partner_id, partner_id, partner_id,
+        ] + where_clause_params + where_clause_params
+        self.env.cr.execute(query, params)
 
-        self.env.cr.execute(query, locals())
         pairs = self.env.cr.fetchall()
 
-        # Apply ir_rules by filtering out
-        all_pair_ids = [element for tupl in pairs for element in tupl]
-        allowed_ids = set(Account_move_line.browse(all_pair_ids).ids)
-        pairs = [pair for pair in pairs if pair[0] in allowed_ids and pair[1] in allowed_ids]
-
-        if len(pairs) > 0:
-            rec_prop += Account_move_line.browse(list(set(pairs[0])))
-
-        return rec_prop
+        if pairs:
+            return Account_move_line.browse(pairs[0])
+        return Account_move_line
 
     @api.model
     def _process_move_lines(self, move_line_ids, new_mv_line_dicts):
