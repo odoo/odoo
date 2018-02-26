@@ -224,7 +224,7 @@ class MailMail(models.Model):
         """Returns an iterator of pairs `(mail_server_id, record_ids)` for current recordset.
 
         The same `mail_server_id` may repeat in order to limit batch size according to
-        the `mail.session.batch.size` system parameter.
+        the `mail.session.batch.size` system parameter. OOO
         """
         groups = defaultdict(list)
         # Turn prefetch OFF to avoid MemoryError on very large mail queues, we only care
