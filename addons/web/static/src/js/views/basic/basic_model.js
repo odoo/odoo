@@ -219,6 +219,10 @@ var BasicModel = AbstractModel.extend({
         var fieldName;
         record._changes = record._changes || {};
 
+        // ignore values for non requested fields (for instance, fields that are
+        // not in the view)
+        values = _.pick(values, fieldNames);
+
         // fill default values for missing fields
         for (var i = 0; i < fieldNames.length; i++) {
             fieldName = fieldNames[i];
@@ -240,9 +244,6 @@ var BasicModel = AbstractModel.extend({
         var defs = [];
         for (fieldName in values) {
             field = record.fields[fieldName];
-            if (!field) {
-                continue; // ignore values for unknown fields
-            }
             record.data[fieldName] = null;
             var dp;
             if (field.type === 'many2one' && values[fieldName]) {
