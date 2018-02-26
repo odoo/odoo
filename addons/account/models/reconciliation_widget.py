@@ -16,8 +16,6 @@ class AccountReconciliation(models.AbstractModel):
     ####################################################
 
     @api.model
-    # model: 'account.bank.statement.line',
-    # method: 'reconciliation_widget_auto_reconcile',
     def auto_reconcile(self, st_line_ids, num_already_reconciled_lines=0):
         """ Use statement line auto_reconcile method and return the details
             to the widget interface.
@@ -62,8 +60,6 @@ class AccountReconciliation(models.AbstractModel):
         }
 
     @api.model
-    # model: 'account.bank.statement.line',
-    # method: 'process_reconciliations',
     def process_bank_statement_line(self, st_line_ids, data):
         """ Handles data sent from the bank statement reconciliation widget
             (and can otherwise serve as an old-API bridge)
@@ -94,8 +90,6 @@ class AccountReconciliation(models.AbstractModel):
                 datum.get('new_aml_dicts', []))
 
     @api.model
-    # model: 'account.bank.statement.line',
-    # method: 'get_move_lines_for_reconciliation_widget',
     def get_move_lines_for_bank_statement_line(self, st_line_id, partner_id=None, excluded_ids=None, search_str=False, offset=0, limit=None):
         """ Returns move lines for the bank statement reconciliation widget,
             formatted as a list of dicts
@@ -127,8 +121,6 @@ class AccountReconciliation(models.AbstractModel):
         return self._prepare_move_lines(aml_recs, target_currency=target_currency, target_date=st_line.date)
 
     @api.model
-    # model: 'account.bank.statement.line',
-    # method: 'get_data_for_reconciliation_widget',
     def get_bank_statement_line_data(self, st_line_ids, excluded_ids=None):
         """ Returns the data required to display a reconciliation widget, for
             each statement line in self
@@ -153,8 +145,6 @@ class AccountReconciliation(models.AbstractModel):
         return ret
 
     @api.model
-    # model: 'account.bank.statement',
-    # method: 'reconciliation_widget_preprocess',
     def get_bank_statement_data(self, bank_statement_ids):
         """ Get statement lines of the specified statements or all unreconciled
             statement lines and try to automatically reconcile them / find them
@@ -221,8 +211,6 @@ class AccountReconciliation(models.AbstractModel):
         }
 
     @api.model
-    # model: 'account.move.line',
-    # method: 'get_move_lines_for_manual_reconciliation',
     def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False, offset=0, limit=None, target_currency_id=False):
         """ Returns unreconciled move lines for an account or a partner+account, formatted for the manual reconciliation widget """
 
@@ -240,8 +228,6 @@ class AccountReconciliation(models.AbstractModel):
         return self._prepare_move_lines(lines, target_currency=target_currency)
 
     @api.model
-    # model: 'account.move.line',
-    # method: 'get_data_for_manual_reconciliation_widget',
     def get_all_data_for_manual_reconciliation(self, partner_ids, account_ids):
         """ Returns the data required for the invoices & payments matching of partners/accounts.
             If an argument is None, fetch all related reconciliations. Use [] to fetch nothing.
@@ -253,8 +239,6 @@ class AccountReconciliation(models.AbstractModel):
         }
 
     @api.model
-    # model: 'account.move.line',
-    # method: 'get_data_for_manual_reconciliation',
     def get_data_for_manual_reconciliation(self, res_type, res_ids=None, account_type=None):
         """ Returns the data required for the invoices & payments matching of partners/accounts (list of dicts).
             If no res_ids is passed, returns data for all partners/accounts that can be reconciled.
@@ -355,8 +339,6 @@ class AccountReconciliation(models.AbstractModel):
         return rows
 
     @api.model
-    # model: 'account.move.line',
-    # method: 'process_reconciliations',
     def process_move_lines(self, move_line_ids, data):
         """ Used to validate a batch of reconciliations in a single call
             :param data: list of dicts containing:
@@ -385,7 +367,6 @@ class AccountReconciliation(models.AbstractModel):
     ####################################################
 
     @api.model
-    # domain_move_lines_for_reconciliation
     def _domain_move_lines(self, search_str):
         """ Returns the domain from the search_str search
             :param search_str: search string
@@ -431,7 +412,6 @@ class AccountReconciliation(models.AbstractModel):
         return str_domain
 
     @api.model
-    # get_move_lines_for_reconciliation (now return the domain)
     def _domain_move_lines_for_reconciliation(self, aml_accounts, partner_id, excluded_ids=None, search_str=False):
         """ Return the domain for account.move.line records which can be used for bank statement reconciliation.
 
@@ -488,7 +468,6 @@ class AccountReconciliation(models.AbstractModel):
         return domain
 
     @api.model
-    # _domain_move_lines_for_manual_reconciliation
     def _domain_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False):
         """ Create domain criteria that are relevant to manual reconciliation. """
         domain = ['&', ('reconciled', '=', False), ('account_id', '=', account_id)]
@@ -502,7 +481,6 @@ class AccountReconciliation(models.AbstractModel):
         return domain
 
     @api.model
-    # prepare_move_lines_for_reconciliation_widget
     def _prepare_move_lines(self, move_lines, target_currency=False, target_date=False):
         """ Returns move lines formatted for the manual/bank reconciliation widget
 
@@ -603,7 +581,6 @@ class AccountReconciliation(models.AbstractModel):
         return ret
 
     @api.model
-    # get_statement_line_for_reconciliation_widget
     def _get_statement_line(self, st_line):
         """ Returns the data required by the bank statement reconciliation widget to display a statement line """
 
@@ -648,7 +625,6 @@ class AccountReconciliation(models.AbstractModel):
         return data
 
     @api.model
-    # get_reconciliation_proposition
     def _get_statement_line_reconciliation_proposition(self, st_line, excluded_ids=None):
         """ Returns move lines that constitute the best guess to reconcile a statement line
             Note: it only looks for move lines in the same currency as the statement line.
@@ -697,7 +673,6 @@ class AccountReconciliation(models.AbstractModel):
         return Account_move_line
 
     @api.model
-    # get_reconciliation_proposition
     def _get_move_line_reconciliation_proposition(self, account_id, partner_id=False):
         """ Returns two lines whose amount are opposite """
 
@@ -749,7 +724,6 @@ class AccountReconciliation(models.AbstractModel):
         return rec_prop
 
     @api.model
-    # process_reconciliation
     def _process_move_lines(self, move_line_ids, new_mv_line_dicts):
         """ Create new move lines from new_mv_line_dicts (if not empty) then call reconcile_partial on self and new move lines
 
