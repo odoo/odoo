@@ -77,8 +77,8 @@ class PaymentAcquirer(models.Model):
         help="Capture the amount from Odoo, when the delivery is completed.")
     # Formerly associated to `generate_and_pay_invoice` option from auto_confirm
     journal_id = fields.Many2one(
-        'account.journal', 'Payment Journal', domain=[('type', '=', 'bank')],
-        default=lambda self: self.env['account.journal'].search([('type', '=', 'bank')], limit=1),
+        'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
+        default=lambda self: self.env['account.journal'].search([('type', 'in', ['bank', 'cash'])], limit=1),
         help="""Payments will be registered into this journal. If you get paid straight on your bank account,
                 select your bank account. If you get paid in batch for several transactions, create a specific
                 payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
