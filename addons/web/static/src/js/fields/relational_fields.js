@@ -1007,7 +1007,10 @@ var FieldX2Many = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onDiscardChanges: function (ev) {
-        ev.data.fieldName = this.name;
+        if (ev.target !== this) {
+            ev.stopPropagation();
+            this.trigger_up('discard_changes', _.extend({}, ev.data, {fieldName: this.name}));
+        }
     },
     /**
      * Called when the renderer asks to edit a line, in that case simply tells

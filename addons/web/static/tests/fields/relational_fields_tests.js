@@ -368,10 +368,6 @@ QUnit.module('relational_fields', {
             "should have an open record button");
 
         form.$('input.o_input').click();
-        form.$('input.o_input').trigger($.Event('keyup', {
-            which: $.ui.keyCode.ESC,
-            keyCode: $.ui.keyCode.ESC,
-        }));
 
         assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
             "should still have an open record button");
