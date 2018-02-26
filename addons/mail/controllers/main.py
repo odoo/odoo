@@ -30,7 +30,7 @@ class MailController(http.Controller):
         base_link = request.httprequest.path
         params = dict(request.params)
         params.pop('token', '')
-        valid_token = request.env['mail.thread']._generate_notification_token(base_link, params)
+        valid_token = request.env['mail.thread']._notify_encode_link(base_link, params)
         return consteq(valid_token, str(token))
 
     @classmethod
