@@ -42,7 +42,7 @@ class AccountInvoice(models.Model):
         if float_compare(qty, 0.0, precision_rounding=line.product_uom.rounding) <= 0:
             qty = 0.0
         taxes = line.taxes_id
-        invoice_line_tax_ids = line.order_id.fiscal_position_id.map_tax(taxes)
+        invoice_line_tax_ids = line.order_id.fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         invoice_line = self.env['account.invoice.line']
         data = {
             'purchase_line_id': line.id,
