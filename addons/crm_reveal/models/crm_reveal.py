@@ -101,28 +101,42 @@ class CRMLeadRule(models.Model):
         return self.search([]).mapped('regex_url')
 
     def match_url(self, url):
-        if re.findall('|'.join([rg for rg in self.get_regex() if rg]), url):
-            return True
+        regex = self.get_regex()
+        if regex:
+            if re.findall('|'.join([rg for rg in regex if rg]), url):
+                return True
         return False
 
     @api.model
     def process_lead_generation(self):
-        http_session_records = self.env['http.session'].search([])
-        for session in http_session_records:
-            page_views = session.pageview_ids.search([('crm_reveal_scanned', '=', False), ('session_id', '=', session.id)])
-            if page_views:
-                self.process_reveal_request(session,page_views.mapped('url'), session.ip_address)
-                for pv in page_views:
-                    pv.crm_reveal_scanned = True
+        page_view_records = self.env['http.pageview'].search([('reveal', '=', True), ('crm_reveal_scanned', '=', False), ('session_id.lead_id', '=', False)])
+        sessions = {}
+        if page_view_records:
+            for pgv in page_view_records:
+                if not sessions.get(pgv.session_id.ip_address):
+                    sessions[pgv.session_id.ip_address] = []
+                sessions[pgv.session_id.ip_address].append(pgv)
+            if sessions:
+                self._perform_reveal_service(self.prepare_server_payload(sessions), sessions)
 
-    @api.model
-    def process_reveal_request(self, session_record, paths, ip):
-        """Entry point form http dispatch"""
-        lead_exist = self.env['crm.lead'].with_context(active_test=False).search_count([('reveal_ip', '=', ip)])
-        if not lead_exist:
-            rules = self._get_matching_rules(paths)
-            if rules:
-                rules._perform_reveal_service(session_record, ip)
+    def prepare_server_payload(self, sessions):
+        server_ip_payload = []
+        rules_list = {}
+        for ip_address in sessions:
+            urls = list(map(lambda x: x.url, sessions[ip_address]))
+            rules = self._get_matching_rules(urls)
+            server_ip_payload.append({
+                'ip': ip_address,
+                'rule_ids': rules.ids
+            })
+            for rule in rules:
+                if rule.id not in rules_list:
+                    rules_list[rule.id] = rule._get_request_payload()[0]
+
+        return {
+            'ips': server_ip_payload,
+            'rules': rules_list
+        }
 
     def _get_matching_rules(self, paths):
         active_rules = self.search([])
@@ -161,22 +175,30 @@ class CRMLeadRule(models.Model):
             rule_data.append(data)
         return rule_data
 
-    def _perform_reveal_service(self,session_record, ip):
+    def _perform_reveal_service(self, server_payload, session_record):
         result = False
         account_token = self.env['iap.account'].get('reveal')
         endpoint = self.env['ir.config_parameter'].sudo().get_param('reveal.endpoint', DEFAULT_ENDPOINT)
 
         params = {
             'account_token': account_token.account_token,
-            'ip': ip,
-            'rules': self._get_request_payload()
+            'data': server_payload
         }
 
         result = jsonrpc(endpoint, params=params)
-        if result:
-            lead = self._process_response(result, ip)
-            if lead:
-                session_record.lead_id = lead.id
+
+        for res in result.get('reveal_data'):
+            for pgv in session_record[res['ip']]:
+                pgv.crm_reveal_scanned = True
+            if not res.get('not_found'):
+                lead = self._process_response(res, res['ip'])
+                hs = self.env['http.session'].search([('ip_address', '=', res['ip'])])
+                if hs:
+                    hs.lead_id = lead.id
+
+        if result.get('credit_error'):
+            # Send Mail to Admin about credit is over
+            pass
 
     def _process_response(self, result, ip):
         """This method will get response from service and create the lead accordingly"""
