@@ -111,9 +111,6 @@ var db = {
     },
     'account.bank.statement': {
         fields: {},
-        reconciliation_widget_preprocess: function () {
-            return $.when(Datas.used.data_preprocess);
-        },
     },
     'account.bank.statement.line': {
         fields: {
@@ -127,70 +124,9 @@ var db = {
             {id: 7, display_name: "Prepayment"},
             {id: 8, display_name: "First 2000 \u20ac of SAJ/2014/001"},
         ],
-        get_move_lines_for_reconciliation_widget: function (args) {
-            var partner_id = args.splice(1, 1)[0];
-            var excluded_ids = args.splice(1, 1)[0];
-            var key = JSON.stringify(args);
-            if (!Datas.used.mv_lines[key]) {
-                throw new Error("Unknown parameters for get_move_lines_for_reconciliation_widget: '"+ key + "'");
-            }
-            return $.when(_.filter(Datas.used.mv_lines[key], function (line) {
-                return excluded_ids.indexOf(line.id) === -1 && (!partner_id || partner_id === line.partner_id);
-            }));
-        },
-        get_data_for_reconciliation_widget: function (args) {
-            var ids = args[0];
-            return $.when(_.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
-        },
-        reconciliation_widget_auto_reconcile: function () {
-            return $.when(Datas.used.auto_reconciliation);
-        },
-        process_reconciliations: function (args) {
-            var datas = args[1];
-            var ids = _.flatten(_.pluck(_.pluck(datas, 'counterpart_aml_dicts'), 'counterpart_aml_id'));
-            ids = ids.concat(_.flatten(_.pluck(datas, 'payment_aml_ids')));
-            ids = _.compact(ids);
-
-            for (var key in Datas.used.move_lines_for_manual_reconciliation) {
-                Datas.used.move_lines_for_manual_reconciliation[key] = _.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (mv_line) {
-                    return ids.indexOf(mv_line.id) === -1;
-                });
-            }
-            return $.when();
-        },
     },
     'account.move.line': {
         fields: {},
-        get_data_for_manual_reconciliation_widget: function (args) {
-            var key = JSON.stringify(args);
-            if (!Datas.used.data_for_manual_reconciliation_widget[key]) {
-                throw new Error("Unknown parameters for get_data_for_manual_reconciliation_widget: '"+ key + "'");
-            }
-            return $.when(Datas.used.data_for_manual_reconciliation_widget[key]);
-        },
-        get_move_lines_for_manual_reconciliation: function (args) {
-            var excluded_ids = args.splice(2, 1)[0];
-            var key = JSON.stringify(args);
-            if (!Datas.used.move_lines_for_manual_reconciliation[key]) {
-                throw new Error("Unknown parameters for get_move_lines_for_manual_reconciliation: '"+ key + "'");
-            }
-            return $.when(_.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (line) {
-                return excluded_ids.indexOf(line.id) === -1;
-            }));
-        },
-        // for manual reconciliation
-        process_reconciliations: function (args) {
-            var datas = args[0];
-            for (var i in datas) {
-                var data = datas[i];
-                for (var key in Datas.used.move_lines_for_manual_reconciliation) {
-                    Datas.used.move_lines_for_manual_reconciliation[key] = _.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (mv_line) {
-                        return data.mv_line_ids.indexOf(mv_line.id) === -1;
-                    });
-                }
-            }
-            return $.when();
-        },
     },
     'account.reconcile.model': {
         fields: {
@@ -220,6 +156,72 @@ var db = {
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'second_tax_id': 7, 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': 6, 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': 2.5},
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'second_tax_id': false, 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5},
         ]
+    },
+    'account.reconciliation.widget': {
+        fields: {},
+        auto_reconcile: function () {
+            return $.when(Datas.used.auto_reconciliation);
+        },
+        process_bank_statement_line: function (args) {
+            var datas = args[1];
+            var ids = _.flatten(_.pluck(_.pluck(datas, 'counterpart_aml_dicts'), 'counterpart_aml_id'));
+            ids = ids.concat(_.flatten(_.pluck(datas, 'payment_aml_ids')));
+            ids = _.compact(ids);
+
+            for (var key in Datas.used.move_lines_for_manual_reconciliation) {
+                Datas.used.move_lines_for_manual_reconciliation[key] = _.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (mv_line) {
+                    return ids.indexOf(mv_line.id) === -1;
+                });
+            }
+            return $.when();
+        },
+        get_move_lines_for_bank_statement_line: function (args) {
+            var partner_id = args.splice(1, 1)[0];
+            var excluded_ids = args.splice(1, 1)[0];
+            var key = JSON.stringify(args);
+            if (!Datas.used.mv_lines[key]) {
+                throw new Error("Unknown parameters for get_move_lines_for_bank_statement_line: '"+ key + "'");
+            }
+            return $.when(_.filter(Datas.used.mv_lines[key], function (line) {
+                return excluded_ids.indexOf(line.id) === -1 && (!partner_id || partner_id === line.partner_id);
+            }));
+        },
+        get_bank_statement_line_data: function (args) {
+            var ids = args[0];
+            return $.when(_.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
+        },
+        get_bank_statement_data: function () {
+            return $.when(Datas.used.data_preprocess);
+        },
+        get_move_lines_for_manual_reconciliation: function (args) {
+            var excluded_ids = args.splice(2, 1)[0];
+            var key = JSON.stringify(args);
+            if (!Datas.used.move_lines_for_manual_reconciliation[key]) {
+                throw new Error("Unknown parameters for get_move_lines_for_manual_reconciliation: '"+ key + "'");
+            }
+            return $.when(_.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (line) {
+                return excluded_ids.indexOf(line.id) === -1;
+            }));
+        },
+        get_all_data_for_manual_reconciliation: function (args) {
+            var key = JSON.stringify(args);
+            if (!Datas.used.data_for_manual_reconciliation_widget[key]) {
+                throw new Error("Unknown parameters for get_all_data_for_manual_reconciliation: '"+ key + "'");
+            }
+            return $.when(Datas.used.data_for_manual_reconciliation_widget[key]);
+        },
+        process_move_lines: function (args) {
+            var datas = args[0];
+            for (var i in datas) {
+                var data = datas[i];
+                for (var key in Datas.used.move_lines_for_manual_reconciliation) {
+                    Datas.used.move_lines_for_manual_reconciliation[key] = _.filter(Datas.used.move_lines_for_manual_reconciliation[key], function (mv_line) {
+                        return data.mv_line_ids.indexOf(mv_line.id) === -1;
+                    });
+                }
+            }
+            return $.when();
+        },
     }
 };
 
@@ -659,7 +661,7 @@ QUnit.module('account', {
                                                                   "analytic_tag_ids": [[6, null, []]]
                                                                 }],
                                     payment_aml_ids: [], new_aml_dicts: []}]],
-                "Should call process_reconciliations with ids");
+                "Should call process_bank_statement_line with ids");
         });
 
         // click on reconcile button
@@ -701,7 +703,7 @@ QUnit.module('account', {
                                         name: 'SAJ/2014/002 and SAJ/2014/003',
                                         analytic_tag_ids: [[6, null, []]]
                                     }]}]],
-                "Should call process_reconciliations with ids");
+                "Should call process_bank_statement_line with ids");
         });
 
         // click on validate button
@@ -754,7 +756,7 @@ QUnit.module('account', {
                                         debit: 0,
                                         name: 'SAJ/2014/002 and SAJ/2014/003 : Open balance'
                                     }]}]],
-                "Should call process_reconciliations with ids");
+                "Should call process_bank_statement_line with ids");
         });
 
         // click on validate button
@@ -769,7 +771,8 @@ QUnit.module('account', {
         testUtils.addMockEnvironment(clientAction, {
             data: this.params.data,
             mockRPC: function (route, args) {
-                if (args.method === 'process_reconciliations') {
+                console.log(args.method);
+                if (args.method === 'process_bank_statement_line') {
                     assert.deepEqual(args.args, [
                         [6],
                         [{
@@ -778,7 +781,7 @@ QUnit.module('account', {
                             payment_aml_ids: [392],
                             new_aml_dicts: [],
                         }]
-                    ], "should call process_reconciliations with partial reconcile values");
+                    ], "should call process_bank_statement_line with partial reconcile values");
                 }
                 return this._super(route, args);
             },

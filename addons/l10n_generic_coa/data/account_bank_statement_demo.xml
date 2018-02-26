@@ -73,5 +73,18 @@
             <field name="amount">102.78</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
         </record>
+
+        <record id="demo_bank_statement_line_6" model="account.bank.statement.line">
+            <field name="ref">''</field>
+            <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
+            <field name="sequence">1</field>
+            <field name="name" eval="'SAJ/'+time.strftime('%Y')+'/002'"/>
+            <field name="journal_id" model="account.journal" search="[
+                ('type', '=', 'bank'),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
+            <field name="amount">750.0</field>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+        </record>
+
     </data>
 </odoo>

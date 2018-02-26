@@ -57,7 +57,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this.action_manager = parent;
         this.params = params;
         this.model = new this.config.Model(this, {
-            modelName: "account.bank.statement.line",
+            modelName: "account.reconciliation.widget",
             limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];
