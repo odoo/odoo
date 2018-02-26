@@ -640,9 +640,11 @@ PaymentScreenWidget.include({
                 });
             } else {
                 this._super(id);
-                order.selected_paymentline.mercury_swipe_pending = true;
-                this.render_paymentlines();
-                order.trigger('change', order); // needed so that export_to_JSON gets triggered
+                if (order.get_due(order.selected_paymentline) > 0) {
+                    order.selected_paymentline.mercury_swipe_pending = true;
+                    this.render_paymentlines();
+                    order.trigger('change', order); // needed so that export_to_JSON gets triggered
+                }
             }
         } else {
             this._super(id);
