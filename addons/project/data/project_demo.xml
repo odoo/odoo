@@ -476,5 +476,37 @@ Send it ASAP, its urgent.</field>
         <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 10)"/>
         <function model="project.task" name="rating_apply" eval="([ref('project.project_task_8')], 1)"/>
         <function model="project.task" name="rating_apply" eval="([ref('project.project_task_15')], 5)"/>
+        <!-- activities for admin-->
+        <record id="project_activity_1" model="mail.activity">
+            <field name="res_id" ref="project.project_task_12"/>
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="(datetime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="summary">Follow-up call with customer</field>
+        </record>
+        <record id="project_activity_2" model="mail.activity">
+            <field name="res_id" ref="project.project_task_14"/>
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="(datetime.today())"/>
+            <field name="summary">Mail invoice to customer</field>
+        </record>
+        <!-- activities for demo -->
+        <record id="project_activity_3" model="mail.activity">
+            <field name="res_id" ref="project.project_task_1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="(datetime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="summary">Call customer to for more requirements</field>
+        </record>
+        <record id="project_activity_4" model="mail.activity">
+            <field name="res_id" ref="project.project_task_4"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="res_model_id" ref="project.model_project_task"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="(datetime.today())"/>
+            <field name="summary">Mail SO data for confirmation</field>
+        </record>
     </data>
 </odoo>

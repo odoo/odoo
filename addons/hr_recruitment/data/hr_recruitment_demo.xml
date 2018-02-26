@@ -5,23 +5,28 @@
     <!--Manage the job_id to get in hr.applicant-->
     <record id="hr.job_developer" model="hr.job">
         <field name="state">recruit</field>
-        <field name="no_of_recruitment">4</field>
+        <field name="no_of_recruitment">12</field>
     </record>
     <record id="hr.job_consultant" model="hr.job">
         <field name="state">recruit</field>
-        <field name="no_of_recruitment">1</field>
+        <field name="no_of_recruitment">7</field>
     </record>
     <record id="hr.job_hrm" model="hr.job">
         <field name="no_of_recruitment">1</field>
-        <field name="state">recruit</field>
+        <field name="state">open</field>
     </record>
     <record id="hr.job_marketing" model="hr.job">
         <field name="state">recruit</field>
-        <field name="no_of_recruitment">3</field>
+        <field name="no_of_recruitment">6</field>
     </record>
     <record id="hr.job_trainee" model="hr.job">
         <field name="state">recruit</field>
-        <field name="no_of_recruitment">6</field>
+        <field name="no_of_recruitment">8</field>
+    </record>
+    <record id="job_js_developer" model="hr.job">
+        <field name="state">open</field>
+        <field name="name">Javascript Developer</field>
+        <field name="no_of_recruitment">1</field>
     </record>
 
     <record id="hr_case_salesman0" model="hr.applicant">
@@ -33,7 +38,6 @@
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">1</field>
         <field name="partner_name">Enrique Jones</field>
-        <field name="partner_mobile">9963214587</field>
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_traineemca0" model="hr.applicant">
@@ -45,7 +49,6 @@
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">2</field>
         <field name="partner_name">Marie Justine</field>
-        <field name="partner_mobile">9988774455</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6633225</field>
     </record>
@@ -100,7 +103,6 @@
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field name="partner_name">Tina Augustie</field>
-        <field name="partner_mobile">9898745745</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6630125</field>
     </record>
@@ -111,10 +113,14 @@
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="partner_name">Shane Williams</field>
-        <field name="partner_mobile">9812398524</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6630125</field>
         <field name="salary_expected">11000.0</field>
+        <field name="description">Hello,
+            I am interested in python applications and website application also.
+            I have work in many projects at my college level.
+            Please let me know if you like the resume.
+            Thanks and regards</field>
     </record>
     <record id="hr_case_advertisement" model="hr.applicant">
         <field name="name">Advertisement</field>
@@ -123,10 +129,60 @@
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="partner_name">David Armstrong</field>
-        <field name="partner_mobile">9988774455</field>
         <field name="stage_id" ref="stage_job2"/>
         <field name="salary_expected">11000.0</field>
     </record>
+
+    <record id="hr_case_marketing_manager" model="hr.applicant">
+        <field name="name">Marketing Manager</field>
+        <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_sales"/>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="partner_name">John Doe</field>
+        <field name="stage_id" ref="stage_job1"/>
+        <field name="salary_expected">25000.0</field>
+    </record>
+    <record id="hr_case_traineemca2" model="hr.applicant">
+        <field name="name">Fresher</field>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="partner_name">Mary Smith</field>
+        <field name="stage_id" ref="stage_job3"/>
+        <field name="salary_expected">5000.0</field>
+    </record>
+    <record id="hr_hr_trainee" model="hr.applicant">
+        <field name="name">Fresher</field>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="partner_name">Anaya Smith</field>
+        <field name="stage_id" ref="stage_job5"/>
+        <field name="salary_expected">5000.0</field>
+    </record>
+    <record id="hr_case_traineemca3" model="hr.applicant">
+        <field name="name">Fresher</field>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="partner_name">John dann marry</field>
+        <field name="stage_id" ref="stage_job5"/>
+        <field name="salary_expected">5000.0</field>
+    </record>
+    <record id="hr_case_js_developer_1" model="hr.applicant">
+        <field name="name">Fresher</field>
+        <field name="job_id" ref="job_js_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="partner_name">Tony Smith</field>
+        <field name="stage_id" ref="stage_job5"/>
+        <field name="salary_expected">5000.0</field>
+    </record>
+    <function model="hr.applicant" name="create_employee_from_applicant" eval="[[ref('hr_hr_trainee'), ref('hr_case_traineemca3'), ref('hr_case_js_developer_1')]]"/>
 
     <record id="hr_case_salesman0_cv" model="ir.attachment">
         <field name="name">Jones_CV.pdf</field>
@@ -216,5 +272,12 @@
         <field name="summary">Call to define real needs about training</field>
     </record>
 
+    <!-- Sources of applicants -->
+    <record id="hr_recruitment_source_1" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_search_engine"/>
+    </record>
+    <record id="hr_recruitment_source_2" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_facebook"/>
+    </record>
   </data>
 </odoo>
