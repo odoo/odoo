@@ -132,43 +132,77 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
 });
 });
 
-//==============================================================================
-
 odoo.define('mass_mailing.unsubscribe', function (require) {
     'use strict';
-
-    var ajax = require('web.ajax');
-    var core = require('web.core');
-    require('web.dom_ready');
-
+    var core = require("web.core");
+    var animation = require('web_editor.snippets.animation');
     var _t = core._t;
 
-    if (!$('.o_unsubscribe_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
-    }
+    return animation.registry.mass_mailing_unsubscribe = animation.Class.extend({
+        selector: "#unsubscribe_form",
+        start: function (editable_mode) {
+            this.controller = '/mail/mailing/unsubscribe';
+            this.$alert = this.$(".alert");
+            this.$email = this.$("input[name='email']");
+            this.$contacts = this.$("input[name='contact_ids']");
+            this.$mailing_id = this.$("input[name='mailing_id']");
+            this.$el.on("submit", $.proxy(this.submit, this));
+        },
 
-    $('#unsubscribe_form').on('submit', function (e) {
-        e.preventDefault();
+        /**
+         * Helper to get list ids, to use in this.$lists.map()
+         */
+        int_val: function (index, element) {
+            return parseInt($(element).val());
+        },
 
-        var email = $("input[name='email']").val();
-        var mailing_id = parseInt($("input[name='mailing_id']").val());
+        /**
+         * Get a filtered array of integer IDs of matching lists
+         */
+        contact_ids: function (checked) {
+            var filter = checked ? ":checked" : ":not(:checked)";
+            return this.$contacts.filter(filter).map(this.int_val).get();
+        },
 
-        var checked_ids = [];
-        $("input[type='checkbox']:checked").each(function (i){
-          checked_ids[i] = parseInt($(this).val());
-        });
+        /**
+         * Get values to send
+         */
+        values: function () {
+            return {
+                email: this.$email.val(),
+                mailing_id: parseInt(this.$mailing_id.val()),
+                checked_ids: this.contact_ids(true),
+                unchecked_ids: this.contact_ids(false),
+            };
+        },
 
-        var unchecked_ids = [];
-        $("input[type='checkbox']:not(:checked)").each(function (i){
-          unchecked_ids[i] = parseInt($(this).val());
-        });
+        /**
+         * Submit by ajax
+         */
+        submit: function (event) {
+            event.preventDefault();
+            return this._rpc({route: this.controller, params: this.values()})
+            .then($.proxy(this.success, this), $.proxy(this.failure, this));
+        },
 
-        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
-            .then(function (result) {
-                $('.alert-info').html(_t('Your changes have been saved.')).removeClass('alert-info').addClass('alert-success');
-            })
-            .fail(function () {
-                $('.alert-info').html(_t('Your changes have not been saved, try again later.')).removeClass('alert-info').addClass('alert-warning');
-            });
+        /**
+         * When you successfully saved the new subscriptions status
+         */
+        success: function () {
+            this.$alert
+            .html(_t('Your changes have been saved.'))
+            .removeClass("alert-info alert-warning")
+            .addClass("alert-success");
+        },
+
+        /**
+         * When you fail to save the new subscriptions status
+         */
+        failure: function () {
+            this.$alert
+            .html(_t('Your changes have not been saved, try again later.'))
+            .removeClass("alert-info alert-success")
+            .addClass("alert-warning");
+        },
     });
 });
