@@ -826,6 +826,7 @@ Symbols and Conventions
     - Compute Field : the compute method pattern is *_compute_<field_name>*
     - Search method : the search method pattern is *_search_<field_name>*
     - Default method : the default method pattern is *_default_<field_name>*
+    - Selection method: the selection method pattern is *_selection_<field_name>*
     - Onchange method : the onchange method pattern is *_onchange_<field_name>*
     - Constraint method : the constraint method pattern is *_check_<constraint_name>*
     - Action method : an object action method is prefix with *action_*. Its decorator is
@@ -836,7 +837,8 @@ Symbols and Conventions
     #. Private attributes (``_name``, ``_description``, ``_inherit``, ...)
     #. Default method and ``_default_get``
     #. Field declarations
-    #. Compute and search methods in the same order as field declaration
+    #. Compute, inverse and search methods in the same order as field declaration
+    #. Selection method (methods used to return computed values for selection fields)
     #. Constrains methods (``@api.constrains``) and onchange methods (``@api.onchange``)
     #. CRUD methods (ORM overrides)
     #. Action methods
@@ -860,12 +862,17 @@ Symbols and Conventions
         seats_available = fields.Integer(oldname='register_avail', string='Available Seats',
             store=True, readonly=True, compute='_compute_seats')
         price = fields.Integer(string='Price')
+        type = fields.Selection(string="Type", selection='_selection_type')
 
         # compute and search fields, in the same order of fields declaration
         @api.multi
         @api.depends('seats_max', 'registration_ids.state', 'registration_ids.nb_register')
         def _compute_seats(self):
             ...
+
+        @api.model
+        def _selection_type(self):
+            return []
 
         # Constraints and onchanges
         @api.constrains('seats_max', 'seats_available')
