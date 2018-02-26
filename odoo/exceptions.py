@@ -11,26 +11,17 @@ If you consider introducing new exceptions, check out the test_exceptions addon.
 """
 
 import logging
-from inspect import currentframe
-from .tools.func import frame_codeinfo
 
 _logger = logging.getLogger(__name__)
 
 
-# kept for backward compatibility
-class except_orm(Exception):
-    def __init__(self, name, value=None):
-        if type(self) == except_orm:
-            caller = frame_codeinfo(currentframe(), 1)
-            _logger.warning('except_orm is deprecated. Please use specific exceptions like UserError or AccessError. Caller: %s:%s', *caller)
-        self.name = name
-        self.value = value
-        self.args = (name, value)
-
-
-class UserError(except_orm):
+class UserError(Exception):
     def __init__(self, msg):
-        super(UserError, self).__init__(msg, value='')
+        super(UserError, self).__init__(msg)
+
+    @property
+    def name(self):
+        return self.args[0]
 
 
 # deprecated due to collision with builtins, kept for compatibility
@@ -46,7 +37,7 @@ class RedirectWarning(Exception):
       :param string button_text: text to put on the button that will trigger
           the redirection.
     """
-    # using this RedirectWarning won't crash if used as an except_orm
+    # using this RedirectWarning won't crash if used as an user_error
     @property
     def name(self):
         return self.args[0]
@@ -62,32 +53,36 @@ class AccessDenied(Exception):
         self.traceback = ('', '', '')
 
 
-class AccessError(except_orm):
+class AccessError(Exception):
     """ Access rights error.
     Example: When you try to read a record that you are not allowed to."""
     def __init__(self, msg):
         super(AccessError, self).__init__(msg)
 
-
-class CacheMiss(except_orm, KeyError):
-    """ Missing value(s) in cache.
-    Example: When you try to read a value in a flushed cache."""
-    def __init__(self, record, field):
-        super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
+    @property
+    def name(self):
+        return self.args[0]
 
 
-class MissingError(except_orm):
+class MissingError(Exception):
     """ Missing record(s).
     Example: When you try to write on a deleted record."""
     def __init__(self, msg):
         super(MissingError, self).__init__(msg)
 
 
-class ValidationError(except_orm):
+class ValidationError(Exception):
     """ Violation of python constraints
     Example: When you try to create a new user with a login which already exist in the db."""
     def __init__(self, msg):
         super(ValidationError, self).__init__(msg)
+
+
+class CacheMiss(UserError, ValidationError, KeyError):
+    """ Missing value(s) in cache.
+    Example: When you try to read a value in a flushed cache."""
+    def __init__(self, record, field):
+        super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
 
 
 class DeferredException(Exception):

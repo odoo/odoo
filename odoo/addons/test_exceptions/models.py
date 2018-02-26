@@ -14,14 +14,6 @@ class m(models.Model):
     _name = 'test.exceptions.model'
     _description = 'Test Exception Model'
 
-    def generate_except_osv(self):
-        # title is ignored in the new (6.1) exceptions
-        raise odoo.osv.osv.except_osv('title', 'description')
-
-    def generate_except_orm(self):
-        # title is ignored in the new (6.1) exceptions
-        raise odoo.exceptions.except_orm('title', 'description')
-
     def generate_warning(self):
         raise odoo.exceptions.Warning('description')
 
@@ -49,12 +41,6 @@ class m(models.Model):
 
     def generate_validation_error(self):
         raise odoo.exceptions.ValidationError('description')
-
-    def generate_except_osv_safe_eval(self):
-        self.generate_safe_eval(self.generate_except_osv)
-
-    def generate_except_orm_safe_eval(self):
-        self.generate_safe_eval(self.generate_except_orm)
 
     def generate_warning_safe_eval(self):
         self.generate_safe_eval(self.generate_warning)

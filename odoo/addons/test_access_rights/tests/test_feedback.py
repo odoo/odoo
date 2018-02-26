@@ -178,13 +178,17 @@ class TestIRRuleFeedback(Feedback):
 (Records: %s (id=%s), User: %s (id=%s))""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
-
-
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
-        self.assertRaisesRegex(
-            AccessError,
-            r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            p.with_user(self.user).write, {'val': 1}
+        with self.assertRaises(AccessError) as ctx:
+            p.with_user(self.user).write({'val': 1})
+        self.assertEqual(
+            ctx.exception.args[0],
+            """The requested operation ("write" on "Object For Test Access Right" (test_access_right.some_obj)) was rejected because of the following rules:
+- rule 0
+
+(Records: %s (id=%s), User: %s (id=%s))
+
+Implicitly accessed through 'Object for testing related access rights' (test_access_right.parent).""" % (self.record.display_name, self.record.id, self.user.name, self.user.id)
         )
 
     def test_locals(self):
@@ -300,11 +304,18 @@ Note: this might be a multi-company issue.
         p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
         p.flush()
         p.invalidate_cache()
-        self.assertRaisesRegex(
-            AccessError,
-            r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
-            lambda: p.with_user(self.user).val
+        with self.assertRaises(AccessError) as ctx:
+            p.with_user(self.user).val
+        self.assertEqual(
+            ctx.exception.args[0],
+            """The requested operation ("read" on "Object for testing related access rights" (test_access_right.parent)) was rejected because of the following rules:
+
+
+(Records: %s (id=%s), User: %s (id=%s))
+
+Implicitly accessed through 'Object for testing related access rights' (test_access_right.parent).""" % (p.display_name, p.id, self.user.name, self.user.id)
         )
+
 
 class TestFieldGroupFeedback(Feedback):
 

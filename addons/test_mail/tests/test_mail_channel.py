@@ -2,7 +2,7 @@
 from odoo.tests import tagged
 from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mail.tests.common import mail_new_test_user
-from odoo.exceptions import AccessError, except_orm, ValidationError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, formataddr
 
 
@@ -37,10 +37,7 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
         self.group_public.with_user(self.user_public).read()
 
         # Read Pigs -> ko, restricted to employees
-        # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
-        # which still generate exception in except_orm.So we need to change all
-        # except_orm to warning in mail module.)
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.group_pigs.with_user(self.user_public).read()
 
         # Read a private group when being a member: ok
@@ -62,7 +59,6 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models', 'odoo.models.unlink')
     def test_access_rights_groups(self):
         # Employee read employee-based group: ok
-        # TODO Change the except_orm to Warning
         self.group_pigs.with_user(self.user_employee).read()
 
         # Employee can create a group
@@ -75,7 +71,7 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
         self.group_pigs.with_user(self.user_employee).unlink()
 
         # Employee cannot read a private group
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.group_private.with_user(self.user_employee).read()
 
         # Employee cannot write on private
@@ -101,8 +97,7 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
             if partner.id == self.user_portal.partner_id.id:
                 # Chell can read her own partner record
                 continue
-            # TODO Change the except_orm to Warning
-            with self.assertRaises(except_orm):
+            with self.assertRaises(AccessError):
                 trigger_read = partner.name
 
 
