@@ -86,8 +86,7 @@ def replace_request_password(args):
 # don't trigger debugger for those exceptions, they carry user-facing warnings
 # and indications, they're not necessarily indicative of anything being
 # *broken*
-NO_POSTMORTEM = (odoo.osv.orm.except_orm,
-                 odoo.exceptions.AccessError,
+NO_POSTMORTEM = (odoo.exceptions.AccessError,
                  odoo.exceptions.ValidationError,
                  odoo.exceptions.MissingError,
                  odoo.exceptions.AccessDenied,
@@ -627,7 +626,7 @@ class JsonRequest(WebRequest):
             return super(JsonRequest, self)._handle_exception(exception)
         except Exception:
             if not isinstance(exception, (odoo.exceptions.Warning, SessionExpiredException,
-                                          odoo.exceptions.except_orm, werkzeug.exceptions.NotFound)):
+                                          odoo.exceptions.UserError, odoo.exceptions.AccessError, odoo.exceptions.MissingError, odoo.exceptions.ValidationError, werkzeug.exceptions.NotFound)):
                 _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
@@ -704,8 +703,6 @@ def serialize_exception(e):
         tmp["exception_type"] = "access_denied"
     elif isinstance(e, odoo.exceptions.ValidationError):
         tmp["exception_type"] = "validation_error"
-    elif isinstance(e, odoo.exceptions.except_orm):
-        tmp["exception_type"] = "except_orm"
     return tmp
 
 class HttpRequest(WebRequest):

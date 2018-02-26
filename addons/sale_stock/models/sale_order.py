@@ -363,6 +363,7 @@ class SaleOrderLine(models.Model):
         depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        errors = []
         procurements = []
         for line in self:
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
@@ -402,6 +403,13 @@ class SaleOrderLine(models.Model):
                 line.name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
+
+            try:
+                self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
+            except UserError as error:
+                errors.append(error.args[0])
+        if errors:
+            raise UserError('\n'.join(errors))
         return True
 
     @api.multi

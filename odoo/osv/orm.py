@@ -3,7 +3,6 @@ import warnings
 
 from lxml import etree
 
-from ..exceptions import except_orm
 from ..models import (
     MetaModel,
     BaseModel,

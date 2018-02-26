@@ -15,7 +15,6 @@ var map_title ={
     access_error: _lt('Access Error'),
     missing_error: _lt('Missing Record'),
     validation_error: _lt('Validation Error'),
-    except_orm: _lt('Global Business Error'),
     access_denied: _lt('Access Denied'),
 };
 
@@ -89,38 +88,12 @@ var CrashManager = core.Class.extend({
             return;
         }
         if (_.has(map_title, error.data.exception_type)) {
-            if(error.data.exception_type === 'except_orm'){
-                if(error.data.arguments[1]) {
-                    error = _.extend({}, error,
-                                {
-                                    data: _.extend({}, error.data,
-                                        {
-                                            message: error.data.arguments[1],
-                                            title: error.data.arguments[0] !== 'Warning' ? (" - " + error.data.arguments[0]) : '',
-                                        })
-                                });
-                }
-                else {
-                    error = _.extend({}, error,
-                                {
-                                    data: _.extend({}, error.data,
-                                        {
-                                            message: error.data.arguments[0],
-                                            title:  '',
-                                        })
-                                });
-                }
-            }
-            else {
-                error = _.extend({}, error,
-                            {
-                                data: _.extend({}, error.data,
-                                    {
-                                        message: error.data.arguments[0],
-                                        title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
-                                    })
-                            });
-            }
+            error = _.extend({}, error, {
+                data: _.extend({}, error.data, {
+                    message: error.data.arguments[0],
+                    title: map_title[error.data.exception_type] !== 'Warning' ? (" - " + map_title[error.data.exception_type]) : '',
+                })
+            });
 
             this.show_warning(error);
         //InternalError

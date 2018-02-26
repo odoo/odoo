@@ -15,16 +15,6 @@ class m(models.Model):
     _description = 'Test Exception Model'
 
     @api.multi
-    def generate_except_osv(self):
-        # title is ignored in the new (6.1) exceptions
-        raise odoo.osv.osv.except_osv('title', 'description')
-
-    @api.multi
-    def generate_except_orm(self):
-        # title is ignored in the new (6.1) exceptions
-        raise odoo.exceptions.except_orm('title', 'description')
-
-    @api.multi
     def generate_warning(self):
         raise odoo.exceptions.Warning('description')
 
@@ -60,14 +50,6 @@ class m(models.Model):
     @api.multi
     def generate_validation_error(self):
         raise odoo.exceptions.ValidationError('description')
-
-    @api.multi
-    def generate_except_osv_safe_eval(self):
-        self.generate_safe_eval(self.generate_except_osv)
-
-    @api.multi
-    def generate_except_orm_safe_eval(self):
-        self.generate_safe_eval(self.generate_except_orm)
 
     @api.multi
     def generate_warning_safe_eval(self):

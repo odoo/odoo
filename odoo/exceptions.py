@@ -17,20 +17,9 @@ from .tools.func import frame_codeinfo
 _logger = logging.getLogger(__name__)
 
 
-# kept for backward compatibility
-class except_orm(Exception):
-    def __init__(self, name, value=None):
-        if type(self) == except_orm:
-            caller = frame_codeinfo(currentframe(), 1)
-            _logger.warn('except_orm is deprecated. Please use specific exceptions like UserError or AccessError. Caller: %s:%s', *caller)
-        self.name = name
-        self.value = value
-        self.args = (name, value)
-
-
-class UserError(except_orm):
+class UserError(Exception):
     def __init__(self, msg):
-        super(UserError, self).__init__(msg, value='')
+        super(UserError, self).__init__(msg)
 
 
 # deprecated due to collision with builtins, kept for compatibility
@@ -62,7 +51,7 @@ class AccessDenied(Exception):
         self.traceback = ('', '', '')
 
 
-class AccessError(except_orm):
+class AccessError(Exception):
     """ Access rights error.
     Example: When you try to read a record that you are not allowed to."""
     def __init__(self, msg):
@@ -76,14 +65,14 @@ class CacheMiss(except_orm, KeyError):
         super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
 
 
-class MissingError(except_orm):
+class MissingError(Exception):
     """ Missing record(s).
     Example: When you try to write on a deleted record."""
     def __init__(self, msg):
         super(MissingError, self).__init__(msg)
 
 
-class ValidationError(except_orm):
+class ValidationError(Exception):
     """ Violation of python constraints
     Example: When you try to create a new user with a login which already exist in the db."""
     def __init__(self, msg):

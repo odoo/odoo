@@ -5,7 +5,7 @@ from email.utils import formataddr
 
 from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mail.tests.common import mail_new_test_user
-from odoo.exceptions import AccessError, except_orm
+from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
 from odoo.tests import tagged
 
@@ -219,15 +219,14 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_mail_message_access_read_crash(self):
-        # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
-        # which still generate exception in except_orm.So we need to change all
-        # except_orm to warning in mail module.)
-        with self.assertRaises(except_orm):
+        # Changed the except_orm to AccessError(Because here it's call check_access_rule
+        # which actually generate AccessError.)
+        with self.assertRaises(AccessError):
             self.message.sudo(self.user_employee).read()
 
     @mute_logger('odoo.models')
     def test_mail_message_access_read_crash_portal(self):
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.message.sudo(self.user_portal).read(['body', 'message_type', 'subtype_id'])
 
     def test_mail_message_access_read_ok_portal(self):
@@ -278,17 +277,16 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
     @mute_logger('odoo.models')
     def test_mail_message_access_create_crash(self):
         # Do: Bert create a private message -> ko, no creation rights
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
 
     @mute_logger('odoo.models')
     def test_mail_message_access_create_doc(self):
-        # TODO Change the except_orm to Warning
         Message = self.env['mail.message'].sudo(self.user_employee)
         # Do: Raoul creates a message on Jobs -> ok, write access to the related document
         Message.create({'model': 'mail.channel', 'res_id': self.group_public.id, 'body': 'Test'})
         # Do: Raoul creates a message on Priv -> ko, no write access to the related document
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             Message.create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
 
     def test_mail_message_access_create_private(self):

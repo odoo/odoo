@@ -1,5 +1,5 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.osv.orm import except_orm
+from odoo.exceptions import UserError
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from calendar import monthrange
@@ -30,7 +30,7 @@ class TestPeriodState(AccountingTestCase):
         self.account_id = self.env['account.account'].search([('internal_type', '=', 'receivable')])[0]
 
     def test_period_state(self):
-        with self.assertRaises(except_orm):
+        with self.assertRaises(UserError):
             move = self.env['account.move'].create({
                 'name': '/',
                 'journal_id': self.sale_journal_id.id,

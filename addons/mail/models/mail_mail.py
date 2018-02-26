@@ -252,7 +252,7 @@ class MailMail(models.Model):
                 if raise_exception:
                     # To be consistent and backward compatible with mail_mail.send() raised
                     # exceptions, it is encapsulated into an Odoo MailDeliveryException
-                    raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
+                    raise MailDeliveryException(_('Unable to connect to SMTP Server') + '\n%s' % exc)
                 else:
                     batch = self.browse(batch_ids)
                     batch.write({'state': 'exception', 'failure_reason': exc})
@@ -413,9 +413,9 @@ class MailMail(models.Model):
                             value = "Invalid text: %s" % e.object
                         else:
                             # get the args of the original error, wrap into a value and throw a MailDeliveryException
-                            # that is an except_orm, with name and value as arguments
+                            # that is an Exception, with message as arguments
                             value = '. '.join(e.args)
-                        raise MailDeliveryException(_("Mail Delivery Failed"), value)
+                        raise MailDeliveryException(_("Mail Delivery Failed") + "\n%s" % value)
                     raise
 
             if auto_commit is True:
