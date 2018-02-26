@@ -244,7 +244,6 @@ class AccountBankStatement(models.Model):
             if moves:
                 moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
-        statements.link_bank_to_partner()
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
 
     @api.multi
@@ -336,13 +335,6 @@ class AccountBankStatement(models.Model):
             'num_already_reconciled_lines': 0,
         }
 
-    @api.multi
-    def link_bank_to_partner(self):
-        for statement in self:
-            for st_line in statement.line_ids:
-                if st_line.bank_account_id and st_line.partner_id and st_line.bank_account_id.partner_id != st_line.partner_id:
-                    st_line.bank_account_id.partner_id = st_line.partner_id
-
 
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
@@ -355,7 +347,8 @@ class AccountBankStatementLine(models.Model):
     journal_currency_id = fields.Many2one('res.currency', string="Journal's Currency", related='statement_id.currency_id',
         help='Utility field to express amount currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
-    bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')
+    account_number = fields.Char(string='Bank Account Number', help="Technical field used to store the bank account number before its creation, upon the line's processing")
+    bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account', help="Bank account that was used in this transaction.")
     account_id = fields.Many2one('account.account', string='Counterpart Account', domain=[('deprecated', '=', False)],
         help="This technical field can be used at the statement line creation/import time in order to avoid the reconciliation"
              " process on it later on. The statement line will simply create a counterpart on this account")
@@ -1018,5 +1011,10 @@ class AccountBankStatementLine(models.Model):
             payment and payment.write({'payment_reference': move.name})
         elif self.move_name:
             raise UserError(_('Operation not allowed. Since your statement line already received a number, you cannot reconcile it entirely with existing journal entries otherwise it would make a gap in the numbering. You should book an entry and make a regular revert of it in case you want to cancel it.'))
+
+        #create the res.partner.bank if needed
+        if self.account_number and self.partner_id and not self.bank_account_id:
+            self.bank_account_id = self.env['res.partner.bank'].create({'acc_number': self.account_number, 'partner_id': self.partner_id.id}).id
+
         counterpart_moves.assert_balanced()
         return counterpart_moves
