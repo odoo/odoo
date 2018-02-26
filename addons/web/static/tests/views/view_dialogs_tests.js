@@ -67,6 +67,41 @@ QUnit.module('Views', {
         parent.destroy();
     });
 
+    QUnit.test('formviewdialog buttons in footer are not duplicated', function (assert) {
+        assert.expect(2);
+        this.data.partner.fields.poney_ids = {string: "Poneys", type: "one2many", relation: 'partner'};
+        this.data.partner.records[0].poney_ids = [];
+
+        var parent = createParent({
+            data: this.data,
+            archs: {
+                'partner,false,form':
+                    '<form string="Partner">' +
+                            '<field name="poney_ids"><tree editable="top"><field name="display_name"/></tree></field>' +
+                            '<footer><button string="Custom Button" type="object" class="btn-primary"/></footer>' +
+                    '</form>',
+            },
+        });
+
+        new dialogs.FormViewDialog(parent, {
+            res_model: 'partner',
+            res_id: 1,
+        }).open();
+
+        assert.strictEqual($('div.modal button.btn-primary').length, 1,
+            "should have 1 buttons in modal");
+
+        $('.o_field_x2many_list_row_add a').click();
+        $('input.o_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+            keyCode: $.ui.keyCode.ESCAPE,
+        }));
+
+        assert.strictEqual($('div.modal button.btn-primary').length, 1,
+            "should still have 1 buttons in modal");
+        parent.destroy();
+    });
+
     QUnit.test('SelectCreateDialog use domain, group_by and search default', function (assert) {
         assert.expect(3);
 
