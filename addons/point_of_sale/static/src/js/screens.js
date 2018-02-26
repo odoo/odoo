@@ -1975,17 +1975,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             return false;
         }
 
-        var plines = order.get_paymentlines();
-        for (var i = 0; i < plines.length; i++) {
-            if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
-                this.gui.show_popup('error',{
-                    'message': _t('Negative Bank Payment'),
-                    'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
-                });
-                return false;
-            }
-        }
-
         if (!order.is_paid() || this.invoicing) {
             return false;
         }
