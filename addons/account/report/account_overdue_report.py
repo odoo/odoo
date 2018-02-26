@@ -65,4 +65,5 @@ class ReportOverdue(models.AbstractModel):
             'Lines': lines_to_display,
             'Totals': totals,
             'Date': fields.date.today(),
+            'company_id': self.env['res.company'].browse([self.env.user.company_id.id]),
         }

@@ -133,4 +133,6 @@ class ReportGeneralLedger(models.AbstractModel):
             'time': time,
             'Accounts': accounts_res,
             'print_journal': codes,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }

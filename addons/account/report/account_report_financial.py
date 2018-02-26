@@ -158,4 +158,6 @@ class ReportFinancial(models.AbstractModel):
             'docs': docs,
             'time': time,
             'get_account_lines': report_lines,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }

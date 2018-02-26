@@ -332,10 +332,11 @@
 
     <template id="internal_layout">
         <!-- Multicompany -->
-        <t t-if="o and 'company_id' in o">
-            <t t-set="company" t-value="o.company_id"/>
+        <t t-if="company_id">
+            <t t-set="company" t-value="company_id"/>
+            <t t-set="res_company" t-value="company_id"/>
         </t>
-        <t t-if="not o or not 'company_id' in o">
+        <t t-if="not company_id">
             <t t-set="company" t-value="res_company"/>
         </t>
 
