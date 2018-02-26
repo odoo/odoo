@@ -73,7 +73,6 @@ class PurchaseRequisition(models.Model):
                               'Status', track_visibility='onchange', required=True,
                               copy=False, default='draft')
     state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
-    account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
@@ -265,8 +264,6 @@ class PurchaseRequisitionLine(models.Model):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id
             self.product_qty = 1.0
-        if not self.account_analytic_id:
-            self.account_analytic_id = self.requisition_id.account_analytic_id
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
