@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields, tools, _
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
 from odoo.tests.common import Form
-from odoo.exceptions import UserError, except_orm
 
 from datetime import datetime
 from lxml import etree
@@ -271,7 +271,7 @@ class AccountMove(models.Model):
                             self._import_facturx_invoice(tree)
                             self._remove_ocr_option()
                             buffer.close()
-            except except_orm as e:
+            except (AccessError, UserError) as e:
                 raise e
             except Exception as e:
                 # Malformed pdf

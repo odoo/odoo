@@ -105,10 +105,13 @@ def replace_request_password(args):
 # don't trigger debugger for those exceptions, they carry user-facing warnings
 # and indications, they're not necessarily indicative of anything being
 # *broken*
-NO_POSTMORTEM = (odoo.exceptions.except_orm,
+NO_POSTMORTEM = (odoo.exceptions.AccessError,
                  odoo.exceptions.AccessDenied,
-                 odoo.exceptions.Warning,
-                 odoo.exceptions.RedirectWarning)
+                 odoo.exceptions.MissingError,
+                 odoo.exceptions.RedirectWarning,
+                 odoo.exceptions.UserError,
+                 odoo.exceptions.ValidationError,
+                 odoo.exceptions.Warning)
 
 
 def dispatch_rpc(service_name, method, params):
@@ -634,8 +637,8 @@ class JsonRequest(WebRequest):
             if not isinstance(exception, SessionExpiredException):
                 if exception.args and exception.args[0] == "bus.Bus not available in test mode":
                     _logger.info(exception)
-                elif isinstance(exception, (odoo.exceptions.Warning, odoo.exceptions.except_orm,
-                                          werkzeug.exceptions.NotFound)):
+                elif isinstance(exception, (odoo.exceptions.Warning,
+                                            odoo.exceptions.UserError, odoo.exceptions.AccessError, odoo.exceptions.MissingError, odoo.exceptions.ValidationError, werkzeug.exceptions.NotFound)):
                     _logger.warning(exception)
                 else:
                     _logger.exception("Exception during JSON request handling.")
@@ -715,8 +718,6 @@ def serialize_exception(e):
         tmp["exception_type"] = "access_denied"
     elif isinstance(e, odoo.exceptions.ValidationError):
         tmp["exception_type"] = "validation_error"
-    elif isinstance(e, odoo.exceptions.except_orm):
-        tmp["exception_type"] = "except_orm"
     return tmp
 
 
