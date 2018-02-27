@@ -53,8 +53,8 @@ class AccountFiscalPosition(models.Model):
             for t in self.tax_ids:
                 if t.tax_src_id == tax:
                     tax_count += 1
-                    if t.tax_dest_id:
-                        result |= t.tax_dest_id
+                    if t.tax_dest_ids:
+                        result |= t.tax_dest_ids
             if not tax_count:
                 result |= tax
         return result
@@ -170,11 +170,11 @@ class AccountFiscalPositionTax(models.Model):
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
     tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True)
-    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply')
+    tax_dest_ids = fields.Many2many('account.tax', string='Taxes to Apply')
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
-         'unique (position_id,tax_src_id,tax_dest_id)',
+         'unique (position_id,tax_src_id,tax_dest_ids)',
          'A tax fiscal position could be defined only once time on same taxes.')
     ]
 
