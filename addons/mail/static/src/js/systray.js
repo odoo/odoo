@@ -24,6 +24,7 @@ var MessagingMenu = Widget.extend({
         "click .o_filter_button": "on_click_filter_button",
         "click .o_new_message": "on_click_new_message",
         "click .o_mail_channel_preview": "_onClickChannel",
+        "click .o_mail_channel_mark_read":"_onClickMarkRead",
     },
     init: function () {
         this._super.apply(this, arguments);
@@ -147,6 +148,26 @@ var MessagingMenu = Widget.extend({
             if (channel) {
                 this.call('chat_manager', 'openChannel', channel);
             }
+        }
+    },
+    /**
+     * When a channel Mark As Read button is clicked on, we want mark message as read
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickMarkRead: function (ev) {
+        ev.stopPropagation();
+        var channelID = $(ev.currentTarget).data('channel_id'),
+            channel = this.call('chat_manager', 'getChannel', channelID);
+        //Mark only static  channel's messages as read and clear notification
+        if (channelID === 'channel_inbox') {
+            var resID = $(ev.currentTarget).data('res_id');
+            var model = $(ev.currentTarget).data('model');
+            var domain = [['model', '=', model], ['res_id', '=', resID]];
+            this.call('chat_manager', 'markAllAsRead', channel, domain);
+        } else {
+            this.call('chat_manager', 'markChannelAsSeen', channel);
         }
     },
 });

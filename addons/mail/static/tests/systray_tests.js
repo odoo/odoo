@@ -324,4 +324,52 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
     }
 });
 
+QUnit.test("messaging menu widget: messaging menu with 1 message", function ( assert ) {
+    assert.expect(5);
+
+    var records = [{
+        "channel_ids": ['channel_inbox'],
+        "res_id": 126,
+        'is_needaction': true,
+        "module_icon": "/crm/static/description/icon.png",
+        "date": "2018-04-05 06:37:26",
+        "subject": "Re: Interest in your Graphic Design Project",
+        "model": "crm.lead",
+        "body": "<span>Testing Messaging</span>"
+    }];
+
+    var messagingMenu = new systray.MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: [ChatManager, createBusService()],
+        mockRPC: function (route, args) {
+            if (args.method === "message_fetch") {
+                return $.when(records);
+            }
+            return this._super(route, args);
+        },
+    });
+
+    messagingMenu.appendTo($('#qunit-fixture'));
+    messagingMenu.$('.dropdown-toggle').click();
+    assert.ok(messagingMenu.$el.hasClass('o_mail_navbar_item'),
+        'should be the instance of widget');
+    assert.strictEqual(messagingMenu.$el.hasClass("open"), true,
+        'MessagingMenu should be open');
+    assert.strictEqual(messagingMenu.$('.o_channel_unread').length, 1,
+        "should have one unread message for channel");
+    assert.strictEqual(messagingMenu.$('.o_mail_channel_mark_read').length, 1,
+        "should have mark as read icon");
+    testUtils.intercept(messagingMenu, 'call_service', function (event) {
+        if (event.data.method === 'markAllAsRead') {
+            assert.deepEqual(
+                event.data.args[1],
+                [["model", "=" , "crm.lead"], ["res_id", "=" ,126]],
+                "The message has been read"
+            );
+        }
+    });
+    messagingMenu.$(".o_mail_channel_mark_read").click();
+    messagingMenu.destroy();
+});
+
 });
