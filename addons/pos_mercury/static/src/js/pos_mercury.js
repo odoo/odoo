@@ -339,6 +339,15 @@ PaymentScreenWidget.include({
 
     // Handler to manage the card reader string
     credit_code_transaction: function (parsed_result, old_deferred, retry_nr) {
+        var order = this.pos.get_order();
+        if (order.get_due(order.selected_paymentline) < 0) {
+            this.gui.show_popup('error',{
+                'title': _t('Refunds not supported'),
+                'body':  _t('Credit card refunds are not supported. Instead select your credit card payment method, click \'Validate\' and refund the original charge manually through the Vantiv backend.'),
+            });
+            return;
+        }
+
         if(this.pos.getOnlinePaymentJournals().length === 0) {
             return;
         }
