@@ -101,4 +101,58 @@
         </t>
     </template>
 
+    <template id="report_event_ticket_document">
+        <div class="page">
+            <div class="panel panel-default">
+                <div class="panel-heading ">
+                    <div t-field="event.event_logo">
+                        <span t-if="event.organizer_id.is_company and event.organizer_id.company_id.logo_web">
+                                <img t-att-src="'data:image/png;base64,%s' % to_text(event.organizer_id.company_id.logo_web)" style="max-height:1cm; max-width:4cm;"/>
+                        </span>
+                        <span t-else="">
+                            <img t-if="not attendee" src="/web/static/src/img/placeholder.png" style="max-height:1cm; max-width:4cm;"/>
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-body" id="o_event_ticket_info">
+                    <h1 class="text-center" t-field="event.name"/>
+                    <div class="row mb24 mt32">
+                        <div class="col-xs-6">
+                            <div class="col-xs-offset-2 col-xs-2">
+                                <i class="fa fa-map-marker fa-3x"/>
+                            </div>
+                            <div class="col-xs-7">
+                                <span t-field="event.address_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="col-xs-offset-2 col-xs-2">
+                                <i class="fa fa-calendar fa-3x"/>
+                            </div>
+                            <div class="col-xs-7">
+                                <strong>From: </strong> <span itemprop="startDate" t-field="event.date_begin" t-options='{"hide_seconds": True}' />
+                                <br/><strong>To: </strong> <span itemprop="endDate" t-field="event.date_end" t-options='{"hide_seconds": True}' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb24">
+                        <div class="col-xs-6" id="o_event_attendee">
+                            <div class="col-xs-offset-2 col-xs-2 mt24">
+                                <i class="fa fa-user fa-3x"/>
+                            </div>
+                            <div class="col-xs-7 mt4" id="o_event_attendee_info">
+                                <t t-if="attendee">
+                                    <h3 class="mb0" t-esc="attendee" />
+                                </t>
+                                <t t-else="">
+                                    <h3 class="mb0">Attendee Name</h3>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
 </odoo>

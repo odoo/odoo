@@ -21,4 +21,15 @@
         </xpath>
     </template>
 
+    <template id="report_event_ticket_document" inherit_id="event.report_event_ticket_document">
+        <xpath expr="//div[@id='o_event_attendee_info']" position="inside">
+            <t t-if="attendee">
+                <span t-if="o.event_ticket_id" t-field="o.event_ticket_id"></span>
+            </t>
+            <t t-else="">
+                <span t-if="len(event.event_ticket_ids)">Ticket Type</span>
+            </t>
+        </xpath>
+    </template>
+
 </odoo>
