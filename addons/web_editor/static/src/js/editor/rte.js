@@ -269,6 +269,14 @@ var RTEWidget = Widget.extend({
 
         $.fn.carousel = this.edit_bootstrap_carousel;
 
+        $(document).on('click.rte keyup.rte', function () {
+            var $popover = $((range.create()||{}).sc).closest('[contenteditable]');
+            var popover_history = ($popover.data()||{}).NoteHistory;
+            if (!popover_history || popover_history === history) return;
+            var editor = $popover.parent('.note-editor');
+            $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
+            $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
+        });
         $(document).on('mousedown.rte activate.rte', this, this._onMousedown.bind(this));
         $(document).on('mouseup.rte', this, this._onMouseup.bind(this));
 
@@ -344,6 +352,8 @@ var RTEWidget = Widget.extend({
         $('#wrapwrap, .o_editable').off('.rte');
 
         $('.o_not_editable').removeAttr('contentEditable');
+
+        $(document).off('click.rte keyup.rte mousedown.rte activate.rte mouseup.rte');
         $(document).off('content_changed').removeClass('o_is_inline_editable').removeData('rte');
         $(document).tooltip('destroy');
         $('body').removeClass('editor_enable');
