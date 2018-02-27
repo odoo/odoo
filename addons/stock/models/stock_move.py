@@ -637,6 +637,17 @@ class StockMove(models.Model):
                                  "change its rounding precision to a smaller value (example: 0.00001)."),
                 }
             }
+        
+    def _search_picking_for_assignation(self):
+        self.ensure_one()
+        picking = self.env['stock.picking'].search([
+                ('group_id', '=', self.group_id.id),
+                ('location_id', '=', self.location_id.id),
+                ('location_dest_id', '=', self.location_dest_id.id),
+                ('picking_type_id', '=', self.picking_type_id.id),
+                ('printed', '=', False),
+                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
+        return picking
 
     def _assign_picking(self):
         """ Try to assign the moves to an existing picking that has not been
@@ -646,13 +657,7 @@ class StockMove(models.Model):
         Picking = self.env['stock.picking']
         for move in self:
             recompute = False
-            picking = Picking.search([
-                ('group_id', '=', move.group_id.id),
-                ('location_id', '=', move.location_id.id),
-                ('location_dest_id', '=', move.location_dest_id.id),
-                ('picking_type_id', '=', move.picking_type_id.id),
-                ('printed', '=', False),
-                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
+            picking = move._search_picking_for_assignation()
             if picking:
                 if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
                     # If a picking is found, we'll append `move` to its move list and thus its
