@@ -238,14 +238,10 @@ class MailThread(models.AbstractModel):
 
         # track values
         if not self._context.get('mail_notrack'):
-            if 'lang' not in self._context:
-                track_thread = thread.with_context(lang=self.env.user.lang)
-            else:
-                track_thread = thread
-            tracked_fields = track_thread._get_tracked_fields(list(values))
+            tracked_fields = thread._get_tracked_fields(list(values))
             if tracked_fields:
                 initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
-                track_thread.message_track(tracked_fields, initial_values)
+                thread.message_track(tracked_fields, initial_values)
 
         return thread
 
@@ -254,18 +250,11 @@ class MailThread(models.AbstractModel):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).write(values)
 
-        # Track initial values of tracked fields
-        if 'lang' not in self._context:
-            track_self = self.with_context(lang=self.env.user.lang)
-        else:
-            track_self = self
-
         tracked_fields = None
         if not self._context.get('mail_notrack'):
-            tracked_fields = track_self._get_tracked_fields(list(values))
+            tracked_fields = self._get_tracked_fields(list(values))
         if tracked_fields:
-            initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
-                                  for record in track_self)
+            initial_values = dict((record.id, dict((key, record[key]) for key in tracked_fields)) for record in self)
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -275,7 +264,7 @@ class MailThread(models.AbstractModel):
 
         # Perform the tracking
         if tracked_fields:
-            track_self.message_track(tracked_fields, initial_values)
+            self.message_track(tracked_fields, initial_values)
 
         return result
 
