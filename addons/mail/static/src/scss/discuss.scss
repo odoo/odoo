@@ -336,6 +336,9 @@
         .o_channel_name {
             color: $headings-color;
         }
+        .o_discuss_icon {
+            opacity: 1;
+        }
     }
     &:not(:last-child) {
         border-bottom: 1px solid $gray-lighter-darker;
@@ -373,11 +376,14 @@
             }
         }
         .o_last_message_preview {
-            width: 100%;
+            width: 94%;
             max-height: 20px;
             color: $o-main-color-muted;
             @include o-text-overflow;
         }
+    }
+    .o_discuss_icon {
+        opacity: 0;
     }
     &.o_channel_unread {
         background-color: transparent;

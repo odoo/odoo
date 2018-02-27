@@ -235,6 +235,7 @@
                     </t>
                     <t t-raw="channel.last_message_preview"/>
                 </div>
+                <span t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-model="channel.model" title="Mark as Read" class="o_discuss_icon  o_mail_channel_mark_read fa fa-check" t-if="channel.unread_counter"/>
             </div>
         </div>
     </t>
