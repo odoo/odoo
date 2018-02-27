@@ -107,7 +107,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         invoice_line = self.env['account.invoice.line'].search([('invoice_id', '=', invoice.id)])
         invoice_line.quantity = 1
 
-        self.currency_rate.rate = 13.834739702 # We test with a big change in the currency rate (which is pretty sound in a world where Trump rules the US)
+        self.currency_rate.rate = 13.834739702 # We test with a big change in the currency rate (even if it is a bit of a comic booky situation)
 
         invoice.action_invoice_open()
         self.receive_po(purchase_order)

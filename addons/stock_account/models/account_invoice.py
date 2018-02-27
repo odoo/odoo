@@ -61,9 +61,9 @@ class AccountInvoice(models.Model):
 
     def invoice_validate(self):
         super(AccountInvoice, self).invoice_validate()
-        self.anglo_saxon_reconcile_valuation(correct_invoice_interim_account=True)
+        self.anglo_saxon_reconcile_valuation()
 
-    def anglo_saxon_reconcile_valuation(self, correct_invoice_interim_account=False):
+    def anglo_saxon_reconcile_valuation(self):
         """ Reconciles the entries made in the interim accounts in anglosaxon accounting,
         reconciling stock valuation move lines with the invoice's.
         """

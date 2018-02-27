@@ -164,7 +164,7 @@ class AccountInvoice(models.Model):
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
                     valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
-                    interim_account_price = company_currency.round(valuation_price_unit * line['quantity'])
+                    interim_account_price = valuation_price_unit * line['quantity']
 
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
@@ -213,8 +213,8 @@ class AccountInvoice(models.Model):
                                         tax_ids.append((4, child.id, None))
 
                         price_before = line.get('price', 0.0)
-                        price_unit_val_dif = company_currency.round(price_unit - valuation_price_unit)
-                        price_val_dif = company_currency.round(price_before - interim_account_price)
+                        price_unit_val_dif = price_unit - valuation_price_unit
+                        price_val_dif = price_before - interim_account_price
                         if inv.currency_id.compare_amounts(i_line.price_unit, i_line.purchase_line_id.price_unit) != 0 and acc:
                             # If the unit prices have not changed and we have a
                             # valuation difference, it means this difference is due to exchange rates,
@@ -263,8 +263,7 @@ class AccountInvoice(models.Model):
         Returns the stock moves associated to this invoice."""
         rslt = super(AccountInvoice, self)._get_related_stock_moves()
 
-        if self.type in ('in_invoice', 'in_refund'):
-            rslt += self.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done')
+        rslt += self.filtered(lambda x: x.type in ('in_invoice', 'in_refund')).mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done')
 
         return rslt
 

@@ -490,14 +490,14 @@ class StockMove(models.Model):
                 debit_value = self.origin_returned_move_id.price_unit * qty
                 credit_value = debit_value
 
-        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(qty, debit_value, credit_value, debit_account_id, credit_account_id).values()]
+        valuation_partner_id = partner_id = self._get_partner_id_for_valuation_lines()
+        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id).values()]
 
         return res
 
-    def _generate_valuation_lines_data(self, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
         # This method returns a dictonary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
-
-        partner_id = self._get_partner_id_for_valuation_lines()
+        self.ensure_one()
 
         debit_line_vals = {
             'name': self.name,
@@ -606,17 +606,13 @@ class StockMove(models.Model):
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
 
         if self.company_id.anglo_saxon_accounting:
-            self.reconcile_valuation_with_invoices()
+            self._get_related_invoices().anglo_saxon_reconcile_valuation()
 
     def _get_related_invoices(self): # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt
         to the way they mix stock moves with invoices.
         """
         return self.env['account.invoice']
-
-    def reconcile_valuation_with_invoices(self):
-        self.ensure_one()
-        self._get_related_invoices().anglo_saxon_reconcile_valuation()
 
 
 class StockReturnPicking(models.TransientModel):

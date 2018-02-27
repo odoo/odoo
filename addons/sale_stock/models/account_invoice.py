@@ -14,8 +14,7 @@ class AccountInvoice(models.Model):
     def _get_related_stock_moves(self): # overridden from stock_account
         rslt = super(AccountInvoice, self)._get_related_stock_moves()
 
-        if self.type in ('out_invoice', 'out_refund'):
-            rslt += self.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done')
+        rslt += self.filtered(lambda x: x.type in ('out_invoice', 'out_refund')).mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done')
 
         return rslt
 
