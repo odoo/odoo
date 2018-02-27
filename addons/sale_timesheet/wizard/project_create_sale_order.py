@@ -73,6 +73,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
         # link project and tasks to SO line
         self.project_id.write({
             'sale_line_id': sale_order_line.id,
+            'billable_type': 'task_rate',
         })
         self.project_id.tasks.filtered(lambda t: not t.sale_line_id).write({
             'sale_line_id': sale_order_line.id,

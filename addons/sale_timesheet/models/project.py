@@ -9,6 +9,16 @@ class Project(models.Model):
     _inherit = 'project.project'
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', domain=[('is_expense', '=', False)], readonly=True, help="Sale order line from which the project has been created. Used for tracability.")
+    billable_type = fields.Selection([
+        ('task_rate', 'At Task Rate'),
+        ('no', 'No Billable')
+    ], string="Billable Type", default='no', required=True, help='Billable type implies:\n'
+        ' - At task rate: each time spend on a task is billed at task rate.\n'
+        ' - No Billable: track time without invoicing it')
+
+    _sql_constraints = [
+        ('sale_line_required_task_rate', "CHECK((billable_type='task_rate' AND sale_line_id IS NOT NULL) OR (billable_type != 'task_rate'))", "The project should be linked to a sale order item, as it is billed at task rate."),
+    ]
 
     @api.multi
     def action_view_timesheet(self):
@@ -70,13 +80,25 @@ class ProjectTask(models.Model):
     def _default_sale_line_id(self):
         sale_line_id = False
         if self._context.get('default_parent_id'):
-            sale_line_id = self.env['project.task'].browse(self._context['default_parent_id']).sale_line_id.id
+            parent_task = self.env['project.task'].browse(self._context['default_parent_id'])
+            if parent_task.project_id.billable_type != 'no':
+                sale_line_id = parent_task.sale_line_id.id
         if not sale_line_id and self._context.get('default_project_id'):
-            sale_line_id = self.env['project.project'].browse(self._context['default_project_id']).sale_line_id.id
+            project = self.env['project.project'].browse(self.env.context['default_project_id'])
+            if project.billable_type != 'no':
+                return project.sale_line_id
         return sale_line_id
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False)]")
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', related='sale_line_id.order_id', store=True, readonly=True)
+    billable_type = fields.Selection([
+        ('task_rate', 'At Task Rate'),
+        ('no', 'No Billable')
+    ], string="Billable Type", default='no', required=True, readonly=True)
+
+    _sql_constraints = [
+        ('sale_line_required_task_rate', "CHECK((billable_type='task_rate' AND sale_line_id IS NOT NULL) OR (billable_type != 'task_rate'))", "The task should be linked to a sale order item, as it is billed at task rate."),
+    ]
 
     @api.onchange('project_id')
     def _onchange_project(self):
@@ -94,6 +116,35 @@ class ProjectTask(models.Model):
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
                     raise ValidationError(_('You cannot link the order item %s - %s to this task because it is a re-invoiced expense.' % (task.sale_line_id.order_id.id, task.sale_line_id.product_id.name)))
+
+    @api.multi
+    @api.constrains('billable_type', 'sale_line_id')
+    def _check_billable_type(self):
+        for task in self:
+            if task.sale_line_id and task.billable_type == 'no':
+                raise ValidationError(_("A billable task should be linked to a sale order item."))
+
+    @api.model
+    def create(self, values):
+        # sub task has the same so line than their parent
+        parent_id = values['parent_id'] if 'parent_id' in values else self.env.context.get('default_parent_id')
+        if parent_id:
+            values['sale_line_id'] = self.env['project.task'].browse(parent_id).sudo().sale_line_id.id
+
+        # determine billable type from the project
+        project_id = values['project_id'] if values.get('project_id') else self.env.context.get('default_project_id')
+        if not values.get('billable_type') and project_id:
+            values['billable_type'] = self.env['project.project'].browse(project_id).billable_type
+        return super(ProjectTask, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        # changing the project forces the billable type
+        if values.get('project_id'):
+            values['billable_type'] = self.env['project.project'].browse(values['project_id']).billable_type
+        else:
+            values['billable_type'] = 'no'
+        return super(ProjectTask, self).write(values)
 
     @api.multi
     def unlink(self):
