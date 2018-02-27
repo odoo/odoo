@@ -286,13 +286,16 @@ class AccountBankStatement(models.Model):
 
         sql_query = """SELECT stl.id
                         FROM account_bank_statement_line stl
-                        WHERE account_id IS NULL AND stl.amount != 0.0 AND date >= self.company_id.account_opening_date AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
+                        WHERE account_id IS NULL AND stl.amount != 0.0 AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
                             AND company_id = %s
                 """
         params = (self.env.user.company_id.id,)
         if statements:
             sql_query += ' AND stl.statement_id IN %s'
             params += (tuple(statements.ids),)
+        if self.company_id.account_opening_date:
+            sql_query += ' AND stl.date >= %s'
+            params += (self.company_id.account_opening_date,)
         sql_query += ' ORDER BY stl.id'
         self.env.cr.execute(sql_query, params)
         st_lines_left = self.env['account.bank.statement.line'].browse([line.get('id') for line in self.env.cr.dictfetchall()])
@@ -326,8 +329,6 @@ class AccountBankStatement(models.Model):
             st_line = self.env['account.bank.statement.line']
             for line in results:
                 st_line.browse(line.get('id')).write({'partner_id': line.get('partner_id')})
-
-        print ("st_lines_left.ids",st_lines_left)
 
         return {
             'st_lines_ids': st_lines_left.ids,
@@ -489,7 +490,6 @@ class AccountBankStatementLine(models.Model):
                 'st_line': st_line.get_statement_line_for_reconciliation_widget(),
                 'reconciliation_proposition': rp
             })
-            print ("account.bank.statement.line", st_line) 
         return ret
 
     def get_statement_line_for_reconciliation_widget(self):
@@ -566,7 +566,7 @@ class AccountBankStatementLine(models.Model):
 
         # Blue lines = payment on bank account not assigned to a statement yet
         reconciliation_aml_accounts = [self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id]
-        domain_reconciliation = ['&', '&', '&', ('statement_line_id', '=', False), ('account_id', 'in', reconciliation_aml_accounts), ('payment_id','<>', False), ('date_maturity', '>=', self.company_id.account_opening_date)]
+        domain_reconciliation = ['&', '&', ('statement_line_id', '=', False), ('account_id', 'in', reconciliation_aml_accounts), ('payment_id','<>', False)]
 
         # Black lines = unreconciled & (not linked to a payment or open balance created by statement
         domain_matching = [('reconciled', '=', False)]
@@ -597,10 +597,7 @@ class AccountBankStatementLine(models.Model):
             additional_domain = expression.normalize_domain(additional_domain)
         domain = expression.AND([domain, additional_domain])
 
-        xyz = self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
-        print ("account.move.line", xyz)
-
-        return xyz
+        return self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
 
     def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, split = False):
         acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"

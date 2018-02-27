@@ -310,13 +310,6 @@ class account_journal(models.Model):
             if self.company_id.account_opening_date:
                 domain.append(('date', '>=', self.company_id.account_opening_date))
             bank_stmt = self.env['account.bank.statement'].search(domain)
-            payment = self.env['account.payment'].search([('payment_method_id', 'in', self.inbound_payment_method_ids.ids), ('payment_date', '>=', self.company_id.account_opening_date)])
-
-            if self.inbound_payment_method_ids.payment_type in ('inbound', 'Inbound'):
-                domain.append(('payment_method_id', 'in', self.inbound_payment_method_ids.ids))
-
-            print ("account.bank.statement, account.journal", bank_stmt, self)
-
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',
