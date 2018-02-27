@@ -2196,7 +2196,7 @@ class MailThread(models.AbstractModel):
         # fetch auto_follow_fields: res.users relation fields whose changes are tracked for subscription
         user_field_lst = self._message_get_auto_subscribe_fields(updated_fields)
 
-        # fetch header subtypes
+        # # fetch header subtypes
         subtypes, relation_fields = self.env['mail.message.subtype'].auto_subscribe_subtypes(self._name)
 
         # if no change in tracked field or no change in tracked relational field: quit
@@ -2208,10 +2208,12 @@ class MailThread(models.AbstractModel):
         for subtype in subtypes:
             if subtype.relation_field and values.get(subtype.relation_field):
                 headers.add((subtype.res_model, values.get(subtype.relation_field)))
+        # print('headers', headers, 'for', self._name, self.ids)
         if headers:
             header_domain = ['|'] * (len(headers) - 1)
             for header in headers:
                 header_domain += ['&', ('res_model', '=', header[0]), ('res_id', '=', header[1])]
+            # print('\theader_domain', header_domain)
             for header_follower in self.env['mail.followers'].sudo().search(header_domain):
                 for subtype in header_follower.subtype_ids:
                     if subtype.parent_id and subtype.parent_id.res_model == self._name:
@@ -2230,14 +2232,18 @@ class MailThread(models.AbstractModel):
         for partner in to_add_users.mapped('partner_id'):
             new_partners.setdefault(partner.id, None)
 
-        for pid, subtypes in new_partners.items():
-            subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
-        for cid, subtypes in new_channels.items():
-            subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
+        gen, part = self.env['mail.followers']._add_follower_command(self._name, self.ids, new_partners, new_channels, force=True)
+        self.sudo().write({'message_follower_ids': gen})
 
-        # remove the current user from the needaction partner to avoid to notify the author of the message
+        # # 100 queries
+        # for pid, subtypes in new_partners.items():
+        #     subtypes = list(subtypes) if subtypes is not None else None
+        #     self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
+        # for cid, subtypes in new_channels.items():
+        #     subtypes = list(subtypes) if subtypes is not None else None
+        #     self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
+
+        # remove the current user from the needaction partner to avoid to notify the author of the message  # 70 queries
         user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user]
         self._message_auto_subscribe_notify(user_pids)
 
