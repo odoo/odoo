@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Fiscal Position Templates -->
+    <record id="fiscal_position_template_eu_taxid" model="account.fiscal.position.template">
+        <field name="name">EU lande (Virksomhed)</field>
+        <field name="chart_template_id" ref="dk_chart_template" />
+    </record>
+    <record id="fiscal_position_template_eu" model="account.fiscal.position.template">
+        <field name="name">EU lande (Privat)</field>
+        <field name="chart_template_id" ref="dk_chart_template" />
+    </record>
+    <record id="fiscal_position_template_3lande" model="account.fiscal.position.template">
+        <field name="name">3. lande (Virksomhed / Privat)</field>
+        <field name="chart_template_id" ref="dk_chart_template" />
+    </record>
+
+    <!-- account.fiscal.position.tax.template -->
+    <!-- 3. lande -->
+    <record id="fiscal_position_tax_salgvare_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="tax_src_id" ref="tax110"/>
+        <field name="tax_dest_id" ref="tax310"/>
+    </record>
+    <record id="fiscal_position_tax_salgydelser_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="tax_src_id" ref="tax120"/>
+        <field name="tax_dest_id" ref="tax310"/>
+    </record>
+    <record id="fiscal_position_tax_koebvare_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="tax_src_id" ref="tax760"/>
+        <field name="tax_dest_id" ref="tax610"/>
+    </record>
+    <record id="fiscal_position_tax_koebydelser_3" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="tax_src_id" ref="tax750"/>
+        <field name="tax_dest_id" ref="tax620"/>
+    </record>
+
+    <!-- EU lande -->
+    <record id="fiscal_position_tax_salgvare_eu" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="tax_src_id" ref="tax110"/>
+        <field name="tax_dest_id" ref="tax210"/>
+    </record>
+    <record id="fiscal_position_tax_salgydelser_eu" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="tax_src_id" ref="tax120"/>
+        <field name="tax_dest_id" ref="tax220"/>
+    </record>
+    <record id="fiscal_position_tax_koebvare_eu" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="tax_src_id" ref="tax760"/>
+        <field name="tax_dest_id" ref="tax510"/>
+    </record>
+    <record id="fiscal_position_tax_koebydelser_eu" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="tax_src_id" ref="tax750"/>
+        <field name="tax_dest_id" ref="tax520"/>
+    </record>
+
+    <!-- Fiscal Position Account Templates -->
+    <!-- 3. lande -->
+    <record id="fiscal_position_account_salgvare_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a1010"/>
+        <field name="account_dest_id" ref="a1030"/>
+    </record>
+    <record id="fiscal_position_account_salgydelser_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a1011"/>
+        <field name="account_dest_id" ref="a1031"/>
+    </record>
+    <record id="fiscal_position_account_koebvare_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a2010"/>
+        <field name="account_dest_id" ref="a2030"/>
+    </record>
+    <record id="fiscal_position_account_koebydelser_3" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_3lande"/>
+        <field name="account_src_id" ref="a2011"/>
+        <field name="account_dest_id" ref="a2031"/>
+    </record>
+
+    <!-- EU lande -->
+    <record id="fiscal_position_account_salgvare_eu" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a1010"/>
+        <field name="account_dest_id" ref="a1020"/>
+    </record>
+    <record id="fiscal_position_account_salgydelser_eu" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a1011"/>
+        <field name="account_dest_id" ref="a1021"/>
+    </record>
+    <record id="fiscal_position_account_koebvare_eu" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a2010"/>
+        <field name="account_dest_id" ref="a2020"/>
+    </record>
+    <record id="fiscal_position_account_koebydelser_eu_taxid" model="account.fiscal.position.account.template">
+        <field name="position_id" ref="fiscal_position_template_eu_taxid"/>
+        <field name="account_src_id" ref="a2011"/>
+        <field name="account_dest_id" ref="a2021"/>
+    </record>
+</odoo>

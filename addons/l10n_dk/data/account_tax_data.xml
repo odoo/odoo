@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Account Tags -->
+    <record id="tax_tag_s" model="account.account.tag">
+        <field name="name">Salgsmoms (udgående moms)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_seu3" model="account.account.tag">
+        <field name="name">Moms af varekøb i udlandet (både EU og tredjelande)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_seu3omv" model="account.account.tag">
+        <field name="name">Moms af ydelseskøb i udlandet med omvendt betalingspligt</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_k" model="account.account.tag">
+        <field name="name">Købsmoms (indgående moms)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_av" model="account.account.tag">
+        <field name="name">Rubrik A, varekøb EU</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_ay" model="account.account.tag">
+        <field name="name">Rubrik A, ydelseskøb EU</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_bv" model="account.account.tag">
+        <field name="name">Rubrik B, varersalg EU</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_bp" model="account.account.tag">
+        <field name="name">Rubrik B, varesalg privat EU</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_by" model="account.account.tag">
+        <field name="name">Rubrik B, ydelsessalg EU</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_c" model="account.account.tag">
+        <field name="name">Rubrik C, ydelses og varesalg u/moms DK, EU og 3. lande</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <!-- Helpers -->
+    <record id="tax8725" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Erhvervelsesmoms med omvendt betlingspligt</field>
+        <field name="description">Erhvervelsesmoms med omvendt betlingspligt</field>
+        <field name="amount">-25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8725"/>
+        <field name="refund_account_id" ref="a8725"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_s')] )]"/>
+    </record>
+    <record id="tax8730" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Moms af varekøb i udlandet (Både EU og 3. lande)</field>
+        <field name="description">Moms af varekøb i udlandet (Både EU og 3. lande)</field>
+        <field name="amount">-25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8730"/>
+        <field name="refund_account_id" ref="a8730"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_seu3')] )]"/>
+    </record>
+    <record id="tax8731" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Moms af ydelseskøb i udlandet med omvendt betalingspligt</field>
+        <field name="description">Moms af ydelseskøb i udlandet med omvendt betalingspligt</field>
+        <field name="amount">-25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8731"/>
+        <field name="refund_account_id" ref="a8731"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_seu3omv')] )]"/>
+    </record>
+    <record id="tax8740b" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Købsmoms import og omvendt betalingspligt (indgående moms)</field>
+        <field name="description">Købsmoms import og omvendt betalingspligt (indgående moms)</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8740"/>
+        <field name="refund_account_id" ref="a8740"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_k')] )]"/>
+    </record>
+
+    <!--Værdier -->
+    <record id="tax8750" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">EU købsværdi, Rubrik A - vare</field>
+        <field name="description">EU købsværdi, Rubrik A - vare</field>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8750"/>
+        <field name="refund_account_id" ref="a8750"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_av')] )]"/>
+    </record>
+    <record id="tax8751" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">EU købsværdi, Rubrik A - ydelser</field>
+        <field name="description">EU købsværdi, Rubrik A - ydelser</field>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8751"/>
+        <field name="refund_account_id" ref="a8751"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_ay')] )]"/>
+    </record>
+    <record id="tax8754" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">EU salgsværdi, Rubrik B - vare</field>
+        <field name="description">EU salgsværdi, Rubrik B - vare</field>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8754"/>
+        <field name="refund_account_id" ref="a8754"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_bv')] )]"/>
+    </record>
+    <record id="tax8755" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">EU salgsværdi, Rubrik B - ydelser</field>
+        <field name="description">EU salgsværdi, Rubrik B - ydelser</field>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8755"/>
+        <field name="refund_account_id" ref="a8755"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_by')] )]"/>
+    </record>
+    <record id="tax8758" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Salgsværdier 3.lande - Rubrik C</field>
+        <field name="description">Salgsværdier 3.lande - Rubrik C</field>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8758"/>
+        <field name="refund_account_id" ref="a8758"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_c')] )]"/>
+    </record>
+    <record id="tax8758b" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Salgsværdier med omvendt betalingspligt - Rubrik C</field>
+        <field name="description">Salgsværdier med omvendt betalingspligt - Rubrik C</field>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8758"/>
+        <field name="refund_account_id" ref="a8758"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_c')])]"/>
+    </record>
+    <record id="tax8769" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Værdier, modkonto</field>
+        <field name="description">Værdier, modkonto</field>
+        <field name="amount">-100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="account_id" ref="a8769"/>
+        <field name="refund_account_id" ref="a8769"/>
+    </record>
+
+    <!-- Salgsmoms -->
+    <!-- DK salgsmoms -->
+    <record id="tax110" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">110</field>
+        <field name="name">Salgsmoms 25%</field>
+        <field name="description">25%</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="a8720"/>
+        <field name="refund_account_id" ref="a8720"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_s')])]"/>
+    </record>
+    <record id="tax120" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">120</field>
+        <field name="name">Salgsmoms 25%, ydelser</field>
+        <field name="description">25%</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="a8720"/>
+        <field name="refund_account_id" ref="a8720"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_s')]) ]"/>
+    </record>
+    <record id="tax140" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">140</field>
+        <field name="name">Salg omvendt betalingspligt</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8758b'), ref('tax8769')] )]"/>
+    </record>
+
+    <!-- EU salgsmoms-->
+    <record id="tax210" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">210</field>
+        <field name="name">EU Varesalg (Virksomheder)</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8754'), ref('tax8769')] )]"/>
+    </record>
+    <record id="tax220" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">220</field>
+        <field name="name">EU Ydelsessalg (Virksomheder)</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8755'), ref('tax8769')] )]"/>
+    </record>
+
+    <!-- 3. Lande købsmoms-->
+    <record id="tax310" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">310</field>
+        <field name="name">3. Land Salg Vare / Ydelser</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8758'), ref('tax8769')] )]"/>
+    </record>
+
+    <!-- Købsmoms -->
+    <!-- EU købsmoms-->
+    <record id="tax510" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">510</field>
+        <field name="name">EU Varekøb</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8740b'), ref('tax8730'),ref('tax8750'), ref('tax8769')] )]"/>
+    </record>
+    <record id="tax520" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">520</field>
+        <field name="name">EU Ydelseskøb</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8740b'), ref('tax8731'),ref('tax8751'), ref('tax8769')] )]"/>
+    </record>
+
+    <!-- 3. Lande købsmoms-->
+    <record id="tax610" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">610</field>
+        <field name="name">3. Land Varekøb</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8740b'), ref('tax8730')] )]"/>
+    </record>
+    <record id="tax620" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">620</field>
+        <field name="name">3. Land Ydelseskøb</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8740b'), ref('tax8731')] )]"/>
+    </record>
+
+    <!-- DK købsmoms -->
+    <record id="tax700" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">700</field>
+        <field name="name">Køb omvendt betalingspligt</field>
+        <field name="description"></field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="children_tax_ids" eval="[(6, 0, [ ref('tax8740b'), ref('tax8725')] )]"/>
+    </record>
+    <record id="tax710" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">710</field>
+        <field name="name">Hotel moms 12,50%, købsmoms</field>
+        <field name="description">12,50%</field>
+        <field name="amount">12.5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="a8740"/> <!-- opret konto til denne feks 8741-->
+        <field name="refund_account_id" ref="a8740"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_k')])]"/>
+    </record>
+    <record id="tax720" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">720</field>
+        <field name="name">Restaurationsmoms 6,25%, købsmoms</field>
+        <field name="description">6,25%</field>
+        <field name="amount">6.25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="a8740"/> <!-- opret konto til denne, feks 8742-->
+        <field name="refund_account_id" ref="a8740"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_k')])]"/>
+    </record>
+    <record id="tax740" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Købsmoms 25% indeholdt</field>
+        <field name="description">25% indeholdt</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="price_include" eval="True"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="a8740"/>
+        <field name="refund_account_id" ref="a8740"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_k')])]"/>
+    </record>
+    <record id="tax750" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Købsmoms 25%, ydelser</field>
+        <field name="description">25%</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="a8740"/>
+        <field name="refund_account_id" ref="a8740"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_k')])]"/>
+    </record>
+    <record id="tax760" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="name">Købsmoms 25%</field>
+        <field name="description">25%</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="a8740"/>
+        <field name="refund_account_id" ref="a8740"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_k')])]"/>
+    </record>
+</odoo>

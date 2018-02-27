@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Account types:
+Resultat opgørelse:
++ account.data_account_type_income                      Indtægter
+- account.data_account_type_direct_costs                Direkte omkostninger
+= GROSS PROFIT                                          Bruttofortjeneste
++ account.data_account_type_other_income                Andre indtægter (Kurs gevinster m.m.)
+- account.data_account_type_expenses                    Udgifter
+- account.data_account_type_depreciation                Afskrivninger
+= NET PROFIT                                            ?
+Balance:
+Aktiver:
++ account.data_account_type_current_assets              Aktiver
++ account.data_account_type_receivable                  Debitore
++ Accounts ???
++ account.data_account_type_current_prepayments         Forudbetalinger
++ account.data_account_type_liquidity                   Bank og kasse
++ account.data_account_type_fixed_assets                Anlægsaktiver
++ account.data_account_type_non-current_assets          Langfristede aktiver
+= Aktiver ialt
+Passiver:
+- account.data_account_type_current_liabilities         Passiver
+- account.data_account_type_payable                     Kreditore
+- account.data_account_type_non-current_liabilities     Langfristede passiver
+= NET ASSETS
+Egenkapital:
+account.data_account_type_equity                        Egenkapital
+account.data_account_type_current_year_ernings          Årets overskud
+= Egenkabital ialt
+-->
+<odoo noupdate="1">
+
+    <menuitem id="account_reports_dk_statements_menu" name="Denmark" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+    <!-- Account Template -->
+    <record id="dk_chart_template" model="account.chart.template">
+        <field name="name">Denmark - Chart of Accounts</field>
+        <field name="code_digits">6</field>
+        <field name="cash_account_code_prefix">681</field>
+        <field name="bank_account_code_prefix">682</field>
+        <field name="transfer_account_code_prefix">683</field>
+        <field name="currency_id" ref="base.DKK"/>
+        <field name="use_anglo_saxon" eval="True"/>
+    </record>
+
+</odoo>
