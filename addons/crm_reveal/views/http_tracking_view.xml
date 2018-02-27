@@ -35,4 +35,15 @@
         </field>
     </record>
 
+    <record id="http_traking_session_tree_view" model="ir.ui.view">
+        <field name="name">http.session.list.inherited</field>
+        <field name="model">http.session</field>
+        <field name="inherit_id" ref="http_tracking.http_session_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_time']" position="after">
+                <field name="lead_id" />
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
