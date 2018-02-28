@@ -163,6 +163,13 @@ class QWebException(Exception):
         if self.html:
             self.message = "%s\nNode: %s" % (self.message, self.html)
 
+        # Compatibility with old odoo.exceptions.QWebException
+        self.qweb = {
+            'template': self.name,
+            'message': self.message,
+            'cause': self.error,
+        }
+
         super(QWebException, self).__init__(message)
 
     def __str__(self):
