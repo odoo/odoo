@@ -1899,7 +1899,7 @@ class TestStockValuation(TransactionCase):
         # Add a new move line to receive 10 more
         # ---------------------------------------------------------------------
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.env['stock.move.line'].with_context(debug=True).create({
+        self.env['stock.move.line'].create({
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 10,
@@ -2168,7 +2168,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Actually, send 10 in the last move
         # ---------------------------------------------------------------------
-        move2.with_context(debug=True).quantity_done = 10
+        move2.quantity_done = 10
 
         self.assertEqual(move2.value, -100.0)
         self.assertEqual(move2.remaining_qty, 0.0)
@@ -2819,7 +2819,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Change the production valuation to AVCO
         # ---------------------------------------------------------------------
-        self.product1.with_context(debug=True).product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.cost_method = 'standard'
 
         # valuation should stay to ~240
         self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
@@ -3006,6 +3006,10 @@ class TestStockValuation(TransactionCase):
             move2._action_done()
 
     def test_at_date_standard_1(self):
+        """ Make some operations at different dates, check that the results of the valuation at
+        date wizard are consistent. Afterwards, edit the done quantity of some operations. The
+        valuation at date results should take these changes into account.
+        """
         self.product1.product_tmpl_id.cost_method = 'standard'
 
         now = Date.from_string(Date.today())
@@ -3123,16 +3127,6 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product1.qty_available, 95)
         self.assertEqual(self.product1.stock_value, 712.5)
 
-        # Quantity at date
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_available, 0)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_available, 30)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_available, 15)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_available, 15)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_available, -5)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date7)).qty_available, -5)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date8)).qty_available, 95)
-
         # Valuation at date
         self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 100)
         self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, 300)
@@ -3140,3 +3134,26 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 75)
         self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -25)
         self.assertEqual(self.product1.with_context(to_date=Date.to_string(date8)).stock_value, 712.5)
+
+        # edit the done quantity of move1, decrease it
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 10)
+        move1.quantity_done = 5
+
+        # as when we decrease a quantity on a recreipt, we consider it as a out move with the price
+        # of today, the value will be decrease of 100 - (5*7.5)
+        self.assertEqual(move1.value, 62.5)
+
+        # the valuatin at date will take the qty at date * the standard price at date, that's why
+        # it is different.
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 50)
+
+        # edit move 4, send 15 instead of 20
+        # we now have +5 + 20 - 15 -20 = -10 * a standard price of 5
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -50)
+        move4.quantity_done = 15
+
+        # -(20*5) + (5*7.5)
+        self.assertEqual(move4.value, -62.5)
+        # we now have +5 + 20 - 15 -15 = -5 * a standard price of 5
+        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -25)
+

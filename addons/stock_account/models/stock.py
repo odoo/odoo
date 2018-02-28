@@ -88,7 +88,10 @@ class StockMoveLine(models.Model):
                 new_remaining_value = 0
                 if move_id.product_id.cost_method in ['standard', 'average']:
                     correction_value = qty_difference * move_id.product_id.standard_price
-                    move_vals['value'] = move_id.value - correction_value
+                    if move_id._is_in():
+                        move_vals['value'] = move_id.value + correction_value
+                    elif move_id._is_out():
+                        move_vals['value'] = move_id.value - correction_value
                     move_vals.pop('remaining_qty')
                 else:
                     # FIFO handling
