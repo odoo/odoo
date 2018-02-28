@@ -658,7 +658,6 @@ function removeSrcAttribute(el, widget) {
     while (node = nodes.pop()) {
         var src = node.attributes.src && node.attributes.src.value;
         if (src && src !== 'about:blank') {
-            var $el = $(node);
             node.setAttribute('data-src', src);
             if (node.nodeName === 'IMG') {
                 node.attributes.removeNamedItem('src');
