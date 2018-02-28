@@ -150,6 +150,7 @@
         <field name="name">Resource Leaves</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">tree,form,calendar</field>
+        <field name="domain">[('time_type', 'in', ['leave', 'other'])]</field>
         <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
     </record>
 
@@ -160,7 +161,50 @@
         <field name="context">{
             'default_calendar_id': active_id,
             'search_default_calendar_id': active_id}</field>
+        <field name="domain">[('time_type', 'in', ['leave', 'other'])]</field>
         <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
+    </record>
+
+    <record id="action_open_resource_calendar_leave_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="resource_calendar_leave_tree"/>
+        <field name="act_window_id" ref="action_resource_calendar_leave_tree"/>
+    </record>
+
+    <record id="action_open_resource_calendar_leave_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="resource_calendar_leave_form"/>
+        <field name="act_window_id" ref="action_resource_calendar_leave_tree"/>
+    </record>
+
+    <record id="action_open_resource_calendar_leave_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_resource_calendar"/>
+        <field name="act_window_id" ref="action_resource_calendar_leave_tree"/>
+    </record>
+
+    <record id="action_open_resource_calendar_leaves_action_from_calendar_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="resource_calendar_leave_tree"/>
+        <field name="act_window_id" ref="resource_calendar_leaves_action_from_calendar"/>
+    </record>
+
+    <record id="action_open_resource_calendar_leaves_action_from_calendar_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="resource_calendar_leave_form"/>
+        <field name="act_window_id" ref="resource_calendar_leaves_action_from_calendar"/>
+    </record>
+
+    <record id="action_open_resource_calendar_leaves_action_from_calendar_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_resource_calendar"/>
+        <field name="act_window_id" ref="resource_calendar_leaves_action_from_calendar"/>
     </record>
 
     <act_window
