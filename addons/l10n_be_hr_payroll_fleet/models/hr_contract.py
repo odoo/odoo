@@ -10,6 +10,7 @@ class HrContract(models.Model):
     car_id = fields.Many2one('fleet.vehicle', string='Company Car',
         domain=lambda self: self._get_available_cars_domain(),
         default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
+        track_visibility="onchange",
         help="Employee's company car.")
     car_atn = fields.Float(compute='_compute_car_atn_and_costs', string='ATN Company Car', store=True)
     company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs', store=True)
