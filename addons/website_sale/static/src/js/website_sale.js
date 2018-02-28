@@ -88,18 +88,12 @@ odoo.define('website_sale.website_sale', function (require) {
 
         $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
             var product_ids = [];
-            var product_dom = $(".js_product .js_add_cart_variants[data-attribute_value_ids]");
+            var product_dom = $(event.target).closest(".js_product").find(".js_add_cart_variants");
             var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
-            if (!product_dom.length) {
-                return;
-            }
             var attribute_value_ids = product_dom.data("attribute_value_ids");
-            if(_.isString(attribute_value_ids)) {
-                attribute_value_ids = JSON.parse(attribute_value_ids.replace(/'/g, '"'));
-            }
             _.each(attribute_value_ids, function(entry) {
-                product_ids.push(entry[0]);});
-            var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
+                product_ids.push(entry[0]);
+            });
 
             if ($("#product_detail").length) {
                 // display the reduction from the pricelist in function of the quantity
@@ -109,7 +103,7 @@ odoo.define('website_sale.website_sale', function (require) {
                     for(var j=0; j < current.length; j++){
                         current[j][2] = data[current[j][0]];
                     }
-                    product_dom.attr("data-attribute_value_ids", JSON.stringify(current)).trigger("change");
+                    product_dom.trigger("change");
                 });
             }
         });
@@ -210,8 +204,7 @@ odoo.define('website_sale.website_sale', function (require) {
             $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
                 var $prod = $(this).closest('*:has(input[name="product_id"])');
                 return !$prod.length || +$prod.find('input[name="product_id"]').val() === product_id;
-            }).val(new_qty);
-            $input.change();
+            }).val(new_qty).change();
             return false;
         });
 
@@ -298,27 +291,14 @@ odoo.define('website_sale.website_sale', function (require) {
             }
         }
 
-        $(oe_website_sale).on('change', 'input.js_product_change', function () {
-            var self = this;
-            var $parent = $(this).closest('.js_product');
-            $.when(base.ready()).then(function() {
-                $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(self).data('lst_price')) );
-                $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(self).data('price')) );
-            });
-            update_product_image(this, +$(this).val());
-        });
-
-        $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function (ev) {
-            var $ul = $(ev.target).closest('.js_add_cart_variants');
-            var $parent = $ul.closest('.js_product');
+        $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change, input.js_product_change, [data-attribute_value_ids]', function (ev) {
+            var $parent = $(ev.target).closest('.js_product');
+            var $ul = $parent.find('.js_add_cart_variants');
             var $product_id = $parent.find('.product_id').first();
             var $price = $parent.find(".oe_price:first .oe_currency_value");
             var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
             var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
             var variant_ids = $ul.data("attribute_value_ids");
-            if(_.isString(variant_ids)) {
-                variant_ids = JSON.parse(variant_ids.replace(/'/g, '"'));
-            }
             var values = [];
             var unchanged_values = $parent.find('div.oe_unchanged_value_ids').data('unchanged_value_ids') || [];
 
@@ -326,12 +306,14 @@ odoo.define('website_sale.website_sale', function (require) {
                 values.push(+$(this).val());
             });
             values =  values.concat(unchanged_values);
+            var list_variant_id = parseInt($parent.find('input.js_product_change:checked').val());
 
             $parent.find("label").removeClass("text-muted css_not_available");
 
             var product_id = false;
             for (var k in variant_ids) {
-                if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
+                if (_.isEmpty(_.difference(variant_ids[k][1], values)) ||
+                    variant_ids[k][0] === list_variant_id) {
                     $.when(base.ready()).then(function() {
                         $price.html(price_to_str(variant_ids[k][2]));
                         $default_price.html(price_to_str(variant_ids[k][3]));
