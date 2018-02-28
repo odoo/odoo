@@ -314,8 +314,8 @@ function addMockEnvironment(widget, params) {
     });
 
     // make sure images do not trigger a GET on the server
-    $('body').on('DOMNodeInserted.removeSRC', function () {
-        removeSrcAttribute($(this), widget);
+    $('body').on('DOMNodeInserted.removeSRC', function (event) {
+        removeSrcAttribute(event.target, widget);
     });
 
     // make sure the debounce value for input fields is set to 0
@@ -641,27 +641,35 @@ function triggerKeypressEvent(char) {
 /**
  * Removes the src attribute on images and iframes to prevent not found errors,
  * and optionally triggers an rpc with the src url as route on a widget.
+ * This method is critical and must be fastest (=> no jQuery, no underscore)
  *
- * @param {JQueryElement} $el
+ * @param {DOM Node} el
  * @param {[Widget]} widget the widget on which the rpc should be performed
  */
-function removeSrcAttribute($el, widget) {
-    $el.find('img, iframe[src]').each(function () {
-        var $el = $(this);
-        var src = $el.attr('src');
+function removeSrcAttribute(el, widget) {
+    var nodes;
+    if (el.nodeName === 'IMG' || el.nodeName === 'IFRAME') {
+        nodes = [el];
+    } else {
+        nodes = Array.prototype.slice.call(el.getElementsByTagName('img'))
+            .concat(Array.prototype.slice.call(el.getElementsByTagName('iframe')));
+    }
+    var node;
+    while (node = nodes.pop()) {
+        var src = node.attributes.src && node.attributes.src.value;
         if (src && src !== 'about:blank') {
-            if ($el[0].nodeName === 'IMG') {
-                $el.attr('data-src', src);
-                $el.removeAttr('src');
+            var $el = $(node);
+            node.setAttribute('data-src', src);
+            if (node.nodeName === 'IMG') {
+                node.attributes.removeNamedItem('src');
             } else {
-                $el.attr('data-src', src);
-                $el.attr('src', 'about:blank');
+                node.setAttribute('src', 'about:blank');
             }
             if (widget) {
                 widget._rpc({route: src});
             }
         }
-    });
+    }
 }
 
 var patches = {};
