@@ -84,6 +84,7 @@ var Dialog = Widget.extend({
             var $b = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {'class': classes} }}}));
             $b.prop('disabled', b.disabled);
             $b.on('click', function(e) {
+                $b.prop('disabled', true);
                 var click_def;
                 if(b.click) {
                     click_def = b.click.call(self, e);
