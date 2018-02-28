@@ -278,7 +278,7 @@ class Website(Home):
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
-        template_ids = map(int, request.httprequest.form.getlist('templates'))
+        template_ids = [int(t) for t in request.httprequest.form.getlist('templates')]
         views = request.env['ir.ui.view'].browse(template_ids)
         views.restore_views()
         return request.redirect(redirect)
