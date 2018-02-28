@@ -19,6 +19,15 @@
                         <button string="Unmark as done" type="object" name="unmark_company_setup_as_done_action" attrs="{'invisible': [('account_setup_company_data_done','=',False)]}"/>
                     </footer>
                 </xpath>
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="has_chart_of_accounts" invisible="1"/>
+                    <field name="has_accounting_entries" invisible="1"/>
+                    <label attrs="{'invisible': [('has_accounting_entries','!=',False)]}" for="chart_template_id" string="Fiscal Localization"/>
+                    <div attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
+                        <field name="chart_template_id" nolabel="1" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 
