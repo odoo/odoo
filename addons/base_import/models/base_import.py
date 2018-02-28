@@ -570,7 +570,10 @@ class Import(models.TransientModel):
             if float_regex.search(split_value[0]) is not None:
                 return split_value[0] if not negative else '-' + split_value[0]
             return False
-        else:
+        # /!\ NOTE: You cannot assume `len(split_value) == 2` because two
+        # previous conditions were not met.
+        # You must make sure they are actually two!
+        if len(split_value) == 2:
             # String has been split in 2, locate which index contains the float and which does not
             currency_index = 0
             if float_regex.search(split_value[0]) is not None:
@@ -581,6 +584,7 @@ class Import(models.TransientModel):
                 return split_value[(currency_index + 1) % 2] if not negative else '-' + split_value[(currency_index + 1) % 2]
             # Otherwise it is not a float with a currency symbol
             return False
+        return value
 
     @api.model
     def _parse_float_from_data(self, data, index, name, options):
