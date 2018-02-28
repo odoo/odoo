@@ -136,7 +136,7 @@ class AccountAnalyticLine(models.Model):
                 values['timesheet_invoice_type'] = 'billable_fixed'
                 # if the so line is already invoiced, and the delivered qty is still smaller than the ordered, then link the timesheet to the invoice
                 if so_line.invoice_status == 'invoiced':
-                    values['timesheet_invoice_id'] = so_line.invoice_lines[0].invoice_id.id
+                    values['timesheet_invoice_id'] = so_line.invoice_lines and so_line.invoice_lines[0].invoice_id.id
             elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type != 'timesheet':
                 values['timesheet_invoice_type'] = 'billable_fixed'
 
