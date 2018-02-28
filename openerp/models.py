@@ -5298,9 +5298,7 @@ class BaseModel(object):
         # read() ignores active_test, but it would forward it to any downstream search call
         # (e.g. for x2m or function fields), and this is not the desired behavior, the flag
         # was presumably only meant for the main search().
-        # TODO: Move this to read() directly?                                                                                                
-        read_ctx = dict(context or {})                                                                                                       
-        read_ctx.pop('active_test', None)                                                                                                    
+        read_ctx = dict(context or {})
                                                                                                                                              
         result = self.read(cr, uid, record_ids, fields, context=read_ctx) 
         if len(result) <= 1:
