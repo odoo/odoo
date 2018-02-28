@@ -6,7 +6,7 @@ import time
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class AccountFiscalPosition(models.Model):
@@ -47,6 +47,16 @@ class AccountFiscalPosition(models.Model):
 
     @api.model     # noqa
     def map_tax(self, taxes, product=None, partner=None):
+        # A little safety check...
+        if 'sale' in taxes.mapped('type_tax_use') and 'purchase' in taxes.mapped('type_tax_use'):
+            raise UserError(_("""
+                A fiscal position, is applied which depends on a single context.
+                The current transaction contains taxes of both types: 'sale' an 'purchase'.
+                Taxes & types:\n{}
+                """.format(
+                    ' / '.join(["{} -> {}".format(tax.display_name, tax.type_tax_use) for tax in taxes])
+                    )
+            ))
         result = self.env['account.tax'].browse()
         for tax in taxes:
             tax_count = 0
