@@ -16,7 +16,7 @@
                              <field name="name"/>
                              <field name="code" placeholder="code"/>
                              <field name="user_type_id" widget="selection"/>
-                             <field name="tax_ids" widget="many2many_tags"/>
+                             <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]"/>
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
