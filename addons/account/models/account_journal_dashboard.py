@@ -439,7 +439,7 @@ class account_journal(models.Model):
         """ Returns the data used by the setup bar on the Accounting app dashboard."""
         company = self.env.user.company_id
         return {
-            'show_setup_bar': not company.account_setup_bar_closed,
+            'show_setup_bar': False,
             'company': company.account_setup_company_data_done,
             'bank': company.account_setup_bank_data_done,
             'fiscal_year': company.account_setup_fy_data_done,
