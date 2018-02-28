@@ -795,7 +795,7 @@
                                     <li t-foreach="views" t-as="view">
                                         <label>
                                             <input type="checkbox" name="templates" t-att-value="view.id" t-att-checked="'checked' if view_first else None"/>
-                                            <t t-esc="view.name"/>
+                                            <t t-esc="view.name + ' (Last edited: ' + view.write_date + ')'"/>
                                         </label>
                                     </li>
                                 </ul>

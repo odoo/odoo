@@ -5,6 +5,7 @@ import logging
 import traceback
 import os
 import unittest
+from datetime import datetime
 
 import pytz
 import werkzeug
@@ -15,7 +16,7 @@ import odoo
 from odoo import api, models
 from odoo import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import config
+from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN, OR
 
@@ -206,7 +207,18 @@ class Http(models.AbstractModel):
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 if 'qweb_exception' in values:
                     IrUiView = request.env["ir.ui.view"]
-                    values['views'] = IrUiView._views_get(exception.qweb['template'])
+
+                    # This is too annoying to type each time...
+                    def dt(x):
+                        return datetime.strptime(x, DEFAULT_SERVER_DATETIME_FORMAT)
+
+                    views = IrUiView._views_get(exception.qweb['template'])
+                    # Get modified views by comparing the create and write datetimes
+                    # this won't work at 100% because sometimes these times differ even if the
+                    # user hasn't modified them manually.
+                    m_views = [v for v in views if dt(v.create_date) != dt(v.write_date)]
+                    # Show latest modified views first
+                    values['views'] = reversed(sorted(m_views, key=lambda v: dt(v.write_date)))
             elif code == 403:
                 logger.warn("403 Forbidden:\n\n%s", values['traceback'])
 
