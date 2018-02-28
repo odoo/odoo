@@ -47,7 +47,7 @@ odoo.define('website_form.animation', function (require) {
 
         send: function(e) {
             e.preventDefault();  // Prevent the default submit behavior
-            this.$target.find('.o_website_form_send').off();  // Prevent users from crazy clicking
+            this.$target.find('.o_website_form_send').off().addClass('disabled');  // Prevent users from crazy clicking
 
             var self = this;
 
@@ -216,7 +216,7 @@ odoo.define('website_form.animation', function (require) {
         update_status: function(status) {
             var self = this;
             if (status != 'success') {  // Restore send button behavior if result is an error
-                this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
+                this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);}).removeClass('disabled');
             }
             var $result = this.$('#o_website_form_result');
             this.templates_loaded.done(function () {
