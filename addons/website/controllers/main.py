@@ -278,22 +278,9 @@ class Website(Home):
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
-        templates = request.httprequest.form.getlist('templates')
-        modules_to_update = []
-        for temp_id in templates:
-            view = request.env['ir.ui.view'].browse(int(temp_id))
-            if view.page:
-                continue
-            view.model_data_id.write({
-                'noupdate': False
-            })
-            if view.model_data_id.module not in modules_to_update:
-                modules_to_update.append(view.model_data_id.module)
-
-        if modules_to_update:
-            modules = request.env['ir.module.module'].sudo().search([('name', 'in', modules_to_update)])
-            if modules:
-                modules.button_immediate_upgrade()
+        template_ids = map(int, request.httprequest.form.getlist('templates'))
+        views = request.env['ir.ui.view'].browse(template_ids)
+        views.restore_views()
         return request.redirect(redirect)
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
