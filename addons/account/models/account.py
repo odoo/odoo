@@ -409,7 +409,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.sequence_id and journal.sequence_number_next:
                 sequence = journal.sequence_id._get_current_sequence()
-                sequence.number_next = journal.sequence_number_next
+                sequence.sudo().number_next = journal.sequence_number_next
 
     @api.multi
     # do not depend on 'refund_sequence_id.date_range_ids', because
