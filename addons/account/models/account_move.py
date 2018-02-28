@@ -241,6 +241,7 @@ class AccountMove(models.Model):
                 'amount_currency': -acm_line.amount_currency
             })
         self._reconcile_reversed_pair(self, reversed_move)
+        return reversed_move
 
     @api.multi
     def reverse_moves(self, date=None, journal_id=None):
