@@ -2570,6 +2570,7 @@ var manualReconciliationLine = abstractReconciliationLine.extend({
     },
 
     prepareCreatedMoveLinesForPersisting: function(lines) {
+        lines = _.filter(lines, function(line) { return !line.is_tax_line });
         var dicts = this._super(lines);
         for (var i=0; i<dicts.length; i++)
             dicts[i]['journal_id'] = lines[i].journal_id;
