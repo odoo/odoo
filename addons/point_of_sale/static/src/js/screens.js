@@ -502,7 +502,9 @@ var OrderWidget = PosBaseWidget.extend({
             }else if( mode === 'discount'){
                 order.get_selected_orderline().set_discount(val);
             }else if( mode === 'price'){
-                order.get_selected_orderline().set_unit_price(val);
+                var selected_orderline = order.get_selected_orderline();
+                selected_orderline.price_manually_set = true;
+                selected_orderline.set_unit_price(val);
             }
     	}
     },
@@ -1971,17 +1973,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 'body':  _t('There must be at least one product in your order before it can be validated'),
             });
             return false;
-        }
-
-        var plines = order.get_paymentlines();
-        for (var i = 0; i < plines.length; i++) {
-            if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
-                this.gui.show_popup('error',{
-                    'message': _t('Negative Bank Payment'),
-                    'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
-                });
-                return false;
-            }
         }
 
         if (!order.is_paid() || this.invoicing) {

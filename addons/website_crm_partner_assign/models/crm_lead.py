@@ -233,7 +233,7 @@ class CrmLead(models.Model):
             # will be modified by the portal form. If no activity exist we create a new one instead
             # that we assign to the portal user.
 
-            user_activity = lead.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+            user_activity = lead.sudo().activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
             if values['activity_date_deadline']:
                 if user_activity:
                     user_activity.sudo().write({
