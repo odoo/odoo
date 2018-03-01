@@ -5,7 +5,6 @@ import logging
 import traceback
 import os
 import unittest
-from datetime import datetime
 
 import pytz
 import werkzeug
@@ -13,7 +12,7 @@ import werkzeug.routing
 import werkzeug.utils
 
 import odoo
-from odoo import api, models
+from odoo import api, models, fields
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import config, DEFAULT_SERVER_DATETIME_FORMAT
@@ -209,8 +208,8 @@ class Http(models.AbstractModel):
                     IrUiView = request.env["ir.ui.view"]
 
                     # This is too annoying to type each time...
-                    def dt(x):
-                        return datetime.strptime(x, DEFAULT_SERVER_DATETIME_FORMAT)
+                    def dt(datetime):
+                        return fields.Datetime.fromstring(datetime)
 
                     views = IrUiView._views_get(exception.qweb['template'])
                     # Get modified views by comparing the create and write datetimes
