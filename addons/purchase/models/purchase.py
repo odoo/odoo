@@ -327,7 +327,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_approve(self, force=False):
-        self.write({'state': 'purchase'})
+        self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
         if self.company_id.po_lock == 'lock':
             self.write({'state': 'done'})
