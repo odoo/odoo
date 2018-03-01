@@ -794,7 +794,14 @@ class PosOrder(models.Model):
                         'lot_id': lot_id,
                     })
                 if not pack_lots:
-                    move.quantity_done = qty_done
+                    self.env['stock.move.line'].create({
+                        'move_id': move.id,
+                        'product_id': move.product_id.id,
+                        'product_uom_id': move.product_uom.id,
+                        'qty_done': qty_done,
+                        'location_id': move.location_id.id,
+                        'location_dest_id': move.location_dest_id.id,
+                    })
         return has_wrong_lots
 
     def _prepare_bank_statement_line_payment_values(self, data):
