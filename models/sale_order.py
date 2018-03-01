@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
@@ -19,7 +19,15 @@ class SaleOrder(models.Model):
     @api.depends('order_line')
     def _compute_reward_total(self):
         for order in self:
-            order.reward_amount = sum([line.price_subtotal for line in order.order_line.filtered(lambda line: line.is_reward_line)])
+            order.reward_amount = sum([line.price_subtotal for line in order._get_reward_lines()])
+
+    def _get_no_effect_on_threshold_lines(self):
+        self.ensure_one()
+        lines = self.env['sale.order.line']
+        # Do not count already applied promo_code discount; Do not substract itself
+        if self.code_promo_program_id and self.code_promo_program_id.reward_type == 'discount':
+            lines = self.order_line.filtered(lambda l: l.product_id == self.code_promo_program_id.discount_line_product_id)
+        return lines
 
     @api.multi
     def recompute_coupon_lines(self):
@@ -30,7 +38,7 @@ class SaleOrder(models.Model):
 
     def copy(self, default=None):
         order = super(SaleOrder, self).copy(dict(default or {}, order_line=False))
-        for line in self.order_line.filtered(lambda line: not line.is_reward_line):
+        for line in self._get_reward_lines():
             line.copy({'order_id': order.id})
         order.with_context(sale_coupon_no_loop=False)._create_new_no_code_promo_reward_lines()
         return order
@@ -71,7 +79,7 @@ class SaleOrder(models.Model):
         if program._is_valid_product(program.reward_product_id):
             reward_product_qty = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
         else:
-            reward_product_qty = max_product_qty
+            reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
@@ -83,14 +91,16 @@ class SaleOrder(models.Model):
             'price_unit': - price_unit,
             'product_uom_qty': reward_qty,
             'is_reward_line': True,
-            'name': "Free Product - " + program.reward_product_id.name,
+            'name': _("Free Product") + " - " + program.reward_product_id.name,
             'product_uom': program.reward_product_id.uom_id.id,
             'tax_id': [(4, tax.id, False) for tax in taxes],
         }
 
-    def _get_order_lines_untaxed_amount(self):
-        """ Returns the untaxed sale order total amount without the rewards amount"""
-        return sum([x.price_subtotal for x in self.order_line.filtered(lambda x: not x.is_reward_line)])
+    def _get_order_lines_tax_included_amount(self):
+        """ Returns the taxes included sale order total amount without the rewards amount"""
+        free_reward_product = self.env['sale.coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
+        return sum([x.price_total for x in self.order_line.filtered(lambda x: not x.is_reward_line or x.product_id in free_reward_product)])
+
 
     def _get_reward_values_discount_fixed_amount(self, program):
         total_amount = sum(self.order_line.filtered(lambda line: not line.is_reward_line).mapped('price_total'))
@@ -105,15 +115,15 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_discount_percentage(self, program):
         discount_amount = 0
-        amount_untaxed = self._get_order_lines_untaxed_amount()
+        amount_total = self._get_order_lines_tax_included_amount()
         max_amount = program._compute_program_amount('discount_max_amount', self.currency_id)
         if program.discount_apply_on == 'on_order':
-            discount_amount = amount_untaxed * (program.discount_percentage / 100)
+            discount_amount = amount_total * (program.discount_percentage / 100)
         if program.discount_apply_on == 'cheapest_product':
             unit_prices = self._get_lines_unit_prices()
             discount_amount = (min(unit_prices) * (program.discount_percentage) / 100)
         if program.discount_apply_on == 'specific_product':
-            discount_amount = sum([(x.price_unit * x.product_uom_qty) * (program.discount_percentage / 100) for x in self.order_line.filtered(
+            discount_amount = sum([(x.price_total * x.product_uom_qty) * (program.discount_percentage / 100) for x in self.order_line.filtered(
                 lambda x: x.product_id == program.discount_specific_product_id)])
         if program.discount_max_amount and discount_amount > max_amount:
             discount_amount = max_amount
@@ -125,7 +135,7 @@ class SaleOrder(models.Model):
         elif program.discount_type == 'fixed_amount':
             discount_amount = self._get_reward_values_discount_fixed_amount(program)
         return {
-            'name': "Discount: %s" % (program.name),
+            'name': _("Discount: ") + program.name,
             'product_id': program.discount_line_product_id.id,
             'price_unit': - discount_amount,
             'product_uom_qty': 1.0,
@@ -154,7 +164,10 @@ class SaleOrder(models.Model):
             'discount_line_product_id': program.discount_line_product_id.id
         })
         self.generated_coupon_ids |= coupon
-        subject = '%s, a coupon has been generated from your order %s' % (self.partner_id.name, self.name)
+        subject = _('%(partner_name)s, a coupon has been generated from your order %(order_name)s') % {
+            'partner_name': self.partner_id.name,
+            'order_name': self.name,
+        }
         body = self.env.ref('sale_coupon.sale_coupon_created_coupon_email_template').render({
             'code': coupon.code,
             'reward_description': coupon.program_id.discount_line_product_id.name
@@ -182,7 +195,7 @@ class SaleOrder(models.Model):
             ('promo_code_usage', '=', 'no_code_needed'),
             # ('promo_applicability', '=', 'on_current_order')
         ])._filter_programs_from_common_rules(self)
-        return programs.sorted('sequence')
+        return programs
 
     def _create_new_no_code_promo_reward_lines(self):
         '''Apply new programs that are applicable'''

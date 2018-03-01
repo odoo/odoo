@@ -53,15 +53,12 @@ class SaleCoupon(models.Model):
     def _check_coupon_code(self, order):
         message = {}
         applicable_programs = order._get_applicable_programs()
-        amount_total = order.amount_untaxed + order.reward_amount
-        if self.program_id.rule_minimum_amount_tax_inclusion == 'tax_included':
-            amount_total += order.amount_tax
         if self.state in ('used', 'expired') or \
            (self.expiration_date and self.expiration_date < order.date_order):
             message = {'error': _('This coupon %s has been used or is expired.') % (self.code)}
         elif self.state == 'reserved':
             message = {'error': _('This coupon %s exists but the origin sales order is not validated yet.') % (self.code)}
-        elif self.program_id._compute_program_amount('rule_minimum_amount', order.currency_id) > amount_total:
+        elif not self.program_id._filter_on_mimimum_amount(order):
             message = {'error': _('A minimum of %s %s should be purchased to get the reward') % (self.program_id.rule_minimum_amount, self.program_id.currency_id.name)}
         elif not self.program_id.active:
             message = {'error': _('The coupon program for %s is in draft or closed state') % (self.code)}
