@@ -4,7 +4,9 @@
 import base64
 import re
 
-from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from email.utils import formataddr
+
+from odoo import _, api, fields, models, tools
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
@@ -38,7 +40,6 @@ class MailComposer(models.TransientModel):
             before being sent to each recipient.
     """
     _name = 'mail.compose.message'
-    _inherit = 'mail.message'
     _description = 'Email composition wizard'
     _log_access = True
     _batch_size = 500
@@ -49,60 +50,48 @@ class MailComposer(models.TransientModel):
             - comment: default mode, model and ID of a record the user comments
                 - default_model or active_model
                 - default_res_id or active_id
-            - reply: active_id of a message the user replies to
-                - default_parent_id or message_id or active_id: ID of the
-                    mail.message we reply to
-                - message.res_model or default_model
-                - message.res_id or default_res_id
             - mass_mail: model and IDs of records the user mass-mails
                 - active_ids: record IDs
                 - default_model or active_model
         """
         result = super(MailComposer, self).default_get(fields)
+        if not result.get('composition_mode') or result['composition_mode'] == 'reply':  # reply -> deprecated, fallback
+            result['composition_mode'] = 'comment'
 
-        # v6.1 compatibility mode
-        result['composition_mode'] = result.get('composition_mode', self._context.get('mail.compose.message.mode', 'comment'))
         result['model'] = result.get('model', self._context.get('active_model'))
         result['res_id'] = result.get('res_id', self._context.get('active_id'))
-        result['parent_id'] = result.get('parent_id', self._context.get('message_id'))
         if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
             result['no_auto_thread'] = True
 
-        # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
-        if result['composition_mode'] == 'reply':
-            result['composition_mode'] = 'comment'
         vals = {}
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
             vals['active_domain'] = '%s' % self._context.get('active_domain')
         if result['composition_mode'] == 'comment':
-            vals.update(self.get_record_data(result))
-
-        for field in vals:
-            if field in fields:
-                result[field] = vals[field]
-
-        # TDE HACK: as mailboxes used default_model='res.users' and default_res_id=uid
-        # (because of lack of an accessible pid), creating a message on its own
-        # profile may crash (res_users does not allow writing on it)
-        # Posting on its own profile works (res_users redirect to res_partner)
-        # but when creating the mail.message to create the mail.compose.message
-        # access rights issues may rise
-        # We therefore directly change the model and res_id
-        if result['model'] == 'res.users' and result['res_id'] == self._uid:
-            result['model'] = 'res.partner'
-            result['res_id'] = self.env.user.partner_id.id
+            vals.update(self._get_default_record_data(result))
+        result.update(vals)
 
         if fields is not None:
             [result.pop(field, None) for field in list(result) if field not in fields]
         return result
 
-    @api.model
-    def _get_composition_mode_selection(self):
-        return [('comment', 'Post on a document'),
-                ('mass_mail', 'Email Mass Mailing'),
-                ('mass_post', 'Post on Multiple Documents')]
-
-    composition_mode = fields.Selection(selection=_get_composition_mode_selection, string='Composition mode', default='comment')
+    # content
+    subject = fields.Char('Subject', default=False)
+    body = fields.Html('Contents', default='', sanitize_style=True, strip_classes=True)
+    parent_id = fields.Many2one('mail.message', 'Parent Message', index=True, ondelete='set null')
+    # related document
+    model = fields.Char('Related Document Model', index=True)
+    res_id = fields.Integer('Related Document ID', index=True)
+    record_name = fields.Char('Message Record Name', help="Name get of the related document.")
+    # origin
+    email_from = fields.Char('From', default=lambda self: formataddr((self.env.user.name, self.env.user.email)))
+    author_id = fields.Many2one(
+        'res.partner', string='Author', index=True,
+        default=lambda self: self.env.user.partner_id)
+    # composer options
+    composition_mode = fields.Selection(selection=[
+        ('comment', 'Post on a document'),
+        ('mass_mail', 'Email Mass Mailing'),
+        ('mass_post', 'Post on Multiple Documents')], string='Composition mode', default='comment')
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts')
@@ -113,7 +102,10 @@ class MailComposer(models.TransientModel):
         'wizard_id', 'attachment_id', 'Attachments')
     is_log = fields.Boolean('Log an Internal Note',
                             help='Whether the message is an internal note (comment mode only)')
-    subject = fields.Char(default=False)
+    # classic post mode only
+    message_type = fields.Selection(selection=[
+        ('notification', 'Notification'),
+        ('comment', 'User comment')], string='Message Type', default='comment')
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
@@ -122,64 +114,50 @@ class MailComposer(models.TransientModel):
         'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
     # mail_message updated fields
-    message_type = fields.Selection(default="comment")
-    subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
-
-    @api.multi
-    def check_access_rule(self, operation):
-        """ Access rules of mail.compose.message:
-            - create: if
-                - model, no res_id, I create a message in mass mail mode
-            - then: fall back on mail.message acces rules
-        """
-        # Author condition (CREATE (mass_mail))
-        if operation == 'create' and self._uid != SUPERUSER_ID:
-            # read mail_compose_message.ids to have their values
-            message_values = {}
-            self._cr.execute('SELECT DISTINCT id, model, res_id FROM "%s" WHERE id = ANY (%%s) AND res_id = 0' % self._table, (self.ids,))
-            for mid, rmod, rid in self._cr.fetchall():
-                message_values[mid] = {'model': rmod, 'res_id': rid}
-            # remove from the set to check the ids that mail_compose_message accepts
-            author_ids = [mid for mid, message in message_values.items()
-                          if message.get('model') and not message.get('res_id')]
-            self = self.browse(list(set(self.ids) - set(author_ids)))  # not sure slef = ...
-
-        return super(MailComposer, self).check_access_rule(operation)
-
-    @api.multi
-    def _notify(self, layout=False, force_send=False, send_after_commit=True, values=None):
-        """ Override specific notify method of mail.message, because we do
-            not want that feature in the wizard. """
-        return
+    subtype_id = fields.Many2one(
+        'mail.message.subtype', 'Subtype',
+        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
+    mail_activity_type_id = fields.Many2one(
+        'mail.activity.type', 'Mail Activity Type',
+        index=True, ondelete='set null')
+    # recipients
+    channel_ids = fields.Many2many(
+        'mail.channel', 'mail_message_mail_channel_rel', string='Channels')
+    # mail gateway
+    no_auto_thread = fields.Boolean(
+        'No threading for answers',
+        help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
+    reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
+    mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
 
     @api.model
-    def get_record_data(self, values):
+    def _get_default_record_data(self, values):
         """ Returns a defaults-like dict with initial values for the composition
-        wizard when sending an email related a previous email (parent_id) or
-        a document (model, res_id). This is based on previously computed default
-        values. """
-        result, subject = {}, False
-        if values.get('parent_id'):
+        wizard when sending an email related a document (model, res_id). This is
+        based on previously computed default values. """
+        result = dict((key, val) for key, val in values.items() if key in ['record_name', 'subject', 'model', 'res_id'])
+
+        if values.get('parent_id') and values['composition_mode'] == 'comment':
             parent = self.env['mail.message'].browse(values.get('parent_id'))
-            result['record_name'] = parent.record_name,
-            subject = tools.ustr(parent.subject or parent.record_name or '')
-            if not values.get('model'):
+            if 'record_name' not in result:
+                result['record_name'] = parent.record_name
+            if 'subject' not in result:
+                result['subject'] = tools.ustr(parent.subject or parent.record_name or '')
+            if not result.get('model'):
                 result['model'] = parent.model
-            if not values.get('res_id'):
+            if not result.get('res_id'):
                 result['res_id'] = parent.res_id
-            partner_ids = values.get('partner_ids', list()) + [(4, id) for id in parent.partner_ids.ids]
-            if self._context.get('is_private') and parent.author_id:  # check message is private then add author also in partner list.
-                partner_ids += [(4, parent.author_id.id)]
-            result['partner_ids'] = partner_ids
-        elif values.get('model') and values.get('res_id'):
-            doc_name_get = self.env[values.get('model')].browse(values.get('res_id')).name_get()
-            result['record_name'] = doc_name_get and doc_name_get[0][1] or ''
-            subject = tools.ustr(result['record_name'])
+
+        if result.get('model') and result.get('res_id') and values['composition_mode'] == 'comment':
+            if 'record_name' not in result:
+                doc_name_get = self.env[values['model']].sudo().browse(values['res_id']).name_get()
+                result['record_name'] = doc_name_get and doc_name_get[0][1] or ''
+            if 'subject' not in result:
+                result['subject'] = tools.ustr(result['record_name'])
 
         re_prefix = _('Re:')
-        if subject and not (subject.startswith('Re:') or subject.startswith(re_prefix)):
-            subject = "%s %s" % (re_prefix, subject)
-        result['subject'] = subject
+        if result.get('subject') and not (result['subject'].startswith('Re:') or result['subject'].startswith(re_prefix)):
+            result['subject'] = "%s %s" % (re_prefix, result['subject'])
 
         return result
 

@@ -99,7 +99,7 @@ class TestMailPerformance(TransactionCase):
     @users('admin', 'emp')
     @warmup
     def test_create_mail_simple(self):
-        with self.assertQueryCount(admin=10, emp=10):  # test_mail only: 10 - 10
+        with self.assertQueryCount(admin=9, emp=9):  # test_mail only: 9 - 9
             self.env['mail.test.simple'].create({'name': 'Test'})
 
     @users('admin', 'emp')
@@ -399,7 +399,7 @@ class TestHeavyMailPerformance(TransactionCase):
         record = self.umbrella.sudo(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_tpl').id
 
-        with self.assertQueryCount(admin=140, emp=185):  # com runbot 138 - 183 // test_mail only: 136 - 181
+        with self.assertQueryCount(admin=136, emp=169):  # com runbot 139 - 182 // test_mail only: 131 - 164
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
@@ -595,7 +595,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(admin=65, emp=92):  # test_mail only: 63 - 90
+        with self.assertQueryCount(admin=59, emp=77):  # test_mail only: 57 - 75
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
