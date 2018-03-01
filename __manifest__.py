@@ -16,5 +16,6 @@
         'views/sale_coupon_program_views.xml',
         'views/sale_config_settings_views.xml',
         'data/sale_coupon_data.xml',
+        'data/sale_coupon_demo.xml',
     ],
 }
