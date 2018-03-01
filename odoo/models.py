@@ -3265,7 +3265,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # update parent_path
         if parent_records:
-            parent_records._parent_store_update(vals)
+            parent_records._parent_store_update()
 
         return True
 
@@ -3410,7 +3410,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self = self.browse(cr.fetchone()[0])
 
         # update parent_path
-        self._parent_store_create(vals)
+        self._parent_store_create()
 
         with self.env.protecting(protected_fields, self):
             # mark fields to recompute; do this before setting other fields,
@@ -3447,23 +3447,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return self
 
-    def _parent_store_create(self, vals):
+    def _parent_store_create(self):
         """ Set the parent_path field on ``self`` after its creation. """
         if not self._parent_store:
             return
 
-        parent_val = vals.get(self._parent_name)
-        if parent_val:
-            query = """
-                UPDATE {0}
-                SET parent_path=concat((SELECT parent_path FROM {0} WHERE id=%s), id, '/')
-                WHERE id IN %s
-            """
-            params = [parent_val, tuple(self.ids)]
-        else:
-            query = "UPDATE {} SET parent_path=concat(id, '/') WHERE id IN %s"
-            params = [tuple(self.ids)]
-        self._cr.execute(query.format(self._table), params)
+        query = """
+            UPDATE {0} node
+            SET parent_path=concat((SELECT parent.parent_path FROM {0} parent
+                                    WHERE parent.id=node.{1}), node.id, '/')
+            WHERE node.id IN %s
+        """.format(self._table, self._parent_name)
+        self._cr.execute(query, [tuple(self.ids)])
 
     def _parent_store_update_prepare(self, vals):
         """ Return the records in ``self`` that must update their parent_path
@@ -3486,23 +3481,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._cr.execute(query, params)
         return self.browse([row[0] for row in self._cr.fetchall()])
 
-    def _parent_store_update(self, vals):
+    def _parent_store_update(self):
         """ Update the parent_path field of ``self``. """
         cr = self.env.cr
 
-        # determine new prefix in parent_path, and check for recursion
-        parent_val = vals[self._parent_name]
-        if parent_val:
-            query = "SELECT parent_path FROM {} WHERE id=%s"
-            cr.execute(query.format(self._table), [parent_val])
-            new_prefix = cr.fetchone()[0]
+        # determine new prefix of parent_path
+        query = """
+            SELECT parent.parent_path FROM {0} node, {0} parent
+            WHERE node.id = %s AND parent.id = node.{1}
+        """
+        cr.execute(query.format(self._table, self._parent_name), [self.ids[0]])
+        prefix = cr.fetchone()[0] if cr.rowcount else ''
 
-            parent_ids = {int(label) for label in new_prefix.split('/')[:-1]}
+        # check for recursion
+        if prefix:
+            parent_ids = {int(label) for label in prefix.split('/')[:-1]}
             if not parent_ids.isdisjoint(self._ids):
                 raise UserError(_("Recursivity Detected."))
-
-        else:
-            new_prefix = ''
 
         # update parent_path of all records and their descendants
         query = """
@@ -3514,7 +3509,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             AND child.parent_path LIKE concat(node.parent_path, '%%')
             RETURNING child.id
         """
-        cr.execute(query.format(self._table), [new_prefix, tuple(self.ids)])
+        cr.execute(query.format(self._table), [prefix, tuple(self.ids)])
         modified_ids = {row[0] for row in cr.fetchall()}
         self.browse(modified_ids).modified(['parent_path'])
 
