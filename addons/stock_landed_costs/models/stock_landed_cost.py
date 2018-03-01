@@ -117,7 +117,7 @@ class LandedCost(models.Model):
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also """
-        prec_digits = self.env['decimal.precision'].precision_get('Account')
+        prec_digits = self.env.user.company_id.currency_id.decimal_places
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
             if not tools.float_compare(total_amount, landed_cost.amount_total, precision_digits=prec_digits) == 0:

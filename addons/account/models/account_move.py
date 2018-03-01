@@ -221,7 +221,7 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
-        prec = self.env['decimal.precision'].precision_get('Account')
+        prec = self.env.user.company_id.currency_id.decimal_places
 
         self._cr.execute("""\
             SELECT      move_id
