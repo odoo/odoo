@@ -106,7 +106,7 @@ class AccountMove(models.Model):
         default=lambda self: self.env.user.company_id)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     # Dummy Account field to search on account.move by account_id
-    dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False)
+    dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False, readonly=True)
     tax_cash_basis_rec_id = fields.Many2one(
         'account.partial.reconcile',
         string='Tax Cash Basis Entry of',
@@ -1361,7 +1361,7 @@ class AccountMoveLine(models.Model):
                     record.payment_id.state = 'reconciled'
 
         result = super(AccountMoveLine, self).write(vals)
-        if self._context.get('check_move_validity', True):
+        if self._context.get('check_move_validity', True) and any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
             move_ids = set()
             for line in self:
                 if line.move_id.id not in move_ids:

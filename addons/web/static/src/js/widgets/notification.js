@@ -68,6 +68,13 @@ var Notification = Widget.extend({
             self.$el.animate({height: 0}, 400, "swing", self.destroy.bind(self));
         });
     },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$el.addClass('o_error');
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers

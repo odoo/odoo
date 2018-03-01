@@ -349,9 +349,9 @@
                                         <div>
                                             <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                             <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
-                                            <a t-if="record.task_needaction_count.raw_value" class="o_needaction" name="%(act_project_project_2_project_task_all)d" type="action" context="{'search_default_message_needaction': 1}">
+                                            <button t-if="record.task_needaction_count.raw_value" class="btn-link o_needaction" name="%(act_project_project_2_project_task_all)d" type="action" context="{'search_default_message_needaction': 1}">
                                                 <t t-esc="record.task_needaction_count.raw_value"/>
-                                            </a>
+                                            </button>
                                         </div>
                                     </a>
                                 </div>

@@ -14,7 +14,7 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="xml">
 <p>Dear ${object.partner_id.name},</p>
-<p>Thank you for your payment.<br />Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${object.amount} ${object.currency_id.name}</strong> from ${object.company_id.name}.</p>
+<p>Thank you for your payment.<br />Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>
 <p>If you have any questions, please do not hesitate to contact us.</p>
 <p>Best regards,
 % if user and user.signature:
