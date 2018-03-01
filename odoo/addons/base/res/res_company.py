@@ -15,7 +15,7 @@ class Company(models.Model):
 
     @api.multi
     def copy(self, default=None):
-        raise UserError(_('Duplicate a company is not allowed. Please create a new one instead.'))
+        raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
         return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read())
