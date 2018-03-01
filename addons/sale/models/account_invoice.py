@@ -92,6 +92,11 @@ class AccountInvoice(models.Model):
     def _get_refund_common_fields(self):
         return super(AccountInvoice, self)._get_refund_common_fields() + ['team_id', 'partner_shipping_id']
 
+    def _map_tax_partner(self):
+        if self.type in ('out_invoice', 'out_refund'):
+            return self.partner_shipping_id
+        return super(AccountInvoice, self)._map_tax_partner()
+
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
     _order = 'invoice_id, layout_category_id, sequence, id'

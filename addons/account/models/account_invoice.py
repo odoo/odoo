@@ -1150,6 +1150,8 @@ class AccountInvoice(models.Model):
         ) for r in res]
         return res
 
+    def _map_tax_partner(self):
+        return self.partner_id
 
 class AccountInvoiceLine(models.Model):
     _name = "account.invoice.line"
@@ -1268,7 +1270,7 @@ class AccountInvoiceLine(models.Model):
         company_id = self.company_id or self.env.user.company_id
         taxes = taxes.filtered(lambda r: r.company_id == company_id)
 
-        self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes, self.product_id, self.invoice_id.partner_id)
+        self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes, self.product_id, self.invoice_id._map_tax_partner())
 
         fix_price = self.env['account.tax']._fix_tax_included_price
         if self.invoice_id.type in ('in_invoice', 'in_refund'):
@@ -1338,7 +1340,7 @@ class AccountInvoiceLine(models.Model):
             return
         if not self.product_id:
             fpos = self.invoice_id.fiscal_position_id
-            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids, partner=self.partner_id).ids
+            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids, partner=self.invoice_id._map_tax_partner()).ids
         elif not self.price_unit:
             self._set_taxes()
 

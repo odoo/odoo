@@ -776,9 +776,9 @@ class PurchaseOrderLine(models.Model):
         fpos = self.order_id.fiscal_position_id
         if self.env.uid == SUPERUSER_ID:
             company_id = self.env.user.company_id.id
-            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
+            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id), self.product_id, self.partner_id)
         else:
-            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id, self.product_id, self.partner_id)
 
         self._suggest_quantity()
         self._onchange_quantity()
@@ -950,7 +950,7 @@ class ProcurementOrder(models.Model):
 
         taxes = self.product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes) if fpos else taxes
+        taxes_id = fpos.map_tax(taxes, self.product_id, seller.name) if fpos else taxes
         if taxes_id:
             taxes_id = taxes_id.filtered(lambda x: x.company_id.id == self.company_id.id)
 
