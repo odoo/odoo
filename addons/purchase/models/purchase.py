@@ -327,7 +327,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_approve(self, force=False):
-        self.write({'state': 'purchase'})
+        self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
         if self.company_id.po_lock == 'lock':
             self.write({'state': 'done'})
@@ -376,7 +376,7 @@ class PurchaseOrder(models.Model):
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
 
-        self.write({'state': 'cancel'})
+        self.write({'state': 'cancel', 'date_approve': False})
 
     @api.multi
     def button_unlock(self):
