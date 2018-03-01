@@ -496,14 +496,17 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.journal',
             type: 'many2one',
             name: 'journal_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.tax',
             type: 'many2one',
             name: 'tax_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.analytic.account',
             type: 'many2one',

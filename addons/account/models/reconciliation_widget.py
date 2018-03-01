@@ -115,7 +115,7 @@ class AccountReconciliation(models.AbstractModel):
         if partner_id is None:
             partner_id = st_line.partner_id.id
 
-        domain = self._domain_move_lines_for_reconciliation(aml_accounts, partner_id, excluded_ids=excluded_ids, search_str=search_str)
+        domain = self._domain_move_lines_for_reconciliation(st_line, aml_accounts, partner_id, excluded_ids=excluded_ids, search_str=search_str)
         aml_recs = self.env['account.move.line'].search(domain, offset=offset, limit=limit, order="date_maturity desc, id desc")
         target_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.journal_id.company_id.currency_id
         return self._prepare_move_lines(aml_recs, target_currency=target_currency, target_date=st_line.date)
@@ -163,12 +163,14 @@ class AccountReconciliation(models.AbstractModel):
         sql_query = """SELECT stl.id
                         FROM account_bank_statement_line stl
                         WHERE account_id IS NULL AND stl.amount != 0.0 AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
-                            AND company_id = %s
                 """
-        params = (self.env.user.company_id.id,)
+        params = []
         if bank_statements:
             sql_query += ' AND stl.statement_id IN %s'
             params += (tuple(bank_statements.ids),)
+        else:
+            sql_query += ' AND stl.company_id = %s'
+            params += [self.env.user.company_id.id]
         sql_query += ' ORDER BY stl.id'
         self.env.cr.execute(sql_query, params)
         st_lines_left = Bank_statement_line.browse([line.get('id') for line in self.env.cr.dictfetchall()])
@@ -184,16 +186,16 @@ class AccountReconciliation(models.AbstractModel):
                             FROM account_move_line aml
                                 JOIN account_account acc ON acc.id = aml.account_id
                                 JOIN account_bank_statement_line stl ON aml.ref = stl.name
-                            WHERE (aml.company_id = %s 
-                                AND aml.partner_id IS NOT NULL) 
+                            WHERE (aml.company_id = stl.company_id
+                                AND aml.partner_id IS NOT NULL)
                                 AND (
-                                    (aml.statement_id IS NULL AND aml.account_id IN %s) 
-                                    OR 
+                                    (aml.statement_id IS NULL AND aml.account_id IN %s)
+                                    OR
                                     (acc.internal_type IN ('payable', 'receivable') AND aml.reconciled = false)
                                     )
                                 AND aml.ref IN %s
                                 """
-            params = (self.env.user.company_id.id, (st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
+            params = ((st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
             if bank_statements:
                 sql_query += 'AND stl.id IN %s'
                 params += (tuple(stl_to_assign.ids),)
@@ -402,9 +404,7 @@ class AccountReconciliation(models.AbstractModel):
                     '|', ('amount_residual', '=', -amount),
                     '|', ('amount_residual_currency', '=', -amount),
                     '&', ('account_id.internal_type', '=', 'liquidity'),
-                    '|', '|', '|', ('debit', '=', amount), ('credit', '=', amount),
-                        ('amount_currency', '=', amount),
-                        ('amount_currency', '=', -amount),
+                    '|', '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount), ('amount_currency', '=', -amount),
                 ]
                 str_domain = expression.OR([str_domain, amount_domain])
             except:
@@ -412,7 +412,7 @@ class AccountReconciliation(models.AbstractModel):
         return str_domain
 
     @api.model
-    def _domain_move_lines_for_reconciliation(self, aml_accounts, partner_id, excluded_ids=None, search_str=False):
+    def _domain_move_lines_for_reconciliation(self, st_line, aml_accounts, partner_id, excluded_ids=None, search_str=False):
         """ Return the domain for account.move.line records which can be used for bank statement reconciliation.
 
             :param aml_accounts:
@@ -465,6 +465,8 @@ class AccountReconciliation(models.AbstractModel):
                 [('id', 'not in', excluded_ids)],
                 domain
             ])
+        # filter on account.move.line having the same company as the statement line
+        domain = expression.AND([domain, [('company_id', '=', st_line.company_id.id)]])
         return domain
 
     @api.model
@@ -478,6 +480,9 @@ class AccountReconciliation(models.AbstractModel):
         if search_str:
             str_domain = self._domain_move_lines(search_str=search_str)
             domain = expression.AND([domain, str_domain])
+        # filter on account.move.line having the same company as the given account
+        account = self.env['account.account'].browse(account_id)
+        domain = expression.AND([domain, [('company_id', '=', account.company_id.id)]])
         return domain
 
     @api.model
@@ -615,6 +620,7 @@ class AccountReconciliation(models.AbstractModel):
             'amount_currency_str': amount_currency_str,  # Amount in the statement currency
             'amount_currency': amount_currency,  # Amount in the statement currency
             'has_no_partner': not st_line.partner_id.id,
+            'company_id': st_line.company_id.id,
         }
         if st_line.partner_id:
             if amount > 0:
@@ -638,7 +644,7 @@ class AccountReconciliation(models.AbstractModel):
         st_line_currency = st_line.currency_id or st_line.journal_id.currency_id
         currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
-        params = {'company_id': self.env.user.company_id.id,
+        params = {'company_id': st_line.company_id.id,
                     'account_payable_receivable': (st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id),
                     'amount': float_repr(float_round(amount, precision_digits=precision), precision_digits=precision),
                     'partner_id': st_line.partner_id.id,
@@ -663,7 +669,7 @@ class AccountReconciliation(models.AbstractModel):
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
         liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
         sql_query = st_line._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND ("+field+" = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
+                " AND (" + field + " = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND " + liquidity_field + " = " + liquidity_amt_clause + ")) \
                 ORDER BY date_maturity desc, aml.id desc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()

@@ -4,6 +4,15 @@ odoo.define('account.reconciliation_tests.data', function () {
 var Datas = {};
 
 var db = {
+    'res.company': {
+        fields: {
+            id: {string: "ID", type: 'integer'},
+            display_name: {string: "Displayed name", type: 'char'},
+        },
+        records: [
+            {id: 1, display_name: "company 1"},
+        ],
+    },
     'res.partner': {
         fields: {
             id: {string: "ID", type: 'integer'},
@@ -35,16 +44,17 @@ var db = {
             id: {string: "ID", type: 'integer'},
             code: {string: "code", type: 'integer'},
             display_name: {string: "Displayed name", type: 'char'},
+            company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
         },
         records: [
-            {id: 282, code: 100000, display_name: "100000 Fixed Asset Account"},
-            {id: 283, code: 101000, display_name: "101000 Current Assets"},
-            {id: 284, code: 101110, display_name: "101110 Stock Valuation Account"},
-            {id: 285, code: 101120, display_name: "101120 Stock Interim Account (Received)"},
-            {id: 286, code: 101130, display_name: "101130 Stock Interim Account (Delivered)"},
-            {id: 287, code: 101200, display_name: "101200 Account Receivable"},
-            {id: 288, code: 101300, display_name: "101300 Tax Paid"},
-            {id: 308, code: 101401, display_name: "101401 Bank"},
+            {id: 282, code: 100000, display_name: "100000 Fixed Asset Account", company_id: 1},
+            {id: 283, code: 101000, display_name: "101000 Current Assets", company_id: 1},
+            {id: 284, code: 101110, display_name: "101110 Stock Valuation Account", company_id: 1},
+            {id: 285, code: 101120, display_name: "101120 Stock Interim Account (Received)", company_id: 1},
+            {id: 286, code: 101130, display_name: "101130 Stock Interim Account (Delivered)", company_id: 1},
+            {id: 287, code: 101200, display_name: "101200 Account Receivable", company_id: 1},
+            {id: 288, code: 101300, display_name: "101300 Tax Paid", company_id: 1},
+            {id: 308, code: 101401, display_name: "101401 Bank", company_id: 1},
         ],
         mark_as_reconciled: function () {
             return $.when();
@@ -57,10 +67,11 @@ var db = {
             amount: {string: "amout", type: 'float'},
             price_include: {string: "Included in Price", type: 'boolean'},
             account_id: {string: "partner", type: 'many2one', relation: 'account.account'},
+            company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
         },
         records: [
-            {id: 6, display_name: "Tax 20.00%", amount: 20, price_include: false},
-            {id: 7, display_name: "Tax 10.00% include", amount: 10, price_include: true, account_id: 288},
+            {id: 6, display_name: "Tax 20.00%", amount: 20, price_include: false, company_id: 1},
+            {id: 7, display_name: "Tax 10.00% include", amount: 10, price_include: true, account_id: 288, company_id: 1},
         ],
         json_friendly_compute_all: function (args) {
             var tax = _.find(db['account.tax'].records, {'id': args[0][0]});
@@ -86,6 +97,7 @@ var db = {
         fields: {
             id: {string: "ID", type: 'integer'},
             display_name: {string: "Displayed name", type: 'char'},
+            company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
         },
         records: []
     },
@@ -117,12 +129,13 @@ var db = {
             id: {string: "ID", type: 'integer'},
             display_name: {string: "Displayed name", type: 'char'},
             partner_id: {string: "partner", type: 'many2one', relation: 'res.partner'},
+            company_id: {string: "Company", type: 'many2one', relation: 'res.company'},
         },
         records: [
-            {id: 5, display_name: "SAJ/2014/002 and SAJ/2014/003"},
-            {id: 6, display_name: "Bank fees"},
-            {id: 7, display_name: "Prepayment"},
-            {id: 8, display_name: "First 2000 \u20ac of SAJ/2014/001"},
+            {id: 5, display_name: "SAJ/2014/002 and SAJ/2014/003", company_id: 1},
+            {id: 6, display_name: "Bank fees", company_id: 1},
+            {id: 7, display_name: "Prepayment", company_id: 1},
+            {id: 8, display_name: "First 2000 \u20ac of SAJ/2014/001", company_id: 1},
         ],
     },
     'account.move.line': {
@@ -252,7 +265,8 @@ var data_widget = [
             'account_code': "101401",
             'ref': "",
             'id': 5,
-            'statement_id': 2
+            'statement_id': 2,
+            'company_id': 1,
         },
         'reconciliation_proposition': []
     },
@@ -274,7 +288,8 @@ var data_widget = [
             'account_code': "101401",
             'ref': "",
             'id': 6,
-            'statement_id': 2
+            'statement_id': 2,
+            'company_id': 1,
         },
         'reconciliation_proposition': []
     },
@@ -297,7 +312,8 @@ var data_widget = [
             'account_code': "101401",
             'ref': "",
             'id': 7,
-            'statement_id': 2
+            'statement_id': 2,
+            'company_id': 1,
         },
         'reconciliation_proposition': [
             {
@@ -343,7 +359,8 @@ var data_widget = [
             'account_code': "101401",
             'ref': "",
             'id': 8,
-            'statement_id': 2
+            'statement_id': 2,
+            'company_id': 1,
         },
         'reconciliation_proposition': []
     },
