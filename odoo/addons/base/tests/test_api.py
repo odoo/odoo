@@ -161,7 +161,7 @@ class TestAPI(common.TransactionCase):
     def test_50_environment(self):
         """ Test environment on records. """
         # partners and reachable records are attached to self.env
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
+        partners = self.env['res.partner'].search([('name', 'ilike', 'i')])
         self.assertEqual(partners.env, self.env)
         for x in (partners, partners[0], partners[0].company_id):
             self.assertEqual(x.env, self.env)
@@ -185,7 +185,7 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(p.env, self.env)
 
         # create record instances attached to demo_env
-        demo_partners = partners.sudo(demo)
+        demo_partners = partners.sudo(demo).filtered(lambda partner: partner.company_id)
         self.assertEqual(demo_partners.env, demo_env)
         for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
             self.assertEqual(x.env, demo_env)

@@ -54,6 +54,7 @@
             <field name="phone">(623)-853-7197</field>
             <field name="website">http://www.wood-corner.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_1-image.png"/>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_2" model="res.partner">
             <field name="name">Deco Addict</field>
@@ -68,6 +69,7 @@
             <field name="phone">(603)-996-3829</field>
             <field name="website">http://www.deco-addict.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_2-image.png"/>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_3" model="res.partner">
             <field name="name">Gemini Furniture</field>
@@ -83,8 +85,9 @@
             <field name="phone">(941)-284-4875</field>
             <field name="website">http://www.gemini-furniture.com/</field>
             <field name="image" type="base64" file="base/static/img/res_partner_3-image.png"/>
+            <field name="company_id"/>
         </record>
-        
+
         <record id="res_partner_4" model="res.partner">
             <field name="name">Ready Mat</field>
             <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
@@ -100,6 +103,7 @@
             <field name="phone">(803)-873-6126</field>
             <field name="website">http://www.ready-mat.com/</field>
             <field name="image" type="base64" file="base/static/img/res_partner_4-image.png"/>
+            <field name="company_id"/>
         </record>
 
         <record id="res_partner_10" model="res.partner">
@@ -113,8 +117,9 @@
             <field name="email">jackson.group82@example.com</field>
             <field name="phone">(334)-502-1024</field>
             <field name="image" type="base64" file="base/static/img/res_partner_10-image.jpg"/>
+            <field name="company_id"/>
         </record>
-  
+
         <record id="res_partner_12" model="res.partner">
             <field name="name">Azure Interior</field>
             <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
@@ -130,6 +135,7 @@
             <field name="email">azure.Interior24@example.com</field>
             <field name="website">http://www.azure-interior.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_12-image.png"/>
+            <field name="company_id"/>
         </record>
 
         <record id="res_partner_18" model="res.partner">
@@ -144,6 +150,7 @@
             <field name="country_id" ref="base.us"/>
             <field name="website">http://www.lumber-inc.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_18-image.png"/>
+            <field name="company_id"/>
         </record>
 
         <record id="res_partner_address_1" model="res.partner">
@@ -154,6 +161,7 @@
             <field name="phone">(846)-523-2111</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_2" model="res.partner">
             <field name="name">Ron Gibson</field>
@@ -163,6 +171,7 @@
             <field name="phone">(976)-397-4091</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_3" model="res.partner">
             <field name="name">Douglas Fletcher</field>
@@ -170,6 +179,7 @@
             <field name="function">Functional Consultant</field>
             <field name="email">douglas.fletcher51@example.com</field>
             <field name="phone">(132)-553-7242</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_4" model="res.partner">
             <field name="name">Floyd Steward</field>
@@ -177,6 +187,7 @@
             <field name="function">Analyst</field>
             <field name="email">floyd.steward34@example.com</field>
             <field name="phone">(145)-138-3401</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_5" model="res.partner">
             <field name="name">Edwin Hansen</field>
@@ -184,6 +195,7 @@
             <field name="function">Marketing Manager</field>
             <field name="email">edwin.hansen58@example.com</field>
             <field name="phone">(943)-352-2555</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_7" model="res.partner">
             <field name="name">Billy Fox</field>
@@ -193,6 +205,7 @@
             <field name="phone">(915)-498-5611</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_10" model="res.partner">
             <field name="name">Jesse Brown</field>
@@ -200,6 +213,7 @@
             <field name="function">Senior Consultant</field>
             <field name="email">jesse.brown74@example.com</field>
             <field name="phone">(829)-386-3277</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_11" model="res.partner">
             <field name="name">Soham Palmer</field>
@@ -207,6 +221,7 @@
             <field name="function">Director</field>
             <field name="email">soham.palmer15@example.com</field>
             <field name="phone">(379)-167-2040</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_13" model="res.partner">
             <field name="name">Kim Snyder</field>
@@ -214,6 +229,7 @@
             <field name="function">Senior Associate</field>
             <field name="email">kim.snyder96@example.com</field>
             <field name="phone">(215)-379-4865</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_14" model="res.partner">
             <field name="name">Edith Sanchez</field>
@@ -221,6 +237,7 @@
             <field name="function">Analyst</field>
             <field name="email">edith.sanchez68@example.com</field>
             <field name="phone">(938)-175-2048</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_15" model="res.partner">
             <field name="name">Brandon Freeman</field>
@@ -228,6 +245,7 @@
             <field name="parent_id" eval="ref('res_partner_12')"/>
             <field name="email">brandon.freeman55@example.com</field>
             <field name="phone">(355)-687-3262</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_16" model="res.partner">
             <field name="name">Nicole Ford</field>
@@ -235,6 +253,7 @@
             <field name="parent_id" eval="ref('res_partner_12')"/>
             <field name="email">nicole.ford75@example.com</field>
             <field name="phone">(946)-638-6034</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_17" model="res.partner">
             <field name="name">Toni Rhodes</field>
@@ -242,6 +261,7 @@
             <field name="parent_id" eval="ref('res_partner_10')"/>
             <field name="email">toni.rhodes11@example.com</field>
             <field name="phone">(198)-539-4948</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_18" model="res.partner">
             <field name="name">Gordon Owens</field>
@@ -249,6 +269,7 @@
             <field name="parent_id" eval="ref('res_partner_10')"/>
             <field name="email">gordon.owens47@example.com</field>
             <field name="phone">(336)-723-6569</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_24" model="res.partner">
             <field name="name">Theodore Gardner</field>
@@ -256,6 +277,7 @@
             <field name="parent_id" eval="ref('res_partner_4')"/>
             <field name="email">theodore.gardner36@example.com</field>
             <field name="phone">(186)-612-6561</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_25" model="res.partner">
             <field name="name">Oscar Morgan</field>
@@ -263,6 +285,7 @@
             <field name="function">Order Clerk</field>
             <field name="email">oscar.morgan11@example.com</field>
             <field name="phone">(561)-239-1744</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_27" model="res.partner">
             <field name="name">Tom Ruiz</field>
@@ -272,6 +295,7 @@
             <field name="email">tom.ruiz89@example.com</field>
             <field name="phone">(102)-834-1602</field>
             <field eval="0" name="customer"/>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_28" model="res.partner">
             <field name="name">Colleen Diaz</field>
@@ -279,6 +303,7 @@
             <field name="parent_id" eval="ref('res_partner_12')"/>
             <field name="email">colleen.diaz83@example.com</field>
             <field name="phone">(255)-595-8393</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_30" model="res.partner">
             <field name="name">Lorraine Douglas</field>
@@ -286,6 +311,7 @@
             <field name="parent_id" eval="ref('res_partner_18')"/>
             <field name="email">lorraine.douglas35@example.com</field>
             <field name="phone">(443)-648-9155</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_31" model="res.partner">
             <field name="name">Addison Olson</field>
@@ -295,6 +321,7 @@
             <field name="phone">(223)-399-7637</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_32" model="res.partner">
             <field name="name">Sandra Neal</field>
@@ -302,6 +329,7 @@
             <field name="function">Sales Manager</field>
             <field name="email">sandra.neal80@example.com</field>
             <field name="phone">(430)-371-7293</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_33" model="res.partner">
             <field name="name">Julie Richards</field>
@@ -309,6 +337,7 @@
             <field name="function">Financial Manager</field>
             <field name="email">julie.richards84@example.com</field>
             <field name="phone">(225)-148-7811</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_address_34" model="res.partner">
             <field name="name">Travis Mendoza</field>
@@ -316,6 +345,7 @@
             <field name="function">Knowledge Manager</field>
             <field name="email">travis.mendoza24@example.com</field>
             <field name="phone">(840)-944-8661</field>
+            <field name="company_id"/>
         </record>
         <record id="res_partner_main1" model="res.partner">
             <field name="name">Chester Reed</field>
