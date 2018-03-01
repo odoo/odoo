@@ -31,20 +31,7 @@ class AccountClosing(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True, related='company_id.currency_id', store=True)
 
     @api.model
-    def _prepare_query(self, company, first_move_sequence_number, date_start):
-        query = '''
-            SELECT
-            FROM account_move_line aml
-            LEFT JOIN account_journal j ON aml.journal_id = j.id
-            LEFT JOIN account_account acc ON acc.id = aml.account_id
-            LEFT JOIN account_move m ON m.id = aml.move_id
-            WHERE j.type = 'sale'
-                AND aml.company_id = %s
-                AND m.state = 'posted'
-                AND acc.user_type_id = %s
-        '''
-        params = [company.id, self.env.ref('account.data_account_type_revenue').id]
-
+    def _query_get_closing(self, query, params, first_move_sequence_number, date_start):
         if first_move_sequence_number is not False and first_move_sequence_number is not None:
             query = query.replace('WHERE', 'WHERE m.l10n_fr_secure_sequence_number > %s AND')
             params = [first_move_sequence_number] + params
@@ -64,19 +51,28 @@ class AccountClosing(models.Model):
         :param date_start:                  The create date of the last processed move.
         :return: The last move_id as a python dictionary.
         '''
-        query, params = self._prepare_query(company, first_move_sequence_number, date_start)
-
-        select_query = 'SELECT m.id AS id, m.l10n_fr_hash AS hash'
-        orderby_query = 'ORDER BY m.l10n_fr_secure_sequence_number DESC LIMIT 1'
-
-        query = query.replace('SELECT', select_query) + orderby_query
-
-        self.env.cr.execute(query, params)
+        query = '''
+            SELECT
+                m.id AS id,
+                m.date AS date,
+                m.l10n_fr_hash AS hash
+            FROM account_move_line aml
+                LEFT JOIN account_journal j ON aml.journal_id = j.id
+                LEFT JOIN account_account acc ON acc.id = aml.account_id
+                LEFT JOIN account_move m ON m.id = aml.move_id
+            WHERE j.type = 'sale'
+                AND aml.company_id = %s
+                AND m.state = 'posted'
+                AND acc.user_type_id = %s
+            ORDER BY m.l10n_fr_secure_sequence_number DESC LIMIT 1
+        '''
+        params = [company.id, self.env.ref('account.data_account_type_revenue').id]
+        self.env.cr.execute(*self._query_get_closing(query, params, first_move_sequence_number, date_start))
         res = self.env.cr.dictfetchall()
         return res and res[0] or None
 
     @api.model
-    def _do_query_groupby_taxes(self, company, first_move_sequence_number, date_start):
+    def _do_query_groupby_taxes(self, company, first_move_sequence_number, date_start, date_end=None):
         ''' Retrieve the values for account.sale.closing records creation by
         grouping the balance of sales operations for each tax.
 
@@ -106,24 +102,29 @@ class AccountClosing(models.Model):
         :param date_start:                  The create date of the last processed move.
         :return: The result of the query as a python dictionaries list.
         '''
-        query, params = self._prepare_query(company, first_move_sequence_number, date_start)
-
-        select_query = '''
+        query = '''
             SELECT
                 SUM(ABS(aml.balance)) AS balance,
                 tax.id,
                 tax.name
+            FROM account_move_line aml
+                LEFT JOIN account_journal j ON aml.journal_id = j.id
+                LEFT JOIN account_account acc ON acc.id = aml.account_id
+                LEFT JOIN account_move m ON m.id = aml.move_id
+                LEFT JOIN account_move_line_account_tax_rel taxrel ON aml.id = taxrel.account_move_line_id
+                LEFT JOIN account_tax tax ON taxrel.account_tax_id = tax.id
+            WHERE j.type = 'sale'
+                AND aml.company_id = %s
+                AND m.state = 'posted'
+                AND acc.user_type_id = %s
+            GROUP BY tax.id, tax.name
         '''
-        leftjoin_query = '''
-            LEFT JOIN account_move_line_account_tax_rel taxrel ON aml.id = taxrel.account_move_line_id
-            LEFT JOIN account_tax tax ON taxrel.account_tax_id = tax.id
-        '''
+        params = [company.id, self.env.ref('account.data_account_type_revenue').id]
 
-        groupby_query = 'GROUP BY tax.id, tax.name'
-
-        query = query.replace('SELECT', select_query).replace('WHERE', leftjoin_query + ' WHERE') + groupby_query
-
-        self.env.cr.execute(query, params)
+        if date_end:
+            query = query.replace('WHERE', 'WHERE m.date <= %s AND')
+            params = [date_end] + params
+        self.env.cr.execute(*self._query_get_closing(query, params, first_move_sequence_number, date_start))
         return self.env.cr.dictfetchall()
 
     @api.model
@@ -150,10 +151,14 @@ class AccountClosing(models.Model):
             date_start = previous_closing.create_date
             cumulative_total += previous_closing.cumulative_total
 
-        # Fetch the last move
-        last_move_vals = self._do_query_last_move_id(company, first_move.l10n_fr_secure_sequence_number, date_start)
+        secure_seq_number = first_move.l10n_fr_secure_sequence_number
 
-        taxes_vals = self._do_query_groupby_taxes(company, first_move.l10n_fr_secure_sequence_number, date_start)
+        # Fetch the last move
+        last_move_vals = self._do_query_last_move_id(company, secure_seq_number, date_start)
+
+        date_end = last_move_vals and last_move_vals['date']
+
+        taxes_vals = self._do_query_groupby_taxes(company, secure_seq_number, date_start, date_end=date_end)
 
         account_closings = self.env['account.sale.closing']
         for query_vals in taxes_vals:

@@ -50,13 +50,19 @@ class ResCompany(models.Model):
         :param fields:          A list of string containing the fields names to export.
         :return:                The bytes representing the content of the CSV.
         '''
-        output = io.BytesIO()
+        def replace_delimiter(value, delimiter):
+            # Avoid having the delimiter in a value
+            if value and isinstance(value, pycompat.string_types):
+                return value.replace(delimiter, '-')
+            return value
 
-        writer = pycompat.csv_writer(output, delimiter=',')
+        delimiter = ';'
+        output = io.BytesIO()
+        writer = pycompat.csv_writer(output, delimiter=delimiter)
 
         writer.writerow(fields)
         for vals in records_vals:
-            row = [isinstance(vals[f], unicode) and vals[f].encode('utf-8') or vals[f] for f in fields]
+            row = [replace_delimiter(vals[f], delimiter) for f in fields]
             writer.writerow(row)
 
         csv_content = output.getvalue()
@@ -74,27 +80,54 @@ class ResCompany(models.Model):
         # Filename
         filename = 'archive_journal_items.csv'
 
-        # Fields
-        fields = ['id', 'name', 'quantity', 'product_uom_id', 'product_id', 'debit', 'credit', 'balance',
-                  'debit_cash_basis', 'credit_cash_basis', 'balance_cash_basis', 'amount_currency',
-                  'company_currency_id', 'currency_id', 'amount_residual', 'amount_residual_currency',
-                  'tax_base_amount', 'account_id', 'move_id', 'ref', 'payment_id', 'statement_line_id',
-                  'statement_id', 'reconciled', 'full_reconcile_id', 'date_maturity', 'date', 'tax_line_id',
-                  'analytic_account_id', 'partner_id', 'user_type_id', 'tax_exigible', 'create_date']
+        # Mapping headers -> fields
+        fields = ['id', 'ref', 'create_date', 'date', 'debit', 'credit', 'balance',
+                  'debit_cash_basis', 'credit_cash_basis', 'balance_cash_basis',
+                  'amount_currency', 'currency_name', 'tax_name', 'partner', 'product_name',
+                  'quantity', 'unit_of_measure', 'account', 'reconciled', 'reconciliation']
 
         # Query
-        select = 'SELECT %s ' % ', '.join('line.%s AS %s' % (f, f) for f in fields)
-        query = """
+        query = '''
+            SELECT
+                line.id AS id,
+                line.ref AS ref,
+                line.create_date AS create_date,
+                line.date AS date,
+                line.debit AS debit,
+                line.credit AS credit,
+                line.balance AS balance,
+                line.debit_cash_basis AS debit_cash_basis,
+                line.credit_cash_basis AS credit_cash_basis,
+                line.balance_cash_basis AS balance_cash_basis,
+                line.amount_currency AS amount_currency,
+                currency.name AS currency_name,
+                tax.name AS tax_name,
+                partner.name AS partner,
+                template.name AS product_name,
+                line.quantity AS quantity,
+                uom.name AS unit_of_measure,
+                account.name AS account,
+                line.reconciled AS reconciled,
+                rec.name AS reconciliation
             FROM account_move_line line
             LEFT JOIN account_move move ON move.id = line.move_id
+            LEFT JOIN res_currency currency ON currency.id = line.currency_id
+            LEFT JOIN account_tax tax ON tax.id = line.tax_line_id
+            LEFT JOIN account_account account ON account.id = line.account_id
+            LEFT JOIN uom_uom uom ON uom.id = line.product_uom_id
+            LEFT JOIN product_product product ON product.id = line.product_id
+            LEFT JOIN product_template template ON template.id = product.product_tmpl_id
+            LEFT JOIN account_full_reconcile rec ON rec.id = line.full_reconcile_id
+            LEFT JOIN res_partner partner ON partner.id = line.partner_id
             WHERE move.state = 'posted'
-            AND line.date <= %s
-            AND line.company_id = %s
-            AND line.journal_id = %s
+                AND line.date <= %s
+                AND line.company_id = %s
+                AND line.journal_id = %s
             ORDER BY line.id
-        """
+        '''
         params = [self.fiscalyear_lock_date, self.id, self.env.ref('point_of_sale.pos_sale_journal').id]
-        self._cr.execute(select + query, params)
+
+        self._cr.execute(query, params)
         return filename, self._l10n_fr_compute_csv_archive_content(self._cr.dictfetchall(), fields)
 
     @api.multi
@@ -108,21 +141,32 @@ class ResCompany(models.Model):
         # Filename
         filename = 'archive_post_order_lines.csv'
 
-        # Fields
-        fields = ['id', 'name', 'notice', 'product_id', 'price_unit', 'qty', 'discount', 'order_id', 'create_date']
+        # Mapping headers -> fields
+        fields = ['id', 'name', 'create_date', 'product_name', 'price_unit', 'quantity', 'discount', 'order_name']
 
         # Query
-        select = 'SELECT %s ' % ', '.join('line.%s AS %s' % (f, f) for f in fields)
-        query = """
+        query = '''
+            SELECT
+                line.id AS id,
+                line.name AS name,
+                line.create_date AS create_date,
+                template.name AS product_name,
+                line.price_unit AS price_unit,
+                line.qty AS quantity,
+                line.discount AS discount,
+                ord.name AS order_name
             FROM pos_order_line line
             LEFT JOIN pos_order ord ON ord.id = line.order_id
+            LEFT JOIN product_product product ON product.id = line.product_id
+            LEFT JOIN product_template template ON template.id = product.product_tmpl_id
             WHERE ord.state in ('paid', 'done', 'invoiced')
             AND line.create_date <= %s
             AND line.company_id = %s
             ORDER BY line.id
-        """
+        '''
         params = [self.fiscalyear_lock_date, self.id]
-        self._cr.execute(select + query, params)
+
+        self._cr.execute(query, params)
         return filename, self._l10n_fr_compute_csv_archive_content(self._cr.dictfetchall(), fields)
 
     @api.multi
@@ -136,20 +180,35 @@ class ResCompany(models.Model):
         # Filename
         filename = 'archive_account_sale_closing.csv'
 
-        # Fields
-        fields = ['id', 'name', 'date_closing_stop', 'date_closing_start', 'frequency', 'total_interval',
-                  'cumulative_total', 'sequence_number', 'last_move_id', 'last_move_hash', 'currency_id', 'create_date']
+        # Mapping headers -> fields
+        fields = ['id', 'name', 'create_date', 'date_start', 'date_close', 'frequency', 'total_interval',
+                  'cumulative_total', 'sequence_number', 'last_move_name', 'last_move_hash', 'currency_name']
 
         # Query
-        select = 'SELECT %s ' % ', '.join('closing.%s AS %s' % (f, f) for f in fields)
-        query = """
+        query = '''
+            SELECT
+                closing.id AS id,
+                closing.name AS name,
+                closing.create_date AS create_date,
+                closing.date_closing_start AS date_start,
+                closing.date_closing_stop AS date_close,
+                closing.frequency AS frequency,
+                closing.total_interval AS total_interval,
+                closing.cumulative_total AS cumulative_total,
+                closing.sequence_number AS sequence_number,
+                move.name AS last_move_name,
+                closing.last_move_hash AS last_move_hash,
+                currency.name AS currency_name
             FROM account_sale_closing closing
+            LEFT JOIN account_move move ON move.id = closing.last_move_id
+            LEFT JOIN res_currency currency ON currency.id = closing.currency_id
             WHERE closing.create_date <= %s
             AND closing.company_id = %s
             ORDER BY closing.id
-        """
+        '''
         params = [self.fiscalyear_lock_date, self.id]
-        self._cr.execute(select + query, params)
+
+        self._cr.execute(query, params)
         return filename, self._l10n_fr_compute_csv_archive_content(self._cr.dictfetchall(), fields)
 
     @api.model
@@ -199,5 +258,4 @@ class ResCompany(models.Model):
             message = _('Point of Sale data archived:')
             message += '<ul><li>%s: %s</li></ul>' % (_('Date'), now.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
 
-            company.partner_id.message_post(
-                body=message, subtype='l10n_fr_pos_cert.archive_posted', attachment_ids = [attachment.id])
+            company.partner_id.message_post(body=message, attachment_ids=[attachment.id])
