@@ -441,3 +441,15 @@ class ResPartner(models.Model):
         action['domain'] = literal_eval(action['domain'])
         action['domain'].append(('partner_id', 'child_of', self.id))
         return action
+
+    def can_edit_vat(self):
+        can_edit_vat = super(ResPartner, self).can_edit_vat()
+        if not can_edit_vat:
+            return can_edit_vat
+        Invoice = self.env['account.invoice']
+        has_invoice = Invoice.search([
+            ('type', 'in', ['out_invoice', 'out_refund']),
+            ('partner_id', 'child_of', self.commercial_partner_id.id),
+            ('state', 'not in', ['draft', 'cancel'])
+        ], limit=1)
+        return can_edit_vat and not (bool(has_invoice))

@@ -139,12 +139,14 @@ class PortalAccount(CustomerPortal):
         error, error_message = super(PortalAccount, self).details_form_validate(data)
         # prevent VAT/name change if invoices exist
         partner = request.env['res.users'].browse(request.uid).partner_id
-        invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
-        if invoices:
+        if not partner.can_edit_vat():
             if 'vat' in data and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
             if 'name' in data and (data['name'] or False) != (partner.name or False):
                 error['name'] = 'error'
                 error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+            if 'company_name' in data and (data['company_name'] or False) != (partner.company_name or False):
+                error['company_name'] = 'error'
+                error_message.append(_('Changing your company name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
         return error, error_message
