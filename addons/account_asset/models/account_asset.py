@@ -511,11 +511,11 @@ class AccountAssetDepreciationLine(models.Model):
         return [x.id for x in created_moves]
 
     def _prepare_move(self, line):
-        prec = self.env['decimal.precision'].precision_get('Account')
         category_id = line.asset_id.category_id
         depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
         company_currency = line.asset_id.company_id.currency_id
         current_currency = line.asset_id.currency_id
+        prec = company_currency.decimal_places
         amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
         asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
         move_line_1 = {
