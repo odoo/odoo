@@ -976,6 +976,9 @@ var SelectCreateListView = ListView.extend({
  * Search dialog (displays a list of records and permits to create a new one by switching to a form view)
  */
 var SelectCreateDialog = ViewDialog.extend({
+    custom_events: {
+        get_controller_context: '_onGetControllerContext',
+    },
     /**
      * options:
      * - initial_ids
@@ -1106,6 +1109,23 @@ var SelectCreateDialog = ViewDialog.extend({
         return new FormViewDialog(this.__parentedParent, this.options).open();
     },
     on_view_list_loaded: function() {},
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles a context request: provides to the caller the context of the
+     * list view.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested context
+     */
+    _onGetControllerContext: function (ev) {
+        var context = this.view_list.get_context();
+        ev.data.callback(context);
+    },
 });
 
 var DomainEditorDialog = SelectCreateDialog.extend({
