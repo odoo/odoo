@@ -1,8 +1,9 @@
 odoo.define('web.view_dialogs_tests', function (require) {
 "use strict";
 
-var testUtils = require('web.test_utils');
 var dialogs = require('web.view_dialogs');
+var ListController = require('web.ListController');
+var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
 QUnit.module('Views', {
@@ -241,6 +242,63 @@ QUnit.module('Views', {
         parent.destroy();
     });
 
+    QUnit.test('SelectCreateDialog: save current search', function (assert) {
+        assert.expect(4);
+
+        testUtils.patch(ListController, {
+            getContext: function () {
+                return {
+                    shouldBeInFilterContext: true,
+                };
+            },
+        });
+
+        var parent = createParent({
+            data: this.data,
+            archs: {
+                'partner,false,list':
+                    '<tree>' +
+                        '<field name="display_name"/>' +
+                    '</tree>',
+                'partner,false,search':
+                    '<search>' +
+                       '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', True)]"/>' +
+                    '</search>',
+
+            },
+            intercepts: {
+                create_filter: function (event) {
+                    var filter = event.data.filter;
+                    assert.deepEqual(filter.domain, [['bar', '=', true]],
+                        "should save the correct domain");
+                    assert.deepEqual(filter.context, {shouldBeInFilterContext: true},
+                        "should save the correct context");
+                },
+            },
+        });
+
+        var dialog = new dialogs.SelectCreateDialog(parent, {
+            context: {shouldNotBeInFilterContext: false},
+            res_model: 'partner',
+        }).open();
+
+        assert.strictEqual(dialog.$('.o_data_row').length, 3,
+            "should contain 3 records");
+
+        // filter on bar
+        dialog.$('.o_filters_menu a:contains(Bar)').click();
+
+        assert.strictEqual(dialog.$('.o_data_row').length, 2,
+            "should contain 2 records");
+
+        // save filter
+        dialog.$('.o_save_search a').click(); // toggle 'Save current search'
+        dialog.$('.o_save_name input[type=text]').val('some name'); // name the filter
+        dialog.$('.o_save_name button').click(); // click on 'Save'
+
+        testUtils.unpatch(ListController);
+        parent.destroy();
+    });
 });
 
 });

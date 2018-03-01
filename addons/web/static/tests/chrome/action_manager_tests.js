@@ -5,6 +5,7 @@ var ReportClientAction = require('report.client_action');
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var ListController = require('web.ListController');
 var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -2344,6 +2345,70 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read',
         ]);
 
+        actionManager.destroy();
+    });
+
+    QUnit.test('save current search', function (assert) {
+        assert.expect(4);
+
+        testUtils.patch(ListController, {
+            getContext: function () {
+                return {
+                    shouldBeInFilterContext: true,
+                };
+            },
+        });
+
+        _.extend(this.archs, {
+            'partner,7,search':
+                '<search>' +
+                   '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
+                '</search>',
+        });
+
+        this.actions.push({
+            id: 33,
+            context: {
+                shouldNotBeInFilterContext: false,
+            },
+            name: 'Partners',
+            res_model: 'partner',
+            search_view_id: [7, 'a custom search view'],
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                create_filter: function (event) {
+                    var filter = event.data.filter;
+                    assert.deepEqual(filter.domain, [['bar', '=', 1]],
+                        "should save the correct domain");
+                    assert.deepEqual(filter.context, {shouldBeInFilterContext: true},
+                        "should save the correct context");
+                },
+            },
+        });
+        actionManager.doAction(33);
+
+        assert.strictEqual(actionManager.$('.o_data_row').length, 5,
+            "should contain 5 records");
+
+        // filter on bar
+        $('.o_control_panel .o_filters_menu a:contains(Bar)').click();
+
+        assert.strictEqual(actionManager.$('.o_data_row').length, 2,
+            "should contain 2 records");
+
+        // save filter
+        $('.o_control_panel .o_save_search a').click(); // toggle 'Save current search'
+        $('.o_control_panel .o_save_name input[type=text]').val('some name'); // name the filter
+        $('.o_control_panel .o_save_name button').click(); // click on 'Save'
+
+        testUtils.unpatch(ListController);
         actionManager.destroy();
     });
 
