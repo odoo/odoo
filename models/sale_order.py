@@ -1,14 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, _
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _get_order_lines_untaxed_amount(self):
-        """ Returns the untaxed sale order total amount without the rewards and shipping amount"""
-        return sum([x.price_subtotal for x in self.order_line.filtered(lambda x: not (x.is_reward_line or x.is_delivery))])
+    def _get_no_effect_on_threshold_lines(self):
+        self.ensure_one()
+        # Do not count shipping and free shipping
+        free_delivery_product = self.env['sale.coupon.program'].search([('reward_type', '=', 'free_shipping')]).mapped('discount_line_product_id')
+        lines = self.order_line.filtered(lambda line: line.is_delivery or line.product_id in free_delivery_product)
+        return lines + super(SaleOrder, self)._get_no_effect_on_threshold_lines()
+
+    def _get_order_lines_tax_included_amount(self):
+        """ Returns the taxes included sale order total amount without the rewards amount"""
+        free_reward_product = self.env['sale.coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
+        return sum([x.price_total for x in self.order_line.filtered(lambda x: not (x.is_reward_line or x.is_delivery) or x.product_id in free_reward_product)])
 
     def _get_reward_line_values(self, program):
         if program.reward_type == 'free_shipping':
@@ -22,7 +30,7 @@ class SaleOrder(models.Model):
         if self.fiscal_position_id:
             taxes = self.fiscal_position_id.map_tax(taxes)
         return {
-            'name': "Discount: %s" % (program.name),
+            'name': _("Discount: ") + program.name,
             'product_id': program.discount_line_product_id.id,
             'price_unit': delivery_line and - delivery_line.price_unit or 0.0,
             'product_uom_qty': 1.0,
