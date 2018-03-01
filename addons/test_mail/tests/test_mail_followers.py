@@ -91,7 +91,21 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
-        self.assertEqual(test_record.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_admin.partner_id).subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+        self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+
+    def test_followers_multiple_subscription_noforce(self):
+        test_record = self.test_record.sudo(self.user_employee)
+
+        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
+        self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
+        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
+        self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+
+        # set new subtypes with force=False, meaning no rewriting of the subscription is done -> result should not change
+        test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], force=False)
+        self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
+        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
+        self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_no_DID(self):
         """Test that a follower cannot suffer from dissociative identity disorder.
