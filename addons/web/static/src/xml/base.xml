@@ -381,7 +381,8 @@
             t-att-data-field="column.id"
             ><t t-raw="render_cell(record, column)"/></td>
     </t>
-    <td t-if="options.deletable" class='o_list_record_delete'>
+    <!-- DO NOT FORWARDPORT, ONLY FOR SAAS-15 -->
+    <td t-if="options.deletable || typeof record.attributes.id !== 'number'" class='o_list_record_delete'>
         <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
