@@ -590,6 +590,7 @@ class WebsiteSale(http.Controller):
             return redirection
 
         mode = (False, False)
+        can_edit_vat = False
         def_country_id = order.partner_id.country_id
         values, errors = {}, {}
 
@@ -598,6 +599,7 @@ class WebsiteSale(http.Controller):
         # IF PUBLIC ORDER
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             mode = ('new', 'billing')
+            can_edit_vat = True
             country_code = request.session['geoip'].get('country_code')
             if country_code:
                 def_country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1)
@@ -608,6 +610,7 @@ class WebsiteSale(http.Controller):
             if partner_id > 0:
                 if partner_id == order.partner_id.id:
                     mode = ('edit', 'billing')
+                    can_edit_vat = order.partner_id.can_edit_vat()
                 else:
                     shippings = Partner.search([('id', 'child_of', order.partner_id.commercial_partner_id.ids)])
                     if partner_id in shippings.mapped('id'):
@@ -651,6 +654,7 @@ class WebsiteSale(http.Controller):
             'partner_id': partner_id,
             'mode': mode,
             'checkout': values,
+            'can_edit_vat': can_edit_vat,
             'country': country,
             'countries': country.get_website_sale_countries(mode=mode[1]),
             "states": country.get_website_sale_states(mode=mode[1]),

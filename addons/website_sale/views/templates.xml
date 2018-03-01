@@ -1161,14 +1161,14 @@
                                         <input type="tel" name="phone" class="form-control" t-att-value="'phone' in checkout and checkout['phone']" />
                                     </div>
                                     <div class="clearfix" />
-                                    <t t-if="mode == ('new', 'billing')">
+                                    <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
                                         <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-md-6">
                                             <label class="control-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                                            <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" />
+                                            <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                                         </div>
                                         <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-md-6 div_vat">
                                             <label class="control-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
-                                            <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" />
+                                            <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                                         </div>
                                     </t>
                                     <div class="clearfix" />
