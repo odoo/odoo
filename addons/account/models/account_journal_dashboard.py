@@ -7,6 +7,8 @@ from odoo import models, api, _, fields
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang
+from odoo.exceptions import UserError
+
 
 class account_journal(models.Model):
     _inherit = "account.journal"
@@ -294,6 +296,9 @@ class account_journal(models.Model):
     @api.multi
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:
+            if len(self.mapped('company_id').ids) > 1:
+                raise UserError(
+                        _('All journals should be of the same company.'))
             # Open reconciliation view for bank statements belonging to this journal
             bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)])
             return {
