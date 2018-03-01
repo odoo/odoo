@@ -606,7 +606,7 @@ class StockMove(models.Model):
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
 
         if self.company_id.anglo_saxon_accounting:
-            self._get_related_invoices().anglo_saxon_reconcile_valuation()
+            self._get_related_invoices().anglo_saxon_reconcile_valuation(self)
 
     def _get_related_invoices(self): # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt
