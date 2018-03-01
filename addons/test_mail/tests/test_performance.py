@@ -192,6 +192,10 @@ class TestHeavyMailPerformance(TransactionCase):
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', 'test-catchall')
         self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'test-bounce')
 
+        self.channel = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
+            'name': 'Listener',
+        })
+
         # prepare recipients to test for more realistic workload
         self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
             'name': 'Test Customer',
@@ -265,6 +269,59 @@ class TestHeavyMailPerformance(TransactionCase):
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
         self.assertEqual(record.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id | self.customer)
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('admin', 'emp')
+    @warmup
+    def test_complex_message_subscribe(self):
+        pids = self.partners.ids
+        cids = self.channel.ids
+        subtypes = self.env.ref('mail.mt_comment') | self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
+        subtype_ids = subtypes.ids
+        rec = self.env['mail.test.full'].create({
+            'name': 'Test',
+            'umbrella_id': False,
+            'customer_id': False,
+            'user_id': self.user_portal.id,
+        })
+
+        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id)
+        self.assertEqual(rec.message_channel_ids, self.env['mail.channel'])
+
+        # subscribe new followers with forced given subtypes
+        with self.assertQueryCount(admin=20, emp=21):  # test_mail only: 20 - 21
+            rec.message_subscribe(
+                partner_ids=pids[:4],
+                channel_ids=cids,
+                subtype_ids=subtype_ids,
+            )
+
+        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:4])
+        self.assertEqual(rec.message_channel_ids, self.channel)
+
+        # subscribe existing and new followers with force=False, meaning only some new followers will be added
+        with self.assertQueryCount(admin=11, emp=12):  # test_mail only: 11 - 12
+            rec.message_subscribe(
+                partner_ids=pids[:6],
+                channel_ids=cids,
+                subtype_ids=None,
+                force=False,
+            )
+
+        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:6])
+        self.assertEqual(rec.message_channel_ids, self.channel)
+
+        # subscribe existing and new followers with force=True, meaning all will have the same subtypes
+        with self.assertQueryCount(admin=48, emp=49):  # test_mail only: 48 - 49
+            rec.message_subscribe(
+                partner_ids=pids,
+                channel_ids=cids,
+                subtype_ids=subtype_ids,
+                force=True,
+            )
+
+        self.assertEqual(rec.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners)
+        self.assertEqual(rec.message_channel_ids, self.channel)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'emp')
