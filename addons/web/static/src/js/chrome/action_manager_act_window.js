@@ -21,6 +21,7 @@ ActionManager.include({
     custom_events: _.extend({}, ActionManager.prototype.custom_events, {
         env_updated: '_onEnvUpdated',
         execute_action: '_onExecuteAction',
+        get_controller_context: '_onGetControllerContext',
         search: '_onSearch',
         switch_view: '_onSwitchView',
     }),
@@ -714,6 +715,20 @@ ActionManager.include({
             var options = {on_close: ev.data.on_closed};
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
+    },
+    /**
+     * Handles a context request: provides to the caller the context of the
+     * current controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested context
+     */
+    _onGetControllerContext: function (ev) {
+        ev.stopPropagation();
+        var currentController = this.getCurrentController();
+        var context = currentController && currentController.widget.getContext();
+        ev.data.callback(context || {});
     },
     /**
      * Called when there is a change in the search view, so the current action's

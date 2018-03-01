@@ -68,6 +68,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
                 .load_filters(event.data.dataset, event.data.action_id)
                 .then(event.data.on_success);
         },
+        create_filter: '_onCreateFilter',
         push_state: '_onPushState',
         show_effect: '_onShowEffect',
         // session
@@ -337,6 +338,18 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {OdooEvent} e
+     * @param {Object} e.data.filter the filter description
+     * @param {function} e.data.on_success called when the RPC succeeds with its
+     *   returned value as argument
+     */
+    _onCreateFilter: function (e) {
+        data_manager
+            .create_filter(e.data.filter)
+            .then(e.data.on_success);
+    },
     /**
      * Displays a warning in a dialog of with the NotificationManager
      *
