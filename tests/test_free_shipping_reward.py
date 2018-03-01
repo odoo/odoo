@@ -116,7 +116,8 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "We should get the 10% discount line since we bought 872.73$")
         order.carrier_id = self.env['delivery.carrier'].search([])[1]
-        order.delivery_set()
+        order.get_delivery_price()
+        order.set_delivery_line()
 
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "We should get the delivery line but not the free delivery since we are below 872.73$ with the 10% discount")
@@ -160,11 +161,13 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # The delivery product has 15% tax on dball but not on dbbase. A module is probably adding the tax at some point.
         # We want that tax to be set so we can be sure it is not added to the order total paid amount used in coupon as
         # it was wrongly done before.
-        self.env.ref('delivery.delivery_carrier').taxes_id = tax_15pc_excl
-        order.carrier_id = self.env['delivery.carrier'].search([])[1]
-        order.delivery_set()
+        carrier = self.env.ref('delivery.delivery_carrier')
+        carrier.product_id.taxes_id = tax_15pc_excl
+        order.carrier_id = carrier
+        order.get_delivery_price()
+        order.set_delivery_line()
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 2, "")
+        self.assertEqual(len(order.order_line.ids), 2)
         self.assertEqual(order.reward_amount, 0)
         # Shipping is 20 + 15%tax
         self.assertEqual(sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 23)
