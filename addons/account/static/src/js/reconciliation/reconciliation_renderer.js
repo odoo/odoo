@@ -427,14 +427,15 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 this._renderCreate(state);
             }
             var data = this.model.get(this.handleCreateRecord).data;
-            this.model.notifyChanges(this.handleCreateRecord, state.createForm);
-            var record = this.model.get(this.handleCreateRecord);
-            _.each(this.fields, function (field, fieldName) {
-                if (self._avoidFieldUpdate[fieldName]) return;
-                if (fieldName === "partner_id") return;
-                if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                    field.reset(record);
-                }
+            this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
+                var record = self.model.get(self.handleCreateRecord);
+                _.each(self.fields, function (field, fieldName) {
+                    if (self._avoidFieldUpdate[fieldName]) return;
+                    if (fieldName === "partner_id") return;
+                    if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                        field.reset(record);
+                    }
+                });
             });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
