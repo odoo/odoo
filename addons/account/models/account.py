@@ -306,6 +306,8 @@ class AccountJournal(models.Model):
             if ('company_id' in vals and journal.company_id.id != vals['company_id']):
                 if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its company.'))
+                if self.bank_account_id:
+                    self.bank_account_id.company_id = vals['company_id']
             if ('code' in vals and journal.code != vals['code']):
                 if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
@@ -319,6 +321,8 @@ class AccountJournal(models.Model):
                     self.default_debit_account_id.currency_id = vals['currency_id']
                 if not 'default_credit_account_id' in vals and self.default_credit_account_id:
                     self.default_credit_account_id.currency_id = vals['currency_id']
+                if self.bank_account_id:
+                    self.bank_account_id.currency_id = vals['currency_id']
             if 'bank_acc_number' in vals and not vals.get('bank_acc_number') and journal.bank_account_id:
                 raise UserError(_('You cannot empty the account number once set.\nIf you would like to delete the account number, you can do it from the Bank Accounts list.'))
         result = super(AccountJournal, self).write(vals)
