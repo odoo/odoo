@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-13 09:40+0000\n"
-"PO-Revision-Date: 2018-02-14 12:20+0000\n"
+"PO-Revision-Date: 2018-02-14 17:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -5153,7 +5153,7 @@ msgstr "Suche Inventur"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
 msgid "Search Stock Location Paths"
-msgstr ""
+msgstr "Lagerort-Pfade durchsuchen"
 
 #. module: stock
 #: code:addons/stock/stock.py:2867
@@ -5229,7 +5229,7 @@ msgstr "<i/><i/>"
 msgid ""
 "Set the products you want to track with lots or serial numbers by setting "
 "the Tracking field on the product form"
-msgstr ""
+msgstr "Legen Sie die Produkte fest, die Sie mit Los- oder Seriennummern verfolgen wollen, indem Sie das Tracking-Feld auf dem Produktformular einstellen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5624,7 +5624,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
-msgstr ""
+msgstr "Die Angebotsanfrage wird ein Kaufauftrag und ein Lieferauftrag wird erstellt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_sale_delay
@@ -5710,7 +5710,7 @@ msgstr "Die Ursache für das negative Quant kommt von"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_location_dest_id
 msgid "The new location where the goods need to go"
-msgstr ""
+msgstr "Der neue Ort, an den die Waren geliefert werden müssen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_parent_id
@@ -5961,7 +5961,7 @@ msgstr "Die Anzahl wird in der Standard Mengeneinheit dargestellt."
 msgid ""
 "This rule can be applied when a move is confirmed that has this location as "
 "destination location"
-msgstr ""
+msgstr "Diese Regel kann angewendet werden, wenn eine Buchung bestätigt wird, für die dieser Ort als Zielort gilt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
@@ -6569,21 +6569,21 @@ msgid ""
 "the default route when products pass through this warehouse.  This behaviour"
 " can be overridden by the routes on the Product/Product Categories or by the"
 " Preferred Routes on the Procurement"
-msgstr ""
+msgstr "Wenn ein Lager für diese Route ausgewählt wurde, sollte diese Route als Standard-Route angesehen werden, wenn Produkte dieses Lager durchlaufen. Dieses Verhalten kann durch die Routen unter Produkt/Produktkategorien oder durch die bevorzugten Routen in der Beschaffung überschrieben werden"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form.  It will take priority over the Warehouse route. "
-msgstr ""
+msgstr "Wenn diese Option aktiviert ist, kann die Route über das Bestand-Tab im Produktformular ausgewählt werden. Sie hat dann Vorrang über die Lagerroute."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_categ_selectable
 msgid ""
 "When checked, the route will be selectable on the Product Category.  It will"
 " take priority over the Warehouse route. "
-msgstr ""
+msgstr "Wenn diese Option aktiviert ist, kann die Route über die Produktkategorie ausgewählt werden. Sie hat dann Priorität über die Lagerroute."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6713,7 +6713,7 @@ msgstr "Sie können lediglich Lieferungen im Entwurf Status löschen."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "You can review and edit the predefined units via the"
-msgstr ""
+msgstr "Sie können die vordefinierten Einheiten prüfen und bearbeiten über die"
 
 #. module: stock
 #: code:addons/stock/stock.py:2435
@@ -6752,7 +6752,7 @@ msgstr "Sie können eine bereits erledigte Lieferung nicht weiter aufteilen"
 msgid ""
 "You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
 "                                to check if products are available."
-msgstr ""
+msgstr "Sie haben keine Produkte für diese Kommissionierung reserviert. Klicken Sie auf die Schaltfläche „Reservieren“, um zu prüfen, ob Produkte verfügbar sind."
 
 #. module: stock
 #: code:addons/stock/stock.py:2595
@@ -6789,7 +6789,7 @@ msgstr "Sie haben weniger Produkte eingetragen als vereinbart war."
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
 "numbers by doing an inventory.  "
-msgstr ""
+msgstr "Sie haben Produkte im Lager, die keine Los-Nummer aufweisen. Sie können Seriennummern zuweisen, indem Sie eine Inventur durchführen."
 
 #. module: stock
 #: constraint:stock.warehouse.orderpoint:0
@@ -6841,7 +6841,7 @@ msgstr "Sie sollten für jedes Stück eine andere Seriennummer angeben"
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
-msgstr ""
+msgstr "Für dieses Produkt sind Nachbestellungsregeln aktiviert. Archivieren Sie diese oder löschen Sie sie."
 
 #. module: stock
 #: constraint:stock.move:0
@@ -6930,7 +6930,7 @@ msgstr "z.B. PO0032"
 msgid ""
 "either by manually updating the Done quantity on the product lines, or let "
 "Odoo do it automatically while validating"
-msgstr ""
+msgstr "indem Sie entweder manuell die bearbeitete Menge in den Produktpositionen aktualisieren oder es Odoo automatisch bei der Validierung tun lassen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6938,7 +6938,7 @@ msgid ""
 "either by manually updating the Done quantity on the product lines, or scan "
 "them with the Odoo Barcode app, or let Odoo do it automatically while "
 "validating"
-msgstr ""
+msgstr "indem Sie entweder manuell die bearbeitete Menge in den Produktpositionen aktualisieren  oder sie mit der Odoo Barcode-App scannen oder es Odoo automatisch bei der Validierung tun lassen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6948,7 +6948,7 @@ msgstr "feedback@mail.odoo.com"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "for a customer and add products"
-msgstr ""
+msgstr "für einen Kunden und Produkte hinzufügen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6960,7 +6960,7 @@ msgstr "für weitere\nInformationen."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "from your vendor with the products and the requested quantities"
-msgstr ""
+msgstr "von Ihrem Lieferanten mit den Produkten und den gewünschten Mengen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
