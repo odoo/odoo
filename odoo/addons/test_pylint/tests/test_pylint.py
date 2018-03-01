@@ -105,7 +105,7 @@ class TestPyLint(TransactionCase):
         'UserDict',
         'UserString',
         'UserList',
-    ]
+    ] + list(tools.SUPPORTED_DEBUGGER)
 
     def _skip_test(self, reason):
         _logger.warn(reason)
