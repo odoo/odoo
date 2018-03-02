@@ -412,11 +412,15 @@ class ResourceCalendar(models.Model):
     def _iter_work_intervals(self, start_dt, end_dt, resource_id, compute_leaves=True):
         """ Lists the current resource's work intervals between the two provided
         datetimes (inclusive) expressed in UTC, for each worked day. """
+        actual_user = self.env.user
+        if self._context.get('website_calendar.resource_user'):
+            resource_object = self.env['resource.resource'].browse(resource_id)
+            actual_user = resource_object.user_id
         if not end_dt:
             end_dt = datetime.datetime.combine(start_dt.date(), datetime.time.max)
 
-        start_dt = to_naive_user_tz(start_dt, self.env.user)
-        end_dt = to_naive_user_tz(end_dt, self.env.user)
+        start_dt = to_naive_user_tz(start_dt, actual_user)
+        end_dt = to_naive_user_tz(end_dt, actual_user)
 
         for day in rrule.rrule(rrule.DAILY,
                                dtstart=start_dt,
