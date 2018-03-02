@@ -267,7 +267,7 @@
     </t>
 
     <t t-name="mail.Attachment">
-        <t t-set="type" t-value="attachment.mimetype.split('/').shift()"/>
+        <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <t t-if="type == 'image'">
                 <div class="o_image_box">
