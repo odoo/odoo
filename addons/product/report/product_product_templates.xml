@@ -22,8 +22,7 @@
                     </td>
                     <td style="border: 2px solid black; text-align: center;" class="col-xs-7">
                         <h4>
-                            <strong t-field="product.company_id.currency_id.symbol"/>
-                            <strong t-field="product.list_price"/>
+                            <strong t-field="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.company_id.currency_id}"/>
                         </h4>
                     </td>
                 </tr>
