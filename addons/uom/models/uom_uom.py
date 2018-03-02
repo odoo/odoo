@@ -10,6 +10,17 @@ class UoMCategory(models.Model):
     _description = 'Product UoM Categories'
 
     name = fields.Char('Name', required=True, translate=True)
+    measure_type = fields.Selection([
+        ('unit', 'Units'),
+        ('weight', 'Weight'),
+        ('time', 'Time'),
+        ('length', 'Length'),
+        ('volume', 'Volume'),
+    ], string="Type of Measure")
+
+    _sql_constraints = [
+        ('uom_category_unique_type', 'UNIQUE(measure_type)', 'You can have only one category per measurement type.'),
+    ]
 
 
 class UoM(models.Model):
@@ -38,6 +49,7 @@ class UoM(models.Model):
         ('reference', 'Reference Unit of Measure for this category'),
         ('smaller', 'Smaller than the reference Unit of Measure')], 'Type',
         default='reference', required=1)
+    measure_type = fields.Selection(string="Type of measurement category", related='category_id.measure_type', store=True, readonly=True)
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
