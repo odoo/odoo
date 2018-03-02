@@ -254,9 +254,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 resIDs: record.res_ids,
             },
             on_success: def.resolve.bind(def),
-            on_fail: function () {
-                reload().always(def.reject.bind(def));
-            },
+            on_fail: def.reject.bind(def),
             on_closed: reload,
         });
         return this.alive(def);
