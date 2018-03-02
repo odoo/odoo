@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
+"PO-Revision-Date: 2018-03-02 14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -234,7 +234,7 @@ msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7569
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7576
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr ""
@@ -579,6 +579,12 @@ msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr ""
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/report/report_contribution_register.py:34
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_l10n_fr_hr_payroll
 msgid "French Payroll"
 msgstr ""
@@ -783,7 +789,7 @@ msgid "Name"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:340
+#: code:addons/hr_payroll/models/hr_payroll.py:341
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr ""
@@ -1180,8 +1186,8 @@ msgid "Salary Rules"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:542
-#: code:addons/hr_payroll/models/hr_payroll.py:590
+#: code:addons/hr_payroll/models/hr_payroll.py:543
+#: code:addons/hr_payroll/models/hr_payroll.py:591
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr ""
@@ -1259,12 +1265,6 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 msgid "Sign documents and contracts online"
-msgstr ""
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/report/report_contribution_register.py:34
-#, python-format
-msgid "Form content is missing, this report cannot be printed."
 msgstr ""
 
 #. module: hr_payroll
@@ -1392,37 +1392,37 @@ msgid "Worked Days & Inputs"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:765
+#: code:addons/hr_payroll/models/hr_payroll.py:766
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:771
+#: code:addons/hr_payroll/models/hr_payroll.py:772
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:794
+#: code:addons/hr_payroll/models/hr_payroll.py:795
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:758
+#: code:addons/hr_payroll/models/hr_payroll.py:759
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:788
+#: code:addons/hr_payroll/models/hr_payroll.py:789
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:271
+#: code:addons/hr_payroll/models/hr_payroll.py:272
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1434,7 +1434,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payroll.py:833
+#: code:addons/hr_payroll/models/hr_payroll.py:834
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""

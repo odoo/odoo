@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-10-19 04:20+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -30,6 +30,13 @@ msgstr ""
 "                    Cilji se lahko samodejno ustvarijo preko izzivov."
 
 #. module: hr_gamification
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
+msgid ""
+"All employee badges, linked to the employee either directly or through the "
+"user"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
@@ -45,6 +52,7 @@ msgstr ""
 "skupine."
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
 msgid "Badges"
 msgstr "Priponke"
@@ -56,6 +64,11 @@ msgid ""
 msgstr ""
 "Priponke so nagrade za dobro opravljeno delo. Dodelite jih ljudem, ki si jih "
 "zaslužijo."
+
+#. module: hr_gamification
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
+msgid "Badges directly linked to the employee"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -90,6 +103,11 @@ msgid "Describe what they did and why it matters (will be public)"
 msgstr "Opišite, kaj so naredili in zakaj je to pomembno (javna objava)"
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
+msgid "Direct Badge"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_employee_id
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard_employee_id
@@ -117,6 +135,11 @@ msgid "Gamification user badge"
 msgstr "Igrificirana uporabniška priponka"
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
+msgid "Goal"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
 #: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
 msgid "Goals History"
@@ -129,8 +152,13 @@ msgstr "Dodelitev priponke"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
-msgid "Granted Employees"
-msgstr "Nagrajeni delojemalci"
+msgid "Granted"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
+msgid "Granted Employees Count"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
@@ -154,9 +182,15 @@ msgid "Reward Employee with"
 msgstr "Nagraditev delojemalca z"
 
 #. module: hr_gamification
-#: constraint:gamification.badge.user:0
+#: code:addons/hr_gamification/models/gamification.py:18
+#, python-format
 msgid "The selected employee does not correspond to the selected user."
 msgstr "Izbrani delojemalec ne ustreza izbranemu uporabniku."
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_res_users
+msgid "Users"
+msgstr "Uporabniki"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -164,13 +198,13 @@ msgid "What are you thankful for?"
 msgstr "Za kaj ste hvaležni?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/grant_badge.py:31
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
 #, python-format
 msgid "You can not send a badge to yourself"
 msgstr "Priponke ne morete poslati sam sebi"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/grant_badge.py:28
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18
 #, python-format
 msgid "You can send badges only to employees linked to a user."
 msgstr "Priponke lahko pošljete le delojemalcem povezanimi z uporabniki"

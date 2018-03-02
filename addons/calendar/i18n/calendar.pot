@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:47+0000\n"
-"PO-Revision-Date: 2017-04-18 14:47+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
+"PO-Revision-Date: 2018-03-02 14:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -300,26 +300,26 @@ msgid "${object.event_id.name}: Date updated"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:658
+#: code:addons/calendar/models/calendar.py:670
 #, python-format
 msgid "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:656
+#: code:addons/calendar/models/calendar.py:661
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:196
+#: code:addons/calendar/models/calendar.py:197
 #, python-format
 msgid "%s has accepted invitation"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:204
+#: code:addons/calendar/models/calendar.py:205
 #, python-format
 msgid "%s has declined invitation"
 msgstr ""
@@ -360,7 +360,7 @@ msgid "All Day"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:653
+#: code:addons/calendar/models/calendar.py:657
 #, python-format
 msgid "AllDay , %s"
 msgstr ""
@@ -399,7 +399,7 @@ msgid "Availability"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1506
+#: code:addons/calendar/models/calendar.py:1523
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -604,13 +604,13 @@ msgid "Ending at"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:848
+#: code:addons/calendar/models/calendar.py:866
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:846
+#: code:addons/calendar/models/calendar.py:864
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr ""
@@ -631,7 +631,7 @@ msgid "Event alarm"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1097
+#: code:addons/calendar/models/calendar.py:1115
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr ""
@@ -659,7 +659,7 @@ msgid "First"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:888
+#: code:addons/calendar/models/calendar.py:906
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -696,7 +696,7 @@ msgid "Group By"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1453
+#: code:addons/calendar/models/calendar.py:1470
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -791,6 +791,7 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_users_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
 msgstr ""
 
@@ -962,7 +963,7 @@ msgid "Participant"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1110
+#: code:addons/calendar/models/calendar.py:1128
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr ""
@@ -974,13 +975,13 @@ msgid "Privacy"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
-msgid "Recurrence Termination"
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
+msgid "Recurrence"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
-msgid "Recurrency"
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
+msgid "Recurrence Termination"
 msgstr ""
 
 #. module: calendar
@@ -1302,7 +1303,7 @@ msgid "e.g. Business Lunch"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1095
+#: code:addons/calendar/models/calendar.py:1113
 #, python-format
 msgid "interval cannot be negative."
 msgstr ""

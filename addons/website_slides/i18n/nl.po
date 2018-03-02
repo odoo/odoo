@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_slides
-# 
+#
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
@@ -16,10 +16,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_slides
@@ -28,22 +28,43 @@ msgid ""
 "\n"
 "<p>Hello,</p>\n"
 "<p>\n"
-"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</"
+"strong> with you!\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
+"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
+"color: #cccccc; margin: 16px;\">\n"
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
 msgstr ""
 "\n"
 "<p>Hallo,</p>\n"
-"<p> ${user.name} deelde het ${object.slide_type} <strong>${object.name}</strong> met u! </p> <p style=\"text-align: center; margin-top: 10px;\"> <a href=\"${object.website_url}\"> <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"> </a> </p> <p style=\"text-align: center; margin-top: 10px;\"> <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"> Bekijk <strong>${object.name}</strong> </a> </p>\n"
+"<p> ${user.name} deelde het ${object.slide_type} <strong>${object.name}</"
+"strong> met u! </p> <p style=\"text-align: center; margin-top: 10px;\"> <a "
+"href=\"${object.website_url}\"> <img alt=\"${object.name}\" src="
+"\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style="
+"\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"> </a> "
+"</p> <p style=\"text-align: center; margin-top: 10px;\"> <a style=\"-webkit-"
+"user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; "
+"color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-"
+"block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-"
+"align: middle; cursor: pointer; white-space: nowrap; background-image: none; "
+"background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" "
+"class=\"o_default_snippet_text\" href=\"${object.website_url}\"> Bekijk "
+"<strong>${object.name}</strong> </a> </p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -51,15 +72,25 @@ msgid ""
 "\n"
 "<p>Hello,</p>\n"
 "<p>\n"
-"    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"    A new ${object.slide_type} <strong>${object.name}</strong> has been "
+"published on ${object.channel_id.name} at ${format_tz(object.write_date, "
+"tz=user.tz)}\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
+"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
+"color: #cccccc; margin: 16px;\">\n"
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -67,15 +98,25 @@ msgstr ""
 "\n"
 "<p>Hallo,</p>\n"
 "<p>\n"
-"    Een nieuwe ${object.slide_type} <strong>${object.name}</strong> is gepubliceerd op ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"    Een nieuwe ${object.slide_type} <strong>${object.name}</strong> is "
+"gepubliceerd op ${object.channel_id.name} at ${format_tz(object.write_date, "
+"tz=user.tz)}\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
+"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
+"color: #cccccc; margin: 16px;\">\n"
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"\"${object.website_url}\">\n"
 "        Bekijk <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -117,29 +158,29 @@ msgstr ". Probeer a.u.b opnieuw met andere sleutelwoorden."
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> E-mail</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_email\"><i class=\"fa fa-envelope\"/> E-mail</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Insluiten</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_embed\"><i class=\"fa fa-code\"/> Insluiten</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Delen</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_share\"><i class=\"fa fa-share-alt\"/> Delen</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -212,10 +253,12 @@ msgstr "<i class=\"fa fa-home\"/> Home"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                        The social sharing module will be unlocked when a moderator will allow your publication."
+"                                        The social sharing module will be "
+"unlocked when a moderator will allow your publication."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                        De module voor delen op sociale media wordt ontgrendeld van zodra een moderator uw publicatie vrijgeeft."
+"                                        De module voor delen op sociale "
+"media wordt ontgrendeld van zodra een moderator uw publicatie vrijgeeft."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -246,46 +289,56 @@ msgstr "<i class=\"fa fa-thumbs-up\"/> Vind-ik-leuks"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+"                                                    <i class=\"fa fa-"
+"facebook-square\"/> Facebook"
 msgstr ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+"                                                    <i class=\"fa fa-"
+"facebook-square\"/> Facebook"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+"                                                    <i class=\"fa fa-google-"
+"plus-square\"/> Google+"
 msgstr ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+"                                                    <i class=\"fa fa-google-"
+"plus-square\"/> Google+"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+"                                                    <i class=\"fa fa-"
+"linkedin-square\"/> LinkedIn"
 msgstr ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+"                                                    <i class=\"fa fa-"
+"linkedin-square\"/> LinkedIn"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
+"                                                    <i class=\"fa fa-share-"
+"alt\"/> Social Shares"
 msgstr ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-alt\"/> Gedeeld op sociale media"
+"                                                    <i class=\"fa fa-share-"
+"alt\"/> Gedeeld op sociale media"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+"                                                    <i class=\"fa fa-twitter-"
+"square\"/> Twitter"
 msgstr ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+"                                                    <i class=\"fa fa-twitter-"
+"square\"/> Twitter"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -295,8 +348,7 @@ msgstr "<span class=\"help-block\">Presentatie versturen via e-mail</span>"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
-"<span class=\"help-block\">Use permanent link to share in social "
-"media</span>"
+"<span class=\"help-block\">Use permanent link to share in social media</span>"
 msgstr ""
 "<span class=\"help-block\">Gebruik permanente koppeling om te delen via "
 "sociale media</span>"
@@ -391,8 +443,7 @@ msgstr "Instellingen kanaal"
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:171
 #, python-format
-msgid ""
-"Channel contains the given title, please change before Save or Publish."
+msgid "Channel contains the given title, please change before Save or Publish."
 msgstr ""
 "Kanaal bevat de gegeven naam, wijzig aub voor het opslaan of publiceren."
 
@@ -443,7 +494,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
-"Kon geen gegevens ophalen vanaf deze url. Het document of de juiste toegangsrechten zijn niet beschikbaar.\n"
+"Kon geen gegevens ophalen vanaf deze url. Het document of de juiste "
+"toegangsrechten zijn niet beschikbaar.\n"
 "%s"
 
 #. module: website_slides
@@ -482,8 +534,8 @@ msgid ""
 "Default channel for slides, all public users can access content of this "
 "channel."
 msgstr ""
-"Standaardkanaal voor presentaties, alle publieke gebruikers kunnen de inhoud"
-" van dit kanaal bekijken."
+"Standaardkanaal voor presentaties, alle publieke gebruikers kunnen de inhoud "
+"van dit kanaal bekijken."
 
 #. module: website_slides
 #. openerp-web
@@ -704,7 +756,8 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
-"Interne serverfout, probeer het later nog een keer of neem contact op met uw beheerder.\n"
+"Interne serverfout, probeer het later nog een keer of neem contact op met uw "
+"beheerder.\n"
 "Foutmelding: %s"
 
 #. module: website_slides
@@ -970,11 +1023,11 @@ msgstr "Resultaten voor"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid ""
-"Review your channel settings to promote your most viewed or recent published"
-" presentation"
+"Review your channel settings to promote your most viewed or recent published "
+"presentation"
 msgstr ""
-"Wijzig uw kanaalinstellingen om uw meest bekeken of meest recente publicatie"
-" te promoten"
+"Wijzig uw kanaalinstellingen om uw meest bekeken of meest recente publicatie "
+"te promoten"
 
 #. module: website_slides
 #. openerp-web
@@ -1140,11 +1193,11 @@ msgstr ""
 #: code:addons/website_slides/controllers/main.py:286
 #, python-format
 msgid ""
-"This video already exists in this channel <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">click here to view it </a>"
+"This video already exists in this channel <a target=\"_blank\" href=\"/"
+"slides/slide/%s\">click here to view it </a>"
 msgstr ""
-"Deze video bestaat reeds in het kanaal. <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">Klik hier om hem te bekijken</a>"
+"Deze video bestaat reeds in het kanaal. <a target=\"_blank\" href=\"/slides/"
+"slide/%s\">Klik hier om hem te bekijken</a>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb

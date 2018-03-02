@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2016-04-23 11:39+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -35,21 +35,71 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_mail_channel
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hello,</p>\n"
+"<p>You have requested to be subscribed to the mailing list <strong>${object."
+"name}</strong></p>\n"
+"<p>To confirm, please visit the following link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
+"</data>"
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Вітаємо,</p>\n"
+"<p>Ви просили підписатися на список розсилки <strong>${object.name}</"
+"strong></p>\n"
+"<p>Для підтвердження, будь ласка, відвідайте таке посилання:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>Якщо це була помилка або ви не просили цю дію, проігноруйте це "
+"повідомлення.</p>\n"
+"</data>"
+
+#. module: website_mail_channel
+#: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hello,</p>\n"
+"<p>You have requested to be unsubscribed to the mailing list <strong>"
+"${object.name}</strong></p>\n"
+"<p>To confirm, please visit the following link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
+"</data>"
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Вітаємо,</p>\n"
+"<p>Ви просили скасувати підписку на список розсилки <strong>${object.name}</"
+"strong></p>\n"
+"<p>Для підтвердження, будь ласка, відвідайте таке посилання:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>Якщо це була помилка або ви не просили цю дію, проігноруйте це "
+"повідомлення.</p>\n"
+"</data>"
+
+#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr ""
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Дискусійна група</span>"
 
 #. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
 #, python-format
 msgid "Add a Subscribe Button"
-msgstr ""
+msgstr "Додати кнопку \"Долучитись\""
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
-msgstr ""
+msgstr "Одні ми можемо зробити так мало, разом ми можемо зробити так багато"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
@@ -59,13 +109,13 @@ msgstr "Архіви"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Browse archives"
-msgstr ""
+msgstr "Переглянути архіви"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "By date"
-msgstr ""
+msgstr "За датою"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -76,19 +126,14 @@ msgstr "По темі"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Change Discussion List"
-msgstr ""
+msgstr "Змінити список обговорення"
 
 #. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
 #, python-format
 msgid "Discussion List"
-msgstr ""
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
-msgstr "Шлях обговорення"
+msgstr "Список обговорень"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
@@ -98,29 +143,29 @@ msgstr "Канал обговорення"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Follow-Ups"
-msgstr ""
+msgstr "Нагадування "
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
+msgstr "Невірне посилання або підтвердження, що закінчилося."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
 msgid "Mailing List"
-msgstr ""
+msgstr "Список адресатів"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Mailing Lists"
-msgstr ""
+msgstr "Списки розсилки"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:23
+#: code:addons/website_mail_channel/models/mail_mail.py:20
 #, python-format
 msgid "Mailing-List"
-msgstr ""
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Опис повідомлення: тема або початок тіла листа"
+msgstr "Список розсилки"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -128,6 +173,8 @@ msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
 "pull-right\"/>"
 msgstr ""
+"Потрібно відписатися? Це прямо тут! <span class=\"fa fa-2x fa-arrow-down "
+"pull-right\"/>"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
@@ -135,15 +182,20 @@ msgid "Outgoing Mails"
 msgstr "Вихідна пошта"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:24
-#, python-format
-msgid "Post to"
-msgstr ""
+#: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
+msgid "Please confirm subscription to ${object.name}"
+msgstr "Будь ласка, підтвердьте підписку на ${object.name}"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
-msgstr "Опубліковано"
+#: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
+msgid "Please confirm unsubscription to ${object.name}"
+msgstr "Будь ласка, продовжіть відписку до ${object.name}"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:21
+#, python-format
+msgid "Post to"
+msgstr "Опублікувати до"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -153,7 +205,7 @@ msgstr "Посилання"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Stay in touch with our Community"
-msgstr ""
+msgstr "Будьте на зв'язку з нашою спільнотою"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -162,34 +214,47 @@ msgid "Subscribe"
 msgstr "Підписатися"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:25
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr "Адреса"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:242
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""
+"За адресою%s  вже скасовано підписку або ніколи не було підписано на будь-"
+"який список розсилки"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Відписатися"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid ""
-"Used to display messages in a paragraph-based chatter using a unique path;"
-msgstr ""
-"Відображав повідомлення у вигляді по-абзацного чату, використовуючи "
-"унікальний шлях;"
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "You have been correctly"
+msgstr "Ви були правильні"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "Показано на сайті як коментар"
+#: model:ir.ui.view,arch_db:website_mail_channel.subscribe
+msgid "a confirmation email has been sent."
+msgstr "було надіслано підтвердження електронною поштою."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "archives"
-msgstr ""
+msgstr "архіви"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "attachments"
-msgstr ""
+msgstr "вкладення"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -198,10 +263,19 @@ msgid "by"
 msgstr "від"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already\n"
+"                    unsubscribed or was never subscribed to the mailing\n"
+"                    list, you may want to check that the address was\n"
+"                    correct."
+msgstr ""
+
+#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "mailing list archives"
-msgstr ""
+msgstr "архів списку розсилок"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -209,43 +283,55 @@ msgid ""
 "members<br/>\n"
 "                    <i class=\"fa fa-fw fa-envelope-o\"/>"
 msgstr ""
+"члени<br/>\n"
+"                    <i class=\"fa fa-fw fa-envelope-o\"/>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "messages / month"
-msgstr ""
+msgstr "повідомлення/місяць"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "more replies"
-msgstr ""
+msgstr "більше відповідей"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "replies"
-msgstr ""
+msgstr "відповіді"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "send mail"
-msgstr ""
+msgstr "надіслати листа"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "show"
-msgstr ""
+msgstr "показати"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "unknown"
-msgstr "невідомий"
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "subscribed"
+msgstr "підписаний"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "to the mailing list."
+msgstr "до списку розсилок."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "unsubscribe"
-msgstr ""
+msgstr "скасовано підписку"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
+msgid "unsubscribed"
+msgstr "Скасовано підписку"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels

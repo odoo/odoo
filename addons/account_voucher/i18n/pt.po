@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2015-10-21 12:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -110,7 +110,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:176
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Não é possível apagar pagamentos que já estão validados ou pagos."
@@ -314,18 +314,23 @@ msgid "Payment"
 msgstr "Pagamento"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_payment_journal_id
+msgid "Payment Method"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
 msgid "Payment Reference"
 msgstr "Referência Pagamento"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/models/account_voucher.py:213
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Por favor, active a sequência do diário selecionado!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:216
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Por favor, defina uma sequência no diário."
@@ -513,7 +518,7 @@ msgid "Vendor Voucher"
 msgstr "Recibo de Fornecedor"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
+#: code:addons/account_voucher/models/account_voucher.py:100
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -568,7 +573,7 @@ msgstr ""
 "o pagamento de cliente relacionado com o recibo."
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:376
+#: code:addons/account_voucher/models/account_voucher.py:426
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Deve antes selecionar um parceiro"

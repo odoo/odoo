@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-30 18:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
@@ -39,8 +39,8 @@ msgstr "Firma"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
-msgid "Create user"
-msgstr "Opprett bruker."
+msgid "Create User"
+msgstr "Opprett bruker"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
@@ -63,16 +63,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
+#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "LDAP Konfigurasjon."
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
 msgid "LDAP Parameters"
-msgstr ""
+msgstr "LDAP-parametre"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.base_config_settings_view_form_inherit_auth_ldap
+msgid "LDAP Server"
+msgstr "LDAP-server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
@@ -136,6 +141,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication "
 "attempts will fail."
 msgstr ""
+"Be om sikker TLS/SSL-kryptering ved oppkobling mot LDAP-server. Dette valget "
+"krever en server med STARTTLS aktiv, ellers vil alle autentiseringsforsøk "
+"mislykkes."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
@@ -163,6 +171,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"Passordet til brukerkontoen på LDAP-serveren som brukes til å sende "
+"forespørsler til registeret."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
@@ -170,6 +180,8 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"Brukerkontoen på LDAP-serveren som brukes til å sende forespørsler til "
+"registeret. La stå tom for å koble til anonymt."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
@@ -190,6 +202,11 @@ msgstr "Bruker til å kopiere når du oppretter nye brukere."
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Brukere"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_base_config_settings
+msgid "base.config.settings"
+msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap

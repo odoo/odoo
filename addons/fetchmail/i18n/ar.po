@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-12 22:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -51,17 +51,12 @@ msgid "Configuration"
 msgstr "الإعدادات"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
-msgstr "إعداد بوابة البريد الإلكتروني الواردة"
-
-#. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
 msgstr "مؤكد"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "فشل اختبار الاتصال: %s"
@@ -81,13 +76,11 @@ msgid "Create a New Record"
 msgstr "إنشاء سجل جديد"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "أنشئ في"
@@ -98,7 +91,6 @@ msgid "Defines the order of processing, lower values mean higher priority"
 msgstr "تحديد ترتيب  العملية, القيم الأقل تعني الأولية"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "اسم العرض"
@@ -114,7 +106,6 @@ msgid "Hostname or IP of the mail server"
 msgstr "اسم الجهاز أو رقم الآي بي لخادم البريد"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "المعرف"
@@ -138,6 +129,11 @@ msgstr "إذا SSL المطلوبة."
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
 msgid "Inbound Mail Server"
 msgstr "خادم البريد الوارد"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Incoming Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -167,19 +163,16 @@ msgid "Last Fetch Date"
 msgstr "تاريخ الجلب الأخير"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
@@ -193,6 +186,13 @@ msgstr "الخادم المحلي"
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "معلومات تسجيل الدخول"
+
+#. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -218,6 +218,11 @@ msgid ""
 msgstr ""
 "اختياري عمل خادم مخصص لتحريك كل البريد الوارد، على السجل التي تم إنشاؤها أو "
 "تحديثها بواسطة هذا البريد"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Outgoing Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -347,14 +352,13 @@ msgstr "اسم المستخدم"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
-#, fuzzy
 msgid ""
 "Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"إذا كان ينبغي أن تحتفظ بنسخة من كل رسالة إلكترونية كمرجع ملحق لكل عملية "
-"إرسال. هذه عادة تضاعف حجم قاعدة بيانات الرسائل"
+"إذا كان يتوجب الاحتفاظ بنسخة اصلية كاملة من كل رسائل البريد كمرجع وارفاقها "
+"بكل الرسائل التي يم معالجتها. سيضاعف هذا عادة حجم الرسالة في قاعدة البيانات."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
@@ -364,8 +368,3 @@ msgid ""
 msgstr ""
 "الملحقات يجب أن يتم تحميلها. إذا لم يتم التمكين، الرسائل المستقبلة سوف يتم "
 "تجريدها من الملحقات قبل معالجتها"
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
-msgstr "fetchmail.config.settings"

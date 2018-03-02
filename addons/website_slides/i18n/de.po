@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_slides
-# 
+#
 # Translators:
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Thomas Lengyel <lexustec_fn@yahoo.de>, 2017
@@ -25,10 +25,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Andi <flimflam@salasar.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_slides
@@ -37,19 +37,52 @@ msgid ""
 "\n"
 "<p>Hello,</p>\n"
 "<p>\n"
-"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</"
+"strong> with you!\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
+"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
+"color: #cccccc; margin: 16px;\">\n"
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo,</p>\n"
+"<p>\n"
+"    ${user.name} hat ${object.slide_type} <strong>${object.name}</strong> "
+"mit Ihnen geteilt!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
+"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
+"color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"\"${object.website_url}\">\n"
+"        <strong>${object.name}</strong> anzeigen\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -57,19 +90,54 @@ msgid ""
 "\n"
 "<p>Hello,</p>\n"
 "<p>\n"
-"    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"    A new ${object.slide_type} <strong>${object.name}</strong> has been "
+"published on ${object.channel_id.name} at ${format_tz(object.write_date, "
+"tz=user.tz)}\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
+"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
+"color: #cccccc; margin: 16px;\">\n"
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo,</p>\n"
+"<p>\n"
+"${object.slide_type} <strong>${object.name}</strong> wurde neu "
+"veröffentlicht auf ${object.channel_id.name} um ${format_tz(object."
+"write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
+"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
+"color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
+"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
+"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"\"${object.website_url}\">\n"
+"        <strong>${object.name}</strong> anzeigen\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -97,6 +165,9 @@ msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
 msgstr ""
+"Das Archivieren bzw. Aufheben einer Archivierung eines Kanals archiviert "
+"automatisch auch dessen Folien bzw. hebt deren Archivierung auf. Möchten Sie "
+"fortfahren?"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -106,29 +177,29 @@ msgstr ". Bitte nochmals mit anderen Schlüsselwörtern probieren."
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Einbetten</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_embed\"><i class=\"fa fa-code\"/> Einbetten</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Teilen</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
+"\"#slide_share\"><i class=\"fa fa-share-alt\"/> Teilen</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -201,10 +272,12 @@ msgstr "<i class=\"fa fa-home\"/> Home"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                        The social sharing module will be unlocked when a moderator will allow your publication."
+"                                        The social sharing module will be "
+"unlocked when a moderator will allow your publication."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"Das Modul für soziales Teilen wird freigeschaltet, wenn ein Moderator die Publikation erlaubt."
+"Das Modul für soziales Teilen wird freigeschaltet, wenn ein Moderator die "
+"Publikation erlaubt."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -235,7 +308,8 @@ msgstr "<i class=\"fa fa-thumbs-up\"/> Likes"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+"                                                    <i class=\"fa fa-"
+"facebook-square\"/> Facebook"
 msgstr ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
 "<i class=\"fa fa-facebook-square\"/> Facebook"
@@ -244,7 +318,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+"                                                    <i class=\"fa fa-google-"
+"plus-square\"/> Google+"
 msgstr ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
 "<i class=\"fa fa-google-plus-square\"/> Google+"
@@ -253,7 +328,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+"                                                    <i class=\"fa fa-"
+"linkedin-square\"/> LinkedIn"
 msgstr ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
 "<i class=\"fa fa-linkedin-square\"/> LinkedIn"
@@ -262,7 +338,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
+"                                                    <i class=\"fa fa-share-"
+"alt\"/> Social Shares"
 msgstr ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
 "<i class=\"fa fa-share-alt\"/> Geteilt gesamt"
@@ -271,7 +348,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+"                                                    <i class=\"fa fa-twitter-"
+"square\"/> Twitter"
 msgstr ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
 "<i class=\"fa fa-twitter-square\"/> Twitter"
@@ -284,8 +362,7 @@ msgstr "<span class=\"help-block\">Präsentation per E-Mail senden</span>"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
-"<span class=\"help-block\">Use permanent link to share in social "
-"media</span>"
+"<span class=\"help-block\">Use permanent link to share in social media</span>"
 msgstr ""
 "<span class=\"help-block\">Verwenden Sie einen permanenten Link zum Teilen "
 "in sozialen Medien</span>"
@@ -380,8 +457,7 @@ msgstr "Kanal-Einstellungen"
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:171
 #, python-format
-msgid ""
-"Channel contains the given title, please change before Save or Publish."
+msgid "Channel contains the given title, please change before Save or Publish."
 msgstr ""
 "Der Kanal hat den gegebenen Titel, bitte vor dem Speichern oder "
 "Veröffentlichen ändern."
@@ -423,6 +499,9 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"Daten konnten nicht von URL abgerufen werden. Dokument oder "
+"Zugangsberechtigung nicht verfügbar.\n"
+"Hier ist die erhaltene Antwort: %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:321
@@ -431,13 +510,14 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
-"Kann die Daten von der URL nicht laden. Das Dokument oder die Zugriffsberechtigung sind nicht vorhanden:\n"
+"Kann die Daten von der URL nicht laden. Das Dokument oder die "
+"Zugriffsberechtigung sind nicht vorhanden:\n"
 "%s"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.website_config_settings_view_form_inherit_website_slides
 msgid "Create a Google Project and Get a Key"
-msgstr ""
+msgstr "Erstellen Sie ein Google-Projekt und erhalten Sie einen Schlüssel"
 
 #. module: website_slides
 #. openerp-web
@@ -494,7 +574,7 @@ msgstr "Verwerfen"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
 msgid "Dislikes"
-msgstr ""
+msgstr "Abneigungen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
@@ -540,7 +620,7 @@ msgstr "Herunterladen"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
 msgid "Download Security"
-msgstr ""
+msgstr "Sicherheit herunterladen"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -619,7 +699,7 @@ msgstr "Empfehlungspolitik"
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr ""
+msgstr "Datei ist zu groß. Dateigröße kann 25MB nicht überschreiten."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -691,7 +771,8 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
-"Interner Serverfehler, bitte versuchen Sie es später noch einmal oder kontaktieren Sie den Administrator.\n"
+"Interner Serverfehler, bitte versuchen Sie es später noch einmal oder "
+"kontaktieren Sie den Administrator.\n"
 "Hier ist die Fehlermeldung: %s"
 
 #. module: website_slides
@@ -779,7 +860,7 @@ msgstr "Name"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
-msgstr ""
+msgstr "${object.slide_type} neu veröffentlicht von ${object.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -955,8 +1036,8 @@ msgstr "Ergebnisse für"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid ""
-"Review your channel settings to promote your most viewed or recent published"
-" presentation"
+"Review your channel settings to promote your most viewed or recent published "
+"presentation"
 msgstr ""
 "Überprüfen Sie Ihre Kanal-Einstellungen um Ihre am meisten gesehene oder "
 "neueste Präsentation zu bewerben"
@@ -1100,6 +1181,9 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Der Dokumenttyp wird automatisch basierend auf der Dokument-URL und den "
+"Eigenschaften (z. B. Höhe und Breite für Präsentation und Dokument) "
+"festgelegt."
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1124,11 +1208,11 @@ msgstr ""
 #: code:addons/website_slides/controllers/main.py:286
 #, python-format
 msgid ""
-"This video already exists in this channel <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">click here to view it </a>"
+"This video already exists in this channel <a target=\"_blank\" href=\"/"
+"slides/slide/%s\">click here to view it </a>"
 msgstr ""
-"Dieses Video existiert schon in diesem Kanal. <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">Klicken Sie hier um es anzuschauen </a>"
+"Dieses Video existiert schon in diesem Kanal. <a target=\"_blank\" href=\"/"
+"slides/slide/%s\">Klicken Sie hier um es anzuschauen </a>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb

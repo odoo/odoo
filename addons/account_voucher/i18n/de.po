@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-# 
+#
 # Translators:
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
@@ -23,27 +23,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Malte Jansen <work@maltejansen.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher "
+"number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-" * Ein Zahlungsbeleg befindet sich nach der Erstellung zunächst im \"Entwurf\".\n"
-"* Durch Änderung auf den Status \"Pro-Forma\", wird der Status geändert, aber keine Belegnummer vergeben.\n"
-"* Der Status \"Gebucht\"  wird angewendet, wenn ein Benutzer einen Zahlungsbeleg mitsamt Belegnummer vollständig gebucht hat.\n"
+" * Ein Zahlungsbeleg befindet sich nach der Erstellung zunächst im \"Entwurf"
+"\".\n"
+"* Durch Änderung auf den Status \"Pro-Forma\", wird der Status geändert, "
+"aber keine Belegnummer vergeben.\n"
+"* Der Status \"Gebucht\"  wird angewendet, wenn ein Benutzer einen "
+"Zahlungsbeleg mitsamt Belegnummer vollständig gebucht hat.\n"
 "* Der Zustand \"Abgebrochen\" kennzeichnet den Abbruch eines Zahlungsbelegs."
 
 #. module: account_voucher
@@ -116,7 +122,7 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:176
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Offene oder bezahlte Belege können nicht storniert werden"
@@ -320,18 +326,23 @@ msgid "Payment"
 msgstr "Zahlung"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_payment_journal_id
+msgid "Payment Method"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
 msgid "Payment Reference"
 msgstr "Zahlungsreferenz"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/models/account_voucher.py:213
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Bitte aktivieren Sie die Nummernfolge für das gewählte Journal !"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:216
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Definieren Sie eine Nummernfolge für das Journal."
@@ -519,7 +530,7 @@ msgid "Vendor Voucher"
 msgstr "Lieferantenbelege"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
+#: code:addons/account_voucher/models/account_voucher.py:100
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -574,7 +585,7 @@ msgstr ""
 "diesem Beleg erfassen."
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:376
+#: code:addons/account_voucher/models/account_voucher.py:426
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Zuerst müssen Sie einen Geschäftspartner wählen!"

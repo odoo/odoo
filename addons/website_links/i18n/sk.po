@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2016-05-03 05:47+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -19,10 +19,30 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_links
-#: model:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Share this Page</span>"
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
 msgstr ""
-"<span title=\"Track this page to count clicks\">Zdielať túto stránku</span>"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr ""
+
+#. module: website_links
+#: model:ir.ui.view,arch_db:website_links.share_page_menu
+msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -164,15 +184,20 @@ msgid "Stats"
 msgstr "štatistiky"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:210
+#: code:addons/website_links/static/src/js/website_links_charts.js:211
+#: code:addons/website_links/static/src/js/website_links_charts.js:212
+#, python-format
+msgid "There is no data to show"
+msgstr ""
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
-#, fuzzy
 msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors, "
 "or in Odoo reports to track opportunities and related revenues."
 msgstr ""
-"Tieto trackery môžu byť použité v Google Analytics na sledovanie kliknutí a "
-"návštevníkov, alebo v Odoo na ohlsovanie sledovania príležitostí a "
-"súvisiacich výnosov."
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -185,6 +210,13 @@ msgstr "URL"
 #, python-format
 msgid "Unable to get recent links"
 msgstr "Nemožno získať najnovšie odkazy"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr ""
 
 #. module: website_links
 #. openerp-web

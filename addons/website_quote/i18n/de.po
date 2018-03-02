@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_quote
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
@@ -27,51 +27,67 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-28 13:13+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2017-04-28 13:13+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_quote
 #: model:mail.template,body_html:website_quote.confirmation_mail
 msgid ""
 "\n"
-"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 "
+"auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
+"5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
+"\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
+"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Dear ${object.partner_id.name},</p><br/>\n"
-"                <p>Your order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> has been validated!</p><br/>\n"
+"                <p>Your order <a href=\"/quote/${object.id}/${object."
+"access_token}\">${object.name}</a> has been validated!</p><br/>\n"
 "                \n"
 "                % if object.partner_id.user_ids\n"
-"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
+"                <p>You can view your quotes, sales orders and invoices "
+"online by going to our <a style=\"text-decoration:none; color: #875A7B;\" "
+"href=\"/my/home\">Online Portal</a>.</p><br/>\n"
 "                % endif\n"
 "\n"
-"                <p>If you have any question, do not hesitate to contact us.</p><br/>\n"
-"                <p>Thank you for choosing ${object.company_id.name or \"us\"}!</p>\n"
+"                <p>If you have any question, do not hesitate to contact us.</"
+"p><br/>\n"
+"                <p>Thank you for choosing ${object.company_id.name or \"us"
+"\"}!</p>\n"
 "            </td>\n"
 "        </tr><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
@@ -80,15 +96,82 @@ msgid ""
 "                </p>\n"
 "                % endif\n"
 "                <p style=\"font-size: 11px;\"><strong>Sent by\n"
-"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-"
+"decoration:none; color: #875A7B;\">\n"
 "                    <strong>${user.company_id.name}</strong>\n"
-"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:"
+"none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
 "                </strong></p>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 "
+"auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
+"5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
+"\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
+"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Sehr geehrte/r ${object.partner_id.name},</p><br/>\n"
+"                <p>Ihr Auftrag <a href=\"/quote/${object.id}/${object."
+"access_token}\">${object.name}</a> wurde validiert!</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>Sie können Ihre Angebote, Aufträge und Rechnungen online "
+"über unser <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home"
+"\">Online Portal</a> ansehen.</p><br/>\n"
+"                % endif\n"
+"\n"
+"                <p>Bei Fragen kontaktieren Sie uns bitte.</p><br/>\n"
+"                <p>Danke, dass Sie sich für ${object.company_id.name or \"us"
+"\"} entschieden haben!</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>Gesendet von\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-"
+"decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a> über <a href=\"www.odoo.com\" style=\"text-decoration:"
+"none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -117,22 +200,26 @@ msgstr "&amp;times;"
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
-"                                this content will appear on the quotation only if this\n"
+"                                this content will appear on the quotation "
+"only if this\n"
 "                                product is put on the quote."
 msgstr ""
 ":\n"
-"                                dieser Inhalt erscheint nur im Angebot, wenn Sie das\n"
+"                                dieser Inhalt erscheint nur im Angebot, wenn "
+"Sie das\n"
 "                                Produkt in das Angebot übernehmen."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
-"                                this content will appear on the quotation only if this\n"
+"                                this content will appear on the quotation "
+"only if this\n"
 "                                product is used in the quote."
 msgstr ""
 ":\n"
-"                                dieser Inhalt erscheint nur im Angebot, wenn Sie das\n"
+"                                dieser Inhalt erscheint nur im Angebot, wenn "
+"Sie das\n"
 "                                Produkt in das Angebot übernommen haben."
 
 #. module: website_quote
@@ -143,12 +230,12 @@ msgstr "<i class=\"fa fa-check\"/> Annehmen"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Annehmen &amp; bezahlen"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept Order"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Auftrag annehmen"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -158,7 +245,7 @@ msgstr "Jetzt bezahlen"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Feedback"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -186,7 +273,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>, for an amount of </span>"
-msgstr ""
+msgstr "<span>, für den Betrag von </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -194,6 +281,8 @@ msgid ""
 "<span>I agree that by paying this proposal, I\n"
 "                                accept it on the behalf of </span>"
 msgstr ""
+"<span>Indem ich dieses Angebot bezahle, stimme ich zu,\n"
+"                                es anzunehmen für </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -210,12 +299,12 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<span>Suggested Products</span>"
-msgstr ""
+msgstr "<span>Vorgeschlagene Produkte</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr ""
+msgstr "<span>mit Zahlungsbedingungen: </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
@@ -239,6 +328,9 @@ msgid ""
 "                                will appear on all quotations using this\n"
 "                                template."
 msgstr ""
+"<strong>Vorlagenüberschrift:</strong> Dieser Inhalt\n"
+"                                wird bei allen Angeboten aus dieser Vorlage\n"
+"                                angezeigt."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -246,11 +338,13 @@ msgid ""
 "<strong>This offer expired!</strong><br/>\n"
 "                                  Contact us for new quote."
 msgstr ""
+"<strong>Dieses Angebot ist abgelaufen!</strong><br/>\n"
+"                                  Kontaktieren Sie uns für ein neues Angebot."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<strong>This offer expires in</strong>"
-msgstr ""
+msgstr "<strong>Dieses Angebot endet in</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -258,6 +352,8 @@ msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
 msgstr ""
+"<strong>Dieses Angebot wurde storniert.</strong> Kontaktieren Sie uns für "
+"ein neues Angebot."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -267,8 +363,8 @@ msgstr "<strong>Gesamt:</strong>"
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_delivery_carrier_website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 
@@ -280,7 +376,7 @@ msgstr "Über uns"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "Zu Auftragszeilen hinzufügen"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -296,9 +392,14 @@ msgstr "Betrag vor Rabatt"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "As a leading professional services firm,\n"
-"                                       we know that success is all about the\n"
+"                                       we know that success is all about "
+"the\n"
 "                                       commitment we put on strong services."
 msgstr ""
+"Als eine der führenden Unternehmen für professionelle Dienstleistungen\n"
+"                                       wissen wir, dass Erfolg auf der "
+"Grundlage\n"
+"                                       eines perfekten Service ruht."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -313,7 +414,7 @@ msgstr "Zurück"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Back to Sales Order"
-msgstr ""
+msgstr "Zurück zu Auftrag"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -338,7 +439,7 @@ msgstr "Hier klicken, um eine Vorlage zu erstellen."
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "Bestätigungs-E-Mail"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -418,7 +519,7 @@ msgstr "Anzeigename"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr ""
+msgstr "Angebot bearbeiten"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -428,27 +529,42 @@ msgstr "Vorlage bearbeiten"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Ablaufdatum:"
+
+#. module: website_quote
+#: model:ir.model,name:website_quote.model_ir_model_fields
+msgid "Fields"
+msgstr "Felder"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
+msgstr "Zeigt Reihenfolge bei Listenansicht der Auftragszeilen."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
 msgid "Gives the sequence order when displaying a list of suggested product."
-msgstr ""
+msgstr "Zeigt Reihenfolge bei Listenansicht des vorgeschlagenen Produkts."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
-"                                <strong>boost your success rate</strong>. The\n"
-"                                first section is usually about your company,\n"
+"                                <strong>boost your success rate</strong>. "
+"The\n"
+"                                first section is usually about your "
+"company,\n"
 "                                your references, your methodology or\n"
-"                                guarantees, your team, SLA, terms and conditions, etc."
+"                                guarantees, your team, SLA, terms and "
+"conditions, etc."
 msgstr ""
+"Eindrucksvolle Angebotsvorlagen tragen entscheidend\n"
+"                                zu Ihrer <strong>Erfolgsrate</strong> bei. "
+"Der\n"
+"                                erste Abschnitt ist Ihrem Unternehmen,\n"
+"                                Ihren Referenzen, Vorgehensweisen oder\n"
+"                                Garantien sowie Ihrem Team, SLA, "
+"Nutzungsbedingungen usw. gewidmet."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -467,10 +583,18 @@ msgstr "ID"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "If edit a quotation from the 'Preview' of a quotation, you will\n"
-"                        update the quotation for this customer only. If you edit the quotation\n"
-"                        template (from the Configuration menu), all future quotations will\n"
+"                        update the quotation for this customer only. If you "
+"edit the quotation\n"
+"                        template (from the Configuration menu), all future "
+"quotations will\n"
 "                        use this modified template."
 msgstr ""
+"Wenn Sie ein Angebot aus der „Vorschau“ bearbeiten, wird\n"
+"                        das Angebot nur für diesen Kunden aktualisiert. Wenn "
+"Sie die Angebotsvorlage\n"
+"                        (aus dem Menü „Konfiguration“) bearbeiten, verwenden "
+"alle zukünftigen Angebote\n"
+"                        diese modifizierte Vorlage."
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:77
@@ -480,6 +604,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Wenn Ihre Zahlungsinformationen auf unserem Server gespeichert ist, erfolgen "
+"Abonnementszahlungen automatisch."
 
 #. module: website_quote
 #: selection:sale.order,require_payment:0
@@ -558,7 +684,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Anzahl der Tage für die Berechnung des Gültigkeitsdatums des Angebots"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_website_description
@@ -578,7 +704,7 @@ msgid "Optional Products Lines"
 msgstr "Optionale Produktpositionen"
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:188
+#: code:addons/website_quote/models/sale_order.py:209
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr ""
@@ -597,17 +723,17 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
-msgstr ""
+msgstr "Unser Angebot"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "Unsere Qualität"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Service"
-msgstr ""
+msgstr "Unser Service"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:66
@@ -636,7 +762,7 @@ msgstr "Zahlungsmethoden"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Payment Terms:"
-msgstr ""
+msgstr "Zahlungsbedingungen:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -677,9 +803,16 @@ msgstr "Produktvorlage"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Product quality is the foundation we\n"
-"                                       stand on; we build it with a relentless\n"
-"                                       focus on fabric, performance and craftsmanship."
+"                                       stand on; we build it with a "
+"relentless\n"
+"                                       focus on fabric, performance and "
+"craftsmanship."
 msgstr ""
+"Die Produktqualität ist unsere\n"
+"                                       Grundlage. Wir garantieren sie durch "
+"unermüdliche\n"
+"                                       Arbeit an Material, Leistung und "
+"Herstellungsweise."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -707,12 +840,12 @@ msgstr "Angebot"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Angebotszeitraum"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr ""
+msgstr "Angebotsoption"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
@@ -743,7 +876,7 @@ msgstr "Angebotsvorlagen"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Angebot angesehen"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:27
@@ -770,8 +903,8 @@ msgstr "Dieses Angebot ablehnen"
 #: model:ir.model.fields,help:website_quote.field_sale_order_require_payment
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_require_payment
 msgid ""
-"Require immediate payment by the customer when validating the order from the"
-" website quote"
+"Require immediate payment by the customer when validating the order from the "
+"website quote"
 msgstr ""
 
 #. module: website_quote
@@ -799,13 +932,13 @@ msgstr "Auftragsposition"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
 msgid "Sales Order Reference"
-msgstr ""
+msgstr "Auftragsreferenz"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Sales Quotation Template Lines"
-msgstr ""
+msgstr "Positionen der Angebotsvorlage"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
@@ -885,20 +1018,30 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"Diese E-Mail-Vorlage wird bei Bestätigung gesendet. Lassen Sie sie leer, um "
+"nichts zu senden."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the <i>Sale</i>\n"
-"                                application, using the menu: Configuration /\n"
+"                                customize it to fit your own needs from the "
+"<i>Sale</i>\n"
+"                                application, using the menu: "
+"Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Dies ist eine <strong>Vorlage für ein Beispielangebot</strong>. Passen Sie "
+"sie\n"
+"                                an Ihren Bedarf an. Gehen Sie dazu in der "
+"Anwendung <i>Vertrieb</i>\n"
+"                                zum Menü: Konfiguration/\n"
+"                                Angebotsvorlagen."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This order"
-msgstr ""
+msgstr "Dieser Auftrag"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -918,9 +1061,14 @@ msgstr "Dieses Angebot wurde abgelehnt."
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 "Titles with style <i>Heading 1</i> and\n"
-"                                <i>Heading 2</i> will be used to generate the\n"
+"                                <i>Heading 2</i> will be used to generate "
+"the\n"
 "                                table of content automatically."
 msgstr ""
+"Titel mit Stil <i>Überschrift 1</i> und\n"
+"                                <i>Überschrift 2</i> werden zum "
+"automatischen Generieren\n"
+"                                des Inhaltsverzeichnis verwendet."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -947,9 +1095,17 @@ msgstr "Mengeneinheit "
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                    Send these quotes by email and let your customers sign online.\n"
-"                    Use cross-selling and discounts to push and boost your sales."
+"                    Send these quotes by email and let your customers sign "
+"online.\n"
+"                    Use cross-selling and discounts to push and boost your "
+"sales."
 msgstr ""
+"Mithilfe von Vorlagen erstellen Sie in wenigen Minuten perfekte, "
+"professionelle Angebote.\n"
+"                    Senden Sie diese Angebote per E-Mail an Kunden und "
+"lassen Sie sie online unterzeichnen.\n"
+"                    Durch Cross-Selling und Rabatte wird Ihr Vertrieb weiter "
+"gesteigert."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -960,9 +1116,14 @@ msgstr "Bestätige Bestellung"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "We always ensure that our products are\n"
-"                                       set at a fair price so that you will be\n"
+"                                       set at a fair price so that you will "
+"be\n"
 "                                       happy to buy them."
 msgstr ""
+"Wir sorgen stets dafür, dass unsere Produkte\n"
+"                                       einen fairen Preis erhalten, sodass "
+"Sie mit\n"
+"                                       deren Erwerb glücklich sind."
 
 #. module: website_quote
 #: model:ir.actions.report.xml,name:website_quote.report_web_quote
@@ -978,11 +1139,24 @@ msgstr "Website-Beschreibung"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
-"                        automatically create a quotation using the descriptions\n"
-"                        of all products in the proposal. The table of content\n"
-"                        on the left is generated automatically using the styles you\n"
+"                        automatically create a quotation using the "
+"descriptions\n"
+"                        of all products in the proposal. The table of "
+"content\n"
+"                        on the left is generated automatically using the "
+"styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"Sie können <strong>eine Beschreibung pro Produkt festlegen</strong>. Odoo "
+"erstellt\n"
+"                        automatisch ein Angebot mit allen "
+"Produktbeschreibungen\n"
+"                        des Vorschlags. Das Inhaltsverzeichnis auf der "
+"linken Seite\n"
+"                        wird automatisch mithilfe der von Ihnen verwendeten "
+"Formate\n"
+"                        aus der Beschreibung (Überschrift 1, Überschrift "
+"2, ...) generiert."
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:137
@@ -1034,7 +1208,7 @@ msgstr "Ihre Mitteilung wurde erfolgreich gesendet!"
 #. module: website_quote
 #: model:mail.template,subject:website_quote.confirmation_mail
 msgid "Your order ${object.name} is confirmed"
-msgstr ""
+msgstr "Ihr Auftrag ${object.name} wurde bestätigt."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

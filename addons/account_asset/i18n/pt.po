@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2016-05-19 11:35+0000\n"
 "Last-Translator: Manuela Silva <inactive+alfalb@transifex.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -28,7 +28,7 @@ msgid " (copy)"
 msgstr " (cópia)"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:534
+#: code:addons/account_asset/models/account_asset.py:535
 #, python-format
 msgid " (grouped)"
 msgstr " (agrupado)"
@@ -99,7 +99,7 @@ msgid "Additional Options"
 msgstr "Opções Adicionais"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:591
+#: code:addons/account_asset/models/account_asset.py:592
 #, python-format
 msgid "Amount"
 msgstr "Montante"
@@ -168,6 +168,7 @@ msgstr "Data de Inicio de Activo"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
+#: model:ir.model.fields,field_description:account_asset.field_product_product_asset_category_id
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
@@ -412,7 +413,7 @@ msgid "Cumulative Depreciation"
 msgstr "Depreciação acumulada"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:591
+#: code:addons/account_asset/models/account_asset.py:592
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -455,6 +456,7 @@ msgid "Deferred Revenue Account"
 msgstr "Conta de receitas diferidas"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_product_product_deferred_revenue_category_id
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
@@ -541,7 +543,7 @@ msgid "Depreciation board modified"
 msgstr "Quadro de depreciação modificado"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:594
+#: code:addons/account_asset/models/account_asset.py:595
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Linha de depreciação lançada."
@@ -569,7 +571,7 @@ msgid "Disposal Moves"
 msgstr "Movimentos de abate"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:573
+#: code:addons/account_asset/models/account_asset.py:574
 #, python-format
 msgid "Document closed."
 msgstr "Documento fechado."
@@ -814,7 +816,7 @@ msgid "One Entry Every"
 msgstr "Um Movimento a Cada"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:593
+#: code:addons/account_asset/models/account_asset.py:594
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #, python-format
@@ -992,11 +994,19 @@ msgid "The number of depreciations needed to depreciate your asset"
 msgstr "A quantidade de tempo entre duas amortizações, em meses"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_invoice.py:52
+#: code:addons/account_asset/models/account_invoice.py:63
 #, python-format
 msgid ""
 "The number of depreciations or the period length of your asset category "
 "cannot be null."
+msgstr ""
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
 msgstr ""
 
 #. module: account_asset
@@ -1084,13 +1094,13 @@ msgid "You cannot delete a document that contains posted entries."
 msgstr "Não pode apagar um documento que contem entradas lançadas"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:602
+#: code:addons/account_asset/models/account_asset.py:603
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "Não pode apagar linhas de depreciação lançadas."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:604
+#: code:addons/account_asset/models/account_asset.py:605
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "Não pode apagar linhas de prestações lançadas."

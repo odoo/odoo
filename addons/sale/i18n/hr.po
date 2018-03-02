@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale
-# 
+#
 # Translators:
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Bole <bole@dajmi5.com>, 2017
@@ -18,25 +18,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-17 08:16+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2017-07-17 08:16+0000\n"
 "Last-Translator: Davor Bojkić <davor.bojkic@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
 "<p>Dear ${object.partner_id.name}\n"
-"% set access_action = object.with_context(force_website=True).get_access_action()\n"
-"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
-"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
-"% set access_name = is_online and object.template_id and doc_name == 'quotation' and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name\n"
+"% set access_action = object.with_context(force_website=True)."
+"get_access_action()\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else "
+"'order confirmation'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions."
+"act_url'\n"
+"% set access_name = is_online and object.template_id and doc_name == "
+"'quotation' and 'Accept and pay %s online' % doc_name or 'View %s' % "
+"doc_name\n"
 "% set access_url = is_online and access_action['url'] or ''\n"
 "\n"
 "% if object.partner_id.parent_id:\n"
@@ -53,14 +59,17 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"amounting in <strong>${object.amount_total} ${object.pricelist_id."
+"currency_id.name}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
 "% if is_online and not ctx.get('proforma'):\n"
 "    <br/><br/>\n"
 "    <center>\n"
-"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; "
+"padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-"
+"size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
 "        <br/><br/><br/>\n"
 "        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
 "    </center>\n"
@@ -146,8 +155,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
-"<b>Pozovite prodavače ili managere</b> putm maila.<br/><i>Unesite jedan mail"
-" po retku.</i>"
+"<b>Pozovite prodavače ili managere</b> putm maila.<br/><i>Unesite jedan mail "
+"po retku.</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -155,23 +164,31 @@ msgid ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or user.company_id\n"
+"                % set company = record and record.company_id or user."
+"company_id\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
-"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor="
+"\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-"
+"collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
 "\n"
 "                      <!-- HEADER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding="
+"\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
+"rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\">\n"
-"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                  <span style=\"font-size:20px; color:white; "
+"font-weight: bold;\">\n"
 "                                      ${object.record_name}\n"
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company."
+"id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt="
+"\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -181,9 +198,12 @@ msgid ""
 "                      <!-- CONTENT -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding="
+"\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
+"rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
 "                            <tbody>\n"
-"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,"
+"Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
 "                                ${object.body | safe}\n"
 "                              </td>\n"
 "                            </tbody>\n"
@@ -194,18 +214,24 @@ msgid ""
 "                      <!-- FOOTER -->\n"
 "                      <tr>\n"
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding="
+"\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
+"rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
 "                            <tr>\n"
-"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                              <td valign=\"middle\" align=\"left\" style="
+"\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
 "                                ${company.name}<br/>\n"
 "                                ${company.phone or ''}\n"
 "                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                              <td valign=\"middle\" align=\"right\" style="
+"\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
 "                                % if company.email:\n"
-"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                <a href=\"mailto:${company.email}\" style="
+"\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
 "                                % if company.website:\n"
-"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                    <a href=\"${company.website}\" style="
+"\"text-decoration:none; color: white;\">\n"
 "                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
@@ -216,7 +242,8 @@ msgid ""
 "                      </tr>\n"
 "                      <tr>\n"
 "                        <td align=\"center\">\n"
-"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                            Powered by <a target=\"_blank\" href=\"https://"
+"www.odoo.com\">Odoo</a>.\n"
 "                        </td>\n"
 "                      </tr>\n"
 "                    </tbody>\n"
@@ -230,7 +257,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "<i>Example: pre-paid service offers for which the customer have\n"
-"                to buy an extra pack of hours, because he used all his support\n"
+"                to buy an extra pack of hours, because he used all his "
+"support\n"
 "                hours.</i>"
 msgstr ""
 "<i>Primjer: pretplatničke ponude zbog kojih će kupac morati\n"
@@ -317,7 +345,8 @@ msgstr "Upozorenje može biti postavljeno na proizvod ili na kupca (Prodaja)"
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_stock_packaging
 msgid ""
 "Ability to select a package type in sales orders and \n"
-"                to force a quantity that is a multiple of the number of units per package."
+"                to force a quantity that is a multiple of the number of "
+"units per package."
 msgstr ""
 
 #. module: sale
@@ -353,7 +382,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Adrese u prodajnim nalozima"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:159
 #, python-format
 msgid "Advance: %s"
 msgstr "Avans od %s"
@@ -367,9 +396,11 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
-"                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
 msgstr ""
-"Omogućuje korištenje različitih cijena, bazirano na pravilima po kategorijama kupaca.\n"
+"Omogućuje korištenje različitih cijena, bazirano na pravilima po "
+"kategorijama kupaca.\n"
 "Primjer: 10% za trgovce, popust od 5 kn na odabrani proizvod itd."
 
 #. module: sale
@@ -390,7 +421,7 @@ msgstr "Iznos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Količina ponuda za fakturiranje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -450,8 +481,8 @@ msgstr "Blokiranje poruke"
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
-"codes. Specific conditions can be set (products, customers, minimum purchase"
-" amount, period). Rewards can be discounts (% or amount) or free products."
+"codes. Specific conditions can be set (products, customers, minimum purchase "
+"amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
 
 #. module: sale
@@ -518,7 +549,7 @@ msgstr "Klikinte ovdje za dodavanje linija vašim ponudama."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a target"
-msgstr ""
+msgstr "Kliknite za definiranje cilja ."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -706,7 +737,7 @@ msgid "Delivered"
 msgstr "Isporučeno"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:724
+#: code:addons/sale/models/sale.py:736
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -803,7 +834,7 @@ msgid "Docsaway"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
 #, python-format
 msgid "Down Payment"
 msgstr "Polog"
@@ -834,7 +865,7 @@ msgid "Down payment (percentage)"
 msgstr "Polog (postotak)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "Polog u postotku %s%%"
@@ -867,7 +898,7 @@ msgid "Extended Filters"
 msgstr "Prošireni filteri"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:697
+#: code:addons/sale/models/sale.py:709
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -1041,7 +1072,7 @@ msgid "Invoiced"
 msgstr "Izdani računi"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:725
+#: code:addons/sale/models/sale.py:737
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1116,6 +1147,14 @@ msgid "Is a down payment"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/sale.py:748
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category___last_update
@@ -1157,8 +1196,8 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:24
 #, python-format
 msgid ""
-"Let's create a new quotation.<br/><i>Note that colored buttons usually point"
-" to the next logical actions.</i>"
+"Let's create a new quotation.<br/><i>Note that colored buttons usually point "
+"to the next logical actions.</i>"
 msgstr ""
 
 #. module: sale
@@ -1217,9 +1256,12 @@ msgstr "Ručno ažuriranje količina na narudžbi"
 #: model:ir.model.fields,help:sale.field_product_product_track_service
 #: model:ir.model.fields,help:sale.field_product_template_track_service
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
 
 #. module: sale
@@ -1278,7 +1320,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1298,7 +1340,7 @@ msgstr "Naziv"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:104 code:addons/sale/models/sale.py:255
-#: code:addons/sale/models/sale.py:256
+#: code:addons/sale/models/sale.py:257 code:addons/sale/models/sale.py:259
 #, python-format
 msgid "New"
 msgstr "Novi"
@@ -1374,7 +1416,8 @@ msgstr ""
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.\n"
 "                    You'll be able to invoice it and collect payments.\n"
-"                    From the <i>Sales Orders</i> menu, you can track delivery\n"
+"                    From the <i>Sales Orders</i> menu, you can track "
+"delivery\n"
 "                    orders or services."
 msgstr ""
 "Kada se ponuda potvrdi, ona postaje prodajni nalog.\n"
@@ -1463,7 +1506,7 @@ msgid "Ordered Qty"
 msgstr "Naručena kol."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:722
+#: code:addons/sale/models/sale.py:734
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
@@ -1474,10 +1517,12 @@ msgstr "Naručene količine"
 #: model:ir.model.fields,help:sale.field_product_template_invoice_policy
 msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
-"Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered "
+"(time or deliveries)."
 msgstr ""
 "Naručena količina: Fakturiranje prema količini koju je kupac naručio.\n"
-"Isporučena količina: Fakturiranje prema količini koju je prodavač isporučio (vrijeme ili isporuka)."
+"Isporučena količina: Fakturiranje prema količini koju je prodavač isporučio "
+"(vrijeme ili isporuka)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1507,11 +1552,14 @@ msgstr "Ponude za sugestivno proširenje prodaje"
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "Orders to upsell are orders having products with an invoicing\n"
-"                policy based on <i>ordered quantities</i> for which you have\n"
+"                policy based on <i>ordered quantities</i> for which you "
+"have\n"
 "                delivered more than what have been ordered."
 msgstr ""
-"Ponude za sugestivno proširenje prodaje su ponude koje imaju proizvode s politikom\n"
-"                izdavanja računa na osnovu <i>naručenih količina</i> za koje ste\n"
+"Ponude za sugestivno proširenje prodaje su ponude koje imaju proizvode s "
+"politikom\n"
+"                izdavanja računa na osnovu <i>naručenih količina</i> za koje "
+"ste\n"
 "                dostavili više nego je bilo naručeno."
 
 #. module: sale
@@ -1562,13 +1610,13 @@ msgid "Personalize sales order and invoice report"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:286
+#: code:addons/sale/models/sale.py:289
 #, python-format
 msgid "Please define an accounting sales journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:807
+#: code:addons/sale/models/sale.py:831
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -2027,8 +2075,8 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, odabirom "
-"opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i blokirati tok."
-" Poruku treba napisati u slijedećem polju."
+"opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i blokirati tok. "
+"Poruku treba napisati u slijedećem polju."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
@@ -2174,8 +2222,8 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
 msgid ""
-"Shipping connectors allow to compute accurate shipping costs, print shipping"
-" labels and request carrier picking at your warehouse to ship to the "
+"Shipping connectors allow to compute accurate shipping costs, print shipping "
+"labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
 
@@ -2313,7 +2361,7 @@ msgid "Terms and conditions"
 msgstr "Uvijeti o korištenju"
 
 #. module: sale
-#: code:addons/sale/models/sale_analytic.py:119
+#: code:addons/sale/models/sale_analytic.py:112
 #, python-format
 msgid ""
 "The Sales Order %s linked to the Analytic Account must be validated before "
@@ -2334,12 +2382,12 @@ msgstr "Analitički konto povezan sa prodajnim nalogom."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
 msgid ""
-"The margin is computed as the sum of product sales prices minus the cost set"
-" in their detail form."
+"The margin is computed as the sum of product sales prices minus the cost set "
+"in their detail form."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:718
+#: code:addons/sale/models/sale.py:730
 #, python-format
 msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
@@ -2347,7 +2395,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:151
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2357,16 +2405,16 @@ msgstr ""
 "'usluge'. Molimo koristite neki drugi artikl ili ažurirajte ovaj artikl."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:145
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
-"The product used to invoice a down payment should have an invoice policy set"
-" to \"Ordered quantities\". Please update your deposit product to be able to"
-" create a deposit invoice."
+"The product used to invoice a down payment should have an invoice policy set "
+"to \"Ordered quantities\". Please update your deposit product to be able to "
+"create a deposit invoice."
 msgstr ""
-"Artikl koji se koristi za fakturiranje predujma treba imati politiku fakture"
-" postavljenu na \"Naručene količine\". Ažurirajte svoj depozit artikla da bi"
-" mogli stvoriti račun depozita."
+"Artikl koji se koristi za fakturiranje predujma treba imati politiku fakture "
+"postavljenu na \"Naručene količine\". Ažurirajte svoj depozit artikla da bi "
+"mogli stvoriti račun depozita."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
@@ -2386,14 +2434,14 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74
 #, python-format
 msgid ""
-"There is no income account defined for this product: \"%s\". You may have to"
-" install a chart of account from Accounting app, settings menu."
+"There is no income account defined for this product: \"%s\". You may have to "
+"install a chart of account from Accounting app, settings menu."
 msgstr ""
 "Nema računa prihoda definiranog za ovaj proizvod: \"%s\". Možda ćete morati "
 "instalirati kontni plan iz računovodstvenih aplikacija, postavke izbornika."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:363 code:addons/sale/models/sale.py:367
+#: code:addons/sale/models/sale.py:366 code:addons/sale/models/sale.py:370
 #, python-format
 msgid "There is no invoicable line."
 msgstr "Ne postoji stavka računa."
@@ -2419,8 +2467,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman,"
-" partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
@@ -2630,7 +2678,7 @@ msgid "Warning"
 msgstr "Upozorenje"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:898
+#: code:addons/sale/models/sale.py:911
 #, python-format
 msgid "Warning for %s"
 msgstr "Upozorenje za %s"
@@ -2688,11 +2736,11 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
-"Ne možete izbrisati poslanu ponudu ili prodajni nalog! Pokušajte to otkazati"
-" prije."
+"Ne možete izbrisati poslanu ponudu ili prodajni nalog! Pokušajte to otkazati "
+"prije."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:927
+#: code:addons/sale/models/sale.py:953
 #, python-format
 msgid ""
 "You can not remove a sales order line.\n"
@@ -2717,14 +2765,16 @@ msgstr "Ovdje ćete pronaći sve narudžbe koje su spremne za fakturirati."
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
-"                to a Sales Order, then create the Invoice and collect the Payment."
+"                to a Sales Order, then create the Invoice and collect the "
+"Payment."
 msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
+"            to a Sales Order, then create the Invoice and collect the "
+"Payment."
 msgstr ""
 
 #. module: sale

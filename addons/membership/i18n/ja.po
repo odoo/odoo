@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
 "PO-Revision-Date: 2016-06-07 11:16+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -37,11 +37,11 @@ msgstr "待機数"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
-"メンバーシップを関連付けたい会員。関連する会員のメンバーシップの状態が考慮さ"
-"れます。"
+"メンバーシップを関連付ける会員。 関連する会員のメンバーシップ状態を検討しま"
+"す。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -83,7 +83,7 @@ msgstr "関連取引先"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
-msgstr ""
+msgstr "会員資格の購入"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
@@ -93,7 +93,7 @@ msgstr "取消"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "会員のキャンセル日"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
@@ -115,7 +115,7 @@ msgstr "分類"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "製品が会員資格の対象かどうかを確認します。"
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -128,6 +128,16 @@ msgstr "クリックして新会員を追加する"
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
 msgstr "会社"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "設定"
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -219,22 +229,18 @@ msgstr "会員終了日"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Ending Month Of Membership"
-msgstr ""
+msgstr "会員の終了月"
 
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "警告！終了日は開始日より前に設定することはできません。"
 
 #. module: membership
-#: constraint:res.partner:0
+#: code:addons/membership/models/partner.py:159
+#, python-format
 msgid "Error ! You cannot create recursive associated members."
 msgstr "エラー！再帰的な関係会員は作れません。"
-
-#. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr "エラー。この会員製品は期限切れです。"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -323,24 +329,34 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"メンバーシップの状態を示します。\n"
+"- 非会員：いかなる会員資格も申請していないパートナー。\n"
+"- キャンセル済会員：メンバーシップをキャンセルした会員。\n"
+"- 古い会員：会員期限が切れた会員。\n"
+"- 入会待ち会員：メンバーシップを申請し、請求書を作成する会員。\n"
+"- 請求済会員：請求書が作成された会員。\n"
+"- 支払い会員：会費を支払った会員。"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"メンバーシップのステータスを示します。\n"
+"-メンバーではない：どのメンバーシップにも申し込まなかったメンバー。\n"
+"- キャンセルされたメンバー：メンバーシップをキャンセルしたメンバー。\n"
+"- 古いメンバー：メンバーシップ日付が期限切れになったメンバー。\n"
+"- 待っているメンバー：メンバーシップおよび作成されようとしている送り状申し込"
+"んだメンバー。\n"
+"- 送り状を送られたメンバー：送り状が作成されたメンバー。\n"
+"- 支払われたメンバー：メンバーシップ料を支払ったメンバー。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -378,6 +394,7 @@ msgstr "会員価格"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -475,6 +492,13 @@ msgid "Membership products"
 msgstr "会員製品"
 
 #. module: membership
+#: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
+#: model:ir.cron,cron_name:membership.ir_cron_update_membership
+#: model:ir.cron,name:membership.ir_cron_update_membership
+msgid "Membership: update memberships"
+msgstr "メンバーシップ: 会員資格の更新"
+
+#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
 msgstr "会員"
@@ -503,6 +527,9 @@ msgid ""
 "                 Current Membership Status, Discussions and History of "
 "Membership, etc."
 msgstr ""
+"Odooは、あなたのメンバーに関連するすべての活動について容易に追跡することを手"
+"助けします。\n"
+"現在のメンバーシップステータス、討議、メンバーシップの歴史など。"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -519,19 +546,18 @@ msgid "Paid Member"
 msgstr "支払済会員"
 
 #. module: membership
-#: model:ir.model,name:membership.model_res_partner
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
 msgid "Partner"
 msgstr "取引先"
 
 #. module: membership
-#: code:addons/membership/membership.py:351
+#: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "パートナは請求書を作成するための住所を持っていません。"
 
 #. module: membership
-#: code:addons/membership/membership.py:349
+#: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
 msgstr "取引先は無料会員です。"
@@ -553,8 +579,8 @@ msgstr "数量"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Reports"
-msgstr "レポート"
+msgid "Reporting"
+msgstr "レポーティング"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -601,7 +627,7 @@ msgstr "パートナ別交渉価格"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "このメモは見積に表示されます。"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -633,10 +659,4 @@ msgstr "待機会員"
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
-msgstr ""
-
-#~ msgid "Basic Membership"
-#~ msgstr "基本会員"
-
-#~ msgid "Silver Membership"
-#~ msgstr "シルバー会員"
+msgstr "membership.membership_line"

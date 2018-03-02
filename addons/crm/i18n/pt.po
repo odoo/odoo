@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2018-03-02 14:44+0000\n"
 "PO-Revision-Date: 2016-02-20 10:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -458,6 +458,13 @@ msgid ""
 "contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon="
+"\"&#57408;\"/>\n"
+"                                        <strong>Importar para</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 200 "
+"contactos</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1008,7 +1015,7 @@ msgstr ""
 "mesclar contatos com e-mails diferentes ."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:844
+#: code:addons/crm/models/crm_lead.py:869
 #, python-format
 msgid ""
 "All email incoming to %s will automatically\n"
@@ -1273,7 +1280,7 @@ msgid "Click on an opportunity to zoom to it."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:847
+#: code:addons/crm/models/crm_lead.py:872
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr "Clique para adicionar uma nova oportunidade"
@@ -1452,7 +1459,7 @@ msgid "Convert to opportunities"
 msgstr "Converter em oportunidades"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1018
+#: code:addons/crm/models/crm_lead.py:1044
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
@@ -1636,7 +1643,7 @@ msgid "Current Line"
 msgstr "Linha Atual"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1062
+#: code:addons/crm/models/crm_lead.py:1088
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1652,7 +1659,7 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1064
+#: code:addons/crm/models/crm_lead.py:1090
 #, python-format
 msgid "Customer Email"
 msgstr "E-mail do cliente"
@@ -1962,6 +1969,11 @@ msgid "Expected Revenue"
 msgstr "Retorno Esperado"
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_expected_revenue
+msgid "Expected Revenue by Team"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected Revenues"
 msgstr "Rendimento esperado"
@@ -2046,7 +2058,7 @@ msgid "Force assignation"
 msgstr "Forçar Atribuição"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:515
+#: code:addons/crm/models/crm_lead.py:540
 #, python-format
 msgid "From %s : %s"
 msgstr "De %s: %s"
@@ -2386,7 +2398,7 @@ msgid "Last Updated on"
 msgstr "Última Actualização em"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:821
+#: code:addons/crm/models/crm_lead.py:846
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
@@ -2569,7 +2581,7 @@ msgstr "Lista de pontos fracos possíveis por segmento/perfil"
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/models/crm_lead.py:1024
+#: code:addons/crm/models/crm_lead.py:1050
 #: code:addons/crm/static/src/js/web_planner_crm.js:33
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2643,7 +2655,7 @@ msgid "Medium"
 msgstr "Médio"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:863
+#: code:addons/crm/models/crm_lead.py:888
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Reunião agendada no '%s 'Assunto: %s <br> Duração: %s hora ( s)"
@@ -2727,25 +2739,25 @@ msgid "Merge with existing opportunities"
 msgstr "Fundir com diferentes oportunidades"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:466
+#: code:addons/crm/models/crm_lead.py:491
 #, python-format
 msgid "Merged lead"
 msgstr "Prospecto fundido"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:497
+#: code:addons/crm/models/crm_lead.py:522
 #, python-format
 msgid "Merged leads"
 msgstr "Prospectos fundidos"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:497
+#: code:addons/crm/models/crm_lead.py:522
 #, python-format
 msgid "Merged opportunities"
 msgstr "Oportunidades intercaladas"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:466
+#: code:addons/crm/models/crm_lead.py:491
 #, python-format
 msgid "Merged opportunity"
 msgstr "Oportunidade Fundida"
@@ -2871,7 +2883,7 @@ msgid "Next activity late"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1084
+#: code:addons/crm/models/crm_lead.py:1110
 #, python-format
 msgid "No Subject"
 msgstr "Sem Assunto"
@@ -3082,7 +3094,7 @@ msgid "Opportunities that are assigned to me"
 msgstr "Oportunidades atribuídas a mim"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:796
+#: code:addons/crm/models/crm_lead.py:821
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event_opportunity_id
@@ -3323,7 +3335,7 @@ msgid "Planner"
 msgstr "Planeador"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:569
+#: code:addons/crm/models/crm_lead.py:594
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -3514,7 +3526,7 @@ msgstr "Requisitos"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Restore"
-msgstr ""
+msgstr "Restaurar"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4147,7 +4159,7 @@ msgstr ""
 "mostrar."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:990
+#: code:addons/crm/models/crm_lead.py:1016
 #, python-format
 msgid "This target does not exist."
 msgstr "Este alvo não existe."
@@ -4536,7 +4548,7 @@ msgstr "Assistente"
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/models/crm_lead.py:1023
+#: code:addons/crm/models/crm_lead.py:1049
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #: code:addons/crm/static/src/js/web_planner_crm.js:22
 #: code:addons/crm/static/src/js/web_planner_crm.js:27
@@ -4743,7 +4755,7 @@ msgid "e.g. www.odoo.com"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:851
+#: code:addons/crm/models/crm_lead.py:876
 #, python-format
 msgid "opportunities"
 msgstr "oportunidades"
@@ -4813,7 +4825,7 @@ msgstr ""
 "                                 nome (ex. sales@yourcompany.com)"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:857
+#: code:addons/crm/models/crm_lead.py:882
 #, python-format
 msgid "unknown"
 msgstr "Desconhecido"

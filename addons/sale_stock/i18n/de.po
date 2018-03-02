@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
@@ -23,10 +23,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Andi <flimflam@salasar.de>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
@@ -48,7 +48,7 @@ msgstr "Kundendienst"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr ""
+msgstr "Spezielle Routen aus Aufträgen anwenden (z. B. Streckengeschäft, MTO)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
@@ -57,6 +57,10 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"Standardmäßig berechnet Odoo das voraussichtliche Lieferdatum auf folgende "
+"Weise: Auftragsdatum + höchste Kundenauslieferungszeit von Produkten. Mit "
+"dieser Option können Sie ein bestimmtes Lieferdatum für Aufträge festlegen, "
+"anstatt Vorlaufzeiten für Produkte festzulegen."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -96,7 +100,7 @@ msgstr "Lieferbedingungen auf Angeboten und Rechnungen anzeigen"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Lieferbedingungen für Aufträgen und Rechnungen anzeigen"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -115,8 +119,8 @@ msgstr "Lieferbedingungen"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 "Lieferbedingungen sind eine Zusammenfassung der Konditionen & Bedingungen, "
 "die z.B. auch eine Kostenaufteilung ermöglicht."
@@ -158,18 +162,18 @@ msgstr "Abrechnung"
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Toleranztage bei Zusagen für Lieferversprechen. Produkte werden um diesen "
-"Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart"
-" um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach"
-" Kunde mit Vorsicht einsetzen!)"
+"Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart "
+"um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach "
+"Kunde mit Vorsicht einsetzen!)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Geschätztes Lieferdatum verschieben um"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
@@ -180,7 +184,7 @@ msgstr "Nicht genug Bestand!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "Auftragsspezifische Routen"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:156
@@ -221,6 +225,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Es empfiehlt sich, in Lieferaufträgen Produkte manuell zu reservieren oder "
+"den Zeitplaner auszuführen, um die Prioritäten im Falle von langen "
+"Auslieferungszeiten oder häufigen Engpässen besser im Blick zu behalten. "
+"Standardmäßig wird der Zeitplaner automatisch alle 24 Stunden ausgeführt."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
@@ -235,7 +243,7 @@ msgstr "Route"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Routen für Auftragspositionen"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_order_id
@@ -272,17 +280,17 @@ msgstr "Verkaufstoleranztage"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Planen Sie Lieferungen früher ein, um Verzögerungen zu vermeiden"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Sicherheitsvorlaufzeit"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_new_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Sicherheitsvorlaufzeit für den Verkauf"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -292,17 +300,17 @@ msgstr "Selektierbar in Auftragszeilen"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Set a delivery date on orders"
-msgstr ""
+msgstr "Ein Lieferdatum für Aufträge festlegen"
 
 #. module: sale_stock
 #: selection:stock.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Alle Produkte auf einmal versenden"
 
 #. module: sale_stock
 #: selection:stock.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Versenden Sie Produkte so schnell wie möglich, mit Rückstanden"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -312,7 +320,7 @@ msgstr "Lieferadresse"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_picking_policy
 msgid "Shipping Management"
-msgstr ""
+msgstr "Versand-Management"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -332,6 +340,11 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Dies ermöglicht die Anwendung einer speziellen Route auf Auftragspositionen "
+"(z. B. Streckengeschäft, Auftragsbeschaffung) im Falle eines ungewöhnlichen "
+"Auftragszenarios. Um in Auftragspositionen verfügbar zu sein, muss bei den "
+"Routen im Einrichtungsformular die Option „Auftragspositionen” aktiviert "
+"sein."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:203
@@ -377,12 +390,12 @@ msgstr "Warnung"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Wann werden verkaufte Produkte reserviert?"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Wann mit dem Versand beginnen "
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:157

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
@@ -20,11 +20,13 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Masha Koc <mariya.kos.ua@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -35,19 +37,23 @@ msgstr "3D Secure HTML"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_warning_text\">Тест</span>\n"
-"                                    <span class=\"o_stat_text\">Окружение</span>"
+"                                    <span class=\"o_stat_text\">Окружение</"
+"span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Продукт</span>\n"
-"                                    <span class=\"o_stat_text\">Окружение</span>"
+"                                    <span class=\"o_stat_text\">Окружение</"
+"span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -95,13 +101,13 @@ msgstr ""
 msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but will not be paid. Do not "
-"hesitate to contact us if you have any questions on the status of your "
-"order.</span>"
+"hesitate to contact us if you have any questions on the status of your order."
+"</span>"
 msgstr ""
-"<span><i>Ошибка,</i> Пожалуйста имейте в виду, что произошла ошибка во время"
-" выполнения транзакции. Заказ был подтвержден, но не будет оплачен. Не "
-"стесняйтесь обращаться к нам, если у вас есть какие-либо вопросы о состоянии"
-" вашего заказа.</span>"
+"<span><i>Ошибка,</i> Пожалуйста имейте в виду, что произошла ошибка во время "
+"выполнения транзакции. Заказ был подтвержден, но не будет оплачен. Не "
+"стесняйтесь обращаться к нам, если у вас есть какие-либо вопросы о состоянии "
+"вашего заказа.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -123,8 +129,7 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
-"<span><i>Pending</i>... The order will be validated after the "
-"payment.</span>"
+"<span><i>Pending</i>... The order will be validated after the payment.</span>"
 msgstr "<span><i>Ожидание</i>... Заказ будет проверен после оплаты.</span>"
 
 #. module: payment
@@ -197,8 +202,8 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
-"Authorize & capture the amount, confirm the SO and auto-validate the invoice"
-" on acquirer confirmation"
+"Authorize & capture the amount, confirm the SO and auto-validate the invoice "
+"on acquirer confirmation"
 msgstr ""
 "Авторизуйте и запишите сумму, подтвердите SO и автоматически подтвердите "
 "счет на подтверждение покупателю"
@@ -232,7 +237,7 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "Идентификатор документа обратного вызова"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_model_id
@@ -242,7 +247,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Хэш обратного вызова"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_method
@@ -377,8 +382,8 @@ msgstr ""
 "Определите, будут ли данные карты сохранены в качестве токена автоматически "
 "или нет. Платежные токены позволяют вашему клиенту повторно использовать "
 "свои карты в e-commerce или разрешить вам взимать счет непосредственно с "
-"кредитной карты. Если установить 'разрешить клиенту решать', у пользователей"
-" электронной торговли будет флажок, отображаемый на странице оплаты."
+"кредитной карты. Если установить 'разрешить клиенту решать', у пользователей "
+"электронной торговли будет флажок, отображаемый на странице оплаты."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -627,8 +632,8 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
-"Сообщение, отображаемое, если заказ успешно делается после того, как сделали"
-" процесс оплаты."
+"Сообщение, отображаемое, если заказ успешно делается после того, как сделали "
+"процесс оплаты."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
@@ -685,13 +690,13 @@ msgstr "Ogone"
 #: code:addons/payment/models/payment_acquirer.py:664
 #, python-format
 msgid "Only transactions in the Authorized status can be captured."
-msgstr ""
+msgstr "Только транзакции в статусе авторизации могут быть захвачены."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:671
 #, python-format
 msgid "Only transactions in the Authorized status can be voided."
-msgstr ""
+msgstr "Только транзакции в статусе авторизации могут быть аннулированы."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
@@ -875,9 +880,9 @@ msgstr "Маленькое изображение"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Малоразмерное изображение этого провайдера. Он автоматически изменяется в "
 "размере как изображение 64x64px с сохранением пропорций. Используйте это "
@@ -924,7 +929,8 @@ msgstr "Ссылка на платежную транзакцию должна �
 #: code:addons/payment/models/account_payment.py:42
 #, python-format
 msgid ""
-"This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
+"This feature is not available for payment acquirers set to the \"Authorize\" "
+"mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
 
@@ -942,12 +948,15 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
+"Этот платежный шлюз доступен для отдельных стран. Если ни один не выбран, он "
+"доступен для всех стран."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is rendered with qWeb with the following evaluation context:"
+"                                            It is rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -960,8 +969,7 @@ msgstr ""
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment method."
-msgstr ""
-"После выбора способа оплаты будет предоставлена информация о переводе."
+msgstr "После выбора способа оплаты будет предоставлена информация о переводе."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -1029,18 +1037,16 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment"
-" button."
-msgstr ""
-"После нажатия кнопки оплаты вы будете перенаправлены на сайт Buckaroo."
+"You will be redirected to the Buckaroo website after clicking on the payment "
+"button."
+msgstr "После нажатия кнопки оплаты вы будете перенаправлены на сайт Buckaroo."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
-"You will be redirected to the Ingenico website after clicking on the payment"
-" button."
-msgstr ""
-"После нажатия кнопки оплаты вы будете перенаправлены на сайт Ingenico."
+"You will be redirected to the Ingenico website after clicking on the payment "
+"button."
+msgstr "После нажатия кнопки оплаты вы будете перенаправлены на сайт Ingenico."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -1061,8 +1067,7 @@ msgstr "После нажатия кнопки оплаты вы будете п
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
-msgstr ""
-"После нажатия кнопки оплаты вы будете перенаправлены на веб-сайт Sips."
+msgstr "После нажатия кнопки оплаты вы будете перенаправлены на веб-сайт Sips."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form

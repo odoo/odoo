@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp_repair
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -28,10 +28,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:47+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mrp_repair
@@ -47,13 +47,28 @@ msgstr "(mise à jour)"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
 msgid ""
-"* The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
-"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.\n"
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* L'état « Brouillon » est utilisé lorsqu'un utilisateur saisit un nouvel "
+"ordre de réparation qui n'a pas encore été confirmé.\n"
+"* L'état « Confirmé » est utilisé lorsqu'un utilisateur confirme l'ordre de "
+"réparation.\n"
+"* L'état « Prêt à réparer » est utilisé pour démarrer la réparation. Un "
+"utilisateur peut uniquement démarrer la réparation si l'ordre a été "
+"confirmé.\n"
+"* L'état « À facturer » est utilisé pour générer la facture avant ou après "
+"la réparation.\n"
+"* L'état « Terminé » est défini une fois la réparation terminée.\n"
+"* L'état « Annulé » est utilisé lorsqu'un utilisateur annule un ordre de "
+"réparation."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -139,7 +154,7 @@ msgstr "Avant la réparation"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "Seules les réparations à l'état de brouillon peuvent être confirmées."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -168,7 +183,7 @@ msgstr "Annulé"
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Impossible d'annuler une réparation terminée."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -206,7 +221,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
-"Impossible de trouver une ligne de liste de prix correspondant à cet article et cette quantité.\n"
+"Impossible de trouver une ligne de liste de prix correspondant à cet article "
+"et cette quantité.\n"
 "Vous devez changer soit l'article, soit la quantité, soit la liste de prix."
 
 #. module: mrp_repair
@@ -247,7 +263,7 @@ msgstr "Emplacement actuel"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Adresse par défaut"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -349,11 +365,14 @@ msgstr "ID"
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
-"Dans un ordre de réparation, vous pouvez détailler les composants à supprimer,\n"
-"à ajouter ou à remplacer et vous pouvez enregistrer le temps que vous avez passé sur les différentes\n"
+"Dans un ordre de réparation, vous pouvez détailler les composants à "
+"supprimer,\n"
+"à ajouter ou à remplacer et vous pouvez enregistrer le temps que vous avez "
+"passé sur les différentes\n"
 "opérations."
 
 #. module: mrp_repair
@@ -667,24 +686,26 @@ msgstr "Référence de la réparation"
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr ""
+"La réparation doit être annulée pour pouvoir être rétablie à l'état de "
+"brouillon."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:343
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "La réparation doit être confirmée pour pouvoir commencer."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "La réparation doit être terminée pour déplacer le produit."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:354
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "La réparation doit être en cours pour pouvoir prendre fin."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:223
@@ -723,7 +744,7 @@ msgstr "Commande de réparation"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Rechercher un ordre de réparation"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -733,9 +754,9 @@ msgid ""
 "you don't want to generate invoice for this repair order."
 msgstr ""
 "Sélectionner \"Avant la réparation\" ou \"Après la réparation\" vous "
-"permettra de générer la facture respectivement avant ou après la réparation."
-" \"Pas de facture\" signifie que vous ne voulez pas générer une facture pour"
-" cet ordre de réparation."
+"permettra de générer la facture respectivement avant ou après la réparation. "
+"\"Pas de facture\" signifie que vous ne voulez pas générer une facture pour "
+"cet ordre de réparation."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:213
@@ -806,7 +827,8 @@ msgstr "Le nom de l'ordre de réparation doit être unique!"
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
-"                order to know if whether the repair should be invoiced to the\n"
+"                order to know if whether the repair should be invoiced to "
+"the\n"
 "                customer or not."
 msgstr ""
 "L'ordre de réparation utilise la date de garantie du numéro de série dans\n"
@@ -819,6 +841,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"L'état d'une ligne de réparation est automatiquement défini sur l'état de "
+"l'ordre de réparation associé."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -929,3 +953,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"Vous devez sélectionnez une liste de prix dans le formulaire de réparation.\n"
+"Définissez-en une avant de choisir un produit."
