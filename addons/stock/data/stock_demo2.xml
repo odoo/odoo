@@ -268,27 +268,32 @@
             })]"/>
         </record>
 
+        <record id="incomming_chicago_warehouse1_move" model="stock.move">
+            <field name="name">Chicago warehouse move</field>
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_qty">180.0</field>
+            <field name="picking_type_id" ref="stock.chi_picking_type_in"/>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock.stock_location_shop0"/>
+        </record>
+
+        <record id="incomming_chicago_warehouse1_move_line" model="stock.move.line">
+            <field name="product_id" ref="product.product_delivery_01"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="qty_done">100.0</field>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock.stock_location_shop0"/>
+            <field name="move_id" model="stock.move" eval="obj().env.ref('stock.incomming_chicago_warehouse1_move').id"/>
+        </record>
+
         <record id="incomming_chicago_warehouse1" model="stock.picking">
             <field name="picking_type_id" ref="stock.chi_picking_type_in"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_shop0"/>
-            <field name="move_lines" model="stock.move" eval="[(0, 0, {
-                'name': obj().env.ref('product.product_delivery_01').name,
-                'product_id': ref('product.product_delivery_01'),
-                'product_uom': ref('product.product_uom_unit'),
-                'product_uom_qty': 180.0,
-                'picking_type_id': ref('stock.chi_picking_type_in'),
-                'location_id': ref('stock.stock_location_suppliers'),
-                'location_dest_id': ref('stock.stock_location_shop0'),
-                'move_line_ids': [(0, 0, {
-                    'product_id': ref('product.product_delivery_01'),
-                    'qty_done': 100,
-                    'product_uom_id': ref('product.product_uom_unit'),
-                    'location_id': ref('stock.stock_location_suppliers'),
-                    'location_dest_id': ref('stock.stock_location_shop0'),
-                })],
-            })]"/>
+            <field name="move_lines" model="stock.move" eval="[(4, obj().env.ref('stock.incomming_chicago_warehouse1_move').id)]"/>
+            <field name="move_line_ids" model="stock.move.line" eval="[(4, obj().env.ref('stock.incomming_chicago_warehouse1_move_line').id)]"/>
         </record>
 
         <record id="incomming_chicago_warehouse2" model="stock.picking">
@@ -419,11 +424,8 @@
                 obj().env.ref('stock.incomming_chicago_warehouse3').id]"/>
         </function>
 
-        <function model="stock.picking" name="force_assign">
-            <value model="stock.picking" eval="[
-                obj().env.ref('stock.outgoing_shipment_main_warehouse').id,
-                obj().env.ref('stock.outgoing_chicago_warehouse3').id,
-                obj().env.ref('stock.outgoing_shipment_main_warehouse2').id]"/>
+        <function model="stock.picking" name="put_in_pack">
+            <value model="stock.picking" eval="[obj().env.ref('stock.incomming_chicago_warehouse1').id]"/>
         </function>
 
         <function model="stock.picking" name="action_done">
