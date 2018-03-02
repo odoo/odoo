@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_expiry
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
@@ -11,12 +11,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017\n"
+"Last-Translator: Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, "
+"2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
@@ -25,16 +26,18 @@ msgid ""
 "<span class=\"label label-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Ablaufalarm</span>"
 
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
 msgid "<span class=\"pull-right\">Expiry Date</span>"
-msgstr ""
+msgstr "<span class=\"pull-right\">Ablaufdatum</span>"
 
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>Tage</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -59,7 +62,7 @@ msgstr "Verwendbar bis"
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
 msgid "Expiration alerts"
-msgstr ""
+msgstr "Ablaufalarme"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -71,6 +74,8 @@ msgstr "Los/Serie"
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
+"Anzahl der Tage, bevor ein Alarm für die Los-/Seriennummer ausgelöst werden "
+"sollte."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_life_time
@@ -78,13 +83,17 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Anzahl der Tage, bevor die Waren gefährlich werden könnten und nicht mehr "
+"verbraucht werden dürfen. Wird anhand der Los-/Seriennummer berechnet."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
 msgid ""
-"Number of days before the goods should be removed from the stock. It will be"
-" computed on the lot/serial number."
+"Number of days before the goods should be removed from the stock. It will be "
+"computed on the lot/serial number."
 msgstr ""
+"Anzahl der Tage, bevor die Waren aus dem Lager entfernt werden sollten. Wird "
+"anhand der Los-/Seriennummer berechnet."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_use_time
@@ -92,6 +101,9 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed on the lot/serial number."
 msgstr ""
+"Anzahl der Tage, bevor die Haltbarkeit abläuft, ohne dass der Konsum nach "
+"Ablaufdatum gesundheitsschädlich ist. Wird anhand der Los-/Seriennummer "
+"berechnet."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
@@ -101,7 +113,7 @@ msgstr "Datum Ablaufwarnung"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Produktablaufalarm"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
@@ -137,7 +149,7 @@ msgstr "Datum der Vernichtung"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr ""
+msgstr "Das Alarmdatum wurde erreicht."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
@@ -145,8 +157,8 @@ msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
 msgstr ""
-"Datum zu dem ein Alarm bezüglich des Verfalls dieser Serie ausgegeben werden"
-" soll."
+"Datum zu dem ein Alarm bezüglich des Verfalls dieser Serie ausgegeben werden "
+"soll."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
@@ -164,8 +176,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
 msgstr ""
-"Spätestens zu diesem Datum sollten Produkte mit dieser Seriennummer entsorgt"
-" werden."
+"Spätestens zu diesem Datum sollten Produkte mit dieser Seriennummer entsorgt "
+"werden."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
@@ -173,5 +185,5 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
-"Anzahl der Tage nach Erstellung einer Serie, an dem die Haltbarkeit abläuft,"
-" ohne dass der Konsum nach Ablaufdatum gesundheitsschädlich ist."
+"Anzahl der Tage nach Erstellung einer Serie, an dem die Haltbarkeit abläuft, "
+"ohne dass der Konsum nach Ablaufdatum gesundheitsschädlich ist."

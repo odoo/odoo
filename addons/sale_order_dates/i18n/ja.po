@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 08:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -33,6 +33,12 @@ msgid ""
 "default method: based on the Product Lead Times and the Company's Security "
 "Delay."
 msgstr ""
+"顧客がアイテムの配送を要求した日。\n"
+"この注文が確認されると、出荷日の予定日は、この日付と当社の予備日に基づいて計"
+"算されます。\n"
+"できるだけ早く出荷注文を処理したい場合は、このフィールドを空白のままにしま"
+"す。 この場合、期待される日付は、製品リードタイムと会社の予備日に基づいて、デ"
+"フォルトの方法を使用して計算されます。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
@@ -40,11 +46,13 @@ msgid ""
 "Date by which the products are sure to be delivered. This is a date that you "
 "can promise to the customer, based on the Product Lead Times."
 msgstr ""
+"製品が確実に配送される日付。 これは、製品リードタイムに基づいて顧客に約束でき"
+"る日付です。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "最初の出荷オーダが作成された日付。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
@@ -57,10 +65,10 @@ msgid "Requested Date"
 msgstr "要求納期"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "リクエストされた日付は早すぎます！"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -73,9 +81,11 @@ msgid "Sales Order Line"
 msgstr "受注明細"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:58
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
+"顧客から要求された日付は、コミットメント日付よりも早いです。 お客様の要求を尊"
+"重することができない場合があります。"

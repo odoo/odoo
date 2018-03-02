@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -22,10 +22,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: lap.odoo <lap@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_stock
@@ -59,8 +59,8 @@ msgid ""
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
 "Par défaut, Odoo calcule la date de livraison attendue de cette façon: date "
-"de commande + le délai client le plus élevé des produits. Avec cette option,"
-" vous pouvez définir un date de livraison spécifique sur les commandes au "
+"de commande + le délai client le plus élevé des produits. Avec cette option, "
+"vous pouvez définir un date de livraison spécifique sur les commandes au "
 "lieu de définir des délais sur les produits."
 
 #. module: sale_stock
@@ -101,7 +101,7 @@ msgstr "Afficher les incotermes sur les ordres de vente et les factures liées"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Afficher les incoterms sur les commandes et les factures"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -120,8 +120,8 @@ msgstr "Incoterms"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 "Les incoterms sont une série de conditions de vente. Ils sont utilisés pour "
 "partager les coûts et les responsabilités entre les acheteurs et les "
@@ -165,8 +165,8 @@ msgstr "Facturation"
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Marge d'erreur sur les dates promises aux clients. Les approvisionnements "
 "seront planifiés avec autant de jours d'avance sur la date promise, afin de "
@@ -175,7 +175,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Avancer les dates de livraison prévues de"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
@@ -227,6 +227,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Il est conseillé de réserver les produits manuellement en créant des bons de "
+"livraison ou en exécutant le planificateur afin de mieux gérer les priorités "
+"en cas de longs délais clients ou de ruptures de stock fréquentes. Par "
+"défaut, le planificateur s'exécute automatiquement toutes les 24 heures."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
@@ -241,7 +245,7 @@ msgstr "Route"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Acheminement des lignes de commande client"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_order_id
@@ -318,7 +322,7 @@ msgstr "Informations de livraison"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_picking_policy
 msgid "Shipping Management"
-msgstr ""
+msgstr "Gestion de l'expédition"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -338,6 +342,11 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Permet d'imposer un itinéraire spécifique pour une ligne de commande client "
+"(p. ex. livraison directe, fabrication à la demande) en cas de circonstances "
+"inhabituelles. Pour qu'un itinéraire soit disponible dans les bons de "
+"commande, l'option « Ligne de commande client » doit être cochée dans son "
+"formulaire de configuration."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:203

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-17 08:17+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2016-05-25 18:21+0000\n"
 "Last-Translator: Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -27,7 +27,7 @@ msgstr "! Serão aplicadas algumas taxas de processamento"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
@@ -1076,11 +1076,6 @@ msgid "Confirmation<span class=\"chevron\"/>"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.confirmation
-msgid "Confirmed"
-msgstr "Confirmado"
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed Orders"
 msgstr ""
@@ -1319,7 +1314,7 @@ msgid "Enter a name for your new product"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:89
+#: code:addons/website_sale/models/product.py:90
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Erro! Não pode criar categorias recursivas."
@@ -1343,6 +1338,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_fedex
 msgid "Fedex integration"
 msgstr "Integração Fedex"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_model_fields
+msgid "Fields"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -1558,7 +1558,7 @@ msgstr "Faturas"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Invoicing"
-msgstr ""
+msgstr "Faturação"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_default_invoice_policy
@@ -1566,7 +1566,7 @@ msgid "Invoicing Policy"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:120
+#: code:addons/website_sale/models/sale_order.py:131
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr ""
@@ -1643,6 +1643,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "List displaying"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Log In"
 msgstr ""
 
 #. module: website_sale
@@ -1747,7 +1752,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:975
+#: code:addons/website_sale/controllers/main.py:983
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1902,8 +1907,8 @@ msgid "Parent Category"
 msgstr "Categoria Ascendente"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:732
-#: code:addons/website_sale/controllers/main.py:842
+#: code:addons/website_sale/controllers/main.py:740
+#: code:addons/website_sale/controllers/main.py:850
 #, python-format
 msgid "Pay Now"
 msgstr "Pagar Agora"
@@ -1945,19 +1950,19 @@ msgid "Payment must be reconciled manually"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:766
+#: code:addons/website_sale/controllers/main.py:774
 #, python-format
 msgid "Payment transaction (%s) failed : <%s>"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:760
+#: code:addons/website_sale/controllers/main.py:768
 #, python-format
 msgid "Payment transaction failed (%s)"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:767
+#: code:addons/website_sale/controllers/main.py:775
 #, python-format
 msgid "Payment transaction failed (Contact Administrator)"
 msgstr ""
@@ -2001,19 +2006,19 @@ msgid "Prefered by some customers"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/backend.py:110
+#: code:addons/website_sale/controllers/backend.py:111
 #, python-format
 msgid "Previous Month"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/backend.py:108
+#: code:addons/website_sale/controllers/backend.py:109
 #, python-format
 msgid "Previous Week"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/backend.py:112
+#: code:addons/website_sale/controllers/backend.py:113
 #, python-format
 msgid "Previous Year"
 msgstr ""
@@ -2116,7 +2121,7 @@ msgstr "Template Artigo"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
 msgid "Product Variants"
-msgstr ""
+msgstr "Variantes de Produto"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2291,7 +2296,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Relatórios"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.404
@@ -2615,6 +2620,11 @@ msgid "Show total"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.address
+msgid "Sign Up"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Size"
 msgstr "Tamanho"
@@ -2665,7 +2675,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:489
+#: code:addons/website_sale/controllers/main.py:497
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -3073,6 +3083,13 @@ msgid "Website price"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_price_difference
+#: model:ir.model.fields,field_description:website_sale.field_product_product_website_price_difference
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_price_difference
+msgid "Website price difference"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_public_price
@@ -3232,11 +3249,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "items)"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.products
-msgid "pagination form-inline o_website_sale_search"
 msgstr ""
 
 #. module: website_sale

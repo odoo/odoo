@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-05-12 12:36+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -20,9 +20,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_account_id
+msgid "Account"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
+msgid "Assign to Order"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
 msgid "Companies"
 msgstr "Компании"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
+msgid ""
+"Create a task under this project on sales order validation. This setting "
+"must be set for each company."
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -30,11 +53,81 @@ msgid "Employee"
 msgstr "Вработен"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be "
+"computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+msgid "Order Line"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_procurement_order
+msgid "Procurement"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_procurement_id
+msgid ""
+"Procurement of the sale order line on which the timesheets should be assigned"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
+msgid "Product Alert Time"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
+msgid "Product Life Time"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
+msgid "Product Removal Time"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product Template"
 msgstr "Урнек на производ"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
+msgid "Product Use Time"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
 msgstr ""
@@ -46,13 +139,47 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
 msgstr "Налог за продажба"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 msgid "Sales Order Line"
 msgstr "Ставка од налог за продажба"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task
+#: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
+msgid "Task"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:80
+#, python-format
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Tasks"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
+msgid "Tasks associated to this sale"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:84
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -69,9 +196,8 @@ msgstr "Трошок на временска таблица"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid "Timesheet UoM"
-msgstr "Временска таблица"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -90,16 +216,18 @@ msgid "Timesheets"
 msgstr "Временски таблици"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_timesheet.py:128
+#: code:addons/sale_timesheet/models/sale_order.py:55
 #, python-format
 msgid ""
-"You can use only one product on timesheet within the same sale order. You "
+"You can use only one product on timesheet within the same sales order. You "
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Аналитичка ставка"
+#: code:addons/sale_timesheet/models/project.py:17
+#, python-format
+msgid ""
+"You cannot delete a task related to a Sales Order. You can only archive this "
+"task."
+msgstr ""

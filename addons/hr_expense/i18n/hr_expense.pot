@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
+"PO-Revision-Date: 2018-03-02 14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -252,6 +252,11 @@ msgid "All Expenses"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Analytic Account"
@@ -343,7 +348,7 @@ msgid "Click here to create new expenses."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:318
+#: code:addons/hr_expense/models/hr_expense.py:326
 #, python-format
 msgid "Click to add a new expense,"
 msgstr ""
@@ -712,19 +717,19 @@ msgid "Expenses follow this flow:"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:413
+#: code:addons/hr_expense/models/hr_expense.py:425
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:525
+#: code:addons/hr_expense/models/hr_expense.py:562
 #, python-format
 msgid "Expenses must have an expense journal specified to generate accounting entries."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:417
+#: code:addons/hr_expense/models/hr_expense.py:427
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
@@ -828,7 +833,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_9374
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_9397
 msgid "ID"
 msgstr ""
 
@@ -961,19 +966,19 @@ msgid "New Mail"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:258
+#: code:addons/hr_expense/models/hr_expense.py:259
 #, python-format
 msgid "No Expense account found for the product %s (or for its category), please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:224
+#: code:addons/hr_expense/models/hr_expense.py:225
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:203
+#: code:addons/hr_expense/models/hr_expense.py:204
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -1038,6 +1043,18 @@ msgid "Once you have created your expense, submit it to your manager who will va
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:545
+#, python-format
+msgid "Only HR Officers can approve expenses"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:536
+#, python-format
+msgid "Only HR Officers can refuse expenses"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Optionally, <strong>expenses are invoiced to the customer afterwards.</strong>"
 msgstr ""
@@ -1092,7 +1109,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:263
+#: code:addons/hr_expense/models/hr_expense.py:264
 #, python-format
 msgid "Please configure Default Expense account for Product expense: `property_account_expense_categ_id`."
 msgstr ""
@@ -1301,7 +1318,7 @@ msgid "See how to manage payables"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:88
+#: code:addons/hr_expense/models/hr_expense.py:89
 #, python-format
 msgid "Selected Unit of Measure does not belong to the same category as the product Unit of Measure"
 msgstr ""
@@ -1506,7 +1523,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_total_amount
 #: model:ir.ui.view,arch_db:hr_expense.view_expenses_tree
-#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
 msgstr ""
@@ -1596,7 +1612,7 @@ msgid "When you charge"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:522
+#: code:addons/hr_expense/models/hr_expense.py:559
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
@@ -1607,25 +1623,37 @@ msgid "You can setup a generic email alias to create incoming expenses easily. W
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:563
+#: code:addons/hr_expense/models/hr_expense.py:597
 #, python-format
 msgid "You cannot add expense lines of another employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:439
+#: code:addons/hr_expense/models/hr_expense.py:306
 #, python-format
 msgid "You cannot delete a posted expense."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:106
+#: code:addons/hr_expense/models/hr_expense.py:448
+#, python-format
+msgid "You cannot delete a posted or paid expense."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:107
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:104
+#: code:addons/hr_expense/models/hr_expense.py:604
+#, python-format
+msgid "You cannot report expenses with different payment modes."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:105
 #, python-format
 msgid "You cannot report twice the same line!"
 msgstr ""
@@ -1642,7 +1670,7 @@ msgid "You record expenses,"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:504
+#: code:addons/hr_expense/models/hr_expense.py:539
 #, python-format
 msgid "Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>"
 msgstr ""
@@ -1693,7 +1721,7 @@ msgid "hr.expense.config.settings"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:319
+#: code:addons/hr_expense/models/hr_expense.py:327
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr ""

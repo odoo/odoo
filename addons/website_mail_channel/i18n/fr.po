@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mail_channel
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Fabien Bourgeois <fabien@yaltik.com>, 2016
@@ -19,14 +19,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_mail_channel
@@ -34,24 +34,50 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>You have requested to be subscribed to the mailing list <strong>${object."
+"name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Bonjour,</p>\n"
+"<p>Vous avez demandé à vous abonner à la liste de diffusion <strong>${object."
+"name}</strong>.</p>\n"
+"<p>Pour confirmer votre demande, consultez le lien suivant :</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>."
+"</p>\n"
+"<p>Si vous avez effectué cette demande par erreur ou si vous n'êtes pas à "
+"l'origine de cette demande, vous pouvez ignorer ce message.</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>You have requested to be unsubscribed to the mailing list <strong>"
+"${object.name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Bonjour,</p>\n"
+"<p>Vous avez demandé à vous désabonner de la liste de diffusion <strong>"
+"${object.name}</strong>.</p>\n"
+"<p>Pour confirmer votre demande, consultez le lien suivant :</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong>."
+"</p>\n"
+"<p>Si vous avez effectué cette demande par erreur ou si vous n'êtes pas à "
+"l'origine de cette demande, vous pouvez ignorer ce message.</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -98,21 +124,11 @@ msgid "Change Discussion List"
 msgstr "Changer de Liste de Discussion"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "Description"
-msgstr "Description"
-
-#. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
 #, python-format
 msgid "Discussion List"
 msgstr "Liste de discussion"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
-msgstr "Parcours de discussion"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
@@ -147,13 +163,6 @@ msgid "Mailing-List"
 msgstr "Liste de diffusion"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
-"Description du message : soit le sujet ou le commencement du corps du "
-"message"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
@@ -170,23 +179,18 @@ msgstr "Courriels à envoyer"
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Please confirm subscription to ${object.name}"
-msgstr ""
+msgstr "Confirmez votre abonnement à ${object.name}"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
 msgid "Please confirm unsubscription to ${object.name}"
-msgstr ""
+msgstr "Confirmez votre désabonnement de ${object.name}"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:21
 #, python-format
 msgid "Post to"
 msgstr "Poster à"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
-msgstr "Publié"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -205,24 +209,26 @@ msgid "Subscribe"
 msgstr "S'inscrire"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr "L'adresse"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:242
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""
+"L'adresse %s est déjà désabonnée ou n'a jamais été abonnée à une liste de "
+"diffusion"
+
+#. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Se désabonner"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid ""
-"Used to display messages in a paragraph-based chatter using a unique path;"
-msgstr ""
-"Utilisé pour afficher des messages dans une zone de discussion employant un "
-"chemin unique;"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "Visible sur le site web comme commentaire"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -250,6 +256,20 @@ msgstr "pièces jointes"
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
 msgstr "par"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already\n"
+"                    unsubscribed or was never subscribed to the mailing\n"
+"                    list, you may want to check that the address was\n"
+"                    correct."
+msgstr ""
+"est déjà\n"
+"                    désabonnée ou n'a jamais été abonnée à la liste de "
+"diffusion.\n"
+"                    Vérifiez que l'adresse est\n"
+"                    correcte."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -295,12 +315,12 @@ msgstr "montrer"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "subscribed"
-msgstr ""
+msgstr "abonné(e)"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr ""
+msgstr "à la liste de diffusion."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels

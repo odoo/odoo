@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sales_team
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
@@ -29,10 +29,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Constantin Ehrenstein <transifex@skiller.eu>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sales_team
@@ -99,7 +99,7 @@ msgstr "Erledigte Aktivitäten"
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
 #: model:ir.ui.menu,name:sales_team.sales_team_menu_config_activity_types
 msgid "Activity Types"
-msgstr ""
+msgstr "Aktivitätstypen"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -120,13 +120,13 @@ msgstr "Bankverzeichnis"
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Bar"
-msgstr ""
+msgstr "Balken"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:237
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "Ziemlich große Schaltfläche :)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_crm
@@ -141,12 +141,12 @@ msgstr "Abbrechen"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
 msgid "Channel Leader"
-msgstr ""
+msgstr "Kanal Leitung"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 msgid "Channel Members"
-msgstr ""
+msgstr "Kanal Mitglieder"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
@@ -158,7 +158,7 @@ msgstr "Kanaltyp"
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Click here to define a new sales channel."
-msgstr ""
+msgstr "Hier klicken um neuen Verkaufskanal zu definieren."
 
 #. module: sales_team
 #. openerp-web
@@ -277,12 +277,12 @@ msgstr "Dashboard"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "Dashboard-Schaltfläche"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
+msgstr "Dashboard-Diagrammdaten"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -346,7 +346,7 @@ msgstr "Hallo!"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
 msgid "How this channel's dashboard graph will group the results."
-msgstr ""
+msgstr "So gruppiert dieses Dashboard-Diagramm des Kanals die Ergebnisse."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
@@ -361,6 +361,8 @@ msgid ""
 "If set, this sales channel will be used for sales and assignations related "
 "to this partner"
 msgstr ""
+"Wenn festgelegt, wird dieser Vertriebskanal für den Verkauf und die "
+"Zuweisungen zu diesem Partner verwendet."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -368,6 +370,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
 "channel without removing it."
 msgstr ""
+"Durch Aktivierung dieser Option kann die Anzeige dieses Vertriebskanals "
+"verhindert werden, ohne den Vertriebskanal selbst zu löschen."
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
@@ -552,6 +556,9 @@ msgid ""
 "Sales Channel the user is member of. Used to compute the members of a sales "
 "channel through the inverse one2many"
 msgstr ""
+"Vertriebskanal, dessen Mitglied der Benutzer ist. Wird benutzt, um die "
+"Mitglieder eines Vertriebskanals durch die Umkehrung von One2many zu "
+"berechnen"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
@@ -626,7 +633,7 @@ msgstr "Teammitglieder"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
 msgid "The color of the channel"
-msgstr ""
+msgstr "Die Farbe des Kanals"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -634,27 +641,31 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this sales channel"
 msgstr ""
+"Die unter „Antwort An” angegebene E-Mail-Adresse aller von Odoo versendeten "
+"E-Mails zu Fällen in diesem Vertriebskanal"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "Das Diagramm, das dieser Kanal im Dashboard anzeigt.\n"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
 msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
+msgstr "Der Zeitabschnitt, den das Dashboard-Diagramm dieses Kanals anzeigt."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
 msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
+msgstr "Der Diagrammtyp, den dieser Kanal im Dashboard angezeigt."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
 msgstr ""
+"Der Typ dieses Kanals, er definiert die Ressourcen, die dieser Kanal "
+"verwendet."
 
 #. module: sales_team
 #. openerp-web
@@ -760,7 +771,7 @@ msgstr "Typ"
 #: code:addons/sales_team/models/crm_team.py:127
 #, python-format
 msgid "Undefined graph model for Sales Channel: %s"
-msgstr ""
+msgstr "Nichtdefiniertes Diagrammmodell für den Vertriebskanal: %s"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
@@ -770,16 +781,18 @@ msgid ""
 "Use sales channels to organize your sales departments. \n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
+"Mit Verkaufskanälen können Sie Ihre Vertriebsabteilungen organisieren.\n"
+"Jeder Kanal arbeitet mit einer separaten Pipeline."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr ""
+msgstr "User: Alle Dokumente"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "User: Nur eigene Dokumente "
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -853,8 +866,8 @@ msgstr ""
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
 msgstr ""
 "der Benutzer erhält den Zugriff auf die Konfiguration des Verkaufs wie auch "
 "auf die zugehörigen Berichte."

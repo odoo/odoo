@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2015-11-19 17:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
@@ -26,12 +26,17 @@ msgstr "<strong>Comentariu:</strong>"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Document:</strong>"
-msgstr ""
+msgstr "<strong>Document:</strong>"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position Remark:</strong>"
+msgstr "<strong>Poziție Notă Fiscală:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Fiscal Position:</strong>"
-msgstr ""
+msgstr "<strong>Poziție fiscală:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -45,13 +50,13 @@ msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Payment Term:</strong>"
-msgstr ""
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>Termene de plată:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>Subtotal</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -170,6 +175,8 @@ msgstr "Facturi intrastat"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: model:ir.model.fields,field_description:report_intrastat.field_delivery_carrier_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_product_product_intrastat_id
 #: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
@@ -237,11 +244,6 @@ msgid "October"
 msgstr "Octombrie"
 
 #. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "PRO-FORMA"
-msgstr "Proformă"
-
-#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
 msgid "Product Template"
 msgstr "Șablon produs"
@@ -304,7 +306,7 @@ msgstr "Valoare"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Factură furnizor"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document

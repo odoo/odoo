@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
 "PO-Revision-Date: 2016-03-12 19:36+0000\n"
 "Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
@@ -77,7 +77,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:543
+#: code:addons/pos_restaurant/static/src/js/floors.js:550
 #, python-format
 msgid "Are you sure ?"
 msgstr ""
@@ -110,7 +110,7 @@ msgstr "Baar & Restoran"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:31
 #, python-format
 msgid "Bill"
-msgstr ""
+msgstr "Arve"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -138,17 +138,10 @@ msgstr ""
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:260
-#: code:addons/pos_restaurant/static/src/js/floors.js:404
+#: code:addons/pos_restaurant/static/src/js/floors.js:297
+#: code:addons/pos_restaurant/static/src/js/floors.js:411
 #, python-format
 msgid "Changes could not be saved"
-msgstr ""
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:261
-#: code:addons/pos_restaurant/static/src/js/floors.js:405
-#, python-format
-msgid "Check your internet connection and access rights"
 msgstr ""
 
 #. module: pos_restaurant
@@ -164,7 +157,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_color
 msgid "Color"
-msgstr ""
+msgstr "Värv"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_create_uid
@@ -243,7 +236,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:918
+#: code:addons/pos_restaurant/static/src/js/floors.js:925
 #, python-format
 msgid "Guests ?"
 msgstr "Külalised ?"
@@ -252,9 +245,9 @@ msgstr "Külalised ?"
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:10
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:21
-#, fuzzy, python-format
+#, python-format
 msgid "Guests:"
-msgstr "Külalised ?"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -306,7 +299,7 @@ msgstr "Viimati uuendatud"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:52
 #, python-format
 msgid "NEW"
-msgstr ""
+msgstr "UUS"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -325,7 +318,7 @@ msgstr "Märkus"
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:476
+#: code:addons/pos_restaurant/static/src/js/floors.js:483
 #, python-format
 msgid "Number of Seats ?"
 msgstr ""
@@ -377,15 +370,14 @@ msgid "Payment"
 msgstr "Makse"
 
 #. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_pos_order
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_pos_config_id
 msgid "Point of Sale"
 msgstr "Müügikoht"
 
 #. module: pos_restaurant
-#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "Pos Orders"
-msgstr ""
+#: model:ir.model,name:pos_restaurant.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Müügikoha tellimused"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -411,7 +403,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:544
+#: code:addons/pos_restaurant/static/src/js/floors.js:551
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr ""
@@ -502,7 +494,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/js/floors.js:464
+#: code:addons/pos_restaurant/static/src/js/floors.js:471
 #, python-format
 msgid "Table Name ?"
 msgstr ""
@@ -518,7 +510,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:54
 #, python-format
 msgid "Tel:"
-msgstr ""
+msgstr "Tel:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_proxy_ip
@@ -545,11 +537,6 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
 msgid "The list of tables in this floor"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_pos_order_ids
-msgid "The orders served at this table"
 msgstr ""
 
 #. module: pos_restaurant
@@ -592,7 +579,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:102
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr ""
@@ -602,7 +589,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:37
 #, python-format
 msgid "Transfer"
-msgstr ""
+msgstr "Ülekanne"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
@@ -635,6 +622,15 @@ msgstr "Koos"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/floors.js:261
+#: code:addons/pos_restaurant/static/src/js/floors.js:298
+#: code:addons/pos_restaurant/static/src/js/floors.js:412
+#, python-format
+msgid "You must be connected to the internet to save your changes."
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
 #, python-format
 msgid "at"
@@ -650,7 +646,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/floors.xml:103
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
 msgstr ""

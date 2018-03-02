@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2015-11-18 13:55+0000\n"
 "Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -20,11 +20,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_links
-#: model:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Share this Page</span>"
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
 msgstr ""
-"<span title=\"Даралтуудыг тоолохын тулд энэ хуудсыг хөтлөх\">Энэ хуудсыг "
-"хуваалцах</span>"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr ""
+
+#. module: website_links
+#: model:ir.ui.view,arch_db:website_links.share_page_menu
+msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -167,14 +186,20 @@ msgid "Stats"
 msgstr "Статистик"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:210
+#: code:addons/website_links/static/src/js/website_links_charts.js:211
+#: code:addons/website_links/static/src/js/website_links_charts.js:212
+#, python-format
+msgid "There is no data to show"
+msgstr ""
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
-#, fuzzy
 msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors, "
 "or in Odoo reports to track opportunities and related revenues."
 msgstr ""
-"Энэ хөтлөгчид нь Google Analytics-д зочлогчдийн даралтыг хөтлөхөд ашиглаж "
-"болно, эсвэл Odoo-д боломж болон холбогдох орлогыг хөтлөх тухай мэдэгдэнэ."
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -187,6 +212,13 @@ msgstr "URL"
 #, python-format
 msgid "Unable to get recent links"
 msgstr "Сүүлийн холбоосыг авах боломжгүй байна"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr ""
 
 #. module: website_links
 #. openerp-web

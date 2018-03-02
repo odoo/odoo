@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2017
@@ -12,14 +12,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2017-04-18 14:47+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_event
@@ -98,7 +98,8 @@ msgstr "<strong>Participez sur Twitter</strong>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
-msgstr "<strong>Téléphone</strong> <span class=\"text-muted\">(Optionnel)</span>"
+msgstr ""
+"<strong>Téléphone</strong> <span class=\"text-muted\">(Optionnel)</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -143,6 +144,8 @@ msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
+"Activez cette option pour placer des menus pour votre événement sur le\n"
+"                                site Web : inscriptions, calendrier, carte, …"
 
 #. module: website_event
 #. openerp-web
@@ -205,7 +208,7 @@ msgstr "Menu dédié"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
 msgid "Display a dedicated menu on Website"
-msgstr ""
+msgstr "Afficher un menu dédié sur le site Web"
 
 #. module: website_event
 #. openerp-web
@@ -328,6 +331,7 @@ msgstr "Libre"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:70
 #, python-format
 msgid "Introduction"
 msgstr "Introduction"
@@ -338,7 +342,8 @@ msgid "Is Participating"
 msgstr "Participe"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:64
+#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:71
 #, python-format
 msgid "Location"
 msgstr "Lieu"
@@ -355,7 +360,7 @@ msgstr "Nom"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:185
+#: code:addons/website_event/controllers/main.py:183
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -460,7 +465,8 @@ msgid "Reference"
 msgstr "Référence"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:65
+#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:72
 #, python-format
 msgid "Register"
 msgstr "S'inscrire"
@@ -469,6 +475,11 @@ msgstr "S'inscrire"
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register Now"
 msgstr "S'inscrire maintenant"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Registration for this event is now closed"
+msgstr "Les inscriptions à cet événement sont maintenant fermées"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2015-12-03 00:21+0000\n"
 "Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -20,6 +20,7 @@ msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_cache
+#: model:ir.model.fields,field_description:pos_cache.field_pos_config_cache_ids
 msgid "Cache"
 msgstr "Cache"
 
@@ -29,14 +30,9 @@ msgid "Cache compute user"
 msgstr "Cache menghitung pengguna"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_config_cache_ids
-msgid "Cache ids"
-msgstr "Cache id"
-
-#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_config_id
-msgid "Config id"
-msgstr "Config id"
+msgid "Config"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_create_uid
@@ -57,6 +53,11 @@ msgstr "Nama Tampilan"
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_id
 msgid "ID"
 msgstr "ID"
+
+#. module: pos_cache
+#: model:ir.ui.view,arch_db:pos_cache.view_pos_config_form
+msgid "Invalidate cache"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache___last_update
@@ -86,19 +87,21 @@ msgid "Oldest cache time"
 msgstr "Tertua waktu cache"
 
 #. module: pos_cache
+#: model:ir.actions.server,name:pos_cache.refresh_pos_cache_cron_ir_actions_server
+#: model:ir.cron,cron_name:pos_cache.refresh_pos_cache_cron
+#: model:ir.cron,name:pos_cache.refresh_pos_cache_cron
+msgid "PoS: refresh cache"
+msgstr ""
+
+#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_domain
-msgid "Product domain"
-msgstr "Produk domain"
+msgid "Product Domain"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_fields
-msgid "Product fields"
-msgstr "Bidang produk"
-
-#. module: pos_cache
-#: model:ir.ui.view,arch_db:pos_cache.view_pos_config_form
-msgid "Recompute cache"
-msgstr "Recompute cache"
+msgid "Product Fields"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_cache

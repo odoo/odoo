@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mail
-# 
+#
 # Translators:
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
@@ -27,69 +27,85 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: İlknur Püskül <ilknurpuskull@gmail.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mail
 #: model:mail.template,body_html:mail.mail_template_data_notification_email_default
 msgid ""
 "\n"
+"% set company = ctx.get('company', user.company_id)\n"
 "<div>\n"
 "% if ctx.get('has_button_access'):\n"
 "<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
-"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/"
+"ViewAction\">\n"
 "        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
 "    </div>\n"
 "</div>\n"
 "% endif\n"
-"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx."
+"get('has_button_access'):\n"
 "<div summary=\"o_mail_notification\" style=\"padding: 0px; width:600px;\">\n"
-"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: "
+"600px; margin-top: 5px;\">\n"
 "<tbody><tr>\n"
 "    <td valign=\"center\">\n"
 "        % if ctx.get('has_button_access'):\n"
-"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
+"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px "
+"12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; "
+"font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; "
+"border-radius:3px\">${ctx['button_access']['title']}</a>\n"
 "        % endif\n"
 "\n"
 "        % if ctx.get('has_button_follow'):\n"
 "        % if ctx.get('has_button_access'):\n"
 "           |\n"
 "        % endif\n"
-"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
+"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; "
+"text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
 "        % elif ctx.get('has_button_unfollow'):\n"
 "        % if ctx.get('has_button_access'):\n"
 "           |\n"
 "        % endif\n"
-"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
+"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; "
+"text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
 "        % endif\n"
 "\n"
 "        % if ctx.get('actions'):\n"
 "        % for action in ctx['actions']:\n"
 "        |\n"
-"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:none !important;\">${action['title']}</a>\n"
+"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:"
+"none !important;\">${action['title']}</a>\n"
 "        % endfor\n"
 "        % endif\n"
 "    </td>\n"
 "    <td valign=\"center\" align=\"right\">\n"
-"        <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; max-width: 80px; max-height: 40px;\" alt=\"${user.company_id.name}\">\n"
+"        <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; "
+"margin: 0px; height: auto; max-width: 80px; max-height: 40px;\" alt="
+"\"${company.name}\">\n"
 "    </td>\n"
 "</tr>\n"
 "<tr>\n"
 "    <td colspan=\"2\" style=\"text-align:center;\">\n"
 "        <hr width=\"100%\"\n"
-"            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
+"            style=\"background-color:rgb(204,204,204);border:medium none;"
+"clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin:10px 0;\">\n"
 "        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
-"        <p style=\"background-color: #f2dede; padding: 5px; margin-bottom: 16px;\">\n"
-"            <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.\n"
+"        <p style=\"background-color: #f2dede; padding: 5px; margin-bottom: "
+"16px;\">\n"
+"            <strong>Internal communication</strong>: Replying will post an "
+"internal note. Followers won't receive any email notification.\n"
 "        </p>\n"
 "        % endif\n"
 "    </td>\n"
@@ -115,20 +131,22 @@ msgid ""
 "<p style=\"color: #555555;\">\n"
 "    Sent by\n"
 "    % if ctx.get('website_url'):\n"
-"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: "
+"#875A7B;\">\n"
 "    % endif\n"
 "    ${ctx.get('company_name')}\n"
 "    % if ctx.get('website_url'):\n"
 "    </a>\n"
 "    % endif\n"
 "    using\n"
-"    <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>.\n"
+"    <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"text-"
+"decoration:none; color: #875A7B;\">Odoo</a>.\n"
 "</p>\n"
 "</div>"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:641
+#: code:addons/mail/models/mail_channel.py:649
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr "Bu kanal özeldir. Bu kanala katılabilmek için davet alınmalıdır."
@@ -142,9 +160,9 @@ msgstr ""
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
 msgid ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
-"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
-"object.parent_id.subject) or (object.parent_id and "
-"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % object."
+"parent_id.subject) or (object.parent_id and object.parent_id.record_name and "
+"'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
 
 #. module: mail
@@ -162,7 +180,7 @@ msgid "%d days overdue"
 msgstr "%d gün geciken"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:236
+#: code:addons/mail/models/mail_template.py:251
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -174,7 +192,7 @@ msgid "%s created"
 msgstr "%s oluşturuldu"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:76
+#: code:addons/mail/models/res_users.py:80
 #, python-format
 msgid "%s has joined the %s network."
 msgstr "%s , %s ağına katıldı."
@@ -201,46 +219,57 @@ msgid "-------- Show older messages --------"
 msgstr "-------- Daha eski mesajları göster --------"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:645
+#: code:addons/mail/models/mail_channel.py:653
 #, python-format
 msgid ""
 "<br><br>\n"
-"            You can mention someone by typing <b>@username</b>, this will grab its attention.<br>\n"
+"            You can mention someone by typing <b>@username</b>, this will "
+"grab its attention.<br>\n"
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
-"            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+"            You can insert canned responses in your message by typing <b>:"
+"shortcut</b>.<br>"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:552
+#: code:addons/mail/models/mail_channel.py:476
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">created <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%(channel_id)s\">#"
+"%(channel_name)s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">oluşturuldu<a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:475
-#: code:addons/mail/models/mail_channel.py:528
+#: code:addons/mail/models/mail_channel.py:560
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">joined <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">created <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">katıldı<a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">oluşturuldu<a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:483
+#: code:addons/mail/models/mail_channel.py:536
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">joined <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+msgstr ""
+"<div class=\"o_mail_notification\">katıldı<a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:168
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">left <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">left <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">terketi <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">terketi <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:23
@@ -248,26 +277,24 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
-"<div><p>Merhaba,</p><p>%s sizi %s dokümanını takip etmeye davet "
-"etti:%s..</p></div>"
+"<div><p>Merhaba,</p><p>%s sizi %s dokümanını takip etmeye davet etti:%s..</"
+"p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
-"<div><p>Merhaba,</p><p>%s sizi bir yeni belgeyi izlemeniz için davet "
-"etti.</p></div>"
+"<div><p>Merhaba,</p><p>%s sizi bir yeni belgeyi izlemeniz için davet etti.</"
+"p></div>"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/tour.js:28
 #, python-format
 msgid ""
-"<p><b>Chat with coworkers</b> in real-time using direct "
-"messages.</p><p><i>You might need to invite users from the Settings app "
-"first.</i></p>"
+"<p><b>Chat with coworkers</b> in real-time using direct messages.</"
+"p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
 
 #. module: mail
@@ -275,8 +302,8 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:15
 #, python-format
 msgid ""
-"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
-" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can "
+"notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 
@@ -285,8 +312,8 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:11
 #, python-format
 msgid ""
-"<p>Channels make it easy to organize information across different topics and"
-" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"<p>Channels make it easy to organize information across different topics and "
+"groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
 
@@ -295,20 +322,27 @@ msgstr ""
 msgid ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
 "                                <strong>Email mass mailing</strong> on\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">the selected records</span>\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', True)]}\">the selected records</span>\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
+"                            <span attrs=\"{'invisible':['|', ('model', '=', "
+"False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document "
+"and</span>"
 msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
-"                                    If you want to use all records according to you search criterion instead check this selection box :\n"
+"                                    If you want to use all records according "
+"to you search criterion instead check this selection box :\n"
 "                                </span>\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
-"                                    If you want to use only selected records please uncheck this selection box :\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', False)]}\">\n"
+"                                    If you want to use only selected records "
+"please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
 
@@ -316,7 +350,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Ekle</span>\n"
 "<span class=\"o_stat_text\">Bağlam Eylemi</span>"
@@ -325,7 +360,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Kaldırma</span>\n"
 "<span class=\"o_stat_text\">Bağlam Eylemi</span>"
@@ -334,18 +370,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>\n"
-"                                    All records matching your current search filter will be mailed,\n"
-"                                    not only the ids selected in the list view.\n"
+"                                    All records matching your current search "
+"filter will be mailed,\n"
+"                                    not only the ids selected in the list "
+"view.\n"
 "                                </strong><br/>\n"
-"                                If you want to send a lot of emails, we recommend you to use the mass mailing module.<br/>\n"
-"                                Confirming this wizard will probably take a few minutes blocking your browser."
+"                                If you want to send a lot of emails, we "
+"recommend you to use the mass mailing module.<br/>\n"
+"                                Confirming this wizard will probably take a "
+"few minutes blocking your browser."
 msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
-"                                If you want to send a lot of emails, we recommend you to use the mass mailing module."
+"                                If you want to send a lot of emails, we "
+"recommend you to use the mass mailing module."
 msgstr ""
 
 #. module: mail
@@ -499,14 +540,14 @@ msgstr ""
 #: model:ir.model,name:mail.model_mail_activity_type
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Activity Type"
-msgstr ""
+msgstr "Aktivite Tipi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
 #: model:ir.ui.view,arch_db:mail.base_config_settings_view_form_inherit_mail
 msgid "Activity Types"
-msgstr ""
+msgstr "Aktivite Türleri"
 
 #. module: mail
 #. openerp-web
@@ -728,11 +769,11 @@ msgstr "Yazanın İmzası (yalnızca toplu postalarda)"
 #: model:ir.model.fields,help:mail.field_mail_message_author_id
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
-"Mesajı yazan. Ayarlanmamışsa, email_from hiç bir iş ortağıyla eşleşmeyen bir"
-" eposta adrsini tutabilir."
+"Mesajı yazan. Ayarlanmamışsa, email_from hiç bir iş ortağıyla eşleşmeyen bir "
+"eposta adrsini tutabilir."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_avatar
@@ -1058,7 +1099,7 @@ msgstr "Bu kişi için bounced eposta sayısı"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:315
+#: code:addons/mail/static/src/js/client_action.js:318
 #, python-format
 msgid "Create %s"
 msgstr "Oluştur %s"
@@ -1298,8 +1339,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
-"Bu alt tip için gönderilen mesaja eklenecek açıklama. Geçersizse, yerine adı"
-" eklenecektir."
+"Bu alt tip için gönderilen mesaja eklenecek açıklama. Geçersizse, yerine adı "
+"eklenecektir."
 
 #. module: mail
 #. openerp-web
@@ -1309,6 +1350,7 @@ msgid "Direct Messages"
 msgstr "Doğrudan Mesajlar"
 
 #. module: mail
+#: model:ir.ui.view,arch_db:mail.email_template_preview_form
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Discard"
 msgstr "Vazgeç"
@@ -1400,7 +1442,7 @@ msgstr "Dinamik Yertutucu Oluşturucu"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:30
+#: code:addons/mail/static/src/xml/activity.xml:27
 #, python-format
 msgid "Edit"
 msgstr "Düzenle"
@@ -1548,8 +1590,7 @@ msgstr "Hata, bir iş ortağı aynı nesneyi iki defa izleyemez."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
-msgid ""
-"Error: A follower must be either a partner or a channel (but not both)."
+msgid "Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
 
 #. module: mail
@@ -1579,7 +1620,7 @@ msgid "Failed"
 msgstr "Başarısız"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:374
+#: code:addons/mail/models/mail_template.py:390
 #, python-format
 msgid "Failed to render template %r using values %r"
 msgstr ""
@@ -1612,7 +1653,7 @@ msgid "Field"
 msgstr "Alan"
 
 #. module: mail
-#: code:addons/mail/models/ir_model.py:23
+#: code:addons/mail/models/ir_model.py:29
 #, python-format
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
 msgstr "\"Posta Konusu\" alanı \"Yanlış\" olarak değiştirilemez."
@@ -1635,8 +1676,8 @@ msgid ""
 "getattr(related_document.relation_field)."
 msgstr ""
 "Alan, ilişkili modeli bir ilişkili belgede alt modele otomatik abonelik "
-"kullanılarak bağlamak için kullanılır. Bu alan "
-"getattr(related_document.relation_field) hesaplamak için kullanılır."
+"kullanılarak bağlamak için kullanılır. Bu alan getattr(related_document."
+"relation_field) hesaplamak için kullanılır."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -1650,8 +1691,7 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
-"Son yer tutucu tanımı, istenen şablon alanına kopyalanıp-yapıştırılmak "
-"üzere."
+"Son yer tutucu tanımı, istenen şablon alanına kopyalanıp-yapıştırılmak üzere."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -1906,7 +1946,7 @@ msgid "Gateway"
 msgstr "Ağ Geçidi"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:53
+#: code:addons/mail/models/res_users.py:54
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Yapılandırma paneline git"
@@ -1941,7 +1981,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
-msgstr ""
+msgstr "Mention İçeren"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -1995,8 +2035,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_mail_test_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "Rumuzu barındıran ata kaydın IDsi (örnek: görev oluşturma rumuzunu "
 "barındıran proje)"
@@ -2165,8 +2205,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_email_template_preview_user_signature
 #: model:ir.model.fields,help:mail.field_mail_template_user_signature
 msgid ""
-"If checked, the user's signature will be appended to the text version of the"
-" message"
+"If checked, the user's signature will be appended to the text version of the "
+"message"
 msgstr ""
 "Eğer işaretlenirse, kullanıcının imzası mesajın metin sürümünün altına "
 "eklenecektir"
@@ -2217,7 +2257,7 @@ msgstr "Pasif rumuz"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1038
+#: code:addons/mail/static/src/js/chat_manager.js:1046
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2254,11 +2294,11 @@ msgstr ""
 "'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1787
+#: code:addons/mail/models/mail_thread.py:1790
 #, python-format
 msgid ""
-"Invalid record set: should be called as model (without records) or on "
-"single-record recordset"
+"Invalid record set: should be called as model (without records) or on single-"
+"record recordset"
 msgstr ""
 
 #. module: mail
@@ -2269,7 +2309,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:623
+#: code:addons/mail/static/src/js/chat_manager.js:631
 #, python-format
 msgid "Invitation"
 msgstr "Davet"
@@ -2305,7 +2345,7 @@ msgstr "İnsanları davet et"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:644
+#: code:addons/mail/static/src/js/client_action.js:652
 #, python-format
 msgid "Invite people to #%s"
 msgstr ""
@@ -2576,7 +2616,7 @@ msgstr "Ayrıl"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:654
+#: code:addons/mail/models/mail_channel.py:662
 #: code:addons/mail/static/src/xml/client_action.xml:101
 #, python-format
 msgid "Leave this channel"
@@ -2595,7 +2635,7 @@ msgid ""
 msgstr "Bu belgenin takipçisi olarak eklenecek iş ortakları."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:665
+#: code:addons/mail/models/mail_channel.py:673
 #, python-format
 msgid "List users in the current channel"
 msgstr ""
@@ -2657,7 +2697,8 @@ msgstr "Bir iç not ekle"
 #: code:addons/mail/static/src/xml/chatter.xml:12
 #, python-format
 msgid ""
-"Log an internal note which will not be sent to followers, but which can be read\n"
+"Log an internal note which will not be sent to followers, but which can be "
+"read\n"
 "                    by users accessing this document."
 msgstr ""
 
@@ -2752,7 +2793,7 @@ msgstr "Yapılacak olarak İşaretle"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:49
 #, python-format
 msgid "Mark as done"
-msgstr ""
+msgstr "Yapıldı olarak işaretle"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_medium
@@ -2842,8 +2883,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new"
-" record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new "
+"record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
@@ -3156,7 +3197,7 @@ msgstr "Sonraki Aktiviteler"
 #: model:ir.model.fields,field_description:mail.field_stock_picking_activity_date_deadline
 #: model:ir.model.fields,field_description:mail.field_survey_survey_activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Sonraki Faaliyet Zaman Sınırı"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_invoice_activity_summary
@@ -3202,7 +3243,7 @@ msgstr "Sonraki Faaliyet Özeti"
 #: model:ir.model.fields,field_description:mail.field_stock_picking_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_survey_survey_activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Sonraki Faaliyet Türü"
 
 #. module: mail
 #. openerp-web
@@ -3238,7 +3279,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:28
 #, python-format
 msgid "No starred message"
-msgstr ""
+msgstr "Yıldızlı mesaj yok"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -3503,7 +3544,7 @@ msgstr "Odoo"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:125
+#: code:addons/mail/static/src/js/client_action.js:123
 #, python-format
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
@@ -3518,7 +3559,7 @@ msgstr "Odoo için izniniz gerekiyor"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:123
+#: code:addons/mail/static/src/js/client_action.js:125
 #, python-format
 msgid ""
 "Odoo will not have the permission to send native notifications on this "
@@ -3572,8 +3613,8 @@ msgstr "Değişiklik üzerine"
 #: code:addons/mail/static/src/js/tour.js:24
 #, python-format
 msgid ""
-"Once a message has been starred, you can come back and review it at any time"
-" here."
+"Once a message has been starred, you can come back and review it at any time "
+"here."
 msgstr ""
 
 #. module: mail
@@ -3591,7 +3632,7 @@ msgid "Online"
 msgstr "Online"
 
 #. module: mail
-#: code:addons/mail/models/ir_model.py:21
+#: code:addons/mail/models/ir_model.py:27
 #, python-format
 msgid "Only custom models can be modified."
 msgstr "Sadece özel modeller değiştirilebilir."
@@ -3648,8 +3689,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Gelen bütün mesajlara eklenecek, yanıtlamasalar da, konunun (kaydın) seçmeli"
-" ID i. Ayarlanırsa, yeni kayıtların oluşumunu tamamen engelleyecektir."
+"Gelen bütün mesajlara eklenecek, yanıtlamasalar da, konunun (kaydın) seçmeli "
+"ID i. Ayarlanırsa, yeni kayıtların oluşumunu tamamen engelleyecektir."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_mail_server_id
@@ -3718,13 +3759,12 @@ msgstr "Giden mail sunucusu"
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 #: selection:mrp.production,activity_state:0
-#: selection:mrp.repair,activity_state:0
-#: selection:mrp.unbuild,activity_state:0 selection:note.note,activity_state:0
+#: selection:mrp.repair,activity_state:0 selection:mrp.unbuild,activity_state:0
+#: selection:note.note,activity_state:0
 #: selection:project.issue,activity_state:0
 #: selection:project.task,activity_state:0
 #: selection:purchase.order,activity_state:0
-#: selection:res.partner,activity_state:0
-#: selection:sale.order,activity_state:0
+#: selection:res.partner,activity_state:0 selection:sale.order,activity_state:0
 #: selection:stock.picking,activity_state:0
 #: selection:survey.survey,activity_state:0
 msgid "Overdue"
@@ -3784,8 +3824,8 @@ msgstr "Üst Kayıt Konu ID"
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_mail_test_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Takma adın bulunduğu üst model. Takma referansın bulunduğu model zorunlu "
@@ -3795,9 +3835,9 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_parent_id
 msgid ""
-"Parent subtype, used for automatic subscription. This field is not correctly"
-" named. For example on a project, the parent_id of project subtypes refers "
-"to task-related subtypes."
+"Parent subtype, used for automatic subscription. This field is not correctly "
+"named. For example on a project, the parent_id of project subtypes refers to "
+"task-related subtypes."
 msgstr ""
 
 #. module: mail
@@ -3814,8 +3854,7 @@ msgstr "İş Ortağı Profili"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
-msgstr ""
-"İş Otaklarına sorulmadan toplu posta kampanyaları dahil edilmeyecekler"
+msgstr "İş Otaklarına sorulmadan toplu posta kampanyaları dahil edilmeyecekler"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
@@ -3834,14 +3873,14 @@ msgstr "Bu mesajı gönderdikten sonra yerden kazanmak için sil"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:123
+#: code:addons/mail/static/src/js/client_action.js:125
 #, python-format
 msgid "Permission denied"
 msgstr "İzin reddedildi"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/client_action.js:125
+#: code:addons/mail/static/src/js/client_action.js:123
 #, python-format
 msgid "Permission granted"
 msgstr "İzin verildi"
@@ -3867,13 +3906,12 @@ msgstr "Yer Tutucu İfade"
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 #: selection:mrp.production,activity_state:0
-#: selection:mrp.repair,activity_state:0
-#: selection:mrp.unbuild,activity_state:0 selection:note.note,activity_state:0
+#: selection:mrp.repair,activity_state:0 selection:mrp.unbuild,activity_state:0
+#: selection:note.note,activity_state:0
 #: selection:project.issue,activity_state:0
 #: selection:project.task,activity_state:0
 #: selection:purchase.order,activity_state:0
-#: selection:res.partner,activity_state:0
-#: selection:sale.order,activity_state:0
+#: selection:res.partner,activity_state:0 selection:sale.order,activity_state:0
 #: selection:stock.picking,activity_state:0
 #: selection:survey.survey,activity_state:0
 #, python-format
@@ -3919,7 +3957,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Mail gateway'i kullanarak gönderilecek mesajların kurallarını belirleyin\n"
 "- herkes: herkes e-posta alır\n"
@@ -4075,7 +4114,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:31
+#: code:addons/mail/static/src/xml/activity.xml:28
 #, python-format
 msgid "Remove"
 msgstr "Kaldır"
@@ -4218,7 +4257,7 @@ msgstr "Etkinlik Planla"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:56
 #, python-format
 msgid "Schedule an activity"
-msgstr ""
+msgstr "Aktivite Planla"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
@@ -4247,10 +4286,12 @@ msgstr "Grupları Ara"
 #: model:ir.model.fields,help:mail.field_mail_template_model_object_field
 msgid ""
 "Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+"If it is a relationship field you will be able to select a target field at "
+"the destination of the relationship."
 msgstr ""
 "İlgili belge modelinden hedef dosyayı seç.\n"
-"Eğer bir ilişki alanı ise ilişkinin varışında bir hedef alan seçebilmelisiniz ."
+"Eğer bir ilişki alanı ise ilişkinin varışında bir hedef alan "
+"seçebilmelisiniz ."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -4271,7 +4312,7 @@ msgid "Send Email"
 msgstr "Eposta Gönder"
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:257
+#: code:addons/mail/models/mail_template.py:272
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "İletiyi Gönder (%s)"
@@ -4307,8 +4348,8 @@ msgid ""
 "value will be the author's email alias if configured, or email address."
 msgstr ""
 "Gönderici adresi (burada yer tutucular kullanılabilir). Ayarlanmamışsa, "
-"varsayılan değer yazanın eposta rumuzu (eğer yapılandırılmışsa) ya da eposta"
-" adresidir."
+"varsayılan değer yazanın eposta rumuzu (eğer yapılandırılmışsa) ya da eposta "
+"adresidir."
 
 #. module: mail
 #. openerp-web
@@ -4371,7 +4412,7 @@ msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:634
+#: code:addons/mail/models/mail_channel.py:642
 #, python-format
 msgid "Show an helper message"
 msgstr ""
@@ -4410,8 +4451,8 @@ msgstr "Kenar çubuğu işlevini açacak kenar çubuğu düğmesi"
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_avatar
 msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Bu carinin küçük boylu resmi. Bu resim otomatik olarak 64x64 pixele en boy "
 "oranını koruyarak küçültülür. Bu alanı küçük resim gerektiğinde "
@@ -4426,11 +4467,11 @@ msgstr "Küçük boyutlu fotoğraf"
 #: model:ir.model.fields,help:mail.field_mail_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
-"Küçük boyutlu grup fotoğrafı. En boy oranı korunarak otomatikman 64x64 resim"
-" olarak boyutlandırılır. Küçük resim gerektiren her yerde kullanabilirsiniz."
+"Küçük boyutlu grup fotoğrafı. En boy oranı korunarak otomatikman 64x64 resim "
+"olarak boyutlandırılır. Küçük resim gerektiren her yerde kullanabilirsiniz."
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -4446,7 +4487,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1044
+#: code:addons/mail/static/src/js/chat_manager.js:1052
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4636,12 +4677,12 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_model_id
 #: model:ir.model.fields,help:mail.field_mail_test_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"Bu diğer ad için karşılık gelen model (Odoo belge gibi). Varolan kayda yanıt"
-" değil gelen herhangi bir e-posta-ecek neden bu modelin (örneğin bir proje "
+"Bu diğer ad için karşılık gelen model (Odoo belge gibi). Varolan kayda yanıt "
+"değil gelen herhangi bir e-posta-ecek neden bu modelin (örneğin bir proje "
 "görevini) yeni kayıt oluşturma"
 
 #. module: mail
@@ -4673,15 +4714,18 @@ msgstr ""
 "Administratörü kullanacaktır."
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:572
-#: code:addons/mail/models/mail_message.py:667
+#: code:addons/mail/models/mail_activity.py:133
+#: code:addons/mail/models/mail_message.py:583
+#: code:addons/mail/models/mail_message.py:683
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Güvenlik sınırlamalarından dolayı istenen işlem tamamlanamıyor. Lütfen sistem yöneticinize danışın.\n"
+"Güvenlik sınırlamalarından dolayı istenen işlem tamamlanamıyor. Lütfen "
+"sistem yöneticinize danışın.\n"
 "\n"
 "(Belge tipi: %s, İşlem: %s)"
 
@@ -4757,20 +4801,19 @@ msgstr "Kime: Takipçileri"
 #. openerp-web
 #: selection:account.invoice,activity_state:0
 #: code:addons/mail/static/src/js/activity.js:27
-#: code:addons/mail/static/src/js/thread.js:231
+#: code:addons/mail/static/src/js/thread.js:235
 #: selection:crm.lead,activity_state:0 selection:event.track,activity_state:0
 #: selection:hr.applicant,activity_state:0 selection:mail.activity,state:0
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 #: selection:mrp.production,activity_state:0
-#: selection:mrp.repair,activity_state:0
-#: selection:mrp.unbuild,activity_state:0 selection:note.note,activity_state:0
+#: selection:mrp.repair,activity_state:0 selection:mrp.unbuild,activity_state:0
+#: selection:note.note,activity_state:0
 #: selection:project.issue,activity_state:0
 #: selection:project.task,activity_state:0
 #: selection:purchase.order,activity_state:0
-#: selection:res.partner,activity_state:0
-#: selection:sale.order,activity_state:0
+#: selection:res.partner,activity_state:0 selection:sale.order,activity_state:0
 #: selection:stock.picking,activity_state:0
 #: selection:survey.survey,activity_state:0
 #, python-format
@@ -4881,8 +4924,7 @@ msgstr "Takibi Bırak"
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
 msgstr ""
-"Ne yazık ki bu eposta rumuzu zaten kullanılıyor, lütfen bir eşsiz olanı "
-"seçin"
+"Ne yazık ki bu eposta rumuzu zaten kullanılıyor, lütfen bir eşsiz olanı seçin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_unread
@@ -5026,14 +5068,14 @@ msgstr "Okunmamış mesajlar"
 #: code:addons/mail/static/src/xml/client_action.xml:129
 #, python-format
 msgid "Unstar all"
-msgstr ""
+msgstr "Tüm Yıldızları Kaldır"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/client_action.xml:129
 #, python-format
 msgid "Unstar all messages"
-msgstr ""
+msgstr "Tüm Yıldızları Kaldır"
 
 #. module: mail
 #. openerp-web
@@ -5104,7 +5146,7 @@ msgid "Users"
 msgstr "Kullanıcılar"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:678
+#: code:addons/mail/models/mail_channel.py:686
 #, python-format
 msgid "Users in this channel: %s %s and you."
 msgstr ""
@@ -5131,7 +5173,8 @@ msgstr "Göster"
 #, python-format
 msgid ""
 "Warning! \n"
-" If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
+" If you remove a follower, he won't be notified of any email or discussion "
+"on this document. Do you really want to remove this follower ?"
 msgstr ""
 
 #. module: mail
@@ -5141,8 +5184,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
-"İlk alan olarak ilişki alanı seçilmişse, bu alan, varış belge modeli içinden"
-" hedef alanını seçmenizi sağlar."
+"İlk alan olarak ilişki alanı seçilmişse, bu alan, varış belge modeli içinden "
+"hedef alanını seçmenizi sağlar."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -5158,8 +5201,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_ir_model_fields_track_visibility
 msgid ""
 "When set, every modification to this field will be tracked in the chatter."
-msgstr ""
-"Ayarlandığında, bu alandaki çok değişiklikler sohbetçide izlenecektir."
+msgstr "Ayarlandığında, bu alandaki çok değişiklikler sohbetçide izlenecektir."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
@@ -5187,7 +5229,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:31
-#: code:addons/mail/static/src/js/thread.js:233
+#: code:addons/mail/static/src/js/thread.js:237
 #, python-format
 msgid "Yesterday"
 msgstr "Dün"
@@ -5200,19 +5242,19 @@ msgid "You added <b>%s</b> to the conversation."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:675
+#: code:addons/mail/models/mail_channel.py:683
 #, python-format
 msgid "You are alone in this channel."
 msgstr "Bu kanalda yalnızsın."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:644
+#: code:addons/mail/models/mail_channel.py:652
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
 msgstr "<b>@%s</b> ile özel sohbettesiniz."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:639
+#: code:addons/mail/models/mail_channel.py:647
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "<b>#%s</b> kanalındasınız."
@@ -5221,19 +5263,21 @@ msgstr "<b>#%s</b> kanalındasınız."
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:29
 #, python-format
-msgid ""
-"You can mark any message as 'starred', and it shows up in this channel."
+msgid "You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
+"Herhangi bir mesajı \"yıldızlı\" olarak işaretleyebilirsiniz ve bu kanalda "
+"gösterilir."
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:52
+#: code:addons/mail/models/res_users.py:53
 #, python-format
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
 msgstr ""
 "Burada. \n"
-" yeni bir kullanıcı oluşturmak için yeni bir kullanıcı oluşturamazsınız lütfen yapılandırma Masası'na gidin."
+" yeni bir kullanıcı oluşturmak için yeni bir kullanıcı oluşturamazsınız "
+"lütfen yapılandırma Masası'na gidin."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:133
@@ -5249,18 +5293,17 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:346
 #, python-format
 msgid ""
-"You could also add a new %(document)s by sending an email to: "
-"%(email_link)s."
+"You could also add a new %(document)s by sending an email to: %(email_link)s."
 msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "Size atanan"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:623
+#: code:addons/mail/static/src/js/chat_manager.js:631
 #, python-format
 msgid "You have been invited to: "
 msgstr "Davet edildiniz:"
@@ -5277,14 +5320,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:519
+#: code:addons/mail/static/src/js/chat_manager.js:527
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:517
+#: code:addons/mail/static/src/js/chat_manager.js:525
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr ""
@@ -5360,13 +5403,6 @@ msgstr "Masaüstü bildirimlerini etkinleştir"
 #, python-format
 msgid "followers"
 msgstr "takipçiler"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:25
-#, python-format
-msgid "for"
-msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link

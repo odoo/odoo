@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-17 08:16+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2016-03-10 09:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -155,8 +155,8 @@ msgid ""
 "company_id\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor="
-"\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary="
-"\"o_mail_notification\">\n"
+"\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-"
+"collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
 "\n"
 "                      <!-- HEADER -->\n"
@@ -164,7 +164,7 @@ msgid ""
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                          <table width=\"590\" border=\"0\" cellpadding="
 "\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
-"rgb(135,90,123); padding: 20px;\">\n"
+"rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\">\n"
 "                                  <span style=\"font-size:20px; color:white; "
@@ -187,7 +187,7 @@ msgid ""
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                          <table width=\"590\" border=\"0\" cellpadding="
 "\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
-"rgb(255, 255, 255); padding: 20px;\">\n"
+"rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
 "                            <tbody>\n"
 "                              <td valign=\"top\" style=\"font-family:Arial,"
 "Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
@@ -203,7 +203,7 @@ msgid ""
 "                        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                          <table width=\"590\" border=\"0\" cellpadding="
 "\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: "
-"rgb(135,90,123); padding: 20px;\">\n"
+"rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style="
 "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
@@ -366,7 +366,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Endereços nas ordes de venda"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:159
 #, python-format
 msgid "Advance: %s"
 msgstr "Adiantamento: %s"
@@ -718,7 +718,7 @@ msgid "Delivered"
 msgstr "Entregue"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:724
+#: code:addons/sale/models/sale.py:736
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -815,7 +815,7 @@ msgid "Docsaway"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
 #, python-format
 msgid "Down Payment"
 msgstr "Entrada Inicial"
@@ -846,7 +846,7 @@ msgid "Down payment (percentage)"
 msgstr "Entrada (percentagem)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "Entrada Inicial de %s%%"
@@ -879,7 +879,7 @@ msgid "Extended Filters"
 msgstr "Filtros extendidos"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:697
+#: code:addons/sale/models/sale.py:709
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -1052,7 +1052,7 @@ msgid "Invoiced"
 msgstr "Faturado"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:725
+#: code:addons/sale/models/sale.py:737
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1122,6 +1122,14 @@ msgstr "Endereço de Fatura e Entrega"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_is_downpayment
 msgid "Is a down payment"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:748
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
 msgstr ""
 
 #. module: sale
@@ -1308,7 +1316,7 @@ msgstr "Nome"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:104 code:addons/sale/models/sale.py:255
-#: code:addons/sale/models/sale.py:256
+#: code:addons/sale/models/sale.py:257 code:addons/sale/models/sale.py:259
 #, python-format
 msgid "New"
 msgstr "Novo"
@@ -1471,7 +1479,7 @@ msgid "Ordered Qty"
 msgstr "Qtd Pedida"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:722
+#: code:addons/sale/models/sale.py:734
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
@@ -1567,13 +1575,13 @@ msgid "Personalize sales order and invoice report"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:286
+#: code:addons/sale/models/sale.py:289
 #, python-format
 msgid "Please define an accounting sales journal for this company."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:807
+#: code:addons/sale/models/sale.py:831
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -2316,7 +2324,7 @@ msgid "Terms and conditions"
 msgstr "Termos e condições"
 
 #. module: sale
-#: code:addons/sale/models/sale_analytic.py:119
+#: code:addons/sale/models/sale_analytic.py:112
 #, python-format
 msgid ""
 "The Sales Order %s linked to the Analytic Account must be validated before "
@@ -2342,7 +2350,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:718
+#: code:addons/sale/models/sale.py:730
 #, python-format
 msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
@@ -2350,7 +2358,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:151
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2360,7 +2368,7 @@ msgstr ""
 "\". Por favor, use outro produto ou actualize este. "
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:145
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set "
@@ -2395,7 +2403,7 @@ msgstr ""
 "de instalar um plano de contas nas configurações da contabilidade."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:363 code:addons/sale/models/sale.py:367
+#: code:addons/sale/models/sale.py:366 code:addons/sale/models/sale.py:370
 #, python-format
 msgid "There is no invoicable line."
 msgstr ""
@@ -2629,7 +2637,7 @@ msgid "Warning"
 msgstr "Aviso"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:898
+#: code:addons/sale/models/sale.py:911
 #, python-format
 msgid "Warning for %s"
 msgstr "Aviso para %s"
@@ -2687,7 +2695,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:927
+#: code:addons/sale/models/sale.py:953
 #, python-format
 msgid ""
 "You can not remove a sales order line.\n"

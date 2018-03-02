@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_account
-# 
+#
 # Translators:
 # Anja Funk <anja.funk@afimage.de>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
@@ -25,10 +25,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Ralf Hilgenstock <rh@dialoge.info>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
@@ -53,6 +53,8 @@ msgid ""
 "Affect landed costs on receipt operations and split them among products to "
 "update their cost price."
 msgstr ""
+"Wenden Sie Einstandskosten auf die Wareneingangsabwicklung an und teilen Sie "
+"sie auf Produkte auf, um die Herstellungskosten zu aktualisieren."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
@@ -80,11 +82,11 @@ msgstr "Abbrechen"
 #: code:addons/stock_account/models/stock.py:260
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
-"Eine Lagereingangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs, einen über die "
+"Eine Lagereingangskonto für für das Produkt %s konnte nicht gefunden werden. "
+"Sie müssen vor der Bearbeitung dieses Vorgangs, einen über die "
 "Produktkategorie oder den Ort definieren."
 
 #. module: stock_account
@@ -95,8 +97,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Eine Lagerausgangskonto für für das Produkt %s konnte nicht gefunden werden."
-" Sie müssen vor der Bearbeitung dieses Vorgangs, einen über die "
+"Eine Lagerausgangskonto für für das Produkt %s konnte nicht gefunden werden. "
+"Sie müssen vor der Bearbeitung dieses Vorgangs, einen über die "
 "Produktkategorie oder den Ort definieren."
 
 #. module: stock_account
@@ -167,7 +169,7 @@ msgstr "Kosten"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "Kostenmethode"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
@@ -189,7 +191,7 @@ msgstr "Gegenkonto"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
 msgid "Counter-Part Account Required"
-msgstr ""
+msgstr "Gegenkonto erforderlich"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -235,12 +237,19 @@ msgstr "ID"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
 msgid ""
-"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
 msgstr ""
-"Wenn der Einstandspreis pro Mengeneinheit (ME) ansteigt, wird in folgender Weise das Bestandsveränderungskonto entlasted (Haben) sowie das Warenversand Konto belasted (Soll):\n"
+"Wenn der Einstandspreis pro Mengeneinheit (ME) ansteigt, wird in folgender "
+"Weise das Bestandsveränderungskonto entlasted (Haben) sowie das Warenversand "
+"Konto belasted (Soll):\n"
 "Buchungsbetrag = (Preissteigerung * Bestand).\n"
-"Wenn der Einstandspreis pro Mengeneinheit sinkt, wird das Bestandsveränderungskonto belasted (Soll) sowie das Warenversand Konto entlasted (Haben)."
+"Wenn der Einstandspreis pro Mengeneinheit sinkt, wird das "
+"Bestandsveränderungskonto belasted (Soll) sowie das Warenversand Konto "
+"entlasted (Haben)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -282,7 +291,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Include landed costs in product cost"
-msgstr ""
+msgstr "Wareneinstandspreise in die Produktkosten einbeziehen"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -412,8 +421,13 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 msgid ""
-"Perpetual valuation allows to get up-to-date books whenever products are transferred. It is only tailored for big companies where such a need matters. It requires extra configuration and testing to make sure accounting is impacted the right way for every kind of stock move. \n"
-" This must be set on product categories. The Periodic mode is applied by default (i.e. manual accounting entries at the end of the fiscal year). This last mode is recommended for starters and small/medium-size companies."
+"Perpetual valuation allows to get up-to-date books whenever products are "
+"transferred. It is only tailored for big companies where such a need "
+"matters. It requires extra configuration and testing to make sure accounting "
+"is impacted the right way for every kind of stock move. \n"
+" This must be set on product categories. The Periodic mode is applied by "
+"default (i.e. manual accounting entries at the end of the fiscal year). This "
+"last mode is recommended for starters and small/medium-size companies."
 msgstr ""
 
 #. module: stock_account
@@ -472,7 +486,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Set standard cost"
-msgstr ""
+msgstr "Standard-Kosten festlegen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -496,24 +510,36 @@ msgstr "Geänderter Standardpreis"
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming "
+"shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
-"Standardpreis: Der Beschaffungspreis wird manuell berechnet (normalerweise einmal jährlich)\n"
-"Durchschnittspreis: Der Beschaffungspreis wird bei jeder eingehenden Lieferung neu berechnet.\n"
-"Echtzeitpreis: Der Beschaffungspreis ist der Preis für das zuletzt versendete Produkt (wird z.B. oft ebenfalls bei Inventurverlust genutzt)."
+"Standardpreis: Der Beschaffungspreis wird manuell berechnet (normalerweise "
+"einmal jährlich)\n"
+"Durchschnittspreis: Der Beschaffungspreis wird bei jeder eingehenden "
+"Lieferung neu berechnet.\n"
+"Echtzeitpreis: Der Beschaffungspreis ist der Preis für das zuletzt "
+"versendete Produkt (wird z.B. oft ebenfalls bei Inventurverlust genutzt)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and "
+"used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing "
+"product (will be used in case of inventory loss for example)."
 msgstr ""
-"Standardpreis: Der Beschaffungspreis wird manuell berechnet (normalerweise einmal jährlich)\n"
-"Durchschnittspreis: Der Beschaffungspreis wird bei jeder eingehenden Lieferung neu berechnet.\n"
-"Echtzeitpreis: Der Beschaffungspreis ist der Preis für das zuletzt versendete Produkt (wird z.B. oft ebenfalls bei Inventurverlust genutzt)."
+"Standardpreis: Der Beschaffungspreis wird manuell berechnet (normalerweise "
+"einmal jährlich)\n"
+"Durchschnittspreis: Der Beschaffungspreis wird bei jeder eingehenden "
+"Lieferung neu berechnet.\n"
+"Echtzeitpreis: Der Beschaffungspreis ist der Preis für das zuletzt "
+"versendete Produkt (wird z.B. oft ebenfalls bei Inventurverlust genutzt)."
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_stock_history
@@ -642,8 +668,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+"value for all products in this category. It can also directly be set on each "
+"product"
 msgstr ""
 "Bei der Echtzeit-Inventar-Bewertung werden Gegenbuchungen zu Lagerzugängen "
 "auf dieses Konto gebucht, es sei denn für das Quelle Lager wurde ein "
@@ -671,13 +697,13 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
+"default value for all products in this category. It can also directly be set "
+"on each product"
 msgstr ""
-"Bei der Echtzeit-Inventar-Bewertung werden Gegenbuchungen aller Lagerabgänge"
-" auf dieses Konto gebucht, es seie denn dem gebuchten Ziellager wurde ein "
-"eigenes Bewertung-Konto festgelegt. Dieses ist die Vorgabe für alle Produkte"
-" dieser Kategorie, kann aber auch je Produkt individuell festgelegt werden."
+"Bei der Echtzeit-Inventar-Bewertung werden Gegenbuchungen aller Lagerabgänge "
+"auf dieses Konto gebucht, es seie denn dem gebuchten Ziellager wurde ein "
+"eigenes Bewertung-Konto festgelegt. Dieses ist die Vorgabe für alle Produkte "
+"dieser Kategorie, kann aber auch je Produkt individuell festgelegt werden."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -732,8 +758,8 @@ msgstr ""
 #: code:addons/stock_account/models/stock.py:264
 #, python-format
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Sie haben keine Lagerbewertung auf Ihrer Produktkategorie. Sie müssen eine "
 "vor der Bearbeitung dieses Vorgangs definieren."

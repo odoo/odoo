@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_automation
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
@@ -25,10 +25,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Florian R. A. Angermeier <fa@brunner.at>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
@@ -94,12 +94,12 @@ msgstr "Abonnenten hinzufügen"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
 msgid "Assigned to admin user"
-msgstr ""
+msgstr "Zugewiesen an Administrator"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
-msgstr ""
+msgstr "Automatische Aktion"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -122,7 +122,7 @@ msgstr "Verfügbar auf der Website"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Basisaktionsregel: Überprüfen und Ausführen"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_model_id
@@ -170,14 +170,14 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Abhängige Server-Aktion, die ausgeführt werden soll. Bitte beachten Sie, das"
-" der letzte Rückgabewert der ausgeführten Aktion als globaler Rückgabewert "
+"Abhängige Server-Aktion, die ausgeführt werden soll. Bitte beachten Sie, das "
+"der letzte Rückgabewert der ausgeführten Aktion als globaler Rückgabewert "
 "verwendet wird."
 
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Click to setup a new automated automation."
-msgstr ""
+msgstr "Klicken, um eine neue automatisierte Aktionsregel zu erstellen."
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -222,9 +222,15 @@ msgstr "Frist"
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 minutes before a meeting."
+"                                    You can put a negative number if you "
+"need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 "
+"minutes before a meeting."
 msgstr ""
+"Verzögerung nach dem Auslösedatum.\n"
+"Sie können eine negative Zahl eingeben, wenn Sie eine Verzögerung vor dem "
+"Triggerdatum, wie z.B. das Senden einer Erinnerung 15 Minuten vor einer "
+"Besprechung."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
@@ -287,8 +293,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
 msgid ""
-"If present, this condition must be satisfied before the update of the "
-"record."
+"If present, this condition must be satisfied before the update of the record."
 msgstr ""
 "Falls vorhanden, muß diese Bedingung vor der Aktualisierung des Datensatzes "
 "erfüllt werden."
@@ -421,8 +426,8 @@ msgstr "Beim Aktualisieren"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_help
 msgid ""
-"Optional help text for the users with a description of the target view, such"
-" as its usage and purpose."
+"Optional help text for the users with a description of the target view, such "
+"as its usage and purpose."
 msgstr ""
 "Optionaler Hilfetext für Benutzer mit der Beschreibung der Ansicht, deren "
 "Verwendung und Aufgabe."
@@ -445,8 +450,8 @@ msgstr "Priorität"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
 msgid ""
-"Provide the field used to link the newly created recordon the record on used"
-" by the server action."
+"Provide the field used to link the newly created recordon the record on used "
+"by the server action."
 msgstr ""
 
 #. module: base_automation
@@ -457,7 +462,7 @@ msgstr "Python Code"
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove Action"
-msgstr ""
+msgstr "Aktion entfernen"
 
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -493,8 +498,7 @@ msgstr "Betreff"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_website_url
 msgid "The full URL to access the server action through the website."
-msgstr ""
-"Die komplette URL zum Zugriff auf die Server-Aktion durch die Website."
+msgstr "Die komplette URL zum Zugriff auf die Server-Aktion durch die Website."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
@@ -511,12 +515,26 @@ msgstr ""
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
+"- 'Create or Copy a new Record': create a new record with new values, or "
+"copy an existing record in your database\n"
 "- 'Write on a Record': update the values of a record\n"
-"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Execute several actions': define an action that triggers several other "
+"server actions\n"
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Typ der Serveraktion. Folgende Werte sind verfügbar:\n"
+"- „Python-Code ausführen“: ein Python-Code-Block, der ausgeführt wird\n"
+"- „Neuen Datensatz erstellen oder kopieren“: einen neuen Datensatz mit neuen "
+"Werten erstellen oder einen existierenden Datensatz in Ihre Datenbank "
+"kopieren\n"
+"- „In einen Datensatz schreiben“: die Werte eines Datensatzes aktualisieren\n"
+"- „Mehrere Aktionen ausführen“: eine Aktion definieren, die mehrere andere "
+"Aktionen auslöst\n"
+"- „Follower hinzufügen“: Follower zu einem Datensatz hinzufügen (verfügbar "
+"in Diskussion)\n"
+"- „E-Mail senden“: automatisch eine E-Mail senden (verfügbar in "
+"email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
@@ -532,11 +550,19 @@ msgstr "Benutze Kalender"
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user may\n"
+"                various screens. Example: a lead created by a specific user "
+"may\n"
 "                be automatically set to a specific sales channel, or an\n"
-"                opportunity which still has status pending after 14 days might\n"
+"                opportunity which still has status pending after 14 days "
+"might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Verwenden Sie automatisierte Aktionen, um automatisch Aktionen für "
+"verschiedene Bildschirme zu veranlassen. Beispiel: Ein von einem bestimmten "
+"Benutzer erstellter Interessent kann automatisch auf einen bestimmten "
+"Vertriebskanal eingestellt werden oder eine Chance, die nach 14 Tagen immer "
+"noch den Status „ausstehend“ innehat, führt zur Auslösung einer "
+"automatischen Erinnerungs-E-Mail."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id
@@ -580,8 +606,12 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the "
+"scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Wann die Bedingung ausgelöst werden sollte.\n"
+"Falls vorhanden, wird der Zeitplaner die Überprüfung vornehmen. Falls leer, "
+"wird bei der Erstellung und Aktualisierung eine Überprüfung vorgenommen."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_active
@@ -593,8 +623,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_code
 msgid ""
-"Write Python code that the action will execute. Some variables are available"
-" for use; help about pyhon expression is given in the help tab."
+"Write Python code that the action will execute. Some variables are available "
+"for use; help about pyhon expression is given in the help tab."
 msgstr ""
 "Schreiben Sie Python-Code den die Aktion ausführen soll. Einige Variablen "
 "stehen zur Verfügung; Hilfe zu Python-Ausdrücken ist dem Hilfe-Reiter "

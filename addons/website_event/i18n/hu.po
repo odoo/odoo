@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2017-04-18 14:47+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event
@@ -98,7 +98,8 @@ msgstr "<strong>Részvétel Twitter-en</strong>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
-msgstr "<strong>Telefon</strong> <span class=\"text-muted\">(Választható)</span>"
+msgstr ""
+"<strong>Telefon</strong> <span class=\"text-muted\">(Választható)</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -328,6 +329,7 @@ msgstr "Szabad"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:70
 #, python-format
 msgid "Introduction"
 msgstr "Bemutatás"
@@ -338,7 +340,8 @@ msgid "Is Participating"
 msgstr "Résztvevő"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:64
+#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:71
 #, python-format
 msgid "Location"
 msgstr "Helyszín"
@@ -355,7 +358,7 @@ msgstr "Név"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:185
+#: code:addons/website_event/controllers/main.py:183
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -460,7 +463,8 @@ msgid "Reference"
 msgstr "Hivatkozás"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:65
+#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:72
 #, python-format
 msgid "Register"
 msgstr "Regisztráció"
@@ -469,6 +473,11 @@ msgstr "Regisztráció"
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register Now"
 msgstr "Regisztráljon most"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Registration for this event is now closed"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404

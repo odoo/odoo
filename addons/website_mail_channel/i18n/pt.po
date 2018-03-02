@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2015-09-15 00:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -97,21 +97,11 @@ msgid "Change Discussion List"
 msgstr "Alterar Lista de Discussão"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "Description"
-msgstr "Descrição"
-
-#. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
 #, python-format
 msgid "Discussion List"
 msgstr "Lista de Discussão"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
-msgstr "Caminho de Discussão"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
@@ -146,11 +136,6 @@ msgid "Mailing-List"
 msgstr "Lista de Correio"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Descrição da Mensagem: ou o assunto, ou o começo do corpo"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
@@ -181,11 +166,6 @@ msgid "Post to"
 msgstr "Postar a"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
-msgstr "Publicado"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Reference"
 msgstr "Referência"
@@ -202,24 +182,24 @@ msgid "Subscribe"
 msgstr "Subscrever"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:242
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""
+
+#. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Cancelar Subscrição"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid ""
-"Used to display messages in a paragraph-based chatter using a unique path;"
-msgstr ""
-"Utilizado para exibir mensagens em uma conversa baseada no parágrafo usando "
-"um único caminho;"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "Visível no site como um comentário"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -247,6 +227,15 @@ msgstr "anexos"
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
 msgstr "por"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already\n"
+"                    unsubscribed or was never subscribed to the mailing\n"
+"                    list, you may want to check that the address was\n"
+"                    correct."
+msgstr ""
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message

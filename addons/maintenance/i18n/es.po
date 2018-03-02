@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * maintenance
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
@@ -37,10 +37,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: maintenance
@@ -84,8 +84,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Diccionario Python a evaluar para proporcionar valores por defecto cuando un"
-" nuevo registro se cree para este seudónimo."
+"Diccionario Python a evaluar para proporcionar valores por defecto cuando un "
+"nuevo registro se cree para este seudónimo."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
@@ -382,7 +382,8 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
 msgstr ""
-"Álias de correo para esta categoría de equipamiento. Los mensajes nuevos crearán\n"
+"Álias de correo para esta categoría de equipamiento. Los mensajes nuevos "
+"crearán\n"
 "automáticamente peticiones de mantenimiento para esta categoría."
 
 #. module: maintenance
@@ -470,8 +471,8 @@ msgstr "ID"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "ID del registro padre que tiene el seudónimo. (ejemplo: el proyecto que "
 "contiene el seudónimo para la creación de tareas)"
@@ -639,7 +640,7 @@ msgstr "Tipos de mantenimiento"
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
 #: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
-msgstr ""
+msgstr "Mantenimiento: generar solicitudes de mantenimiento preventivo"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_model
@@ -655,7 +656,7 @@ msgstr "Más <i class=\"fa fa-caret-down\"/>"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "Mis actividades"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -702,8 +703,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Id. opcional de un hilo (registro) al que todos los mensajes entrantes serán"
-" adjuntados, incluso si no fueron respuestas del mismo. Si se establece, se "
+"Id. opcional de un hilo (registro) al que todos los mensajes entrantes serán "
+"adjuntados, incluso si no fueron respuestas del mismo. Si se establece, se "
 "deshabilitará completamente la creación de nuevos registros."
 
 #. module: maintenance
@@ -740,8 +741,8 @@ msgstr "ID del hilo del registro padre"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Modelo padre que contiene el alias. El modelo que contiene la referencia "
@@ -754,12 +755,15 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
-"Política para publicar un mensaje en el documento utilizando el servidor de correo.\n"
+"Política para publicar un mensaje en el documento utilizando el servidor de "
+"correo.\n"
 "- todo el mundo: todos pueden publicar\n"
 "- socios: sólo socios autenticados\n"
-"- seguidores: sólo seguidores del documento relacionado o miembros de los siguientes canales\n"
+"- seguidores: sólo seguidores del documento relacionado o miembros de los "
+"siguientes canales\n"
 
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
@@ -899,6 +903,8 @@ msgstr "Configuración"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Mostrar todos los registros que tienen la próxima fecha de acción antes de "
+"hoy"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_stage_id
@@ -959,9 +965,9 @@ msgstr "Técnicos"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "El modelo (Tipo de documento de Odoo) al que corresponde este seudónimo. "
 "Cualquier correo entrante que no sea respuesta a un registro existente, "
@@ -974,9 +980,9 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nombre de este seudónimo de correo electrónico. Por ejemplo, "
-"\"trabajos\",  si lo que quiere es obtener los correos para "
-"<trabajos@example.odoo.com>."
+"El nombre de este seudónimo de correo electrónico. Por ejemplo, \"trabajos"
+"\",  si lo que quiere es obtener los correos para <trabajos@example.odoo."
+"com>."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_user_id
@@ -1001,24 +1007,34 @@ msgstr "El usuario podrá gestionar equipos."
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                Create some laptop, printer or phone and link each equipment "
+"to\n"
+"                an employee or departement. You will manage allocations, "
+"issues\n"
 "                and maintenance of equipment."
 msgstr ""
-"Esta aplicación le ayuda a realizar un seguimiento de los equipos utilizados por los empleados.\n"
-"Añada un portátil, impresora o un teléfono, y vincúlelo a un empleado o departamento.\n"
-"Usted se encargará de las asignaciones,  problemas y mantenimiento de los equipos."
+"Esta aplicación le ayuda a realizar un seguimiento de los equipos utilizados "
+"por los empleados.\n"
+"Añada un portátil, impresora o un teléfono, y vincúlelo a un empleado o "
+"departamento.\n"
+"Usted se encargará de las asignaciones,  problemas y mantenimiento de los "
+"equipos."
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of equipment."
+"                Create some laptop, printer or phone and link each equipment "
+"to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of "
+"equipment."
 msgstr ""
-"Esta aplicación ayuda a realizar un seguimiento de los equipos utilizados por los empleados. \n"
-"Crea algún portátil, impresora o teléfono y vincula cada equipo a un empleado o departamento. \n"
-"Usted se encargará de las asignaciones, los problemas y el mantenimiento del equipo."
+"Esta aplicación ayuda a realizar un seguimiento de los equipos utilizados "
+"por los empleados. \n"
+"Crea algún portátil, impresora o teléfono y vincula cada equipo a un "
+"empleado o departamento. \n"
+"Usted se encargará de las asignaciones, los problemas y el mantenimiento del "
+"equipo."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1093,7 +1109,7 @@ msgstr "Mantenimiento no programado"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgstr "Próximas actividades (7 días)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1125,8 +1141,8 @@ msgstr "Garantía"
 #: code:addons/maintenance/models/maintenance.py:75
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
+"You cannot delete an equipment category containing equipments or maintenance "
+"requests."
 msgstr ""
 "No puede borrar una categoría de equipamiento que contiene equipos o "
 "peticiones de mantenimiento."

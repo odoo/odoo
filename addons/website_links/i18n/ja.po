@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2016-07-11 08:35+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -18,44 +18,66 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_links
-#: model:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Share this Page</span>"
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
 msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr ""
+
+#. module: website_links
+#: model:ir.ui.view,arch_db:website_links.share_page_menu
+msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgstr ""
+"<span title=\"Track this page to count clicks\">このページを追跡</span>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Campaign</strong>"
-msgstr ""
+msgstr "<strong>キャンペーン</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr ""
+msgstr "<strong>中</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Original URL</strong>"
-msgstr ""
+msgstr "<strong>オリジナル URL</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Redirected URL</strong>"
-msgstr ""
+msgstr "<strong>リダイレクト URL</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Source</strong>"
-msgstr ""
+msgstr "<strong>参照元</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr ""
+msgstr "<strong>追跡リンク</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr ""
+msgstr "常時"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -64,20 +86,23 @@ msgid ""
 "placement=\"top\" title=\"Defines the context of your link. It might be an "
 "event you want to promote or a special promotion.\"/>"
 msgstr ""
+"キャンペーン <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"placement=\"top\" title=\"Defines the context of your link. It might be an "
+"event you want to promote or a special promotion.\"/>"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:37
 #, python-format
 msgid "Copy"
-msgstr ""
+msgstr "コピー"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:350
 #, python-format
 msgid "Generating link..."
-msgstr ""
+msgstr "リンクを生成中..."
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -92,7 +117,7 @@ msgstr "先月"
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Week"
-msgstr ""
+msgstr "先週"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -107,11 +132,14 @@ msgid ""
 "\"top\" title=\"Defines the medium used to share your link. It might be an "
 "email, or a Facebook Ads for instance.\"/>"
 msgstr ""
+"媒体 <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
+"\"top\" title=\"Defines the medium used to share your link. It might be an "
+"email, or a Facebook Ads for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Most Clicked"
-msgstr ""
+msgstr "最多クリックされている"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -121,7 +149,7 @@ msgstr "最新"
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Recently Used"
-msgstr ""
+msgstr "最近利用された"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -137,6 +165,9 @@ msgid ""
 "\"top\" title=\"Defines the source from which your traffic will come from, "
 "Facebook or Twitter for instance.\"/>"
 msgstr ""
+"ソース <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
+"\"top\" title=\"Defines the source from which your traffic will come from, "
+"Facebook or Twitter for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -148,6 +179,15 @@ msgstr "統計"
 #: code:addons/website_links/static/src/xml/recent_link.xml:38
 #, python-format
 msgid "Stats"
+msgstr "統計"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:210
+#: code:addons/website_links/static/src/js/website_links_charts.js:211
+#: code:addons/website_links/static/src/js/website_links_charts.js:212
+#, python-format
+msgid "There is no data to show"
 msgstr ""
 
 #. module: website_links
@@ -156,30 +196,39 @@ msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors, "
 "or in Odoo reports to track opportunities and related revenues."
 msgstr ""
+"これらのトラッカーは、Googleアナリティクスでクリックや訪問者を追跡するため、"
+"またはOdooのレポートで機会や関連収益を追跡するために使用できます。"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:216
 #, python-format
 msgid "Unable to get recent links"
-msgstr ""
+msgstr "最近のリンクを取得できません"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr "未定義"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:239
 #, python-format
 msgid "You don't have any recent links."
-msgstr ""
+msgstr "最近のリンクはありません。"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr ""
+msgstr "追跡されたリンク"
 
 #. module: website_links
 #. openerp-web
@@ -187,19 +236,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:8
 #, python-format
 msgid "clicks"
-msgstr ""
+msgstr "クリック"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "copy"
-msgstr ""
+msgstr "コピー"
 
 #. module: website_links
 #. openerp-web
@@ -220,12 +269,12 @@ msgstr ""
 #: code:addons/website_links/static/src/js/website_links.js:262
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
-msgstr ""
+msgstr "例. 検索エンジン, ウエブサイトのページ, .."
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/page/contactus"
-msgstr ""
+msgstr "例. https://www.odoo.com/page/contactus"
 
 #. module: website_links
 #. openerp-web
@@ -233,7 +282,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "ok"
-msgstr ""
+msgstr "ok"
 
 #. module: website_links
 #. openerp-web

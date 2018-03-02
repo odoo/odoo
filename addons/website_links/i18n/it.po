@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2016-03-03 11:31+0000\n"
 "Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
@@ -19,11 +19,30 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
+msgstr "click"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr "nazioni"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr "# di click"
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Share this Page</span>"
+msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
 msgstr ""
-"<span title=\"Track this page to count clicks\">Condividi questa pagina</"
-"span>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -113,6 +132,9 @@ msgid ""
 "\"top\" title=\"Defines the medium used to share your link. It might be an "
 "email, or a Facebook Ads for instance.\"/>"
 msgstr ""
+"Medio <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-placement="
+"\"top\" title=\"Defines the medium used to share your link. It might be an "
+"email, or a Facebook Ads for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -160,6 +182,15 @@ msgid "Stats"
 msgstr "Statistiche"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:210
+#: code:addons/website_links/static/src/js/website_links_charts.js:211
+#: code:addons/website_links/static/src/js/website_links_charts.js:212
+#, python-format
+msgid "There is no data to show"
+msgstr "Non ci sono dati da visualizzare"
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors, "
@@ -180,10 +211,17 @@ msgstr "Impossibile ottenere link recenti"
 
 #. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:239
 #, python-format
 msgid "You don't have any recent links."
-msgstr ""
+msgstr "Non ci sono link recenti."
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url

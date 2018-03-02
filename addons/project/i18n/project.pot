@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2018-03-02 14:44+0000\n"
+"PO-Revision-Date: 2018-03-02 14:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -137,6 +137,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
+#: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
 msgstr ""
 
@@ -152,7 +153,7 @@ msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:242
-#: code:addons/project/models/project.py:428
+#: code:addons/project/models/project.py:429
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -750,14 +751,14 @@ msgid "Active"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
-#: model:ir.ui.menu,name:project.project_menu_config_activity_type
-msgid "Activity Types"
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.project_planner
-msgid "Activities"
+#: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
+#: model:ir.ui.menu,name:project.project_menu_config_activity_type
+msgid "Activity Types"
 msgstr ""
 
 #. module: project
@@ -1296,7 +1297,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:658
+#: code:addons/project/models/project.py:659
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1305,7 +1306,7 @@ msgid "Customer"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:658
+#: code:addons/project/models/project.py:659
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -1550,7 +1551,7 @@ msgid "Ending Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:436
+#: code:addons/project/models/project.py:437
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr ""
@@ -1795,7 +1796,7 @@ msgid "Holds visibility of the tasks or issues that belong to the current projec
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:585
+#: code:addons/project/models/project.py:586
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2289,7 +2290,6 @@ msgstr ""
 msgid "Objectives"
 msgstr ""
 
-
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
@@ -2408,7 +2408,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:738
+#: code:addons/project/models/project.py:739
 #, python-format
 msgid "Please remove existing tasks in the project linked to the accounts you want to delete."
 msgstr ""
@@ -3015,6 +3015,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.model.fields,field_description:project.field_res_users_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3629,7 +3630,7 @@ msgid "send us an email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:484
+#: code:addons/project/models/project.py:485
 #, python-format
 msgid "tasks"
 msgstr ""

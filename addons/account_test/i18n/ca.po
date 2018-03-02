@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-11-30 11:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
@@ -23,6 +23,8 @@ msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
+"<br/>\n"
+"                        <strong>Descripció:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
@@ -62,6 +64,7 @@ msgstr ""
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
 msgstr ""
+"Comprovar que les factures pagades/conciliades no estan en estat 'Obert'"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
@@ -69,6 +72,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"Comprovar que els apunts comptables conciliats que defineixin comptes a "
+"cobrar i a pagar pertanyin a factures conciliades"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -76,6 +81,8 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for "
 "Payable and Receivable Accounts"
 msgstr ""
+"Comprovar que la factura conciliada per vendes/compres te apunts conciliats "
+"per els comptes a cobrar i a pagar"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -201,16 +208,18 @@ msgstr ""
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
+"Prova 5.1 : Línies de comptabilitat a cobrar i a pagar de factures no "
+"conciliades"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "Prova 5.2 : Factures conciliades i comptes a cobrar/a pagar"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "Prova 6 : Estat de la factura"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
@@ -234,7 +243,7 @@ msgid "Tests"
 msgstr "Test"
 
 #. module: account_test
-#: code:addons/account_test/report/account_test_report.py:49
+#: code:addons/account_test/report/report_account_test.py:52
 #, python-format
 msgid "The test was passed successfully"
 msgstr ""

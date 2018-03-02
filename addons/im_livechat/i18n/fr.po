@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * im_livechat
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -30,10 +30,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:47+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: im_livechat
@@ -56,11 +56,14 @@ msgstr "% content"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
 msgid ""
 "* 'Display the button' displays the chat button on the pages.\n"
-"* 'Auto popup' displays the button and automatically open the conversation pane.\n"
+"* 'Auto popup' displays the button and automatically open the conversation "
+"pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
-"* « Afficher le bouton » affiche le bouton de messagerie instantanée sur les pages ;\n"
-"* « Auto popup » affiche le bouton et ouvre automatiquement la fenêtre de conversation ;\n"
+"* « Afficher le bouton » affiche le bouton de messagerie instantanée sur les "
+"pages ;\n"
+"* « Auto popup » affiche le bouton et ouvre automatiquement la fenêtre de "
+"conversation ;\n"
 "* « Masquer le bouton » masque le bouton sur les pages."
 
 #. module: im_livechat
@@ -69,9 +72,15 @@ msgid ""
 "<span>Define rules for your live support channel. You can apply an action "
 "(disable the support, automatically open your support, or just make the "
 "button available) for the given URL, and per country.<br/>To identify the "
-"country, GeoIP must be installed on your server, otherwise, the countries of"
-" the rule will not be taken into account.</span>"
+"country, GeoIP must be installed on your server, otherwise, the countries of "
+"the rule will not be taken into account.</span>"
 msgstr ""
+"<span>Définissez des règles pour votre canal d'assistance en ligne. Vous "
+"pouvez associer une action (désactiver l'assistance, ouvrir l'assistance "
+"automatiquement ou activer un bouton) à une URL donnée en fonction du pays."
+"<br/> Pour identifier le pays, GeoIP doit être installé sur votre serveur. "
+"Autrement, les pays ne seront pas pris en compte lors de l'exécution de la "
+"règle.</span>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
@@ -145,9 +154,15 @@ msgstr "Réponses Enregistrées"
 msgid ""
 "Canned responses allow you to insert prewritten responses in\n"
 "                your messages by typing <i>:shortcut</i>. The shortcut is\n"
-"                replaced directly in your message, so that you can still edit\n"
+"                replaced directly in your message, so that you can still "
+"edit\n"
 "                it before sending."
 msgstr ""
+"Les réponses standardisées vous permettent d'insérer des réponses "
+"prédéfinies dans\n"
+" vos messages en saisissant <i>:raccourci</i>. Le raccourci est\n"
+" remplacé directement dans votre message, ce qui vous permet de le modifier\n"
+" avant de l'envoyer."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -196,7 +211,7 @@ msgstr "Discutez en ligne avec un de nos collaborateurs"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Click to create a new canned response."
-msgstr ""
+msgstr "Cliquez ici pour créer une réponse standardisée."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -284,8 +299,7 @@ msgstr "Date de création (année)"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
 msgid "Default text displayed on the Livechat Support Button"
 msgstr ""
-"Texte par défaut affiché sur le bouton de support de la conversation en "
-"ligne"
+"Texte par défaut affiché sur le bouton de support de la conversation en ligne"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
@@ -294,6 +308,9 @@ msgid ""
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
+"Délai (en secondes) d'ouverture automatique de la fenêtre de conversation. "
+"Remarque : l'action sélectionnée doit être « Fenêtre contextuelle "
+"automatique » pour que ce paramètre soit pris en compte."
 
 #. module: im_livechat
 #. openerp-web
@@ -345,10 +362,14 @@ msgstr "Expliquez votre note"
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"For website built with Odoo CMS, please install the website_livechat module."
-" Then go to Website Admin &gt; Configuration &gt; Settings and select the "
+"For website built with Odoo CMS, please install the website_livechat module. "
+"Then go to Website Admin &gt; Configuration &gt; Settings and select the "
 "Website Live Chat Channel you want to add on your website."
 msgstr ""
+"Si votre site Web a été réalisé avec le CMS Odoo, vous devez installer le "
+"module website_livechat. Ensuite, accédez à Administration du site Web > "
+"Configuration > Paramètres et sélectionnez le canal d'assistance en ligne "
+"que vous souhaitez ajouter sur votre site."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -357,8 +378,8 @@ msgid ""
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
 "Donne l'ordre pour trouver une règle correspondante. Si 2 règles "
-"correspondent à l'adresse/pays donnée, celle avec la séquence la plus petite"
-" sera choisie."
+"correspondent à l'adresse/pays donnée, celle avec la séquence la plus petite "
+"sera choisie."
 
 #. module: im_livechat
 #. openerp-web
@@ -510,6 +531,10 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
+"Les statistiques relatives au canal d'assistance en ligne vous permettent "
+"d'évaluer et d'analyser facilement les performances d'une session "
+"d'assistance en ligne. Obtenez des informations à propos des sessions "
+"manquées, de l'audience, de la durée d'une session, etc."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -641,8 +666,8 @@ msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
 msgstr ""
-"Les opérateurs qui ne montrent pas d'activité pendant plus de 30 minutes sur"
-" Odoo seront considérés comme déconnectés. "
+"Les opérateurs qui ne montrent pas d'activité pendant plus de 30 minutes sur "
+"Odoo seront considérés comme déconnectés. "
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -673,6 +698,8 @@ msgstr "Note : :rating_%d"
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
+"Expression régulière spécifiant les pages Web sur lesquelles cette règle "
+"sera appliquée."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -705,7 +732,7 @@ msgstr "Recherche de rapport"
 #: code:addons/im_livechat/models/mail_channel.py:114
 #, python-format
 msgid "See 15 last visited pages"
-msgstr ""
+msgstr "Voir les 15 dernières pages visitées"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -740,8 +767,8 @@ msgstr "Historique des sessions"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Photo petit format du groupe. Elle est automatiquement redimensionnée au "
 "format 64x64px, en respectant le ratio d'aspect. Utilisez ce champ à tout "
@@ -783,6 +810,11 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"La règle sera uniquement appliquée pour ces pays. Exemple : si vous "
+"sélectionnez « Belgique» et « États-Unis » et que vous définissez l'action "
+"sur « Masquer le bouton », le bouton d'assistance sera masqué sur l'URL "
+"spécifiée pour les visiteurs situés dans ces deux pays. Cette fonctionnalité "
+"nécessite que GeoIP soit installé sur votre serveur."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -838,8 +870,8 @@ msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
 msgstr ""
-"URL vers une page statique où votre client peut discuter avec l'opérateur de"
-" la chaîne."
+"URL vers une page statique où votre client peut discuter avec l'opérateur de "
+"la chaîne."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_uuid
@@ -878,9 +910,13 @@ msgstr "Message d'accueil"
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "You can create channels for each website on which you want\n"
-"                to integrate the website live chat widget, allowing your website\n"
+"                to integrate the website live chat widget, allowing your "
+"website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"Vous pouvez créer des canaux pour chaque site Web sur lequel vous souhaitez\n"
+" intégrer le widget d'assistance en ligne. Cela permet aux visiteurs\n"
+" de votre site de discuter en temps réel avec vos opérateurs."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action

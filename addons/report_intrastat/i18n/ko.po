@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2016-01-25 08:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -20,12 +20,17 @@ msgstr ""
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Comment:</strong>"
-msgstr ""
+msgstr "<strong>댓글</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Document:</strong>"
 msgstr ""
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position Remark:</strong>"
+msgstr "<strong>회계 위치 참고:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -44,18 +49,18 @@ msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Payment Term:</strong>"
-msgstr ""
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>결제 조건:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>소계</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>합계</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -169,6 +174,8 @@ msgstr "인트라스탯 송장"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: model:ir.model.fields,field_description:report_intrastat.field_delivery_carrier_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_product_product_intrastat_id
 #: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
@@ -236,11 +243,6 @@ msgid "October"
 msgstr "10월"
 
 #. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "PRO-FORMA"
-msgstr "견적"
-
-#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
 msgid "Product Template"
 msgstr "제품 양식"
@@ -303,7 +305,7 @@ msgstr "값"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Vendor Bill"
-msgstr ""
+msgstr "공급 업체 청구서"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document

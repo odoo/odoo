@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mail_channel
-# 
+#
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Zsofia Biro <zsbiro1205@gmail.com>, 2016
@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Asztalosok Boltja <tilia2002@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mail_channel
@@ -26,10 +26,13 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>You have requested to be subscribed to the mailing list <strong>${object."
+"name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
 "</data>"
 msgstr ""
 
@@ -38,10 +41,13 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>You have requested to be unsubscribed to the mailing list <strong>"
+"${object.name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
 "</data>"
 msgstr ""
 
@@ -90,21 +96,11 @@ msgid "Change Discussion List"
 msgstr "Hozzászólási lista váltása"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "Description"
-msgstr "Leírás"
-
-#. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
 #, python-format
 msgid "Discussion List"
 msgstr "Hozzászólási lista"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
-msgstr "Megbeszélés csoport"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
@@ -139,11 +135,6 @@ msgid "Mailing-List"
 msgstr "Levelezőlista"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Üzenet leírása: vagy a tárgy, vagy a törzsrész eleje"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
@@ -174,11 +165,6 @@ msgid "Post to"
 msgstr "Ide küldi"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
-msgstr "Közzétett"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Reference"
 msgstr "Hivatkozás"
@@ -195,24 +181,24 @@ msgid "Subscribe"
 msgstr "Feliratkozás"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:242
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""
+
+#. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Leiratkozás"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid ""
-"Used to display messages in a paragraph-based chatter using a unique path;"
-msgstr ""
-"Bekezdés alapú beszélgetési üzenetek kijelzésére használt egy egyedi "
-"csoportban;"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "Hozzászólásként látható a weboldalon"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -240,6 +226,15 @@ msgstr "mellékletek"
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
 msgstr "által"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already\n"
+"                    unsubscribed or was never subscribed to the mailing\n"
+"                    list, you may want to check that the address was\n"
+"                    correct."
+msgstr ""
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message

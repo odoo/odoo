@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-05-06 12:24+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -22,20 +22,12 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"<br/>\n"
-"                                    - Create a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized "
-"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr ""
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:98
+#: code:addons/auth_oauth/controllers/main.py:99
 #, python-format
 msgid "Access Denied"
 msgstr "У доступі відмовлено"
@@ -54,6 +46,11 @@ msgstr "Рахунок дебітора"
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
 msgid "Allow users to sign in with Google"
 msgstr "Дозволити користувачам заходити через Google"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "Allow users to sign in with their Google account"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
@@ -87,6 +84,11 @@ msgid "Client ID"
 msgstr "ID клієнта"
 
 #. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "Client ID:"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "Компанії, що стосуються партнера"
@@ -109,14 +111,13 @@ msgstr "Дата створення"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-#, fuzzy
 msgid "Currency"
-msgstr "ІД валюти"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
-msgid "Customer Payment Term"
-msgstr "Термін оплати для клієнта"
+msgid "Customer Payment Terms"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -139,19 +140,24 @@ msgid "Fiscal Position"
 msgstr "Схема оподаткування"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
+msgid "Google Authentification"
 msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
-msgid "Has unreconciled entries"
-msgstr "Має неузгоджені записи"
+msgid "Has Unreconciled Entries"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr "ID"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
+msgid "Invoice"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -193,9 +199,14 @@ msgid "Latest Invoices & Payments Matching Date"
 msgstr ""
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
+msgid "Message for Invoice"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
 msgid "OAuth Access Token"
-msgstr ""
+msgstr "Токен доступу OAuth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
@@ -204,18 +215,19 @@ msgstr "Провайдер OAuth"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
 msgid "OAuth Providers"
 msgstr "Провайдери OAuth"
 
 #. module: auth_oauth
 #: sql_constraint:res.users:0
 msgid "OAuth UID must be unique per provider"
-msgstr ""
+msgstr "OAuth UID повинен бути унікальним для кожного постачальника"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
 msgid "OAuth User ID"
-msgstr ""
+msgstr "OAuth ID користувача"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
@@ -225,12 +237,12 @@ msgstr "Провайдер OAuth2"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
-msgstr ""
+msgstr "Oauth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
-msgstr ""
+msgstr "Oauth Provider user_id"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
@@ -253,10 +265,28 @@ msgid "Scope"
 msgstr "Сфера"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:96
+#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
+msgid "Server uri"
+msgstr "uri сервера"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:97
 #, python-format
 msgid "Sign up is not allowed on this database."
-msgstr ""
+msgstr "Вхід не дозволено у цій базі даних."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
@@ -295,17 +325,8 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
 msgid ""
-"This payment term will be used instead of the default one for sale orders "
+"This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"To setup the signin process with Google, first you have to perform the "
-"following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
 msgstr ""
 
 #. module: auth_oauth
@@ -350,33 +371,26 @@ msgstr "URL підтвердження"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid "Vendor Payment Term"
-msgstr "Термін оплати постачальника"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
-msgid "Website Messages"
+msgid "Vendor Payment Terms"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:100
+#: code:addons/auth_oauth/controllers/main.py:101
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
 msgstr ""
+"Ви не маєте доступу до цієї бази даних або термін дії вашого запрошення "
+"минув. Будь ласка, запросіть запрошення та обов'язково перейдіть за "
+"посиланням у своєму електронному листі запрошення."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_list
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr ""
+msgstr "арка"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_base_config_settings
@@ -384,16 +398,11 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#: model:ir.ui.view,arch_db:auth_oauth.base_config_settings_view_form_inherit_auth_oauth
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr ""
+msgstr "e.g. 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
-msgid "unknown"
-msgstr "невідомий"

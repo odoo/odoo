@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-04-28 13:13+0000\n"
 "PO-Revision-Date: 2015-09-08 10:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
@@ -19,28 +19,52 @@ msgstr ""
 
 #. module: website_partner
 #: model:ir.model,name:website_partner.model_res_partner
-msgid "Partner"
+msgid "Contact"
 msgstr "Kontakt"
-
-#. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_self
-msgid "Self"
-msgstr ""
 
 #. module: website_partner
 #: model:ir.ui.view,arch_db:website_partner.partner_detail
 msgid "Short Description for List View"
-msgstr ""
+msgstr "Kort beskrivelse til Listevisning"
+
+#. module: website_partner
+#: model:ir.model.fields,help:website_partner.field_res_users_website_url
+msgid "The full URL to access the document through the website."
+msgstr "Den fulde URL for at få adgang til dokumentet via hjemmesiden."
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_published
+msgid "Visible in Website"
+msgstr "Synlig på website"
 
 #. module: website_partner
 #: model:ir.model.fields,field_description:website_partner.field_res_partner_website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "Hjemmeside partner fuld beskrivelse"
 
 #. module: website_partner
 #: model:ir.model.fields,field_description:website_partner.field_res_partner_website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "Hjemmeside partner kort beskrivelse"
 
-#~ msgid "unknown"
-#~ msgstr "ukendt"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_url
+msgid "Website URL"
+msgstr "Website URL"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_description
+msgid "Website meta description"
+msgstr "Meta beskrivelse"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Meta nøgleord"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_users_website_meta_title
+msgid "Website meta title"
+msgstr "Meta titel"

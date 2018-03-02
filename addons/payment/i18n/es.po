@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # oihane <oihanecruce@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
@@ -33,10 +33,10 @@ msgstr ""
 "PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
@@ -48,19 +48,23 @@ msgstr "3D Secure HTML"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_warning_text\">Prueba</span>\n"
-"                                    <span class=\"o_stat_text\">Entorno</span>"
+"                                    <span class=\"o_stat_text\">Entorno</"
+"span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Producción</span>\n"
-"                                    <span class=\"o_stat_text\">Entorno</span>"
+"                                    <span class=\"o_stat_text\">Entorno</"
+"span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -108,12 +112,15 @@ msgstr ""
 msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but will not be paid. Do not "
-"hesitate to contact us if you have any questions on the status of your "
-"order.</span>"
+"hesitate to contact us if you have any questions on the status of your order."
+"</span>"
 msgstr ""
 "%\n"
 "match\n"
-"<span><i>Error,</i> Tenga en cuenta por favor que ha ocurrido un error durante la transacción. La orden ha sido confirmada, pero no se ha efectuado el pago. No dude en contactarnos si usted tiene alguna pregunta sobre el estado de su orden.</span>"
+"<span><i>Error,</i> Tenga en cuenta por favor que ha ocurrido un error "
+"durante la transacción. La orden ha sido confirmada, pero no se ha efectuado "
+"el pago. No dude en contactarnos si usted tiene alguna pregunta sobre el "
+"estado de su orden.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -135,17 +142,15 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
-"<span><i>Pending</i>... The order will be validated after the "
-"payment.</span>"
+"<span><i>Pending</i>... The order will be validated after the payment.</span>"
 msgstr ""
-"<span><i>Pendiente</i>... El pedido será validado después de recibir el "
-"pago.</span>"
+"<span><i>Pendiente</i>... El pedido será validado después de recibir el pago."
+"</span>"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
 msgid "Account journal used for automatic payment reconciliation."
-msgstr ""
-"Diario contable usado para la conciliación automática de pagos/cobros."
+msgstr "Diario contable usado para la conciliación automática de pagos/cobros."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -211,8 +216,8 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
-"Authorize & capture the amount, confirm the SO and auto-validate the invoice"
-" on acquirer confirmation"
+"Authorize & capture the amount, confirm the SO and auto-validate the invoice "
+"on acquirer confirmation"
 msgstr ""
 "Autorizar y capturar la cantidad, confirmar el SO y validar automáticamente "
 "la factura en la confirmación del adquirente"
@@ -246,22 +251,22 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "ID del documento de retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "Modelo de documento de retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Hash de retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "Método de retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
@@ -635,8 +640,7 @@ msgstr "Mensaje mostrado si se produce un error durante el proceso de pago."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
-"Mensaje mostrado si el pedido es cancelado durante el proceso de pago."
+msgstr "Mensaje mostrado si el pedido es cancelado durante el proceso de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -691,8 +695,8 @@ msgid ""
 "of capturing the amount) are not available."
 msgstr ""
 "Tenga en cuenta que los tokens de los adquirentes establecidos para "
-"autorizar sólo las transacciones (en lugar de capturar la cantidad) no están"
-" disponibles."
+"autorizar sólo las transacciones (en lugar de capturar la cantidad) no están "
+"disponibles."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -896,9 +900,9 @@ msgstr "Imagen de tamaño pequeño"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Imagen pequeña de este proveedor. Se redimensiona automáticamente a 64x64 "
 "px, preservando el ratio de proporción. Usar este campo siempre que se "
@@ -945,12 +949,13 @@ msgstr "La referencia de la transacción de pago debe ser única"
 #: code:addons/payment/models/account_payment.py:42
 #, python-format
 msgid ""
-"This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
+"This feature is not available for payment acquirers set to the \"Authorize\" "
+"mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
 "128/5000Esta función no está disponible para los adquirentes de pago "
-"establecidos en el modo \"Autorizar\".Utilice un token de otro proveedor que"
-" no sea."
+"establecidos en el modo \"Autorizar\".Utilice un token de otro proveedor que "
+"no sea."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -966,13 +971,18 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
+"Esta pasarela de pago está disponible para ciertos países. Si no hay ninguno "
+"disponible, significa que está disponible para todos los países."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is rendered with qWeb with the following evaluation context:"
+"                                            It is rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
+"Esta plantilla muestra el botón de pago con todos los valores necesarios.\n"
+" Se muestra con qWeb con el siguiente contexto de evaluación:"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:166
@@ -1056,8 +1066,8 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment"
-" button."
+"You will be redirected to the Buckaroo website after clicking on the payment "
+"button."
 msgstr ""
 "Será redirigido a la página web de Buckaroo después de hacer clic an el "
 "botón de pago."
@@ -1065,8 +1075,8 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
-"You will be redirected to the Ingenico website after clicking on the payment"
-" button."
+"You will be redirected to the Ingenico website after clicking on the payment "
+"button."
 msgstr ""
 "Será redirigido a la página web de Ingenico después de hacer clic an el "
 "botón de pago."

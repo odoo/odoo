@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-10-19 04:18+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -29,11 +29,6 @@ msgstr "&amp;časi;"
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "<span class=\"text-muted\">or</span>"
 msgstr "<span class=\"text-muted\">ali</span>"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_after_sale
-msgid "After-sale communication"
-msgstr "Po prodajna komunikacija"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -60,19 +55,9 @@ msgid "Benefits of having done this setup"
 msgstr "Koristi teh nastavitev"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_cms_ecommerce
-msgid "CMS & eCommerce"
-msgstr "CMS in eCommerce"
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_child_ids
 msgid "Children Table Of Content"
 msgstr "Podrejeno kazalo"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_claim
-msgid "Claims"
-msgstr "Zahtevki"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_color
@@ -90,16 +75,6 @@ msgstr "Ustvaril"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_create_date
 msgid "Created on"
 msgstr "Ustvarjeno"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm
-msgid "Customer Relationship Management"
-msgstr "Upravljanje odnosov s strankami"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_customer
-msgid "Customers"
-msgstr "Kupci"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
@@ -159,20 +134,15 @@ msgid "Edit Post"
 msgstr "Urejanje objave"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm_contract
-msgid "Employee Contract"
-msgstr "Pogodba zaposlenega"
-
-#. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Napaka! Ne morete ustvariti rekurzivne kategorije."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-#, fuzzy
 msgid "Explain how to configure Odoo"
-msgstr "Razložite, kako nastaviti v Odoo"
+msgstr ""
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -188,11 +158,6 @@ msgstr "Forum"
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
 msgstr "Objava foruma"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
-msgid "Functional Documentation"
-msgstr "Funkcionalna dokumentacija"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -213,11 +178,6 @@ msgstr "Kako izvajati bodoče inventure proizvoda?"
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "How to forecast sales revenues?"
 msgstr "Kako napovedati prihodke iz prodaje?"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm
-msgid "Human Resources Management"
-msgstr "Upravljanje kadrov"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
@@ -252,11 +212,6 @@ msgstr "Zadnjič posodobil"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_date
 msgid "Last Updated on"
 msgstr "Zadnjič posodobljeno"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_lead
-msgid "Lead & Opportunity"
-msgstr "Indic in priložnost"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_left
@@ -344,21 +299,6 @@ msgid "Right Parent"
 msgstr "Desno pravilo"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_0
-msgid "Sales & Warehouse"
-msgstr "Prodaja in skladišče"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale
-msgid "Sales Management"
-msgstr "Upravljanje prodaje"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_so
-msgid "Sales orders"
-msgstr "Prodajni nalogi"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Samples"
 msgstr "Vzorci"
@@ -402,11 +342,6 @@ msgid "The question title is short and descriptive"
 msgstr "Naslov vprašanja je kratek in opisen"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "This documentation is produced using the best posts from the"
-msgstr "Ta dokumentacija je sestavljena iz najboljših objav iz"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid ""
 "This documentation page has been extracted\n"
@@ -434,20 +369,6 @@ msgstr ""
 "                        in odgovori izpolnjevati naslednje kriterije:"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
-msgid ""
-"Tracks leads, boost opportunities and close deals.\n"
-"                    This serie of how-to will help you develop your business."
-msgstr ""
-" Sledenje indicem, spodbujanje priložnosti in sklepanje poslov.\n"
-"                    Ta serija vodičev pomaga pri razvoju poslovanja."
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_website
-msgid "Website"
-msgstr "Spletna stran"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
 msgstr "Katero poročilo se uporabi za izračun verjetnosti po stopnji?"
@@ -463,11 +384,6 @@ msgid "cancel"
 msgstr "preklic"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "community forum"
-msgstr "foruma skupnosti"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essay"
 msgstr "esej"
@@ -481,12 +397,3 @@ msgstr "eseji"
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr "uradna dokumentacija"
-
-#~ msgid "Website meta description"
-#~ msgstr "Meta opis spletne strani"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Meta ključne besede spletne strani"
-
-#~ msgid "Website meta title"
-#~ msgstr "Meta naziv spletne strani"

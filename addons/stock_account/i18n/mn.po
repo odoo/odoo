@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
 "PO-Revision-Date: 2015-11-21 09:40+0000\n"
 "Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -29,27 +29,27 @@ msgid "Account Stock Properties"
 msgstr "Барааны дансны үзүүлэлтүүд"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Санхүү"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Санхүүгийн мэдээлэл"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_change_standard_price.py:62
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "Агуулгад Идэвхтэй ID тохируулагдаагүй байна."
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid ""
+"Affect landed costs on receipt operations and split them among products to "
+"update their cost price."
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
-msgid ""
-"Allows to configure inventory valuations on products and product categories."
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Allow perpetual stock valuation in accounting"
 msgstr ""
-"Бараан болон барааны ангилалын үнэлгээний тохиргоог хийх бололцоог олгоно."
+
+#. module: stock_account
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "At a Specific Date"
+msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -58,18 +58,13 @@ msgid "Average Price"
 msgstr "Дундаж үнэ"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/models/stock.py:260
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -77,7 +72,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/models/stock.py:262
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -98,8 +93,8 @@ msgid "Change Standard Price"
 msgstr "Стандарт Үнийг Өөрчлөх"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Choose a date in the past to get the inventory at that date."
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_date
+msgid "Choose a date to get the inventory at that date"
 msgstr ""
 
 #. module: stock_account
@@ -110,16 +105,15 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_compute_at_date
+msgid ""
+"Choose to analyze the current inventory or from a specific date in the past."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
 msgstr "Огноо сонгоно уу"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -128,13 +122,12 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_compute_at_date
+msgid "Compute"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: code:addons/stock_account/models/stock.py:335
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -147,6 +140,17 @@ msgid "Cost"
 msgstr "Өртөг"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+msgid "Cost Method"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Costing &amp; Valuation"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
@@ -155,9 +159,13 @@ msgstr "Өртөг тооцох арга"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
-#, fuzzy
 msgid "Counter-Part Account"
-msgstr "Агуулахын зарлагын данс"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
+msgid "Counter-Part Account Required"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -172,9 +180,9 @@ msgid "Created on"
 msgstr "Үүсгэсэн"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
-msgid "Date"
-msgstr "Огноо"
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "Current Inventory"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
@@ -238,18 +246,9 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: selection:stock.config.settings,module_stock_landed_costs:0
-msgid "Include landed costs in product costing computation"
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Include landed costs in product cost"
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
-msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
-msgstr ""
-"Газардсан өртөгийг бэлтгэх баримт дээр тооцоолох модулийг суулгадаг бөгөөд "
-"энэ модуль газардсан өртөгийг ялгаатай бараануудад хувааж өгдөг."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -265,10 +264,14 @@ msgstr "Тооллогын Байрлалууд"
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
-#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
 msgstr "Тооллогын Үнэлгээ"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+msgid "Inventory Valuation Report"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
@@ -276,9 +279,7 @@ msgid "Inventory Value"
 msgstr "Тооллогын Үнэлгээ"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
-#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
 msgid "Inventory at Date"
 msgstr ""
 
@@ -323,26 +324,21 @@ msgid "Location"
 msgstr "Байрлал"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Lot/Serial Number"
+msgstr ""
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr "Тооллогын үнэлгээ болон Өртөгийн аргыг удирдах"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Хөдөлгөөн"
-
-#. module: stock_account
-#: code:addons/stock_account/product.py:125
-#: code:addons/stock_account/product.py:187
+#: code:addons/stock_account/models/product.py:108
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr "Шинэ үнэ болон стандарт үнэ хоорондоо ялгаагүй !"
-
-#. module: stock_account
-#: selection:stock.config.settings,module_stock_landed_costs:0
-msgid "No landed costs"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date
@@ -356,19 +352,39 @@ msgid "Periodic (manual)"
 msgstr ""
 
 #. module: stock_account
-#: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid "Periodic inventory valuation (recommended)"
-msgstr ""
-
-#. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
 msgstr ""
 
 #. module: stock_account
-#: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid "Perpetual inventory valuation (stock move generates accounting entries)"
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+msgid "Perpetual Valuation"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid ""
+"Perpetual valuation allows to get an up-to-date stock valuation in your "
+"accounting whenever products are transferred. It is only tailored for big "
+"companies where such a need matters. It requires extra configuration and "
+"testing to make sure accounting is impacted the right way for every kind of "
+"stock move. This must be set on product categories. The Periodic mode is "
+"applied by default (i.e. manual accounting entries at the end of the fiscal "
+"year). This last mode is recommended for starters and small/medium-size "
+"companies."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+msgid ""
+"Perpetual valuation allows to get up-to-date books whenever products are "
+"transferred. It is only tailored for big companies where such a need "
+"matters. It requires extra configuration and testing to make sure accounting "
+"is impacted the right way for every kind of stock move. \n"
+" This must be set on product categories. The Periodic mode is applied by "
+"default (i.e. manual accounting entries at the end of the fiscal year). This "
+"last mode is recommended for starters and small/medium-size companies."
 msgstr ""
 
 #. module: stock_account
@@ -384,11 +400,6 @@ msgid "Product"
 msgstr "Бараа"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Анхааруулах хугацаа"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -396,19 +407,9 @@ msgid "Product Category"
 msgstr "Барааны ангилал"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Дуусах хугацаа"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Барааны тоо хэмжээ"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Устгах хугацаа"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -416,11 +417,6 @@ msgstr "Устгах хугацаа"
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Product Template"
 msgstr "Барааны үлгэр"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Хэрэглэх хугацаа"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -439,42 +435,20 @@ msgid "Retrieve the Inventory Value"
 msgstr "Барааны Өртөгийг авах"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Retrieve the curent stock valuation."
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Save this page and come back here to set up the feature."
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Серийн дугаар"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-#, fuzzy
-msgid "Set standard price"
-msgstr "Стандарт үнэ"
+msgid "Set standard cost"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Эх үүсвэр"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-"Барааны нөөцийн хэмжих нэгжээс ялгаатай хэмжих нэгжээр нэхэмжилсэн бол "
-"хэмжих нэгжийг энд зааж өгнө. Үндсэн хэмжих нэгжийг хэрэглэхээр бол хоосон "
-"үлдээнэ."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -483,10 +457,8 @@ msgid "Standard Price"
 msgstr "Стандарт үнэ"
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:138
-#: code:addons/stock_account/product.py:145
-#: code:addons/stock_account/product.py:199
-#: code:addons/stock_account/product.py:205
+#: code:addons/stock_account/models/product.py:125
+#: code:addons/stock_account/models/product.py:130
 #, python-format
 msgid "Standard Price changed"
 msgstr "Стандарт үнэ өөрчлөгдсөн"
@@ -497,9 +469,9 @@ msgstr "Стандарт үнэ өөрчлөгдсөн"
 msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific "
 "period (usually once a year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
+"                Average Price: The cost price is recomputed at each incoming "
+"shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the "
 "last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
@@ -515,6 +487,11 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -522,7 +499,7 @@ msgid "Stock Input Account"
 msgstr "Барааны орлогын данс"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/models/account_chart_template.py:15
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -531,6 +508,7 @@ msgstr "Барааны журнал"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Нөөцийн хөдөлгөөн"
 
@@ -557,7 +535,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Барааны Үнэлгээний Данс (Гарах)"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_history.py:31
+#: code:addons/stock_account/wizard/wizard_valuation_history.py:39
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -572,7 +550,7 @@ msgid "Templates for Account Chart"
 msgstr "Дансны модны үлгэр"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/models/stock.py:289
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -584,16 +562,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Нийт Өртөг Үнэ"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Хэмжих нэгж -> БХН коэф"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Борлуулалтын нэгж"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -624,45 +592,15 @@ msgstr ""
 "дансын оронд хэрэглэгдэнэ. Дотоод байрлалуудад энэ нь нөлөө байхгүй."
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+msgid "Valuation"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Утга"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Шинэ Серийн Дугаар үүсгэгдэхэд тухайн барааны талаар дохио, сануулга өгч "
-"эхлэх хоногийн тоо."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Шинэ Серийн Дугаар үүсгэгдэхэд тухайн бараа нь аюултай болж борлуулж "
-"болохгүй болох хоногийн тоо."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Шинэ Серийн Дугаар үүсгэгдэхэд тухайн бараа нь агуулахаас гарсан байвал "
-"зохих хоногийн тоо."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Шинэ Серийн Дугаар үүсгэгдэхэд тухайн бараа нь аюулгүй боловч муудаж эхлэх "
-"хоногийн тоо."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -745,7 +683,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Нөөцийн үнэлгээний түүхийн хүснэгтийг харилцах цонх нь нээнэ"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/models/stock.py:258
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -753,7 +691,8 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
+#: code:addons/stock_account/models/product.py:110
+#: code:addons/stock_account/models/stock.py:264
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
@@ -774,11 +713,3 @@ msgstr "stock.config.settings"
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
-msgid "unknown"
-msgstr "тодорхой бус"

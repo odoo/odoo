@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_mail_channel
-# 
+#
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mail_channel
@@ -25,18 +25,23 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be subscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>You have requested to be subscribed to the mailing list <strong>${object."
+"name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
 "</data>"
 msgstr ""
 "<data><p>Hallo,</p>\n"
 "<p>U heeft aangevraagd om te worden ingeschreven voor de mailinglijst\n"
 "<strong>${object.name}</strong></p>\n"
 "<p>Om te bevestigen, volg de volgende link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</"
+"p>\n"
 "</data>"
 
 #. module: website_mail_channel
@@ -44,18 +49,23 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Hello,</p>\n"
-"<p>You have requested to be unsubscribed to the mailing list <strong>${object.name}</strong></p>\n"
+"<p>You have requested to be unsubscribed to the mailing list <strong>"
+"${object.name}</strong></p>\n"
 "<p>To confirm, please visit the following link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>If this was a mistake or you did not requested this action, please ignore "
+"this message.</p>\n"
 "</data>"
 msgstr ""
 "<data><p>Hallo,</p>\n"
 "<p>U heeft aangevraagd om te worden ingeschreven voor de mailinglijst\n"
 "<strong>${object.name}</strong></p>\n"
 "<p>Om te bevestigen, volg de volgende link:</p>\n"
-"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
-"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></"
+"p>\n"
+"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</"
+"p>\n"
 "</data>"
 
 #. module: website_mail_channel
@@ -103,21 +113,11 @@ msgid "Change Discussion List"
 msgstr "Wijzig discussie lijst"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "Description"
-msgstr "Omschrijving"
-
-#. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
 #, python-format
 msgid "Discussion List"
 msgstr "Discussie lijst"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
-msgstr "Discussie pad"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
@@ -152,18 +152,13 @@ msgid "Mailing-List"
 msgstr "Mailing-lijst"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Bericht omschrijving: of het onderwerp, of het begin van de body"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
 "pull-right\"/>"
 msgstr ""
-"Wilt u zich uitschrijven? Dat kan hier! <span class=\"fa fa-2x fa-arrow-down"
-" pull-right\"/>"
+"Wilt u zich uitschrijven? Dat kan hier! <span class=\"fa fa-2x fa-arrow-down "
+"pull-right\"/>"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
@@ -187,11 +182,6 @@ msgid "Post to"
 msgstr "Versturen naar"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
-msgstr "Gepubliceerd"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Reference"
 msgstr "Referentie"
@@ -208,24 +198,26 @@ msgid "Subscribe"
 msgstr "Inschrijven"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr "Het adres"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:242
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""
+"Het adres %s is is al uitgeschreven of was nooit ingeschreven voor een "
+"mailinglijst"
+
+#. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Uitschrijven"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid ""
-"Used to display messages in a paragraph-based chatter using a unique path;"
-msgstr ""
-"Gebruikt om berichten weer te geven op een paragraaf gebaseerde chatter met "
-"behulp van een uniek pad."
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "Zichtbaar op de website als commentaar"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -253,6 +245,17 @@ msgstr "Bijlages"
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
 msgstr "door"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already\n"
+"                    unsubscribed or was never subscribed to the mailing\n"
+"                    list, you may want to check that the address was\n"
+"                    correct."
+msgstr ""
+"Is reeds uitgeschreven of was nooit ingeschreven voor de mailinglijst. "
+"Controleer of het adres juist is."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message

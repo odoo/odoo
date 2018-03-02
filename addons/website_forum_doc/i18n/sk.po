@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-05-02 20:26+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -28,11 +28,6 @@ msgstr "&amp;times;"
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "<span class=\"text-muted\">or</span>"
 msgstr "<span class=\"text-muted\">alebo</span>"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_after_sale
-msgid "After-sale communication"
-msgstr "Popredajná komunikácia"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -59,19 +54,9 @@ msgid "Benefits of having done this setup"
 msgstr "Výhody spravenia tohto nastavenia"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_cms_ecommerce
-msgid "CMS & eCommerce"
-msgstr "CMS & eCommerce"
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_child_ids
 msgid "Children Table Of Content"
 msgstr "Podradený obsah"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_claim
-msgid "Claims"
-msgstr "Nároky"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_color
@@ -89,16 +74,6 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_create_date
 msgid "Created on"
 msgstr "Vytvorené"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm
-msgid "Customer Relationship Management"
-msgstr "Customer Relationship Management"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_customer
-msgid "Customers"
-msgstr "Zákazníci"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
@@ -158,20 +133,15 @@ msgid "Edit Post"
 msgstr "Upraviť príspevok"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm_contract
-msgid "Employee Contract"
-msgstr "Zmluva zamestnanca"
-
-#. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Chyba! Nemožte vytvoriť rekurzívne kategórie."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-#, fuzzy
 msgid "Explain how to configure Odoo"
-msgstr "Vysvetlite, ako nastaviť v Odoo"
+msgstr ""
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -187,11 +157,6 @@ msgstr "Fórum"
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
 msgstr "Príspevok fóra"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
-msgid "Functional Documentation"
-msgstr "Funkčná dokumentácia"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -212,11 +177,6 @@ msgstr "Ako vypočítať budúce zásoby pre výrobok?"
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "How to forecast sales revenues?"
 msgstr "Ako predpovedať výnosy z predaja?"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm
-msgid "Human Resources Management"
-msgstr "Spravovanie ľudských zdrojov"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
@@ -251,11 +211,6 @@ msgstr "Naposledy upravoval"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_date
 msgid "Last Updated on"
 msgstr "Naposledy upravované"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_lead
-msgid "Lead & Opportunity"
-msgstr "Iniciatíva & Príležitosť"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_left
@@ -343,21 +298,6 @@ msgid "Right Parent"
 msgstr "Pravé nadradenie"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_0
-msgid "Sales & Warehouse"
-msgstr "Predaje & Skladiská"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale
-msgid "Sales Management"
-msgstr "Spravovanie predaja"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_so
-msgid "Sales orders"
-msgstr "Objednávky predaja"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "Samples"
 msgstr "Vzorky"
@@ -401,11 +341,6 @@ msgid "The question title is short and descriptive"
 msgstr "Nadpis otázky je krátky a opisný"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "This documentation is produced using the best posts from the"
-msgstr "Táto dokumentácia je vyrobená s použitím najlepších príspevkov z"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid ""
 "This documentation page has been extracted\n"
@@ -432,20 +367,6 @@ msgstr ""
 "a odpoveď musí spĺňať nasledujúce kritériá:"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
-msgid ""
-"Tracks leads, boost opportunities and close deals.\n"
-"                    This serie of how-to will help you develop your business."
-msgstr ""
-"Sledujte iniciatívy, propagujte príležitosti a uzatvárajte obchody.\n"
-"Táto séria 'ako na to' vám pomôže rozvíjať svoje podnikanie."
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_website
-msgid "Website"
-msgstr "Webová stránka"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
 msgstr "Aký výkaz by som mal použiť pre výpočet pravdepodobnosti na fázu?"
@@ -461,11 +382,6 @@ msgid "cancel"
 msgstr "zrušiť"
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "community forum"
-msgstr "komunitné fórum"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essay"
 msgstr "esej"
@@ -479,12 +395,3 @@ msgstr "eseje"
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr "oficiálna dokumentácia"
-
-#~ msgid "Website meta description"
-#~ msgstr "Website meta popis"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Website meta kľúčové slová"
-
-#~ msgid "Website meta title"
-#~ msgstr "Website meta názov"

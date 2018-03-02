@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-07-22 23:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
@@ -18,19 +18,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_base_action_rule
-msgid "Action Rules"
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
 msgid "Advantages"
-msgstr ""
+msgstr "مزایا"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr ""
+msgstr "مزایا..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
@@ -38,43 +33,54 @@ msgid "Basic Salary of the employee"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr "برای ایجاد قرارداد جدید اینجا کلیک کنید"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
-msgstr ""
+msgstr "شرکت خودرو"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
-msgstr ""
+msgstr "منبع قرارداد"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6101
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Contract Type"
-msgstr ""
+msgstr "نوع قرارداد"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
 msgid "Contract Types"
-msgstr ""
+msgstr "انواع قرارداد"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "قرارداد منقضی می‌شود"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "قرارداد منقضی شده است"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:87
+#, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr "تاریخ شروع قرارداد باید کوچکتر از تاریخ اتمام قرارداد باشد"
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -110,12 +116,12 @@ msgstr "ایجاد شده در"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
-msgstr ""
+msgstr "قرارداد کنونی"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
-msgstr ""
+msgstr "کارمند کونی"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
@@ -142,9 +148,8 @@ msgstr "کارمند"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "کارمند"
+msgstr "قرارداد کارمند"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
@@ -152,15 +157,10 @@ msgid "End Date"
 msgstr "تاریخ پایان"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr ""
-
-#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "منقضی شده"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
@@ -173,13 +173,17 @@ msgid "Group By"
 msgstr "گروه‌بندی برمبنای"
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_close
-msgid "HR Contract: set as close"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_close_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_close
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_close
+msgid "HR Contract: update to closed"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_pending
-msgid "HR Contract: set as pending"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_pending_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_pending
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_pending
+msgid "HR Contract: update to pending"
 msgstr ""
 
 #. module: hr_contract
@@ -194,9 +198,14 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr "پیام‌های مهم"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
-msgstr ""
+msgstr "به کیلومتر"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -206,7 +215,7 @@ msgstr "اطلاعات"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
 msgid "Is a Manager"
-msgstr ""
+msgstr "مدیر است"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -239,17 +248,17 @@ msgstr "آخرین به روز رسانی در"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
 msgid "Latest contract of the employee"
-msgstr ""
+msgstr "آخرین قرارداد کارمند"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
-msgstr ""
+msgstr "آزمون پزشکی"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
 msgid "Medical Examination Date"
-msgstr ""
+msgstr "تاریخ آزمون پزشکی"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -265,17 +274,12 @@ msgstr "یادداشت‌ها"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.filters,name:hr_contract.contract_open
-msgid "Open Contracts"
-msgstr ""
+msgstr "تعداد فرزند"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
 msgid "Place of Birth"
-msgstr ""
+msgstr "محل تولد"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -290,12 +294,12 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
-msgstr ""
+msgstr "جستجوی قرارداد"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Search Contract Type"
-msgstr ""
+msgstr "جستجوی نوع قرارداد"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
@@ -316,7 +320,7 @@ msgstr "وضعیت"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_state
 msgid "Status of the contract"
-msgstr ""
+msgstr "وضعیت قرارداد"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -341,34 +345,19 @@ msgid "Trial Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "پیام های ناخوانده"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use employee work schedule"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use the user's working schedule."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
-msgstr ""
+msgstr "تاریخ انقضا ویزا"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
 msgid "Visa No"
-msgstr ""
+msgstr "شماره ویزا"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
 msgid "Wage"
-msgstr ""
+msgstr "دستمزد"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -378,56 +367,9 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
-msgstr ""
+msgstr "شماره مجوز کار"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "اقدام مورد نیاز است"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
-
-#~ msgid "Followers"
-#~ msgstr "دنبال‌کنندگان"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "پیروان (کانال ها)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "پیروان (شرکاء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
-
-#~ msgid "Is Follower"
-#~ msgstr "دنبال می کند"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاریخ آخرین پیام"
-
-#~ msgid "Messages"
-#~ msgstr "پیام‌ها"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "پیام‌ها و تاریخچه ارتباط"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "تعداد پیام‌های خوانده نشده"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "شمارنده پیام‌های خوانده‌نشده"
-
-#~ msgid "Website Messages"
-#~ msgstr "پیام‌های وب‌سایت"
-
-#~ msgid "Website communication history"
-#~ msgstr "تاریخچه ارتباط با وبسایت"
+msgstr "برنامه‌ی زمانی کار"

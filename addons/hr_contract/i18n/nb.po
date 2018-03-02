@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-30 18:51+0000\n"
 "Last-Translator: Mari Løken <mari@tinderbox.no>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
@@ -19,11 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_base_action_rule
-msgid "Action Rules"
-msgstr "Handlingsregler"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
 msgid "Advantages"
 msgstr "Fordeler"
@@ -31,12 +26,17 @@ msgstr "Fordeler"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr ""
+msgstr "Fordeler..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
 msgid "Basic Salary of the employee"
 msgstr "Grunnlønn for den ansatte."
+
+#. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr "Klikk her for å opprette nye kontakter."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
@@ -51,7 +51,7 @@ msgstr "Kontrakt referanse."
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6101
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -70,17 +70,23 @@ msgstr "Kontrakt typer."
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "Kontrakt i ferd med å utløpe"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "Kontrakt utløpt"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:87
+#, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr "Kontraktens startdato må komme før sluttdato."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "Kontrakt å fornye"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
@@ -111,12 +117,12 @@ msgstr "Opprettet den"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
-msgstr ""
+msgstr "Nåværende kontrakt"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
-msgstr ""
+msgstr "Nåværende ansatt"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
@@ -143,9 +149,8 @@ msgstr "Ansatt"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Kontrakt"
+msgstr "Ansattkontrakt"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
@@ -153,20 +158,15 @@ msgid "End Date"
 msgstr "Sluttdato."
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr ""
-
-#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "Utløpte"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
 msgid "Gives the sequence when displaying a list of Contract."
-msgstr ""
+msgstr "Setter sekvensen for visning av kontraktslister."
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -174,13 +174,17 @@ msgid "Group By"
 msgstr "Grupper etter"
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_close
-msgid "HR Contract: set as close"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_close_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_close
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_close
+msgid "HR Contract: update to closed"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_pending
-msgid "HR Contract: set as pending"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_pending_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_pending
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_pending
+msgid "HR Contract: update to pending"
 msgstr ""
 
 #. module: hr_contract
@@ -193,6 +197,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr "Viktige meldinger"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -245,7 +254,7 @@ msgstr "Siste kontrakten av den ansatte"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
-msgstr ""
+msgstr "Medisinsk undersøkelse"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
@@ -267,11 +276,6 @@ msgstr "Notater"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
 msgstr "Antall barn"
-
-#. module: hr_contract
-#: model:ir.filters,name:hr_contract.contract_open
-msgid "Open Contracts"
-msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
@@ -342,21 +346,6 @@ msgid "Trial Start Date"
 msgstr "Prøve Startdato"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "Uleste meldinger."
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use employee work schedule"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use the user's working schedule."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
 msgstr "Visa utløpsdato."
@@ -385,39 +374,3 @@ msgstr "Arbeidstillatelse Ingen."
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "Arbeidsplan"
-
-#~ msgid "Action Needed"
-#~ msgstr "Handling"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dato for siste melding på denne posten."
-
-#~ msgid "Followers"
-#~ msgstr "Følgere."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Siste meldingsdato"
-
-#~ msgid "Messages"
-#~ msgstr "Meldinger."
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meldinger og kommunikasjon historie."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antall handlinger"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antall meldinger som krever handling"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antall uleste meldinger"
-
-#~ msgid "Website Messages"
-#~ msgstr "Meldinger fra Nettsted"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historikk for kommuniksjon på nettsted"

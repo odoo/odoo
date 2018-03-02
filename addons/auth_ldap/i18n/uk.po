@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-05-06 12:24+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -27,6 +27,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"Автоматично створювати локальних користувачів для нових користувачів "
+"аутентифікованих за допомогою LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -40,7 +42,7 @@ msgstr "Компанія"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
-msgid "Create user"
+msgid "Create User"
 msgstr ""
 
 #. module: auth_ldap
@@ -64,46 +66,51 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
+#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "Налаштування LDAP"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
 msgid "LDAP Parameters"
+msgstr "Параметри LDAP"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.base_config_settings_view_form_inherit_auth_ldap
+msgid "LDAP Server"
 msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "Адреса серверу LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "Порт сервера LDAP "
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "База LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
 msgid "LDAP filter"
-msgstr ""
+msgstr "Фільтр LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
 msgid "LDAP password"
-msgstr ""
+msgstr "Пароль LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
@@ -123,12 +130,12 @@ msgstr "Останнє оновлення"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr ""
+msgstr "Інформація входу"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "Параметр процесу"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
@@ -137,6 +144,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication "
 "attempts will fail."
 msgstr ""
+"Запит безпечного шифрування TLS/SSL під час підключення до сервера LDAP. Ця "
+"опція вимагає наявності сервера, увімкненого STARTTLS, інакше всі спроби "
+"автентифікації вийдуть з ладу."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
@@ -146,17 +156,17 @@ msgstr "Послідовність"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr ""
+msgstr "Інформація про сервер"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "Встановіть ваш сервер LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
 msgid "Template User"
-msgstr ""
+msgstr "Шаблон користувача"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
@@ -164,6 +174,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"Пароль облікового запису користувача на сервері LDAP, який використувується "
+"для запиту каталогу."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
@@ -171,21 +183,23 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"Обліковий запис користувача на сервері LDAP, який використовується запиту "
+"каталогу. Залишити порожнім, щоб з'єднатися анонімно."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "Використання TLS"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr ""
+msgstr "Інформація користувача"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "Копіювання користувача при створенні нових користувачів"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
@@ -193,6 +207,11 @@ msgid "Users"
 msgstr "Користувачі"
 
 #. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_base_config_settings
+msgid "base.config.settings"
+msgstr ""
+
+#. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "res.company.ldap"
-msgstr ""
+msgstr "res.company.ldap"

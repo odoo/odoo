@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2018-03-02 14:45+0000\n"
 "PO-Revision-Date: 2016-03-12 20:27+0000\n"
 "Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
@@ -29,6 +29,13 @@ msgid ""
 "generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * \"Mustand\" staatus on kasutusel kui kasutaja loob uue kinnitamata "
+"vautšeri.\n"
+" * \"Esialgne\" staatus on kasutusel kui kasutaja loob vautšeri, millel ei "
+"ole vautšeri numbrit.\n"
+" * \"Postitatud\" staatus on kasutusel kui kasutaja loob vautšeri ja "
+"genereeritakse vautšeri number. Kontol luuakse vautšeri kanded.\n"
+" * \"Tühistatud\" staatus määratakse siis, kui kasutaja loobub vautšerist."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -42,9 +49,14 @@ msgid "Account Date"
 msgstr "Konto kuupäev"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr "Raamatupidamiskande kuupäev"
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr ""
+msgstr "Raamatupidamise vautšer"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -60,22 +72,24 @@ msgstr "Analüütiline konto"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Kas oled kindel, et soovid selle kviitungi tühistada?"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
-msgstr ""
+msgstr "Arve kuupäev"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Bill Information"
-msgstr ""
+msgstr "Ostuarve informatsioon"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Ostuarve viide"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -85,7 +99,7 @@ msgstr "Loobu"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "Tühista kviitung"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -93,20 +107,20 @@ msgid "Cancelled"
 msgstr "Tühistatud"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/models/account_voucher.py:176
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "Avatud või makstud vautšereid ei saa kustutada."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "Vajuta müügitšeki loomiseks."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "Vajuta otsutšeki registreerimiseks."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -118,7 +132,7 @@ msgstr "Ettevõte"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Andmikuga seotud ettevõte"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -146,9 +160,7 @@ msgid "Customer"
 msgstr "Klient"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Kuupäev"
 
@@ -176,7 +188,7 @@ msgstr "Mustand"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "Mustandvautšerid"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
@@ -184,14 +196,14 @@ msgid "Due Date"
 msgstr "Tähtaeg"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Raamatupidamiskannete jõustumise kuupäev"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr ""
+msgstr "Annab vautšeri kuvamisel ridade järjekorra."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -211,6 +223,7 @@ msgstr "ID"
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
+"Juhul kui maksudega tekib ümardamisprobleeme, kasuta seda välja parandamiseks"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -235,7 +248,7 @@ msgstr "Päeviku kanne"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr ""
+msgstr "Andmiku kirjed"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
@@ -268,7 +281,7 @@ msgstr "Number"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "Ainult maks, mis ei sisaldu hinnas"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
@@ -284,12 +297,12 @@ msgstr "Partner"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "Maksa otse"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Maksa hiljem"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -297,21 +310,26 @@ msgid "Payment"
 msgstr "Makse"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_payment_journal_id
+msgid "Payment Method"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
 msgid "Payment Reference"
 msgstr "Makse viide"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/models/account_voucher.py:213
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Palun aktiveerige valitud andmiku järjestus !"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/models/account_voucher.py:216
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Palun määra jada arveraamatus."
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -326,7 +344,7 @@ msgstr "Postitatud"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "Postitatud vautšerid"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -346,18 +364,18 @@ msgstr "Ost"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Ostutšekk"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Ostutšekid"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Ostuvautšer"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
@@ -377,13 +395,13 @@ msgstr "Müügiinfo"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr ""
+msgstr "Müügitšekk"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Müügitšekid"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -414,12 +432,12 @@ msgstr "Olek"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "Oleku muutus"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "Olek on muutunud"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
@@ -428,33 +446,33 @@ msgstr "KM"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
-msgid "Tax amount"
-msgstr ""
+msgid "Tax Amount"
+msgstr "Maksu summa"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
-msgid "Tax correction"
-msgstr ""
+msgid "Tax Correction"
+msgstr "Maksude korrigeerimine"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "Vautšer on makstud täielikult."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "Tulude või kulude konto seotud valitud tootega. "
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "Partneri viide sellele dokumendile."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "To Review"
-msgstr ""
+msgstr "Ülevaatamiseks"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
@@ -493,10 +511,10 @@ msgstr "Tarnija"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Tarnija vautšer"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:31
+#: code:addons/account_voucher/models/account_voucher.py:100
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -530,7 +548,7 @@ msgstr "Vautšerite statistika"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "Vautšeri kanded"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -538,6 +556,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
+"Kui ostuarve on kinnitatud, siis on võimalik\n"
+"                salvestada makse tarnijale, mis on seotud selle ostuarvega."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -545,54 +565,11 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
+"Kui müügiarve on kinnitatud, siis on võimalik\n"
+"                salvestada kliendi makse, mis on seotud selle müügiarvega."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/models/account_voucher.py:426
 #, python-format
 msgid "You must first select a partner!"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vajalik toiming"
-
-#~ msgid "Followers"
-#~ msgstr "Jälgijad"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu"
-
-#~ msgid "Is Follower"
-#~ msgstr "Jälgija"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimase sõnumi kuupäev"
-
-#~ msgid "Messages"
-#~ msgstr "Sõnumid"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Sõnumite ja kommunikatsiooni ajalugu"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimingute arv"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Tegutsemist nõudvate sõnumite arv"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lugemata sõnumite arv"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lugemata sõnumid"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lugemata sõnumite loendur"
-
-#~ msgid "Website Messages"
-#~ msgstr "Veebilehe sõnumid"
-
-#~ msgid "Website communication history"
-#~ msgstr "Veebilehe suhtluse ajalugu"
+msgstr "Te peate esmalt valima partneri!"

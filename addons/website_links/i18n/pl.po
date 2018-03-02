@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2018-03-02 14:46+0000\n"
 "PO-Revision-Date: 2016-07-11 08:14+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -20,10 +20,30 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 
 #. module: website_links
-#: model:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Share this Page</span>"
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:53
+#, python-format
+msgid " clicks"
 msgstr ""
-"<span title=\"Track this page to count clicks\">Udostępnij stronę</span>"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:104
+#, python-format
+msgid " countries"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:57
+#, python-format
+msgid "# of clicks"
+msgstr ""
+
+#. module: website_links
+#: model:ir.ui.view,arch_db:website_links.share_page_menu
+msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -160,6 +180,15 @@ msgid "Stats"
 msgstr "Statystyki"
 
 #. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:210
+#: code:addons/website_links/static/src/js/website_links_charts.js:211
+#: code:addons/website_links/static/src/js/website_links_charts.js:212
+#, python-format
+msgid "There is no data to show"
+msgstr ""
+
+#. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors, "
@@ -177,6 +206,13 @@ msgstr "URL"
 #, python-format
 msgid "Unable to get recent links"
 msgstr "niemożliwe aby dostać niedawne linki"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links_charts.js:99
+#, python-format
+msgid "Undefined"
+msgstr "Niezdefiniowane"
 
 #. module: website_links
 #. openerp-web
