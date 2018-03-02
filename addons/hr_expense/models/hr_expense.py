@@ -574,7 +574,7 @@ class HrExpenseSheet(models.Model):
 
     def _add_followers(self):
         users = self._get_users_to_subscribe()
-        self.message_subscribe_users(user_ids=users.ids)
+        self.message_subscribe(partner_ids=users.mapped('partner_id').ids)
 
     @api.model
     def _create_set_followers(self, values):

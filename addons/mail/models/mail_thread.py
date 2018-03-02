@@ -1849,7 +1849,7 @@ class MailThread(models.AbstractModel):
             partner_to_subscribe = partner_ids
             if self._context.get('mail_post_autofollow_partner_ids'):
                 partner_to_subscribe = [p for p in partner_ids if p in self._context.get('mail_post_autofollow_partner_ids')]
-            self.message_subscribe(list(partner_to_subscribe), force=False)
+            self.message_subscribe(list(partner_to_subscribe))
 
         # _mail_flat_thread: automatically set free messages to the first posted message
         MailMessage = self.env['mail.message']
@@ -1908,7 +1908,7 @@ class MailThread(models.AbstractModel):
 
         # Post-process: subscribe author
         if values['author_id'] and values['model'] and self.ids and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            self.message_subscribe([values['author_id']], force=False)
+            self._message_subscribe([values['author_id']])
 
     @api.multi
     def message_post_with_view(self, views_or_xmlid, **kwargs):
@@ -2034,26 +2034,18 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     @api.multi
-    def message_subscribe_users(self, user_ids=None, subtype_ids=None):
-        """ Wrapper on message_subscribe, using users. If user_ids is not
-            provided, subscribe uid instead. """
-        if user_ids is None:
-            user_ids = [self._uid]
-        return self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
-
-    @api.multi
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
-        """ Add partners to the records followers. """
-        # not necessary for computation, but saves an access right check
-        if not partner_ids and not channel_ids:
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
+        """ Main public API to add followers to a record set. Its main purpose is
+        to perform access rights checks before calling ``_message_subscribe``. """
+        if not self or (not partner_ids and not channel_ids):
             return True
-        if partner_ids is None:
-            partner_ids = []
-        if channel_ids is None:
-            channel_ids = []
 
-        # TDE CHECK THIS
-        if not channel_ids and partner_ids and set(partner_ids) == set([self.env.user.partner_id.id]):
+        partner_ids = partner_ids or []
+        channel_ids = channel_ids or []
+        adding_current = set(partner_ids) == set([self.env.user.partner_id.id])
+        customer_ids = [] if adding_current else None
+
+        if not channel_ids and partner_ids and adding_current:
             try:
                 self.check_access_rights('read')
                 self.check_access_rule('read')
@@ -2063,24 +2055,37 @@ class MailThread(models.AbstractModel):
             self.check_access_rights('write')
             self.check_access_rule('write')
 
-        partner_data = dict((pid, subtype_ids) for pid in partner_ids)
-        channel_data = dict((cid, subtype_ids) for cid in channel_ids)
-        gen, part = self.env['mail.followers']._add_follower_command(self._name, self.ids, partner_data, channel_data, force=force)
-        self.sudo().write({'message_follower_ids': gen})
-        for record in self.filtered(lambda self: self.id in part):
-            record.write({'message_follower_ids': part[record.id]})
+        return self._message_subscribe(partner_ids, channel_ids, subtype_ids, customer_ids=customer_ids)
+
+    def _message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, customer_ids=None):
+        """ Main private API to add followers to a record set. This method adds
+        partners and channels, given their IDs, as followers of all records
+        contained in the record set.
+
+        If subtypes are given existing followers are erased with new subtypes.
+        If default one have to be computed only missing followers will be added
+        with default subtypes matching the record set model.
+
+        This private method does not specifically check for access right. Use
+        ``message_subscribe`` public API when not sure about access rights.
+
+        :param customer_ids: see ``_insert_followers`` """
+        if not self:
+            return True
+
+        if not subtype_ids:
+            self.env['mail.followers']._insert_followers(
+                self._name, self.ids, partner_ids, None, channel_ids, None,
+                customer_ids=customer_ids)
+        else:
+            self.env['mail.followers']._insert_followers(
+                self._name, self.ids,
+                partner_ids, dict((pid, subtype_ids) for pid in partner_ids),
+                channel_ids, dict((cid, subtype_ids) for cid in channel_ids),
+                customer_ids=customer_ids, check_existing=True, existing_policy='force')
 
         self.invalidate_cache()
         return True
-
-    @api.multi
-    def message_unsubscribe_users(self, user_ids=None):
-        """ Wrapper on message_subscribe, using users. If user_ids is not
-            provided, unsubscribe uid instead. """
-        if user_ids is None:
-            user_ids = [self._uid]
-        partner_ids = [user.partner_id.id for user in self.env['res.users'].browse(user_ids)]
-        return self.message_unsubscribe(partner_ids)
 
     @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
@@ -2224,10 +2229,10 @@ class MailThread(models.AbstractModel):
 
         for pid, subtypes in new_partners.items():
             subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
+            self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes)
         for cid, subtypes in new_channels.items():
             subtypes = list(subtypes) if subtypes is not None else None
-            self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
+            self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes)
 
         # remove the current user from the needaction partner to avoid to notify the author of the message
         user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user]

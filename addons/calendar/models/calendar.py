@@ -1396,13 +1396,14 @@ class Meeting(models.Model):
         return super(Meeting, self.browse(thread_id)).message_post(**kwargs)
 
     @api.multi
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         records = self.browse(get_real_ids(self.ids))
-        return super(Meeting, records).message_subscribe(
-            partner_ids=partner_ids,
-            channel_ids=channel_ids,
-            subtype_ids=subtype_ids,
-            force=force)
+        return super(Meeting, records).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+
+    @api.multi
+    def _message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, customer_ids=None):
+        records = self.browse(get_real_ids(self.ids))
+        return super(Meeting, records)._message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, customer_ids=customer_ids)
 
     @api.multi
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):

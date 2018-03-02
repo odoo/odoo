@@ -124,7 +124,7 @@ class HolidaysAllocation(models.Model):
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)
         if employee.user_id:
-            self.message_subscribe_users(user_ids=employee.user_id.ids)
+            self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
 
     @api.multi
     @api.constrains('holiday_status_id')
