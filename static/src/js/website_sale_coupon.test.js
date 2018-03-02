@@ -41,8 +41,8 @@ tour.register('shop_sale_coupon', {
             trigger: '#customize-menu > a',
         },
         {
-            content: "click on 'Coupon Code'",
-            trigger: "#customize-menu a:contains(Coupon Code)",
+            content: "click on 'Promo Code'",
+            trigger: "#customize-menu a:contains(Promo Code)",
         },
         {
             content: "insert promo code '10pc'",
@@ -98,8 +98,8 @@ tour.register('shop_sale_coupon', {
             trigger: '#customize-menu > a',
         },
         {
-            content: "click on 'Coupon Code'",
-            trigger: "#customize-menu a:contains(Coupon Code)",
+            content: "click on 'Promo Code'",
+            trigger: "#customize-menu a:contains(Promo Code)",
         },
     ]
 );
