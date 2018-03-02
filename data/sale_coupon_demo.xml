@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="10_percent_auto_applied" model="sale.coupon.program">
+            <field name="name">Code for 10% on orders</field>
+            <field name="promo_code_usage">code_needed</field>
+            <field name="promo_code">10pc</field>
+            <field name="discount_apply_on">on_order</field>
+            <field name="discount_type">percentage</field>
+            <field name="discount_percentage">10.0</field>
+            <field name="program_type">promotion_program</field>
+        </record>
+
+        <record id="3_ipad_plus_1_free" model="sale.coupon.program">
+            <field name="name">Buy 3 ipads, get one for free</field>
+            <field name="promo_code_usage">no_code_needed</field>
+            <field name="discount_apply_on">on_order</field>
+            <field name="reward_type">product</field>
+            <field name="program_type">promotion_program</field>
+            <field name="reward_product_id" ref="product.product_product_6"></field>
+            <field name="rule_min_quantity">3</field>
+            <field name="rule_products_domain">[["name","ilike","ipad mini"]]</field>
+        </record>
+    </data>
+</odoo>

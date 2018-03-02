@@ -55,7 +55,7 @@ class TestProgramRules(TestSaleCouponCommon):
         # Test case: Based on the minimum purchased
 
         self.immediate_promotion_program.write({
-            'rule_minimum_amount': 1000.0,
+            'rule_minimum_amount': 1006,
             'rule_minimum_amount_tax_inclusion': 'tax_excluded'
         })
 
@@ -81,7 +81,7 @@ class TestProgramRules(TestSaleCouponCommon):
         order.write({'order_line': [
             (0, False, {
                 'product_id': self.product_A.id,
-                'name': '1 Product A',
+                'name': '10 Product A',
                 'product_uom': self.uom_unit.id,
                 'product_uom_qty': 10.0,
             }),
@@ -93,7 +93,18 @@ class TestProgramRules(TestSaleCouponCommon):
             })
         ]})
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied as the purchased amount is enough")
+        # 10*100 + 5 = 1005
+        self.assertEqual(len(order.order_line.ids), 2, "The promo offert should not be applied as the purchased amount is not enough")
+
+        self.immediate_promotion_program.rule_minimum_amount = 1005
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3, "The promo offert should be applied as the purchased amount is now enough")
+
+        # 10*(100*1.15) + (5*1.15) = 10*115 + 5.75 = 1155.75
+        self.immediate_promotion_program.rule_minimum_amount = 1006
+        self.immediate_promotion_program.rule_minimum_amount_tax_inclusion = 'tax_included'
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3, "The promo offert should be applied as the initial amount required is now tax included")
 
     def test_program_rules_validity_dates_and_uses(self):
         # Test case: Based on the validity dates and the number of allowed uses
