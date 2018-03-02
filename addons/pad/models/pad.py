@@ -46,10 +46,11 @@ class PadCommon(models.AbstractModel):
         path = '-%s-%s' % (self._name, salt)
         path = '%s%s' % (self.env.cr.dbname.replace('_', '-')[0:50 - len(path)], path)
         # contruct the url
-        url = '%s/p/%s' % (pad["server"], path)
+        url = ''
 
         # if create with content
         if self.env.context.get('field_name') and self.env.context.get('model') and self.env.context.get('object_id'):
+            url = '%s/p/%s' % (pad["server"], path)
             myPad = EtherpadLiteClient(pad["key"], pad["server"] + '/api')
             try:
                 myPad.createPad(path)
@@ -114,7 +115,7 @@ class PadCommon(models.AbstractModel):
         if self.env.context.get('pad_no_create', False):
             return pad
         for k, field in self._fields.items():
-            if hasattr(field, 'pad_content_field') and k not in vals:
+            if hasattr(field, 'pad_content_field') and not vals.get(k):
                 ctx = {
                     'model': self._name,
                     'field_name': k,
@@ -122,6 +123,7 @@ class PadCommon(models.AbstractModel):
                 }
                 pad_info = self.with_context(**ctx).pad_generate_url()
                 pad[k] = pad_info.get('url')
+        pad._set_pad_value(vals)
         return pad
 
     # Set the pad content in vals
@@ -139,7 +141,7 @@ class PadCommon(models.AbstractModel):
         for k, v in list(vals.items()):
             field = self._fields.get(k)
             if hasattr(field, 'pad_content_field'):
-                vals[field.pad_content_field] = self.pad_get_content(v)
+                vals[field.pad_content_field] = self.pad_get_content(v) or vals.get(field.pad_content_field)
 
     @api.multi
     def copy(self, default=None):
