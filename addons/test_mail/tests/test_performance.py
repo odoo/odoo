@@ -93,7 +93,7 @@ class TestMailPerformance(TransactionCase):
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
-        with self.assertQueryCount(admin=16, demo=16):  # test_mail only: 16 - 16
+        with self.assertQueryCount(admin=15, demo=15):  # test_mail only: 15 - 15
             self.env['test_performance.mail'].create({'name': 'X'})
 
     @users('admin', 'emp')
@@ -148,7 +148,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
 
-        with self.assertQueryCount(admin=9, emp=9):  # test_mail only: 9 - 9
+        with self.assertQueryCount(admin=8, emp=8):  # test_mail only: 8 - 8
             model.create({'name': 'Test'})
 
     @users('admin', 'emp')
@@ -494,7 +494,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=319, emp=380):  # com runbot: 319 - 179 // test_mail only: 312 - 373
+        with self.assertQueryCount(admin=318, emp=379):  # com runbot: 318 - 378 // test_mail only: 311 - 372
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
