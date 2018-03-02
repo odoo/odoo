@@ -71,7 +71,7 @@
                         <div class="content-group">
                             <div class="row mt16">
                                 <label for="transfer_account_id" class="col-md-3 o_light_label"/>
-                                <field name="transfer_account_id"  attrs="{'required': [('chart_template_id','!=',False)]}"/>
+                                <field name="transfer_account_id"  attrs="{'required': [('has_chart_of_accounts','=',True)]}"/>
                             </div>
                         </div>
                     </div>
