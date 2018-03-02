@@ -1032,7 +1032,7 @@ QUnit.module('Views', {
         });
         form.$('.o_form_statusbar button.s').click();
 
-        assert.strictEqual(rpcCount, 2, "should have done 2 rpcs to reload");
+        assert.strictEqual(rpcCount, 1, "should have done 1 rpc, because we do not reload anymore if the server action fails");
         form.destroy();
     });
 
