@@ -18,7 +18,7 @@ from . import tools
 
 try:
     from pythonjsonlogger import jsonlogger
-except:
+except ImportError:
     jsonlogger = None
 
 _logger = logging.getLogger(__name__)
