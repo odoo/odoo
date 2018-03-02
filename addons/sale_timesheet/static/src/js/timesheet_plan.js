@@ -1,4 +1,4 @@
-odoo.define('project_timesheet.project_plan', function (require) {
+odoo.define('sale_timesheet.ProjectPlan', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
@@ -25,6 +25,7 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
         this._super.apply(this, arguments);
         this.action = action;
         this.action_manager = parent;
+        this.set('title', action.name || _t('Overview'));
     },
     willStart: function () {
         var self = this;
@@ -213,6 +214,7 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
         });
     },
     _onSearch: function (search_event) {
+        search_event.stopPropagation();
         var session = this.getSession();
         // group by are disabled, so we don't take care of them
         var result = pyeval.eval_domains_and_contexts({
@@ -226,4 +228,5 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
 
 core.action_registry.add('timesheet.plan', PlanAction);
 
+return PlanAction;
 });
