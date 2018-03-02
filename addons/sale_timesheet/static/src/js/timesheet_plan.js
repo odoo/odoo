@@ -74,7 +74,7 @@ var ProjectPlan = Widget.extend(ControlPanelMixin, {
 
         return $.when(def1, def2).then(function(){
             self.searchview.do_search();
-            self.update_cp();
+            self._updateControlPanel();
         });
     },
 
