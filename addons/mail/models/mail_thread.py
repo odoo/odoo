@@ -219,8 +219,8 @@ class MailThread(models.AbstractModel):
 
         # subscribe uid unless asked not to
         if not self._context.get('mail_create_nosubscribe'):
-            message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
-            message_follower_ids += self.env['mail.followers']._add_follower_command(self._name, [], {self.env.user.partner_id.id: None}, {}, force=True)[0]
+            message_follower_ids = values.get('message_follower_ids') or []
+            message_follower_ids += [(0, 0, fol_vals) for fol_vals in self.env['mail.followers']._add_default_followers(self._name, [], self.env.user.partner_id.ids, customer_ids=[])[0][0]]
             values['message_follower_ids'] = message_follower_ids
         thread = super(MailThread, self).create(values)
 
