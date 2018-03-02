@@ -1,32 +1,34 @@
 odoo.define('sale_timesheet.ProjectPlan', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
-var Context = require('web.Context');
 var core = require('web.core');
 var data = require('web.data');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
-var session = require('web.session');
 var Widget = require('web.Widget');
 
-var QWeb = core.qweb;
 var _t = core._t;
 
-var PlanAction = Widget.extend(ControlPanelMixin, {
+var ProjectPlan = Widget.extend(ControlPanelMixin, {
     events: {
         "click a[type='action']": "_onClickAction",
         "click .o_timesheet_plan_redirect": '_onRedirect',
         "click .oe_stat_button": "_onClickStatButton",
         "click .o_timesheet_plan_sale_timesheet_people_time .progress-bar": '_onClickEmployeeProgressbar',
     },
-    init: function(parent, action, options) {
+    /**
+     * @override
+     */
+     init: function (parent, action) {
         this._super.apply(this, arguments);
         this.action = action;
         this.action_manager = parent;
         this.set('title', action.name || _t('Overview'));
     },
+    /**
+     * @override
+     */
     willStart: function () {
         var self = this;
         var view_id = this.action && this.action.search_view_id && this.action.search_view_id[0];
@@ -37,7 +39,10 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
             });
         return $.when(this._super(), def);
     },
-    start: function(){
+    /**
+     * @override
+     */
+    start: function () {
         var self = this;
 
         // find default search from context
@@ -77,15 +82,51 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
     do_show: function () {
         this._super.apply(this, arguments);
-        this.update_cp();
+        this._updateControlPanel();
         this.action_manager.do_push_state({
             action: this.action.id,
             active_id: this.action.context.active_id,
         });
     },
-    update_cp: function () {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Refresh the DOM html
+     *
+     * @private
+     * @param {string|html} dom
+     */
+    _refreshPlan: function (dom) {
+        this.$el.html(dom);
+    },
+    /**
+     * Call controller to get the html content
+     *
+     * @private
+     * @param {string[]}
+     * @returns {Deferred}
+     */
+    _fetchPlan: function (domain) {
+        var self = this;
+        return this._rpc({
+            route:"/timesheet/plan",
+            params: {domain: domain},
+        }).then(function(result){
+            self._refreshPlan(result.html_content);
+        });
+    },
+    /**
+     * @private
+     */
+    _updateControlPanel: function () {
         this.update_control_panel({
             cp_content: {
                 $buttons: this.$buttons,
@@ -97,67 +138,41 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
     },
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-    /**
-     * Refresh the DOM html
-     * @param {string|html} dom
-     * @private
-     */
-    _refreshPlan: function(dom){
-        this.$el.html(dom);
-    },
-    /**
-     * Call controller to get the html content
-     * @private
-     * @returns {Deferred}
-     */
-    _fetchPlan: function(domain){
-        var self = this;
-        return this._rpc({
-            route:"/timesheet/plan",
-            params: {domain: domain},
-        }).then(function(result){
-            self._refreshPlan(result['html_content']);
-        });
-    },
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     /**
      * Generate the action to execute based on the clicked target
      *
-     * @param {MouseEvent} event
      * @private
+     * @param {MouseEvent} event
      */
-    _onClickAction: function(ev){
+    _onClickAction: function (ev) {
         var $target = this.$(ev.currentTarget);
 
         var action = false;
         if($target.attr('name')){ // classical case : name="action_id" type="action"
-            action = $target.attr('name')
-        }else{ // custom case : build custom action dict
+            action = $target.attr('name');
+        } else { // custom case : build custom action dict
             action = {
                 'name': _t('Timesheet'),
                 'type': 'ir.actions.act_window',
                 'target': 'current',
                 'res_model': 'account.analytic.line',
-            }
+            };
             // find action views
             var views = [[false, 'pivot'], [false, 'list']];
             if($target.attr('views')){
                 views = JSON.parse($target.attr('views').replace(/\'/g, '"'));
             }
-            action['views'] = views;
-            action['view_mode'] = _.map(views, function(view_array){return view_array[1];});
+            action.views = views;
+            action.view_mode = _.map(views, function(view_array){return view_array[1];});
             // custom domain
             var domain = [];
             if($target.attr('domain')){
                 domain = JSON.parse($target.attr('domain').replace(/\'/g, '"'));
             }
-            action['domain'] = domain;
+            action.domain = domain;
         }
 
         // additionnal context
@@ -176,6 +191,43 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
             additional_context: context
         });
     },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickEmployeeProgressbar: function (event) {
+        var domain = $(event.currentTarget).data('domain');
+        this.do_action({
+            name: 'Timesheets',
+            type: 'ir.actions.act_window',
+            res_model: 'account.analytic.line',
+            views: [[false, 'list'], [false, 'form']],
+            view_type: 'list',
+            view_mode: 'form',
+            domain: domain,
+        });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickStatButton: function (event) {
+        var self = this;
+        var data = $(event.currentTarget).data();
+        return this._rpc({
+            route:"/timesheet/plan/action",
+            params: {
+                domain: data.domain,
+                res_model: data.resModel,
+            },
+        }).then(function(action){
+            self.do_action(action);
+        });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
     _onRedirect: function (event) {
         event.preventDefault();
         var $target = $(event.target);
@@ -188,45 +240,29 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
             res_id: $target.data('oe-id'),
         });
     },
-    _onClickStatButton: function(event){
-        var self = this;
-        var data = $(event.currentTarget).data();
-        return this._rpc({
-            route:"/timesheet/plan/action",
-            params: {
-                domain: data['domain'],
-                res_model: data['resModel'],
-            },
-        }).then(function(action){
-            self.do_action(action);
-        });
-    },
-    _onClickEmployeeProgressbar: function(event){
-        var domain = $(event.currentTarget).data('domain');
-        this.do_action({
-            name: 'Timesheets',
-            type: 'ir.actions.act_window',
-            res_model: 'account.analytic.line',
-            views: [[false, 'list'], [false, 'form']],
-            view_type: 'list',
-            view_mode: 'form',
-            domain: domain,
-        });
-    },
-    _onSearch: function (search_event) {
-        search_event.stopPropagation();
+    /**
+     * This client action has its own search view and already listen on it. If
+     * we let the event pass through, it will be caught by the action manager
+     * which will do its work.  This may crash the web client, if the action
+     * manager tries to notify the previous action.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onSearch: function (event) {
+        event.stopPropagation();
         var session = this.getSession();
         // group by are disabled, so we don't take care of them
         var result = pyeval.eval_domains_and_contexts({
-            domains: search_event.data.domains,
-            contexts: [session.user_context].concat(search_event.data.contexts)
+            domains: event.data.domains,
+            contexts: [session.user_context].concat(event.data.contexts)
         });
 
         this._fetchPlan(result.domain);
     },
 });
 
-core.action_registry.add('timesheet.plan', PlanAction);
+core.action_registry.add('timesheet.plan', ProjectPlan);
 
-return PlanAction;
+return ProjectPlan;
 });
