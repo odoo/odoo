@@ -110,8 +110,8 @@ if ('website_sale_options.website_sale' in odoo.__DEBUG__.services) {
   for (var k=0; k<steps.length; k++) {
       if (steps[k].content === "click on 'Add to Cart' button") {
           steps.splice(k+1, 0, {
-              content: "click in modal on 'Proceed to checkout' button",
-              trigger: 'a:contains("Proceed to checkout")',
+              content: "click in modal on 'Proceed to Checkout' button",
+              trigger: 'a:contains("Proceed to Checkout")',
           });
           break;
       }
