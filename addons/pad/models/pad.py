@@ -101,16 +101,19 @@ class PadCommon(models.AbstractModel):
 
     @api.multi
     def write(self, vals):
-        self._set_pad_value(vals)
+        self._set_field_to_pad(vals)
+        self._set_pad_to_field(vals)
         return super(PadCommon, self).write(vals)
 
     @api.model
     def create(self, vals):
-        self._set_pad_value(vals)
+        # Case of a regular creation: we receive the pad url, so we need to update the
+        # corresponding field
+        self._set_pad_to_field(vals)
         pad = super(PadCommon, self).create(vals)
 
-        # In case the pad is created programmatically, the content is not filled in yet since it is
-        # normally initialized by the JS layer
+        # Case of a programmatical creation (e.g. copy): we receive the field content, so we need
+        # to create the corresponding pad
         if self.env.context.get('pad_no_create', False):
             return pad
         for k, field in self._fields.items():
@@ -124,9 +127,7 @@ class PadCommon(models.AbstractModel):
                 pad[k] = pad_info.get('url')
         return pad
 
-    # Set the pad content in vals
-    def _set_pad_value(self, vals):
-
+    def _set_field_to_pad(self, vals):
         # Update the pad if the `pad_content_field` is modified
         for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
@@ -135,22 +136,9 @@ class PadCommon(models.AbstractModel):
                 path = self[k].split('/p/')[1]
                 myPad.setHtmlFallbackText(path, vals[field.pad_content_field])
 
+    def _set_pad_to_field(self, vals):
         # Update the `pad_content_field` if the pad is modified
         for k, v in list(vals.items()):
             field = self._fields.get(k)
             if hasattr(field, 'pad_content_field'):
                 vals[field.pad_content_field] = self.pad_get_content(v)
-
-    @api.multi
-    def copy(self, default=None):
-        self.ensure_one()
-        if not default:
-            default = {}
-        for k, field in self._fields.items():
-            if hasattr(field, 'pad_content_field'):
-                if self.env.context.get('pad_no_create', False):
-                    default[k] = ''
-                else:
-                    pad = self.pad_generate_url()
-                    default[k] = pad.get('url')
-        return super(PadCommon, self).copy(default)
