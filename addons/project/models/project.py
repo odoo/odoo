@@ -545,12 +545,6 @@ class Task(models.Model):
         for task in self:
             task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
 
-    @api.constrains('parent_id')
-    def _check_subtask_project(self):
-        for task in self:
-            if task.parent_id.project_id and task.project_id != task.parent_id.project_id.subtask_project_id:
-                raise UserError(_("You can't define a parent task if its project is not correctly configured. The sub-task's project of the parent task's project should be this task's project"))
-
     # Override view according to the company definition
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
