@@ -891,9 +891,9 @@ class WebsiteRedirect(models.Model):
     _order = "sequence, id"
     _rec_name = 'url_from'
 
-    type = fields.Selection([('301', 'Moved permanently'), ('302', 'Moved temporarily')], string='Redirection Type')
-    url_from = fields.Char('Redirect From')
-    url_to = fields.Char('Redirect To')
+    type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True)
+    url_from = fields.Char('Redirect From', required=True)
+    url_to = fields.Char('Redirect To', required=True)
     website_id = fields.Many2one('website', 'Website')
     active = fields.Boolean(default=True)
-    sequence = fields.Integer(default=0)
+    sequence = fields.Integer()

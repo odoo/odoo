@@ -61,6 +61,22 @@
             </field>
         </record>
 
+
+        <record id="view_redirect_search" model="ir.ui.view">
+            <field name="name">website.redirect.search</field>
+            <field name="model">website.redirect</field>
+            <field name="arch" type="xml">
+                <search string="Search Redirect">
+                    <field name="url_from"/>
+                    <field name="url_to"/>
+
+                    <group string="Group By">
+                        <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <!-- website.redirect views -->
         <record id="website_redirect_form_view" model="ir.ui.view">
             <field name="name">website.redirect.form</field>
@@ -77,7 +93,6 @@
                             <group>
                                 <field name="website_id"/>
                                 <field name="active"/>
-                                <field name="sequence"/>
                             </group>
                         </group>
                     </sheet>
@@ -89,13 +104,13 @@
             <field name="name">website.redirect.list</field>
             <field name="model">website.redirect</field>
             <field name="arch" type="xml">
-                <tree string="Website Redirects">
+                <tree string="Website Redirects" editable="bottom">
                     <field name="type"/>
                     <field name="url_from"/>
                     <field name="url_to"/>
                     <field name="website_id"/>
                     <field name="active"/>
-                    <field name="sequence"/>
+                    <field name="sequence" widget="handle" />
                 </tree>
             </field>
         </record>
@@ -107,6 +122,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="website_redirect_tree_view"/>
             <field name="target">current</field>
+            <field name="search_view_id" ref="view_redirect_search"/>
         </record>
 
         <!-- website.page views -->
