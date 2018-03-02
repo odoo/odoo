@@ -8,6 +8,14 @@
         </xpath>
     </template>
 
+
+    <template id="qunit_suite" name="timesheet plan tests" inherit_id="web.qunit_suite">
+        <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
+            <script type="text/javascript" src="/sale_timesheet/static/tests/timesheet_plan_tests.js"></script>
+        </xpath>
+    </template>
+
+
     <template id="timesheet_plan" name="Timesheet Plan">
         <div class="o_form_view o_form_readonly o_project_plan">
             <div class="o_form_sheet_bg">
