@@ -82,6 +82,11 @@ class MrpBom(models.Model):
         if self.product_tmpl_id:
             self.product_uom_id = self.product_tmpl_id.uom_id.id
 
+    @api.onchange('routing_id')
+    def onchange_routing_id(self):
+        for line in self.bom_line_ids:
+            line.operation_id = False
+
     @api.multi
     def name_get(self):
         return [(bom.id, '%s%s' % (bom.code and '%s: ' % bom.code or '', bom.product_tmpl_id.display_name)) for bom in self]
