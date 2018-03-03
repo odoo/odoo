@@ -3,17 +3,17 @@
 # * rating_project
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Bohdan Lisnenko, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Martin Trigaux, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,21 +97,93 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                  Оцінка задоволеності\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Вітаємо,</p>\n"
+"                <p>Будь ласка, виділіть час, щоб оцінити наші послуги, пов'язані з цим завданням \"<strong>${object.name}</strong>\"\n"
+"                   призначено <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+"                <p>Ми цінуємо ваш відгук. Це допомагає нам постійно вдосконалюватися.</p>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:10px 20px\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                    <tr>\n"
+"                        <td style=\"text-align:center;\">\n"
+"                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                Скажіть нам, що ви думаєте про наші послуги:\n"
+"                            </h2>\n"
+"                            <div style=\"text-color: #888888\">(натисніть на один зі смайликів)</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:10px 10px;\">\n"
+"                            <table style=\"width:100%;text-align:center;\">\n"
+"                                <tr>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/10\">\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/5\">\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/1\">\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
+"                % if object.project_id.rating_status == 'stage':\n"
+"                    <p>Це опитування клієнтів було надіслано, оскільки ваше завдання було перенесено на етап <b>${object.stage_id.name}</b></p>\n"
+"                % endif\n"
+"                % if object.project_id.rating_status == 'periodic':\n"
+"                    <p>Це клієнтське опитування було надіслане ${object.project_id.rating_status_period}</b> поки завдання знаходиться в <b>${object.stage_id.name}</b> етапі.\n"
+"                % endif\n"
+"                <p>Email було автоматично надіслано <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Проект Odoo</a> для <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Запит рейтингу послуг"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% На завданнях"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Автоматичний статус канбану"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -120,6 +192,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Автоматично змінювати стан канбану, коли користувач відповідає на зворотній зв'язок для цього етапу.\n"
+" *Хороший відгук від клієнта оновить стан канбану до \"готового до нового етапу\" (зелена позначка).\n"
+" * Середній або поганий відгук встановить стан канбану на \"заблокований\" (червона позначка).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
@@ -135,6 +210,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Оцінка клієнтів на завдання. Якщо у вас немає рейтингу, змініть параметри "
+"проекту, щоб його активувати."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -142,11 +219,13 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Рейтинги клієнтів щодо завдань/проблем. Якщо у вас немає рейтингу, змініть "
+"параметри проекту, щоб його активувати."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Рейтинги клієнта(ів)"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -159,16 +238,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"Відредагуйте етапи проекту та встановіть шаблон електронної пошти\n"
+"на етапах, на яких ви хочете активувати рейтинг."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Щасливі % на проекті"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Щасливі % на завданні"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -179,36 +260,41 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Як отримати зворотній зв'язок з клієнтом?\n"
+"- Рейтинг при зміні стадії: електронна пошта буде надіслана, коли завдання/питання витягнуте на іншому етапі\n"
+"- Періодичний рейтинг: електронна пошта буде надсилатися періодично\n"
+"\n"
+"Не забудьте налаштувати поштові шаблони на етапах, для яких ви хочете отримати зворотній зв'язок з клієнтом."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Останній рейтинг: Високо незадоволений"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Останній рейтинг: Не задоволений"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Останній рейтинг: Задоволений"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Немає рейтингу"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "No rating yet"
-msgstr ""
+msgstr "Ще немає рейтингу"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Раз на місяць"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -216,11 +302,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Відсоток щасливих оцінок за останні 30 днів. Отримайте дані про оцінку в "
+"меню \"Додатково\"."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Періодичний рейтинг"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -245,17 +333,17 @@ msgstr "Шаблон листа оцінки"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Частота рейтингу"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating request deadline"
-msgstr ""
+msgstr "Кінцевий термін подачі запиту на рейтинг"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Рейтинг при зміні етапу"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
@@ -280,7 +368,7 @@ msgstr "Завдання"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Рейтинг завдання"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -290,7 +378,7 @@ msgstr "Стадія завдання"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Двічі на місяць"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
