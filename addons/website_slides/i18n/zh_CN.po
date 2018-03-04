@@ -53,18 +53,22 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
-"<p></p><p><strong></strong></p><p style=\"text-align: center; margin-top: "
-"10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" "
-"src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" "
-"style=\"height:auto; width:150px; background-color: #cccccc; margin: "
-"16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style"
-"=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-"
-"height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; "
-"display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: "
-"center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
-"background-image: none; background-color: #875A7B; border: 1px solid "
-"#875A7B; border-radius:3px\" class=\"o_default_snippet_text\" "
-"href=\"${object.website_url}\"><strong></strong></a></p>"
+"\n"
+" 您好，\n"
+"\n"
+" ${user.name} ${object.slide_type} ${object.name} 与您分享！<p></p>\n"
+"\n"
+"\n"
+" \n"
+" \n"
+" \n"
+"\n"
+"\n"
+" \n"
+" 查看 ${object.name}\n"
+" \n"
+"\n"
+"<p><strong></strong></p><p style=\"text-align: center; margin-top: 10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"><strong></strong></a></p>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -85,18 +89,22 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
-"<p></p><p><strong></strong></p><p style=\"text-align: center; margin-top: "
-"10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" "
-"src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" "
-"style=\"height:auto; width:150px; background-color: #cccccc; margin: "
-"16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style"
-"=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-"
-"height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; "
-"display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: "
-"center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
-"background-image: none; background-color: #875A7B; border: 1px solid "
-"#875A7B; border-radius:3px\" class=\"o_default_snippet_text\" "
-"href=\"${object.website_url}\"><strong></strong></a></p>"
+"\n"
+" 您好 \n"
+"\n"
+" 新的 ${object.slide_type} ${object.name} 已发表在 ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"\n"
+"\n"
+" \n"
+" \n"
+" \n"
+"\n"
+"\n"
+" \n"
+" 查看 ${object.name}\n"
+" \n"
+"\n"
+"<p></p><p><strong></strong></p><p style=\"text-align: center; margin-top: 10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"><strong></strong></a></p>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -123,7 +131,7 @@ msgstr "${user.name} 向你分享了 ${object.slide_type}!"
 msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
-msgstr ""
+msgstr "（非）自动归档渠道（非）归档其幻灯片。是否继续？"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -353,12 +361,12 @@ msgstr "归档"
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
-msgstr ""
+msgstr "仅限已验证的用户"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
-msgstr ""
+msgstr "Odoo 超棒的时间表"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
@@ -464,6 +472,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"无法从url 中获取数据。文档或访问权限不可用。\n"
+" 这是已收到的回复：%"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:322
@@ -533,7 +543,7 @@ msgstr "放弃"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_6
 msgid "Discover how easy marketing your business can be with Odoo"
-msgstr ""
+msgstr "发现您的业务可以使用 Odoo 轻松的进行营销"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_0
@@ -544,11 +554,16 @@ msgid ""
 "\n"
 "Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
 msgstr ""
+"发现您如何在单个应用程序上集成 MRP、 PLM、质量和维护，以便最大化制造业务的效率。\n"
+"\n"
+" 请在：https://www.odoo.com/page/manufacturing-features 了解更多功能 \n"
+"\n"
+" 发现 Odoo MRP：https://www.odoo.com/page/manufacturing"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_1
 msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
+msgstr "发现客户关系管理的销售人员喜欢 https://www.odoo.com/page/crm"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_2
@@ -557,6 +572,9 @@ msgid ""
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
+"发现多合一业务管理软件解决方案适合任何业务规模和使用情况。\n"
+"\n"
+" 请在 https://odoo.com 了解更多"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
@@ -612,6 +630,10 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
+"通过 Odoo 下载超棒的时间表，会发现时间跟踪和员工管理会是多么的轻松！\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
@@ -715,7 +737,7 @@ msgstr "谷歌文档密钥"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Google Drive API 密钥"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -815,7 +837,7 @@ msgstr "最新发布"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_8
 msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr ""
+msgstr "在 https://www.odoo.com/page/sales 上了解更多"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
@@ -927,12 +949,12 @@ msgstr "视频数量"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
 msgid "Odoo All-in-One Software Demonstration"
-msgstr ""
+msgstr "Odoo 多合一软件演示"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
 msgid "Odoo CRM"
-msgstr ""
+msgstr "Odoo 客户关系管理"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
@@ -943,27 +965,27 @@ msgstr "Odoo 日期"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
 msgid "Odoo Inventory"
-msgstr ""
+msgstr "Odoo 库存"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
 msgid "Odoo MRP"
-msgstr ""
+msgstr "Odoo 物料需求计划"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_6
 msgid "Odoo Marketing"
-msgstr ""
+msgstr "Odoo 市场营销"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_8
 msgid "Odoo Sales"
-msgstr ""
+msgstr "Odoo 销售"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr ""
+msgstr "Odoo 标志演示"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
@@ -1197,6 +1219,9 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
+"停止手工打印和扫描。转向带有 Odoo 标志的电子签名！\n"
+"\n"
+" 在 https://www.odoo.com/page/sign 发现更多"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
@@ -1230,7 +1255,7 @@ msgstr "这"
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
-msgstr ""
+msgstr "文档类型将根据文档 URL 和属性（例如，演示和文档的高度和宽度）自动设置。"
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1390,6 +1415,9 @@ msgid ""
 "\n"
 "Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
 msgstr ""
+"21 世纪专享的仓库管理软件 \n"
+"\n"
+" Odoo 库存的发现：https://www.odoo.com/page/warehouse"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
