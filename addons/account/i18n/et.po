@@ -1937,7 +1937,7 @@ msgstr ""
 "Kõik käsitsi loodud uued arveraamatu kanded on tavaliselt staatusega "
 "“Postitamata”, aga sa saad seotud arveraamatu seadistada nii, et see staatus"
 " jääks vahele. Sellisel juhul käituvad need nagu andmikukanded, mis on "
-"dokumentide valideerimise süsteemi poolt automaatselt loodud (arved, "
+"dokumentide kinnitamise süsteemi poolt automaatselt loodud (arved, "
 "pangaaruanded…) ja nad luuakse “Postitatud” staatusega."
 
 #. module: account
@@ -1946,8 +1946,8 @@ msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
 msgstr ""
-"Kõik valitud žurnaali kanded valideeritakse ja postitatakse. Neid ei saa "
-"muuta peale seda."
+"Kõik valitud žurnaali kanded kinnitatakse ja postitatakse. Neid ei saa muuta"
+" peale seda."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:240
@@ -2036,7 +2036,7 @@ msgstr "Kogus"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount_currency
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_currency
 msgid "Amount Currency"
-msgstr "Valuuta Kogus"
+msgstr "Summa valuuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -4732,7 +4732,7 @@ msgstr "Tootemalli kulu konto"
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Expenses"
-msgstr "Kulud"
+msgstr "kulud"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
@@ -5035,7 +5035,7 @@ msgstr "Tulevane"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Future Activities"
-msgstr "Tuleviku tegevused"
+msgstr "Tulevased tegevused"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -10022,9 +10022,9 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"Kulu kajastatakse siis, kui tarnija arve on valideeritud, välja arvatud "
-"anglo- saksi arvestus koos püsiva laoarvestusega, millisel juhul "
-"kajastatakse kulu (müüdud kaupade kulu konto) müügiarve valideerimisel."
+"Kulu kajastatakse siis, kui tarnija arve on kinnitatud, välja arvatud anglo-"
+" saksi arvestus koos püsiva laoarvestusega, millisel juhul kajastatakse kulu"
+" (müüdud kaupade kulu konto) müügiarve kinnitamisel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product_property_account_expense_id
@@ -10036,10 +10036,10 @@ msgid ""
 "validation. If the field is empty, it uses the one defined in the product "
 "category."
 msgstr ""
-"Kulu kajastatakse siis, kui tarnija arve on valideeritud, välja arvatud "
-"anglo- saksi arvestus koos püsiva laoarvestusega, millisel juhul "
-"kajastatakse kulu (müüdud kaupade kulu konto) müügiarve valideerimisel. Kui "
-"väli on tühi, kasutatakse tootekategoorial määratud seadistust."
+"Kulu kajastatakse siis, kui tarnija arve on kinnitatud, välja arvatud anglo-"
+" saksi arvestus koos püsiva laoarvestusega, millisel juhul kajastatakse kulu"
+" (müüdud kaupade kulu konto) müügiarve kinnitamisel. Kui väli on tühi, "
+"kasutatakse tootekategoorial määratud seadistust."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11184,7 +11184,7 @@ msgstr "KM:"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr "Valideeri"
+msgstr "Kinnita"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move

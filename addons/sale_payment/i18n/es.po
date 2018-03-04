@@ -9,6 +9,7 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Manuel Isaac <manuel.aih@hotmail.com>, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
@@ -35,19 +36,19 @@ msgstr "&amp;times;"
 #: code:addons/sale_payment/models/payment.py:124
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
-msgstr "<%s> transacción (%s) falló : <%s>"
+msgstr "<%s> transacción (%s) falló: <%s>"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:131
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
-msgstr "<%s> transacción (%s) estado inválido : %s"
+msgstr "<%s> transacción (%s) estado inválido: %s"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:139
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
-msgstr "<%s> transacción (%s) confirmación de orden fallida : <%s>"
+msgstr "<%s> transacción (%s) confirmación de orden fallida: <%s>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -57,7 +58,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Pagar Ahora"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
-msgstr "Realizado"
+msgstr "<i class=\"fa fa-check-circle\"/>Hecho"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -75,7 +76,7 @@ msgid ""
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Realizado</span>"
+"fa-fw fa-check\"/>Hecho</span>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -86,7 +87,7 @@ msgstr "<strong>Transacciones</strong>"
 #: code:addons/sale_payment/models/payment.py:54
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Cantidad no coincidente (%s)"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
@@ -193,7 +194,7 @@ msgstr "Presupuesto"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
 msgid "Sale Order State"
-msgstr ""
+msgstr "Estado de orden de venta"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
@@ -212,6 +213,8 @@ msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"
 " amount is %r but acquirer replied with %r."
 msgstr ""
+"La orden de venta no se confirmó a pesar de la respuesta del adquirente "
+"(%s): el importe SO es %r pero el adquiridor respondió con %r,"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -235,7 +238,7 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-"Se produjo un error al procesar su pago: problema con la validación de la "
+"Hubo un error al procesar su pago: problema con la validación de la "
 "identificación de la tarjeta de crédito."
 
 #. module: sale_payment
