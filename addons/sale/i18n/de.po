@@ -99,9 +99,9 @@ msgstr ""
 "<p>Hallo ${object.partner_id.name}\n"
 "% set access_action = object.with_context(force_website=True).get_access_action()\n"
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
-"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set doc_name = 'Angebot' if object.state in ('draft', 'sent') else 'Auftragsbestätigung'\n"
 "% set pay_sign_name =  object.get_portal_confirmation_action()\n"
-"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name\n"
+"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Akzeptieren und online %s' % pay_sign_name or '%s anzeigen' % doc_name\n"
 "% set access_url = is_online and object.get_mail_url() or ''\n"
 "\n"
 "% if object.partner_id.parent_id:\n"
@@ -113,7 +113,7 @@ msgstr ""
 "% if ctx.get('proforma')\n"
 "im Anhang finden Sie Ihre Proformarechnung\n"
 "% else\n"
-"the ${doc_name} <strong>${object.name}</strong>\n"
+"die ${doc_name} <strong>${object.name}</strong>\n"
 "% endif\n"
 "% if object.origin:\n"
 "(mit Referenz: ${object.origin} )\n"
@@ -175,7 +175,7 @@ msgid ""
 "'_draft' or ''}"
 msgstr ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
-"'_draft' or ''}"
+"'_Entwurf' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -206,7 +206,7 @@ msgstr "&amp;nbsp;"
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr "&amp;nbsp;<span>am</span>&amp;nbsp;"
+msgstr "&amp;nbsp;<span>auf</span>&amp;nbsp;"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -2495,7 +2495,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set specific billing and shipping addresses"
-msgstr "Bestimmte Rechnungs- und Lieferadressen festlegen"
+msgstr "Spezielle Rechnungs- und Lieferadressen festlegen"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2512,8 +2512,7 @@ msgstr "Einstellungen"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your sales settings ..."
 msgstr ""
-"Legen Sie Standard-Geschäftsbedingungen in Ihren Verkaufseinstellungen fest "
-"…"
+"Legen Sie Standard-Geschäftsbedingungen in Ihren Verkaufseinstellungen fest."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2590,7 +2589,7 @@ msgstr "Referenzbeleg"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_product_email_template
 msgid "Specific Email"
-msgstr "Bestimmte E-Mail"
+msgstr "Spezielle E-Mail"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:88
