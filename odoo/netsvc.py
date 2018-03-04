@@ -84,15 +84,16 @@ class DBFormatter(logging.Formatter):
         record.dbname = getattr(threading.currentThread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
 
-class JSONFormatter(jsonlogger.JsonFormatter):
-    def formatException(self, exc_info):
-        result = super(JSONFormatter, self).formatException(exc_info)
-        # Also provide the error's class & module name
-        return exc_info[0].__module__ + '.' + exc_info[0].__name__ + ' >>>> ' + result
-    def format(self, record):
-        record.pid = os.getpid()
-        record.dbname = getattr(threading.currentThread(), 'dbname', '?')
-        return jsonlogger.JsonFormatter.format(self, record)
+if jsonlogger:
+    class JSONFormatter(jsonlogger.JsonFormatter):
+        def formatException(self, exc_info):
+            result = super(JSONFormatter, self).formatException(exc_info)
+            # Also provide the error's class & module name
+            return exc_info[0].__module__ + '.' + exc_info[0].__name__ + ' >>>> ' + result
+        def format(self, record):
+            record.pid = os.getpid()
+            record.dbname = getattr(threading.currentThread(), 'dbname', '?')
+            return jsonlogger.JsonFormatter.format(self, record)
 
 class ColoredFormatter(DBFormatter):
     def format(self, record):
