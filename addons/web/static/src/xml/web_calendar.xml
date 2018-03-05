@@ -63,13 +63,7 @@
 
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
-            <t t-if="isMobile">
-                <span class="fa-stack o_calendar_button_today">
-                    <i class="fa fa-calendar-o fa-stack-2x"></i>
-                    <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
-                </span>
-            </t>
-            <t t-else="">
+            <t t-if="!isMobile">
                 <button class="o_calendar_button_prev btn btn-sm btn-primary"><span class="fa fa-arrow-left"/></button>
                 <button class="o_calendar_button_today btn btn-sm btn-primary">Today</button>
                 <button class="o_calendar_button_next btn btn-sm btn-primary"><span class="fa fa-arrow-right"/></button>
@@ -80,6 +74,13 @@
                 <button type="button" class="o_calendar_button_month btn btn-sm btn-default">Month</button>
             </div>
         </div>
+    </t>
+
+    <t t-name="CalendarView.TodayButtonMobile">
+        <span class="fa-stack o_calendar_button_today">
+            <i class="fa fa-calendar-o fa-stack-2x"></i>
+            <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
+        </span>
     </t>
 
     <div t-name="CalendarView.quick_create" class="o_calendar_quick_create">
