@@ -421,15 +421,17 @@ class Quant(models.Model):
             initial_domain=domain)
 
         restrict_lot_id = lot_id if pack_operation else move.restrict_lot_id.id or lot_id
-        meta_domains = self._quants_get_meta_domain(
-            move,
-            restrict_lot_id,
-            preferred_domain_list
-            )
+        meta_domains = self._quants_get_meta_domain(move, restrict_lot_id)
+        meta_domains_adj = [[]]
+        if preferred_domain_list:
+            meta_domains_adj = []
+            for meta_domain in meta_domains:
+                for inner_domain in preferred_domain_list:
+                    meta_domains_adj.append(inner_domain + meta_domain)
 
         res_qty = qty
-        while (float_compare(res_qty, 0, precision_rounding=move.product_id.uom_id.rounding) and meta_domains):
-            additional_domain = meta_domains.pop(0)
+        while (float_compare(res_qty, 0, precision_rounding=move.product_id.uom_id.rounding) and meta_domains_adj):
+            additional_domain = meta_domains_adj.pop(0)
             reservations.pop()
             new_reservations = self._quants_get_reservation(
                 res_qty, move,
@@ -447,19 +449,10 @@ class Quant(models.Model):
         ''' Overridable method providing meta search domains for the quant search iterations.
             Use `move` object to pass your values.
         '''
-        if not restrict_lot_id and not preferred_domain_list:
-            meta_domains = [[]]
-        elif restrict_lot_id and not preferred_domain_list:
+        if restrict_lot_id:
             meta_domains = [[('lot_id', '=', restrict_lot_id)], [('lot_id', '=', False)]]
-        elif restrict_lot_id and preferred_domain_list:
-            lot_list = []
-            no_lot_list = []
-            for inner_domain in preferred_domain_list:
-                lot_list.append(inner_domain + [('lot_id', '=', restrict_lot_id)])
-                no_lot_list.append(inner_domain + [('lot_id', '=', False)])
-            meta_domains = lot_list + no_lot_list
         else:
-            meta_domains = preferred_domain_list
+            meta_domains = [[]]
         return meta_domains
 
 
