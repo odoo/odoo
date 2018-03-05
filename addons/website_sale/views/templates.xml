@@ -1567,12 +1567,6 @@
         </t>
         <t t-if="tx_ids and state == 'pending' and validation">
             <p>Your transaction is waiting a manual confirmation.</p>
-            <br />
-            <t t-if="tx_post_msg">
-                <div class="hidden-print">
-                    <t t-raw="tx_post_msg" />
-                </div>
-            </t>
         </t>
         <t t-if="tx_ids and state not in ['done', 'cancel', 'pending', 'authorized']">
             <p>Your transaction is waiting confirmation.</p>
