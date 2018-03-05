@@ -973,7 +973,7 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the user clicks on the 'Add an item' link (list case) or the
+     * Called when the user clicks on the 'Add a line' link (list case) or the
      * 'Add' button (kanban case).
      *
      * @abstract
