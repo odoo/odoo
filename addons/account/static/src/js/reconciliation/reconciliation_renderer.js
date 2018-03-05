@@ -428,7 +428,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             var data = this.model.get(this.handleCreateRecord).data;
             this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
                 // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
-                this.model.notifyChanges(this.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
+                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
                     var defs = [];
                     _.each(state.createForm.analytic_tag_ids, function (tag) {
                         defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
