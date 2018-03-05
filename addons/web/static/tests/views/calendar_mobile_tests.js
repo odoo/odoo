@@ -52,8 +52,8 @@ QUnit.module('Views', {
             "prev button should be hidden");
         assert.notOk(calendar.$buttons.find('.o_calendar_button_next').is(':visible'),
             "next button should be hidden");
-        assert.ok(calendar.$buttons.find('.o_calendar_button_today').is(':visible'),
-            "today button should be visible");
+        assert.ok($('.o_control_panel .o_cp_pager .o_calendar_button_today').is(':visible'),
+            "today button should be visible in the pager area (bottom right corner)");
 
         calendar.destroy();
     });
