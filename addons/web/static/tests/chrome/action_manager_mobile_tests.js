@@ -80,6 +80,49 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
     });
+
+    QUnit.test('lazy load mobile-friendly view', function (assert) {
+        assert.expect(11);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.loadState({
+            action: 1,
+            view_type: 'form',
+        });
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not have rendered a list view");
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 0,
+            "should not have rendered a kanban view either");
+        assert.strictEqual(actionManager.$('.o_form_view').length, 1,
+            "should have rendered a form view");
+
+        // go back to lazy loaded view
+        $('.o_control_panel .breadcrumb a').click();
+        assert.strictEqual(actionManager.$('.o_form_view').length, 0,
+            "should not display the form view anymore");
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view either");
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should have lazy loaded the kanban view");
+
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            'default_get', // default_get to open form view
+            '/web/dataset/search_read', // search read when coming back to Kanban
+        ]);
+
+        actionManager.destroy();
+    });
 });
 
 });
