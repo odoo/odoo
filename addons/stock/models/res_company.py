@@ -25,6 +25,14 @@ class Company(models.Model):
                 'usage': 'transit',
                 'location_id': parent_location and parent_location.id or False,
             })
+            Warehouse = self.env['stock.warehouse']
+            if not Warehouse.search([('company_id', '=', company.id)]):
+                warehouse = Warehouse.create({
+                    'name': company.name,
+                    'code': company.name[:5],
+                    'company_id': company.id,
+                    'partner_id': company.partner_id.id
+                })
             location.sudo().write({'company_id': company.id})
             company.write({'internal_transit_location_id': location.id})
 
@@ -34,6 +42,5 @@ class Company(models.Model):
 
         # multi-company rules prevents creating warehouse and sub-locations
         self.env['stock.warehouse'].check_access_rights('create')
-        self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
         company.create_transit_location()
         return company
