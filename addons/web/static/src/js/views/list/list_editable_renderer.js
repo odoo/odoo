@@ -38,7 +38,7 @@ ListRenderer.include({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
 
-        // if addCreateLine is true, the renderer will add a 'Add an item' link
+        // if addCreateLine is true, the renderer will add a 'Add a line' link
         // at the bottom of the list view
         this.addCreateLine = params.addCreateLine;
 
@@ -521,7 +521,7 @@ ListRenderer.include({
     _renderRows: function () {
         var $rows = this._super();
         if (this.addCreateLine) {
-            var $a = $('<a href="#">').text(_t("Add an item"));
+            var $a = $('<a href="#">').text(_t("Add a line"));
             var $td = $('<td>')
                         .attr('colspan', this._getNumberOfCols())
                         .addClass('o_field_x2many_list_row_add')
@@ -687,7 +687,7 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is called when we click on the 'Add an Item' button in a sub
+     * This method is called when we click on the 'Add a line' button in a sub
      * list such as a one2many in a form view.
      *
      * @param {MouseEvent} event
