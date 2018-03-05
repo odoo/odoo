@@ -34,17 +34,22 @@ var db = {
         fields: {
             id: {string: "ID", type: 'integer'},
             code: {string: "code", type: 'integer'},
-            display_name: {string: "Displayed name", type: 'char'},
+            name: {string: "Displayed name", type: 'char'},
         },
         records: [
-            {id: 282, code: 100000, display_name: "100000 Fixed Asset Account"},
-            {id: 283, code: 101000, display_name: "101000 Current Assets"},
-            {id: 284, code: 101110, display_name: "101110 Stock Valuation Account"},
-            {id: 285, code: 101120, display_name: "101120 Stock Interim Account (Received)"},
-            {id: 286, code: 101130, display_name: "101130 Stock Interim Account (Delivered)"},
-            {id: 287, code: 101200, display_name: "101200 Account Receivable"},
-            {id: 288, code: 101300, display_name: "101300 Tax Paid"},
-            {id: 308, code: 101401, display_name: "101401 Bank"},
+            {id: 282, code: 100000, name: "100000 Fixed Asset Account"},
+            {id: 283, code: 101000, name: "101000 Current Assets"},
+            {id: 284, code: 101110, name: "101110 Stock Valuation Account"},
+            {id: 285, code: 101120, name: "101120 Stock Interim Account (Received)"},
+            {id: 286, code: 101130, name: "101130 Stock Interim Account (Delivered)"},
+            {id: 287, code: 101200, name: "101200 Account Receivable"},
+            {id: 288, code: 101300, name: "101300 Tax Paid"},
+            {id: 308, code: 101401, name: "101401 Bank"},
+            {id: 500, code: 500, name: "500 Account"},
+            {id: 501, code: 501, name: "501 Account"},
+            {id: 502, code: 502, name: "502 Account"},
+            {id: 503, code: 503, name: "503 Account"},
+            {id: 504, code: 504, name: "504 Account"},
         ],
         mark_as_reconciled: function () {
             return $.when();
@@ -767,13 +772,7 @@ QUnit.module('account', {
                             partner_id: false,
                             counterpart_aml_dicts:[],
                             payment_aml_ids: [392],
-                            new_aml_dicts: [
-                                {
-                                  "credit": 343.42,
-                                  "debit": 0,
-                                  "name": "Bank fees : Open balance"
-                                }
-                            ],
+                            new_aml_dicts: [],
                         }]
                     ], "should call process_reconciliations with partial reconcile values");
                 }
@@ -802,14 +801,14 @@ QUnit.module('account', {
         assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 0, "should not display the partial reconciliation alert");
+        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
         assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should not display the reconcile button");
         assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
-        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 0, "should not display a partial reconciliation alert");
-        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should not display the partial reconciliation information");
+        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
+        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_true'), "should display the partial reconciliation information");
         assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
-        assert.strictEqual( widget.$el.data('mode'), "match", "should be inactive mode");
+        assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
         widget.$('button.btn-default:not(hidden)').trigger('click');
 
         clientAction.destroy();
@@ -1027,13 +1026,77 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
+    QUnit.test('Reconciliation create line (many2one test)', function (assert) {
+        assert.expect(5);
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+        var def = $.Deferred();
+
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
+            archs: {
+                "account.account,false,list": '<tree string="Account"><field name="code"/><field name="name"/></tree>',
+                "account.account,false,search": '<search string="Account"><field name="code"/></search>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    return def.then(this._super.bind(this, route, args));
+                }
+                return this._super(route, args);
+            },
+        });
+
+        clientAction.prependTo($('#qunit-fixture'));
+
+        var widget = clientAction.widgets[0];
+
+        // open the first line in write-off mode
+        widget.$('.accounting_view tfoot td:first').trigger('click');
+
+        // select an account with the many2one (drop down)
+        widget.$('.create .create_account_id input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(101200)').trigger('mouseenter').trigger('click');
+        assert.strictEqual(widget.$('.create .create_account_id input').val(), "101200 Account Receivable", "Display the selected account");
+        assert.strictEqual(widget.$('tbody:first .cell_account_code').text(), "101200", "Display the code of the selected account");
+
+        // use the many2one select dialog to change the account
+        widget.$('.create .create_account_id input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(Search)').trigger('mouseenter').trigger('click');
+        // select the account who does not appear in the drop drown
+        $('.modal tr.o_data_row:contains(502)').click();
+        assert.strictEqual(widget.$('.create .create_account_id input').val(), "101200 Account Receivable", "Selected account does not change");
+        // wait the name_get to render the changes
+        def.resolve();
+        assert.strictEqual(widget.$('.create .create_account_id input').val(), "502 Account", "Display the selected account");
+        assert.strictEqual(widget.$('tbody:first .cell_account_code').text(), "502", "Display the code of the selected account");
+        clientAction.destroy();
+    });
+
     QUnit.test('Reconciliation create line with taxes', function (assert) {
         assert.expect(13);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
+            data: this.params.data,
+            session: {
+                currencies: {
+                    3: {
+                        digits: [69, 2],
+                        position: "before",
+                        symbol: "$"
+                    }
+                }
+            },
         });
         clientAction.appendTo($('#qunit-fixture'));
 
@@ -1045,26 +1108,26 @@ QUnit.module('account', {
         widget.$('.create .create_label input').val('test1').trigger('input');
         widget.$('.create .create_amount input').val('1100').trigger('input');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text(), "1100.00", "should display the value 1100.00 in left column");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text(), "$\u00a01100.00", "should display the value 1100.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
-        assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "75.00", "should display 'Open Balance' with 75.00 in right column");
+        assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$\u00a075.00", "should display 'Open Balance' with 75.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have 1 created reconcile lines");
 
         widget.$('.create .create_tax_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(10.00%)').trigger('mouseenter').trigger('click');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().replace('$_', ''), "1000.00100.00", "should have 2 created reconcile lines with right column values");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().replace('$_', ''), "$\u00a01000.00$\u00a0100.00", "should have 2 created reconcile lines with right column values");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
-        assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "75.00", "should display 'Open Balance' with 75.00 in right column");
+        assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$\u00a075.00", "should display 'Open Balance' with 75.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "", "should display 'Open Balance' without any value in left column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
 
         widget.$('.create .create_tax_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(20.00%)').trigger('mouseenter').trigger('click');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().replace('$_', ''), "1100.00220.00", "should have 2 created reconcile lines with right column values");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().replace('$_', ''), "$\u00a01100.00$\u00a0220.00", "should have 2 created reconcile lines with right column values");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Create Write-off", "should display 'Create Write-off'");
-        assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "145.00", "should display 'Create Write-off' with 145.00 in right column");
+        assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$\u00a0145.00", "should display 'Create Write-off' with 145.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
 
         clientAction.destroy();
@@ -1076,7 +1139,7 @@ QUnit.module('account', {
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
 
         testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
+            data: this.params.data,
         });
         clientAction.appendTo($('#qunit-fixture'));
 

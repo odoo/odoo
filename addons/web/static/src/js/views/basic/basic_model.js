@@ -219,6 +219,10 @@ var BasicModel = AbstractModel.extend({
         var fieldName;
         record._changes = record._changes || {};
 
+        // ignore values for non requested fields (for instance, fields that are
+        // not in the view)
+        values = _.pick(values, fieldNames);
+
         // fill default values for missing fields
         for (var i = 0; i < fieldNames.length; i++) {
             fieldName = fieldNames[i];
@@ -240,9 +244,6 @@ var BasicModel = AbstractModel.extend({
         var defs = [];
         for (fieldName in values) {
             field = record.fields[fieldName];
-            if (!field) {
-                continue; // ignore values for unknown fields
-            }
             record.data[fieldName] = null;
             var dp;
             if (field.type === 'many2one' && values[fieldName]) {
@@ -3804,14 +3805,14 @@ var BasicModel = AbstractModel.extend({
 
         // for multi-pages list datapoints, we might need to read the
         // order field first to apply the order on all pages
-        if (list.res_ids.length > list.limit) {
-            if (!list.orderedResIDs && list.orderedBy.length) {
+        if (list.res_ids.length > list.limit && list.orderedBy.length) {
+            if (!list.orderedResIDs) {
                 var fieldNames = _.pluck(list.orderedBy, 'name');
                 def = this._readMissingFields(list, _.filter(list.res_ids, _.isNumber), fieldNames);
-                def.then(function () {
-                    self._sortList(list);
-                });
             }
+            def.then(function () {
+                self._sortList(list);
+            });
         }
         return def.then(function () {
             var resIDs = [];

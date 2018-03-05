@@ -37,9 +37,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong></p><p></p><p><strong><a "
-"href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
+"<?xml version=\"1.0\"?>\n"
+"您好，\n"
+"您已请求订阅邮件列表 ${object.name}\n"
+"要进行确认，请访问以下链接：\n"
+"${ctx['token_url']}\n"
+"如果这是一个错误，或者您未请求执行此操作，请忽略此消息。\n"
+"<data><p></p><p><strong></strong></p><p></p><p><strong><a href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
@@ -52,9 +56,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong></p><p></p><p><strong><a "
-"href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
+"<?xml version=\"1.0\"?>\n"
+"您好，\n"
+"您已请求退订邮件列表 ${object.name}\n"
+"要进行确认，请访问以下链接：\n"
+"${ctx['token_url']}\n"
+"如果这是一个错误，或者您未请求执行此操作，请忽略此消息。\n"
+"<data><p></p><p><strong></strong></p><p></p><p><strong><a href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -154,12 +162,12 @@ msgstr "出向邮件"
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Please confirm subscription to ${object.name}"
-msgstr ""
+msgstr "请确认订阅 ${object.name}"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
 msgid "Please confirm unsubscription to ${object.name}"
-msgstr ""
+msgstr "请确认取消订阅 ${object.name}"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:21
@@ -186,7 +194,7 @@ msgstr "订阅"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
 msgid "The address"
-msgstr ""
+msgstr "地址"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/controllers/main.py:238
@@ -194,7 +202,7 @@ msgstr ""
 msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
 "mailing list"
-msgstr ""
+msgstr "地址 %s 已经取消订阅或从未订阅任何邮件列表"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
@@ -206,7 +214,7 @@ msgstr "退订"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "You have been correctly"
-msgstr ""
+msgstr "您已正确"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -238,6 +246,10 @@ msgid ""
 "                    list, you may want to check that the address was\n"
 "                    correct."
 msgstr ""
+"已\n"
+" 取消订阅或从未订阅邮件\n"
+" 列表，您可能希望查看地址是否\n"
+" 正确。"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -286,7 +298,7 @@ msgstr "已订阅"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr ""
+msgstr "至邮件列表。"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels

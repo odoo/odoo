@@ -59,7 +59,7 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         res = super(AccountInvoiceLine, self)._onchange_product_id()
-        rec = self.env['account.analytic.default'].account_get(self.product_id.id, self.invoice_id.partner_id.id, self.env.uid,
+        rec = self.env['account.analytic.default'].account_get(self.product_id.id, self.invoice_id.commercial_partner_id.id, self.env.uid,
                                                                fields.Date.today(), company_id=self.company_id.id)
         self.account_analytic_id = rec.analytic_id.id
         return res
@@ -67,7 +67,7 @@ class AccountInvoiceLine(models.Model):
     def _set_additional_fields(self, invoice):
         if not self.account_analytic_id:
             rec = self.env['account.analytic.default'].account_get(
-                self.product_id.id, self.invoice_id.partner_id.id, self.env.uid,
+                self.product_id.id, self.invoice_id.commercial_partner_id.id, self.env.uid,
                 fields.Date.today(), company_id=self.company_id.id)
             if rec:
                 self.account_analytic_id = rec.analytic_id.id

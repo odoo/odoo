@@ -5,7 +5,7 @@ import os
 import re
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class Company(models.Model):
@@ -15,16 +15,7 @@ class Company(models.Model):
 
     @api.multi
     def copy(self, default=None):
-        """
-        Duplicating a company without specifying a partner duplicate the partner
-        """
-        self.ensure_one()
-        default = dict(default or {})
-        if not default.get('name') and not default.get('partner_id'):
-            copy_partner = self.partner_id.copy()
-            default['partner_id'] = copy_partner.id
-            default['name'] = copy_partner.name
-        return super(Company, self).copy(default)
+        raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
 
     def _get_logo(self):
         return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read())
