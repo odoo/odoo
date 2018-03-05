@@ -672,14 +672,14 @@ class PaymentTransaction(models.Model):
         '''
         if any(trans.state != 'draft' for trans in self):
             raise UserError(_('Some transactions can\'t be processed because they are not linked to draft payment.'))
-        self.payment_id.post()
-        self.write({'pending': True})
 
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
         invoices.action_invoice_open()
 
-        self.filtered(lambda t: t.capture).write({'capture': False})
+        self.payment_id.post()
+
+        self.write({'pending': True, 'capture': False})
         self._log_payment_transaction_received()
 
     @api.multi
@@ -689,9 +689,10 @@ class PaymentTransaction(models.Model):
         '''
         if any(trans.state != 'draft' for trans in self):
             raise UserError(_('Some transactions can\'t be cancelled because they are not linked to draft payment.'))
+
         self.payment_id.cancel()
-        self.filtered(lambda t: not t.pending).write({'pending': True})
-        self.filtered(lambda t: t.capture).write({'capture': False})
+
+        self.write({'pending': True, 'capture': False})
         self._log_payment_transaction_received()
 
     @api.multi

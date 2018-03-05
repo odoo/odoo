@@ -8,7 +8,6 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.ensure_one()
         res = super(SaleOrder, self).action_confirm()
         # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
         self.order_line._update_registrations(confirm=self.amount_total == 0, cancel_to_draft=False)
