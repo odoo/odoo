@@ -184,10 +184,12 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
     elif node.tag == "function":
         args = []
         a_eval = node.get('eval','')
+        model_str = node.get('model', '')
         # FIXME: should probably be exclusive
         if a_eval:
             idref['ref'] = lambda x: self.id_get(cr, x)
-            args = safe_eval(a_eval, idref)
+            idref2 = _get_idref(self, cr, uid, model_str, context, idref)
+            args = safe_eval(a_eval, idref2)
         for n in node:
             return_val = _eval_xml(self,n, pool, cr, uid, idref, context)
             if return_val is not None:
