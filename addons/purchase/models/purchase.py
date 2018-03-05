@@ -918,14 +918,6 @@ class PurchaseOrderLine(models.Model):
             self.product_qty = 1.0
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    @api.model
-    def _get_exceptions_domain(self):
-        return super(ProcurementGroup, self)._get_exceptions_domain() + [('created_purchase_line_id', '=', False)]
-
-
 class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
     action = fields.Selection(selection_add=[('buy', 'Buy')])
