@@ -111,6 +111,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'product_id': self.product_id.id,
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'invoice_line_tax_ids': [(6, 0, tax_ids)],
+                'analytic_tag_ids': [(6, 0, so_line.analytic_tag_ids.ids)],
                 'account_analytic_id': order.analytic_account_id.id or False,
             })],
             'currency_id': order.pricelist_id.currency_id.id,
@@ -157,6 +158,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 else:
                     tax_ids = taxes.ids
                 context = {'lang': order.partner_id.lang}
+                analytic_tag_ids = []
+                for line in order.order_line:
+                    analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
                 so_line = sale_line_obj.create({
                     'name': _('Advance: %s') % (time.strftime('%m %Y'),),
                     'price_unit': amount,
@@ -165,6 +169,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'discount': 0.0,
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
+                    'analytic_tag_ids': analytic_tag_ids,
                     'tax_id': [(6, 0, tax_ids)],
                     'is_downpayment': True,
                 })
