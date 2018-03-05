@@ -229,7 +229,7 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _get_exceptions_domain(self):
-        return [('procure_method', '=', 'make_to_order'), ('move_orig_ids', '=', False)]
+        return [('procure_method', '=', 'make_to_order'), ('move_orig_ids', '=', False), ('state', 'not in', ('cancel', 'done', 'draft'))]
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
