@@ -255,18 +255,26 @@ ActionManager.include({
             action.env = self._generateActionEnv(action, options);
             action.controllers = {};
 
-            // select the first view to display
-            var lazyLoadFirstView = false;
+            // select the first view to display, and optionally the main view
+            // which will be lazyloaded
             var firstView = options.viewType && _.findWhere(views, {type: options.viewType});
+            var mainView;
             if (firstView) {
                 if (!firstView.multiRecord && views[0].multiRecord) {
-                    lazyLoadFirstView = true;
+                    mainView = views[0];
                 }
             } else {
                 firstView = views[0];
             }
-            if (config.device.isMobile && !firstView.isMobileFriendly) {
-                firstView = _.findWhere(action.views, {isMobileFriendly: true}) || firstView;
+
+            // use mobile-friendly view by default in mobile, if possible
+            if (config.device.isMobile) {
+                if (!firstView.isMobileFriendly) {
+                    firstView = self._findMobileView(views, firstView.multiRecord) || firstView;
+                }
+                if (mainView && !mainView.isMobileFriendly) {
+                    mainView = self._findMobileView(views, mainView.multiRecord) || mainView;
+                }
             }
 
             var def;
@@ -280,8 +288,8 @@ ActionManager.include({
             return $.when(def).then(function () {
                 var defs = [];
                 defs.push(self._createViewController(action, firstView.type));
-                if (lazyLoadFirstView) {
-                    defs.push(self._createViewController(action, views[0].type, {}, {lazy: true}));
+                if (mainView) {
+                    defs.push(self._createViewController(action, mainView.type, {}, {lazy: true}));
                 }
                 return $.when.apply($, defs);
             }).then(function (controller, lazyLoadedController) {
@@ -295,6 +303,22 @@ ActionManager.include({
                     }
                 });
             });
+        });
+    },
+    /**
+     * Helper function to find the first mobile-friendly view, if any.
+     *
+     * @private
+     * @param {Array} views an array of views
+     * @param {boolean} multiRecord set to true iff we search for a multiRecord
+     *   view
+     * @returns {Object|undefined} a mobile-friendly view of the requested
+     *   multiRecord type, undefined if there is no such view
+     */
+    _findMobileView: function (views, multiRecord) {
+        return _.findWhere(views, {
+            isMobileFriendly: true,
+            multiRecord: multiRecord,
         });
     },
     /**
