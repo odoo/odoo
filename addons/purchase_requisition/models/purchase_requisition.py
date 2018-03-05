@@ -205,7 +205,7 @@ class PurchaseRequisitionLine(models.Model):
     move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
-    @api.multi
+    @api.model
     def create(self,vals):
         res = super(PurchaseRequisitionLine, self).create(vals)
         if res.requisition_id.state not in ['draft', 'cancel', 'done'] and res.requisition_id.is_quantity_copy == 'none':
