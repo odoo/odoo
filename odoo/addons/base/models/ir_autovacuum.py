@@ -17,7 +17,11 @@ class AutoVacuum(models.AbstractModel):
         for mname in self.env:
             model = self.env[mname]
             if model.is_transient():
-                model._transient_vacuum(force=True)
+                # Do not block the process of autovacuum if the are an issue.
+                try:
+                    model._transient_vacuum(force=True)
+                except Exception:
+                    _logger.error("Error during AutoVacuum of %s" % mname)
 
     @api.model
     def _gc_user_logs(self):
