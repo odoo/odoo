@@ -45,7 +45,8 @@ class TestStockCommon(common.TransactionCase):
         self.productE = self.ProductObj.create({'name': 'Product E', 'type': 'product'})
 
         # Configure unit of measure.
-        self.uom_kg = self.UomObj.create({
+        self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm), ('uom_type', '=', 'reference')], limit=1)
+        self.uom_kg.write({
             'name': 'Test-KG',
             'category_id': self.categ_kgm,
             'factor_inv': 1,
@@ -71,7 +72,8 @@ class TestStockCommon(common.TransactionCase):
             'factor': 100000.0,
             'rounding': 0.001})
         # Check Unit
-        self.uom_unit = self.UomObj.create({
+        self.uom_unit = self.env['uom.uom'].search([('category_id', '=', self.categ_unit), ('uom_type', '=', 'reference')], limit=1)
+        self.uom_unit.write({
             'name': 'Test-Unit',
             'category_id': self.categ_unit,
             'factor': 1,
