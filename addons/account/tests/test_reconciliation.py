@@ -23,7 +23,8 @@ class TestReconciliation(AccountingTestCase):
         self.currency_swiss_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_euro_id = self.env.ref("base.EUR").id
-        self.env.ref('base.main_company').write({'currency_id': self.currency_euro_id})
+        company = self.env.ref('base.main_company')
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_euro_id, company.id])
         self.account_rcv = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
         self.account_rsa = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.product = self.env.ref("product.product_product_4")
