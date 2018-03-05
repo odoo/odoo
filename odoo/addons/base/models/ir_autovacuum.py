@@ -20,7 +20,7 @@ class AutoVacuum(models.AbstractModel):
                 # Do not block the process of autovacuum if the are an issue.
                 try:
                     model._transient_vacuum(force=True)
-                except:
+                except Exception:
                     _logger.error("Error during AutoVacuum of %s" % mname)
 
     @api.model
