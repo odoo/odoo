@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import ValidationError
 
 
 class TestUom(TransactionCase):
@@ -47,3 +48,50 @@ class TestUom(TransactionCase):
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
         self.assertEquals(qty, 1, "Converted quantity should be rounded up.")
+
+    def test_30_reference_uniqueness(self):
+        """ Check the uniqueness of the reference UoM in a category """
+        time_category = self.env['uom.category'].search([('measure_type', '=', 'time')], limit=1)
+
+        with self.assertRaises(ValidationError):
+            self.env['uom.uom'].create({
+                'name': 'Second Time Reference',
+                'factor_inv': 1,
+                'uom_type': 'reference',
+                'rounding': 1.0,
+                'category_id': time_category.id
+            })
+
+    def test_40_custom_uom(self):
+        """ A custom UoM is an UoM in a category without measurement type. It should behave like a normal UoM """
+        category = self.env['uom.category'].create({
+            'name': 'Custom UoM category',
+        })
+
+        # create the reference
+        self.env['uom.uom'].create({
+            'name': 'Reference UoM of my category',
+            'factor_inv': 1,
+            'uom_type': 'reference',
+            'rounding': 1.0,
+            'category_id': category.id
+        })
+
+        # we can create another UoM now
+        self.env['uom.uom'].create({
+            'name': 'Bigger UoM of my category',
+            'factor_inv': 42,
+            'uom_type': 'bigger',
+            'rounding': 0.5,
+            'category_id': category.id
+        })
+
+        # we can not create a second reference in custom category
+        with self.assertRaises(ValidationError):
+            self.env['uom.uom'].create({
+                'name': 'Second Time Reference',
+                'factor_inv': 1,
+                'uom_type': 'reference',
+                'rounding': 1.0,
+                'category_id': category.id
+            })
