@@ -37,7 +37,8 @@ class TestSaleMrpFlow(common.TransactionCase):
                 p.route_ids.add(r)
             return p.save()
 
-        self.uom_kg = self.UoM.create({
+        self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm.id), ('uom_type', '=', 'reference')], limit=1)
+        self.uom_kg.write({
             'name': 'Test-KG',
             'category_id': self.categ_kgm.id,
             'factor_inv': 1,
@@ -50,7 +51,8 @@ class TestSaleMrpFlow(common.TransactionCase):
             'uom_type': 'smaller',
             'factor': 1000.0,
             'rounding': 0.001})
-        self.uom_unit = self.UoM.create({
+        self.uom_unit = self.env['uom.uom'].search([('category_id', '=', self.categ_unit.id), ('uom_type', '=', 'reference')], limit=1)
+        self.uom_unit.write({
             'name': 'Test-Unit',
             'category_id': self.categ_unit.id,
             'factor': 1,

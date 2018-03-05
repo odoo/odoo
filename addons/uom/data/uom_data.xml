@@ -51,16 +51,16 @@
             <field name="factor" eval="1000"/>
             <field name="uom_type">smaller</field>
         </record>
+        <record id="product_uom_day" model="uom.uom">
+            <field name="name">Day(s)</field>
+            <field eval="uom_categ_wtime" name="category_id"/>
+            <field name="factor" eval="1.0"/>
+        </record>
         <record id="product_uom_hour" model="uom.uom">
             <field name="name">Hour(s)</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="8.0"/>
             <field name="uom_type">smaller</field>
-        </record>
-        <record id="product_uom_day" model="uom.uom">
-            <field name="name">Day(s)</field>
-            <field eval="uom_categ_wtime" name="category_id"/>
-            <field name="factor" eval="1.0"/>
         </record>
         <record id="product_uom_ton" model="uom.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
