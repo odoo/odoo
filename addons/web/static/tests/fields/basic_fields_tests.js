@@ -3068,13 +3068,13 @@ QUnit.module('basic_fields', {
 
         // switch to edit mode and check the result
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[type="text"].o_field_widget').length, 1,
+        assert.strictEqual(form.$('input[type="tel"].o_field_widget').length, 1,
             "should have an input for the phone field");
-        assert.strictEqual(form.$('input[type="text"].o_field_widget').val(), 'yop',
+        assert.strictEqual(form.$('input[type="tel"].o_field_widget').val(), 'yop',
             "input should contain field value in edit mode");
 
         // change value in edit mode
-        form.$('input[type="text"].o_field_widget').val('new').trigger('input');
+        form.$('input[type="tel"].o_field_widget').val('new').trigger('input');
 
         // save
         form.$buttons.find('.o_form_button_save').click();

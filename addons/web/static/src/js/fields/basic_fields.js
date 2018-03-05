@@ -8,6 +8,7 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
+var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
@@ -585,7 +586,7 @@ var FieldMonetary = InputField.extend({
     },
     _prepareInput: function () {
         this._super.apply(this, arguments);
-        if(config.isMobile){
+        if(config.device.isMobile){
             this.$input.attr('type', 'tel');
         }
         return this.$input;
@@ -798,7 +799,7 @@ var FieldInteger = InputField.extend({
     },
     _prepareInput: function () {
         this._super.apply(this, arguments);
-        if(config.isMobile){
+        if(config.device.isMobile){
             this.$input.attr('type', 'tel');
         }
         return this.$input;
@@ -852,7 +853,7 @@ var FieldFloat = InputField.extend({
     },
     _prepareInput: function () {
         this._super.apply(this, arguments);
-        if(config.isMobile){
+        if(config.device.isMobile){
             this.$input.attr('type', 'tel');
         }
         return this.$input;
@@ -995,7 +996,7 @@ var FieldPhone = FieldEmail.extend({
 
     _prepareInput: function () {
         this._super.apply(this, arguments);
-        if(config.isMobile){
+        if(config.device.isMobile){
             this.$input.attr('type', 'tel');
         }
         return this.$input;
