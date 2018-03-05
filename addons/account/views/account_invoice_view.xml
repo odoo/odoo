@@ -335,12 +335,6 @@
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="date" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="is_recurrency_enabled" string="Recurring Bills" help="Tick this box to generate recurring bills. The recurring bills will only be generated if this bill is validated." groups="account.group_allow_recurring" attrs="{'invisible': [('type', '!=', 'in_invoice')]}"/>
-                                    <label for="recurrency_interval" attrs="{'invisible': [('is_recurrency_enabled', '=', False)]}" groups="account.group_allow_recurring"/>
-                                    <div class="o_row" attrs="{'invisible': [('is_recurrency_enabled', '=', False)]}" groups="account.group_allow_recurring">
-                                        <field name="recurrency_interval" help="Define the recurrency of the vendor bill." attrs="{'required': [('is_recurrency_enabled', '=', True)]}"/>
-                                        <field name="recurrency_type" attrs="{'required': [('is_recurrency_enabled', '=', True)]}"/>
-                                    </div>
                                 </group>
                             </group>
                         </page>
@@ -546,8 +540,6 @@
                     <field name="date" string="Period"/>
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
-                    <filter domain="[('is_recurrency_enabled','=',True)]" name="is_recurrency_enabled" help="Bills Generating Recurring Bills" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
-                    <filter domain="[('is_recurring_document','=',True)]" name="is_recurring_document" help="Bills Generated Automatically" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
