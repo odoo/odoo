@@ -50,7 +50,7 @@ Tour.register('bank_statement_reconciliation', {
         {
             content: "re-select the line",
             extra_trigger: '.o_reconciliation_line:last .o_no_valid:visible', // the user can't validate the line and display the write-off line
-            trigger: '.o_reconciliation_line:last .match .cell_label:contains("/0002")'
+            trigger: '.o_reconciliation_line:last .match .cell_label:contains("INV"):contains("/0002")'
         },
         {
             content: "reconcile the line",
