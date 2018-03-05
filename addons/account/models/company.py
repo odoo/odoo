@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from datetime import timedelta
 
 
@@ -110,4 +110,10 @@ Best Regards,''')
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
             if values.get('accounts_code_digits'):
                 company.reflect_code_digits_change(digits)
+
+            #forbid the change of currency_id if there are already some accounting entries existing
+            if 'currency_id' in values and values['currency_id'] != company.currency_id.id:
+                if self.env['account.move.line'].search([('company_id', '=', company.id)]):
+                    raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
+
         return super(ResCompany, self).write(values)
