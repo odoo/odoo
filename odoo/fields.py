@@ -1527,6 +1527,9 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT) if value else False
 
+    def convert_to_column(self, value, record):
+        return super(Date, self).convert_to_column(value or None, record)
+
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
@@ -1595,6 +1598,9 @@ class Datetime(Field):
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT) if value else False
+
+    def convert_to_column(self, value, record):
+        return super(Datetime, self).convert_to_column(value or None, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
