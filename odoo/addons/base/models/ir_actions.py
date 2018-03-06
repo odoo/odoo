@@ -517,14 +517,15 @@ class IrActionsServer(models.Model):
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
         model = self.env[model_name]
+        context = self.env.context
         record = None
         records = None
-        if self._context.get('active_model') == model_name and self._context.get('active_id'):
-            record = model.browse(self._context['active_id'])
-        if self._context.get('active_model') == model_name and self._context.get('active_ids'):
-            records = model.browse(self._context['active_ids'])
-        if self._context.get('onchange_self'):
-            record = self._context['onchange_self']
+        if context.get('active_model') == model_name and context.get('active_id'):
+            record = model.browse(context['active_id'])
+        if context.get('active_model') == model_name and context.get('active_ids') or 'active_domain' in context:
+            records = model.get_active_records()
+        if context.get('onchange_self'):
+            record = context['onchange_self']
         eval_context.update({
             # orm
             'env': self.env,
