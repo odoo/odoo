@@ -1,8 +1,8 @@
 
-from openerp import models, fields, api, _, tools
-from datetime import datetime, date
+from openerp import models, fields, api, tools
+from openerp.osv import fields as oldfields
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
-import openerp.addons.decimal_precision as dp
 
 class crm_lead(models.Model):
     _inherit = ['crm.lead']
@@ -28,6 +28,8 @@ class crm_lead(models.Model):
     def retrieve_sales_dashboard(self, cr, uid, context=None):
         res = super(crm_lead, self).retrieve_sales_dashboard(cr, uid, context=None)
 
+        today = fields.Date.from_string(oldfields.date.context_today(self, cr, uid, context=context))
+
         res['invoiced'] = {
             'this_month': 0,
             'last_month': 0,
@@ -35,7 +37,7 @@ class crm_lead(models.Model):
         account_invoice_domain = [
             ('state', 'in', ['open', 'paid']),
             ('user_id', '=', uid),
-            ('date', '>=', date.today().replace(day=1) - relativedelta(months=+1)),
+            ('date', '>=', today.replace(day=1) - relativedelta(months=+1)),
             ('type', 'in', ['out_invoice', 'out_refund'])
         ]
 
@@ -43,9 +45,9 @@ class crm_lead(models.Model):
         for inv in invoice_ids:
             if inv['date']:
                 inv_date = datetime.strptime(inv['date'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
-                if inv_date <= date.today() and inv_date >= date.today().replace(day=1):
+                if inv_date <= today and inv_date >= today.replace(day=1):
                     res['invoiced']['this_month'] += inv['amount_untaxed_signed']
-                elif inv_date < date.today().replace(day=1) and inv_date >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif inv_date < today.replace(day=1) and inv_date >= today.replace(day=1) - relativedelta(months=+1):
                     res['invoiced']['last_month'] += inv['amount_untaxed_signed']
 
         res['invoiced']['target'] = self.pool('res.users').browse(cr, uid, uid, context=context).target_sales_invoiced
