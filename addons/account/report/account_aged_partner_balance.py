@@ -12,7 +12,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
     _name = 'report.account.report_agedpartnerbalance'
 
-    def _get_partner_move_lines(self, account_type, date_from, target_move, period_length):
+    def _get_partner_move_lines(self, account_type, date_from, target_move, period_length, **kwargs):
         periods = {}
         start = datetime.strptime(date_from, "%Y-%m-%d")
         for i in range(5)[::-1]:
@@ -190,7 +190,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 values['name'] = _('Unknown Partner')
                 values['trust'] = False
 
-            if at_least_one_amount:
+            if at_least_one_amount or kwargs.get('include_zero_amount'):
                 res.append(values)
 
         return res, total, lines
