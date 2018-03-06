@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='active_group']" position="before">
                     <group string="Expenses" name="timesheet">
-                        <field name="expense_manager_id"/>   
+                        <field name="expense_manager_id"/>
                     </group>
                 </xpath>
             </field>
@@ -35,14 +35,26 @@
             </field>
         </record>
 
-        <record id="hr_expense_view_form_without_header" model="ir.ui.view">
+        <record id="hr_expense_view_form" model="ir.ui.view">
             <field name="name">hr.expense.view.form</field>
             <field name="model">hr.expense</field>
-            <field eval="35" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Expenses" class="o_expense_form">
-                <field name="state" invisible="True"/>
+                <header>
+                    <button name="action_submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
+                    <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
+                </header>
                 <sheet>
+                    <div class="oe_button_box">
+                        <button name="action_get_attachment_view"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            type="object"
+                            attrs="{'invisible': [('attachment_number', '=', 0)]}">
+                            <field name="attachment_number" widget="statinfo" string="Documents" options="{'reload_on_button': true}"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
@@ -90,29 +102,18 @@
             </field>
         </record>
 
-        <record id="hr_expense_view_form" model="ir.ui.view">
+        <record id="hr_expense_view_form_without_header" model="ir.ui.view">
             <field name="name">hr.expense.view.form</field>
             <field name="model">hr.expense</field>
-            <field name="inherit_id" ref="hr_expense.hr_expense_view_form_without_header"/>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field eval="35" name="priority"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/*" position="before">
-                    <header>
-                        <button name="action_submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
-                        <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
-                    </header>
+                <xpath expr="/form/header" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="/form/sheet/*" position="before">
-                    <div class="oe_button_box">
-                        <button name="action_get_attachment_view"
-                            class="oe_stat_button"
-                            icon="fa-book"
-                            type="object"
-                            attrs="{'invisible': [('attachment_number', '=', 0)]}">
-                            <field name="attachment_number" widget="statinfo" string="Documents" options="{'reload_on_button': true}"/>
-                        </button>
-                    </div>
+                <xpath expr="/form/sheet/div[hasclass('oe_button_box')]" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>
