@@ -3,10 +3,10 @@
 # * purchase
 # 
 # Translators:
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Collex100, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
@@ -19,13 +19,14 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2017
 # Denis Baranov <baranov@itlibertas.com>, 2017
 # Василий Коробатов <boxat@mail.ru>, 2017
+# Yuriy Ney <kwizardn@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Василий Коробатов <boxat@mail.ru>, 2017\n"
+"Last-Translator: Yuriy Ney <kwizardn@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -320,7 +321,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
-msgstr ""
+msgstr "<strong>Сумма</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -419,6 +420,8 @@ msgid ""
 "A sale order that generated this purchase order has been deleted. Check if "
 "an action is needed."
 msgstr ""
+"Заказ на продажу, на основании которого был создан этот заказ на покупку, "
+"удален. Проверьте, нужно ли произвести какие либо дополнительные действия."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -558,6 +561,10 @@ msgid ""
 " your vendors provide you with pricelist files, this option allows you to "
 "easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 msgstr ""
+"По умолчанию, цены поставщиков устанавливаются вручную в соответствующей "
+"вкладке карточки товара, если ваш поставщик предоставляет вам прайслисты в "
+"виде файлов, вы можете легко импортировать их воспользовавшись функцией, "
+"которая доступна в меню \"Закупки -> Прайслисты поставщиков\""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -1340,7 +1347,7 @@ msgstr "Категория продукта"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Изображения продукта "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
@@ -1630,7 +1637,7 @@ msgstr "Полученное кол-во"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
-msgstr ""
+msgstr "Полученное количество:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1689,6 +1696,8 @@ msgstr "Запрос цен №"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
 msgstr ""
+"Попросите ваших поставщиков доставить товар непосредственно вашему "
+"покупателю."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
