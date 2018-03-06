@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
@@ -16,13 +16,14 @@
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 # Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
+# Jukka Paulin <jukka.paulin@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016\n"
+"Last-Translator: Jukka Paulin <jukka.paulin@gmail.com>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,7 +113,7 @@ msgstr "<span class=\"o_stat_text\">OEE</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Performance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Suorituskyky</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -123,22 +124,22 @@ msgstr "<span class=\"o_stat_text\">Romut</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Aika<br/>Analyysi</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Work Center Load</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Työpisteen kuormitus</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Work Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Työtilaukset</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Actions</span>"
-msgstr ""
+msgstr "<span>Toiminnot</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -148,7 +149,7 @@ msgstr "<span>Uusi</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Plan Orders</span>"
-msgstr ""
+msgstr "<span>Suunnittele tilaukset</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -183,7 +184,7 @@ msgstr "<strong>Nimi</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>No. Of Minutes</strong>"
-msgstr ""
+msgstr "<strong>minuuttia</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -254,7 +255,7 @@ msgstr "<strong>Työpiste</strong>"
 #: code:addons/mrp/models/mrp_workorder.py:424
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
-msgstr ""
+msgstr "Valmiatustilaus on jo tehty tai peruttu!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -278,7 +279,7 @@ msgstr "Aktiivinen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_active_move_lot_ids
 msgid "Active move lot ids"
-msgstr ""
+msgstr "Aktiiviset siirtoerä ID:t"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -293,7 +294,7 @@ msgstr "Kaikki"
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "All components available"
-msgstr ""
+msgstr "Kaikki materiaalit saatavilla"
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
@@ -310,6 +311,8 @@ msgid ""
 "An unbuild order will do a reverse bill of materials, unbuilding products\n"
 "            you produced, but you can also use it to unbuild products you purchased."
 msgstr ""
+"Purkutilaus purkaa jo valmistuneen tuotteen ja palauttaa sen sisältämät osat"
+" varastoon; voit käyttää purkutilausta myös ulkoa ostettuihin tuotteisiin."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -355,7 +358,7 @@ msgstr "Saatavuus"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr ""
+msgstr "Hyllypuutteet"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -427,7 +430,7 @@ msgstr "Osaluettelo"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr ""
+msgstr "Osaluettelon rivi"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -478,14 +481,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr ""
+msgstr "Ryhmä"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter_wo
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block Workcenter"
-msgstr ""
+msgstr "Ryhmän työpiste"
 
 #. module: mrp
 #: selection:mrp.workcenter,working_state:0
@@ -495,12 +498,12 @@ msgstr "Estetty"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_blocked_time
 msgid "Blocked Time"
-msgstr ""
+msgstr "Estetty (kesto)"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_blocked_time
 msgid "Blocked hour(s) over the last month"
-msgstr ""
+msgstr "Estettynä viime kuussa (h)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
@@ -510,7 +513,7 @@ msgstr "Osaluettelo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
 msgid "BoM Line"
-msgstr ""
+msgstr "Osaluettelo rivi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
@@ -525,13 +528,15 @@ msgstr "Osalistan tyyppi"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
-msgstr ""
+msgstr "Osaluettelon yksityiskohdat"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:67
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
 msgstr ""
+"Osaluettelon tuote (rivillä %s) ei saa olla sama kuin itse osaluettelosta "
+"valmistuva tuote."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -568,7 +573,7 @@ msgstr "Peruttu"
 #: code:addons/mrp/models/mrp_production.py:263
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
-msgstr ""
+msgstr "Työtilauksen voi poistaa vain kun se on Peruttu -tilassa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity
@@ -594,7 +599,7 @@ msgstr "Muuta tuotteiden määrää"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_check_to_done
 msgid "Check Produced Qty"
-msgstr ""
+msgstr "Tarkista tuotetut kpl"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -637,7 +642,7 @@ msgstr "Klikkaa lisätäksesi uusi reititys. "
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Click to start a new Unbuild Order"
-msgstr ""
+msgstr "Näpäytä purkutilauksen käynnistämiseksi"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -691,13 +696,13 @@ msgstr "Komponentit"
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Compute based on real time"
-msgstr ""
+msgstr "Laske käyttäen todellista ajanottoa"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
 msgid "Computer Desk"
-msgstr ""
+msgstr "Työpöytä"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -739,7 +744,7 @@ msgstr "Kulutettavat tuotteet"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_operation_id
 msgid "Consumed in Operation"
-msgstr ""
+msgstr "Kului operaatiossa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_consumed_quant_ids
@@ -749,7 +754,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Continue Production"
-msgstr ""
+msgstr "Jatka tuotantoa"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -759,7 +764,7 @@ msgstr "Kustannusrakenne"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
 msgid "Count mo late"
-msgstr ""
+msgstr "Laske myöhästyneet työmääräimet"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
@@ -769,7 +774,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
 msgid "Count mo waiting"
-msgstr ""
+msgstr "Laske jonossa olevat työmääräimet"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -827,12 +832,12 @@ msgstr "Nykytuotanto"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Current Qty"
-msgstr ""
+msgstr "Hyllyssä kpl"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_producing
 msgid "Currently Produced Quantity"
-msgstr ""
+msgstr "Tuotannosta syntynyt kpl"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
@@ -847,7 +852,7 @@ msgstr "Päivämäärä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
 msgid "Deadline End"
-msgstr ""
+msgstr "Tuotannon eräpäivä"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
@@ -857,7 +862,7 @@ msgstr "Aloituksen määräaika"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Default Duration"
-msgstr ""
+msgstr "Vakiokesto"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -883,12 +888,12 @@ msgstr "Kuvaus"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
 msgid "Description of the Work Center."
-msgstr ""
+msgstr "Työpisteen kuvaus."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Description of the work center..."
-msgstr ""
+msgstr "Työpisteen kuvaus..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_dest_id
@@ -1300,7 +1305,7 @@ msgstr "Läppärä, räätälöity"
 #: model:product.template,name:mrp.product_product_laptop_keypad_product_template
 #: model:stock.inventory.line,product_name:mrp.stock_inventory_line_product_laptop_keypad
 msgid "Laptop Keypad"
-msgstr ""
+msgstr "Läppärin numeronäppäimistö"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
@@ -1377,6 +1382,7 @@ msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
 msgstr ""
+"Rivit pitää poistaa, mutta sitä ennen ne on kulutettava loppuun tuotannossa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
@@ -1402,7 +1408,7 @@ msgstr "Logistiikka"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9376
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
-msgstr ""
+msgstr "Hävikin syy"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_lot_id
@@ -1436,7 +1442,7 @@ msgstr "Hallinnoi työtilauksen operaatioita"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_plm:0
 msgid "Manage engineering changes, versions and documents"
-msgstr ""
+msgstr "Hallitse rakennemuutoksia, versioita ja dokumentteja"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
@@ -1451,7 +1457,7 @@ msgstr "Hallitse valmistusta työtilauksilla."
 #. module: mrp
 #: selection:mrp.config.settings,module_quality_mrp:0
 msgid "Manage quality control points, checks and measures"
-msgstr ""
+msgstr "Hallitse laaduntarkastuspisteitä, tarkistusmenetelmiä ja tilastointia"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1461,7 +1467,7 @@ msgstr "Päällikkö"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle_manual
 msgid "Manual Duration"
-msgstr ""
+msgstr "Manuaalivaiheen kesto"
 
 #. module: mrp
 #: code:addons/mrp/models/procurement.py:14
@@ -1506,7 +1512,7 @@ msgstr "Valmistuksen läpimenoaika"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_manufacturing_lead
 msgid "Manufacturing Lead Time *"
-msgstr ""
+msgstr "Valmistuksen läpimenoaika *"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
@@ -1551,18 +1557,18 @@ msgstr "Valmistuksessa parhaillaan olevat valmistustilaukset."
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr ""
+msgstr "Vahvistetut valmistustilaukset"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manu_type_id
 msgid "Manufacturing Picking Type"
-msgstr ""
+msgstr "Valmistuksen keräilytyyppi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_ready_to_produce
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Manufacturing Readiness"
-msgstr ""
+msgstr "Tuotannon valmius"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1631,7 +1637,7 @@ msgstr "Siirrä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_done_move
 msgid "Move Done"
-msgstr ""
+msgstr "Siirto tehty"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_raw_ids
@@ -1681,7 +1687,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
 msgid "Next Operation"
-msgstr ""
+msgstr "Seuraava toiminto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
@@ -1697,7 +1703,7 @@ msgstr "Tuotteella ei ole osaluetteloa!"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "No Routing"
-msgstr ""
+msgstr "Ei reititystä"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
@@ -1711,6 +1717,8 @@ msgid ""
 "No data to display. You will get here statistics about the\n"
 "              work orders duration related to this routing."
 msgstr ""
+"Ei näytettäviä tietoja. Tänne ilmestyy valittuun\n"
+"reititykseen liittyvien työmääräinten kestoaikoja."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
@@ -1728,22 +1736,22 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_plm:0
 msgid "No product lifecycle management"
-msgstr ""
+msgstr "Ei tuotteen elinkaaren hallintaa"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_loss_action
 msgid "No productivity loss defined."
-msgstr ""
+msgstr "Tuotantohävikkiä ei ole määritelty."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
 msgid "No productivity loss for this equipment."
-msgstr ""
+msgstr "Tuotantohävikkiä ei ole määritelty tälle laitteelle."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_quality_mrp:0
 msgid "No quality control"
-msgstr ""
+msgstr "Ei laaduntarkkailua"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -1755,6 +1763,8 @@ msgstr "Tuotteilla ei variantteja"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
+"Ei meneillään olevia työmääräimiä. Näpsäytä jos haluat merkitä työpisteen "
+"estetyksi."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -1793,17 +1803,17 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr ""
+msgstr "KNL"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee_target
 msgid "OEE Target"
-msgstr ""
+msgstr "KNL tavoite"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee_target
 msgid "OEE Target in percentage"
-msgstr ""
+msgstr "KNL tavoite-%"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1817,7 +1827,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_oee
 msgid "Oee"
-msgstr ""
+msgstr "Knl"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_19
@@ -1828,12 +1838,12 @@ msgstr "Tarvittaessa kiintolevyn kapasiteetti asiakasvaatimusten mukaan."
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr ""
+msgstr "Kun tuotannon vähimmäismäärä on saavutettu"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once all products are processed"
-msgstr ""
+msgstr "Kun kaikki tuotteet ovat valmiit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
@@ -1845,7 +1855,7 @@ msgstr "Toiminto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_operation_id
 msgid "Operation To Consume"
-msgstr ""
+msgstr "Toiminto kuluttaa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -1868,19 +1878,19 @@ msgstr "Tilaukset"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_production
 msgid "Original Production Quantity"
-msgstr ""
+msgstr "Alkuperäinen tuotantotavoite (määrä)"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr ""
+msgstr "KNL-tunnusluku"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr ""
+msgstr "Edeltävän kk:n KNL-tunnusluku"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
@@ -1891,7 +1901,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_plm
 msgid "PLM"
-msgstr ""
+msgstr "Tuotteen elinkaaren hallinta"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
@@ -2077,12 +2087,12 @@ msgstr "Tuotevariaatiot"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_consume_line_ids
 msgid "Product to Track"
-msgstr ""
+msgstr "Seurattava tuote"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_has_tracking
 msgid "Product with Tracking"
-msgstr ""
+msgstr "Tuotteella seuranta"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -2095,7 +2105,7 @@ msgstr "Valmistus"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_date
 msgid "Production Date"
-msgstr ""
+msgstr "Valmistus pvm"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_location_id
@@ -2106,7 +2116,7 @@ msgstr "Valmistuksen paikka"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_message
 msgid "Production Message"
-msgstr ""
+msgstr "Valmistuksen viesti"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_production_order
@@ -2123,12 +2133,12 @@ msgstr "Valmistustilaus -"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for finished products"
-msgstr ""
+msgstr "Valmiiden tuotteiden valmistustilaus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
 msgid "Production Order for raw materials"
-msgstr ""
+msgstr "Raaka-aineiden valmistustilaus"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2149,7 +2159,7 @@ msgstr "Valmistukset"
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Productive"
-msgstr ""
+msgstr "Tuotannossa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productive_time
@@ -2166,7 +2176,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_loss
 msgid "Productivity Losses"
-msgstr ""
+msgstr "Tuotantohävikki"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
@@ -2197,12 +2207,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_quality_mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Quality"
-msgstr ""
+msgstr "Laatu"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Quality Losses"
-msgstr ""
+msgstr "Laatuhävikki"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_lots
@@ -2232,7 +2242,7 @@ msgstr "Saatavilla oleva määrä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_qty
 msgid "Quantity Finished Product"
-msgstr ""
+msgstr "Valmistunut määrä"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_qty_produced
@@ -2249,7 +2259,7 @@ msgstr "Valmistettava määrä"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
 msgid "Quantity to Process"
-msgstr ""
+msgstr "Tuotantoa odottavat"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_quant
@@ -2259,7 +2269,7 @@ msgstr "Määrät"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Raw Material"
-msgstr ""
+msgstr "Raaka-aine"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_raw_ids
@@ -2284,12 +2294,12 @@ msgstr "Valmis siirrettäväksi"
 #: code:addons/mrp/static/src/js/mrp.js:24
 #, python-format
 msgid "Ready to produce"
-msgstr ""
+msgstr "Valmis tuotantoon"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration
 msgid "Real Duration"
-msgstr ""
+msgstr "Todellinen kesto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_name
@@ -2358,7 +2368,7 @@ msgstr "Raportointi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_serial
 msgid "Requires Serial"
-msgstr ""
+msgstr "Vaatii sarjanumeron"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
@@ -2400,12 +2410,12 @@ msgstr "Reititys"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_routing_line_ids
 msgid "Routing Lines"
-msgstr ""
+msgstr "Reititysrivit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
 msgid "Routing Name"
-msgstr ""
+msgstr "Reitin nimi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2425,7 +2435,7 @@ msgstr "Vaiheet"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
 msgid "Routings & Planning"
-msgstr ""
+msgstr "Reititys & Suunnittelu"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -2762,6 +2772,10 @@ msgid ""
 "mainly used to compute work center costs during operations and to plan "
 "future loads on work centers based on production planning."
 msgstr ""
+"Tuotteen loppuunsaattamiseksi tarvittavien työvaiheiden lista. Reititystä "
+"käytetään pääasiallisesti työpisteen käytönaikaisten kustannusten "
+"laskemiseen. Tätä tietoa voidaan käyttää tulevan tuotannon suunnittelussa "
+"erityisesti työpisteiden kuormitus huomioiden."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_qty_produced
@@ -3186,7 +3200,7 @@ msgstr "Työpisteen kuormitus"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center Name"
-msgstr ""
+msgstr "Työpistenimi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view

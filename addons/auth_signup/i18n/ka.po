@@ -3,14 +3,17 @@
 # * auth_signup
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Saba Khmaladze <skhmaladze@uglt.org>, 2018
+# Temur, 2018
+# Dachi Darchiashvili <darcho.dd@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Dachi Darchiashvili <darcho.dd@gmail.com>, 2018\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,64 +108,67 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
-msgstr ""
+msgstr "ნება მიეცით გარეშე მომხმარებლებს დარეგისტრირდნენ"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "თქვენი პაროლის აღსადგენად საჭირო მონაცემები გამოგზავნილია ელ. ფოსტით"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr ""
+"სხვა მომხმარებელი უკვე დარეგისტრირებულია ამ ელ. ფოსტის მისამართის "
+"გამოყენებით."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "აუთენტიფიკაცია წარუმატებლად დასრულდა."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
-msgstr ""
+msgstr "საწყის გვერდზე დაბრუნება შესასვლელად"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:135
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
+"ვერ გაიგზავნა ელ. ფოსტა: მომხმარებელს %s არ აქვს ელ. ფოსტის მისამართი."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr ""
+msgstr "დამოწმება"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "დაამოწმეთ პაროლი"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "დამოწმებული"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "ახალი ანგარიში ვერ შეიქმნა"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:63
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "პაროლის აღდგენა ვერ განხორციელდა"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -173,6 +179,7 @@ msgstr ""
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
 msgstr ""
+"თუ მონიშნული არაა, მარტო მოწვეულ მომხმარებლებს შეეძლებათ დარეგისტრირება."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:91
@@ -183,7 +190,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "არასოდეს დაკავშირებულა."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -193,39 +200,39 @@ msgstr "პარტნიორი"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "პაროლი"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "პაროლის აღდგენა"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "პაროლის აღდგენა"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:108
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "პაროლის აღდგენა: არასწორი მომხმარებლის სახელი ან ელ. ფოსტა"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "პაროლის აღდგენის ისნტრუქციის გაგზავნა"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "მოწვევის მეილის გაგზავნა"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "რეგისტრაცია"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
@@ -280,7 +287,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "მომხმარებლები"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
@@ -321,12 +328,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "თქვენი ელ. ფოსტა"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "თქვენი სახელი"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -336,4 +343,4 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "მაგ. გიორგი გიორგაძე"

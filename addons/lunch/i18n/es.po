@@ -3,8 +3,8 @@
 # * lunch
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Antonio Trueba, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
@@ -20,13 +20,14 @@
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Gelo Joga Landoo <gj@landoo.es>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +42,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
 msgstr ""
+"<span class=\"fa fa-phone text-success\"></span><br><span class=\"fa fa-"
+"check text-success\"></span><br><span class=\"fa fa-times-circle text-"
+"danger\"></span>"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -49,6 +53,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
 msgstr ""
+"<span class=\"fa fa-phone text-success\"></span><br><span class=\"fa fa-"
+"check text-success\"></span><br><span class=\"fa fa-times-circle text-"
+"danger\"></span>"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -150,7 +157,7 @@ msgstr "Por empleado"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Order"
-msgstr ""
+msgstr "Por pedido"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -585,19 +592,20 @@ msgstr "Nota"
 #: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "Solo el responsable de las comidas puede cancelar los pedidos."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:163
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Solo responsable de las comidas puede hacer los pedidos."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:183
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
 msgstr ""
+"Solo el responsable de las comidas puede indicar los pedidos como recibidos."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id

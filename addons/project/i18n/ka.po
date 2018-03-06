@@ -3,14 +3,18 @@
 # * project
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Saba Khmaladze <skhmaladze@uglt.org>, 2018
+# Giorgi Melitauri <gmelitauri@live.com>, 2018
+# Temur, 2018
+# Nika Chikhradze <nika@globaltravel.ge>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Nika Chikhradze <nika@globaltravel.ge>, 2018\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,6 +137,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>ძვირფასო ${object.partner_id.name or 'customer'},</p>\n"
+"<p>გმადლობთ მოთხოვნისთვის.<br /></p>\n"
+"<p>დამატებითი კითხვების შემთხვევაში, მოგვმართეთ.</p>\n"
+"<p>პატივისცემით,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -147,13 +156,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# დღე ბოლო ვადამდე"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 #: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "# დავალება"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
@@ -163,14 +172,14 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr ""
+msgstr "# დავალება"
 
 #. module: project
 #: code:addons/project/models/project.py:240
 #: code:addons/project/models/project.py:410
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (ასლი)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -182,7 +191,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "- The Odoo Team"
-msgstr ""
+msgstr "- Odoo-ს გუნდი"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -203,6 +212,8 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>დააკისრეთ დავალება</b> ვინმეს. <i>ახალი მომხმარებლის შექმნა და მოწვევა "
+"პროცესშივე შეგიძლიათ.</i>"
 
 #. module: project
 #. openerp-web
@@ -216,7 +227,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:48
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr ""
+msgstr "<b>გადაიტანეთ დავალებები</b> სვეტებს შორის თქვენი სურვილისამებრ."
 
 #. module: project
 #. openerp-web
@@ -254,6 +265,8 @@ msgstr ""
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">დააჭირეთ, რომ შექმნათ ახალი "
+"პროექტი.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -325,6 +338,10 @@ msgid ""
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> მორგებული ანგარიშის შექმნა</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -381,6 +398,10 @@ msgid ""
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> დავალება</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -617,7 +638,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>დავალებისთვის:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -857,17 +878,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_active
 #: model:ir.model.fields,field_description:project.field_project_task_active
 msgid "Active"
-msgstr ""
+msgstr "აქტიური"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Activities"
-msgstr ""
+msgstr "ქმედებები"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr ""
+msgstr "აღწერის დამატება..."
 
 #. module: project
 #. openerp-web
@@ -951,7 +972,7 @@ msgstr ""
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project_name
 msgid "Analytic Account"
-msgstr ""
+msgstr "ანალიტიკური ანგარიში"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_line_ids
@@ -970,7 +991,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Apply"
-msgstr ""
+msgstr "გააქტიურება"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -991,7 +1012,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr ""
+msgstr "დაკისრებული დავალებები"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
@@ -1032,7 +1053,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "თანდართული ფაილები"
 
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
@@ -1068,7 +1089,7 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "ძირითადი"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1201,7 +1222,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "დააჭირეთ, რომ შექმნათ ახალი პროექტი<br>"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1213,7 +1234,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_tags_color
 #: model:ir.model.fields,field_description:project.field_project_task_color
 msgid "Color Index"
-msgstr ""
+msgstr "ფერის ინდექსი"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1245,7 +1266,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_project_config
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Configuration"
-msgstr ""
+msgstr "კონფიგურაცია"
 
 #. module: project
 #. openerp-web
@@ -1281,7 +1302,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Contact"
-msgstr ""
+msgstr "კონტაქტი"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
@@ -1303,7 +1324,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create"
-msgstr ""
+msgstr "შექმნა"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1313,12 +1334,12 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "პროექტის შექმნა"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr ""
+msgstr "ახალი პროექტის შექმნა"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1330,7 +1351,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create at least 3 tasks"
-msgstr ""
+msgstr "შექმენით მინიმუმ 3 დავალება"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1345,7 +1366,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create the Projects"
-msgstr ""
+msgstr "პროექტების შექმნა"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_create_uid
@@ -1409,7 +1430,7 @@ msgstr "კლიენტი"
 #: code:addons/project/models/project.py:643
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "კლიენტის ელ. ფოსტა"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1463,7 +1484,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_deadline
 msgid "Deadline"
-msgstr ""
+msgstr "ბოლო ვადა"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_debit
@@ -1473,7 +1494,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "საწყისი მნიშვნელობები"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1487,7 +1508,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Delete"
-msgstr ""
+msgstr "წაშლა"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1534,7 +1555,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "გაუქმება"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1615,7 +1636,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
-msgstr ""
+msgstr "დასრულებულია"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1634,7 +1655,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "დავალების შეცვლა"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1649,7 +1670,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
-msgstr ""
+msgstr "ელ.ფოსტა"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1697,7 +1718,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
-msgstr ""
+msgstr "მაგალითები"
 
 #. module: project
 #. openerp-web
@@ -1726,7 +1747,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr ""
+msgstr "დამატებითი ინფორმაცია"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1881,13 +1902,13 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr ""
+msgstr "აქ შეგიძლიათ შექმნათ ახალი დავალებები"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "მაღალი"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_privacy_visibility
@@ -1947,7 +1968,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:95
 #, python-format
 msgid "Ideas"
-msgstr ""
+msgstr "აზრები"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2010,7 +2031,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "მიმდინარე"
 
 #. module: project
 #. openerp-web
@@ -2061,7 +2082,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "ვერსია"
 
 #. module: project
 #. openerp-web
@@ -2172,7 +2193,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "ბოლო შეტყობინება"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings___last_update
@@ -2219,7 +2240,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
 msgid "Let's create your first project."
-msgstr ""
+msgstr "მოდით შევქმნათ თქვენი პირველი პროექტი"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_pad
@@ -2244,13 +2265,13 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr ""
+msgstr "დაბალი"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr ""
+msgstr "მმართველი"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2308,12 +2329,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr ""
+msgstr "ჩემი დავალებები"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2341,7 +2362,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "ახალი"
 
 #. module: project
 #: code:addons/project/models/project.py:571
@@ -2365,7 +2386,7 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "ნორმალური"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_1
@@ -2381,7 +2402,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
-msgstr ""
+msgstr "ჩანაწერები"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2521,7 +2542,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "მფლობელი"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
@@ -2559,7 +2580,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "დამგეგმავი"
 
 #. module: project
 #: code:addons/project/models/project.py:723
@@ -2577,6 +2598,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"ფოსტის საშუალებით შეტყობინების დაწერის პოლიტიკა.\n"
+"- ყველა: ყველას შეუძლია დაწერა\n"
+"- პარტნიორები: მხოლოდ პარტნიორებს შეუძლიათ დაწერა\n"
+"- გამომწერებს: მხოლოდ დოკუმენტის გამომწერებს ან არხის წევრებს შეუძლიათ დაწერა\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2587,7 +2612,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
 msgid "Priority"
-msgstr ""
+msgstr "პრიორიტეტი"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
@@ -2615,7 +2640,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
-msgstr ""
+msgstr "პროექტი"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
@@ -2631,7 +2656,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Project Management"
-msgstr ""
+msgstr "პროექტების მართვა"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
@@ -2664,7 +2689,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
 #: model:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
-msgstr ""
+msgstr "პროექტის დავალებები"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
@@ -2674,12 +2699,12 @@ msgstr ""
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr ""
+msgstr "პროექტის დავალება"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr ""
+msgstr "პროექტის დავალებები"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2692,12 +2717,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
-msgstr ""
+msgstr "პროექტები"
 
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "პროექტები და დავალებები"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -2715,7 +2740,7 @@ msgstr ""
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "მზადაა შემდეგი ეტაპისთვის"
 
 #. module: project
 #. openerp-web
@@ -2771,7 +2796,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
 msgid "Reference"
-msgstr ""
+msgstr "წყარო"
 
 #. module: project
 #. openerp-web
@@ -2819,7 +2844,7 @@ msgstr "რეპორტინგი"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reports"
-msgstr ""
+msgstr "ანგარიშგებები"
 
 #. module: project
 #. openerp-web
@@ -2851,7 +2876,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "Search"
-msgstr ""
+msgstr "ძიება"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2863,7 +2888,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "არჩევა"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2906,7 +2931,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
-msgstr ""
+msgstr "პარამეტრები"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2969,12 +2994,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Stage"
-msgstr ""
+msgstr "ეტაპი"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "შეიცვალა ეტაპი"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -2984,18 +3009,18 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
 msgid "Stage Name"
-msgstr ""
+msgstr "ეტაპის სახელი"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "შეიცვალა ეტაპი"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr ""
+msgstr "ეტაპები"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3005,7 +3030,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
 msgid "Start Date"
-msgstr ""
+msgstr "დაწყების თარიღი"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
@@ -3015,7 +3040,7 @@ msgstr ""
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "ტეგი უკვე არსებობს!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3024,7 +3049,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model:ir.ui.view,arch_db:project.project_tags_form_view
 msgid "Tags"
-msgstr ""
+msgstr "ტეგები"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -3037,24 +3062,24 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
-msgstr ""
+msgstr "დავალება"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
 msgid "Task Activities"
-msgstr ""
+msgstr "დავალების აქტივობა"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr ""
+msgstr "დავალება დაბლოკილია"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Opened"
-msgstr ""
+msgstr "დავალება გაიხსნა"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -3065,7 +3090,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "დავალება მზადაა"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3083,17 +3108,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr ""
+msgstr "დავალების დასახელება"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "დავალების დასახელება..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr ""
+msgstr "დავალება დაბლოკილია"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -3105,31 +3130,31 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Task is Developed"
-msgstr ""
+msgstr "დავალება შექმნილია"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Task is completed"
-msgstr ""
+msgstr "დავალება დასრულებულია"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is tested"
-msgstr ""
+msgstr "დავალება შემოწმებულია"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task opened"
-msgstr ""
+msgstr "დავალება გაიხსნა"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr ""
+msgstr "მზადაა შემდეგი ეტაპისთვის"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3148,7 +3173,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Tasks"
-msgstr ""
+msgstr "დავალებები"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3362,7 +3387,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
-msgstr ""
+msgstr "გასაკეთებელია"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3452,7 +3477,7 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr ""
+msgstr "მომხმარებელი"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
@@ -3611,7 +3636,7 @@ msgstr ""
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "სამუშაო დატვირთვა"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
@@ -3731,7 +3756,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
@@ -3747,7 +3772,7 @@ msgstr ""
 #: code:addons/project/models/project.py:466
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "დავალებები"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

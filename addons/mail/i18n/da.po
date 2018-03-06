@@ -3,7 +3,7 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2016
@@ -275,6 +275,15 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
 
 #. module: mail

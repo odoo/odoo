@@ -122,7 +122,7 @@ class SaleOrder(models.Model):
     validity_date = fields.Date(string='Expiration Date', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sale order is confirmed.", oldname="date_confirm")
+    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sale order is confirmed.", oldname="date_confirm", copy=False)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
@@ -729,6 +729,18 @@ class SaleOrderLine(models.Model):
                         msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
                     msg += "</ul>"
                     order.message_post(body=msg)
+
+        # Prevent writing on a locked SO.
+        protected_fields = self._get_protected_fields()
+        if 'done' in self.mapped('order_id.state') and any(f in values.keys() for f in protected_fields):
+            fields = self.env['ir.model.fields'].search([
+                ('name', 'in', protected_fields), ('model', '=', self._name)
+            ])
+            raise UserError(
+                _('It is forbidden to modify the following fields in a locked order:\n%s')
+                % '\n'.join(fields.mapped('field_description'))
+            )
+
         result = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_procurement_create()
@@ -983,6 +995,12 @@ class SaleOrderLine(models.Model):
             uom_factor = 1.0
 
         return product[field_name] * uom_factor * cur_factor, currency_id.id
+
+    def _get_protected_fields(self):
+        return [
+            'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
+            'tax_id', 'analytic_tag_ids'
+        ]
 
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _onchange_discount(self):

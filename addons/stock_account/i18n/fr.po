@@ -5,26 +5,28 @@
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
+# Florian Hatat, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # lap.odoo <lap@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# e2f Production <e2f_prod@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: lap.odoo <lap@odoo.com>, 2017\n"
+"Last-Translator: e2f Production <e2f_prod@outlook.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +88,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Impossible de trouver un compte de stock/production pour le produit %s. Vous"
+" devez en définir un dans la catégorie de produit ou l'emplacement avant "
+"d'effectuer cette opération."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -156,7 +161,7 @@ msgstr "Méthode de coût"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Compte de contre-valeur"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -246,7 +251,7 @@ msgstr ""
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr "Inclure les frais de débarquement dans le calcul du coût produit"
+msgstr "Inclure les frais de douane dans le calcul du coût d'un article"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -254,7 +259,7 @@ msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
 msgstr ""
-"Installer le module qui permet d'imputer les frais de douane sur les "
+"Installe le module qui permet d'imputer les frais de douane sur les "
 "réceptions et les répartir sur les différents articles."
 
 #. module: stock_account
@@ -377,8 +382,8 @@ msgstr "Perpétuel (automatisé)"
 msgid ""
 "Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
-"Valorisation d'inventaire perpéturl (chaque mouvement de stock produit des "
-"écritures comptables)"
+"Valorisation d'inventaire perpétuelle (chaque mouvement de stock produit des"
+" écritures comptables)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -598,7 +603,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr "Valorisatio"
+msgstr "Valorisation"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -707,6 +712,9 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Vous n'avez aucun compte de valorisation d'inventaire défini dans votre "
+"catégorie de produit. Vous devez en définir un avant d'effectuer cette "
+"opération."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

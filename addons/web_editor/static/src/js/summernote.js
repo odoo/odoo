@@ -703,10 +703,16 @@ dom.isRemovableEmptyNode = function (node) {
 dom.isForbiddenNode = function (node) {
     return node.tagName === "BR" || $(node).is(".fa, img");
 };
-dom.listBetween = function (sc, ec) {
+/**
+ * @todo 'so' and 'eo' were added as a bugfix and are not given everytime. They
+ * however should be as the function may be wrong without them (for example,
+ * when asking the list between an element and its parent, as there is no path
+ * from the beginning of the former to the beginning of the later).
+ */
+dom.listBetween = function (sc, ec, so, eo) {
     var nodes = [];
     var ancestor = dom.commonAncestor(sc, ec);
-    dom.walkPoint({'node': sc, 'offset': 0}, {'node': ec, 'offset': 0}, function (point) {
+    dom.walkPoint({'node': sc, 'offset': so || 0}, {'node': ec, 'offset': eo || 0}, function (point) {
         if (ancestor !== point.node || ancestor === sc || ancestor === ec) {
             nodes.push(point.node);
         }
@@ -886,46 +892,82 @@ range.WrappedRange.prototype.reRange = function (keep_end, isNotBreakable) {
 
     return new range.WrappedRange(sc, so, ec, eo);
 };
-// isOnImg: judge whether range is an image node or not
+/**
+ * Returns the image the range is in or matches (if any, false otherwise).
+ *
+ * @todo this implementation may not cover all corner cases but should do the
+ * trick for all reproductible ones
+ * @returns {DOMElement|boolean}
+ */
 range.WrappedRange.prototype.isOnImg = function () {
+    // If not a selection but a cursor position, just check if a point's
+    // ancestor is an image or not
+    if (this.sc === this.ec && this.so === this.eo) {
+        return dom.ancestor(this.sc, dom.isImg);
+    }
+
+    var startPoint = {node: this.sc, offset: this.so};
+    var endPoint = {node: this.ec, offset: this.eo};
+
     var nb = 0;
     var image;
-    var startPoint = {node: this.sc.childNodes.length && this.sc.childNodes[this.so] || this.sc};
-    startPoint.offset = startPoint.node === this.sc ? this.so : 0;
-    var endPoint = {node: this.ec.childNodes.length && this.ec.childNodes[this.eo] || this.ec};
-    endPoint.offset = endPoint.node === this.ec ? this.eo : 0;
-
-    if (dom.isImg(startPoint.node)) {
-        nb ++;
-        image = startPoint.node;
-    }
+    var textNode;
     dom.walkPoint(startPoint, endPoint, function (point) {
-        if (!dom.isText(endPoint.node) && point.node === endPoint.node && point.offset === endPoint.offset) {
+        // If the element has children (not a text node and not empty node),
+        // the element cannot be considered as selected (these children will
+        // be processed to determine that)
+        if (dom.hasChildren(point.node)) {
             return;
         }
-        var node = point.node.childNodes.length && point.node.childNodes[point.offset] || point.node;
-        var offset = node === point.node ? point.offset : 0;
-        var isImg = dom.ancestor(node, dom.isImg);
-        if (!isImg && ((!dom.isBR(node) && !dom.isText(node)) || (offset && node.textContent.length !== offset && node.textContent.match(/\S|\u00A0/)))) {
+
+        // Check if an ancestor of the current point is an image
+        var pointImg = dom.ancestor(point.node, dom.isImg);
+        var isText = dom.isText(point.node);
+
+        // Check if a visible element is selected, i.e.
+        // - If an ancestor of the current is an image we did not see yet
+        // - If the point is not in a br or a text (so a node with no children)
+        // - If the point is in a non empty text node we already saw
+        if (pointImg ?
+            (image !== pointImg) :
+            ((!dom.isBR(point.node) && !isText) || (textNode === point.node && point.node.textContent.match(/\S|\u00A0/)))) {
             nb++;
         }
-        if (isImg && image !== isImg) {
-            image = isImg;
-            nb ++;
+
+        // If an ancestor of the current point is an image, then save it as the
+        // image we are looking for
+        if (pointImg) {
+            image = pointImg;
+        }
+        // If the current point is a text node save it as the last text node
+        // seen (if we see it again, this might mean it is selected)
+        if (isText) {
+            textNode = point.node;
         }
     });
+
     return nb === 1 && image;
 };
 range.WrappedRange.prototype.deleteContents = function (towrite) {
-    var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    if (this.sc === this.ec && this.so === this.eo) {
+        return this;
+    }
 
-    $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
-    return new range.WrappedRange(
-      prevBP.sc,
-      prevBP.so,
-      prevBP.ec,
-      prevBP.eo
-    );
+    var r;
+    var image = this.isOnImg();
+    if (image) {
+        // If the range matches/is in an image, then the image is to be removed
+        // and the cursor moved to its previous position
+        var parentNode = image.parentNode;
+        var index = _.indexOf(parentNode.childNodes, image);
+        parentNode.removeChild(image);
+        r = new range.WrappedRange(parentNode, index, parentNode, index);
+    } else {
+        r = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    }
+
+    $(dom.node(r.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
+    return new range.WrappedRange(r.sc, r.so, r.ec, r.eo);
 };
 range.WrappedRange.prototype.clean = function (mergeFilter, all) {
     var node = dom.node(this.sc === this.ec ? this.sc : this.commonAncestor());
@@ -1274,7 +1316,7 @@ function summernote_keydown_clean (field) {
 
 function remove_table_content(r) {
     var ancestor = r.commonAncestor();
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     if (dom.isText(r.sc)) {
         r.sc.textContent = r.sc.textContent.slice(0, r.so);
     }
@@ -1896,7 +1938,7 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     }
 
     // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     for (var i=0; i<nodes.length; i++) {
         if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
@@ -1981,6 +2023,14 @@ eventHandler.modules.editor.currentStyle = function (target) {
         var r = range.create();
         if(r)
             styleInfo.image = r.isOnImg();
+    }
+    // Fix when the target is a link: the text-align buttons state should
+    // indicate the alignment of the link in the parent, not the text inside
+    // the link (which is not possible to customize with summernote). Summernote fixed
+    // this in their newest version... by just not showing the active button
+    // for alignments.
+    if (styleInfo.anchor) {
+        styleInfo['text-align'] = $(styleInfo.anchor).parent().css('text-align');
     }
     return styleInfo;
 }

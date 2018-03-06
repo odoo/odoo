@@ -5,8 +5,9 @@
 # Translators:
 # oihane <oihanecruce@gmail.com>, 2017
 # Gorka Toledo <gorka.toledo@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Mikel Lizarralde <mikellizarralde@gmail.com>, 2017
 # ibinka lete <ilete@fpbidasoa.net>, 2017
+# Martin Trigaux, 2017
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -44,6 +45,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
+"Sortu ataza bat proiektu honetan salmenta-eskaera balidazioan. Ezarpen hau "
+"enpresa bakoitzarentzat ezarri behar da."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -53,13 +56,13 @@ msgstr "Langilea"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr ""
+msgstr "Eskaera lerroa"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
-msgstr "Procurement"
+msgstr "Hornikuntza"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
@@ -69,27 +72,27 @@ msgstr "Produktua"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Produktuaren alerta-denbora"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
 msgid "Product Life Time"
-msgstr "Produktuen lifetime-a"
+msgstr "Produktuaren lifetime-a"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Produktuaren kentze-denbora"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product Template"
-msgstr "Product Template"
+msgstr "Produktuen txantiloia"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
 msgid "Product Use Time"
-msgstr "Produktuen erabili denbora"
+msgstr "Produktuen erabilpen-denbora"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
@@ -101,19 +104,19 @@ msgstr "Proiektu"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Salmenta honi loturiko proiektua"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
-msgstr "Salmenta eskaria"
+msgstr "Salmenta-eskaera"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 msgid "Sales Order Line"
-msgstr "Salmenta lerroa"
+msgstr "Salmenta-eskaera lerroa"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -127,17 +130,19 @@ msgstr "Ataza"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"Sortutako ataza (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Tasks"
-msgstr ""
+msgstr "Atazak"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Salmenta honi loturiko atazak"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/procurement.py:84
@@ -146,6 +151,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"Ataza hau hemendik sortu da: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -153,32 +160,34 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Proiektu eta atazetan erabiliko den neurri-unitatea zehaztuko du honek.\n"
+"Proiektuei loturiko denbora-orria erabiltzen baduzu, ez ahaztu zure langileei neurri-unitate egokia zehazteaz"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr ""
+msgstr "Denbora-orriaren kostua"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "Denbora-orriaren UoM-a"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "Denbora-orriko jarduerak"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "Salmenta honi loturiko denbora-orriko jarduerak"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Timesheets"
-msgstr ""
+msgstr "Denbora-orriak"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
@@ -186,6 +195,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Serie-zenbaki berri bat jaulkitzean, hau da abisua jakinarazteko pasa behar "
+"den egun-kopurua."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -193,6 +204,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"Serie-zenbaki berri bat jaulkitzean, hau da ondasunak arriskutsu bilakatu "
+"eta kontsumitu ezin diren egun kopurua."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -200,6 +213,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Serie-zenbaki berri bat jaulkitzean, hau da ondasun bat zure stocketik "
+"kentzeko egun-kopurua"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -207,6 +222,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Serie-zenbaki berri bat jaulkitzean, hau da ondasun bat hondatzen hasten den"
+" egun-kopurua, oraindik arriskutsua izan gabe."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
@@ -216,6 +233,9 @@ msgid ""
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
+"Denbora-orrian produktu bat soilik erabil dezakezu salmenta-eskaera berean. "
+"Zure eskaera banatu beharko zenuke denbora eta materialean oinarrituriko "
+"kontratatu bakarra izateko."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17
@@ -224,3 +244,5 @@ msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Ezin duzu salmenta-eskaera bati loturiko ataza bat ezabatu. Ataza hau "
+"artxibatu egin dezakezu soilik."

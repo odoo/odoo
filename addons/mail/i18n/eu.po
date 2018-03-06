@@ -4,18 +4,20 @@
 # 
 # Translators:
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # oihane <oihanecruce@gmail.com>, 2017
 # ibinka lete <ilete@fpbidasoa.net>, 2017
 # José Miguel Andonegi <jm.andonegi@gmail.com>, 2017
 # Gorka Toledo <gorka.toledo@gmail.com>, 2017
+# Eneko <eastigarraga@codesyntax.com>, 2018
+# Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Gorka Toledo <gorka.toledo@gmail.com>, 2017\n"
+"Last-Translator: Mikel Lizarralde <mikellizarralde@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,6 +183,15 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
 
 #. module: mail
@@ -1366,7 +1377,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
 msgid "Everyone"
-msgstr ""
+msgstr "Denok"
 
 #. module: mail
 #: selection:mail.notification,email_status:0
@@ -2004,7 +2015,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:620
 #, python-format
 msgid "Invitation"
-msgstr ""
+msgstr "Gonbidapena"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:54
@@ -2045,7 +2056,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Gonbidapen-laguntzailea"
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -2241,7 +2252,7 @@ msgstr "Last Message Date"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite___last_update
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Azken aldaketa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_last_seen_partner_ids
@@ -2819,7 +2830,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Notification"
-msgstr ""
+msgstr "Jakinarazpena"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notification_ids
@@ -3231,7 +3242,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "Jabea"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_parent_id
@@ -3416,7 +3427,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel_public
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Privacy"
-msgstr ""
+msgstr "Pribatutasuna"
 
 #. module: mail
 #. openerp-web
@@ -3838,7 +3849,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_subject
 #, python-format
 msgid "Subject"
-msgstr ""
+msgstr "Gaia"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_subject

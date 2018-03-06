@@ -6,7 +6,7 @@
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
@@ -14,7 +14,7 @@
 # Alexis de Lattre <alexis@via.ecp.fr>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Florian Hatat, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 # Frédéric LIETART <stuff@tifred.fr>, 2016
@@ -22,14 +22,13 @@
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
 # Benjamin Delagoutte <ben@ampletus.fr>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Hamid Darabi, 2016
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2016
-# ShevAbam <shevabam@gmail.com>, 2016
+# ShevAbam, 2016
 # Nicolas Martinelli <nim@odoo.com>, 2016
 # Jean-Marc Dupont <jmd@6it.fr>, 2016
-# Kévin R. <realrom@hotmail.fr>, 2016
+# Kévin R., 2016
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
-# Xavier Brochard <xavier@alternatif.org>, 2016
 # Fabien Bourgeois <fabien@yaltik.com>, 2016
 # Matillon Samantha <smatillon@gmail.com>, 2016
 # Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2016
@@ -49,13 +48,16 @@
 # Leandre Berger <leandre.berger@gmail.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # William Henrotin <whe@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# fr trans <e2ffr01@hotmail.com>, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 07:12+0000\n"
 "PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: William Henrotin <whe@odoo.com>, 2017\n"
+"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -235,7 +237,7 @@ msgid ""
 "110101- Caja\n"
 "11010101 Caja General\n"
 "    "
-msgstr ""
+msgstr "0        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -548,6 +550,9 @@ msgid ""
 "        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
 "    "
 msgstr ""
+"\n"
+"        Calculer automatiquement la taxe de vente à l'aide de TaxCloud, en fonction de l'adresse du client aux États-Unis.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -565,6 +570,9 @@ msgid ""
 "        Enable the SEPA features in the payments of expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Activer les fonctionnalités SEPA dans les paiements des dépenses\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -576,6 +584,12 @@ msgid ""
 "        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Générer des ordres de paiements, conformément à la norme SEPA, via les messages pain.001. Les versions de pain prises en charge (pays) sont le pain.001.001.03 (générique), le pain.001.001.03.ch.02 (Suisse) et le pain.001.003.03 (Allemagne). Le fichier XML généré peut ensuite être transféré à la banque.\n"
+"\n"
+"       Ce module suit les directives de mise en œuvre adoptées par le Conseil européen des paiements.\n"
+"        Pour plus d'informations sur les normes SEPA : http://www.iso20022.org/ et http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_voip
@@ -594,6 +608,8 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+" Indiquer le montant en lettres sur les chèques émis pour les dépenses\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -757,6 +773,9 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+" When invoicing timesheets, allows invoicing either all timesheets\n"
+" linked to an SO, or only the validated timesheets\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -792,6 +811,8 @@ msgid ""
 "\n"
 "    Adds workcenters to Quality Control\n"
 msgstr ""
+"\n"
+"    Ajoute des postes de travail au module Contrôle qualité\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -858,6 +879,9 @@ msgid ""
 "    Resource management for Project\n"
 "    "
 msgstr ""
+"\n"
+"    Gestion des ressources d'un projet\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -1418,6 +1442,11 @@ msgid ""
 "\n"
 "* Cost structure report\n"
 msgstr ""
+"\n"
+"Comptabilité analytique au niveau de la fabrication\n"
+"==========================\n"
+"\n"
+"* Rapport relatif à la structure des coûts\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -1534,6 +1563,12 @@ msgid ""
 "GST Reporting for Australian Accounting.\n"
 "    "
 msgstr ""
+"\n"
+"Rapports de comptabilité australienne\n"
+"=============================\n"
+"\n"
+"Déclaration de la TPS pour la comptabilité australienne.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_gengo
@@ -1748,6 +1783,24 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Caisse enregistrée en Belgique\n"
+"================================\n"
+"\n"
+"Ce module transforme le module Point de vente en caisse certifiée pour la Belgique.\n"
+"\n"
+"Pour en savoir plus :\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Clause juridique\n"
+"-----\n"
+"**L'utilisation des sources pos_blackbox_be est uniquement certifiée sur la plate-forme SaaS odoo.com\n"
+"pour la version 9.0.**\n"
+"Une version obscurcie et certifiée de pos_blackbox_be peut être fournie\n"
+"sur demande pour les installations sur site.\n"
+"Aucune version modifiée n'est certifiée ni prise en charge par Odoo SA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2576,6 +2629,14 @@ msgid ""
 "**Configure your API keys from General Setting**\n"
 "    "
 msgstr ""
+"\n"
+"Intégration de la messagerie Google Firebase\n"
+"=====================================\n"
+"Ce module permet d'envoyer une notification push FCM sur les appareils mobiles enregistrés\n"
+"pour chaque message de la zone de discussion.\n"
+"\n"
+"**Configurez vos clés API depuis Paramètre général**\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_proxy
@@ -2620,6 +2681,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Assistance – Application de gestion d'incident\n"
+"================================\n"
+"\n"
+"Fonctionnalités :\n"
+"\n"
+"    – Traitez les tickets à travers différentes étapes pour les résoudre.\n"
+"    – Ajoutez des priorités, des types, des descriptions et des balises pour définir vos tickets.\n"
+"    – Utilisez la zone de discussion pour transmettre des informations supplémentaires et contacter vos collègues au sujet des tickets.\n"
+"    – Utilisez un tableau de bord adapté et une vue kanban facile à utiliser pour gérer vos tickets.\n"
+"    – Effectuez une analyse approfondie des tickets à l'aide de la vue croisée du menu du rapport.\n"
+"    – Créez une équipe et définissez ses membres, utilisez une méthode d'affectation automatique si vous le souhaitez.\n"
+"    – Utilisez un alias de messagerie pour créer des tickets et communiquer avec vos clients.\n"
+"    – Ajoutez automatiquement des délais de contrat de niveau de service à vos tickets.\n"
+"    – Obtenez les avis des clients en utilisant des classements.\n"
+"    – Installez facilement des fonctionnalités supplémentaires en utilisant la vue formulaire de votre équipe.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_sheet_timesheet_grid
@@ -2694,6 +2773,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Les données suivantes ont été incluses dans les normes Accounting Standards for Business Enterprises\n"
+"包含企业会计准则以下数据\n"
+"\n"
+"* Plan comptable\n"
+"* 科目表模板\n"
+"\n"
+"* Modèles de compte\n"
+"* 科目模板\n"
+"\n"
+"* Modèles de taxe\n"
+"* 税金模板\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -2737,6 +2830,18 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By OpenERP.\n"
 "  "
 msgstr ""
+"\n"
+"Plan comptable indien.\n"
+"====================================\n"
+"\n"
+"Plan comptable et localisation pour l'Inde.\n"
+"\n"
+"Plan comptable Schedule VI pour la comptabilité indienne.\n"
+"\n"
+"Remarque : le plan Schedule VI a été révisé par MCA et s'applique à tous les bilans faits après le\n"
+"31 mars 2011. Deux anciens formats de bilan ne sont plus pris en charge.\n"
+"Seul le format Vertical est autorisé et pris en charge par OpenERP.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -2869,6 +2974,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Maintenance au niveau de la fabrication\n"
+"==================\n"
+"* Maintenance préventive contre maintenance corrective\n"
+"* Définir les différentes étapes de vos demandes de maintenance\n"
+"* Planifier des demandes de maintenance (maintenance préventive régulière également)\n"
+"* Équipements associés aux postes de travail\n"
+"* MTBF, MTTR,…\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -3366,6 +3479,21 @@ msgid ""
 "of recall defined. You can define different policies for different companies. \n"
 "\n"
 msgstr ""
+"\n"
+"Module automatisant les lettres de relance pour les factures impayées, avec rappels à plusieurs niveaux.\n"
+"=========================================================================\n"
+"\n"
+"Vous pouvez définir vos différents niveaux de rappel à l'aide du menu :\n"
+"---------------------------------------------------------------\n"
+"    Configuration / Suivi / Niveaux de suivi\n"
+"    \n"
+"Une fois que vous les avez définis, vous pouvez automatiquement imprimer les rappels chaque jour en cliquant simplement sur le menu :\n"
+"------------------------------------------------------------------------------------------------------\n"
+"    Suivi de paiement / Envoyer un message et des lettres\n"
+"\n"
+"Un PDF est généré / les messages sont envoyés / des actions manuelles sont définies en fonction des différents niveaux \n"
+"de rappel définis. Vous pouvez définir des politiques différentes pour différentes sociétés. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -3377,6 +3505,12 @@ msgid ""
 "Improve the import of bank statement feature to support the SEPA recommanded Cash Management format (CAMT.053).\n"
 "    "
 msgstr ""
+"\n"
+"Module important des relevés bancaires CAMT.\n"
+"======================================\n"
+"\n"
+"Améliorer la fonctionnalité d'importation de relevé bancaire pour prendre en charge le format SEPA recommandé (CAMT.053).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -3477,6 +3611,17 @@ msgid ""
 "Because of the CSV format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"Module d'importation de relevés bancaires CSV.\n"
+"======================================\n"
+"\n"
+"Ce module vous permet d'importer des CSV dans Odoo : ils sont analysés et stockés au format lisibie dans\n"
+"Comptabilité \\ Banque et Cash \\ Relevés bancaires.\n"
+"\n"
+"Note importante\n"
+"---------------------------------------------\n"
+"Le format CSV étant limité, nous ne pouvons pas garantir qu'une transaction n'a pas été importée plusieurs fois ou manipulée en multi-devises.\n"
+"Dans la mesure du possible, vous devez utiliser un format de fichier mieux adapté, comme OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -3686,6 +3831,12 @@ msgid ""
 "This module modifies the web addon to provide Enterprise design and responsiveness.\n"
 "        "
 msgstr ""
+"\n"
+"Client Web Odoo Enterprise.\n"
+"===========================\n"
+"\n"
+"Ce module modifie le module Web pour assurer la conception et la réactivité d'Enterprise.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_editor
@@ -4157,6 +4308,13 @@ msgid ""
 "* Different approval flows possible depending on the type of change order\n"
 "\n"
 msgstr ""
+"\n"
+"Gestion du cycle de vie du produit\n"
+"=======================\n"
+"\n"
+"* Gestion des versions de nomenclatures et de gammes\n"
+"* Différents processus d'approbation possible en fonction du type de demande de changement\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_extended
@@ -4227,6 +4385,16 @@ msgid ""
 "* Define your stages for the quality alerts\n"
 "\n"
 msgstr ""
+"\n"
+"Contrôle qualité\n"
+"===============\n"
+"\n"
+"* Définir des niveaux de qualité qui génèrent des contrôles qualité pour les préparations,\n"
+"  les ordres de fabrication ou les ordres de travail (quality_mrp)\n"
+"* Possibilité de créer des alertes de qualité distinctes ou liées aux contrôles qualité\n"
+"* Possibilité d'ajouter une mesure au contrôle qualité avec une tolérance minimale/maximale\n"
+"* Définir les étapes liées aux alertes de qualité\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -4385,6 +4553,13 @@ msgid ""
 "installed screen. This module then displays this HTML using a web\n"
 "browser.\n"
 msgstr ""
+"\n"
+"Commande d'écran\n"
+"=============\n"
+"\n"
+"Ce module permet au client PdV d'envoyer le fichier HTML rendu vers un écran\n"
+"installé à distance. Il affiche ensuite ce fichier HTML à l'aide d'un\n"
+"navigateur Web.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -4542,6 +4717,17 @@ msgid ""
 "\n"
 "Note: Only the admin user is allowed to make those customizations.\n"
 msgstr ""
+"\n"
+"Studio – Personnalisation d'Odoo\n"
+"=======================\n"
+"\n"
+"Ce module permet à l'utilisateur de personnaliser la plupart des éléments de l'interface utilisateur, de\n"
+"manière simple et graphique. Il est doté de deux principales fonctionnalités :\n"
+"\n"
+"* création d'une application (ajouter un module, un élément de menu supérieur et une action par défaut)\n"
+"* personnalisation d'une application existante (modifier des menus, des actions, des vues, des translations,…)\n"
+"\n"
+"Remarque : seul l'administrateur peut effectuer ces personnalisations.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -5351,6 +5537,16 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+"Module de gestion du plan comptable vietnamien dans Odoo.\n"
+"=========================================================================\n"
+"\n"
+"Ce module s'applique aux entreprises placées sous la norme comptable vietnamienne (VAS),\n"
+"Circulaire nº 200/2014/TT-BTC\n"
+"\n"
+"**Crédits :**\n"
+"    – General Solutions.\n"
+"    – Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -5555,6 +5751,11 @@ msgid ""
 "the registration is confirmed.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module ajoute la prise en charge de la lecture de code-barres au système de gestion d'événements.\n"
+"Un code-barre est généré pour chaque participant et imprimé sur le badge. Lors de la lecture,\n"
+"l'inscription est confirmée.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -7093,8 +7294,8 @@ msgid ""
 "<strong>This operation will permanently erase all data currently stored by "
 "the modules!</strong>"
 msgstr ""
-"<strong>Cette opération effacera de façon définitive toute l'information "
-"enregistrée par ces modules!</strong>"
+"<strong>Cette opération effacera de façon définitive toutes les informations"
+" actuellement stockées par ces modules !</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7354,12 +7555,12 @@ msgstr "Compte TaxCloud"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
 msgid "Account TaxCloud - Ecommerce"
-msgstr ""
+msgstr "Compte TaxCloud – E-commerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
 msgid "Account TaxCloud - Sale"
-msgstr ""
+msgstr "Compte TaxCloud – Vente"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -7379,7 +7580,7 @@ msgstr "Comptabilité &amp; Finance"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
-msgstr ""
+msgstr "Comptabilité – MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
@@ -7626,6 +7827,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_event_barcode
 msgid "Add barcode scanning feature to event management."
 msgstr ""
+"Ajouter une fonctionnalité de lecture de code-barres au module Gestion "
+"d'événement."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -7905,6 +8108,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_website_helpdesk_form
 msgid "Allow website visitors to submit tickets through a form"
 msgstr ""
+"Permet aux visiteurs du site Web de soumettre des tickets au moyen d'un "
+"formulaire"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -7932,6 +8137,8 @@ msgid ""
 "Also you will find here all the related documents and download it by "
 "clicking on any individual document."
 msgstr ""
+"Vous trouverez également ici tous les documents associés et pourrez les "
+"télécharger en cliquant sur chacun d'eux."
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -7977,7 +8184,7 @@ msgstr "Comptabilité analytique"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr ""
+msgstr "Comptabilité analytique dans le module Fabrication"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -8261,7 +8468,7 @@ msgstr "Australie - Comptabilité"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
 msgid "Australian - Accounting Reports"
-msgstr ""
+msgstr "Australie – Rapports comptables"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -8509,7 +8716,7 @@ msgstr "Vue de base"
 #. module: base
 #: model:ir.module.module,summary:base.module_grid
 msgid "Basic 2D Grid view for odoo"
-msgstr ""
+msgstr "Vue Grille 2D basique pour Odoo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_deposit
@@ -8534,7 +8741,7 @@ msgstr "Declaration Intrastat Belge"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
-msgstr ""
+msgstr "Caisse enregistreuse enregistrée en Belgique"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -8688,6 +8895,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_website_helpdesk
 msgid "Bridge module for helpdesk modules using the website."
 msgstr ""
+"Module intermédiaire pour les modules d'assistance utilisant le site Web."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -8998,7 +9206,7 @@ msgstr "Vérifier la Base d'impression"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_check
 msgid "Check Printing in Expenses"
-msgstr ""
+msgstr "Impression de chèque dans le module Dépenses"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
@@ -9524,7 +9732,7 @@ msgstr "Assistants de configuration"
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_sale
 msgid "Configure timesheet invoicing"
-msgstr ""
+msgstr "Configurer la facturation des feuilles de temps"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -10911,6 +11119,9 @@ msgid ""
 " is a customer without access or with a limited access created for sharing "
 "data."
 msgstr ""
+"Le client (aucun utilisateur) ou l'utilisateur partagé a indiqué que le "
+"partenaire actuel est un client qui ne dispose pas d'accès ou qui dispose "
+"d'un accès limité pour le partage des données."
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -11003,6 +11214,11 @@ msgid ""
 "* Traceability report\n"
 "* Cost Structure report (mrp_account)"
 msgstr ""
+"Extension d'entreprise pour le module Fabrication\n"
+"\n"
+"* Planification de commande de travail. Vérifiez la planification à l'aide de vues Gantt regroupées par commande de travail / poste de charge\n"
+"* Rapport de traçabilité\n"
+"* Rapport sur la structure de coût (mrp_account)"
 
 #. module: base
 #: model:res.country,name:base.gq
@@ -11093,7 +11309,7 @@ msgstr "Type d'Évaluation"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_barcode
 msgid "Event Barcode Scanning"
-msgstr ""
+msgstr "Lecture de code-barres d'événement"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_event_management
@@ -11209,6 +11425,8 @@ msgstr "Exporter les Traductions"
 #: model:ir.module.module,summary:base.module_hr_expense_sepa
 msgid "Export expenses payments as SEPA Credit Transfer files"
 msgstr ""
+"Exporter les paiements des dépenses en tant que fichiers de transfert de "
+"crédit SEPA"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa
@@ -11658,7 +11876,7 @@ msgstr "Finlande"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_push
 msgid "Firebase Cloud Messaging"
-msgstr ""
+msgstr "Messagerie dans le nuage Firebase"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
@@ -12914,7 +13132,9 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "If you wish to cancel the process, press the cancel button below"
-msgstr "Pour arrêter le processus, activer le bouton 'Arrêter' ci dessous"
+msgstr ""
+"Si vous ne souhaitez pas réaliser cette action, cliquez sur le bouton "
+"\"Annuler\" ci-dessous"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_logo
@@ -12940,6 +13160,8 @@ msgid ""
 "Implements the registered cash system, adhering to guidelines by FPS "
 "Finance."
 msgstr ""
+"Met en œuvre le système de caisse enregistré, conformément aux directives de"
+" FPS Finance."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
@@ -12949,12 +13171,12 @@ msgstr "Import / Export"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
 msgid "Import CAMT Bank Statement"
-msgstr ""
+msgstr "Importer le relevé bancaire CAMT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_csv
 msgid "Import CSV Bank Statement"
-msgstr ""
+msgstr "Importer le relevé bancaire CSV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
@@ -13042,7 +13264,7 @@ msgstr "Rapports de comptabilité - Inde"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_schedule6
 msgid "Indian - Schedule VI Accounting"
-msgstr ""
+msgstr "Inde – Comptabilité Schedule VI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -13572,7 +13794,7 @@ msgstr "Kiribati"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_forum
 msgid "Knowledge base for helpdesk based on Odoo Forum"
-msgstr ""
+msgstr "Base de connaissances pour l'assistance selon le forum Odoo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_si
@@ -14051,7 +14273,7 @@ msgstr "Surveillance de liens"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast_sale
 msgid "Link module between project_forecast and sale(_timesheet)"
-msgstr ""
+msgstr "Module le liaison entre between project_forecast et sale(_timesheet)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_link_field_id
@@ -14249,7 +14471,7 @@ msgstr "Responsable"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_maintenance
 msgid "Maintenance - MRP"
-msgstr ""
+msgstr "Maintenance – Fabrication"
 
 #. module: base
 #: model:res.country,name:base.mw
@@ -14619,7 +14841,7 @@ msgstr "Valeur requise manquante pour le champ '%s'."
 #: code:addons/base/ir/ir_ui_view.py:345
 #, python-format
 msgid "Missing view architecture."
-msgstr ""
+msgstr "Architecture de vue manquante."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -14914,7 +15136,7 @@ msgstr "M."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder
 msgid "Mrp Workorder"
-msgstr ""
+msgstr "Ordre de travail Fabrication"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
@@ -15311,7 +15533,7 @@ msgstr "Odoo Enterprise Edition License v1.0"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
 msgid "Odoo Mobile Core module"
-msgstr ""
+msgstr "Module cœur pour mobile Odoo"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -16216,7 +16438,7 @@ msgstr "Imprimer des chèques US"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_check
 msgid "Print amount in words on checks issued for expenses"
-msgstr ""
+msgstr "Indiquer le montant en lettres sur les chèques émis pour les dépenses"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
@@ -16377,7 +16599,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
 msgid "Provides support for customer facing displays"
-msgstr ""
+msgstr "Fournit une assistance pour les affichages côté client"
 
 #. module: base
 #: model:res.groups,name:base.group_public
@@ -16488,7 +16710,7 @@ msgstr "Qualificateur"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality
 msgid "Quality Alerts and Control Points"
-msgstr ""
+msgstr "Alertes de qualité et points de contrôle qualité"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
@@ -16498,7 +16720,7 @@ msgstr "Contrôle qualité"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
 msgid "Quality Management with MRP"
-msgstr ""
+msgstr "Gestion de la qualité avec le module Fabrication"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
@@ -17067,7 +17289,7 @@ msgstr "Transfert de crédit SEPA"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_sepa
 msgid "SEPA Credit Transfer in Expenses"
-msgstr ""
+msgstr "Transfert de crédit SEPA dans le module Dépenses"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_port
@@ -17202,7 +17424,7 @@ msgstr "Feuille de temps des Ventes"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_sale
 msgid "Sales Timesheet: Grid Support"
-msgstr ""
+msgstr "Feuille de temps des ventes : prise en charge des tarifs"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
@@ -17284,7 +17506,7 @@ msgstr "Actions planifiées"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_screen
 msgid "Screen Driver"
-msgstr ""
+msgstr "Commande d'écran"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
@@ -17992,12 +18214,12 @@ msgstr "Stock"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
-msgstr ""
+msgstr "Code-barres de stock sur mobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mobile
 msgid "Stock Barcode scan in Mobile"
-msgstr ""
+msgstr "Lecture de code-barres de stock sur mobile"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -18352,6 +18574,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_account_taxcloud
 msgid "TaxCloud make it easy for business to comply with sales tax law"
 msgstr ""
+"TaxCloud permet à l'entreprise de se conformer facilement à la loi sur la "
+"taxe de vente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
@@ -19066,17 +19290,17 @@ msgstr "Séparateur des milliers"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Ticketing, Support, Issues"
-msgstr ""
+msgstr "Création de ticketd, assistance, incidents"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
 msgid "Ticketing, Support, Livechat"
-msgstr ""
+msgstr "Création de ticket, assistance, messagerie instantanée"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_slides
 msgid "Ticketing, Support, Slides"
-msgstr ""
+msgstr "Création de ticket, assistance, diapositives"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_time_format
@@ -20245,7 +20469,7 @@ msgstr "Éditeur Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_enterprise
 msgid "Web Enterprise"
-msgstr ""
+msgstr "Web Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
@@ -20306,7 +20530,7 @@ msgstr "Site Web Constructeur de Formulaires"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_form
 msgid "Website Form Helpdesk"
-msgstr ""
+msgstr "Assistance du site Web par formulaire"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_gengo
@@ -20321,12 +20545,12 @@ msgstr "Site Web Google Map"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
 msgid "Website Helpdesk"
-msgstr ""
+msgstr "Assistance relative au site Web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr ""
+msgstr "Assistance relative à la discussion instantanée du site Web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_links
@@ -20406,7 +20630,7 @@ msgstr "Site Web – Stocks et informations sur les livraisons"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr ""
+msgstr "Assistance relative aux diapositives du site Web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
@@ -20574,7 +20798,7 @@ msgstr "Jours Travaillés"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planing, Stock Reports."
-msgstr ""
+msgstr "Commandes de travail, planification, rapports sur les stocks."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_wkf_id

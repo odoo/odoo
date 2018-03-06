@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
@@ -27,7 +27,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr ""
+msgstr "%d tehingud on varem imporditud ja neid ignoreeriti."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
@@ -38,7 +38,7 @@ msgstr "1 kanne on juba imporditud ja seda ignoreeriti."
 #. module: account_bank_statement_import
 #: sql_constraint:account.bank.statement.line:0
 msgid "A bank account transactions can be imported only once !"
-msgstr ""
+msgstr "Pangaväljavõtte saab importida ühe korra !"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
@@ -91,7 +91,7 @@ msgstr "Pangakonto"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
 msgid "Bank Feeds"
-msgstr ""
+msgstr "Pangakanalid"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -111,7 +111,7 @@ msgstr "Pangateatise rida"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Kuulub kasutaja praegusele ettevõttele"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -242,7 +242,7 @@ msgstr "Faili nimi"
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
-msgstr ""
+msgstr "Hankige pangaväljavõtted elektroonilises vormis ja valige need siin."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -261,6 +261,8 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
+"Kui see on märgitud, siis arve genereerimisel süsteem grupeerib "
+"raamatupidamise kanded."
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
@@ -300,7 +302,7 @@ msgstr "See toimib kui vaikimisi konto kreeditsummale"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
 msgid "It acts as a default account for debit amount"
-msgstr ""
+msgstr "See toimib kui vaikimisi konto deebetsummale"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -386,7 +388,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr ""
+msgstr "%s valuutat ei leitud."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
