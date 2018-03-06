@@ -54,7 +54,6 @@
                       'company_id': company_id,
                       'fields_id': field_id,
                       'value': value,
-                      'res_id': 'product.category,'+str(ref('product.product_category_all')),
                   }
                   properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
                   if properties:
