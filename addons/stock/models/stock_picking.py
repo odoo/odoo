@@ -347,7 +347,10 @@ class Picking(models.Model):
         - Cancelled: if the picking is cancelled
         '''
         if not self.move_lines:
-            self.state = 'draft'
+            if self.env.context.get('planned_picking'):
+                self.state = 'draft'
+            else:
+                self.state = 'assigned'
         elif any(move.state == 'draft' for move in self.move_lines):  # TDE FIXME: should be all ?
             self.state = 'draft'
         elif all(move.state == 'cancel' for move in self.move_lines):
@@ -441,7 +444,7 @@ class Picking(models.Model):
     @api.depends('state', 'is_locked')
     def _compute_show_validate(self):
         for picking in self:
-            if self._context.get('planned_picking') and picking.state == 'draft':
+            if picking.state == 'draft':
                 picking.show_validate = False
             elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned') or not picking.is_locked:
                 picking.show_validate = False
