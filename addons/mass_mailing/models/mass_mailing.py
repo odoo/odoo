@@ -162,11 +162,12 @@ class MassMailingContact(models.Model):
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
 
-    @api.model
-    def create(self, vals):
-        if 'opt_out' in vals:
-            vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
-        return super(MassMailingContact, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'opt_out' in vals:
+                vals['unsubscription_date'] = vals['opt_out'] and fields.Datetime.now()
+        return super(MassMailingContact, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

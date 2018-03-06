@@ -1025,59 +1025,53 @@ class AccountMoveLine(models.Model):
     # CRUD methods
     ####################################################
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ :context's key `check_move_validity`: check data consistency after move line creation. Eg. set to false to disable verification that the move
                 debit-credit == 0 while creating the move lines composing the move.
         """
-        amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
-        move = self.env['account.move'].browse(vals['move_id'])
-        account = self.env['account.account'].browse(vals['account_id'])
-        if account.deprecated:
-            raise UserError(_('The account %s (%s) is deprecated.') %(account.name, account.code))
-        journal = vals.get('journal_id') and self.env['account.journal'].browse(vals['journal_id']) or move.journal_id
-        vals['date_maturity'] = vals.get('date_maturity') or vals.get('date') or move.date
-        ok = not (journal.type_control_ids or journal.account_control_ids)
+        for vals in vals_list:
+            amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
+            move = self.env['account.move'].browse(vals['move_id'])
+            account = self.env['account.account'].browse(vals['account_id'])
+            if account.deprecated:
+                raise UserError(_('The account %s (%s) is deprecated.') %(account.name, account.code))
+            journal = vals.get('journal_id') and self.env['account.journal'].browse(vals['journal_id']) or move.journal_id
+            vals['date_maturity'] = vals.get('date_maturity') or vals.get('date') or move.date
 
-        if journal.type_control_ids:
-            type = account.user_type_id
-            for t in journal.type_control_ids:
-                if type == t:
-                    ok = True
-                    break
-        if journal.account_control_ids and not ok:
-            for a in journal.account_control_ids:
-                if a.id == vals['account_id']:
-                    ok = True
-                    break
-        # Automatically convert in the account's secondary currency if there is one and
-        # the provided values were not already multi-currency
-        if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
-            vals['currency_id'] = account.currency_id.id
-            ctx = {}
-            if 'date' in vals:
-                ctx['date'] = vals['date']
-            vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, vals.get('date', fields.Date.today()))
+            ok = (
+                (not journal.type_control_ids and not journal.account_control_ids)
+                or account.user_type_id in journal.type_control_ids
+                or account in journal.account_control_ids
+            )
+            if not ok:
+                raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
-        if not ok:
-            raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
+            # Automatically convert in the account's secondary currency if there is one and
+            # the provided values were not already multi-currency
+            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
+                vals['currency_id'] = account.currency_id.id
+                ctx = {}
+                if 'date' in vals:
+                    ctx['date'] = vals['date']
+                vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, vals.get('date', fields.Date.today()))
 
-        #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
-        #the 'tax_ids' is a cash based tax.
-        taxes = False
-        if vals.get('tax_line_id'):
-            taxes = [{'tax_exigibility': self.env['account.tax'].browse(vals['tax_line_id']).tax_exigibility}]
-        if vals.get('tax_ids'):
-            taxes = self.env['account.move.line'].resolve_2many_commands('tax_ids', vals['tax_ids'])
-        if taxes and any([tax['tax_exigibility'] == 'on_payment' for tax in taxes]) and not vals.get('tax_exigible'):
-            vals['tax_exigible'] = False
+            #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
+            #the 'tax_ids' is a cash based tax.
+            taxes = False
+            if vals.get('tax_line_id'):
+                taxes = [{'tax_exigibility': self.env['account.tax'].browse(vals['tax_line_id']).tax_exigibility}]
+            if vals.get('tax_ids'):
+                taxes = self.env['account.move.line'].resolve_2many_commands('tax_ids', vals['tax_ids'])
+            if taxes and any([tax['tax_exigibility'] == 'on_payment' for tax in taxes]) and not vals.get('tax_exigible'):
+                vals['tax_exigible'] = False
 
-        new_line = super(AccountMoveLine, self).create(vals)
+        lines = super(AccountMoveLine, self).create(vals_list)
 
         if self._context.get('check_move_validity', True):
-            move._post_validate()
+            lines.mapped('move_id')._post_validate()
 
-        return new_line
+        return lines
 
     @api.multi
     def unlink(self):

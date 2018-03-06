@@ -87,12 +87,13 @@ class UoM(models.Model):
             if uom_data['uom_count'] > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
 
-    @api.model
-    def create(self, values):
-        if 'factor_inv' in values:
-            factor_inv = values.pop('factor_inv')
-            values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
-        return super(UoM, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'factor_inv' in values:
+                factor_inv = values.pop('factor_inv')
+                values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
+        return super(UoM, self).create(vals_list)
 
     @api.multi
     def write(self, values):

@@ -1238,10 +1238,10 @@ class IrModelAccess(models.Model):
     #
     # Check rights on actions
     #
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.call_cache_clearing_methods()
-        return super(IrModelAccess, self).create(values)
+        return super(IrModelAccess, self).create(vals_list)
 
     @api.multi
     def write(self, values):

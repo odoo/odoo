@@ -121,9 +121,9 @@ class IrRule(models.Model):
         self.clear_caches()
         return res
 
-    @api.model
-    def create(self, vals):
-        res = super(IrRule, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(IrRule, self).create(vals_list)
         self.clear_caches()
         return res
 

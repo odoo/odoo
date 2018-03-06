@@ -142,14 +142,15 @@ class Attendee(models.Model):
         """ Make entry on email and availability on change of partner_id field. """
         self.email = self.partner_id.email
 
-    @api.model
-    def create(self, values):
-        if not values.get("email") and values.get("common_name"):
-            common_nameval = values.get("common_name").split(':')
-            email = [x for x in common_nameval if '@' in x] # TODO JEM : should be refactored
-            values['email'] = email and email[0] or ''
-            values['common_name'] = values.get("common_name")
-        return super(Attendee, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get("email") and values.get("common_name"):
+                common_nameval = values.get("common_name").split(':')
+                email = [x for x in common_nameval if '@' in x] # TODO JEM : should be refactored
+                values['email'] = email and email[0] or ''
+                values['common_name'] = values.get("common_name")
+        return super(Attendee, self).create(vals_list)
 
     @api.multi
     @api.returns('self', lambda value: value.id)

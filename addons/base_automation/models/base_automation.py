@@ -212,16 +212,16 @@ class BaseAutomation(models.Model):
 
         def make_create():
             """ Instanciate a create method that processes action rules. """
-            @api.model
-            def create(self, vals, **kw):
+            @api.model_create_multi
+            def create(self, vals_list, **kw):
                 # retrieve the action rules to possibly execute
                 actions = self.env['base.automation']._get_actions(self, ['on_create', 'on_create_or_write'])
                 # call original method
-                record = create.origin(self.with_env(actions.env), vals, **kw)
+                records = create.origin(self.with_env(actions.env), vals_list, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in actions.with_context(old_values=None):
-                    action._process(action._filter_post(record))
-                return record.with_env(self.env)
+                    action._process(action._filter_post(records))
+                return records.with_env(self.env)
 
             return create
 

@@ -17,6 +17,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import pycompat
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock 
@@ -535,21 +536,23 @@ class Partner(models.Model):
             partner._fields_sync(vals)
         return result
 
-    @api.model
-    def create(self, vals):
-        if vals.get('website'):
-            vals['website'] = self._clean_website(vals['website'])
-        if vals.get('parent_id'):
-            vals['company_name'] = False
-        # compute default image in create, because computing gravatar in the onchange
-        # cannot be easily performed if default images are in the way
-        if not vals.get('image'):
-            vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-        tools.image_resize_images(vals, sizes={'image': (1024, None)})
-        partner = super(Partner, self).create(vals)
-        partner._fields_sync(vals)
-        partner._handle_first_contact_creation()
-        return partner
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('website'):
+                vals['website'] = self._clean_website(vals['website'])
+            if vals.get('parent_id'):
+                vals['company_name'] = False
+            # compute default image in create, because computing gravatar in the onchange
+            # cannot be easily performed if default images are in the way
+            if not vals.get('image'):
+                vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
+            tools.image_resize_images(vals, sizes={'image': (1024, None)})
+        partners = super(Partner, self).create(vals_list)
+        for partner, vals in pycompat.izip(partners, vals_list):
+            partner._fields_sync(vals)
+            partner._handle_first_contact_creation()
+        return partners
 
     @api.multi
     def create_company(self):
