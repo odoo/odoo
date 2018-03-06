@@ -7,14 +7,14 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
-# niulin lnc. <admin@niulin.net>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
+# niulin lnc. <admin@niulin.net>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
 # zpq001 <zpq001@live.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -53,7 +53,7 @@ msgstr ""
 " \n"
 " * 如果工资单被确认后状态为 “已完成”。\n"
 " \n"
-" * 当用户取消工资单时状态为”取消“。"
+" * 当用户取消工资单时状态为”已拒绝“。"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -76,7 +76,7 @@ msgstr "<strong>银行账号</strong>"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date From:</strong>"
-msgstr "<strong>起始日期:</strong>"
+msgstr "<strong>开始日期:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -99,7 +99,7 @@ msgstr "<strong>结束日期</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
-msgstr "<strong>职务 </strong>"
+msgstr "<strong>职务</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -123,7 +123,7 @@ msgstr "<strong>姓名</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Reference</strong>"
-msgstr "<strong>编号</strong>"
+msgstr "<strong>参考</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -142,9 +142,9 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            estate or anyone that collect or inject money on payslips."
 msgstr ""
-"缴费注册是参与雇员工资 \n"
+"缴费登记方是参与员工工资 \n"
 " 支付的第三方。有可能是社会保障、\n"
-" 不动产或在工资单中收集或注入资金的任何人。"
+" 不动产或在工资单中收取或注入资金的任何人。"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -171,7 +171,7 @@ msgstr "添加内部备注"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
 msgid "Advantage Name"
-msgstr "补贴名称"
+msgstr "福利名称"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
@@ -253,7 +253,7 @@ msgstr "取消工资单"
 #: code:addons/hr_payroll/models/hr_payslip.py:98
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr "不能取消完成的工资单"
+msgstr "无法取消已完成的工资单。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -383,7 +383,7 @@ msgstr "合同"
 #: model:ir.actions.act_window,name:hr_payroll.hr_contract_advantage_template_action
 #: model:ir.ui.menu,name:hr_payroll.hr_contract_advantage_template_menu_action
 msgid "Contract Advantage Templates"
-msgstr "合同优势模板"
+msgstr "合同福利模板"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -468,7 +468,7 @@ msgstr "结束日期"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_default_value
 msgid "Default value for this advantage"
-msgstr "该优势的默认值"
+msgstr "该福利的默认值"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_schedule_pay
@@ -591,7 +591,7 @@ msgstr "员工工资单"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
 msgid "Employee's Advantage on Contract"
-msgstr "雇员在合同中的优势"
+msgstr "员工在合同中的福利"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
@@ -821,7 +821,7 @@ msgstr "下限"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_lower_bound
 msgid "Lower bound authorized by the employer for this advantage"
-msgstr "雇主针对该优势的授权下限"
+msgstr "雇主针对该福利授权的下限"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
@@ -1416,7 +1416,7 @@ msgstr "上限"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_upper_bound
 msgid "Upper bound authorized by the employer for this advantage"
-msgstr "雇主针对该优势的授权上限"
+msgstr "雇主针对该福利授权的上限"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
@@ -1501,7 +1501,7 @@ msgstr "你必须选择员工以生成工资单。"
 #: code:addons/hr_payroll/models/hr_payslip.py:517
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr "您必须设置一份合同以便创建工资核算单。"
+msgstr "您必须设置一份合同以创建工资单。"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule

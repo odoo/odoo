@@ -18,6 +18,7 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -86,49 +87,53 @@ msgid ""
 "</div>"
 msgstr ""
 "\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>尊敬的 ${object.partner_id.name}，</p><br/>\n"
+"                <p>您的订单 <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> 已验证！</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>您可以通过访问我们的<a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">在线门户网站</a>在线查看您的报价、销售订单和发票。</p><br/>\n"
+"                % endif\n"
 "\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-"\n"
-"\n"
-" \n"
-" \n"
-" \n"
-" 尊敬的 ${object.partner_id.name}， \n"
-" 您的订单 ${object.name} 已验证！<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td></tr></tbody></table>\n"
-" \n"
-" % if object.partner_id.user_ids\n"
-" 您可以通过访问我们的在线门户网站在线查看您的报价、销售订单和发票。 \n"
-" % endif\n"
-"\n"
-" 如果您有任何问题，请随时与我们联系。 \n"
-" 感谢您选择 ${object.company_id.name or \"us\"}！% if user.signature\n"
-" ${user.signature | safe}\n"
-" \n"
-" % endif\n"
-" 由\n"
-" \n"
-" ${user.company_id.name}\n"
-" 使用 Odoo 发送\n"
-" \n"
-" \n"
-" \n"
-" \n"
-"<table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\"><div><hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\"></div></td></tr></tbody></table></div><div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td style=\"padding:0px 10px 5px 5px;font-size: 14px;\"><p></p><br/><p><a href=\"/quote/${object.id}/${object.access_token}\"></a></p><br/><p><a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\"></a></p><br/><p></p><br/><p></p></td></tr><tr><td style=\"padding:0px 10px 5px 5px;font-size: 14px;\"><p style=\"font-size: 14px;\"></p><p style=\"font-size: 11px;\"><strong><a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\"><strong></strong></a><a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong></strong></a></strong></p></td></tr></tbody></table></div>"
+"                <p>如果您有任何问题，请随时与我们联系。</p><br/>\n"
+"                <p>感谢您选择 ${object.company_id.name or \"us\"}！</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>由\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a>使用 <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong> 发送</a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -268,7 +273,9 @@ msgstr "<SPAN>本人同意支付这个提案，我接受</SPAN>"
 msgid ""
 "<span>I agree that by signing this proposal, I\n"
 "                                    accept it on the behalf of </span>"
-msgstr "<span>本人同意签署这项提案，我接受</span>"
+msgstr ""
+"<span>本人同意签署这项提案，\n"
+"                                    我接受</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -376,12 +383,12 @@ msgstr "关于我们"
 msgid ""
 "Access to an Account Manager at Odoo SA to discuss strategic, sales and "
 "service issues"
-msgstr "可跟Odoo位于香港的客户经理商谈策略, 销售及服务等事宜"
+msgstr "可跟 Odoo SA 的客户经理商谈策略、销售及服务等事宜"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Partners Portal"
-msgstr "访问 合作伙伴门户"
+msgstr "访问合作伙伴门户"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_active
@@ -445,7 +452,8 @@ msgid ""
 "                                       commitment we put on strong services."
 msgstr ""
 "作为一家领先的专业服务公司，\n"
-" 我们知道成功与否是我们对优质服务的承诺。"
+"                                       我们知道成功与否\n"
+"                                       是我们对优质服务的承诺。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -465,19 +473,19 @@ msgstr "返回销售订单"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Be available for periodic review meeting with Odoo SA account managers"
-msgstr "可与香港的客户经理进行周期性评估"
+msgstr "可与 Odoo SA 客户经理进行周期性评估"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Be the first level of support for his Odoo customers and use Odoo SA for the"
 " second level of support (mostly for bug fixes)"
-msgstr "成为你Odoo顾客的第一阶段支援, 并提供由Odoo SA提供的第二阶段支援(大部分情况为错误修复)"
+msgstr "成为其 Odoo 客户的第一级支持，并使用 Odoo SA 提供第二级支持（主要用于错误修复）"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Become a Certified Odoo Partner"
-msgstr "成为认证的Odoo合作伙伴"
+msgstr "成为认证的 Odoo 合作伙伴"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -717,7 +725,7 @@ msgstr "字段"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Follows a transparent ranking system. Ready - Silver - Gold"
-msgstr "遵循透明的等级制度。普通级别-白银级别-黄金级别"
+msgstr "遵循透明的等级制度。普通级别 - 白银级别 - 黄金级别"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_1
@@ -760,10 +768,10 @@ msgid ""
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
 "完善的报价模板将显著\n"
-" <strong>提高您的成功率。</strong>\n"
-" 第一部分通常是关于您的公司、\n"
-" 您的参考资料、您的方法或\n"
-" 担保、您的团队、SLA、条款和条件等。"
+"                                <strong>提高您的成功率。</strong>\n"
+"                                第一部分通常是关于您的公司、\n"
+"                                您的参考资料、您的方法或\n"
+"                                担保、您的团队、SLA、条款和条件等"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -776,7 +784,7 @@ msgstr "实际操作练习和他们的解决方案"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Has a direct relationship with Odoo SA to escalate issues"
-msgstr "与 Odoo SA 直接联系 上报问题"
+msgstr "与 Odoo SA 直接联系上报问题"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -827,16 +835,16 @@ msgid ""
 "                        use this modified template."
 msgstr ""
 "如果从报价的“预览”中编辑报价单，\n"
-" 则只会更新此客户的报价。如果您编辑报价 \n"
-" 模板（通过“配置”菜单），所有未来的报价将\n"
-" 使用此修改后的模板。"
+"                        则只会更新此客户的报价。如果您编辑报价 \n"
+"                        模板（通过“配置”菜单），所有未来的报价将\n"
+"                        使用此修改后的模板。"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_active
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr "如果不选中，将允许您隐藏报价模板而不删除它。"
+msgstr "如果取消选中，将允许您隐藏报价模板而不将其删除。"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:103
@@ -1041,7 +1049,7 @@ msgstr "Odoo 官方合作伙伴将受益于："
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Odoo sales training session"
-msgstr "Odoo销售培训活动"
+msgstr "Odoo 销售培训会议"
 
 #. module: website_quote
 #: selection:sale.order,require_payment:0
@@ -1144,7 +1152,7 @@ msgstr "收单"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Payment Terms:"
-msgstr "付款条款:"
+msgstr "付款条款："
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -1189,8 +1197,8 @@ msgid ""
 "                                       focus on fabric, performance and craftsmanship."
 msgstr ""
 "产品质量是我们立足\n"
-" 的基础；我们坚持不懈地\n"
-"专注于产品质地、性能和工艺。"
+"                                       的基础；我们坚持不懈地\n"
+"                                       专注于产品质地、性能和工艺。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1210,7 +1218,7 @@ msgstr "向客户推广 Odoo 企业版"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Publishes references directly on Odoo.com"
-msgstr "直接 在 Odoo.com 上发布参考"
+msgstr "直接在 Odoo.com 上发布参考"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1470,7 +1478,7 @@ msgstr ""
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
-msgstr "此电子邮件模板将在确认时发送。没有要发送的内容。"
+msgstr "此电子邮件模板将在确认时发送。留空即表示没有要发送的内容。"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1481,9 +1489,9 @@ msgid ""
 "                                Quotation Templates."
 msgstr ""
 "这是一个<strong>报价模板示例。</strong>您应该\n"
-" 使用菜单从<i>销售\n"
-"</i> 应用程序进行自定义，从而满足自己的需求：配置/报价\n"
-" 模板。"
+"                                使用菜单：配置/报价模板从 <i></i>销售\n"
+"                                应用程序进行自定义，\n"
+"                                从而满足自己的需求。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1526,7 +1534,7 @@ msgstr "总价"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Train their staff by following Odoo training sessions"
-msgstr "通过 Odoo 培训课程对员工进行培训"
+msgstr "通过以下 Odoo 培训课程对员工进行培训"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1617,7 +1625,10 @@ msgid ""
 "We always ensure that our products are\n"
 "                                       set at a fair price so that you will be\n"
 "                                       happy to buy them."
-msgstr "我们始终确保产品价格合理，这样您会很愿意购买。"
+msgstr ""
+"我们始终确保产品价格\n"
+"                                       合理，这样您会\n"
+"                                       很愿意购买，"
 
 #. module: website_quote
 #: model:ir.actions.report,name:website_quote.report_web_quote
@@ -1648,7 +1659,7 @@ msgstr "工作流"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Yearly upgrade training sessions when a new version is released"
-msgstr "新版本发布时年度升级培训"
+msgstr "新版本发布时的年度升级培训"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1665,10 +1676,10 @@ msgid ""
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
 "您可以<strong>设置每个产品描述。</strong>Odoo 将\n"
-" 使用建议中所有产品的描述\n"
-" 自动创建一个报价。左边的内容表\n"
-" 是根据您描述中使用的样式\n"
-" 自动生成的（标题 1、标题 2…）"
+"                        使用建议中所有产品的描述\n"
+"                        自动创建一个报价。左边的内容表\n"
+"                        是根据您描述中使用的样式\n"
+"                        自动生成的（标题 1、标题 2…）"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:150

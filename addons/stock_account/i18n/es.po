@@ -3,18 +3,19 @@
 # * stock_account
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
+# Martin Trigaux, 2017
 # Gustavo Valverde, 2017
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
 # José Vicente <txusev@gmail.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Glen Sojo <inactive+glen.sojo@transifex.com>, 2017
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
 # Antonio Trueba, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Ivan Nieto <ivan.n.s@tuta.io>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
 # Raquel Iciarte <ric@odoo.com>, 2017
@@ -48,7 +49,7 @@ msgstr "Movimiento de cuenta"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Propiedades de cuenta de existencias"
+msgstr "Propiedades de cuenta de stock"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_form_inherit
@@ -137,14 +138,14 @@ msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
-"Escriba la fecha de contabilidad en la que quiera valorar los movimientos de"
-" stock creados por el inventario en vez de la de por defecto (la fecha de "
-"fin de inventario)"
+"Escriba la fecha contable en la que quiera valorar los movimientos de stock "
+"creados por el inventario en vez de la predeterminada (la fecha de fin de "
+"inventario)"
 
 #. module: stock_account
 #: model:ir.actions.act_window,help:stock_account.stock_move_valuation_action
 msgid "Click to create a stock movement."
-msgstr "Pulse para crear un movimiento de stock"
+msgstr "Clic para crear un movimiento de stock"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:523
@@ -159,7 +160,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cost"
-msgstr "Coste"
+msgstr "Costo"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
@@ -177,7 +178,7 @@ msgstr "Gastos de envío"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
-msgstr "Método de coste"
+msgstr "Método de costo"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
@@ -226,8 +227,8 @@ msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
-"Si el precio de coste se incrementa, la cuenta la variación de existencias irá al debe y la cuenta de salida de existencias irá al haber con el valor = (diferencia de cantidad * cantidad disponible).\n"
-"Si el precio de coste se reduce, la cuenta la variación de existencias irá al haber y la cuenta de entrada de existencias irá al debe."
+"Si el precio de costo se incrementa, la cuenta la variación de stock irá al debe y la cuenta de salida de stock irá al haber con el valor = (diferencia de cantidad * cantidad disponible).\n"
+"Si el precio de costo se reduce, la cuenta la variación de stock irá al haber y la cuenta de entrada de stock irá al debe."
 
 #. module: stock_account
 #: model:ir.actions.act_window,help:stock_account.product_valuation_action
@@ -237,7 +238,7 @@ msgstr "Si hay productos, verá su nombre y valoración."
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Include landed costs in product cost"
-msgstr "Incluir gastos de envío en el coste del producto"
+msgstr "Incluir gastos de envío en el costo del producto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -451,54 +452,54 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
 msgid "Stock Input Account"
-msgstr "Cuenta de entrada de existencias"
+msgstr "Cuenta de entrada de stock"
 
 #. module: stock_account
 #: code:addons/stock_account/models/account_chart_template.py:15
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
-msgstr "Diario de existencias"
+msgstr "Diario de stock"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_account_move_stock_move_id
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
 msgid "Stock Moves"
-msgstr "Movimientos de existencias"
+msgstr "Movimientos de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
 msgid "Stock Output Account"
-msgstr "Cuenta de salida de existencias"
+msgstr "Cuenta de salida de stock"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Stock Valuation"
-msgstr "Valoración de existencias"
+msgstr "Valoración de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr "Cuenta de valoración de existencias"
+msgstr "Cuenta de valoración de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr "Cuenta de valoracion de existencias (entrada)"
+msgstr "Cuenta de valoracion de stock (entrada)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "Cuenta de valoracion de existencias (salida)"
+msgstr "Cuenta de valoracion de stock (salida)"
 
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
@@ -611,9 +612,9 @@ msgstr ""
 "Usado para una valoración en tiempo real del inventario. Cuando está "
 "establecido en una ubicación virtual (no de tipo interno), esta cuenta se "
 "usará para mantener el valor de los productos que son movidos fuera de la "
-"ubicación a una ubicación interna, en lugar de la cuenta de salida de "
-"existencias genérica establecida en el producto. No tiene efecto para "
-"ubicaciones internas."
+"ubicación a una ubicación interna, en lugar de la cuenta de salida de stock "
+"genérica establecida en el producto. No tiene efecto para ubicaciones "
+"internas."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -645,7 +646,7 @@ msgstr ""
 "Cuando se realiza una valoración de inventario en tiempo real, la "
 "contrapartida para todos los movimientos de entrada serán imputados en esta "
 "cuenta, a menos que se haya establecido una cuenta de valoración específica "
-"en la ubicación fuente. Éste es el valor por defecto para todos los "
+"en la ubicación fuente. Éste es el valor predeterminado para todos los "
 "productos en esta categoría. También se puede establecer directamente en "
 "cada producto."
 
@@ -676,7 +677,7 @@ msgstr ""
 "Cuando se realiza una valoración de inventario en tiempo real, la "
 "contrapartida para todos los movimientos de salida serán imputados en esta "
 "cuenta, a menos que se haya establecido una cuenta de valoración específica "
-"en la ubicación destino. Éste es el valor por defecto para todos los "
+"en la ubicación destino. Éste es el valor predeterminado para todos los "
 "productos en esta categoría. También se puede establecer directamente en "
 "cada producto."
 

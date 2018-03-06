@@ -21,13 +21,14 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -574,7 +575,7 @@ msgstr "表单按钮模板"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr "使用标记化技术的表单"
+msgstr "使用令牌化技术的表单"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -604,7 +605,7 @@ msgstr "ID"
 msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
-msgstr "如果您将其留空，该支付受让人将适用于所有国家/地区。"
+msgstr "如果您将其留空，该付款受让人将适用于所有国家/地区。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
@@ -759,7 +760,7 @@ msgstr "消息"
 #: code:addons/payment/models/payment_acquirer.py:395
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr "尝试创建新的支付标记时缺少合作伙伴参考"
+msgstr "尝试创建新的支付令牌时缺少合作伙伴参考"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
@@ -794,7 +795,7 @@ msgstr "未选择付款方式"
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr "请注意，来自设置为仅授权交易（而非获取金额）的受让人的标记不可用。"
+msgstr "请注意，来自设置为仅授权交易（而非获取金额）的受让人的令牌不可用。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_payment_flow
@@ -954,12 +955,13 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
-"支付将被登记到此日记账。如果您在银行账户上直接支付，\n"
-" 请选择您的银行账户。如果您分批支付多笔交易，则为此支付收购方创建特定\n"
-" 支付日记账，以便轻松管理银行对账单。您掌握着\n"
-" 账簿的临时转账账户中的金额（创建\n"
-" 支付日记账时自动创建）。然后，当您收到支付受让人在银行账户上支付的款项后，核对银行对账单使用对账\n"
-" 模板一键完成。"
+"付款将被登记到此日记账中。如果您直接通过银行账户收取付款，\n"
+"                请选择您的银行账户。如果您分批收取多笔交易的付款，则为此付款受让人创建特定\n"
+"                付款日记账，以便轻松管理银行对账单。您持有\n"
+"                账簿的临时转账账户中的金额（创建\n"
+"                付款日记账时自动创建）。然后，当您收到付款受让人通过银行账户支付的款项后，\n"
+"                使用此临时转账账户核对银行对账单。使用对账\n"
+"                模板一键完成。"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1183,7 +1185,7 @@ msgstr "感谢留言"
 #: code:addons/payment/models/payment_acquirer.py:567
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
-msgstr "允许 %s 支付受让人使用手动捕获模式！"
+msgstr "付款受让人 %s 无法使用手动捕获模式！"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:560
@@ -1198,8 +1200,8 @@ msgid ""
 "This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
-"此功能不适用于已设置为“授权”模式的支付受让人。\n"
-" 请使用 %s 之外的其他提供者的标记。"
+"此功能不适用于已设置为“授权”模式的付款受让人。\n"
+"请使用 %s 之外的其他提供者的令牌。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon_image
@@ -1237,13 +1239,13 @@ msgid ""
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
 "此模板提供具有所有必要值的受让人按钮。\n"
-" 它使用以下评估上下文与qWeb呈现"
+"                                            它使用以下评估上下文，通过 qWeb 进行渲染："
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
-msgstr "在选择支付受让人后提供转账信息。"
+msgstr "在选择付款受让人后提供转账信息。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type

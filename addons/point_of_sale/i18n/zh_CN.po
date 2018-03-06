@@ -31,6 +31,7 @@
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -470,7 +471,7 @@ msgstr "总额合计"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
 msgid "An internal identification of the point of sale."
-msgstr "销售点的内部确认。"
+msgstr "销售点的内部标识。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:160
@@ -966,7 +967,7 @@ msgstr "确认"
 #: code:addons/point_of_sale/static/src/js/chrome.js:454
 #, python-format
 msgid "Connected, Not Owned"
-msgstr "Connected, Not Owned"
+msgstr "已连接，非所有"
 
 #. module: point_of_sale
 #. openerp-web
@@ -988,7 +989,7 @@ msgstr "继续销售"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Control cash box at opening and closing"
-msgstr "在打开和关闭时控制现金箱"
+msgstr "在打开和关闭时控制钱箱"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1145,7 +1146,7 @@ msgstr "默认公司徽标"
 msgid ""
 "Defines what kind of barcodes are available and how they are assigned to "
 "products, customers and cashiers."
-msgstr "定义可用的条码种类以及将分配给产品、客户和收银员的方法。"
+msgstr "定义可用的条码种类以及将其分配给产品、客户和收银员的方法。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_delay_validation
@@ -1731,12 +1732,12 @@ msgstr "初始类别"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr "集成卡支付"
+msgstr "集成的卡支付"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Integrated Card Reader"
-msgstr "集成读卡器"
+msgstr "集成的读卡器"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -1849,7 +1850,7 @@ msgstr "上次会话关闭支付金额"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr "最近会话关闭日期"
+msgstr "上次会话关闭日期"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -1958,7 +1959,7 @@ msgstr "忠诚计划"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Loyalty program to use for this point of sale."
-msgstr "用于此销售单的忠诚度方案。"
+msgstr "用于此销售点的忠诚度方案。"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -2161,7 +2162,7 @@ msgstr "确定"
 #: code:addons/point_of_sale/static/src/js/screens.js:441
 #, python-format
 msgid "One or more product(s) required serial/lot number."
-msgstr "一个或多个产品需要序号/批号。"
+msgstr "一个或多个产品需要的序号/批号。"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.Onions
@@ -2724,7 +2725,7 @@ msgstr "销售点订单计数"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
 msgid "Pos Order Line"
-msgstr "POS单明细"
+msgstr "销售点订单明细"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
@@ -2969,7 +2970,7 @@ msgstr "读取称重电子秤"
 #: code:addons/point_of_sale/static/src/js/tour.js:14
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>? <i>Click here</i>."
-msgstr "准备好启动您的<b>销售点了吗？</b><i>点击此处。</i>"
+msgstr "准备好启动您的<b>销售点了吗</b>？<i>点击此处。</i>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3641,7 +3642,7 @@ msgstr "发票日记账和销售点必须属于同一公司"
 msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
-msgstr "发票日记账所使用币种在未设置的情况下必须与销售日记账或公司币种一致。"
+msgstr "在未设置的情况下，发票日记账所使用币种必须与销售日记账或公司币种一致。"
 
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
@@ -3673,7 +3674,7 @@ msgstr "因为未知错误，订单不能发送到服务器"
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount."
-msgstr "该支付输入与银行支付输入类似，将通过准确到期金额预填充。"
+msgstr "该支付输入与银行支付输入类似，将通过准确到期金额进行预填充。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
@@ -3879,7 +3880,7 @@ msgstr "本产品用作客户收据的参考。"
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
-msgstr "此序列由 Odoo 自动创建，但您可以进行更改以自定义订单详情的参考号。"
+msgstr "此序列由 Odoo 自动创建，但您可以进行更改以自定义订单明细的参考号。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
@@ -4200,8 +4201,8 @@ msgid ""
 "You can define another list of available currencies on the\n"
 "                                <i>Cash Registers</i> tab of the"
 msgstr ""
-"您可以在\n"
-" <i>以下收银机</i>选项卡上定义其他可用货币列表"
+"您可以在以下\n"
+"                                <i>收银机</i>选项卡上定义其他可用货币列表 "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:458

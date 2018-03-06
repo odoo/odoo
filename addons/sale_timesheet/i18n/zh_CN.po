@@ -9,6 +9,7 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -40,13 +41,14 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-" <p class=\"oe_view_nocontent_create\">\n"
-" 点击以记录工时表。\n"
-"</p> <p>\n"
-" 您可以每\n"
-" 天通过项目注册并跟踪工作时间。在项目上花费的每段时间都将变成成本，如有必要，可为\n"
-" 客户重新开具发票。\n"
-"</p> \n"
+"                <p class=\"oe_view_nocontent_create\">\n"
+"                    点击以记录工时表。\n"
+"                </p><p>\n"
+"                    您可以每天按项目注册并跟踪工作时间。\n"
+"                    在项目上花费的每段时间都将变成成本，如有必要，\n"
+"                    可为客户重新开具发票。\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -118,7 +120,7 @@ msgstr "成本和收入"
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
 msgid "Create a new project but no task"
-msgstr "创建新项目，但是不创建任务"
+msgstr "创建新项目，但没有任务"
 
 #. module: sale_timesheet
 #: selection:product.template,service_tracking:0
@@ -314,7 +316,7 @@ msgstr "收入"
 msgid ""
 "Sale order line from which the project has been created. Used for "
 "tracability."
-msgstr "创建该项目的销售订单行。用于跟踪。"
+msgstr "创建项目时依据的销售订单行。用于跟踪。"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
@@ -338,7 +340,7 @@ msgstr "销售订单行"
 msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
-msgstr "销售订单项目应根据产品设置生成任务或项目。"
+msgstr "销售订单项目应根据产品设置生成任务和/或项目。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
@@ -346,7 +348,7 @@ msgstr "销售订单项目应根据产品设置生成任务或项目。"
 msgid ""
 "Select a non billable project on which tasks can be created. This setting "
 "must be set for each company."
-msgstr "在可创建任务的项目中，选择一个非计费项目。必须为每个公司进行此设置。"
+msgstr "选择一个可创建任务的非计费项目。必须为每个公司进行此设置。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
@@ -380,7 +382,7 @@ msgstr "任务"
 #, python-format
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
-msgstr "创建的任务(%s)：%s<a href=# data-oe-model=project.task data-oe-id=%d></a>"
+msgstr "任务已创建 (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_task_id
@@ -412,12 +414,12 @@ msgstr "目前没有工时表。"
 msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
-msgstr "此任务已创建自：%s (%s)<a href=# data-oe-model=sale.order data-oe-id=%d></a>"
+msgstr "此任务已创建自：<a href=# data-oe-model=sale.order data-oe-id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Time and material"
-msgstr "时间和物料"
+msgstr "时间和材料"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -488,7 +490,7 @@ msgstr "开发票"
 msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
-msgstr "您不可以更改已开具发票的工时表（与按时间和材料开具发票的销售订单项目相关联）。"
+msgstr "您不可以修改已开具发票的工时表（与按时间和材料开具发票的销售订单项目相关联）。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:74

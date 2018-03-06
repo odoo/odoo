@@ -9,6 +9,7 @@
 # Ivan Nieto <ivan.n.s@tuta.io>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
 # Jesus Zapata <jesus@vauxoo.com>, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
@@ -53,7 +54,7 @@ msgstr "Añadir a remesa"
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit_stock_picking_batch
 msgid "Batch"
-msgstr "Por lotes"
+msgstr "Lote"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
@@ -74,7 +75,7 @@ msgstr "Nombre de albarán de remesa"
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Pickings"
-msgstr "Agrupación de albaranes"
+msgstr "Lotes de recolección"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -95,7 +96,7 @@ msgstr "Cancelar"
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Cancel picking"
-msgstr "Cancelar albarán"
+msgstr "Cancelar recolección"
 
 #. module: stock_picking_batch
 #: selection:stock.picking.batch,state:0
@@ -115,7 +116,7 @@ msgstr "Confirmar"
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm picking"
-msgstr "Confirmar albarán"
+msgstr "Confirmar recolección"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_create_uid
@@ -186,7 +187,7 @@ msgstr "Transferencia inmediata"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:92
 #, python-format
 msgid "Immediate Transfer?"
-msgstr "Transferencia inmediata?"
+msgstr "¿Transferencia inmediata?"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -246,7 +247,7 @@ msgstr "Albarán para pedido pendiente"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_picking_ids
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Pickings"
-msgstr "Albaranes"
+msgstr "Recolecciones"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -290,8 +291,8 @@ msgid ""
 "Some products require lots/serial numbers, so you need to specify those "
 "first!"
 msgstr ""
-"Algunos productos requieren números de Lotes/Series, por lo que es necesario"
-" especificarlos primero!"
+"¡Algunos productos requieren lotes/número de serie, por lo que es necesario "
+"especificarlos primero!"
 
 #. module: stock_picking_batch
 #: model:product.product,name:stock_picking_batch.product_product_dry_specu
