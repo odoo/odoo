@@ -2,10 +2,10 @@
 <templates>
     <t t-extend="website.dashboard_header">
         <t t-jquery="t[t-foreach='apps']" t-operation="before">
-            <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_main o_box_item" title="Confirm orders when you get paid." t-name='unpaid_orders_box'>
+            <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_main o_box_item" title="All unconfirmed orders." t-name='unpaid_orders_box'>
                 <a href="#" class="o_dashboard_action" name="website_sale.action_unpaid_orders_ecommerce">
                     <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_unpaid_count"/></div>
-                    Unpaid Orders
+                    Pending Orders
                 </a>
                 <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
             </div>

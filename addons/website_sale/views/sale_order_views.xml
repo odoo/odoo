@@ -49,13 +49,13 @@
     </record>
 
     <record id="action_unpaid_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">Unpaid Orders</field>
+        <field name="name">Pending Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', '=', 'sent'), ('team_id.team_type', '=', 'website')]</field>
         <field name="context">{'show_sale': True, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
-        <field name="help">You don't have any unpaid order from the website.</field>
+        <field name="help">You don't have any pending order from the website.</field>
     </record>
 
     <record id="action_abandoned_orders_ecommerce" model="ir.actions.act_window">
@@ -116,7 +116,7 @@
     <menuitem id="menu_orders_orders" name="Orders"
         action="action_orders_ecommerce"
         parent="menu_orders" sequence="1"/>
-    <menuitem id="menu_orders_unpaid_orders" name="Unpaid Orders"
+    <menuitem id="menu_orders_unpaid_orders" name="Pending Orders"
         action="action_unpaid_orders_ecommerce"
         parent="menu_orders" sequence="2"/>
     <menuitem id="menu_orders_abandoned_orders" name="Abandoned Carts"
@@ -158,24 +158,5 @@
     <menuitem id="menu_catalog_variants_action"
         action="product.variants_action"
         parent="menu_product_settings" groups="product.group_product_variant" sequence="3"/>
-
-    <record id="sale_order_view_form" model="ir.ui.view">
-        <field name="name">sale.order.form</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_quotation_send']" position="after">
-                <button name="action_mark_as_paid" type="object"
-                    string="Mark as Paid" class="btn-primary"
-                    attrs="{'invisible': ['|', ('can_directly_mark_as_paid', '=', False), ('state', 'not in', ['sent', 'sale'])]}"/>
-            </xpath>
-            <field name="partner_id" position="after">
-                <field name="can_directly_mark_as_paid" invisible="1"/>
-            </field>
-            <xpath expr="//button[@id='action_confirm']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|',('can_directly_mark_as_paid', '=', True), ('state', 'not in', ['sent'])]}</attribute>
-            </xpath>
-        </field>
-    </record>
 
 </odoo>
