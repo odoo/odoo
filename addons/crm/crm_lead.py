@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
-from werkzeug import url_encode
 
 from openerp import SUPERUSER_ID
-from openerp import tools, api
+from openerp import tools, api, fields as newfields
 from openerp.addons.base.res.res_partner import format_address
 from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
@@ -1106,14 +1104,7 @@ Update your business card, phone book, social media,... Send an email right now 
         return res
 
     def retrieve_sales_dashboard(self, cr, uid, context=None):
-        date_today = date.today()
-        # We imitate here what the JS search does in the user's browser:
-        # retrieve the user's local date
-        if context and context.get('tz'):
-            user_tz = pytz.timezone(context['tz'])
-            now_utc = pytz.utc.localize(datetime.now())
-            now_user_tz = now_utc.astimezone(user_tz)
-            date_today = date(now_user_tz.year, now_user_tz.month, now_user_tz.day)
+        date_today = newfields.Date.from_string(fields.date.context_today(self, cr, uid, context=context))
 
         res = {
             'meeting': {
