@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
-from werkzeug import url_encode
 
 from openerp import SUPERUSER_ID
-from openerp import tools, api
+from openerp import tools, api, fields as newfields
 from openerp.addons.base.res.res_partner import format_address
 from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
@@ -1105,6 +1104,7 @@ Update your business card, phone book, social media,... Send an email right now 
         return res
 
     def retrieve_sales_dashboard(self, cr, uid, context=None):
+        date_today = newfields.Date.from_string(fields.date.context_today(self, cr, uid, context=context))
 
         res = {
             'meeting': {
@@ -1143,32 +1143,32 @@ Update your business card, phone book, social media,... Send an email right now 
             if opp['date_deadline']:
                 date_deadline = datetime.strptime(opp['date_deadline'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
 
-                if date_deadline == date.today():
+                if date_deadline == date_today:
                     res['closing']['today'] += 1
-                if date_deadline >= date.today() and date_deadline <= date.today() + timedelta(days=7):
+                if date_deadline >= date_today and date_deadline <= date_today + timedelta(days=7):
                     res['closing']['next_7_days'] += 1
-                if date_deadline < date.today() and not opp['date_closed']:
+                if date_deadline < date_today and not opp['date_closed']:
                     res['closing']['overdue'] += 1
 
             # Next activities
             if opp['next_activity_id'] and opp['date_action']:
                 date_action = datetime.strptime(opp['date_action'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
 
-                if date_action == date.today():
+                if date_action == date_today:
                     res['activity']['today'] += 1
-                if date_action >= date.today() and date_action <= date.today() + timedelta(days=7):
+                if date_action >= date_today and date_action <= date_today + timedelta(days=7):
                     res['activity']['next_7_days'] += 1
-                if date_action < date.today() and not opp['date_closed']:
+                if date_action < date_today and not opp['date_closed']:
                     res['activity']['overdue'] += 1
 
             # Won in Opportunities
             if opp['date_closed']:
                 date_closed = datetime.strptime(opp['date_closed'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
 
-                if date_closed <= date.today() and date_closed >= date.today().replace(day=1):
+                if date_closed <= date_today and date_closed >= date_today.replace(day=1):
                     if opp['planned_revenue']:
                         res['won']['this_month'] += opp['planned_revenue']
-                elif date_closed < date.today().replace(day=1) and date_closed >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif date_closed < date_today.replace(day=1) and date_closed >= date_today.replace(day=1) - relativedelta(months=+1):
                     if opp['planned_revenue']:
                         res['won']['last_month'] += opp['planned_revenue']
 
@@ -1198,9 +1198,9 @@ Update your business card, phone book, social media,... Send an email right now 
         for act in activites_done:
             if act['date']:
                 date_act = datetime.strptime(act['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                if date_act <= date.today() and date_act >= date.today().replace(day=1):
+                if date_act <= date_today and date_act >= date_today.replace(day=1):
                         res['done']['this_month'] += 1
-                elif date_act < date.today().replace(day=1) and date_act >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif date_act < date_today.replace(day=1) and date_act >= date_today.replace(day=1) - relativedelta(months=+1):
                     res['done']['last_month'] += 1
 
         # Meetings
@@ -1216,9 +1216,9 @@ Update your business card, phone book, social media,... Send an email right now 
             if meeting['start']:
                 start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
 
-                if start == date.today():
+                if start == date_today:
                     res['meeting']['today'] += 1
-                if start >= date.today() and start <= date.today() + timedelta(days=7):
+                if start >= date_today and start <= date_today + timedelta(days=7):
                     res['meeting']['next_7_days'] += 1
 
         res['nb_opportunities'] = len(opportunities)
