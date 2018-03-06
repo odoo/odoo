@@ -75,7 +75,7 @@ class AccountAnalyticLine(models.Model):
         order = self.env['sale.order'].search([('project_id', '=', self.account_id.id)], limit=1)
         if not order:
             return False
-        if order.state != 'sale':
+        if order.state not in ['sale', 'done']:
             raise UserError(_('The Sale Order %s linked to the Analytic Account must be validated before registering expenses.') % order.name)
 
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
