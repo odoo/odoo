@@ -82,7 +82,7 @@ class Lead2OpportunityPartner(models.TransientModel):
     @api.model
     def view_init(self, fields):
         """ Check some preconditions before the wizard executes. """
-        for lead in self.env['crm.lead'].browse(self._context.get('active_ids', [])):
+        for lead in self.env['crm.lead'].get_active_records():
             if lead.probability == 100:
                 raise UserError(_("Closed/Dead leads cannot be converted into opportunities."))
         return False
@@ -134,7 +134,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                 values['user_id'] = self.user_id.id
                 leads.write(values)
         else:
-            leads = self.env['crm.lead'].browse(self._context.get('active_ids', []))
+            leads = self.env['crm.lead'].get_active_records()
             values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id]})
             self._convert_opportunity(values)
 
@@ -189,7 +189,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
 
     @api.onchange('deduplicate')
     def _onchange_deduplicate(self):
-        active_leads = self.env['crm.lead'].browse(self._context['active_ids'])
+        active_leads = self.env['crm.lead'].get_active_records()
         partner_ids = [(lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from) for lead in active_leads]
         partners_duplicated_leads = {}
         for partner_id, email in partner_ids:
