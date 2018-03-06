@@ -15,10 +15,10 @@ class StockInventory(models.Model):
     _inherit = "stock.inventory"
 
     accounting_date = fields.Date(
-        'Force Accounting Date',
-        help="Choose the accounting date at which you want to value the stock "
-             "moves created by the inventory instead of the default one (the "
-             "inventory end date)")
+        'Accounting Date',
+        help="Date at which the accounting entries will be created"
+             " in case of automated inventory valuation."
+             " If empty, the inventoy date will be used.")
 
     @api.multi
     def post_inventory(self):
