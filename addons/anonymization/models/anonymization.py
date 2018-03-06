@@ -64,15 +64,16 @@ class IrModelFieldsAnonymization(models.Model):
             return (field.model_id.id, field.id)
         return (False, False)
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # check field state: all should be clear before we can add a new field to anonymize:
         self._check_write()
-        if vals.get('field_name') and vals.get('model_name'):
-            vals['model_id'], vals['field_id'] = self._get_model_and_field_ids(vals)
-        # check not existing fields:
-        vals['state'] = self._get_global_state() if vals.get('field_id') else 'not_existing'
-        return super(IrModelFieldsAnonymization, self).create(vals)
+        for vals in vals_list:
+            if vals.get('field_name') and vals.get('model_name'):
+                vals['model_id'], vals['field_id'] = self._get_model_and_field_ids(vals)
+            # check not existing fields:
+            vals['state'] = self._get_global_state() if vals.get('field_id') else 'not_existing'
+        return super(IrModelFieldsAnonymization, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

@@ -404,14 +404,14 @@ class Users(models.Model):
         return super(Users, self)._search(args, offset=offset, limit=limit, order=order, count=count,
                                           access_rights_uid=access_rights_uid)
 
-    @api.model
-    def create(self, vals):
-        # import pudb; pudb.set_trace()
-        user = super(Users, self).create(vals)
-        user.partner_id.active = user.active
-        if user.partner_id.company_id:
-            user.partner_id.write({'company_id': user.company_id.id})
-        return user
+    @api.model_create_multi
+    def create(self, vals_list):
+        users = super(Users, self).create(vals_list)
+        for user in users:
+            user.partner_id.active = user.active
+            if user.partner_id.company_id:
+                user.partner_id.write({'company_id': user.company_id.id})
+        return users
 
     @api.multi
     def write(self, values):
@@ -842,14 +842,15 @@ class GroupsImplied(models.Model):
         for g in self:
             g.trans_implied_ids = g.implied_ids | g.mapped('implied_ids.trans_implied_ids')
 
-    @api.model
-    def create(self, values):
-        user_ids = values.pop('users', None)
-        group = super(GroupsImplied, self).create(values)
-        if user_ids:
-            # delegate addition of users to add implied groups
-            group.write({'users': user_ids})
-        return group
+    @api.model_create_multi
+    def create(self, vals_list):
+        user_ids_list = [vals.pop('users', None) for vals in vals_list]
+        groups = super(GroupsImplied, self).create(vals_list)
+        for group, user_ids in pycompat.izip(groups, user_ids_list):
+            if user_ids:
+                # delegate addition of users to add implied groups
+                group.write({'users': user_ids})
+        return groups
 
     @api.multi
     def write(self, values):
@@ -866,14 +867,15 @@ class GroupsImplied(models.Model):
 class UsersImplied(models.Model):
     _inherit = 'res.users'
 
-    @api.model
-    def create(self, values):
-        if 'groups_id' in values:
-            # complete 'groups_id' with implied groups
-            user = self.new(values)
-            gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
-            values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
-        return super(UsersImplied, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'groups_id' in values:
+                # complete 'groups_id' with implied groups
+                user = self.new(values)
+                gs = user.groups_id | user.groups_id.mapped('trans_implied_ids')
+                values['groups_id'] = type(self).groups_id.convert_to_write(gs, user.groups_id)
+        return super(UsersImplied, self).create(vals_list)
 
     @api.multi
     def write(self, values):

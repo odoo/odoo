@@ -62,15 +62,16 @@ class StockLocation(models.Model):
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    @api.model
-    def create(self, vals):
-        res = super(StockMoveLine, self).create(vals)
-        move = res.move_id
-        if move.state == 'done':
-            correction_value = move._run_valuation(res.qty_done)
-            if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
-                move.with_context(force_valuation_amount=correction_value)._account_entry_move()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(StockMoveLine, self).create(vals_list)
+        for line in lines:
+            move = line.move_id
+            if move.state == 'done':
+                correction_value = move._run_valuation(line.qty_done)
+                if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
+                    move.with_context(force_valuation_amount=correction_value)._account_entry_move()
+        return lines
 
     @api.multi
     def write(self, vals):

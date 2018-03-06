@@ -89,10 +89,10 @@ class IrConfigParameter(models.Model):
                 self.create({'key': key, 'value': value})
             return False
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.clear_caches()
-        return super(IrConfigParameter, self).create(vals)
+        return super(IrConfigParameter, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

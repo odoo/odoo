@@ -430,14 +430,15 @@ class IrAttachment(models.Model):
 
         return res
 
-    @api.model
-    def create(self, values):
-        # remove computed field depending of datas
-        for field in ('file_size', 'checksum'):
-            values.pop(field, False)
-        values = self._check_contents(values)
-        self.browse().check('write', values=values)
-        return super(IrAttachment, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            # remove computed field depending of datas
+            for field in ('file_size', 'checksum'):
+                values.pop(field, False)
+            values = self._check_contents(values)
+            self.browse().check('write', values=values)
+        return super(IrAttachment, self).create(vals_list)
 
     @api.one
     def generate_access_token(self):

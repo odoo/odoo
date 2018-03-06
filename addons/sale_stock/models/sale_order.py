@@ -172,12 +172,11 @@ class SaleOrderLine(models.Model):
                         qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line.qty_delivered = qty
 
-    @api.model
-    def create(self, values):
-        line = super(SaleOrderLine, self).create(values)
-        if line.state == 'sale':
-            line._action_launch_stock_rule()
-        return line
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(SaleOrderLine, self).create(vals_list)
+        lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
+        return lines
 
     @api.multi
     def write(self, values):

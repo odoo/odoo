@@ -164,18 +164,19 @@ class SaleOrderLine(models.Model):
             else:
                 super(SaleOrderLine, line)._compute_product_updatable()
 
-    @api.model
-    def create(self, values):
-        line = super(SaleOrderLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(SaleOrderLine, self).create(vals_list)
         # Do not generate task/project when expense SO line, but allow
         # generate task with hours=0.
-        if line.state == 'sale' and not line.is_expense:
-            line.sudo()._timesheet_service_generation()
-            # if the SO line created a task, post a message on the order
-            if line.task_id:
-                msg_body = _("Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>") % (line.product_id.name, line.task_id.id, line.task_id.name)
-                line.order_id.message_post(body=msg_body)
-        return line
+        for line in lines:
+            if line.state == 'sale' and not line.is_expense:
+                line.sudo()._timesheet_service_generation()
+                # if the SO line created a task, post a message on the order
+                if line.task_id:
+                    msg_body = _("Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>") % (line.product_id.name, line.task_id.id, line.task_id.name)
+                    line.order_id.message_post(body=msg_body)
+        return lines
 
     @api.multi
     def write(self, values):

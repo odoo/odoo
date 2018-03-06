@@ -43,9 +43,9 @@ class IrActions(models.Model):
         for record in self:
             record.xml_id = res.get(record.id)
 
-    @api.model
-    def create(self, vals):
-        res = super(IrActions, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(IrActions, self).create(vals_list)
         # self.get_bindings() depends on action records
         self.clear_caches()
         return res
@@ -220,10 +220,10 @@ class IrActionsActWindow(models.Model):
         record = self.env.ref("%s.%s" % (module, xml_id))
         return record.read()[0]
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.clear_caches()
-        return super(IrActionsActWindow, self).create(vals)
+        return super(IrActionsActWindow, self).create(vals_list)
 
     @api.multi
     def unlink(self):
@@ -614,12 +614,13 @@ class IrActionsTodo(models.Model):
     state = fields.Selection([('open', 'To Do'), ('done', 'Done')], string='Status', default='open', required=True)
     name = fields.Char()
 
-    @api.model
-    def create(self, vals):
-        todo = super(IrActionsTodo, self).create(vals)
-        if todo.state == "open":
-            self.ensure_one_open_todo()
-        return todo
+    @api.model_create_multi
+    def create(self, vals_list):
+        todos = super(IrActionsTodo, self).create(vals_list)
+        for todo in todos:
+            if todo.state == "open":
+                self.ensure_one_open_todo()
+        return todos
 
     @api.multi
     def write(self, vals):

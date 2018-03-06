@@ -376,16 +376,18 @@ class StockMove(models.Model):
                 move.location_id.name, move.location_dest_id.name)))
         return res
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # TDE CLEANME: why doing this tracking on picking here ? seems weird
-        perform_tracking = not self.env.context.get('mail_notrack') and vals.get('picking_id')
-        if perform_tracking:
-            picking = self.env['stock.picking'].browse(vals['picking_id'])
-            initial_values = {picking.id: {'state': picking.state}}
-        vals['ordered_qty'] = vals.get('product_uom_qty')
-        res = super(StockMove, self).create(vals)
-        if perform_tracking:
+        tracking = []
+        for vals in vals_list:
+            vals['ordered_qty'] = vals.get('product_uom_qty')
+            if not self.env.context.get('mail_notrack') and vals.get('picking_id'):
+                picking = self.env['stock.picking'].browse(vals['picking_id'])
+                initial_values = {picking.id: {'state': picking.state}}
+                tracking.append((picking, initial_values))
+        res = super(StockMove, self).create(vals_list)
+        for picking, initial_values in tracking:
             picking.message_track(picking.fields_get(['state']), initial_values)
         return res
 

@@ -153,49 +153,53 @@ class StockMoveLine(models.Model):
             lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
-    @api.model
-    def create(self, vals):
-        vals['ordered_qty'] = vals.get('product_uom_qty')
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['ordered_qty'] = vals.get('product_uom_qty')
 
-        # If the move line is directly create on the picking view.
-        # If this picking is already done we should generate an
-        # associated done move.
-        if 'picking_id' in vals and not vals.get('move_id'):
-            picking = self.env['stock.picking'].browse(vals['picking_id'])
-            if picking.state == 'done':
-                product = self.env['product.product'].browse(vals['product_id'])
-                new_move = self.env['stock.move'].create({
-                    'name': _('New Move:') + product.display_name,
-                    'product_id': product.id,
-                    'product_uom_qty': 'qty_done' in vals and vals['qty_done'] or 0,
-                    'product_uom': vals['product_uom_id'],
-                    'location_id': 'location_id' in vals and vals['location_id'] or picking.location_id.id,
-                    'location_dest_id': 'location_dest_id' in vals and vals['location_dest_id'] or picking.location_dest_id.id,
-                    'state': 'done',
-                    'additional': True,
-                    'picking_id': picking.id,
-                })
-                vals['move_id'] = new_move.id
+            # If the move line is directly create on the picking view.
+            # If this picking is already done we should generate an
+            # associated done move.
+            if 'picking_id' in vals and not vals.get('move_id'):
+                picking = self.env['stock.picking'].browse(vals['picking_id'])
+                if picking.state == 'done':
+                    product = self.env['product.product'].browse(vals['product_id'])
+                    new_move = self.env['stock.move'].create({
+                        'name': _('New Move:') + product.display_name,
+                        'product_id': product.id,
+                        'product_uom_qty': 'qty_done' in vals and vals['qty_done'] or 0,
+                        'product_uom': vals['product_uom_id'],
+                        'location_id': 'location_id' in vals and vals['location_id'] or picking.location_id.id,
+                        'location_dest_id': 'location_dest_id' in vals and vals['location_dest_id'] or picking.location_dest_id.id,
+                        'state': 'done',
+                        'additional': True,
+                        'picking_id': picking.id,
+                    })
+                    vals['move_id'] = new_move.id
 
-        ml = super(StockMoveLine, self).create(vals)
-        if ml.state == 'done':
-            if ml.product_id.type == 'product':
-                Quant = self.env['stock.quant']
-                quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
-                in_date = None
-                available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
-                if available_qty < 0 and ml.lot_id:
-                    # see if we can compensate the negative quants with some untracked quants
-                    untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
-                    if untracked_qty:
-                        taken_from_untracked_qty = min(untracked_qty, abs(quantity))
-                        Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
-                        Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
-                Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
-            next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
-            next_moves._do_unreserve()
-            next_moves._action_assign()
-        return ml
+        mls = super(StockMoveLine, self).create(vals_list)
+
+        for ml in mls:
+            if ml.state == 'done':
+                if ml.product_id.type == 'product':
+                    Quant = self.env['stock.quant']
+                    quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
+                    in_date = None
+                    available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
+                    if available_qty < 0 and ml.lot_id:
+                        # see if we can compensate the negative quants with some untracked quants
+                        untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                        if untracked_qty:
+                            taken_from_untracked_qty = min(untracked_qty, abs(quantity))
+                            Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
+                            Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
+                    Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
+                next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
+                next_moves._do_unreserve()
+                next_moves._action_assign()
+
+        return mls
 
     def write(self, vals):
         """ Through the interface, we allow users to change the charateristics of a move line. If a
