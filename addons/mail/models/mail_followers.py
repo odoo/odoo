@@ -46,9 +46,9 @@ class Followers(models.Model):
             if record.res_id:
                 self.env[record.res_model].invalidate_cache(ids=[record.res_id])
 
-    @api.model
-    def create(self, vals):
-        res = super(Followers, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(Followers, self).create(vals_list)
         res._invalidate_documents()
         return res
 
@@ -151,9 +151,11 @@ GROUP BY fol.id%s""" % (
             new, upd = self._add_default_followers(res_model, res_ids, partner_ids, channel_ids, customer_ids=customer_ids)
         else:
             new, upd = self._add_followers(res_model, res_ids, partner_ids, partner_subtypes, channel_ids, channel_subtypes, check_existing=check_existing, existing_policy=existing_policy)
-        for res_id, values_list in new.items():
-            for values in values_list:
-                sudo_self.create(dict(values, res_id=res_id)).id
+        sudo_self.create([
+            dict(values, res_id=res_id)
+            for res_id, values_list in new.items()
+            for values in values_list
+        ])
         for fol_id, values in upd.items():
             sudo_self.browse(fol_id).write(values)
 

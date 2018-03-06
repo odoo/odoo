@@ -377,27 +377,28 @@ actual arch.
             values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
-    @api.model
-    def create(self, values):
-        if not values.get('type'):
-            if values.get('inherit_id'):
-                values['type'] = self.browse(values['inherit_id']).type
-            else:
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get('type'):
+                if values.get('inherit_id'):
+                    values['type'] = self.browse(values['inherit_id']).type
+                else:
 
-                try:
-                    if not values.get('arch') and not values.get('arch_base'):
-                        raise ValidationError(_('Missing view architecture.'))
-                    values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
-                except LxmlError:
-                    # don't raise here, the constraint that runs `self._check_xml` will
-                    # do the job properly.
-                    pass
-
-        if not values.get('name'):
-            values['name'] = "%s %s" % (values.get('model'), values['type'])
+                    try:
+                        if not values.get('arch') and not values.get('arch_base'):
+                            raise ValidationError(_('Missing view architecture.'))
+                        values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
+                    except LxmlError:
+                        # don't raise here, the constraint that runs `self._check_xml` will
+                        # do the job properly.
+                        pass
+            if not values.get('name'):
+                values['name'] = "%s %s" % (values.get('model'), values['type'])
+            values.update(self._compute_defaults(values))
 
         self.clear_caches()
-        return super(View, self).create(self._compute_defaults(values))
+        return super(View, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

@@ -49,25 +49,26 @@ class FleetVehicleCost(models.Model):
             })
             self.odometer_id = odometer
 
-    @api.model
-    def create(self, data):
-        # make sure that the data are consistent with values of parent and contract records given
-        if 'parent_id' in data and data['parent_id']:
-            parent = self.browse(data['parent_id'])
-            data['vehicle_id'] = parent.vehicle_id.id
-            data['date'] = parent.date
-            data['cost_type'] = parent.cost_type
-        if 'contract_id' in data and data['contract_id']:
-            contract = self.env['fleet.vehicle.log.contract'].browse(data['contract_id'])
-            data['vehicle_id'] = contract.vehicle_id.id
-            data['cost_subtype_id'] = contract.cost_subtype_id.id
-            data['cost_type'] = contract.cost_type
-        if 'odometer' in data and not data['odometer']:
-            # if received value for odometer is 0, then remove it from the
-            # data as it would result to the creation of a
-            # odometer log with 0, which is to be avoided
-            del data['odometer']
-        return super(FleetVehicleCost, self).create(data)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for data in vals_list:
+            # make sure that the data are consistent with values of parent and contract records given
+            if 'parent_id' in data and data['parent_id']:
+                parent = self.browse(data['parent_id'])
+                data['vehicle_id'] = parent.vehicle_id.id
+                data['date'] = parent.date
+                data['cost_type'] = parent.cost_type
+            if 'contract_id' in data and data['contract_id']:
+                contract = self.env['fleet.vehicle.log.contract'].browse(data['contract_id'])
+                data['vehicle_id'] = contract.vehicle_id.id
+                data['cost_subtype_id'] = contract.cost_subtype_id.id
+                data['cost_type'] = contract.cost_type
+            if 'odometer' in data and not data['odometer']:
+                # if received value for odometer is 0, then remove it from the
+                # data as it would result to the creation of a
+                # odometer log with 0, which is to be avoided
+                del data['odometer']
+        return super(FleetVehicleCost, self).create(vals_list)
 
 
 class FleetVehicleLogContract(models.Model):

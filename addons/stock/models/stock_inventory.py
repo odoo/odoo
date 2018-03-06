@@ -380,11 +380,12 @@ class InventoryLine(models.Model):
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
 
-    @api.model
-    def create(self, values):
-        if 'product_id' in values and 'product_uom_id' not in values:
-            values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
-        res = super(InventoryLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'product_id' in values and 'product_uom_id' not in values:
+                values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
+        res = super(InventoryLine, self).create(vals_list)
         res._check_no_duplicate_line()
         return res
 
@@ -456,7 +457,7 @@ class InventoryLine(models.Model):
         }
 
     def _generate_moves(self):
-        moves = self.env['stock.move']
+        vals_list = []
         for line in self:
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
                 continue
@@ -465,5 +466,5 @@ class InventoryLine(models.Model):
                 vals = line._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False)
             else:
                 vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True)
-            moves |= self.env['stock.move'].create(vals)
-        return moves
+            vals_list.append(vals)
+        return self.env['stock.move'].create(vals_list)

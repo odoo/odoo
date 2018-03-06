@@ -25,9 +25,9 @@ class DecimalPrecision(models.Model):
         """ Deprecated, use `clear_caches` instead. """
         self.clear_caches()
 
-    @api.model
-    def create(self, data):
-        res = super(DecimalPrecision, self).create(data)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super(DecimalPrecision, self).create(vals_list)
         self.clear_caches()
         return res
 
