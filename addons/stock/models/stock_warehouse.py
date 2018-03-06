@@ -749,6 +749,9 @@ class Orderpoint(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location',
         ondelete="cascade", required=True)
+    warehouse_view_location_id = fields.Many2one(
+        'stock.location', 'Warehouse view location',
+        related='warehouse_id.view_location_id', readonly=True)
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=[('type', '=', 'product')], ondelete='cascade', required=True)
