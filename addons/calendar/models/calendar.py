@@ -1191,8 +1191,8 @@ class Meeting(models.Model):
         freq = self.rrule_type  # day/week/month/year
         result = ''
         if freq:
-            interval_srting = self.interval and (';INTERVAL=' + str(self.interval)) or ''
-            result = 'FREQ=' + freq.upper() + get_week_string(freq) + interval_srting + get_end_date() + get_month_string(freq)
+            interval_string = self.interval and (';INTERVAL=' + str(self.interval)) or ''
+            result = 'FREQ=' + freq.upper() + get_week_string(freq) + interval_string + get_end_date() + get_month_string(freq)
         return result
 
     def _rrule_default_values(self):
