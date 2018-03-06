@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 
 class HolidaysAllocation(models.Model):
     _name = "hr.leave.allocation"
-    _description = "Allocation"
+    _description = "Leaves Allocation"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _default_employee(self):
