@@ -469,11 +469,16 @@ class AccountMoveLine(models.Model):
         if 'line_ids' not in self._context:
             return rec
 
-        #compute the default credit/debit of the next line in case of a manual entry
+        # Manual entry case: Reset the previously computed debit/credit amounts and recompute the default debit/credit of the next line
+        rec['debit'] = 0
+        rec['credit'] = 0
         balance = 0
         for line in self._context['line_ids']:
             if line[2]:
                 balance += line[2].get('debit', 0) - line[2].get('credit', 0)
+            elif line[1] and line[0] not in (2, 3, 5):  # Don't take deleted records into account
+                db_move_line = self.browse(line[1])
+                balance += db_move_line.debit - db_move_line.credit
         if balance < 0:
             rec.update({'debit': -balance})
         if balance > 0:
