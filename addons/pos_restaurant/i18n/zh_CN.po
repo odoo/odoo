@@ -16,13 +16,14 @@
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -235,15 +236,15 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
-"每个订单打印机都具有定义支持打印机的 PosBox/硬件\n"
-"代理以及产品类别列表的 IP 地址。\n"
-"订单打印机将只打印属于\n"
-"其类别的产品的更新。"
+"每个订单打印机都具一个 IP 地址，\n"
+"                该地址可定义支持打印机的 PosBox/硬件代理以及产品类别列表。\n"
+"                订单打印机将只打印属于其类别之一的\n"
+"                产品的更新。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr "销售点中允许账单拆分。"
+msgstr "在销售点中启用账单拆分。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_floor_id
@@ -264,7 +265,7 @@ msgstr "楼层示意图"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
-msgstr "最低标准"
+msgstr "楼层"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -609,7 +610,7 @@ msgstr "本层座位清单"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr "此销售点提供的餐厅最低标准。"
+msgstr "此销售点提供的餐厅楼层数。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id

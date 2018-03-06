@@ -20,6 +20,7 @@
 # zpq001 <zpq001@live.com>, 2017
 # 厦门-许舟 <windedge99@gmail.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -48,12 +49,13 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-" <p>\n"
-" 您好，\n"
-" 我们</p><p>正在开展一项调查，期望得到您的意见反馈。\n"
-" 请点击</p><p><a href=\"__URL__\" style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\">此处开始调查\n"
-" 非常</a></p><p>感谢您的参与！</p>\n"
 " \n"
+" <p>您好，</p>\n"
+" <p>我们正在开展一项调查，期望得到您的意见反馈。</p>\n"
+" <p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">请点击此处开始调查</a></p>\n"
+" <p>非常感谢您的参与！</p>\n"
+"\n"
+" "
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -270,7 +272,7 @@ msgstr "有效"
 msgid ""
 "Add a list of email of recipients (will not be converted into contacts). "
 "Separated by commas, semicolons or newline..."
-msgstr "添加电子邮件收件人列表（不会转化为联系人）。采用逗号、分号或新行分隔..."
+msgstr "添加电子邮件收件人列表（不会转换为联系人）。采用逗号、分号或新行分隔..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -346,7 +348,7 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
-msgstr "附件是通过模型 / res_id 连接到文档中并通过该字段链接到消息上。"
+msgstr "附件通过模型/res_id 链接到文档并通过该字段链接到消息。"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -1303,7 +1305,7 @@ msgstr "开发人员的问题"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
 msgid "Quizz Mode"
-msgstr "Quizz 模式"
+msgstr "测验模式"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1764,8 +1766,8 @@ msgid ""
 "These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
-"这些问题与 Odoo 的分化和易用性相关。尝试提醒 Odoo 中的第一天以及\n"
-" 您的困难。"
+"这些问题与 Odoo 的功能分化和易用性相关。尝试回想刚开始使用 Odoo 的时候以及\n"
+"遇到的困难。"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_2
@@ -1922,7 +1924,7 @@ msgstr "使用模板"
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
 "Use this field to add         additional explanations about your question"
-msgstr "使用此字段增加 关于问题的额外解释"
+msgstr "使用此字段添加关于问题的额外解释"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
@@ -2047,7 +2049,9 @@ msgstr "哪个模块你现在在使用或测试?"
 msgid ""
 "YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\"/>"
-msgstr "YYYY<i class=\"fa fa-calendar fa-2x\"/>-MM-DD\n"
+msgstr ""
+"YYYY-MM-DD\n"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
@@ -2080,7 +2084,7 @@ msgid ""
 "want with the public web link (in this case, the \"Login Required\" setting "
 "must be disabled)."
 msgstr ""
-"您可以分享调查的网络链接和/或给您的观众发送私人邀请。每次邀请只可回答一次，且每次他们想要使用网络链接回答时（在这种情况下，必须禁用“必须登录”设置）。"
+"您可以分享调查的网络链接和/或给您的观众发送私人邀请。每次邀请只可回答一次，时间不限，使用公开网络链接（在这种情况下，必须禁用“要求登录”设置）。"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:316
