@@ -54,12 +54,11 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-" <p>\n"
-"Hallo,\n"
-"Wir</p><p> führen eine Umfrage durch und schätzen Ihre Antwort.\n"
-"Bitte klicken</p><p><a href=\"__URL__\" style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\"> Sie hier, um die Umfrage zu starten\n"
-"Danke</a></p><p> für Ihre Teilnahme!</p> \n"
-" \n"
+"\n"
+"<p>Hallo,</p>\n"
+"<p>wir führen eine Umfrage durch und schätzen Ihre Antwort.</p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Bitte klicken Sie hier, um die Umfrage zu starten.</a></p>\n"
+"<p>Danke für Ihre Teilnahme!</p> "
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -176,8 +175,8 @@ msgid ""
 "finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"label label-default only_left_radius filter-all\">Alle "
-"UmfragenAbgeschlossene</span><span class=\"label label-primary "
-"only_right_radius filter-finished\"> Umfragen</span>"
+"Umfragen</span> <span class=\"label label-primary only_right_radius filter-"
+"finished\">Abgeschlossene Umfragen</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -207,8 +206,8 @@ msgid ""
 "finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"label label-primary only_left_radius filter-all\">Alle "
-"UmfragenAbgeschlossene</span><span class=\"label label-default "
-"only_right_radius filter-finished\"> Umfragen</span>"
+"Umfragen</span> <span class=\"label label-default only_right_radius filter-"
+"finished\">Abgeschlossene Umfragen</span>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
@@ -219,7 +218,7 @@ msgid ""
 "                        Sorry, No one answered this survey yet"
 msgstr ""
 "<span>\n"
-" <i class=\"fa fa-users pull-right\" style=\"font-size:1.8em\"/>\n"
+"<i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "</span> \n"
 " Leider hat noch niemand diese Umfrage beantwortet."
 
@@ -281,12 +280,12 @@ msgid ""
 msgstr ""
 "Fügen Sie eine Liste der Empfänger-E-Mail-Adressen hinzu (werden nicht in "
 "Kontakte umgewandelt). Getrennt durch Kommata, Strichpunkte oder einen "
-"Zeilenumbruch ..."
+"Zeilenumbruch …"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Add existing contacts..."
-msgstr "Bestehende Kontakte hinzufügen  …"
+msgstr "Bestehende Kontakte hinzufügen …"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_3
@@ -1334,7 +1333,7 @@ msgstr "Fragen für Entwickler"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
 msgid "Quizz Mode"
-msgstr "Quizz-Modus"
+msgstr "Quizmodus"
 
 #. module: survey
 #: selection:survey.question,display_mode:0
@@ -1665,7 +1664,7 @@ msgstr "Umfrageseite"
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
 msgid "Survey: Clean test answers"
-msgstr "Umfrage: Saubere Test-Antworten"
+msgstr "Umfrage: Testantworten entfernen"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -1961,7 +1960,7 @@ msgstr "Antworttypen"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Upcoming Activities"
-msgstr "Anstehende Aktivitäten"
+msgstr "Zukünftige Aktivitäten"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -2041,7 +2040,7 @@ msgstr "Eingabeprüfung"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Validation Error message"
-msgstr "Meldung Validierungsfehler"
+msgstr "Validierungsfehlermeldung"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -2128,8 +2127,8 @@ msgid ""
 "marketing campaigns, etc."
 msgstr ""
 "Sie können Umfragen für verschiedene Zwecke erstellen: Kunden-Meinung, "
-"Feedback zu Dienstleistungen, Einstellungsgespräche, regelmäßige Bewertung "
-"von Mitarbeitern, Marketingkampagnen usw."
+"Feedback zu Dienstleistungen, Vorstellungsgespräche, regelmäßige Beurteilung"
+" von Mitarbeitern, Marketingkampagnen usw."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -2165,7 +2164,7 @@ msgstr "Sie haben folgende Punktzahl erreicht"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
-msgstr "ans"
+msgstr "Antw."
 
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum

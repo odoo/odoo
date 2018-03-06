@@ -422,11 +422,6 @@ return AbstractRenderer.extend({
             this.target_date = this.state.target_date.toString();
         }
 
-        var highlightDate = moment(this.state.highlight_date).format('YYYY-MM-DD');
-        $calendar.find('.o_target_date').removeClass('o_target_date');
-        $calendar.find('.fc-bg .fc-day[data-date="'+highlightDate+'"]')
-                 .addClass('o_target_date');
-
         this.$small_calendar.datepicker("setDate", this.state.highlight_date.toDate())
                             .find('.o_selected_range')
                             .removeClass('o_color o_selected_range');

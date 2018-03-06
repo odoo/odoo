@@ -5,13 +5,13 @@
 # Translators:
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Gert Valdek <gert@airobot.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
 # Mattias Põldaru <mahfiaz@gmail.com>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
+# Gert Valdek <gert@airobot.ee>, 2017
 # Marek Pontus, 2018
 msgid ""
 msgstr ""
@@ -316,7 +316,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr ""
+msgstr "<strong>Tellimise kuupäev:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1014,7 +1014,7 @@ msgstr "Täielikult arveks tehtud"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr "Tuleviku tegevused"
+msgstr "Tulevased tegevused"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1425,7 +1425,7 @@ msgstr "Uus"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "Uus hinnapakkumine"
+msgstr "Loo hinnapakkumine"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -1517,7 +1517,7 @@ msgstr "Online allkirja ja makse valikud"
 #: code:addons/sale/static/src/js/sale.js:32
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr ""
+msgstr "Ainult täisarvuline väärtus peaks olema kehtiv."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:209
@@ -1711,7 +1711,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:353
 #, python-format
 msgid "Please define an accounting sales journal for this company."
-msgstr ""
+msgstr "Palun määra raamatupidamise müügi andmik sellele ettevõttele."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:916
@@ -2018,7 +2018,7 @@ msgstr "Aruande paigutuse kategooriad"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "Raporteerimine"
+msgstr "Analüüs"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -2539,6 +2539,8 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
+"Sellele tootele ei ole tulukontot määratud: \"%s\". Võimalik, et peate "
+"paigaldama kontoplaani Raamatupidamise mooduli seadistuste menüüst."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
@@ -2730,7 +2732,7 @@ msgstr "Hoiatus %s"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr ""
+msgstr "Hoiatus müügitellimusel"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button

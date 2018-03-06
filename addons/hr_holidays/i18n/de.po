@@ -11,6 +11,7 @@
 # Wolfgang Taferner, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2017
 # Niki Waibel, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
@@ -19,7 +20,6 @@
 # Krakataua Katarajtu <shlok@hotmail.de>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # e2f FFE <e2f_de_FFE@outlook.com>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -76,7 +76,7 @@ msgstr "%s : %.2f Tag(e)"
 #: code:addons/hr_holidays/models/hr_holidays.py:335
 #, python-format
 msgid "%s on %s : %.2f day(s)"
-msgstr "%s auf %s : %.2f Tag(e)"
+msgstr "%s mit Abwesenheitstyp %s : %.2f Tag(e)"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -144,7 +144,7 @@ msgid ""
 "on today"
 msgstr ""
 "Abwesende(r) Angestellte(r), dessen/deren Urlaubsantrag heute bestätigt oder"
-" validiert wurde"
+" genehmigt wurde"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -743,7 +743,7 @@ msgstr "Der Urlaubsantrag muss bestätigt werden, um ihn zu genehmigen."
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Der Urlaubsantrag muss bestätigt oder validiert werden, um ihn abzulehnen."
+"Der Urlaubsantrag muss bestätigt oder genehmigt werden, um ihn abzulehnen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:422
@@ -1036,7 +1036,7 @@ msgid ""
 "type in the calendar."
 msgstr ""
 "Sobald eine Urlaubsantrag genehmigt wurde, erstellt Odoo ein Meeting in "
-"diesem Kalender"
+"diesem Kalender."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -1048,7 +1048,7 @@ msgid ""
 msgstr ""
 "Sobald Sie Ihren Urlaubsantrag aufgenommen haben, wird er an einen "
 "Vorgesetzten geschickt zur Überprüfung. Stellen Sie sicher, dass Sie den "
-"richtigen Urlaubstyp (Erholung, gesetzlicher Urlaub, Krankheit) und die "
+"richtigen Urlaubstyp (Ersatzurlaub, gesetzlicher Urlaub, Krankheit) und die "
 "genaue Anzahl der freien Tage für Ihren Urlaub festlegen."
 
 #. module: hr_holidays

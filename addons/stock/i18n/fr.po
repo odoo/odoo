@@ -1126,7 +1126,7 @@ msgstr "Lecteur de code-barres"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr "Lots de préparations"
+msgstr "Préparations par lots"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1601,7 +1601,7 @@ msgstr "Nombre de préparations"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Nombre de préparations partielles"
+msgstr "Nombre de préparations liées à un reliquat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_draft
@@ -2729,11 +2729,11 @@ msgid ""
 "                the purchase order reference. Then you can confirm all products\n"
 "                received using the buttons on the right of each line."
 msgstr ""
-"Permet de recevoir les produits individuellement, quel que soit\n"
-"                l'ordre dans lequel ils ont été achetés ou préparés. Vous trouverez\n"
+"Permet de recevoir les produits individuellement, indépendamment de\n"
+"                la commande fournisseur ou la préparation de commande à l'origine. Vous trouverez\n"
 "                la liste de tous les produits que vous attendez de recevoir. Après avoir reçu\n"
 "                une commande, vous pouvez filtrer les produits en fonction du nom du fournisseur ou\n"
-"               de la référence du bon de commande. Ensuite, vous pouvez confirmer tous les produits\n"
+"               de la référence de la commande fournisseur. Ensuite, vous pouvez confirmer tous les produits\n"
 "                reçus à l'aide des boutons situés à droite de chaque ligne."
 
 #. module: stock
@@ -5457,7 +5457,7 @@ msgstr "RAM SR5"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
 msgid "Rate Picking Backorders"
-msgstr "Pourcentage de préparations partielles"
+msgstr "Pourcentage de préparations liées à un reliquat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
@@ -6628,9 +6628,9 @@ msgstr ""
 "La demande représentée par un approvisionnement (p. ex. issu d'un bon de "
 "commande, d'une règle de commande ou d'un autre mouvement) doit être résolue"
 " en appliquant une règle de réapprovisionnement. Selon l'action définie par "
-"la règle de réapprovisionnement, cela déclenche la création d'un bon de "
-"commande, d'un ordre de fabrication ou d'un autre mouvement. Le système peut"
-" ainsi créer des chaînes inversées en partant de l'étape finale avec la "
+"la règle de réapprovisionnement, cela déclenche la création d'une commande "
+"fournisseur, d'un ordre de fabrication ou d'un autre mouvement. Le système "
+"peut ainsi créer des chaînes inversées en partant de l'étape finale avec la "
 "demande initiale et en terminant par le point de départ. De cette manière, "
 "l'étape suivante est toujours connue. C'est la raison pour laquelle cette "
 "solution est préférable aux règles de flux poussé."
@@ -6713,7 +6713,8 @@ msgstr "La règle poussée qui a créé ce mouvement de stock"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sales Order and a Transfer Order is created"
-msgstr "Le devis devient un bon de commande et un ordre de transfert est créé"
+msgstr ""
+"Le devis devient une commande client et un ordre de transfert est créé"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:266
@@ -7586,10 +7587,10 @@ msgstr ""
 "Lorsqu'un mouvement vers un emplacement est prévu, la règle de flux poussé "
 "crée automatiquement un mouvement vers un autre emplacement. Généralement, "
 "cette étape est uniquement nécessaire lorsque vous créez des opérations "
-"manuelles, telles qu'un bon de commande manuel à 2/3 étapes ou un ordre de "
-"fabrication manuel à 2/3 étapes pour un produit fini. Dans les autres cas, "
-"il est important d'utiliser des règles d'approvisionnement étant donné que "
-"les étapes suivantes dépendent de la demande."
+"manuelles, telles qu'une commande fournisseur manuelle à 2/3 étapes ou un "
+"ordre de fabrication manuel à 2/3 étapes pour un produit fini. Dans les "
+"autres cas, il est important d'utiliser des règles d'approvisionnement étant"
+" donné que les étapes suivantes dépendent de la demande."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_warehouse_selectable
@@ -8225,7 +8226,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "on the sales order form to see Transfer Order"
 msgstr ""
-"sur le formulaire de bon de commande pour consulter l'ordre de transfert"
+"sur le formulaire de commande client pour consulter l'ordre de transfert"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast

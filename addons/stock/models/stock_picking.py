@@ -514,7 +514,18 @@ class Picking(models.Model):
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
         if vals.get('move_lines'):
-            self._autoconfirm_picking()
+            # Do not run autoconfirm if any of the moves has an initial demand. If an initial demand
+            # is present in any of the moves, it means the picking was created through the "planned
+            # transfer" mechanism.
+            pickings_to_not_autoconfirm = self.env['stock.picking']
+            for picking in self:
+                if picking.state != 'draft':
+                    continue
+                for move in picking.move_lines:
+                    if not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                        pickings_to_not_autoconfirm |= picking
+                        break
+            (self - pickings_to_not_autoconfirm)._autoconfirm_picking()
         return res
 
     @api.multi
@@ -831,7 +842,7 @@ class Picking(models.Model):
 
     def _put_in_pack(self):
         package = False
-        for pick in self:
+        for pick in self.filtered(lambda p: p.state not in ('done', 'cancel')):
             operations = pick.move_line_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
             operation_ids = self.env['stock.move.line']
             if operations:
