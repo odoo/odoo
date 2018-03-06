@@ -6,17 +6,26 @@
 Odoo Guidelines
 ===============
 
-This page introduces the new Odoo Coding Guidelines. Those aim to improve the quality of the code (e.g. better readability of source) and Odoo Apps. Indeed, proper code eases maintenance, aids debugging, lowers complexity and promotes reliability.
-
-These guidelines should be applied to every new module, and new development.
+This page introduces the Odoo Coding Guidelines. Those aim to improve the
+quality of Odoo Apps code. Indeed proper code improves readability, eases
+maintenance, helps debugging, lowers complexity and promotes reliability.
+These guidelines should be applied to every new module and to all new development.
 
 .. warning::
 
-    These guidelines are written with new modules and new files in mind. When
-    modifying existing files, the original style of the file strictly supersedes
-    any other style guidelines. In other words, never modify existing files in
-    order to apply these guidelines, to avoid disrupting the revision history of
-    each line. For more details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+    When modifying existing files in **stable version** the original file style
+    strictly supersedes any other style guidelines. In other words please never
+    modify existing files in order to apply these guidelines. It avoids disrupting
+    the revision history of code lines. Diff should be kept minimal. For more
+    details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+
+.. warning::
+
+    When modifying existing files in **master (development) version** apply those
+    guidelines to existing code only for modified code or if most of the file is
+    under revision. In other words modify existing files structure only if it is
+    going under major changes. In that case first do a **move** commit then apply
+    the changes related to the feature.
 
 Module structure
 ================
