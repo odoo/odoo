@@ -13,10 +13,7 @@ class AccountInvoiceConfirm(models.TransientModel):
 
     @api.multi
     def invoice_confirm(self):
-        context = dict(self._context or {})
-        active_ids = context.get('active_ids', []) or []
-
-        for record in self.env['account.invoice'].browse(active_ids):
+        for record in self.env['account.invoice'].get_active_records():
             if record.state != 'draft':
                 raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' state."))
             record.action_invoice_open()

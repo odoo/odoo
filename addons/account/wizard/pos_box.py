@@ -13,9 +13,8 @@ class CashBox(models.TransientModel):
     def run(self):
         context = dict(self._context or {})
         active_model = context.get('active_model', False)
-        active_ids = context.get('active_ids', [])
 
-        records = self.env[active_model].browse(active_ids)
+        records = self.env[active_model].get_active_records()
 
         return self._run(records)
 

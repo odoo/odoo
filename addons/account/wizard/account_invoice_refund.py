@@ -49,7 +49,7 @@ class AccountInvoiceRefund(models.TransientModel):
             created_inv = []
             date = False
             description = False
-            for inv in inv_obj.browse(context.get('active_ids')):
+            for inv in inv_obj.get_active_records():
                 if inv.state in ['draft', 'cancel']:
                     raise UserError(_('Cannot create credit note for the draft/cancelled invoice.'))
                 if inv.reconciled and mode in ('cancel', 'modify'):

@@ -9,7 +9,7 @@ class ValidateAccountMove(models.TransientModel):
     @api.multi
     def validate_move(self):
         context = dict(self._context or {})
-        moves = self.env['account.move'].browse(context.get('active_ids'))
+        moves = self.env['account.move'].get_active_records()
         move_to_post = self.env['account.move']
         for move in moves:
             if move.state == 'draft':

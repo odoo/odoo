@@ -40,6 +40,7 @@ class AccountCommonReport(models.TransientModel):
     def check_report(self):
         self.ensure_one()
         data = {}
+        # TO-CHECK
         data['ids'] = self.env.context.get('active_ids', [])
         data['model'] = self.env.context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'company_id'])[0]
