@@ -41,7 +41,7 @@ Discuss.include({
      */
     on_attach_callback: function () {
         if (this.channel && this._isInInboxTab()) {
-            this.thread.scroll_to({offset: this.channels_scrolltop[this.channel.id]});
+            this.thread.scroll_to({offset: this.channelsScrolltop[this.channel.id]});
         }
     },
     /**
@@ -49,7 +49,7 @@ Discuss.include({
      */
     on_detach_callback: function () {
         if (this._isInInboxTab()) {
-            this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
+            this.channelsScrolltop[this.channel.id] = this.thread.get_scrolltop();
         }
     },
 
