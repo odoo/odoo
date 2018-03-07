@@ -13,8 +13,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     @api.model
     def _default_partner_id(self):
         context = dict(self._context or {})
-        active_ids = context.get('active_ids', [])
-        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
+        expense_sheet = self.env['hr.expense.sheet'].get_active_records()
         return expense_sheet.address_id.id or expense_sheet.employee_id.id and expense_sheet.employee_id.address_home_id.id
 
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, default=_default_partner_id)
@@ -93,8 +92,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
     def expense_post_payment(self):
         self.ensure_one()
         context = dict(self._context or {})
-        active_ids = context.get('active_ids', [])
-        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
+        expense_sheet = self.env['hr.expense.sheet'].get_active_records()
 
         # Create payment and post it
         payment = self.env['account.payment'].create(self._get_payment_vals())
