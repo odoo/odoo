@@ -160,13 +160,14 @@ class PosOrder(models.Model):
         """
         Prepare the dict of values to create the new invoice for a pos order.
         """
+        invoice_type = 'out_invoice' if self.amount_total >= 0 else 'out_refund'
         return {
             'name': self.name,
             'origin': self.name,
             'account_id': self.partner_id.property_account_receivable_id.id,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'company_id': self.company_id.id,
-            'type': 'out_invoice',
+            'type': invoice_type,
             'reference': self.name,
             'partner_id': self.partner_id.id,
             'comment': self.note or '',
@@ -208,7 +209,7 @@ class PosOrder(models.Model):
         inv_line = {
             'invoice_id': invoice_id,
             'product_id': line.product_id.id,
-            'quantity': line.qty,
+            'quantity': line.qty if self.amount_total >= 0 else -line.qty,
             'account_analytic_id': self._prepare_analytic_account(line),
             'name': inv_name,
         }
