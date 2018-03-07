@@ -11,6 +11,7 @@
 # liAnGjiA <liangjia@qq.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Bo Cao, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -38,12 +39,12 @@ msgid ""
 "</data>"
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"您好，\n"
-"您已请求订阅邮件列表 ${object.name}\n"
-"要进行确认，请访问以下链接：\n"
-"${ctx['token_url']}\n"
-"如果这是一个错误，或者您未请求执行此操作，请忽略此消息。\n"
-"<data><p></p><p><strong></strong></p><p></p><p><strong><a href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
+"<data><p>您好，</p>\n"
+"<p>您已请求订阅邮件列表 <strong>${object.name}</strong></p>\n"
+"<p>要进行确认，请访问以下链接：</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>如果这是一个错误，或者您未请求执行此操作，请忽略此消息。</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
@@ -57,12 +58,12 @@ msgid ""
 "</data>"
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"您好，\n"
-"您已请求退订邮件列表 ${object.name}\n"
-"要进行确认，请访问以下链接：\n"
-"${ctx['token_url']}\n"
-"如果这是一个错误，或者您未请求执行此操作，请忽略此消息。\n"
-"<data><p></p><p><strong></strong></p><p></p><p><strong><a href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
+"<data><p>您好，</p>\n"
+"<p>您已请求退订邮件列表 <strong>${object.name}</strong></p>\n"
+"<p>要进行确认，请访问以下链接：</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>如果这是一个错误，或者您未请求执行此操作，请忽略此消息。</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -214,7 +215,7 @@ msgstr "退订"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "You have been correctly"
-msgstr "您已正确"
+msgstr "您已正确操作"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe

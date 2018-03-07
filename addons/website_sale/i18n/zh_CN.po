@@ -36,13 +36,14 @@
 # zhiguo liu <if@openbpm.cn>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,9 +73,9 @@ msgid ""
 "                              Free Shipping in U.S.<br/>\n"
 "                              Buy now, get in 2 days"
 msgstr ""
-"30 天退款保证 <br/>\n"
-" 美国境内免运费 <br/>\n"
-" 立即购买，2 天内到货"
+"30 天退款保证<br/>\n"
+"                              美国境内免运费<br/>\n"
+"                              现在购买，2 天内到货"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -121,36 +122,36 @@ msgid ""
 "            "
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"\n"
-"\n"
-" 您的购物车中有一些商品。\n"
-" 是否想要完成购买？<div style=\"margin:auto;width:100%;\"><img src=\"/web/image/res.company/${user.company_id.id}/logo\" style=\"height: auto; width: 80px; margin-top:30px;\" alt=\"${user.company_id.name}\"/><h1 style=\"color:#A9A9A9;\"></h1>\n"
-" % if object.order_line:\n"
-" % for line in object.order_line:\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" ${line.product_id.display_name} ${line.name}\n"
-" \n"
-" \n"
-" ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
-" \n"
-" \n"
-" \n"
-" % endfor\n"
-" \n"
-" % endif\n"
-" \n"
-" \n"
-" 恢复订单 \n"
-" 谢谢惠顾 ${user.company_id.name}！\n"
-" \n"
-" \n"
-"<p></p><br/><br/><hr/><table width=\"100%\"><tr><td style=\"padding: 10px; width:150px;\"><img src=\"/web/image/product.product/${line.product_id.id}/image\" height=\"100px\" width=\"100px\"/></td><td><strong></strong><br/></td><td width=\"100px\" align=\"right\"></td></tr></table><hr/><br/><br/><center><a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\"></a><br/><br/><br/><p><b></b></p></center></div>"
+"<div style=\"margin:auto;width:100%;\">\n"
+"                    <img src=\"/web/image/res.company/${user.company_id.id}/logo\" style=\"height: auto; width: 80px; margin-top:30px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    <h1 style=\"color:#A9A9A9;\">您的购物车中有一些商品。</h1>\n"
+"                    <p>是否想要完成购买？</p><br/><br/>\n"
+"                    % if object.order_line:\n"
+"                    % for line in object.order_line:\n"
+"                    <hr/>\n"
+"                    <table width=\"100%\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 10px; width:150px;\">\n"
+"                                <img src=\"/web/image/product.product/${line.product_id.id}/image\" height=\"100px\" width=\"100px\"/>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                            </td>\n"
+"                            <td width=\"100px\" align=\"right\">\n"
+"                                ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % endfor\n"
+"                    <hr/>\n"
+"                    % endif\n"
+"                    <br/><br/>\n"
+"                    <center>\n"
+"                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">重新订购</a><br/><br/><br/>\n"
+"                        <p><b>感谢您使用 ${user.company_id.name} 购物！</b></p>\n"
+"                    </center>\n"
+"                </div>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -168,12 +169,12 @@ msgid ""
 "                                e.g. for computers:"
 msgstr ""
 "<br/>\n"
-" 例如针对计算机："
+"                                例如针对计算机："
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add payment acquirers"
-msgstr "<i aria-hidden=\"true\" class=\"fa fa-arrow-right\"/>添加付款托收方"
+msgstr "<i aria-hidden=\"true\" class=\"fa fa-arrow-right\"/>添加付款收单方"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
@@ -202,7 +203,7 @@ msgid ""
 "                    My Cart"
 msgstr ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
-" 我的购物车"
+"                    我的购物车"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:58
@@ -214,8 +215,9 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-" 您可以在此处找到所有被遗弃的购物车，即在一个小时前由您的网站访客创建，但尚未确认的购物车。\n"
-"</p> <p>您应该向这些客户发送电子邮件，鼓励他们进行确认！</p>\n"
+"                        您可以在此处找到所有被遗弃的购物车，即在一个小时前由您的网站访客创建，但尚未确认的购物车。</p>\n"
+"                        <p>您应该向这些客户发送电子邮件，鼓励他们进行确认！</p>\n"
+"                    "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -256,8 +258,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left\" aria-hidden=\"true\"/>\n"
 "                                            <span class=\"sr-only\">Previous</span>"
 msgstr ""
-"<span aria-hidden=\"true\" class=\"fa fa-chevron-left\"/>\n"
-" <span class=\"sr-only\">上一步</span>"
+"<span class=\"fa fa-chevron-left\" aria-hidden=\"true\"/>\n"
+"                                            <span class=\"sr-only\">上一步</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -265,8 +267,8 @@ msgid ""
 "<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
 "                                            <span class=\"sr-only\">Next</span>"
 msgstr ""
-"<span aria-hidden=\"true\" class=\"fa fa-chevron-right\"/>\n"
-" <span class=\"sr-only\">下一步</span>"
+"<span class=\"fa fa-chevron-right\" aria-hidden=\"true\"/>\n"
+"                                            <span class=\"sr-only\">下一步</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -275,7 +277,7 @@ msgid ""
 "                                Everything is editable in your Odoo website. Feel free to edit any page title, field or button label. Simply hit *Edit* in upper-right corner to start editing the page."
 msgstr ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-" 您的 Odoo 网站中所有内容都可以进行编辑。可以随意编辑任意页面标题、字段或按钮标签。只需单击右上角的*编辑*即可开始编辑页面。"
+"                                您的 Odoo 网站中所有内容都可以进行编辑。可以随意编辑任意页面标题、字段或按钮标签。只需单击右上角的*编辑*即可开始编辑页面。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -284,7 +286,7 @@ msgid ""
 "                                Offering free delivery with a minimum amount or minimum number of items should drive up your average order value and help to compensate for the delivery costs."
 msgstr ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-" 提供最低金额或最少数量的物品的免费送货服务会提高您的平均订单价值，并有助于弥补运输成本。"
+"                                提供最低金额或最少数量的物品的免费送货服务会提高您的平均订单价值，并有助于弥补运输成本。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -293,7 +295,7 @@ msgid ""
 "                                You can create different rates based on order amount ranges (e.g. $10 up to a $50 order, then $5 beyond)."
 msgstr ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-" 您可以基于订单金额范围创建不同的费率（例如 50 美元的订单至多 10 美元，超过之后增加 5 美元）。"
+"                                您可以基于订单金额范围创建不同的费率（例如 50 美元的订单至多 10 美元，超过之后增加 5 美元）。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.continue_shopping
@@ -303,18 +305,18 @@ msgid ""
 "                <span class=\"visible-xs-inline\">Continue</span>"
 msgstr ""
 "<span class=\"fa fa-long-arrow-left\"/>\n"
-" <span class=\"hidden-xs\">继续采购\n"
-"</span> <span class=\"visible-xs-inline\">继续</span>"
+"                <span class=\"hidden-xs\">继续购物</span>\n"
+"                <span class=\"visible-xs-inline\">继续</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"fa fa-long-arrow-left\"/> Back"
-msgstr "<span class=\"fa fa-long-arrow-left\"/>回退"
+msgstr "<span class=\"fa fa-long-arrow-left\"/>返回"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"fa fa-long-arrow-left\"/> Previous"
-msgstr "<span class=\"fa fa-long-arrow-left\"/>以前"
+msgstr "<span class=\"fa fa-long-arrow-left\"/>上一步"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -328,9 +330,9 @@ msgid ""
 "                                        <span class=\"visible-xs-inline\">Checkout</span>\n"
 "                                        <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
-"<span class=\"hidden-xs\">结账流程\n"
-"</span> <span class=\"visible-xs-inline\">结账\n"
-"</span><span class=\"fa fa-long-arrow-right\"/>"
+"<span class=\"hidden-xs\">结账流程</span>\n"
+"                                        <span class=\"visible-xs-inline\">结账</span>\n"
+"                                        <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -364,8 +366,8 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <strong>交叉销售\n"
-"</strong></span>"
+"                                        <strong> 交叉销售</strong>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -387,9 +389,9 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <strong>篮子中平均 > 5 件商品？</strong><br/>\n"
-" <span class=\"small\"/>\n"
-"</span>"
+"                                        <strong>购物车中平均 > 5 件商品？</strong><br/>\n"
+"                                            <span class=\"small\"/>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -399,8 +401,8 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <strong>多个价格\n"
-"</strong></span>"
+"                                        <strong>多个价格</strong>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -410,8 +412,8 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <strong>唯一价格\n"
-"</strong></span>"
+"                                        <strong>唯一价格</strong>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -421,8 +423,8 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <strong>增售\n"
-"</strong></span>"
+"                                        <strong>增售</strong>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -432,8 +434,8 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <strong>是否有全面的目录？</strong><br/>\n"
-"</span>"
+"                                        <strong>是否有全面的目录？</strong><br/>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -445,10 +447,10 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <span class=\"fa fa-check-square-o\"/>\n"
-" <strong>定制您的产品目录</strong> <br/>\n"
-" <span class=\"small\"/>\n"
-"</span>"
+"                                    <span class=\"fa fa-check-square-o\"/>\n"
+"                                    <strong>定制您的产品目录</strong><br/>\n"
+"                                        <span class=\"small\"/>\n"
+"                                </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -460,10 +462,10 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-" <span class=\"fa fa-check-square-o\"/>\n"
-" <strong>定制结账流程</strong> <br/>\n"
-" <span class=\"small\"/>\n"
-"</span>"
+"                                <span class=\"fa fa-check-square-o\"/>\n"
+"                                <strong>定制结账流程</strong><br/>\n"
+"                                    <span class=\"small\"/>\n"
+"                            </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -472,9 +474,9 @@ msgid ""
 "                                    <span class=\"small\">Recommended for Starters</span>\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong>首次</strong><span class=\"small\">使用\n"
-" 推荐 Paypal</span>\n"
-"</span>"
+"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> Paypal</strong>\n"
+"                                    <span class=\"small\">推荐新用户使用</span>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -502,7 +504,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong>按成本价</strong>（客户支付您需要支付的款项）<br/>\n"
-" 如果<span class=\"small\">您的包装在尺寸/重量上有所不同并且/或者您在全球范围内运送，则建议此方式\\</span>n</span>"
+"                            <span class=\"small\">如果您的包装在尺寸/重量上有所不同并且/或者您在全球范围内运送，则建议此方式</span>\n"
+"                            </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -510,8 +513,8 @@ msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong> Free delivery</strong><br/>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong>免费送货</strong> <br/>\n"
-"</span>"
+"<span class=\"panel-title\"><span class=\"fa fa-smile-o\"/><strong>免费送货</strong><br/>\n"
+"                            </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -520,9 +523,9 @@ msgid ""
 "                            <span class=\"small\">Advised if you target a local audience</span>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong>费率</strong>平均（所有人付款相同）<br/>\n"
-" <span class=\"small\">针对本地受众，建议此</span>方式\n"
-"</span>"
+"<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong>统一费用</strong> （所有人支付相同费用）<br/>\n"
+"                            <span class=\"small\">针对本地受众，建议此方式</span>\n"
+"                            </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -532,7 +535,7 @@ msgstr "<span>& 运输</span>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "<span>Billing</span>"
-msgstr "<span>开单</span>"
+msgstr "<span>开票</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -560,8 +563,8 @@ msgid ""
 "<span>Sort by</span>\n"
 "                        <span class=\"caret\"/>"
 msgstr ""
-"<span>排序方式\n"
-"</span><span class=\"caret\"/>"
+"<span>排序方式</span>\n"
+"                        <span class=\"caret\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -621,7 +624,7 @@ msgstr "<strong>对于复杂导入</strong> (&gt;5000项，产品变体，图片
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>High-quality pictures</strong>"
-msgstr "<strong>高质量的图片</strong>"
+msgstr "<strong>高画质图片</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -629,8 +632,8 @@ msgid ""
 "<strong>Key features, emotional and commercial content</strong><br/>\n"
 "                            Recommended for at least your top products, because it may have a big impact on your sales and conversion rates."
 msgstr ""
-"<strong>主要特点，情绪和商业内容</strong> <br/>\n"
-" 至少推荐你的顶级产品，因为它可能对你的销售和转化率有很大的影响。"
+"<strong>主要特点，情绪化和商业内容</strong><br/>\n"
+"                            至少推荐你的顶级产品，因为它可以对你的销售和转化率有很大的影响。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -650,7 +653,7 @@ msgstr "<strong>订单详情:</strong>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<strong>Payment Acquirer:</strong>"
-msgstr "<strong>付款收单机构：</strong>"
+msgstr "<strong>付款收单方：</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -697,18 +700,18 @@ msgid ""
 "<strong>Reassurance arguments</strong><br/>\n"
 "                            Anticipate your customers questions &amp; worries on practical details like shipping rates &amp; policies, return &amp; replacement policies, payment acquirers &amp; security and your"
 msgstr ""
-"<strong>放心参数</strong> <br/>\n"
-" 预测您的客户疑问和对实际细节的担忧，如运费和政策、退换货政策、付款收单方和安全性及您的"
+"<strong>放心参数</strong><br/>\n"
+"                            预测您的客户疑问和对实际细节的担忧，如运费和政策、退换货政策、付款收单方和安全性及您的"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>See it in action in Odoo</strong><br/>"
-msgstr "<strong>在 Odoo 的操作中进行查看</strong><br/>"
+msgstr "<strong>在 Odoo 中查看操作画面</strong><br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Short description</strong>"
-msgstr "<strong>短描述</strong>"
+msgstr "<strong>简短描述</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -749,7 +752,7 @@ msgid ""
 "A <b>Governing Law</b> will inform users which laws govern the agreement. "
 "This should the country in which your company is headquartered or the "
 "country from which you operate your web site and mobile app."
-msgstr "<b>适用法律</b>将告知用户适用于协议的法律。这应该是您的公司总部所在的国家/地区或运营您的网站和移动应用程序的国家/地区。"
+msgstr "<b>适用法律</b>将告知用户协议适用的法律。应当是您的公司总部所在的国家/地区或运营您的网站和移动应用程序的国家/地区的法律。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -759,7 +762,7 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
-"“<b>用户行为限制”条款可以</b>告知用户，他们在同意使用您的服务的同时也同意不进行特定的行为。这可能是您的条款和条件协议中非常长而详细的清单的一部分，以包括大部的消极使用。"
+"“<b>用户行为限制”条款可以</b>告知用户，他们在同意使用您的服务时，即表示同意不进行某些特定的行为。您的条款和条件协议中会进行详尽的介绍，以包括大部的消极使用。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -780,7 +783,7 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
-"<b>终止</b>条款将告知用户在您的网站和移动应用程序上的账户或用户对您的网站和移动应用程序的访问权（如果用户无法拥有您的账户），可以在发生滥用情况或您自行决定时被终止。"
+"<b>终止</b>条款将告知用户在您的网站和移动应用程序上的账户或用户对您的网站和移动应用程序的访问权（如果用户无法拥有您的账户），可以在发生滥用时或由您自行决定终止。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -1089,7 +1092,7 @@ msgstr "款项需要数天才能到账"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:12
 #, python-format
 msgid "Capture order payments when the delivery is completed."
-msgstr "在交货完成后获取订单付款。"
+msgstr "在交货后获取订单付款。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_quantity
@@ -1104,7 +1107,7 @@ msgstr "购物车恢复电子邮件"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Cart are considered abandoned after"
-msgstr "购物车考虑为遗弃的期限"
+msgstr "购物车被视为遗弃的期限"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_recovery_email_sent
@@ -1156,7 +1159,7 @@ msgid ""
 "Shop page, hit Customize and turn *Product Categories* on. A product can "
 "belong to several categories."
 msgstr ""
-"可以在“商店”页面（在线目录网格）上发布类别，有助于客户查找某一类别的所有产品。要发布类别，请转到“商店”页面，单击“定制”并启用“产品类别”。一件产品可以属于多个类别。"
+"可以在“商店”页面（在线目录网格）上发布类别，帮助客户查找某一类别的所有产品。要发布类别，请转到“商店”页面，单击“定制”并启用“产品类别”。一件产品可以属于多个类别。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1170,7 +1173,8 @@ msgid ""
 "                is sent or confirmed and if the payment acquire is of the type transfer or manual"
 msgstr ""
 "检查销售订单是否可以直接标记为已付款，即假设已发送\n"
-"或确认报价并且付款方式是转账或手动类型"
+"\n"
+"               或确认报价并且付款方式是转账或手动付款"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -1457,7 +1461,7 @@ msgstr "在购物车被遗弃时默认发送的恢复电子邮件"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default sales tax applied to local transactions"
-msgstr "适用于本地交易的销售税"
+msgstr "适用于本地交易的默认销售税"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1669,7 +1673,7 @@ msgstr "字段"
 msgid ""
 "Find here all the abandoned carts, i.e. the carts generated by your "
 "website's visitors more than one hour ago and not confirmed."
-msgstr "在此找到所有遗弃的购物车，即由网站的访客创建，却没有确认且已超过一个小时的购物车。"
+msgstr "在此找到所有遗弃的购物车，即由网站的访客在一个小时前创建，却没有确认的购物车。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1847,8 +1851,8 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
-"如果您的网站或移动应用允许用户创建内容并将内容公开给其他用户，则“<b>内容</b>”部分将告知用户他们拥有所创建的内容的权利。<br/>“内容”条款通常会提到用户必须向您（网站或移动应用程序开发商）提供许可证，以便您可以在您的网站/移动应用程序上共享此内容，并使其他用户可以使用此内容。<br/>由于用户所创建的内容对其他用户都是公开的，因此"
-" DMCA 通知条款（或版权侵权）部分有助于告知用户和版权作者，如果发现任何内容侵犯了版权，您将响应所有的 DMCA 删除通知并删除相关内容。"
+"如果您的网站或移动应用允许用户创建内容并将内容公开给其他用户，则“<b>内容</b>”部分将告知用户他们对所创建的内容享有权利。<br/>“内容”条款通常会提到用户必须向您（网站或移动应用程序开发者）提供许可证，以便您可以在您的网站/移动应用程序上共享此内容，并使其他用户可以使用此内容。<br/>由于用户所创建的内容对其他用户都是公开的，因此"
+" DMCA 通知条款（或版权侵权）部分有助于告知用户和版权作者，如果发现任何内容侵犯了版权，您将响应收到的所有 DMCA 删除通知并删除相关内容。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_image
@@ -2064,7 +2068,7 @@ msgid ""
 "Make sure your customers can go through the shopping process in a very short"
 " time, otherwise they will leave your website. Here are some actions to "
 "tailor the process to your business."
-msgstr "保证您的客户可以在很短的时间内完成购物流程，否则他们将会离开网站。这些操作可以让流程更加适合您的业务。"
+msgstr "保证您的客户可以在很短的时间内完成购物流程，否则他们将会离开网站。以下操作可以让流程更加适合您的业务。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2166,7 +2170,7 @@ msgstr "新产品"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "下<span class=\"fa fa-long-arrow-right\"/>一步"
+msgstr "下一步<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2191,7 +2195,7 @@ msgstr "无网站"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Now to Follow Your Order"
-msgstr "现在关注订单"
+msgstr "立即关注订单"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_count
@@ -2217,7 +2221,7 @@ msgstr "激活后，可以在“价格表”设置表单（折扣政策字段）
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:55
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "一旦你点击<b>保存，</b>您的产品更新。"
+msgstr "一旦您点击<b>保存</b>，将会更新您的产品。"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:39
@@ -2351,14 +2355,14 @@ msgstr "付款<span class=\"chevron\"/>"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.payment_transaction_action_payments_to_capture
 msgid "Payments To Capture"
-msgstr "付款到获取"
+msgstr "付款获取"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:14
 #, python-format
 msgid "Payments to Capture"
-msgstr "付款到获取"
+msgstr "付款获取"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Pen_Drive
@@ -2607,7 +2611,7 @@ msgid ""
 "                            all your product pages."
 msgstr ""
 "将实际的详细信息（运输，收款方等）作为页脚中的链接；这样，在您的所有产品页面中都能\n"
-"看到这些内容。"
+"                            看到这些内容。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2815,7 +2819,7 @@ msgstr "查看如何配置付款收单方"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to configure pricing &amp; discounts"
-msgstr "查看如何配置价格和折扣"
+msgstr "查看如何配置定价和折扣"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2834,7 +2838,7 @@ msgstr "选择"
 msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
-msgstr "选择<b>新产品</b>来创建和管理它的属性来提高你的销售。"
+msgstr "选择<b>新产品</b>来创建产品和管理它的属性来提高您的销售额。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2876,7 +2880,7 @@ msgstr "卖得更多"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell content to download or URL links"
-msgstr "销售下载链接或 URL 链接"
+msgstr "销售下载内容或 URL 链接"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3308,7 +3312,7 @@ msgstr "这会添加价格表上的货币选项。"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
-msgstr "组合不存在。"
+msgstr "此组合不存在。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image
@@ -3320,7 +3324,7 @@ msgstr "这个字段记录了这个分类使用的图像，限制在1024x1024像
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
-msgstr "这是当前您的购物车。"
+msgstr "这是您当前的购物车。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.coupon_form
@@ -3339,13 +3343,13 @@ msgid ""
 "                        Using payment acquirers costs you money, so take some time to compare them."
 msgstr ""
 "要收取付款，您可以要求您的客户手动处理（如电汇等）或将其重定向到付款收单方。<br/>\n"
-" 使用付款收单方会有一定成本，所以需要一些时间来进行比较。"
+"                        使用付款收单方会有一定成本，所以需要一些时间来进行比较。 "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid ""
 "To do so, take the most out of Odoo's <strong>pricing options</strong>:<br/>"
-msgstr "为此，请充分利用 Odoo <strong>的定价选项：</strong><br/>"
+msgstr "为此，请充分利用 Odoo <strong>的定价选项</strong>：<br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -3488,7 +3492,7 @@ msgstr "网站价格"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price_difference
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price_difference
 msgid "Website price difference"
-msgstr "网站定价差异"
+msgstr "网站价格差异"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
@@ -3606,7 +3610,7 @@ msgid ""
 "                                        <small> or </small>"
 msgstr ""
 "您的地址\n"
-" <small>或</small>"
+"                                        <small>或</small>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -3689,7 +3693,7 @@ msgstr "如果想要将之前的购物车合并到当前购物车。"
 msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
-msgstr "如果要恢复之前的购物车。您的之前的购物车将代替当前购物车。"
+msgstr "如果要恢复之前的购物车。您之前的购物车将代替当前购物车。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover

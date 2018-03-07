@@ -18,6 +18,7 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 钟小华 <mackz@sina.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -61,28 +62,28 @@ msgid ""
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
 "\n"
-"\n"
-" 亲爱的 ${object.user_id.name or ''}，\n"
-"\n"
-"\n"
-" 您已获得访问 ${user.company_id.name} ${object.wizard_id.portal_id.name} 的权限。\n"
-"\n"
-"\n"
-" 您的登录账户信息为：\n"
-"\n"
-"<p></p>\n"
-" <li>用户名：${object.user_id.login or ''}</li>\n"
-" <li>门户：<a href=\"${&apos;portal_url&apos; in ctx and ctx[&apos;portal_url&apos;] or &apos;&apos;}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
-" <li>数据库：${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
-"\n"
-"\n"
-" 您可以通过以下 URL 设置或更改密码：\n"
-"\n"
-"\n"
-" ${object.user_id.signup_url}\n"
-"\n"
-"\n"
-"${object.wizard_id.welcome_message or ''}<p></p><p></p><ul></ul><p></p><ul><li><a href=\"${object.user_id.signup_url}\"></a></li></ul><p>"
+"<p>\n"
+"    亲爱的 ${object.user_id.name or ''}，\n"
+"</p>\n"
+"<p>\n"
+"    您已获得访问 ${user.company_id.name}'s ${object.wizard_id.portal_id.name} 的权限。\n"
+"</p>\n"
+"<p>\n"
+"    您的登录账户信息为：\n"
+"</p>\n"
+"<ul>\n"
+"    <li>用户名：${object.user_id.login or ''}</li>\n"
+"    <li>门户：<a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>数据库：${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"    您可以通过以下 URL 设置或更改密码：\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -131,7 +132,7 @@ msgstr "清除"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr "单击此处查看您的文件。"
+msgstr "单击此处查看您的文档。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -298,7 +299,7 @@ msgstr "下一个"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:38
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr "哎哟！出错了。请尝试重新加载页面并登录。"
+msgstr "糟糕！出错了。请尝试重新加载页面并登录。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -610,7 +611,7 @@ msgstr "你的详细信息"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr "您的文件"
+msgstr "您的文档"
 
 #. module: portal
 #. openerp-web
