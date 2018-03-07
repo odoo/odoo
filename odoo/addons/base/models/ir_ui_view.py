@@ -256,12 +256,10 @@ actual arch.
     def _inverse_arch(self):
         for view in self:
             data = dict(arch_db=view.arch)
-            if 'install_mode_data' in self._context:
-                imd = self._context['install_mode_data']
-
+            if 'install_filename' in self._context:
                 # we store the relative path to the resource instead of the absolute path, if found
                 # (it will be missing e.g. when importing data-only modules using base_import_module)
-                path_info = get_resource_from_path(imd['xml_file'])
+                path_info = get_resource_from_path(self._context['install_filename'])
                 if path_info:
                     data['arch_fs'] = '/'.join(path_info[0:2])
             view.write(data)
@@ -402,7 +400,7 @@ actual arch.
     def write(self, vals):
         # If view is modified we remove the arch_fs information thus activating the arch_db
         # version. An `init` of the view will restore the arch_fs for the --dev mode
-        if ('arch' in vals or 'arch_base' in vals) and 'install_mode_data' not in self._context:
+        if ('arch' in vals or 'arch_base' in vals) and 'install_filename' not in self._context:
             vals['arch_fs'] = False
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
@@ -472,7 +470,7 @@ actual arch.
             # cannot currently use relationships that are
             # not required. The root cause is the INNER JOIN
             # used to implement it.
-            modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
             views = self.search(conditions + [('model_ids.module', 'in', modules)])
             views_cond = [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)]
             views = self.search(conditions + views_cond, order=INHERIT_ORDER)
