@@ -15,21 +15,21 @@ class ResConfigSettings(models.TransientModel):
 
     # FIXME: Set website_id to ondelete='cascade' in master
     website_id = fields.Many2one('website', string="website", default=_default_website, required=True)
-    website_name = fields.Char('Website Name', related='website_id.name')
-    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
+    website_name = fields.Char('Website Name', related='website_id.name', related_sudo=False)
+    language_ids = fields.Many2many(related='website_id.language_ids', related_sudo=False, relation='res.lang')
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
-    default_lang_id = fields.Many2one(string='Default language', related='website_id.default_lang_id', relation='res.lang', required=True)
-    default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code')
-    google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key')
-    google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id')
-    google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret')
+    default_lang_id = fields.Many2one(string='Default language', related='website_id.default_lang_id', related_sudo=False, relation='res.lang', required=True)
+    default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code', related_sudo=False)
+    google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key', related_sudo=False)
+    google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id', related_sudo=False)
+    google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret', related_sudo=False)
 
-    cdn_activated = fields.Boolean('Use a Content Delivery Network (CDN)', related='website_id.cdn_activated')
-    cdn_url = fields.Char(related='website_id.cdn_url')
-    cdn_filters = fields.Text(related='website_id.cdn_filters')
+    cdn_activated = fields.Boolean('Use a Content Delivery Network (CDN)', related='website_id.cdn_activated', related_sudo=False)
+    cdn_url = fields.Char(related='website_id.cdn_url', related_sudo=False)
+    cdn_filters = fields.Text(related='website_id.cdn_filters', related_sudo=False)
     module_website_version = fields.Boolean("A/B Testing")
 
-    favicon = fields.Binary('Favicon', related='website_id.favicon')
+    favicon = fields.Binary('Favicon', related='website_id.favicon', related_sudo=False)
     # Set as global config parameter since methods using it are not website-aware. To be changed
     # when multi-website is implemented
     google_maps_api_key = fields.Char(string='Google Maps API Key')

@@ -8,22 +8,25 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
-    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
+    currency_id = fields.Many2one('res.currency', related="company_id.currency_id",
+        related_sudo=False, required=True,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
         'account.journal',
-        related='company_id.currency_exchange_journal_id',
+        related='company_id.currency_exchange_journal_id', related_sudo=False,
         string="Exchange Gain or Loss Journal",
         domain=[('type', '=', 'general')],
         help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
+    code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits',
+        related_sudo=False, help="No. of digits to use for account code")
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method')
+        ], related='company_id.tax_calculation_rounding_method',
+        related_sudo=False, string='Tax calculation rounding method')
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
@@ -56,9 +59,11 @@ class ResConfigSettings(models.TransientModel):
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
-    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
-    account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
+    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', related_sudo=False)
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id',
+        related_sudo=False, string="Tax Cash Basis Journal")
+    account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',
+        related_sudo=False, help="Tick if you wish to hide the setup bar on the dashboard")
 
     @api.model
     def get_values(self):

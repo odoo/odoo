@@ -20,8 +20,12 @@ class ResConfigSettings(models.TransientModel):
         except ValueError:
             return False
 
-    salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Channel', domain=[('team_type', '!=', 'pos')])
+    salesperson_id = fields.Many2one('res.users',
+        related='website_id.salesperson_id', related_sudo=False,
+        string='Salesperson')
+    salesteam_id = fields.Many2one('crm.team',
+        related='website_id.salesteam_id', related_sudo=False,
+        string='Sales Channel', domain=[('team_type', '!=', 'pos')])
     module_website_sale_delivery = fields.Boolean("Shipping Costs")
     # field used to have a nice radio in form view, resuming the 2 fields above
     sale_delivery_settings = fields.Selection([

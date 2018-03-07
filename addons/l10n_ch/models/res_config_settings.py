@@ -8,5 +8,5 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     l10n_ch_isr_print_bank_location = fields.Boolean(string="Print bank on ISR",
-        related="company_id.l10n_ch_isr_print_bank_location",
+        related="company_id.l10n_ch_isr_print_bank_location", related_sudo=False,
         required=True)

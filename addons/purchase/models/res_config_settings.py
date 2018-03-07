@@ -8,11 +8,15 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     lock_confirmed_po = fields.Boolean("Lock Confirmed Orders", default=lambda self: self.env.user.company_id.po_lock == 'lock')
-    po_lock = fields.Selection(related='company_id.po_lock', string="Purchase Order Modification *")
+    po_lock = fields.Selection(related='company_id.po_lock',
+        related_sudo=False, string="Purchase Order Modification *")
     po_order_approval = fields.Boolean("Order Approval", default=lambda self: self.env.user.company_id.po_double_validation == 'two_step')
-    po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *")
-    po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Minimum Amount", currency_field='company_currency_id')
-    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
+    po_double_validation = fields.Selection(related='company_id.po_double_validation',
+        related_sudo=False, string="Levels of Approvals *")
+    po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount',
+        related_sudo=False, string="Minimum Amount", currency_field='company_currency_id')
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id',
+        related_sudo=False, readonly=True,
         help='Utility field to express amount currency')
     default_purchase_method = fields.Selection([
         ('purchase', 'Ordered quantities'),

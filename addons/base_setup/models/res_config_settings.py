@@ -29,12 +29,13 @@ class ResConfigSettings(models.TransientModel):
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
     default_custom_report_footer = fields.Boolean("Custom Report Footer")
-    report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
+    report_footer = fields.Text(related="company_id.report_footer",
+        related_sudo=False, string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
-    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
-    external_report_layout = fields.Selection(related="company_id.external_report_layout")
+    paperformat_id = fields.Many2one(related="company_id.paperformat_id", related_sudo=False, string='Paper format')
+    external_report_layout = fields.Selection(related="company_id.external_report_layout", related_sudo=False)
 
     @api.model
     def get_values(self):
