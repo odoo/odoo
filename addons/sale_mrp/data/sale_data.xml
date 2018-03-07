@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <template id="exception_on_mrp">
+        <div class="alert alert-warning"> 
+            Exception(s) occurred on the production order(s):
+            <t t-foreach="prod_order_ids" t-as="production_order">
+                <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-esc="production_order.name"/></a>.
+            </t>
+            <t t-foreach="prod_order_ids" t-as="production_order">
+                <t t-if="production_order.state == 'cancel'">
+                    <br/>Your order <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-esc="production_order.name"/></a>. has been cancelled.
+                </t>
+            </t>
+            <br/>Manual actions may be needed.
+        <div class="mt16">
+            <t t-foreach="prod_order_ids" t-as="production_order">
+                <t t-if="production_order.state != 'cancel'">
+                    <p>Exception(s):</p>
+                    <ul t-foreach="order_exceptions" t-as="exception">
+                        <a href="#" data-oe-model="mrp.production" t-att-data-oe-id="production_order.id"><t t-esc="production_order.name"/></a>
+                        <li>
+                            <t t-set="order_line" t-value="exception[0]"/>
+                            <t t-set="new_qty" t-value="exception[1][0]"/>
+                            <t t-set="old_qty" t-value="exception[1][1]"/>
+                            <t t-esc="new_qty"/> <t t-esc="order_line.product_id.uom_id.name"/> of <t t-esc="order_line.product_id.name"/>
+                            ordered instead of <t t-esc="old_qty"/> <t t-esc="order_line.product_id.uom_id.name"/>
+                        </li>
+                    </ul>
+                </t>
+            </t>
+        </div>
+        <div class="mt16" t-if="impacted_pickings">
+            <p>Next transfer(s) impacted:</p>
+            <ul t-foreach="impacted_prod_orders" t-as="prod_order">
+                <li><a href="#" data-oe-model="mrp.production" t-att-data-oe-id="prod_order.id"><t t-esc="prod_order.name"/></a></li>
+            </ul>
+            <ul t-foreach="impacted_pickings" t-as="picking">
+                <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
+            </ul>
+        </div>
+        </div>
+    </template>
+
+    </data>
+</odoo>
