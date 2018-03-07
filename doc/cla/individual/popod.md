@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Popod, https://github.com/popod
+Popod popod@me.com https://github.com/popod
