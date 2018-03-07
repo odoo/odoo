@@ -66,13 +66,14 @@ def _configure_journals(cr, registry):
                     'company_id': company_id.id,
                     'fields_id': field_id,
                     'value': value,
-                    'res_id': 'product.category,'+str(env.ref('product.product_category_all').id),
                 }
                 properties = env['ir.property'].search([
                     ('name', '=', record),
                     ('company_id', '=', company_id.id),
-                    ('value_reference', '!=', False)])
-                if not properties:
+                ])
+                if properties:
+                    properties.write(vals)
+                else:
                     # create the property
                     env['ir.property'].create(vals)
 

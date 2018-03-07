@@ -55,8 +55,8 @@
                             <p><b>Amount:</b> <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></p>
                             <t t-call="payment.payment_tokens_list" t-if="reference and amount and currency">
                                 <t t-set="mode" t-value="'payment'"/>
-                                <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/' + reference + '/' + str(amount) + '/' + str(currency.id)"/>
-                                <t t-set="form_action" t-value="'/website_payment/token/' + reference + '/' + str(amount) + '/' + str(currency.id)"/>
+                                <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference"/>
+                                <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference"/>
                             </t>
                             <div t-if="not (s2s_acquirers or form_acquirers)" class="alert alert-danger">
                                 <p>No payment acquirer found.</p>

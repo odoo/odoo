@@ -151,7 +151,7 @@ class WebsiteSale(http.Controller):
             else:
                 price = variant.website_public_price / quantity
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price, price])
+            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price / quantity, price])
         return attribute_value_ids
 
     def _get_search_order(self, post):

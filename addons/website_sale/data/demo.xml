@@ -548,6 +548,16 @@ Weight: 31 grams</field>
             <field name="compute_price">formula</field>
         </record>
 
+        <record id="item2" model="product.pricelist.item">
+            <field name="base">list_price</field>
+            <field name="applied_on">1_product</field>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
+            <field name="price_discount">40</field>
+            <field name="min_quantity">2</field>
+            <field name="compute_price">formula</field>
+        </record>
+
     <!-- product.public.category -->
 
         <record id="Components" model="product.public.category">

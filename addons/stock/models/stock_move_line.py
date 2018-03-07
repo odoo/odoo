@@ -167,7 +167,7 @@ class StockMoveLine(models.Model):
         # If the move line is directly create on the picking view.
         # If this picking is already done we should generate an
         # associated done move.
-        if 'picking_id' in vals and 'move_id' not in vals:
+        if 'picking_id' in vals and not vals.get('move_id'):
             picking = self.env['stock.picking'].browse(vals['picking_id'])
             if picking.state == 'done':
                 product = self.env['product.product'].browse(vals['product_id'])
