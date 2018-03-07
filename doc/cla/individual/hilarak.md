@@ -1,4 +1,4 @@
-France, 2015-10-30
+India, 18-02-2018
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Laurent Bélorgey lb@lalieutenante.com https://github.com/lbelorgey
+Hilar AK hilarak@gmail.com https://github.com/hilarak
