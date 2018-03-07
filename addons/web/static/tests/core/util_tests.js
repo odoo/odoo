@@ -44,6 +44,17 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(intersperse("12345678", [3,0], '.'), '12.345.678');
     });
 
+    QUnit.test('is_bin_size', function (assert) {
+        assert.expect(3);
+
+        var is_bin_size = utils.is_bin_size;
+
+        assert.strictEqual(is_bin_size('Cg=='), false);
+        assert.strictEqual(is_bin_size('2.5 Mb'), true);
+        // should also work for non-latin languages (e.g. russian)
+        assert.strictEqual(is_bin_size('64.2 Кб'), true);
+    });
+
 });
 
 });
