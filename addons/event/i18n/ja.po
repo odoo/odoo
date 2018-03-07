@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -86,18 +86,6 @@ msgid ""
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
-"                            <td style=\"padding:25px 0px; text-align:center;\">\n"
-"                                <p>\n"
-"                                    Don't forget to <strong>add it to your calendar</strong>:\n"
-"                                </p>\n"
-"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                        <tr>\n"
 "                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
 "                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
@@ -165,6 +153,16 @@ msgid ""
 "                            </tr>\n"
 "                        </table>\n"
 "                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
@@ -193,170 +191,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
-"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
-"    <table style=\"width:600px;margin:5px auto;\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td>\n"
-"                    <a href=\"/\">\n"
-"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
-"                    </a>\n"
-"                </td>\n"
-"                <td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
-"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">ビューイベント</a>\n"
-"                    % endif\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td style=\"padding:15px 20px 0px 20px; font-size:16px; font-weight:300;\">\n"
-"                    <p style=\"font-size:16px;\">\n"
-"                        Hi,\n"
-"                    </p><p style=\"font-size:16px;\">\n"
-"                        イベントへの登録を確認させていただきます：\n"
-"                    </p>\n"
-"                    <ul>\n"
-"                        <li>イベント: \n"
-"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
-"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
-"                        % else:\n"
-"                            <strong>${object.event_id.name}</strong>\n"
-"                        % endif\n"
-"                        </li>\n"
-"                        <li>出席者: ${object.name}</li>\n"
-"                    </ul>\n"
-"                    <p style=\"font-size:16px;\">\n"
-"                        また近いうちにお会いしましょう,\n"
-"                    </p>\n"
-"                    <p style=\"font-size:16px; margin-bottom: 30px\">\n"
-"                        <i>\n"
-"                           -- <br/>\n"
-"                        % if object.event_id.organizer_id:\n"
-"                            ${object.event_id.organizer_id.name}\n"
-"                        % else:\n"
-"                            主催者。\n"
-"                        % endif\n"
-"                        </i>\n"
-"                    </p>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr>\n"
-"                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                        <tr>\n"
-"                            <td style=\"padding:25px 0px; text-align:center;\">\n"
-"                                <p>\n"
-"                                    カレンダーに追加することを <strong>忘れないでください</strong>:\n"
-"                                </p>\n"
-"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> グーグル</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> アウトルック</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> ヤフー</a>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                        <tr>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
-"                            </td>\n"
-"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>から</strong> ${object.event_id.date_begin_located}</div>\n"
-"                                <div><strong>まで</strong> ${object.event_id.date_end_located}</div>\n"
-"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
-"                            </td>\n"
-"                            % if object.event_id.address_id.country_id.name:\n"
-"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
-"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
-"                                </td>\n"
-"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
-"                                    % set location = ''\n"
-"                                    % if object.event_id.address_id.name:\n"
-"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
-"                                    % endif\n"
-"                                    % if object.event_id.address_id.street:\n"
-"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
-"                                        % set location = object.event_id.address_id.street\n"
-"                                    % endif\n"
-"                                    % if object.event_id.address_id.street2:\n"
-"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
-"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
-"                                    % endif\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
-"                                    % if object.event_id.address_id.city:\n"
-"                                        ${object.event_id.address_id.city},\n"
-"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
-"                                    % endif\n"
-"                                    % if object.event_id.address_id.state_id.name:\n"
-"                                        ${object.event_id.address_id.state_id.name},\n"
-"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
-"                                    % endif\n"
-"                                    % if object.event_id.address_id.zip:\n"
-"                                        ${object.event_id.address_id.zip}\n"
-"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
-"                                    % endif\n"
-"                                    </p>\n"
-"                                    % if object.event_id.address_id.country_id.name:\n"
-"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
-"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
-"                                    % endif\n"
-"                                </td>\n"
-"                            % endif\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                    % if object.event_id.organizer_id:\n"
-"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                            <tr>\n"
-"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
-"                                    <h2 style=\"font-weight:300;margin:10px 0px\">このイベントに関する質問?</h2>\n"
-"                                    <p>主催者に連絡してください:</p>\n"
-"                                    <ul>\n"
-"                                        <li>${object.event_id.organizer_id.name}</li>\n"
-"                                        % if object.event_id.organizer_id.email\n"
-"                                            <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
-"                                        % endif\n"
-"                                        % if object.event_id.organizer_id.phone\n"
-"                                            <li>Phone: ${object.event_id.organizer_id.phone}</li>\n"
-"                                        % endif\n"
-"                                    </ul>\n"
-"\n"
-"                                </td>\n"
-"                            </tr>\n"
-"                        </table>\n"
-"                    % endif\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"    % if object.event_id.address_id:\n"
-"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
-"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
-"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
-"        </a>\n"
-"    </div>\n"
-"    % endif\n"
-"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <div>Sent by ${object.company_id.name}</div>\n"
-"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
-"                    <div>\n"
-"                        すべてのイベント<a href=\"/event\" style=\"text-decoration:none;color:#717188;\">を発見する</a>.\n"
-"                    </div>\n"
-"                    % endif\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"</div>\n"
-"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -711,22 +545,10 @@ msgstr "%s (コピー)"
 
 #. module: event
 #: model:event.event,description:event.event_0
-msgid ""
-"1 business room: to discuss implementation methodologies, best sales "
-"practices, etc."
-msgstr "1ビジネスルーム：実装方法論を議論するために、ベストセールスプラクティス、等"
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid "1 workshop room: mainly for developers."
-msgstr "1ワークショップルーム：主に開発者向け。"
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"2 technical rooms: one dedicated to advanced Odoo developers, one for new "
-"developers."
-msgstr "2つの技術室：高度なOdoo開発者向けのもの、新しい開発者向けのもの。"
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "5 Intensive Days"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -738,30 +560,27 @@ msgstr "<em>(チャンバー・ワークスは、イベントを取り消し、�
 #. module: event
 #: model:event.event,description:event.event_0
 msgid ""
-"<em>(OpenElec Applications reserves the right to cancel, re-name or re-"
-"locate<br>the event or change the dates on which it is held.)</em>"
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
+" Programming</i></font>"
 msgstr ""
-"<em>(OpenElecアプリケーションは、イベントを取り消し、名前を変更したり、<br>イベントの場所を変更したり、開催日を変更する権利を留保します。)</em>"
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">Odoo "
+"<i>プログラミングを学ぶこと</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
 msgid ""
-"<em>(YourCompany reserves the right to cancel, re-name or re-locate<br>the "
-"event or change the dates on which it is held.)</em>"
-msgstr "<em>(YourCompanyはイベントをキャンセル、再命名または再配置、<br>または開催日を変更する権利を留保します。)</em>"
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn "
+"<i>technical aspects</i></font>"
+msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">技術的に "
+"<i>学ぶこと</i></font>"
 
 #. module: event
-#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_3
 msgid ""
-"<em>If you wish to make a presentation, please send your topic proposal as "
-"soon as possible for approval to Mr. Famke Jenssens at ngh (a) yourcompany "
-"(dot) com. The presentations should be, for example, a presentation of a "
-"community module, a case study, methodology feedback, technical, etc. Each "
-"presentation must be in English.</em>"
-msgstr ""
-"<em>プレゼンテーションを希望する場合は、Mr. Famke Jenssensから承認するように、話題の提案をできるだけ早くngh "
-"(a)yourcompany(dot)comに送ってください。プレゼンテーション、例、コミュニティモジュールの提示、ケーススタディ、方法論のフィードバック、技術的なものなどであるべきである。各プレゼンテーションは日本語でなければなりません</em>"
+"<font style=\"font-size: 24px;\">to learn <i>business applications "
+"development</i></font>"
+msgstr "<font style=\"font-size: 24px;\">ビジネス<i>アプリケーション開発 を学ぶこと</i></font>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -773,10 +592,42 @@ msgstr ""
 "                                        <b>に</b>"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to create dynamic page interacting with the ORM.</i>"
+msgstr "<i>ORMと対話する動的なページを作成することができます。</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop a full application with backend and user "
+"interface.</i>"
+msgstr "<i>バックエンドとユーザーインターフェイスを備えた完全なアプリケーションを開発することができます。</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop simple dynamic components in HTML pages.</i>"
+msgstr "<i>HTMLページで簡単な動的コンポーネントを開発することができます。</i>"
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
 msgstr "<i>に</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<small>John Doe, CEO</small>"
+msgstr "<small>John Doe, CEO</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -790,14 +641,15 @@ msgstr ""
 "                                    </span>"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "<strong>5-days Technical Training</strong>"
-msgstr "<strong>5日間の技術トレーニング</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid "<strong>Cancellation Policy: </strong>"
-msgstr "<strong>取り消し規約: </strong>"
+msgid ""
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
+msgstr ""
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -805,16 +657,8 @@ msgid "<strong>Conference on Business Apps</strong>"
 msgstr "<strong>ビジネスに関する会議アプリケーション</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid "<strong>Course summary:</strong>"
-msgstr "<strong>コース概要:</strong>"
-
-#. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid "<strong>Functional Webinar</strong>"
-msgstr "<strong>機能ウェブセミナー</strong>"
-
-#. module: event
 #: model:event.event,description:event.event_3
 msgid ""
 "<strong>Having attended this course, participants should be able "
@@ -823,45 +667,33 @@ msgstr "<strong>このコースに参加した参加者は、次のことが可�
 
 #. module: event
 #: model:event.event,description:event.event_0
-msgid "<strong>Join us to our main event of the year: the Open Days</strong>"
-msgstr "<strong>今年のメインイベント：Open Days</strong>"
-
-#. module: event
 #: model:event.event,description:event.event_1
-msgid "<strong>Objective:</strong>"
-msgstr "<strong>客観:</strong>"
-
-#. module: event
 #: model:event.event,description:event.event_2
 #: model:event.event,description:event.event_3
 msgid "<strong>Objectives:</strong>"
 msgstr "<strong>目標:</strong>"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
 msgstr "<strong>価格には以下のものが含まれます：</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
 msgstr "<strong>プログラム:</strong>"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "<strong>Requirements</strong>"
-msgstr "<strong>要件</strong>"
+msgid "<strong>Requirements:</strong>"
+msgstr "<strong>要件:</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid "<strong>What's new for this year?</strong>"
-msgstr "<strong>今年は何が新しくなったのですか？</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "<strong>Where to find us:</strong>"
 msgstr "<strong>私たちを見つける場所:</strong>"
 
@@ -878,17 +710,17 @@ msgid ""
 msgstr "スケジュール、トラック、トラック提案書などを含むイベントWebページにナビゲーションメニューを追加する。"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Advanced JQuery"
+msgstr "高度なJQuery"
+
+#. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After each registration"
 msgstr "各登録後"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid ""
-"After registering, you will receive a link and password by email before the "
-"start of the session. If you have a problem to connect, please contact us at"
-msgstr "登録後、セッションの開始前に電子メールでリンクとパスワードを受け取ります。 問題がある場合は、お問い合わせください。"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -909,14 +741,11 @@ msgid ""
 msgstr "このイベントをキャンセルしてもよろしいですか？ リンクされた出席者もすべてキャンセルされます。"
 
 #. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid "Ask your questions to our expert;"
-msgstr "私たちの専門家に質問してください。"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid "Assess whether your expectations are met;"
-msgstr "あなたの期待が満たされているかどうかを評価する。"
+#: model:event.event,description:event.event_3
+msgid "Arrays"
+msgstr "配列"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1014,17 +843,37 @@ msgid "Before the event"
 msgstr "イベントの前に"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "Best regards,"
 msgstr "宜しくお願い致します。"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Bootstrap CSS"
+msgstr "ブートストラップ CSS"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
 msgstr "自前のラップトップを持参。"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Building a Full Application"
+msgstr "完全なアプリケーションの構築"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Calling the ORM"
+msgstr "ORMの呼び出し"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -1058,11 +907,6 @@ msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid "Chaussée de Namur 69, 1300 Wavre, Belgium"
-msgstr "Chaussée de Namur 69, 1300 Wavre, Belgium"
-
-#. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Click to add a new attendee."
 msgstr "参加者を追加するためにクリックする"
@@ -1090,7 +934,7 @@ msgid "Company"
 msgstr "会社"
 
 #. module: event
-#: code:addons/event/models/event.py:475
+#: code:addons/event/models/event.py:481
 #, python-format
 msgid "Compose Email"
 msgstr "Eメール作成"
@@ -1104,11 +948,6 @@ msgstr "会議"
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Apps"
 msgstr "ビジネスアプリケーションに関する会議"
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr "会議、ワークショップ、トレーニングは6室で開催されます："
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -1158,9 +997,23 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Controllers and Views"
+msgstr "コントローラとビュー"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
 msgstr "国"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Course Summary"
+msgstr "コース概要"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
@@ -1185,16 +1038,37 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: event
-#: code:addons/event/models/event.py:438
+#: code:addons/event/models/event.py:444
 #, python-format
 msgid "Customer"
 msgstr "顧客"
 
 #. module: event
-#: code:addons/event/models/event.py:440
+#: code:addons/event/models/event.py:446
 #, python-format
 msgid "Customer Email"
 msgstr "顧客Eメール"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 1"
+msgstr "1日目"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 2"
+msgstr "2日目"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 3"
+msgstr "3日目"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1213,14 +1087,11 @@ msgid "Description"
 msgstr "説明"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Develop a new module for a particular application."
 msgstr "特定のアプリケーションのための新しいモジュールを開発する。"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid "Discover how to navigate in our software;"
-msgstr "私たちのソフトウェアでナビゲートする方法を発見してください。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_display_name
@@ -1239,6 +1110,13 @@ msgid "Display order"
 msgstr "注文を表示する"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Dive into Strings"
+msgstr "文字列に潜む"
+
+#. module: event
 #: selection:event.event,state:0
 msgid "Done"
 msgstr "完了"
@@ -1249,13 +1127,6 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr "この会議で、私たちのチームはビジネスアプリケーションの詳細な概要を説明します。 あなたはそれを使うことのすべての利点を知るでしょう。"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid ""
-"Each session lasts approximately one hour and is free, we just ask you to "
-"register to receive access codes."
-msgstr "各セッションは約1時間続き、無料です。アクセスコードを受け取るよう登録するようお願いします。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -1431,18 +1302,6 @@ msgid "Events in New state"
 msgstr "新しいイベント"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"Every year we invite our community, partners and end-users to come and meet "
-"us! It's the ideal event to get together and present new features, roadmap "
-"of future versions, achievements of the software, workshops, training "
-"sessions, etc.... This event is also an opportunity to showcase our "
-"partners' case studies, methodology or developments. Be there and see "
-"directly from the source the features of the version 8!"
-msgstr ""
-"毎年、私たちのコミュニティ、パートナー、エンドユーザを招待し、私たちと出会います！それは、新しい機能を紹介、将来のバージョンのロードマップ、ソフトウェアの成果、ワークショップ、トレーニングセッションなどをまとめて提示するのに理想的なイベントです。このイベントは、パートナーのケーススタディ、方法論、または開発を紹介する機会です。そこにいて、バージョン8の機能をソースから直接参照してください！"
-
-#. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
 msgstr "展示会"
@@ -1463,9 +1322,7 @@ msgid "Finish Event"
 msgstr "イベント終了"
 
 #. module: event
-#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "For any additional information, please contact us at"
 msgstr "追加情報については、下記までご連絡ください。"
 
@@ -1486,11 +1343,6 @@ msgstr ""
 "各イベントについて、最小予約席(出席者数)を定義することができます。記載されている登録に達していない場合、そのイベントは確認できません(このルールを無視するために0を保持します)"
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid "For more information on the program, please explore"
-msgstr "プログラムの詳細については、こちらをご覧ください。"
-
-#. module: event
 #: model:event.event,name:event.event_1
 msgid "Functional Webinar"
 msgstr "ファンクショナルウェビナー"
@@ -1499,6 +1351,13 @@ msgstr "ファンクショナルウェビナー"
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
 msgstr "主なアプリケーションの機能フロー。"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Functions"
+msgstr "機能"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1512,10 +1371,33 @@ msgid "Having attended this conference, participants should be able to:"
 msgstr "この会議に出席した参加者は、次のことができること："
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Hello World"
+msgstr "Hello World"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Hour(s)"
 msgstr "時間"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "How to Debug"
+msgstr "デバッグ方法"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"I did not expect such a great learning experience. I feel like I can develop"
+" anything now."
+msgstr "私はそのような偉大な学習経験を期待していませんでした。私は今何かを開発できるように感じる。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_id
@@ -1540,28 +1422,51 @@ msgstr ""
 "イベントが終了すると、ステータスは「完了」に設定されます。 イベントがキャンセルされると、ステータスは「キャンセル」に設定されます。"
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"If you have a question<strong> concerning the content of the "
-"training</strong>, please contact"
-msgstr "トレーニングの内容に<strong> 関する質問がある場合は、</strong>お問い合わせください"
-
-#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
 msgstr "すぐに"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Install and administer your own server;"
 msgstr "独自のサーバーにインストールして管理。"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Integrated Help"
+msgstr "統合されたヘルプ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail_interval_nbr
 msgid "Interval"
 msgstr "間隔"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to JQuery"
+msgstr "JQuery入門"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to Javascript"
+msgstr "Javascript入門"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to QWeb"
+msgstr "QWeb入門"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1635,8 +1540,12 @@ msgstr "ロケーション"
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_2
 #: model:event.event,description:event.event_3
+msgid "Loops"
+msgstr "ループ"
+
+#. module: event
+#: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
 msgstr "Luigi Roni, シニアイベントマネージャー"
 
@@ -1719,17 +1628,17 @@ msgid "Minimum Registrations"
 msgstr "最小登録"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Modules"
+msgstr "モジュール"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Month(s)"
 msgstr "月"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"More information about our Headquarter office (directions, transports, "
-"parking, hotels, ...), please have a look at"
-msgstr "本社の事務所に関する詳しい情報(案内、交通機関、駐車場、ホテル、...)をご覧ください。"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1743,7 +1652,7 @@ msgid "No more available seats."
 msgstr "満席です"
 
 #. module: event
-#: code:addons/event/models/event.py:357
+#: code:addons/event/models/event.py:363
 #, python-format
 msgid "No more seats available for this event."
 msgstr "本イベントには満席です"
@@ -1763,6 +1672,20 @@ msgstr "参加者数"
 #: model:ir.model.fields,help:event.field_res_users_event_count
 msgid "Number of events the partner has participated."
 msgstr "パートナー参加したイベント数"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Official Website"
+msgstr "Odoo 公式サイト"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Web Client"
+msgstr "Odooウェブクライアント"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1813,13 +1736,6 @@ msgid "Open Days in Los Angeles"
 msgstr "ロサンゼルスでOpen Days"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"OpenElec Applications 23 Rockwell Lane, Los Angeles, CA 90001, United States"
-msgstr ""
-"OpenElec Applications 23 Rockwell Lane, Los Angeles, CA 90001, United States"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
 msgid "Organizer"
 msgstr "オーガナイザ"
@@ -1830,6 +1746,8 @@ msgid "Participant"
 msgstr "参加者"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
@@ -1837,6 +1755,8 @@ msgid ""
 msgstr "参加者はプログラミングにある程度の知識が必要です。 Pythonプログラミングの基本知識が推奨されます。"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
 "Participants preferably have a functional knowledge of our software (see "
@@ -1872,6 +1792,20 @@ msgstr "プロジェクト管理、人材管理、契約管理"
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
 msgstr "購買、販売 &amp;  購買管理、財務会計"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Python Objects"
+msgstr "Pythonオブジェクト"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Read Great Contents"
+msgstr "素晴らしい内容を読む"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1940,9 +1874,23 @@ msgid "Registration mail"
 msgstr "登録メール"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Report Engine"
+msgstr "レポートエンジン"
+
+#. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
 msgstr "レポーティング"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Requirements"
+msgstr "必要事項"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
@@ -2060,44 +2008,7 @@ msgid "Technical Training"
 msgstr "技術トレーニング"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"The Open Days are preceded by 2 days of optional training sessions for "
-"experts! We propose 3 different training sessions, 2 days each."
-msgstr ""
-"開かれた日は、専門家のための2日間のオプションのトレーニングセッションが先行しています！私たちは2日ごと、3種類のトレーニングセッションを提案します。"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"The organization of the training session has related costs. Due to these "
-"costs, cancellations made less than 2 weeks (14 calendar days) prior to the "
-"start of the training session is a subject to a fee. This fee can be up to a"
-" maximum of 1000€ per cancellation request."
-msgstr ""
-"トレーニングセッションの構成には、関連コストがあります。これらの費用のために、トレーニングセッションの開始前に2週間(14カレンダー)未満のキャンセルは有料です。この手数料は、キャンセル要求につき最大1000ユーロまで可能です。"
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"The plenary sessions in the morning will be shorter and we will give more "
-"time for thematical meetings, conferences, workshops and tutorial sessions "
-"in the afternoon."
-msgstr "朝のプレナリーセッションは短くなり、午後には、テーマミーティング、会議、ワークショップ、チュートリアルセッションに多くの時間を割きます。"
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"The whole event is open to all public! We ask a participation fee of 49.50€ "
-"for the costs for the 3 days (morning coffee, coffee breaks, drinks, "
-"sandwiches for lunch and the surprising beer party of Wednesday evening) but"
-" it's optional. For those who do not want to contribute, there is a free "
-"ticket, therefore, catering is not inclued."
-msgstr ""
-"全体のイベントはすべての一般に公開されています！私たちは3日間(モーニングコーヒー、コーヒーブレーク、飲み物、ランチ用のサンドイッチ、水曜日の夕方の驚くべきビールパーティー)の費用は49.50ユーロですが、オプションです。貢献したくない人には、無料のチケットがあるので、ケータリングは含まれていません。"
-
-#. module: event
-#: code:addons/event/models/event.py:301
+#: code:addons/event/models/event.py:307
 #, python-format
 msgid ""
 "There are already attendees who attended this event. Please reset it to "
@@ -2105,27 +2016,13 @@ msgid ""
 msgstr "すでにこのイベントに参加した出席者がいます。 このイベントをキャンセルする場合は、下書きにリセットしてください。"
 
 #. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid ""
-"These webinars allow companies interested in our software, to assess whether"
-" the solution meets their needs, and can adapt to the scope of their "
-"project."
-msgstr ""
-"これらのウェビナーは、ソフトウェアに興味のある企業がソリューションがニーズを満たしているかどうかを評価し、プロジェクトの範囲に適応できるようにします。"
-
-#. module: event
 #: model:event.event,description:event.event_3
 msgid ""
-"This course is dedicated to partners, integrators and developers who need to"
-" grasp knowledge about the business applications development process and for"
-" new developers or for IT professionals eager to learn more about technical "
-"aspects."
+"This course help me build my first application within a month. Definetly "
+"worth its price."
 msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid "This event and all the conferences are in english!"
-msgstr "このイベントとすべての会議は英語です！"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -2133,11 +2030,6 @@ msgstr "このイベントとすべての会議は英語です！"
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 msgstr "このフィールドには、自動的に送信されるメールのテンプレートが含まれます"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid "This webinar helps participants to:"
-msgstr "このウェビナーでは、参加者に役立ちます"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_sale
@@ -2151,6 +2043,13 @@ msgid "Timezone"
 msgstr "タイムゾーン"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "To get more information, visit the"
+msgstr "詳細については、以下をご覧ください。"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
 msgstr "履歴とアジェンダ"
@@ -2159,6 +2058,13 @@ msgstr "履歴とアジェンダ"
 #: model:event.type,name:event.event_type_4
 msgid "Training"
 msgstr "トレーニング"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Training Center Module"
+msgstr "トレーニングセンターモジュール"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail_interval_type
@@ -2188,6 +2094,15 @@ msgid "Unconfirmed Seat Reservations"
 msgstr "予約キャンセル数"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Underscore"
+msgstr "アンダースコア"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
 msgstr "開発の概念とアーキテクチャを理解する。"
@@ -2240,9 +2155,11 @@ msgid "User"
 msgstr "ユーザ"
 
 #. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid "View full flow: purchasing, sales, project management, accounting;"
-msgstr "フルフローを見る：購買、販売、プロジェクト管理、会計、"
+#: model:event.event,description:event.event_3
+msgid "Variables &amp; Operators"
+msgstr "変数と演算子"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -2262,41 +2179,40 @@ msgid ""
 msgstr "警告：このイベントは最少催行人数に達していません。それでも確定にしますか？"
 
 #. module: event
-#: model:event.event,description:event.event_1
-msgid "We are looking forward to meeting you online,"
-msgstr "オンラインでお会いできることを楽しみにしています。"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"We strongly recommend to book your flight tickets and/or hotel reservations "
-"2 weeks prior to the training. If the training is cancelled 2 weeks in "
-"advance, you'll be notified by email."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid ""
-"Webinars are online demonstrations where one of our team members explains "
-"the main features and benefits of our online offer through an online "
-"conference. We can therefore directly answer any questions you may have "
-"through a Q&amp;A."
-msgstr ""
-
-#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
 msgstr "週"
 
 #. module: event
-#: code:addons/event/models/event.py:414
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What do people say about this course?"
+msgstr "このコースについて人々は何を言いますか？"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What you will learn?"
+msgstr "あなたは何を学びますか？"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Workflows"
+msgstr "ワークフロー"
+
+#. module: event
+#: code:addons/event/models/event.py:420
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
 msgstr "この操作を行う前に、イベントの確認を待つ必要があります。"
 
 #. module: event
-#: code:addons/event/models/event.py:416
+#: code:addons/event/models/event.py:422
 #, python-format
 msgid "You must wait the event starting day before doing this action."
 msgstr "この操作を行う前に、イベントの開始を待つ必要があります。"
@@ -2317,6 +2233,8 @@ msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "drinks and lunch;"
 msgstr "飲料と昼食;"
@@ -2328,47 +2246,29 @@ msgstr "event.confirm"
 
 #. module: event
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "events@odoo.com"
 msgstr "events@odoo.com"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "events@yourcompany.com"
-msgstr "events@yourcompany.com"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid "http://bit.ly/VD8J67."
-msgstr "http://bit.ly/VD8J67."
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid "https://www.odoo.com/services/technical-training"
-msgstr "https://www.odoo.com/services/technical-training"
-
-#. module: event
-#: code:addons/event/models/event.py:497
+#: code:addons/event/models/event.py:503
 #, python-format
 msgid "in %d days"
 msgstr "%d 日で"
 
 #. module: event
-#: code:addons/event/models/event.py:501
+#: code:addons/event/models/event.py:507
 #, python-format
 msgid "next month"
 msgstr "来月"
 
 #. module: event
-#: code:addons/event/models/event.py:499
+#: code:addons/event/models/event.py:505
 #, python-format
 msgid "next week"
 msgstr "来週"
 
 #. module: event
-#: code:addons/event/models/event.py:503
+#: code:addons/event/models/event.py:509
 #, python-format
 msgid "on "
 msgstr "に"
@@ -2379,18 +2279,20 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: event
-#: code:addons/event/models/event.py:493
+#: code:addons/event/models/event.py:499
 #, python-format
 msgid "today"
 msgstr "本日"
 
 #. module: event
-#: code:addons/event/models/event.py:495
+#: code:addons/event/models/event.py:501
 #, python-format
 msgid "tomorrow"
 msgstr "明日"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "トレーニング教材。"

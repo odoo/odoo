@@ -29,6 +29,9 @@ def tokenize(typespec):
         elif toktype == token.OP:
             if string in '|<>[].,':
                 yield (OP, string)
+            elif string == '>>':
+                yield (OP, '>')
+                yield (OP, '>')
             elif string == '*': # maybe?
                 yield (NAME, 'any')
             elif string in '()':

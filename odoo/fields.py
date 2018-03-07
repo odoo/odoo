@@ -39,18 +39,7 @@ Default = object()                      # default value for __init__() methods
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    src, dst = records.env.cache, env.cache
-    todo, done = set(records), set()
-    while todo:
-        record = todo.pop()
-        if record not in done:
-            done.add(record)
-            target = record.with_env(env)
-            for field in src.get_fields(record):
-                value = src.get(record, field)
-                dst.set(target, field, value)
-                if value and field.type in ('many2one', 'one2many', 'many2many', 'reference'):
-                    todo.update(field.convert_to_record(value, record))
+    env.cache.copy(records, env)
 
 def first(records):
     """ Return the first record in ``records``, with the same prefetching. """
@@ -563,7 +552,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         # copy the cache of draft records into others' cache
-        if records.env != others.env:
+        if records.env.in_onchange and records.env != others.env:
             copy_cache(records - records.filtered('id'), others.env)
         #
         # Traverse fields one by one for all records, in order to take advantage

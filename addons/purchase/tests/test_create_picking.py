@@ -174,3 +174,142 @@ class TestCreatePicking(common.TestProductCommon):
 
         customer_move._action_assign()
         self.assertEqual(customer_move.state, 'assigned', 'Reservation should work with the new quantity provided by the PO.')
+
+    def test_03_uom(self):
+        """ Buy a dozen of products stocked in units. Check that the quantities on the purchase order
+        lines as well as the received quantities are handled in dozen while the moves themselves
+        are handled in units. Edit the ordered quantities, check that the quantites are correctly
+        updated on the moves. Edit the ir.config_parameter to propagate the uom of the purchase order
+        lines to the moves and edit a last time the ordered quantities. Receive, check the quantities.
+        """
+        uom_unit = self.env.ref('product.product_uom_unit')
+        uom_dozen = self.env.ref('product.product_uom_dozen')
+
+        self.assertEqual(self.product_id_1.uom_po_id.id, uom_unit.id)
+
+        # buy a dozen
+        po = self.env['purchase.order'].create(self.po_vals)
+
+        po.order_line.product_qty = 1
+        po.order_line.product_uom = uom_dozen.id
+        po.button_confirm()
+
+        # the move should be 12 units
+        # note: move.product_qty = computed field, always in the uom of the quant
+        #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
+        move1 = po.picking_ids.move_lines[0]
+        self.assertEqual(move1.product_uom_qty, 12)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 12)
+
+        # edit the so line, sell 2 dozen, the move should now be 24 units
+        po.order_line.product_qty = 2
+        self.assertEqual(move1.product_uom_qty, 24)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 24)
+
+        # force the propagation of the uom, sell 3 dozen
+        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
+        po.order_line.product_qty = 3
+        move2 = po.picking_ids.move_lines.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        self.assertEqual(move2.product_uom_qty, 1)
+        self.assertEqual(move2.product_uom.id, uom_dozen.id)
+        self.assertEqual(move2.product_qty, 12)
+
+        # deliver everything
+        move1.quantity_done = 24
+        move2.quantity_done = 1
+        po.picking_ids.button_validate()
+
+        # check the delivered quantity
+        self.assertEqual(po.order_line.qty_received, 3.0)
+
+    def test_04_mto_multiple_po(self):
+        """ Simulate a mto chain with 2 purchase order.
+        Create a move with qty 1, confirm the RFQ then create a new
+        move that will not be merged in the first one(simulate an increase
+        order quantity on a SO). It should generate a new RFQ, validate
+        and receipt the picking then try to reserve the delivery
+        picking.
+        """
+        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
+        customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
+        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
+        # route buy should be there by default
+        partner = self.env['res.partner'].create({
+            'name': 'Jhon'
+        })
+
+        seller = self.env['product.supplierinfo'].create({
+            'name': partner.id,
+            'price': 12.0,
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase.route_warehouse0_buy'))],
+            'seller_ids': [(6, 0, [seller.id])],
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        # A picking is require since only moves inside the same picking are merged.
+        customer_picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': picking_type_out.id,
+        })
+
+        customer_move = self.env['stock.move'].create({
+            'name': 'move out',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 80.0,
+            'procure_method': 'make_to_order',
+            'picking_id': customer_picking.id,
+        })
+
+        customer_move._action_confirm()
+
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        self.assertTrue(purchase_order, 'No purchase order created.')
+
+        # Check purchase order line data.
+        purchase_order_line = purchase_order.order_line
+        self.assertEqual(purchase_order_line.product_id, product, 'The product on the purchase order line is not correct.')
+        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same than the seller.')
+        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same than the move.')
+
+        purchase_order.button_confirm()
+
+        customer_move_2 = self.env['stock.move'].create({
+            'name': 'move out',
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 20.0,
+            'procure_method': 'make_to_order',
+            'picking_id': customer_picking.id,
+        })
+
+        customer_move_2._action_confirm()
+
+        self.assertTrue(customer_move_2.exists(), 'The second customer move should not be merged in the first.')
+        self.assertEqual(sum(customer_picking.move_lines.mapped('product_uom_qty')), 100.0)
+
+        purchase_order_2 = self.env['purchase.order'].search([('partner_id', '=', partner.id), ('state', '=', 'draft')])
+        self.assertTrue(purchase_order_2, 'No purchase order created.')
+
+        purchase_order_2.button_confirm()
+
+        purchase_order.picking_ids.move_lines.quantity_done = 80.0
+        purchase_order.picking_ids.button_validate()
+
+        purchase_order_2.picking_ids.move_lines.quantity_done = 20.0
+        purchase_order_2.picking_ids.button_validate()
+
+        self.assertEqual(sum(customer_picking.move_lines.mapped('reserved_availability')), 100.0, 'The total quantity for the customer move should be available and reserved.')

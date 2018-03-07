@@ -167,7 +167,7 @@ class StockMoveLine(models.Model):
         # If the move line is directly create on the picking view.
         # If this picking is already done we should generate an
         # associated done move.
-        if 'picking_id' in vals and 'move_id' not in vals:
+        if 'picking_id' in vals and not vals.get('move_id'):
             picking = self.env['stock.picking'].browse(vals['picking_id'])
             if picking.state == 'done':
                 product = self.env['product.product'].browse(vals['product_id'])
@@ -340,8 +340,13 @@ class StockMoveLine(models.Model):
                 raise UserError(_('You can not delete product moves if the picking is done. You can only correct the done quantities.'))
             # Unlinking a move line should unreserve.
             if ml.product_id.type == 'product' and not ml.location_id.should_bypass_reservation() and not float_is_zero(ml.product_qty, precision_digits=precision):
-                self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id,
-                                                                   package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                try:
+                    self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                except UserError:
+                    if ml.lot_id:
+                        self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    else:
+                        raise
         moves = self.mapped('move_id')
         res = super(StockMoveLine, self).unlink()
         if moves:

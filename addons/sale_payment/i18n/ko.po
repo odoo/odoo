@@ -6,13 +6,14 @@
 # Martin Trigaux, 2017
 # Up Link <linkup.way@gmail.com>, 2018
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
+# Youngsoo Jung <youngsoo.j@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-07 15:45+0000\n"
-"PO-Revision-Date: 2017-11-07 15:45+0000\n"
-"Last-Translator: Linda Stockelova <stockeloval@btlnet.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Youngsoo Jung <youngsoo.j@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,19 +22,24 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:111
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp; 번"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:124
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:118
+#: code:addons/sale_payment/models/payment.py:131
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:126
+#: code:addons/sale_payment/models/payment.py:139
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr ""
@@ -65,6 +71,12 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<strong>Transactions</strong>"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:54
+#, python-format
+msgid "Amount Mismatch (%s)"
 msgstr ""
 
 #. module: sale_payment
@@ -121,18 +133,13 @@ msgid "Number of transactions to capture"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_success
-msgid "Order successfully paid."
-msgstr ""
-
-#. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:50
+#: code:addons/sale_payment/controllers/payment.py:49
 #, python-format
 msgid "Pay"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:187
+#: code:addons/sale_payment/models/payment.py:200
 #, python-format
 msgid "Pay Now"
 msgstr ""
@@ -173,6 +180,11 @@ msgid "Quotation"
 msgstr "견적"
 
 #. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
+msgid "Sale Order State"
+msgstr ""
+
+#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
 msgstr "판매 채널"
@@ -181,6 +193,14 @@ msgstr "판매 채널"
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
 msgid "Sales Order"
 msgstr "판매 주문"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:55
+#, python-format
+msgid ""
+"The sale order was not confirmed despite response from the acquirer (%s): SO"
+" amount is %r but acquirer replied with %r."
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -231,3 +251,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
 msgid "Transactions"
 msgstr "거래"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""

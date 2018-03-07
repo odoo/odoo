@@ -52,7 +52,15 @@ class SaleOrder(models.Model):
         return template and template.active and template or False
 
     def _get_default_online_payment(self):
-        return 1 if self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay' else 0
+        default_template = self._get_default_template()
+        if self.template_id:
+            return self.template_id.require_payment
+        elif default_template:
+            return default_template.require_payment
+        elif self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay':
+            return 1
+        else:
+            return 0
 
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
@@ -200,8 +208,8 @@ class SaleOrder(models.Model):
 
     def get_portal_confirmation_action(self):
         """ Template override default behavior of pay / sign chosen in sales settings """
-        if self.template_id:
-            return 'sign' if self.require_payment == 1 else 'pay'
+        if self.require_payment is not None or self.require_payment is not False:
+            return 'pay' if self.require_payment == 1 else 'sign'
         return super(SaleOrder, self).get_portal_confirmation_action()
 
     @api.multi

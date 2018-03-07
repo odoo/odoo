@@ -58,6 +58,10 @@ function checkXML(xml) {
  * @returns {string} formatted xml
  */
 function formatXML(xml) {
+    // do nothing if an inline script is present to avoid breaking it
+    if (/<script(?: [^>]*)?>[^<][\s\S]*<\/script>/i.test(xml)) {
+        return xml;
+    }
     return window.vkbeautify.xml(xml, 4);
 }
 /**
@@ -742,7 +746,7 @@ var ViewEditor = Widget.extend({
 
             var text = data.text || '';
             if (!isSelected) {
-                text = Array($elem.data('level')).join('-') + ' ' + text;
+                text = Array(($elem.data('level') || 0) + 1).join('-') + ' ' + text;
             }
             var $div = $('<div/>',  {
                 text: text,

@@ -8,7 +8,7 @@
 # Xavier Belmere <Info@cartmeleon.com>, 2017
 # Shark McGnark <peculiarcheese@gmail.com>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
@@ -24,14 +24,17 @@
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Frédéric LIETART <stuff@tifred.fr>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Alexandra Jubert <aju@odoo.com>, 2017
+# Florian Hatat, 2017
+# e2f <projects@e2f.com>, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
 "PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2017\n"
+"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,6 +78,12 @@ msgid ""
 "country, GeoIP must be installed on your server, otherwise, the countries of"
 " the rule will not be taken into account.</span>"
 msgstr ""
+"<span>Définissez des règles pour votre canal d'assistance en ligne. Vous "
+"pouvez associer une action (désactiver l'assistance, ouvrir l'assistance "
+"automatiquement ou activer un bouton) à une URL donnée en fonction du "
+"pays.<br/> Pour identifier le pays, GeoIP doit être installé sur votre "
+"serveur. Autrement, les pays ne seront pas pris en compte lors de "
+"l'exécution de la règle.</span>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
@@ -151,6 +160,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"Les réponses standardisées vous permettent d'insérer des réponses prédéfinies dans\n"
+" vos messages en saisissant <i>:raccourci</i>. Le raccourci est\n"
+" remplacé directement dans votre message, ce qui vous permet de le modifier\n"
+" avant de l'envoyer."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -199,7 +212,7 @@ msgstr "Discutez en ligne avec un de nos collaborateurs"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Click to create a new canned response."
-msgstr ""
+msgstr "Cliquez ici pour créer une réponse standardisée."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -237,7 +250,7 @@ msgstr "Copié!"
 #: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:12
 #, python-format
 msgid "Copy Text"
-msgstr ""
+msgstr "Copier le texte"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -306,7 +319,7 @@ msgstr "Évaluations de la Clientèle"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
 msgid "Customer ratings on livechat session."
-msgstr ""
+msgstr "Évaluations clients suite à une session d'assistance en ligne."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
@@ -322,6 +335,9 @@ msgid ""
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
+"Délai (en secondes) d'ouverture automatique de la fenêtre de conversation. "
+"Remarque : l'action sélectionnée doit être « Fenêtre contextuelle "
+"automatique » pour que ce paramètre soit pris en compte."
 
 #. module: im_livechat
 #. openerp-web
@@ -377,6 +393,10 @@ msgid ""
 " Then go to Website Admin &gt; Configuration &gt; Settings and select the "
 "Website Live Chat Channel you want to add on your website."
 msgstr ""
+"Si votre site Web a été réalisé avec le CMS Odoo, vous devez installer le "
+"module website_livechat. Ensuite, accédez à Administration du site Web > "
+"Configuration > Paramètres et sélectionnez le canal d'assistance en ligne "
+"que vous souhaitez ajouter sur votre site."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -501,7 +521,7 @@ msgstr "La semaine dernière"
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr "Congé"
+msgstr "Quitter"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -511,7 +531,7 @@ msgstr "Quitter le canal"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel_partner
 msgid "Listeners of a Channel"
-msgstr ""
+msgstr "Audience d'un canal"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
@@ -545,6 +565,10 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
+"Les statistiques relatives au canal d'assistance en ligne vous permettent "
+"d'évaluer et d'analyser facilement les performances d'une session "
+"d'assistance en ligne. Obtenez des informations à propos des sessions "
+"manquées, de l'audience, de la durée d'une session, etc."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -706,28 +730,30 @@ msgstr "Note : :rating_%d"
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Bad"
-msgstr ""
+msgstr "Évaluation : mauvais"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Great"
-msgstr ""
+msgstr "Évaluation : excellent"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Okay"
-msgstr ""
+msgstr "Évaluation : moyen"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
 msgid "Ratings for livechat channel"
-msgstr ""
+msgstr "Évaluations relatives au canal d'assistance en ligne"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
+"Expression régulière spécifiant les pages Web sur lesquelles cette règle "
+"sera appliquée."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -760,7 +786,7 @@ msgstr "Recherche de rapport"
 #: code:addons/im_livechat/models/mail_channel.py:113
 #, python-format
 msgid "See 15 last visited pages"
-msgstr ""
+msgstr "Voir les 15 dernières pages visitées"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -838,6 +864,11 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"La règle sera uniquement appliquée pour ces pays. Exemple : si vous "
+"sélectionnez « Belgique» et « États-Unis » et que vous définissez l'action "
+"sur « Masquer le bouton », le bouton d'assistance sera masqué sur l'URL "
+"spécifiée pour les visiteurs situés dans ces deux pays. Cette fonctionnalité"
+" nécessite que GeoIP soit installé sur votre serveur."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -852,7 +883,7 @@ msgstr "Cet utilisateur pourra rejoindre les canaux de support."
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
 msgid "There is no rating for this channel at the moment."
-msgstr ""
+msgstr "Ce canal n'a reçu aucune évaluation pour le moment."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image
@@ -941,6 +972,9 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"Vous pouvez créer des canaux pour chaque site Web sur lequel vous souhaitez\n"
+" intégrer le widget d'assistance en ligne. Cela permet aux visiteurs\n"
+" de votre site de discuter en temps réel avec vos opérateurs."
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action

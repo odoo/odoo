@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Gert Valdek <gert@airobot.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
 # Marek Pontus, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Marek Pontus, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -173,6 +173,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Hoiatus</strong>: uute atribuutide lisamisel või kustutamisel\n"
+"                        kustutatakse ja luuakse uuesti olemasolevad variatsioonid ja müügivihjed.\n"
+"                      Seega võivad kaduma minna toodetele tehtud kohandused.  "
 
 #. module: product
 #: sql_constraint:product.product:0
@@ -359,7 +362,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr ""
+msgstr "Atribuudi väärtused"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -368,12 +371,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Attributes"
-msgstr "Omadused"
+msgstr "Atribuudid"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_variant
 msgid "Attributes and Variants"
-msgstr ""
+msgstr "Atribuudid ja variatsioonid"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -518,7 +521,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Purchased"
-msgstr "On ostetav"
+msgstr "Ostetav toode"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_rental
@@ -531,7 +534,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_sale_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
-msgstr "On müüdav"
+msgstr "Müüdav toode"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -693,7 +696,7 @@ msgstr ""
 #: selection:product.template,type:0
 #, python-format
 msgid "Consumable"
-msgstr "Tarvikud"
+msgstr "Tarbitav toode"
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -721,7 +724,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
-msgstr "Maksumus"
+msgstr "Omahind"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -748,12 +751,12 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
 msgid "Country Group"
-msgstr "Maa grupp"
+msgstr "Riikide grupp"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_country_group_ids
 msgid "Country Groups"
-msgstr ""
+msgstr "Riikide rühmad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
@@ -890,7 +893,7 @@ msgstr "Kirjeldus"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
-msgstr ""
+msgstr "Kirjeldus klientidele"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1130,6 +1133,11 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Friendly to the environment."
 msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Future Activities"
+msgstr "Tulevased tegevused"
 
 #. module: product
 #: model:product.product,name:product.product_product_1
@@ -1471,6 +1479,11 @@ msgid "Last Updated on"
 msgstr "Viimati uuendatud"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Late Activities"
+msgstr "Ületähtaja tegevused"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_delay
 msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
@@ -1566,12 +1579,12 @@ msgstr "Min.hinnamarginaal"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_min_quantity
 msgid "Min. Quantity"
-msgstr "Vähim kogus"
+msgstr "Min. kogus"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_min_qty
 msgid "Minimal Quantity"
-msgstr "Vähim kogus"
+msgstr "Minimaalne kogus"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1882,25 +1895,25 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
 msgid "Product Attribute Value"
-msgstr ""
+msgstr "Toote atribuudi väärtused"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "Toote atribuudid ja väärtused"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line_ids
 msgid "Product Attributes"
-msgstr "Toote omadused"
+msgstr "Toote atribuudid"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model:ir.ui.view,arch_db:product.product_category_list_view
 #: model:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "Toote kategooriad"
+msgstr "Toodete kategooriad"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1921,7 +1934,7 @@ msgstr "Toote nimi"
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_stock_packaging
 #: model:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packages"
-msgstr ""
+msgstr "Toote pakid"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -1961,7 +1974,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr "Toote variant"
+msgstr "Toote variatsioon"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1969,7 +1982,7 @@ msgstr "Toote variant"
 #: model:ir.actions.act_window,name:product.product_variant_action
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "Toote variandid"
+msgstr "Toote variatsioonid"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
@@ -1984,7 +1997,7 @@ msgstr "Tooted"
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Products Labels"
-msgstr "Tootete sildid"
+msgstr "Toodete sildid"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -2172,7 +2185,7 @@ msgstr "Müük"
 #: model:ir.model.fields,field_description:product.field_product_product_list_price
 #: model:ir.model.fields,field_description:product.field_product_template_list_price
 msgid "Sales Price"
-msgstr ""
+msgstr "Müügihind"
 
 #. module: product
 #: model:res.groups,name:product.group_sale_pricelist
@@ -2252,6 +2265,13 @@ msgid ""
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
 msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Näita kõiki andmeid, millel on järgmise tegevuse kuupäev ennem tänast "
+"kuupäeva"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_pricelist
@@ -2661,7 +2681,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note will show up on sales orders."
-msgstr ""
+msgstr "See märkus on nähtav müügitellimustel."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
@@ -2684,6 +2704,11 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Today Activities"
+msgstr "Tänased tegevused"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2747,7 +2772,7 @@ msgstr "Mõõtühikute kategooriad"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr "Ühik(ud)"
+msgstr "Ühik(ut)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -2854,7 +2879,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr "Variandid"
+msgstr "Variatsioonid"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name

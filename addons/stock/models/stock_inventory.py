@@ -368,6 +368,7 @@ class InventoryLine(models.Model):
     def write(self, values):
         values.pop('product_name', False)
         res = super(InventoryLine, self).write(values)
+        return res
 
     @api.model
     def create(self, values):

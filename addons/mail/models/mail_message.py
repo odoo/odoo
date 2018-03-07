@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
-_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/]{3,}=*)([\'"])', re.I)
+_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])', re.I)
 
 
 class Message(models.Model):
@@ -757,9 +757,10 @@ class Message(models.Model):
                         'datas_fname': name,
                         'res_model': 'mail.message',
                     })
+                    attachment.generate_access_token()
                     values['attachment_ids'].append((4, attachment.id))
-                    data_to_url[key] = '/web/image/%s' % attachment.id
-                return '%s%s alt="%s"' % (data_to_url[key], match.group(3), name)
+                    data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
+                return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
             values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
 
         # delegate creation of tracking after the create as sudo to avoid access rights issues

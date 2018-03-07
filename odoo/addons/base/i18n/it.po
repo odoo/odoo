@@ -7,13 +7,16 @@
 # Paolo Valier, 2017
 # Pietro Della Notte <pdellanotte@gmail.com>, 2017
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
+# p_amoruso <p.amoruso@elvenstudio.it>, 2018
+# Manuela Feliciani <mfeliciani@alice.it>, 2018
+# Luigi Di Naro <gigidn@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-08 13:21+0000\n"
-"PO-Revision-Date: 2017-11-08 13:21+0000\n"
-"Last-Translator: Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 14:33+0000\n"
+"PO-Revision-Date: 2018-02-19 14:33+0000\n"
+"Last-Translator: Luigi Di Naro <gigidn@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +47,10 @@ msgid ""
 "Allow cashier to reprint receipts\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Consenti al cassiere di ristampare le ricevute\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -3133,7 +3140,7 @@ msgid ""
 "An ISR will be generated if you specify the information it needs :\n"
 "    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
 "    - Your invoice must have been set assigned a bank account to receive its payment\n"
-"    (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
 "    - You must have set the postal references of your bank.\n"
 "    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
 "\n"
@@ -3247,6 +3254,44 @@ msgid ""
 "\n"
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
 
 #. module: base
@@ -3604,6 +3649,19 @@ msgid ""
 "This module contains most code coming from odoo v10 website_portal. Purpose\n"
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -4975,7 +5033,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_view_form
 #: model:res.groups,name:base.group_erp_manager
 msgid "Access Rights"
-msgstr ""
+msgstr "Autorizzazioni Accesso"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_groups_form
@@ -4986,7 +5044,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_access_token
 msgid "Access Token"
-msgstr ""
+msgstr "Token di accesso"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -5051,16 +5109,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilità"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_and_finance
 msgid "Accounting & Finance"
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
-msgid "Accounting &amp; Finance"
 msgstr ""
 
 #. module: base
@@ -5125,7 +5178,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.action_view_tree
 #: model:ir.ui.view,arch_db:base.view_window_action_search
 msgid "Action"
-msgstr ""
+msgstr "Azione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_help
@@ -5146,7 +5199,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_window_name
 #: model:ir.model.fields,field_description:base.field_ir_cron_name
 msgid "Action Name"
-msgstr ""
+msgstr "Nome Azione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_url_target
@@ -5191,6 +5244,11 @@ msgid "Actions"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+msgid "Activate more currencies"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
 #: model:ir.model.fields,field_description:base.field_ir_filters_active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_active
@@ -5216,6 +5274,11 @@ msgstr "Attivo"
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
 msgstr "Aggiungi i costi di consegna alle Vendite Online"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "Aggiungi Followers"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -5264,7 +5327,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Address"
-msgstr ""
+msgstr "Indirizzo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_type
@@ -5489,13 +5552,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr ""
-
-#. module: base
 #: code:addons/base/ir/ir_fields.py:378
 #, python-format
 msgid ""
@@ -5603,7 +5659,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Apply"
-msgstr ""
+msgstr "Salva"
 
 #. module: base
 #: code:addons/base/module/module.py:622
@@ -5690,7 +5746,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Archived"
-msgstr ""
+msgstr "Archiviato"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -5709,7 +5765,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
-msgid "Arguments sent to the client along withthe view tag"
+msgid "Arguments sent to the client along with the view tag"
 msgstr ""
 
 #. module: base
@@ -5766,7 +5822,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_name
 msgid "Attachment Name"
-msgstr ""
+msgstr "Nome Allegato"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -5775,7 +5831,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 #: model:ir.ui.view,arch_db:base.view_attachment_tree
 msgid "Attachments"
-msgstr ""
+msgstr "Allegati"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document
@@ -5827,7 +5883,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_author
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Author"
-msgstr ""
+msgstr "Autore"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -5848,6 +5904,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
+msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
 msgstr ""
 
 #. module: base
@@ -5984,7 +6045,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_bank_id
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Bank"
-msgstr ""
+msgstr "Banca"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
@@ -6027,7 +6088,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_bank_ids
 #: model:ir.ui.view,arch_db:base.view_res_bank_tree
 msgid "Banks"
-msgstr ""
+msgstr "Banche"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -6419,7 +6480,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
@@ -6448,7 +6509,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_calendar
 #: selection:ir.ui.view,type:0
 msgid "Calendar"
-msgstr ""
+msgstr "Calendario"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_calendar_sms
@@ -6524,7 +6585,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Cancel Uninstall"
-msgstr ""
+msgstr "Annulla Disinstallazione"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -6638,7 +6699,7 @@ msgstr ""
 #. module: base
 #: selection:ir.property,type:0
 msgid "Char"
-msgstr ""
+msgstr "Carattere"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_livechat
@@ -6788,7 +6849,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
-msgstr ""
+msgstr "Città"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
@@ -6801,13 +6862,13 @@ msgid "Clean"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_ui_view_custom
-msgid "Click here to create a customized view"
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to attach a new document."
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to create new documents."
+#: model:ir.actions.act_window,help:base.action_ui_view_custom
+msgid "Click here to create a customized view"
 msgstr ""
 
 #. module: base
@@ -6857,7 +6918,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_base_module_update
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -6868,7 +6929,7 @@ msgstr ""
 #: selection:ir.translation,type:0
 #: model:ir.ui.view,arch_db:base.view_base_import_language
 msgid "Code"
-msgstr ""
+msgstr "Codice"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_compute
@@ -6918,7 +6979,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_color
 #: model:ir.model.fields,field_description:base.field_res_users_color
 msgid "Color Index"
-msgstr ""
+msgstr "Indice Colore"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_column1
@@ -6976,7 +7037,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Communication"
-msgstr ""
+msgstr "Comunicazione"
 
 #. module: base
 #: model:res.country,name:base.km
@@ -7035,7 +7096,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_company_name
 #: model:ir.model.fields,field_description:base.field_res_users_company_name
 msgid "Company Name"
-msgstr ""
+msgstr "Nome dell’azienda"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_commercial_company_name
@@ -7153,7 +7214,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Confirm"
-msgstr ""
+msgstr "Conferma"
 
 #. module: base
 #: model:res.country,name:base.cg
@@ -7220,7 +7281,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 #: selection:res.partner,type:0
 msgid "Contact"
-msgstr ""
+msgstr "Contatto"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -7245,23 +7306,23 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact Name"
-msgstr ""
+msgstr "Nome di contatto"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr ""
+msgstr "Tag Contatti"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr ""
+msgstr "Tag Contatti"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 msgid "Contact Titles"
-msgstr ""
+msgstr "Qualifiche Contatto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_child_ids
@@ -7343,7 +7404,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_country
 #: model:ir.model.fields,field_description:base.field_res_country_group_country_ids
 msgid "Countries"
-msgstr ""
+msgstr "Nazioni"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -7362,7 +7423,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Country"
-msgstr ""
+msgstr "Nazione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_phone_code
@@ -7380,7 +7441,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_country_group_form
 #: model:ir.ui.view,arch_db:base.view_country_group_tree
 msgid "Country Group"
-msgstr ""
+msgstr "Gruppo Nazione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_country_group_ids
@@ -7415,8 +7476,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
-msgstr ""
+msgstr "Crea Date"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -7469,6 +7531,11 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
+"Crea e gestisci gli utenti che si connetteranno al sistema. Gli utenti "
+"possono essere disattivati nel caso in cui ci sia un periodo durante il "
+"quale essi non dovranno/dovrebbero connettersi al sistema. È possibile "
+"assegnare loro gruppi per fornire un accesso specifico alle applicazioni che"
+" devono utilizzare nel sistema."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -7643,7 +7710,6 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -7657,7 +7723,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Creation Month"
-msgstr ""
+msgstr "Mese di creazione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_credit_limit
@@ -7843,7 +7909,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_form
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Customers"
-msgstr ""
+msgstr "Clienti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts
@@ -7961,7 +8027,7 @@ msgstr ""
 #: selection:ir.property,type:0
 #: model:ir.ui.view,arch_db:base.view_currency_rate_search
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_create_date
@@ -7986,7 +8052,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Day"
-msgstr ""
+msgstr "Giorno"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -8007,6 +8073,27 @@ msgstr ""
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr ""
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Gentile signore/signora, \n"
+"\n"
+"Dalle nostre registrazioni contabili risultano ancora sospesi alcuni pagamenti. Vi preghiamo di verificare i dettagli allegati.\n"
+"Se il pagamento dovesse essere già stato corrisposto, vi preghiamo di non considerare la presente. In caso contrario, vi chiediamo di corrispondere l'importo indicato di seguito.\n"
+"Se dovessero esserci dubbi o richieste a riguardo, non esitate a contattarci.\n"
+"\n"
+"Ringraziamo in anticipo per la Vostra collaborazione.\n"
+"Distinti saluti,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -8031,7 +8118,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_is_default
 msgid "Default Filter"
-msgstr ""
+msgstr "Filtro predefinito"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_default
@@ -8234,13 +8321,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Annulla"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_discuss
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Discuss"
-msgstr ""
+msgstr "Comunicazioni"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
@@ -8430,7 +8517,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:1174 code:addons/base/ir/ir_model.py:1177
 #, python-format
 msgid "Document model"
-msgstr ""
+msgstr "Modello Documento"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
@@ -8473,7 +8560,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr ""
+msgstr "Completato"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -8610,7 +8697,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_email
 #: model:ir.ui.menu,name:base.menu_email
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -8703,7 +8790,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_maintenance
 msgid "Equipments"
-msgstr ""
+msgstr "Attrezzature"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_maintenance
@@ -8842,7 +8929,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "Examples"
-msgstr ""
+msgstr "Esempi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion_exclusion_id
@@ -9059,7 +9146,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 msgid "Fed. States"
-msgstr ""
+msgstr "Stati Federali"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_fedex
@@ -9141,6 +9228,12 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:201
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:1016
+#, python-format
+msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
 
 #. module: base
@@ -9257,18 +9350,18 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_filter
 msgid "Filter"
-msgstr ""
+msgstr "Filtro"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_name
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filter Name"
-msgstr ""
+msgstr "Nome Filtro"
 
 #. module: base
 #: sql_constraint:ir.filters:0
 msgid "Filter names must be unique"
-msgstr ""
+msgstr "I nomi dei filtri devono essere univoci"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
@@ -9283,7 +9376,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_filters_view_tree
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Filters"
-msgstr ""
+msgstr "Filtri"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -9323,7 +9416,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
 msgid "Fleet Management"
-msgstr ""
+msgstr "Gestione Flotta"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -9445,6 +9538,23 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
 msgstr ""
 
 #. module: base
@@ -9593,7 +9703,7 @@ msgstr "Informazioni Generali"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "General Settings"
-msgstr ""
+msgstr "Impostazioni Generali"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
@@ -9794,7 +9904,7 @@ msgstr ""
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Grid"
-msgstr ""
+msgstr "Griglia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_grid
@@ -10350,6 +10460,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "L'ID dell'azione è definito in un file XML"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr ""
@@ -10420,7 +10535,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
 msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
-"log at DEBUG level(this is very verbose and may include confidential info!)"
+"log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
 
 #. module: base
@@ -10477,6 +10592,9 @@ msgid ""
 "If the selected language is loaded in the system, all documents related to "
 "this contact will be printed in this language. If not, it will be English."
 msgstr ""
+"Se la lingua selezionata è caricata nel sistema, tutti i documenti relativi "
+"a questo contatto saranno stampati in questa lingua. Se non è così, saranno "
+"stampati in inglese."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view_groups_id
@@ -10725,7 +10843,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_info
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Information"
-msgstr ""
+msgstr "Informazioni"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search
@@ -10799,7 +10917,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
 msgid "Install Language"
-msgstr ""
+msgstr "Installa lingua"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -10887,7 +11005,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "Note Interne"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_ref
@@ -11267,7 +11385,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_lang
 #: model:ir.ui.view,arch_db:base.res_lang_search
 msgid "Language"
-msgstr ""
+msgstr "Lingua"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
@@ -11277,7 +11395,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import_name
 msgid "Language Name"
-msgstr ""
+msgstr "Nome Lingua"
 
 #. module: base
 #: code:addons/base/module/wizard/base_language_install.py:39
@@ -11289,7 +11407,7 @@ msgstr "Pacchetto Lingua"
 #: code:addons/base/res/res_lang.py:218
 #, python-format
 msgid "Language code cannot be modified."
-msgstr ""
+msgstr "Il codice della lingua non può essere modificato."
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -11304,7 +11422,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.res_lang_search
 #: model:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Languages"
-msgstr ""
+msgstr "Lingue"
 
 #. module: base
 #: model:res.country,name:base.la
@@ -11690,7 +11808,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_logging_level
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Level"
-msgstr ""
+msgstr "Livello"
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -11831,7 +11949,7 @@ msgstr "Codice Locale"
 #: model:ir.module.category,name:base.module_category_localization
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
-msgstr ""
+msgstr "Localizzazione"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -12106,7 +12224,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_mrp
 #: model:res.partner.industry,name:base.res_partner_industry_C
 msgid "Manufacturing"
-msgstr ""
+msgstr "Produzione"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
@@ -12145,7 +12263,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation
@@ -12277,7 +12395,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_message
 msgid "Message"
-msgstr ""
+msgstr "Messaggio"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -12418,7 +12536,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "Model"
-msgstr ""
+msgstr "Modello"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:618
@@ -12458,7 +12576,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_model
 msgid "Model Name"
-msgstr ""
+msgstr "Nome Modello"
 
 #. module: base
 #: model:ir.actions.report,name:base.report_ir_model_overview
@@ -12512,7 +12630,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_data_search
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Module"
-msgstr ""
+msgstr "Modulo"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_module_category_form
@@ -12529,7 +12647,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstallation"
-msgstr ""
+msgstr "Disinstallazione modulo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -12608,7 +12726,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Month"
-msgstr ""
+msgstr "Mese"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -12679,7 +12797,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "My filters"
-msgstr ""
+msgstr "I miei Filtri"
 
 #. module: base
 #: model:res.country,name:base.mm
@@ -12722,7 +12840,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 #: model:ir.ui.view,arch_db:base.view_partner_tree
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -12808,7 +12926,7 @@ msgstr "Data Prossima Esecuzione"
 #: model:ir.model.fields,field_description:base.field_ir_sequence_number_next
 #: model:ir.model.fields,field_description:base.field_ir_sequence_number_next_actual
 msgid "Next Number"
-msgstr ""
+msgstr "Prossimo Numero"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_date_range_number_next
@@ -12858,7 +12976,7 @@ msgstr ""
 #: code:addons/models.py:1287
 #, python-format
 msgid "No default view of type '%s' could be found !"
-msgstr ""
+msgstr "Non è stato trovata alcuna vista predefinita di tipo  '%s' !"
 
 #. module: base
 #: selection:ir.sequence,implementation:0
@@ -12956,7 +13074,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_groups_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category_module_nr
@@ -14573,7 +14691,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:734 code:addons/base/res/res_users.py:895
 #, python-format
 msgid "Other"
-msgstr ""
+msgstr "Altro"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -14649,7 +14767,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_attachment_create_uid
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Owner"
-msgstr ""
+msgstr "Proprietario"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
@@ -14779,7 +14897,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_parent_id
 msgid "Parent Company"
-msgstr ""
+msgstr "Societ&agrave; Madre"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_left
@@ -14837,7 +14955,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 msgid "Partners"
-msgstr ""
+msgstr "Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
@@ -14880,7 +14998,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_payment_acquirer
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Acquirente di pagamento"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
@@ -14974,7 +15092,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Persons"
-msgstr ""
+msgstr "Persone"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -14997,12 +15115,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_phone
 #: model:ir.model.fields,field_description:base.field_res_users_phone
 msgid "Phone"
-msgstr ""
+msgstr "Telefono"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_phone_validation
 msgid "Phone Numbers Validation"
-msgstr ""
+msgstr "Convalida numeri di telefono"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -15023,7 +15141,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Progettista"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
@@ -15239,7 +15357,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_sequence
 #: model:ir.model.fields,field_description:base.field_res_request_link_priority
 msgid "Priority"
-msgstr ""
+msgstr "Priorit&agrave;"
 
 #. module: base
 #: code:addons/models.py:110
@@ -15303,7 +15421,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_project_management
 #: model:ir.module.module,shortdesc:base.module_project
 msgid "Project"
-msgstr ""
+msgstr "Progetto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
@@ -15432,8 +15550,8 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron_link_field_id
 msgid ""
-"Provide the field used to link the newly created recordon the record on used"
-" by the server action."
+"Provide the field used to link the newly created record on the record on "
+"used by the server action."
 msgstr ""
 
 #. module: base
@@ -15517,7 +15635,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_purchase_management
 #: model:ir.module.category,name:base.module_category_purchases
 msgid "Purchases"
-msgstr ""
+msgstr "Acquisti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_push
@@ -15901,7 +16019,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
 msgid "Resellers"
-msgstr ""
+msgstr "Rivenditori"
 
 #. module: base
 #: code:addons/models.py:791
@@ -16270,7 +16388,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_company_report_form
 #: model:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Save"
-msgstr ""
+msgstr "Salva"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_report_form_with_print
@@ -16400,7 +16518,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selectable
 msgid "Selectable"
-msgstr ""
+msgstr "Selezionabile"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:28
@@ -16441,6 +16559,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
 msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "Invia Email"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -16595,7 +16718,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_11
 msgid "Services"
-msgstr ""
+msgstr "Servizi"
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
@@ -16765,7 +16888,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "Slides"
-msgstr ""
+msgstr "diapositiva"
 
 #. module: base
 #: model:res.country,name:base.sk
@@ -16971,17 +17094,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr ""
+msgstr "Stato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_code
 msgid "State Code"
-msgstr ""
+msgstr "Codice Stato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_name
 msgid "State Name"
-msgstr ""
+msgstr "Nome Stato"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -17056,7 +17179,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_street
 #: model:ir.model.fields,field_description:base.field_res_users_street
 msgid "Street"
-msgstr ""
+msgstr "Strada/Via"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -17065,7 +17188,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
-msgstr ""
+msgstr "Strada/Via 2…"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -17074,7 +17197,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street..."
-msgstr ""
+msgstr "Strada/Via…"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank_street2
@@ -17082,7 +17205,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_street2
 #: model:ir.model.fields,field_description:base.field_res_users_street2
 msgid "Street2"
-msgstr ""
+msgstr "Strada/Via2"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_stripe
@@ -17278,7 +17401,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_name
@@ -17289,7 +17412,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_category_id_893
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -17360,11 +17483,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:750
+#: code:addons/base/ir/ir_translation.py:760
 #, python-format
 msgid "Technical Translations"
 msgstr ""
@@ -17377,7 +17501,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_name
 msgid "Template Name"
-msgstr ""
+msgstr "Nome Template"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
@@ -17441,6 +17565,12 @@ msgid "Thailand - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: code:addons/base/res/res_users.py:290
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -17451,7 +17581,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid ""
-"The Selection Options expression is not a valid Pythonic expression.Please "
+"The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
 
@@ -17486,7 +17616,7 @@ msgstr ""
 #: code:addons/base/module/module.py:561
 #, python-format
 msgid "The `base` module cannot be uninstalled"
-msgstr ""
+msgstr "Il modulo 'base' non può essere disinstallato"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category_active
@@ -17596,7 +17726,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "The following apps will be uninstalled"
-msgstr ""
+msgstr "Le seguenti app verranno disinstallate"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -17780,6 +17910,8 @@ msgid ""
 "The selected language has been successfully installed. You must change the "
 "preferences of the user to view the changes."
 msgstr ""
+"La lingua selezionata è stata installata con successo. È necessario cambiare"
+" le impostazioni dell'utente per visualizzare le modifiche."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -17789,7 +17921,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state_code
 msgid "The state code."
-msgstr ""
+msgstr "Il codice dello stato."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:491
@@ -17922,7 +18054,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "This module will trigger the uninstallation of below modules."
-msgstr ""
+msgstr "Questo modulo causerà la disinstallazione dei seguenti moduli."
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bootswatch
@@ -18004,7 +18136,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_title_name
 #: model:ir.model.fields,field_description:base.field_res_users_title
 msgid "Title"
-msgstr ""
+msgstr "Titolo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_to
@@ -18269,7 +18401,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids anygap in the sequence (while "
+"later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
 
@@ -18284,7 +18416,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_state
@@ -18429,14 +18561,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.module_form
 #, python-format
 msgid "Uninstall"
-msgstr ""
+msgstr "Disinstalla"
 
 #. module: base
 #: code:addons/base/module/module.py:573
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall module"
-msgstr ""
+msgstr "Disinstalla modulo"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -18545,7 +18677,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_data_date_update
 #: model:ir.model.fields,field_description:base.field_ir_model_relation_date_update
 msgid "Update Date"
-msgstr ""
+msgstr "Data di aggiornamento"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
@@ -18697,17 +18829,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 #: model:ir.ui.view,arch_db:base.view_users_search
 msgid "User"
-msgstr ""
+msgstr "Utente"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_2
 msgid "User Interface"
-msgstr ""
+msgstr "Interfaccia Utente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user_user_login
 msgid "User Login"
-msgstr ""
+msgstr "Login Utente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_log_ids
@@ -18895,7 +19027,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Vehicle, leasing, insurances, costs"
-msgstr ""
+msgstr "Veicolo, leasing, assicurazioni, costi"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
@@ -18972,7 +19104,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_name
 msgid "View Name"
-msgstr ""
+msgstr "Nome Vista"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_id
@@ -18985,7 +19117,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_type
 #: model:ir.ui.view,arch_db:base.view_window_action_search
 msgid "View Type"
-msgstr ""
+msgstr "Tipo Vista"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
@@ -19003,6 +19135,8 @@ msgid ""
 "View type: Tree type to use for the tree view, set to 'tree' for a "
 "hierarchical tree view, or 'form' for a regular list view"
 msgstr ""
+"Tipo di vista: Tree è usato per le viste elenco, imposta a 'tree' per una "
+"vista strutturata (con eredità), oppure 'form' per una lista regolare"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:570
@@ -19090,7 +19224,7 @@ msgstr ""
 #: code:addons/base/res/res_partner.py:308
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Avviso"
 
 #. module: base
 #: code:addons/base/res/res_config.py:427
@@ -19321,7 +19455,7 @@ msgstr ""
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Weeks"
-msgstr ""
+msgstr "Settimane"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scale
@@ -19465,6 +19599,8 @@ msgid ""
 "You are creating a new user. After saving, the user will receive an invite "
 "email containing a link to set its password."
 msgstr ""
+"Stai creando un nuovo utente. Dopo averlo salvato, l'utente riceverà "
+"un'email di invito contenente un link per impostare la sua password."
 
 #. module: base
 #: code:addons/base/module/module.py:418
@@ -19596,9 +19732,9 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid ""
-"Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
-" do the trick."
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
 msgstr ""
 
 #. module: base
@@ -19616,7 +19752,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_short_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "ZIP"
-msgstr ""
+msgstr "ZIP"
 
 #. module: base
 #: model:res.country,name:base.zm
@@ -19634,7 +19770,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_zip
 #: model:ir.model.fields,field_description:base.field_res_users_zip
 msgid "Zip"
-msgstr ""
+msgstr "Zip"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -19793,7 +19929,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. www.odoo.com"
-msgstr ""
+msgstr "per esempio www.odoo.com"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_ebay
@@ -19930,7 +20066,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
@@ -20105,7 +20241,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_translation
 msgid "ir.translation"
-msgstr ""
+msgstr "ir.translation"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -20304,7 +20440,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
 msgid "wizard.ir.model.menu.create"
-msgstr ""
+msgstr "wizard.ir.model.menu.create"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:143
