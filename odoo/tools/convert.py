@@ -575,12 +575,8 @@ form: module.record_id""" % (xml_id,)
             rec_context = safe_eval(rec_context)
 
         if self.xml_filename and rec_id:
-            rec_context['install_mode_data'] = dict(
-                xml_file=self.xml_filename,
-                xml_id=rec_id,
-                model=rec_model,
-                module=self.module
-            )
+            rec_context['install_module'] = self.module
+            rec_context['install_filename'] = self.xml_filename
 
         self._test_xml_id(rec_id)
         # in update mode, the record won't be updated if the data node explicitly
