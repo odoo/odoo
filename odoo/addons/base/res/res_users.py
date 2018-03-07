@@ -752,7 +752,11 @@ class GroupsView(models.Model):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
-            view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
+
+            new_context = dict(view._context)
+            new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
+            new_context['lang'] = None
+            view.with_context(new_context).write({'arch': xml_content})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """
