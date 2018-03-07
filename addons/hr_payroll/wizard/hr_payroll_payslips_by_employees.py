@@ -46,6 +46,7 @@ class hr_payslip_employees(osv.osv_memory):
                 'date_from': from_date,
                 'date_to': to_date,
                 'credit_note': credit_note,
+                'company_id': emp.company_id.id,
             }
             slip_ids.append(slip_pool.create(cr, uid, res, context=context))
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
