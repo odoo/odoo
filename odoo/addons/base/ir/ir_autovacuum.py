@@ -18,7 +18,7 @@ class AutoVacuum(models.AbstractModel):
             model = self.env[mname]
             if model.is_transient():
                 try:
-                    with cr.savepoint():
+                    with self._cr.savepoint():
                         model._transient_vacuum(force=True)
                 except Exception as e:
                     _logger.warning("Failed to clean transient model %s\n%s", model, str(e))
