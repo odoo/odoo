@@ -171,7 +171,8 @@ class WebsiteForm(http.Controller):
         return data
 
     def insert_record(self, request, model, values, custom, meta=None):
-        record = request.env[model.model].sudo().with_context(mail_create_nosubscribe=True).create(values)
+        model_name = model.sudo().model
+        record = request.env[model_name].sudo().with_context(mail_create_nosubscribe=True).create(values)
 
         if custom or meta:
             default_field = model.website_form_default_field_id
@@ -183,13 +184,13 @@ class WebsiteForm(http.Controller):
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead
             if default_field.name:
-                if default_field.ttype == 'html' or model.model == 'mail.mail':
+                if default_field.ttype == 'html' or model_name == 'mail.mail':
                     custom_content = nl2br(custom_content)
                 record.update({default_field.name: custom_content})
             else:
                 values = {
                     'body': nl2br(custom_content),
-                    'model': model.model,
+                    'model': model_name,
                     'message_type': 'comment',
                     'no_auto_thread': False,
                     'res_id': record.id,
@@ -201,7 +202,8 @@ class WebsiteForm(http.Controller):
     # Link all files attached on the form
     def insert_attachment(self, model, id_record, files):
         orphan_attachment_ids = []
-        record = model.env[model.model].browse(id_record)
+        model_name = model.sudo().model
+        record = model.env[model_name].browse(id_record)
         authorized_fields = model.sudo()._get_form_writable_fields()
         for file in files:
             custom_field = file.field_name not in authorized_fields
@@ -209,7 +211,7 @@ class WebsiteForm(http.Controller):
                 'name': file.field_name if custom_field else file.filename,
                 'datas': base64.encodestring(file.read()),
                 'datas_fname': file.filename,
-                'res_model': model.model,
+                'res_model': model_name,
                 'res_id': record.id,
             }
             attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
@@ -221,10 +223,10 @@ class WebsiteForm(http.Controller):
         # If some attachments didn't match a field on the model,
         # we create a mail.message to link them to the record
         if orphan_attachment_ids:
-            if model.model != 'mail.mail':
+            if model_name != 'mail.mail':
                 values = {
                     'body': _('<p>Attached files : </p>'),
-                    'model': model.model,
+                    'model': model_name,
                     'message_type': 'comment',
                     'no_auto_thread': False,
                     'res_id': id_record,
