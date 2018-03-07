@@ -809,6 +809,7 @@ var BasicModel = AbstractModel.extend({
                 this.discardChanges(id, {rollback: false});
             }
         } else if (element._changes) {
+            delete element.tempLimitIncrement;
             _.each(element._changes, function (change) {
                 delete change.isNew;
             });
@@ -1683,6 +1684,10 @@ var BasicModel = AbstractModel.extend({
             case 'CREATE':
                 var options = {position: command.position};
                 def = this._addX2ManyDefaultRecord(list, options).then(function (id) {
+                    if (command.position === 'bottom' && list.orderedResIDs.length >= list.limit) {
+                        list.tempLimitIncrement = (list.tempLimitIncrement || 0) + 1;
+                        list.limit += 1;
+                    }
                     // FIXME: hack for lunch widget, which does useless default_get and onchange
                     if (command.data) {
                         return self._applyChange(id, command.data);
@@ -3819,7 +3824,8 @@ var BasicModel = AbstractModel.extend({
             // generate the current count and res_ids list by applying the changes
             var currentCount = list.count;
             var currentResIDs = list.res_ids;
-            var upperBound = list.limit ? Math.min(list.offset + list.limit, currentCount) : currentCount;
+            var effectiveLimit = (list.limit || 0) - (list.tempLimitIncrement || 0);
+            var upperBound = effectiveLimit ? Math.min(list.offset + effectiveLimit, currentCount) : currentCount;
             var fieldNames = list.getFieldNames();
             for (var i = list.offset; i < upperBound; i++) {
                 var resId = currentResIDs[i];

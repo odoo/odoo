@@ -2783,7 +2783,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('onchange followed by edition on the second page', function (assert) {
-        assert.expect(20);
+        assert.expect(12);
 
         var ids = [];
         for (var i=1; i<85; i++) {
@@ -2853,10 +2853,32 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#39))').index(), 2, "should display '#39' at the third line");
 
         form.destroy();
+    });
+
+    QUnit.test('onchange followed by edition on the second page (part 2)', function (assert) {
+        assert.expect(8);
+
+        var ids = [];
+        for (var i=1; i<85; i++) {
+            var id = 10 + i;
+            ids.push(id);
+            this.data.turtle.records.push({
+                id: id,
+                turtle_int: id/3|0,
+                turtle_foo: "#" + i,
+            });
+        }
+        ids.splice(41, 0, 1, 2, 3);
+        this.data.partner.records[0].turtles = ids;
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [[5]].concat(obj.turtles);
+            },
+        };
 
         // bottom order
 
-        form = createView({
+        var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -2888,16 +2910,16 @@ QUnit.module('relational_fields', {
 
         form.$('.o_field_x2many_list_row_add a').click();
 
-        assert.strictEqual(form.$('.o_data_row').length, 40, "should display 39 records and the create line");
+        assert.strictEqual(form.$('.o_data_row').length, 41, "should display 41 records and the create line");
         assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#76))').index(), 38, "should display '#76' at the penultimate line");
-        assert.strictEqual(form.$('.o_data_row:has(.o_field_char)').index(), 39, "should display the create line at the last position");
+        assert.strictEqual(form.$('.o_data_row:has(.o_field_char)').index(), 40, "should display the create line at the last position");
 
         form.$('.o_data_row input:first').val('value 3').trigger('input');
         form.$('.o_field_x2many_list_row_add a').click();
 
-        assert.strictEqual(form.$('.o_data_row').length, 40, "should display 39 records and the create line");
+        assert.strictEqual(form.$('.o_data_row').length, 42, "should display 42 records and the create line");
         assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#76))').index(), 38, "should display '#76' at the penultimate line");
-        assert.strictEqual(form.$('.o_data_row:has(.o_field_char)').index(), 39, "should display the create line at the last position");
+        assert.strictEqual(form.$('.o_data_row:has(.o_field_char)').index(), 41, "should display the create line at the last position");
 
         form.destroy();
     });
@@ -7595,6 +7617,42 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editing tabbed one2many (editable=bottom), again...', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].turtles = [];
+        for (var i = 0; i < 9; i++) {
+            var id = 100 + i;
+            this.data.turtle.records.push({id: id, turtle_foo: 'turtle' + (id-99)});
+            this.data.partner.records[0].turtles.push(id);
+        }
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom" limit="3">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_data_row input[name="turtle_foo"]').val('rainbow dash').trigger('input');
+        form.$('.o_x2m_control_panel .o_pager_next').click();
+        form.$('.o_x2m_control_panel .o_pager_next').click();
+
+        assert.strictEqual(form.$('tr.o_data_row').length, 3,
+            "should have 3 data rows on the current page");
+        form.destroy();
+    });
+
     QUnit.test('editing tabbed one2many (editable=top)', function (assert) {
         assert.expect(15);
 
@@ -8207,6 +8265,49 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').text(), 'yopblip',
             'data has been properly saved');
+        form.destroy();
+    });
+
+    QUnit.test('add a new line after limit is reached should behave nicely', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [1,2,3];
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.turtles = [
+                    [5],
+                    [1, 1, {turtle_foo: "yop"}],
+                    [1, 2, {turtle_foo: "blip"}],
+                    [1, 3, {turtle_foo: "kawa"}],
+                    [0, obj.turtles[3][2], {turtle_foo: "abc"}],
+                ];
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree limit="3" editable="bottom">' +
+                            '<field name="turtle_foo" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_data_row').length, 4, 'should have 4 data rows');
+        form.$('.o_input[name="turtle_foo"]').val('a').trigger('input');
+        assert.strictEqual(form.$('.o_data_row').length, 4,
+            'should still have 4 data rows (the limit is increased to 4)');
+
         form.destroy();
     });
 
