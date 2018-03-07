@@ -193,29 +193,40 @@ var DashboardShare = Widget.extend({
         'click .li_share': 'share_linkedin',
     },
 
-    init: function(parent, data){
+    init: function (parent, data) {
         this.data = data;
         this.parent = parent;
         this.share_url = 'https://www.odoo.com';
         this.share_text = encodeURIComponent("I am using #Odoo - Awesome open source business apps.");
     },
 
-    share_twitter: function(){
+    /**
+     * @param {MouseEvent} ev
+     */
+    share_twitter: function (ev) {
+        ev.preventDefault();
         var popup_url = _.str.sprintf( 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=%s %s',this.share_text,this.share_url);
         this.sharer(popup_url);
     },
-
-    share_facebook: function(){
+    /**
+     * @param {MouseEvent} ev
+     */
+    share_facebook: function (ev) {
+        ev.preventDefault();
         var popup_url = _.str.sprintf('https://www.facebook.com/sharer/sharer.php?u=%s', encodeURIComponent(this.share_url));
         this.sharer(popup_url);
     },
 
-    share_linkedin: function(){
+    /**
+     * @param {MouseEvent} ev
+     */
+    share_linkedin: function (ev) {
+        ev.preventDefault();
         var popup_url = _.str.sprintf('http://www.linkedin.com/shareArticle?mini=true&url=%s&title=I am using odoo&summary=%s&source=www.odoo.com', encodeURIComponent(this.share_url), this.share_text);
         this.sharer(popup_url);
     },
 
-    sharer: function(popup_url){
+    sharer: function (popup_url) {
         window.open(
             popup_url,
             'Share Dialog',
