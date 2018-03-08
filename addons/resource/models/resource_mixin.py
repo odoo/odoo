@@ -8,8 +8,8 @@ from pytz import utc
 from odoo import api, fields, models
 from odoo.tools import float_utils
 
-# This will generate quarter of days
-ROUNDING_FACTOR = 4
+# This will generate eights of days
+ROUNDING_FACTOR = 8
 
 
 class ResourceMixin(models.AbstractModel):
