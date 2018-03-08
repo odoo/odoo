@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import werkzeug
 
 from odoo import exceptions, fields, http, _
@@ -63,16 +64,18 @@ class sale_quote(http.Controller):
         if pdf:
             pdf = request.env.ref('website_quote.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            if not post.get('print'):
+                filename = "%s.pdf" % (re.sub('\W+', '-', (order_sudo.state in ('draft', 'sent') and 'Quotation - %s' % (order_sudo.name)) or 'Order - %s' % (order_sudo.name)))
+                pdfhttpheaders.append(('Content-Disposition', http.content_disposition(filename)))
             return request.make_response(pdf, headers=pdfhttpheaders)
         transaction = order_sudo.get_portal_last_transaction()
         values = {
-            'quotation': order_sudo,
+            'order': order_sudo,
             'message': message and int(message) or False,
             'option': any(not x.line_id for x in order_sudo.options),
             'order_valid': (not order_sudo.validity_date) or (now <= order_sudo.validity_date),
             'days_valid': days,
             'action': request.env.ref('sale.action_quotations').id,
-            'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
             'tx_id': transaction.id if transaction else False,
             'tx_state': transaction.state if transaction else False,
             'payment_tx': transaction,
@@ -82,6 +85,7 @@ class sale_quote(http.Controller):
             'return_url': '/shop/payment/validate',
             'bootstrap_formatting': True,
             'partner_id': order_sudo.partner_id.id,
+            'decline_url': '/quote/%s/%s/decline' % (order_sudo.id, order_sudo.access_token),
         }
 
         if order_sudo.has_to_be_paid() or values['need_payment']:
@@ -128,7 +132,20 @@ class sale_quote(http.Controller):
         number = -1 if remove else 1
         quantity = OrderLine.product_uom_qty + number
         OrderLine.write({'product_uom_qty': quantity})
-        return [str(quantity), str(Order.amount_total)]
+        days = 0
+        if Order.validity_date:
+            days = (fields.Date.from_string(Order.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
+        values = {
+            'qty': str(quantity),
+            'amount': str(Order.amount_total),
+            'portal_order_expire_detail': request.env['ir.ui.view'].render_template("sale.portal_order_expire_detail", {
+                'order': Order,
+                'days_valid': days,
+                'order_valid': (not Order.validity_date) or (fields.Date.today() <= Order.validity_date),
+            }),
+            'portal_order_amount_detail': request.env['ir.ui.view'].render_template("sale.portal_order_amount", {'order': Order}),
+        }
+        return values
 
     @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
