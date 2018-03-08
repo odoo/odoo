@@ -356,6 +356,11 @@ var ActionManager = Widget.extend({
                 // toggle the fullscreen mode for actions in target='fullscreen'
                 self._toggleFullscreen();
 
+                // now that the action has been executed, force its 'pushState'
+                // flag to 'true', as we don't want to prevent its controller
+                // from pushing its state if it changes in the future
+                action.pushState = true;
+
                 return action;
             })
             .fail(function () {

@@ -760,7 +760,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('should not push a loaded state', function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -772,9 +772,14 @@ QUnit.module('ActionManager', {
                 },
             },
         });
-        actionManager.loadState({action: 1});
+        actionManager.loadState({action: 3});
 
-        assert.verifySteps([]);
+        assert.verifySteps([], "should not push the loaded state");
+
+        actionManager.$('tr.o_data_row:first').click();
+
+        assert.verifySteps(['push_state'],
+            "should push the state of it changes afterwards");
 
         actionManager.destroy();
     });
