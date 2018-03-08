@@ -4985,15 +4985,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         done = set()
 
         # dummy assignment: trigger invalidations on the record
-        for name in todo:
-            if name == 'id':
-                continue
-            value = record[name]
-            field = self._fields[name]
-            if field.type == 'many2one' and field.delegate and not value:
-                # do not nullify all fields of parent record for new records
-                continue
-            record[name] = value
+        with env.do_in_onchange():
+            for name in todo:
+                if name == 'id':
+                    continue
+                value = record[name]
+                field = self._fields[name]
+                if field.type == 'many2one' and field.delegate and not value:
+                    # do not nullify all fields of parent record for new records
+                    continue
+                record[name] = value
 
         result = {}
         dirty = set()
