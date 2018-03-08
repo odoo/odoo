@@ -119,6 +119,10 @@ class Website(models.Model):
             'arch': template_record.arch.replace(template, key),
             'name': name,
         })
+
+        if view.arch_fs:
+            view.arch_fs = False
+
         if ispage:
             page = self.env['website.page'].create({
                 'url': page_url,
@@ -711,7 +715,7 @@ class Page(models.Model):
                 'website_id': website.id,
             })
 
-        return True
+        return url
 
     @api.multi
     def copy(self, default=None):
