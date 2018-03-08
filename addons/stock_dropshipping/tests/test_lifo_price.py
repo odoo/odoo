@@ -19,7 +19,7 @@ class TestLifoPrice(common.TransactionCase):
 
         # Set the company currency as EURO for the sake of repeatibility
         self.env.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s",
-                            [self.env.ref("base.EUR").id, self.env.ref('base.main_company')])
+                            [self.env.ref("base.EUR").id, self.env.ref('base.main_company').id])
 
         # Set product category removal strategy as LIFO
         product_category_001 = self.env['product.category'].create({
