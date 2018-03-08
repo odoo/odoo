@@ -42,6 +42,7 @@
 
         <record id="email_template_badge_received" model="mail.template">
             <field name="name">Received Badge</field>
+            <field name="subject">New badge ${object.badge_id.name} granted</field>
             <field name="model_id" ref="gamification.model_gamification_badge_user"/>
             <field name="lang">${object.user_id.lang}</field>
             <field name="body_html"><![CDATA[
