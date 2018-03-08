@@ -18,6 +18,8 @@
         'report/sale_coupon_report.xml',
         'report/sale_coupon_report_templates.xml',
         'data/sale_coupon_email_data.xml',
+    ],
+    'demo': [
         'data/sale_coupon_demo.xml',
     ],
 }
