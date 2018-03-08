@@ -114,7 +114,12 @@ class MailComposer(models.TransientModel):
         'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
     # mail_message updated fields
-    subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
+    subtype_id = fields.Many2one(
+        'mail.message.subtype', 'Subtype',
+        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
+    mail_activity_type_id = fields.Many2one(
+        'mail.activity.type', 'Mail Activity Type',
+        index=True, ondelete='set null')
     # recipients
     channel_ids = fields.Many2many(
         'mail.channel', 'mail_message_mail_channel_rel', string='Channels')
@@ -267,6 +272,7 @@ class MailComposer(models.TransientModel):
                 'record_name': self.record_name,
                 'no_auto_thread': self.no_auto_thread,
                 'mail_server_id': self.mail_server_id.id,
+                'mail_activity_type_id': self.mail_activity_type_id.id,
             }
 
             # mass mailing: rendering override wizard static values
