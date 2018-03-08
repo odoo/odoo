@@ -35,6 +35,7 @@ class HrPayslipEmployees(models.TransientModel):
                 'date_from': from_date,
                 'date_to': to_date,
                 'credit_note': run_data.get('credit_note'),
+                'company_id': employee.company_id.id,
             }
             payslips += self.env['hr.payslip'].create(res)
         payslips.compute_sheet()
