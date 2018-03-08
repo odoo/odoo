@@ -150,6 +150,9 @@ class PaymentAcquirerOgone(models.Model):
     def ogone_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         ogone_tx_values = dict(values)
+        param_plus = {
+            'return_url': ogone_tx_values.pop('return_url', False)
+        }
         temp_ogone_tx_values = {
             'PSPID': self.ogone_pspid,
             'ORDERID': values['reference'],
@@ -167,7 +170,7 @@ class PaymentAcquirerOgone(models.Model):
             'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
             'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
-            'PARAMPLUS': 'return_url=%s' % ogone_tx_values.pop('return_url') if ogone_tx_values.get('return_url') else False,
+            'PARAMPLUS': url_encode(param_plus),
         }
         if self.save_token in ['ask', 'always']:
             temp_ogone_tx_values.update({
