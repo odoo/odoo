@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import werkzeug
+import re
 
-from odoo import http, _
+from odoo import fields, http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
@@ -53,9 +55,9 @@ class CustomerPortal(CustomerPortal):
         values = {
             'order': order,
             'order_invoice_lines': order_invoice_lines,
+            'portal_layout': True,  # switch the controllers for portal sale or website quote
         }
         if access_token:
-            values['no_breadcrumbs'] = True
             values['access_token'] = access_token
         values['portal_confirmation'] = order.get_portal_confirmation_action()
 
@@ -182,7 +184,34 @@ class CustomerPortal(CustomerPortal):
             return request.redirect('/my')
 
         values = self._order_get_page_view_values(order_sudo, access_token, **kw)
+
+        days = 0
+        if order_sudo.validity_date:
+            days = (fields.Date.from_string(order_sudo.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
+        message = kw.get('message')
+        values.update({
+            'days_valid': days,
+            'order_valid': (not order_sudo.validity_date) or (fields.Date.today() <= order_sudo.validity_date),
+            'decline_url': '/my/orders/%s/%s/decline' % (order_sudo.id, order_sudo.access_token),
+            'message': message and int(message) or False,
+        })
+
         return request.render("sale.portal_order_page", values)
+
+    @http.route(['/my/orders/<int:order_id>/<token>/decline'], type='http', auth="public", methods=['POST'], website=True)
+    def decline(self, order_id, token, **post):
+        try:
+            order_sudo = self._order_check_access(order_id, access_token=token)
+        except AccessError:
+            return request.redirect('/my')
+
+        if order_sudo.state != 'sent':
+            return werkzeug.utils.redirect("/my/orders/%s?access_token=%s&message=4" % (order_id, token))
+        order_sudo.action_cancel()
+        message = post.get('decline_message')
+        if message:
+            _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': token} if token else {})
+        return werkzeug.utils.redirect("/my/orders/%s?access_token=%s&message=2" % (order_id, token))
 
     @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_report(self, order_id, access_token=None, **kw):
@@ -193,11 +222,14 @@ class CustomerPortal(CustomerPortal):
 
         # print report as sudo, since it require access to taxes, payment term, ... and portal
         # does not have those access rights.
-        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
+        pdf = request.env.ref('sale.action_report_portal_saleorder').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),
             ('Content-Length', len(pdf)),
         ]
+        if not kw.get('print'):
+            filename = "%s.pdf" % (re.sub('\W+', '-', (order_sudo.state in ('draft', 'sent') and 'Quotation - %s' % (order_sudo.name)) or 'Order - %s' % (order_sudo.name)))
+            pdfhttpheaders.append(('Content-Disposition', http.content_disposition(filename)))
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     def _portal_quote_user_can_accept(self, order):

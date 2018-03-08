@@ -6,5 +6,9 @@
             <field name="use_invoices" eval="True"/>
             <field name="dashboard_graph_model">sale.report</field>
         </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="portal_confirmation_sign" eval="True"/>
+        </record>
     </data>
 </odoo>

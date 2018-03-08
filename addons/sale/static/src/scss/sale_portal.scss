@@ -8,3 +8,72 @@
 .orders_label_text_align {
     vertical-align: 15%;
 }
+
+.o_portal_sidebar .bs-sidebar {
+    .nav {
+        > li > a {
+            display: block;
+            color: #716b7a;
+            padding: 5px 20px;
+            &.active, &.active:hover, &.active:focus {
+                font-weight: bold;
+                color: #563d7c;
+                background-color: transparent;
+                border-right: 1px solid #563d7c;
+            }
+        }
+        .nav {
+            display: none;
+            margin-bottom: 8px;
+            > li > a {
+                padding: 3px 30px;
+                font-size: 90%;
+            }
+        }
+    }
+    .bs-sidenav {
+        padding: 10px 0px;
+    }
+    .o_portal_sale_ask_changes {
+        width: 60%;
+    }
+    .o_portal_sale_reject {
+        width: 38%;
+    }
+    @include media-breakpoint-down(md) {
+        .o_portal_sale_ask_changes {
+            width: 50%;
+        }
+        .o_portal_sale_reject {
+            width: 49%;
+        }
+    }
+    @include media-breakpoint-down(sm) {
+        .o_portal_sale_ask_changes, .o_portal_sale_reject {
+            width: 100%;
+        }
+    }
+}
+
+.wq-table {
+    table-layout: auto !important;
+    th, td {
+        border-top: none !important;
+    }
+}
+
+.wq-table:not(:first-of-type) thead {
+    display: none;
+}
+
+@include media-breakpoint-up(lg) {
+    .o_portal_sidebar .bs-sidebar .nav > .active > ul {
+        display: block;
+    }
+}
+
+@media print {
+    body {
+        padding: 0;
+    }
+}
