@@ -3,6 +3,7 @@ odoo.define('web.action_manager_tests', function (require) {
 
 var ReportClientAction = require('report.client_action');
 
+var AbstractAction = require('web.AbstractAction');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var ReportService = require('web.ReportService');
@@ -485,7 +486,7 @@ QUnit.module('ActionManager', {
     QUnit.test('properly load client actions', function (assert) {
         assert.expect(2);
 
-        var ClientAction = Widget.extend({
+        var ClientAction = AbstractAction.extend({
             className: 'o_client_action_test',
             start: function () {
                 this.$el.text('Hello World');
@@ -781,7 +782,7 @@ QUnit.module('ActionManager', {
     QUnit.test('change a param of an ir.actions.client in the url', function (assert) {
         assert.expect(7);
 
-        var ClientAction = Widget.extend(ControlPanelMixin, {
+        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
             className: 'o_client_action',
             init: function (parent, action) {
                 this._super.apply(this, arguments);
@@ -1205,7 +1206,7 @@ QUnit.module('ActionManager', {
     QUnit.test('can execute client actions from tag name', function (assert) {
         assert.expect(3);
 
-        var ClientAction = Widget.extend({
+        var ClientAction = AbstractAction.extend({
             className: 'o_client_action_test',
             start: function () {
                 this.$el.text('Hello World');
@@ -1234,7 +1235,7 @@ QUnit.module('ActionManager', {
     QUnit.test('client action with control panel', function (assert) {
         assert.expect(4);
 
-        var ClientAction = Widget.extend(ControlPanelMixin, {
+        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
             className: 'o_client_action_test',
             start: function () {
                 this.$el.text('Hello World');
@@ -1262,7 +1263,7 @@ QUnit.module('ActionManager', {
     QUnit.test('state is pushed for client actions', function (assert) {
         assert.expect(2);
 
-        var ClientAction = Widget.extend(ControlPanelMixin, {
+        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
             className: 'o_client_action_test',
             start: function () {
                 this.$el.text('Hello World');

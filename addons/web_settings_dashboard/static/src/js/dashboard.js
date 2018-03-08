@@ -1,6 +1,7 @@
 odoo.define('web_settings_dashboard', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var framework = require('web.framework');
 var Widget = require('web.Widget');
@@ -8,7 +9,7 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var Dashboard = Widget.extend({
+var Dashboard = AbstractAction.extend({
     template: 'DashboardMain',
 
     init: function(){
