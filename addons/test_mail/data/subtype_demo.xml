@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="st_mail_test_simple_external" model="mail.message.subtype">
+        <field name="name">External subtype</field>
+        <field name="description">External subtype</field>
+        <field name="res_model">mail.test.simple</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="False"/>
+    </record>
+
     <record id="st_mail_test_full_umbrella_upd" model="mail.message.subtype">
         <field name="name">Umbrella Changed Subtype</field>
         <field name="description">Umbrella Changed</field>
