@@ -4,6 +4,7 @@ odoo.define('web.WebClient', function (require) {
 var AbstractWebClient = require('web.AbstractWebClient');
 var config = require('web.config');
 var data_manager = require('web.data_manager');
+var dom = require('web.dom');
 var framework = require('web.framework');
 var Menu = require('web.Menu');
 var session = require('web.session');
@@ -176,6 +177,39 @@ return AbstractWebClient.extend({
         if (!fullscreen) {
             this.menu.reflow();
         }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onGetScrollPosition: function (ev) {
+        ev.data.callback({
+            left: this.action_manager.el.scrollLeft,
+            top: this.action_manager.el.scrollTop,
+        });
+    },
+    /**
+     * @override
+     */
+    _onScrollTo: function (ev) {
+        var offset;
+        if (ev.data.selector) {
+            offset = dom.getPosition(document.querySelector(ev.data.selector));
+            // substract the position of the ActionManager as it is the
+            // scrolling element
+            var actionManagerOffset = dom.getPosition(this.action_manager.el);
+            offset.left -= actionManagerOffset.left;
+            offset.top -= actionManagerOffset.top;
+        } else {
+            offset = {top: ev.data.top || 0, left: ev.data.left || 0};
+        }
+
+        this.action_manager.el.scrollTop = offset.top;
+        this.action_manager.el.scrollLeft = offset.left;
     },
 });
 
