@@ -292,7 +292,7 @@ class Partner(osv.osv):
                     string = 'Membership Start Date', type = 'date', multi='_membership_date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids', 'payment_ids'], 10),
-                        'membership.membership_line': (_get_partner_id, ['state'], 10, ),
+                        'membership.membership_line': (_get_partner_id, ['state', 'date_cancel', 'date_from'], 10, ),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
@@ -300,7 +300,7 @@ class Partner(osv.osv):
                     string = 'Membership End Date', type='date', multi='_membership_date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids', 'payment_ids'], 10),
-                        'membership.membership_line': (_get_partner_id, ['state'], 10),
+                        'membership.membership_line': (_get_partner_id, ['state', 'date_cancel', 'date_to'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
@@ -308,7 +308,7 @@ class Partner(osv.osv):
                     string = 'Cancel Membership Date', type='date', multi='_membership_date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids', 'payment_ids'], 11),
-                        'membership.membership_line': (_get_partner_id, ['state'], 10),
+                        'membership.membership_line': (_get_partner_id, ['state', 'date_cancel'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="Date on which membership has been cancelled"),
     }
