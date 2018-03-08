@@ -607,7 +607,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _renderWidget: function (record, node) {
         var Widget = widgetRegistry.get(node.attrs.name);
-        var widget = new Widget(this, record);
+        var widget = new Widget(this, record, node);
 
         this.widgets.push(widget);
 
