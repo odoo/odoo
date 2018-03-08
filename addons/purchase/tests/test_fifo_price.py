@@ -14,7 +14,8 @@ class TestFifoPrice(TestPurchase):
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # Set the company currency as EURO for the sake of repeatibility
-        self.env.ref('base.main_company').currency_id = self.env.ref('base.EUR')
+        self.env.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s",
+                            [self.env.ref("base.EUR").id, self.env.ref('base.main_company')])
 
         # Set a product as using fifo price
         product_icecream = self.env['product.product'].create({
