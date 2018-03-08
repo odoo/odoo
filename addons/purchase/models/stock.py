@@ -45,7 +45,8 @@ class StockMove(models.Model):
             order = self.purchase_line_id.order_id
             #if the currency of the PO is different than the company one, the price_unit on the move must be reevaluated
             #(was created at the rate of the PO confirmation, but must be valuated at the rate of stock move execution)
-            if order.currency_id != self.company_id.currency_id:
+            #also change when the unit price on the PO line changes in the meantime
+            if order.currency_id != self.company_id.currency_id or self.purchase_line_id.price_unit != self.price_unit:
                 #we don't pass the move.date in the compute() for the currency rate on purpose because
                 # 1) get_price_unit() is supposed to be called only through move.action_done(),
                 # 2) the move hasn't yet the correct date (currently it is the expected date, after
