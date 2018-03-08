@@ -3048,7 +3048,7 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'one2many' || field.type === 'many2many') {
                 var ids;
                 if (!context[fieldName] || _.isArray(context[fieldName])) { // no dataPoint created yet
-                    ids = context[fieldName] || [];
+                    ids = context[fieldName] ? context[fieldName].slice(0) : [];
                 } else {
                     relDataPoint = this._applyX2ManyOperations(this.localData[context[fieldName]]);
                     ids = relDataPoint.res_ids.slice(0);
