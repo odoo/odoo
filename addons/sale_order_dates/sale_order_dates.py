@@ -40,7 +40,10 @@ class sale_order_dates(osv.osv):
                 dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
-                res[order.id] = min(dates_list)
+                if order.picking_policy == 'one':
+                   res[order.id] = max(dates_list)
+                else:
+                   res[order.id] = min(dates_list)
         return res
 
     def onchange_requested_date(self, cr, uid, ids, requested_date,
