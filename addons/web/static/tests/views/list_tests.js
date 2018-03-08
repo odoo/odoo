@@ -3468,6 +3468,50 @@ QUnit.module('Views', {
         list.destroy();
         testUtils.unpatch(BasicModel);
     });
+
+    QUnit.test('list should ask to scroll to top on page changes', function (assert) {
+        assert.expect(10);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3">' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+            intercepts: {
+                scrollTo: function (ev) {
+                    assert.strictEqual(ev.data.top, 0,
+                        "should ask to scroll to top");
+                    assert.step('scroll');
+                },
+            },
+        });
+
+        // switch pages (should ask to scroll)
+        list.pager.$('.o_pager_next').click();
+        list.pager.$('.o_pager_previous').click();
+
+        assert.verifySteps(['scroll', 'scroll'],
+            "should ask to scroll when switching pages");
+
+        // change the limit (should not ask to scroll)
+        list.pager.$('.o_pager_value').click();
+        list.pager.$('.o_pager_value input').val('1-2').blur();
+        assert.strictEqual(list.pager.$('.o_pager_value').text(), '1-2',
+            "should have changed the limit");
+
+        assert.verifySteps(['scroll', 'scroll'],
+            "should not ask to scroll when changing the limit");
+
+        // switch pages again (should still ask to scroll)
+        list.pager.$('.o_pager_next').click();
+
+        assert.verifySteps(['scroll', 'scroll', 'scroll'],
+            "this is still working after a limit change");
+
+        list.destroy();
+    });
 });
 
 });
