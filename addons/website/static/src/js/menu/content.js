@@ -205,7 +205,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             method: 'save_page_info',
             args: [[context.website_id], params],
             context: context,
-        }).then(function () {
+        }).then(function (url) {
             // If from page manager: reload url, if from page itself: go to
             // (possibly) new url
             if (self._getMainObject().model === 'website.page') {

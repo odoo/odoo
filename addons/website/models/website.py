@@ -715,7 +715,7 @@ class Page(models.Model):
                 'website_id': website.id,
             })
 
-        return True
+        return url
 
     @api.multi
     def copy(self, default=None):
