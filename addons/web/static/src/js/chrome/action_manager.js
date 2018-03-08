@@ -9,6 +9,7 @@ odoo.define('web.ActionManager', function (require) {
  * coordinated.
  */
 
+var AbstractAction = require('web.AbstractAction');
 var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
@@ -79,7 +80,7 @@ var ActionManager = Widget.extend({
     on_attach_callback: function() {
         this.isInDOM = true;
         var currentController = this.getCurrentController();
-        if (currentController && currentController.widget.on_attach_callback) {
+        if (currentController) {
             currentController.widget.on_attach_callback();
         }
     },
@@ -89,7 +90,7 @@ var ActionManager = Widget.extend({
     on_detach_callback: function() {
         this.isInDOM = false;
         var currentController = this.getCurrentController();
-        if (currentController && currentController.widget.on_detach_callback) {
+        if (currentController) {
             currentController.widget.on_detach_callback();
         }
     },
@@ -109,13 +110,8 @@ var ActionManager = Widget.extend({
      */
     clearUncommittedChanges: function () {
         var currentController = this.getCurrentController();
-        // AAB: with AbstractAction, the second part of the condition won't be
-        // necessary anymore, as there will be such a function it its API
-        if (currentController && currentController.widget.discardChanges) {
-            return currentController.widget.discardChanges(undefined, {
-                // AAB: get rid of this option when on_hashchange mechanism is improved
-                readonlyIfRealDiscard: true,
-            });
+        if (currentController) {
+            return currentController.widget.canBeRemoved();
         }
         return $.when();
     },
@@ -405,11 +401,7 @@ var ActionManager = Widget.extend({
                     in_DOM: true,
                     callbacks: [{widget: dialog}],
                 });
-                // AAB: renderButtons will be a function of AbstractAction, so this
-                // test won't be necessary anymore
-                if (widget.renderButtons) {
-                    widget.renderButtons(dialog.$footer);
-                }
+                widget.renderButtons(dialog.$footer);
 
                 self.currentDialogController = controller;
 
@@ -434,6 +426,9 @@ var ActionManager = Widget.extend({
         if (!ClientAction) {
             console.error("Could not find client action " + action.tag, action);
             return $.Deferred().reject();
+        }
+        if (!(ClientAction.prototype instanceof AbstractAction)) {
+            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
         }
         if (!(ClientAction.prototype instanceof Widget)) {
             // the client action might be a function, which is executed and

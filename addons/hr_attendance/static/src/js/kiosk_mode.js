@@ -1,13 +1,14 @@
 odoo.define('hr_attendance.kiosk_mode', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Widget = require('web.Widget');
 var Session = require('web.session');
+
 var QWeb = core.qweb;
 
 
-var KioskMode = Widget.extend({
+var KioskMode = AbstractAction.extend({
     events: {
         "click .o_hr_attendance_button_employees": function(){ this.do_action('hr_attendance.hr_employee_attendance_action_kanban'); },
     },

@@ -1,11 +1,11 @@
 odoo.define('base_import.import', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
-var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -44,7 +44,7 @@ function jsonp(form, attributes, callback) {
     $(form).ajaxSubmit(attributes);
 }
 
-var DataImport = Widget.extend(ControlPanelMixin, {
+var DataImport = AbstractAction.extend(ControlPanelMixin, {
     template: 'ImportView',
     opts: [
         {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},

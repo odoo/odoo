@@ -5,6 +5,7 @@ var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var keyboard = require('point_of_sale.keyboard');
 var models = require('point_of_sale.models');
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
@@ -564,7 +565,7 @@ var ClientScreenWidget = PosBaseWidget.extend({
 // - .gui which controls the switching between 
 //   screens and the showing/closing of popups
 
-var Chrome = PosBaseWidget.extend({
+var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
     template: 'Chrome',
     init: function() { 
         var self = this;

@@ -1,11 +1,11 @@
 odoo.define('report.client_action', function (require) {
 'use strict';
 
+var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
 var core = require('web.core');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var session = require('web.session');
-var Widget = require('web.Widget');
 var utils = require('report.utils');
 
 var QWeb = core.qweb;
@@ -17,7 +17,7 @@ var AUTHORIZED_MESSAGES = [
     'report:do_action',
 ];
 
-var ReportAction = Widget.extend(ControlPanelMixin, {
+var ReportAction = AbstractAction.extend(ControlPanelMixin, {
 
     template: 'report.client_action',
 

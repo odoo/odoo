@@ -1,16 +1,16 @@
 odoo.define('sale_timesheet.ProjectPlan', function (require) {
 'use strict';
 
+var AbstractAction = require('web.AbstractAction');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
-var Widget = require('web.Widget');
 
 var _t = core._t;
 
-var ProjectPlan = Widget.extend(ControlPanelMixin, {
+var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
     events: {
         "click a[type='action']": "_onClickAction",
         "click .o_timesheet_plan_redirect": '_onRedirect',
