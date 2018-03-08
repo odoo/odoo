@@ -33,12 +33,13 @@
                             <field name="time_type" groups="base.group_no_one"/>
                             <field name="limit"/>
                             <field name="sequence" attrs="{'invisible': [('limit', '=', False)]}" groups="base.group_no_one"/>
+                            <field name="request_unit"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
                         </group>
                         <group name="visibility" string="Visibility">
-                            <field name="employee_applicability" widget="radio" attrs="{'readonly': [('limit', '=', True)]}"/>
+                            <field name="employee_applicability" widget="radio" attrs="{'readonly': [('limit', '=', True)]}" force_save="1"/>
                         </group>
                         <group name="calendar" string="Calendar">
                             <field name="categ_id"/>
@@ -102,7 +103,6 @@
                 <field name="validation_type" />
                 <field name="validity_start" />
                 <field name="validity_stop" />
-                <field name="valid"/>
             </tree>
         </field>
     </record>

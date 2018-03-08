@@ -78,6 +78,9 @@ class HolidaysType(models.Model):
 
     time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
+    request_unit = fields.Selection([('day', 'Day'),
+                               ('half', 'Half-day'),
+                               ('hour', 'Hours')], default='day', string='Take Leaves in', required=True)
 
     @api.multi
     @api.constrains('validity_start', 'validity_stop')
@@ -100,11 +103,13 @@ class HolidaysType(models.Model):
         for holiday_type in self:
             if holiday_type.validity_start and holiday_type.validity_stop:
                 holiday_type.valid = ((dt < holiday_type.validity_stop) and (dt > holiday_type.validity_start))
+            elif holiday_type.validity_start and (dt > holiday_type.validity_start):
+                holiday_type.valid = False
             else:
-                holiday_type.valid = not holiday_type.validity_stop
+                holiday_type.valid = True
 
     def _search_valid(self, operator, value):
-        dt = self._context.get('default_date_from', fields.Date.today())
+        dt = self._context.get('default_date_from', fields.Date.today()) or fields.Date.today()
         signs = ['>=', '<='] if operator == '=' else ['<=', '>=']
 
         return ['|', ('validity_stop', operator, False), '&',

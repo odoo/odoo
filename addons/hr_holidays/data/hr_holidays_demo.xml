@@ -2,6 +2,22 @@
 <odoo>
 <data noupdate="1">
 
+    <record id="hr_holiday_status_hl" model="hr.leave.type">
+      <field name="name">Overtime Compensation</field>
+      <field name="limit" eval="False"/>
+      <field name="color_name">blue</field>
+      <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+      <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
+      <field name="request_unit">hour</field>
+    </record>
+
+    <record id="hr_holiday_status_dv" model="hr.leave.type">
+      <field name="name">Parental Leaves</field>
+      <field name="limit" eval="True"/>
+      <field name="color_name">brown</field>
+      <field name="validation_type">both</field>
+    </record>
+
     <record id="hr_holidays_employee1_allocation_cl" model="hr.leave.allocation">
         <field name="name">Legal Leaves for Peter Parker</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
@@ -18,6 +34,14 @@
         <field name="state">confirm</field>
     </record>
 
+    <record id="hr_holidays_employee1_allocation_hl" model="hr.leave.allocation">
+        <field name="name">Overtime Compensation</field>
+        <field name="holiday_status_id" ref="hr_holiday_status_hl"/>
+        <field name="number_of_hours">160</field>
+        <field name="number_of_days_temp">20</field>
+        <field name="employee_id" ref="hr.employee_root"/>
+    </record>
+
     <record id="hr_holidays_employee1_vc" model="hr.leave.allocation">
         <field name="name">Summer Vacation</field>
         <field name="holiday_status_id" ref="holiday_status_unpaid"/>
@@ -25,8 +49,8 @@
         <field name="employee_id" ref="hr.employee_root"/>
     </record>
 
-    <!-- approve the first 2 leave allocations -->
-    <function model="hr.leave.allocation" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_allocation_cl'), ref('hr_holidays.hr_holidays_employee1_int_tour')]]"/>
+    <!-- approve the first 3 leave allocations -->
+    <function model="hr.leave.allocation" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_allocation_cl'), ref('hr_holidays.hr_holidays_employee1_int_tour'), ref('hr_holidays_employee1_allocation_hl')]]"/>
 
     <record id="hr_holidays_employee1_cl" model="hr.leave">
         <field name="name">Trip with Family</field>

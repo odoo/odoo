@@ -104,13 +104,36 @@
                         <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':date_from}"/>
                         <label for="number_of_days_temp" string="Duration"/>
                         <div>
+                            <field name="leave_type_request_unit" invisible="1"/>
                             <div>
-                                <field name="date_from" class="oe_inline"/>
-                                <label string="-" class="oe_inline"/>
-                                <field name="date_to" class="oe_inline"/>
+                              <field name="request_unit_all" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
+                              <field name="request_unit_day" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
+
+                              <div>
+                                  <div class="o_row">
+                                      <span attrs="{'invisible': [('request_unit_all', '!=', 'period')]}">From </span>
+                                      <field name="request_date_from" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'hour'), ('request_unit_all', '=', 'period')]}"/>
+                                      <field name="date_from" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'hour'), ('request_unit_all', '!=', 'period')]}"/>
+                                      <span class="ml8" attrs="{'invisible': ['|', '&amp;', ('request_unit_all', '!=', 'half'), ('leave_type_request_unit', '!=', 'half'), '&amp;', ('request_unit_all', '=', 'day'), ('leave_type_request_unit', '=', 'half')]}"/>
+                                      <field name="request_date_from_period" options="{'horizontal': True}"
+                                          attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', '|', ('leave_type_request_unit', '=', 'day'), '&amp;', ('leave_type_request_unit', '=', 'half'), ('request_unit_all', '=', 'day'), '&amp;', ('leave_type_request_unit', '=', 'hour'), ('request_unit_all', '!=', 'half')]}"/>
+                                  </div>
+                                  <div class="o_row">
+                                      <span  attrs="{'invisible': [('request_unit_all', '!=', 'period')]}">To </span>
+                                      <field name="request_date_to" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '=', 'hour')]}"/>
+                                      <field name="date_to" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'hour'), ('request_unit_all', '!=', 'period')], 'required': ['|', ('request_unit_all', '=', 'period'), ('request_unit_day', '=', 'period')]}"/>
+                                      <span class="ml8" attrs="{'invisible': ['|', ('leave_type_request_unit', '!=', 'half'), ('request_unit_all', '!=', 'period')]}"/>
+                                      <field name="request_date_to_period" options="{'horizontal': True}"
+                                          attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'half'), ('request_unit_all', '!=', 'period')]}"/>
+                                  </div>
+                              </div>
+                          </div>
+
+                            <div attrs="{'invisible': [('leave_type_request_unit', '=', 'hour')]}">
+                                <field name="number_of_days_temp" class="oe_inline"/> day(s)
                             </div>
-                            <div>
-                                <field name="number_of_days_temp" class="oe_inline"/> days
+                            <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}">
+                                <field name="number_of_hours" class="oe_inline"/> hour(s)
                             </div>
                         </div>
                     </group>
