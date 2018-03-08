@@ -131,8 +131,8 @@
                     <field name="resident_bool" eval="False"/> 
                 </xpath>
                 <xpath expr="//field[@name='marital']" position="after">
-                    <field name="spouse_fiscal_status" attrs="{'invisible':[('marital','!=','married')],'required':[('marital','=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
-                    <field name="disabled_spouse_bool" attrs="{'invisible':[('marital','!=','married')]}" colspan="1"/>
+                    <field name="spouse_fiscal_status" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'required': [('marital', 'in', ['married', 'cohabitant'])]}" colspan="1" help="if spouse has professionnel income or not"/> 
+                    <field name="disabled_spouse_bool" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" colspan="1"/>
                 </xpath>
                 <xpath expr="//field[@name='gender']" position="after">
                     <field name="disabled"/>
@@ -148,8 +148,8 @@
                     <field name="other_disabled_juniors_dependent" attrs="{'invisible':[('other_dependent_people','!=',True)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='spouse_fiscal_status']" position="after">
-                    <field name="spouse_net_revenue" attrs="{'invisible': ['|', ('marital', '!=', 'married'), ('spouse_fiscal_status', '!=', 'with income')]}"/>
-                    <field name="spouse_other_net_revenue" attrs="{'invisible': ['|', ('marital', '!=', 'married'), ('spouse_fiscal_status', '!=', 'with income')]}"/>
+                    <field name="spouse_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
+                    <field name="spouse_other_net_revenue" attrs="{'invisible': ['|', ('marital', 'not in', ['married', 'cohabitant']), ('spouse_fiscal_status', '!=', 'with income')]}"/>
                 </xpath>
             </field>
         </record>
