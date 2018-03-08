@@ -213,8 +213,8 @@ class PaymentAcquirerOgone(models.Model):
 class PaymentTxOgone(models.Model):
     _inherit = 'payment.transaction'
     # ogone status
-    _ogone_valid_tx_status = [5, 9]
-    _ogone_wait_tx_status = [41, 50, 51, 52, 55, 56, 91, 92, 99]
+    _ogone_valid_tx_status = [5, 9, 8]
+    _ogone_wait_tx_status = [41, 50, 51, 52, 55, 56, 91, 92, 99, 81, 82]
     _ogone_pending_tx_status = [46]   # 3DS HTML response
     _ogone_cancel_tx_status = [1]
 
@@ -410,13 +410,12 @@ class PaymentTxOgone(models.Model):
             'ORDERID': reference,
             'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
-            'OPERATION': 'RFD',
-            'ECI': 2,   # Recurring (from MOTO)
-            'ALIAS': self.payment_token_id.acquirer_ref,
-            'RTIMEOUT': 30,
+            'OPERATION': 'RFS',
+            'PAYID': self.acquirer_reference,
         }
+        data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % (self.acquirer_id.environment)
 
         _logger.debug("Ogone data %s", pformat(data))
         result = requests.post(direct_order_url, data=data).content
