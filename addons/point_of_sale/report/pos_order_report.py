@@ -44,7 +44,7 @@ class PosOrderReport(models.Model):
         self._cr.execute("""
             CREATE OR REPLACE VIEW report_pos_order AS (
                 SELECT
-                    MIN(l.id) AS id,
+                    s.id AS id,
                     COUNT(*) AS nbr_lines,
                     s.date_order AS date,
                     SUM(l.qty) AS product_qty,
