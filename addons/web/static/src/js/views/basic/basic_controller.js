@@ -139,6 +139,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.pager.on('pager_changed', this, function (newState) {
             var self = this;
             this.pager.disable();
+            data = this.model.get(this.handle, {raw: true});
             var limitChanged = (data.limit !== newState.limit);
             this.reload({limit: newState.limit, offset: newState.current_min - 1})
                 .then(function () {
