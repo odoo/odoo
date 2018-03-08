@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 
-
+@tagged('post_install', '-at_install')
 class TestStockValuation(AccountingTestCase):
     def setUp(self):
         super(TestStockValuation, self).setUp()
