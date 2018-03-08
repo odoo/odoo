@@ -65,6 +65,7 @@ class HolidaysAllocation(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='Number of days of the leave request according to your working schedule.')
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
+    number_of_hours = fields.Float('Number of Hours', help="Number of hours of the leave allocation according to your working schedule.")
     parent_id = fields.Many2one('hr.leave.allocation', string='Parent')
     linked_request_ids = fields.One2many('hr.leave.allocation', 'parent_id', string='Linked Requests')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
@@ -84,6 +85,7 @@ class HolidaysAllocation(models.Model):
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
+    type_request_unit = fields.Selection(related='holiday_status_id.request_unit')
 
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
@@ -92,10 +94,13 @@ class HolidaysAllocation(models.Model):
     ]
 
     @api.multi
-    @api.depends('number_of_days_temp')
+    @api.depends('number_of_days_temp', 'type_request_unit', 'number_of_hours')
     def _compute_number_of_days(self):
         for holiday in self:
-            holiday.number_of_days = holiday.number_of_days_temp
+            if holiday.type_request_unit == 'hour':
+                holiday.number_of_days = holiday.number_of_hours / holiday.employee_id.resource_calendar_id.hours_per_day
+            else:
+                holiday.number_of_days = holiday.number_of_days_temp
 
     @api.multi
     def _compute_can_reset(self):
@@ -136,6 +141,14 @@ class HolidaysAllocation(models.Model):
         if self.holiday_type == 'employee':
             self.department_id = self.employee_id.department_id
 
+    @api.onchange('number_of_days_temp')
+    def _onchange_number_of_days_temp(self):
+        self.number_of_hours = self.number_of_days_temp * self.employee_id.resource_calendar_id.hours_per_day
+
+    @api.onchange('number_of_hours')
+    def _onchange_number_of_hours(self):
+        self.number_of_days_temp = self.number_of_hours / self.employee_id.resource_calendar_id.hours_per_day
+
     ####################################################
     # ORM Overrides methods
     ####################################################
@@ -144,7 +157,10 @@ class HolidaysAllocation(models.Model):
     def name_get(self):
         res = []
         for leave in self:
-            res.append((leave.id, _("Allocation of %s : %.2f day(s) To %s") % (leave.holiday_status_id.name, leave.number_of_days_temp, leave.employee_id.name)))
+            if leave.type_request_unit == 'hour':
+                res.append((leave.id, _("Allocation of %s : %.2f hour(s) To %s") % (leave.holiday_status_id.name, leave.number_of_hours, leave.employee_id.name)))
+            else:
+                res.append((leave.id, _("Allocation of %s : %.2f day(s) To %s") % (leave.holiday_status_id.name, leave.number_of_days_temp, leave.employee_id.name)))
         return res
 
     @api.multi
