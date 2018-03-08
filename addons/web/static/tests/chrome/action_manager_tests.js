@@ -350,6 +350,52 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('stores and restores scroll position', function (assert) {
+        assert.expect(7);
+
+        var left;
+        var top;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                getScrollPosition: function (ev) {
+                    assert.step('getScrollPosition');
+                    ev.data.callback({left: left, top: top});
+                },
+                scrollTo: function (ev) {
+                    assert.step('scrollTo left ' + ev.data.left + ', top ' + ev.data.top);
+                },
+            },
+        });
+
+        // execute a first action and simulate a scroll
+        assert.step('execute action 3');
+        actionManager.doAction(3);
+        left = 50;
+        top = 100;
+
+        // execute a second action (in which we don't scroll)
+        assert.step('execute action 4');
+        actionManager.doAction(4);
+
+        // go back using the breadcrumbs
+        assert.step('go back to action 3');
+        $('.o_control_panel .breadcrumb a').click();
+
+        assert.verifySteps([
+            'execute action 3',
+            'execute action 4',
+            'getScrollPosition', // of action 3, before leaving it
+            'go back to action 3',
+            'getScrollPosition', // of action 4, before leaving it
+            'scrollTo left 50, top 100', // restore scroll position of action 3
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Push State');
 
     QUnit.test('properly push state', function (assert) {

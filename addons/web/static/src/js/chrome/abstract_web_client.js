@@ -88,6 +88,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
                 }
             });
         },
+        getScrollPosition: '_onGetScrollPosition',
+        scrollTo: '_onScrollTo',
     },
     init: function (parent) {
         this.client_options = {};
@@ -374,6 +376,16 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         }
     },
     /**
+     * This function must be implemented to provide to the caller the current
+     * scroll position (left and top) of the webclient.
+     *
+     * @abstract
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback
+     */
+    _onGetScrollPosition: function (ev) {
+    },
+    /**
      * Loads an action from the database given its ID.
      *
      * @private
@@ -393,6 +405,20 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
      */
     _onPushState: function (e) {
         this.do_push_state(e.data.state);
+    },
+    /**
+     * This function must be implemented by actual webclient to scroll either to
+     * a given offset or to a target element (given a selector).
+     * It must be called with: trigger_up('scrollTo', options).
+     *
+     * @abstract
+     * @param {OdooEvent} ev
+     * @param {integer} [ev.data.top] the number of pixels to scroll from top
+     * @param {integer} [ev.data.left] the number of pixels to scroll from left
+     * @param {string} [ev.data.selector] the selector of the target element to
+     *   scroll to
+     */
+    _onScrollTo: function (ev) {
     },
     /**
      * Displays a visual effect (for example, a rainbowman0

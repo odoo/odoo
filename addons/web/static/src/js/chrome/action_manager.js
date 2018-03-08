@@ -258,7 +258,9 @@ var ActionManager = Widget.extend({
             callbacks: [{widget: controller.widget}],
         });
 
-        this.trigger_up('scrollTo', {offset: controller.scrollTop || 0});
+        if (controller.scrollPosition) {
+            this.trigger_up('scrollTo', controller.scrollPosition);
+        }
 
         if (!controller.widget.need_control_panel) {
             this.controlPanel.do_hide();
@@ -294,7 +296,7 @@ var ActionManager = Widget.extend({
     _detachCurrentController: function () {
         var currentController = this.getCurrentController();
         if (currentController) {
-            currentController.scrollTop = this._getScrollTop();
+            currentController.scrollPosition = this._getScrollPosition();
             dom.detach([{widget: currentController.widget}]);
         }
     },
@@ -613,19 +615,19 @@ var ActionManager = Widget.extend({
         return state;
     },
     /**
-     * Returns the current vertical scroll position.
+     * Returns the current horizontal and vertical scroll positions.
      *
      * @private
-     * @returns {integer}
+     * @returns {Object}
      */
-    _getScrollTop: function () {
-        var scrollTop;
-        this.trigger_up('getScrollTop', {
-            callback: function (value) {
-                scrollTop = value;
+    _getScrollPosition: function () {
+        var scrollPosition;
+        this.trigger_up('getScrollPosition', {
+            callback: function (_scrollPosition) {
+                scrollPosition = _scrollPosition;
             }
         });
-        return scrollTop;
+        return scrollPosition;
     },
     /**
      * Dispatches the given action to the corresponding handler to execute it,
