@@ -214,8 +214,8 @@ class PaymentTxOgone(models.Model):
     _inherit = 'payment.transaction'
     # ogone status
     _ogone_valid_tx_status = [5, 9, 8]
-    _ogone_wait_tx_status = [41, 50, 51, 52, 55, 56, 91, 92, 99, 81, 82]
-    _ogone_pending_tx_status = [46]   # 3DS HTML response
+    _ogone_wait_tx_status = [41, 50, 51, 52, 55, 56, 91, 92, 99]
+    _ogone_pending_tx_status = [46, 81, 82]   # 46 = 3DS HTML response
     _ogone_cancel_tx_status = [1]
 
     # --------------------------------------------------
@@ -283,7 +283,7 @@ class PaymentTxOgone(models.Model):
         return invalid_parameters
 
     def _ogone_form_validate(self, data):
-        if self.state in ['done', 'refunded']:
+        if self.state in ['done', 'refunding', 'refunded']:
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
@@ -460,6 +460,9 @@ class PaymentTxOgone(models.Model):
             if self.payment_token_id:
                 self.payment_token_id.verified = True
             self.execute_callback()
+            # if this transaction is a validation one, then we refund the money we just withdrawn
+            if self.type == 'validation':
+                self.s2s_do_refund()
             return True
         elif status in self._ogone_cancel_tx_status:
             self.write({
@@ -468,11 +471,13 @@ class PaymentTxOgone(models.Model):
             })
         elif status in self._ogone_pending_tx_status:
             new_state = 'refunding' if self.state == 'refunding' else 'pending'
-            self.write({
+            vals = {
                 'state': new_state,
                 'acquirer_reference': tree.get('PAYID'),
-                'html_3ds': ustr(base64.b64decode(tree.HTML_ANSWER.text)),
-            })
+            }
+            if status == 46: # HTML 3DS
+                vals['html_3ds'] = ustr(base64.b64decode(tree.HTML_ANSWER.text))
+            self.write(vals)
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)
             self.write({'acquirer_reference': tree.get('PAYID')})
