@@ -425,3 +425,32 @@ class TestOnChange(common.TransactionCase):
                  'size': email.size,
              })]
         )
+
+    def test_onchange_related(self):
+        value = {
+            'message': 1,
+            'message_name': False,
+            'message_currency': 2,
+        }
+        field_onchange = {
+            'message': '1',
+            'message_name': None,
+            'message_currency': None,
+        }
+
+        onchange_result = {
+            'message_name': 'Hey dude!',
+            'message_currency': (1, 'Administrator')
+        }
+
+        self.env.cache.invalidate()
+        Message = self.env['test_new_api.related']
+        result = Message.onchange(value, ['message', 'message_name', 'message_currency'], field_onchange)
+
+        self.assertEqual(result['value'], onchange_result)
+
+        self.env.cache.invalidate()
+        Message = self.env(user=self.env.ref('base.user_demo').id)['test_new_api.related']
+        result = Message.onchange(value, ['message', 'message_name', 'message_currency'], field_onchange)
+
+        self.assertEqual(result['value'], onchange_result)

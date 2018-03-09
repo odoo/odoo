@@ -324,6 +324,9 @@ class Related(models.Model):
     related_name = fields.Char(related='name', string='A related on Name')
     related_related_name = fields.Char(related='related_name', string='A related on a related on Name')
 
+    message = fields.Many2one('test_new_api.message')
+    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
+    message_currency = fields.Many2one(related="message.author", string='Message Author')
 
 class ComputeProtected(models.Model):
     _name = 'test_new_api.compute.protected'
@@ -335,7 +338,6 @@ class ComputeProtected(models.Model):
     def _compute_bar(self):
         for record in self:
             record.bar = record.foo
-
 
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'

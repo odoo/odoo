@@ -63,7 +63,8 @@ class ResourceMixin(models.AbstractModel):
             theoric_hours = self.get_day_work_hours_count(day_intervals[0][0].date(), calendar=calendar)
             work_time = sum((interval[1] - interval[0] for interval in day_intervals), timedelta())
             total_work_time += work_time
-            days_count += float_utils.round((work_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
+            if theoric_hours:
+                days_count += float_utils.round((work_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
         return {
             'days': days_count,
             'hours': total_work_time.total_seconds() / 3600,
@@ -97,7 +98,8 @@ class ResourceMixin(models.AbstractModel):
             theoric_hours = self.get_day_work_hours_count(day_intervals[0][0].date(), calendar=calendar)
             leave_time = sum((interval[1] - interval[0] for interval in day_intervals), timedelta())
             total_leave_time += leave_time
-            days_count += float_utils.round((leave_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
+            if theoric_hours:
+                days_count += float_utils.round((leave_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
         return {
             'days': days_count,
             'hours': total_leave_time.total_seconds() / 3600,

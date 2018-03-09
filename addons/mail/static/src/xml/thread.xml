@@ -51,6 +51,11 @@
             <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar">
                 <ul class="list-inline">
                     <li>
+                        <a class="o_rotate" href="#">
+                            <i class="fa fa-2x fa-repeat"></i>
+                        </a>
+                    </li>
+                    <li>
                         <a class="o_zoom_out" href="#">
                             <i class="fa fa-2x fa-search-minus"></i>
                         </a>
@@ -105,18 +110,14 @@
 
     <!-- When a channel is empty-->
     <div t-name="mail.EmptyChannel" class="o_mail_no_content">
-        <div class="o_view_nocontent">
-            <div class="o_nocontent_help">
-                <t t-if="options.channel_id==='channel_inbox'">
-                    <p>Congratulations, your inbox is empty</p>
-                    <p>New messages appear here.</p>
-                </t>
-                <t t-if="options.channel_id==='channel_starred'">
-                    <p>No starred message</p>
-                    <p>You can mark any message as 'starred', and it shows up in this channel.</p>
-                </t>
-            </div>
-        </div>
+        <t t-if="options.channel_id==='channel_inbox'">
+            <div class="o_thread_title">Congratulations, your inbox is empty</div>
+            <div>New messages appear here.</div>
+        </t>
+        <t t-if="options.channel_id==='channel_starred'">
+            <div class="o_thread_title">No starred message</div>
+            <div>You can mark any message as 'starred', and it shows up in this channel.</div>
+        </t>
     </div>
 
     <t t-name="mail.ChatThread.Content">
@@ -266,7 +267,7 @@
     </t>
 
     <t t-name="mail.Attachment">
-        <t t-set="type" t-value="attachment.mimetype.split('/').shift()"/>
+        <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <t t-if="type == 'image'">
                 <div class="o_image_box">

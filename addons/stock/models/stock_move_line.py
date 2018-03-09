@@ -143,7 +143,7 @@ class StockMoveLine(models.Model):
         res = {}
         if self.product_id.tracking == 'serial':
             if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
-                message = _('You can only process 1.0 %s for products with unique serial number.') % self.product_id.uom_id.name
+                message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
@@ -167,7 +167,7 @@ class StockMoveLine(models.Model):
         # If the move line is directly create on the picking view.
         # If this picking is already done we should generate an
         # associated done move.
-        if 'picking_id' in vals and 'move_id' not in vals:
+        if 'picking_id' in vals and not vals.get('move_id'):
             picking = self.env['stock.picking'].browse(vals['picking_id'])
             if picking.state == 'done':
                 product = self.env['product.product'].browse(vals['product_id'])

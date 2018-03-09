@@ -97,10 +97,15 @@ return Widget.extend({
         }
         var user_context = this.getSession().user_context;
         var search = this.searchview.build_search_data();
-        var view_context = this.action.env.context;
+        var controllerContext;
+        this.trigger_up('get_controller_context', {
+            callback: function (ctx) {
+                controllerContext = ctx;
+            },
+        });
         var results = pyeval.eval_domains_and_contexts({
                 domains: search.domains,
-                contexts: [user_context].concat(search.contexts.concat(view_context || [])),
+                contexts: [user_context].concat(search.contexts.concat(controllerContext || [])),
                 group_by_seq: search.groupbys || [],
             });
         if (!_.isEmpty(results.group_by)) {
@@ -123,7 +128,7 @@ return Widget.extend({
             is_default: default_filter,
             action_id: this.action_id,
         };
-        return data_manager.create_filter(filter).done(function (id) {
+        return this._createFilter(filter).then(function (id) {
             filter.id = id;
             self.toggle_save_menu(false);
             self.$save_name.find('input').val('').prop('checked', false);
@@ -272,6 +277,26 @@ return Widget.extend({
                     self.$shared_divider.hide();
                 }
             });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a new search view filter.
+     *
+     * @private
+     * @param {Object} filter the filter description
+     * @returns {$.Deferred} resolved with the RPC's result when it succeeds
+     */
+    _createFilter: function (filter) {
+        var def = $.Deferred();
+        this.trigger_up('create_filter', {
+            filter: filter,
+            on_success: def.resolve.bind(def),
+        });
+        return def;
     },
 });
 

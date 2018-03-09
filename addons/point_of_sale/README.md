@@ -52,7 +52,7 @@ designed for modern retailer.
 
 ### Designed for Productivity
 
-Whether it's for a restaurant or a shop, you can activate the multiple tickets
+Whether it's for a restaurant or a shop, you can activate the multiple orders
 in parallel to not make your customers wait.
 
 ### Blazing fast search

@@ -200,6 +200,14 @@ class StockMove(models.Model):
                 return True
         return False
 
+    def _is_dropshipped(self):
+        """ Check if the move should be considered as a dropshipping move so that the cost method
+        will be able to apply the correct logic.
+
+        :return: True if the move is a dropshipping one else False
+        """
+        return self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer'
+
     @api.model
     def _run_fifo(self, move, quantity=None):
         move.ensure_one()
@@ -298,6 +306,21 @@ class StockMove(models.Model):
                     'value': value if quantity is None else self.value + value,
                     'price_unit': value / valued_quantity,
                 })
+        elif self._is_dropshipped():
+            curr_rounding = self.company_id.currency_id.rounding
+            if self.product_id.cost_method in ['fifo']:
+                price_unit = self._get_price_unit()
+                # see test_dropship_fifo_perpetual_anglosaxon_ordered
+                self.product_id.standard_price = price_unit
+            else:
+                price_unit = self.product_id.standard_price
+            value = float_round(self.product_qty * price_unit, precision_rounding=curr_rounding)
+            # In move have a positive value, out move have a negative value, let's arbitrary say
+            # dropship are positive.
+            self.write({
+                'value': value,
+                'price_unit': price_unit,
+            })
 
     def _action_done(self):
         self.product_price_update_before_done()
@@ -319,7 +342,7 @@ class StockMove(models.Model):
             if company_src and company_dst and company_src.id != company_dst.id:
                 raise UserError(_("The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."))
             move._run_valuation()
-        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out())):
+        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out() or m._is_dropshipped())):
             move._account_entry_move()
         return res
 
@@ -401,6 +424,13 @@ class StockMove(models.Model):
                 corrected_value = tmp_value
                 if remaining_value_before_vacuum < 0:
                     corrected_value += remaining_value_before_vacuum
+
+                # If `corrected_value` is 0, absolutely do *not* call `_account_entry_move`. We
+                # force the amount in the context, but in the case it is 0 it'll create an entry
+                # for the entire cost of the move. This case happens when the candidates moves
+                # entirely compensate the problematic move.
+                if not corrected_value:
+                    continue
 
                 if move._is_in():
                     # If we just compensated an IN move that has a negative remaining
@@ -582,7 +612,7 @@ class StockMove(models.Model):
             else:
                 self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
 
-        if self.company_id.anglo_saxon_accounting and self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer':
+        if self.company_id.anglo_saxon_accounting and self._is_dropshipped():
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)

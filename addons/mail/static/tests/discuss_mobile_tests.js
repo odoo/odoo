@@ -65,6 +65,29 @@ QUnit.test('mobile basic rendering', function (assert) {
     });
 });
 
+QUnit.test('on_{attach/detach}_callback', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    }).then(function (discuss) {
+        try {
+            discuss.on_attach_callback();
+            assert.ok(true, 'should not crash on attach callback');
+            discuss.on_detach_callback();
+            assert.ok(true, 'should not crash on detach callback');
+        } finally {
+            discuss.destroy();
+            done();
+        }
+    });
+});
+
 });
 
 });

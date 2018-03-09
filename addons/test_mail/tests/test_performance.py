@@ -177,7 +177,7 @@ class TestAdvMailPerformance(TransactionCase):
         self.user_test.write({'notification_type': 'email'})
         record = self.env['mail.test.track'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=92, emp=118):  # test_mail only: 90 - 116
+        with self.assertQueryCount(admin=92, emp=120):  # test_mail only: 90 - 116
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -455,7 +455,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=94, emp=122):  # test_mail only: 92 - 120
+        with self.assertQueryCount(admin=94, emp=123):  # test_mail only: 92 - 120
             rec.write({'user_id': self.user_portal.id})
 
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
@@ -478,7 +478,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=326, emp=386):  # test_mail only: 319 - 379
+        with self.assertQueryCount(admin=326, emp=388):  # test_mail only: 319 - 379
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,

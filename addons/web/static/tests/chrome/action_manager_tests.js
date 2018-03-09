@@ -6,6 +6,7 @@ var ReportClientAction = require('report.client_action');
 var AbstractAction = require('web.AbstractAction');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var ListController = require('web.ListController');
 var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -760,7 +761,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('should not push a loaded state', function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -772,9 +773,14 @@ QUnit.module('ActionManager', {
                 },
             },
         });
-        actionManager.loadState({action: 1});
+        actionManager.loadState({action: 3});
 
-        assert.verifySteps([]);
+        assert.verifySteps([], "should not push the loaded state");
+
+        actionManager.$('tr.o_data_row:first').click();
+
+        assert.verifySteps(['push_state'],
+            "should push the state of it changes afterwards");
 
         actionManager.destroy();
     });
@@ -2350,6 +2356,70 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('save current search', function (assert) {
+        assert.expect(4);
+
+        testUtils.patch(ListController, {
+            getContext: function () {
+                return {
+                    shouldBeInFilterContext: true,
+                };
+            },
+        });
+
+        _.extend(this.archs, {
+            'partner,7,search':
+                '<search>' +
+                   '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
+                '</search>',
+        });
+
+        this.actions.push({
+            id: 33,
+            context: {
+                shouldNotBeInFilterContext: false,
+            },
+            name: 'Partners',
+            res_model: 'partner',
+            search_view_id: [7, 'a custom search view'],
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                create_filter: function (event) {
+                    var filter = event.data.filter;
+                    assert.deepEqual(filter.domain, [['bar', '=', 1]],
+                        "should save the correct domain");
+                    assert.deepEqual(filter.context, {shouldBeInFilterContext: true},
+                        "should save the correct context");
+                },
+            },
+        });
+        actionManager.doAction(33);
+
+        assert.strictEqual(actionManager.$('.o_data_row').length, 5,
+            "should contain 5 records");
+
+        // filter on bar
+        $('.o_control_panel .o_filters_menu a:contains(Bar)').click();
+
+        assert.strictEqual(actionManager.$('.o_data_row').length, 2,
+            "should contain 2 records");
+
+        // save filter
+        $('.o_control_panel .o_save_search a').click(); // toggle 'Save current search'
+        $('.o_control_panel .o_save_name input[type=text]').val('some name'); // name the filter
+        $('.o_control_panel .o_save_name button').click(); // click on 'Save'
+
+        testUtils.unpatch(ListController);
+        actionManager.destroy();
+    });
+
     QUnit.module('Actions in target="new"');
 
     QUnit.test('can execute act_window actions in target="new"', function (assert) {
@@ -2527,6 +2597,35 @@ QUnit.module('ActionManager', {
         assert.verifySteps(['on_close']);
 
         actionManager.destroy();
+    });
+
+    QUnit.test('doAction resolved with an action', function (assert) {
+        assert.expect(4);
+        var done = assert.async();
+
+        this.actions.push({
+            id: 21,
+            name: 'A Close Action',
+            type: 'ir.actions.act_window_close',
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(21).then(function (action) {
+            assert.ok(action, "doAction should be resolved with an action");
+            assert.strictEqual(action.id, 21,
+                "should be resolved with correct action id");
+            assert.strictEqual(action.name, 'A Close Action',
+                "should be resolved with correct action name");
+            assert.strictEqual(action.type, 'ir.actions.act_window_close',
+                "should be resolved with correct action type");
+            actionManager.destroy();
+            done();
+        });
     });
 });
 

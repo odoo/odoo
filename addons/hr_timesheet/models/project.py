@@ -15,12 +15,17 @@ class Project(models.Model):
 class Task(models.Model):
     _inherit = "project.task"
 
-    remaining_hours = fields.Float("Remaining Hours", compute='_compute_progress_hours', store=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
+    remaining_hours = fields.Float("Remaining Hours", compute='_compute_progress_hours', inverse='_inverse_remaining_hours', store=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_progress_hours', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
-    progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task. In case if the total spent hours exceeds planned hours then the progress bar may go above 100%")
+    progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)", oldname='children_hours')
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
+
+    @api.onchange('remaining_hours')
+    def _inverse_remaining_hours(self):
+        for task in self:
+            task.planned_hours = task.remaining_hours + task.effective_hours + task.subtask_effective_hours
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
@@ -31,7 +36,11 @@ class Task(models.Model):
     def _compute_progress_hours(self):
         for task in self:
             if (task.planned_hours > 0.0):
-                task.progress = round(100.0 * (task.effective_hours + task.subtask_effective_hours) / task.planned_hours, 2)
+                task_total_hours = task.effective_hours + task.subtask_effective_hours
+                if task_total_hours > task.planned_hours:
+                    task.progress = 100
+                else:
+                    task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
             else:
                 task.progress = 0.0
 

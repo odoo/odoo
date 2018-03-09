@@ -501,7 +501,7 @@ class SaleOrder(models.Model):
     @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
-            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+            self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi

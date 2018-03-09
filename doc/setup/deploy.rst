@@ -165,6 +165,18 @@ in ``/etc/odoo.conf`` set:
   db_password = pwd
   dbfilter = ^mycompany.*$
 
+.. _postgresql_ssl_connect:
+
+SSL Between Odoo and PostgreSQL
+-------------------------------
+
+Since Odoo 11.0, you can enforce ssl connection between Odoo and PostgreSQL.
+in Odoo the db_sslmode control the ssl security of the connection 
+with value choosed out of 'disable', 'allow', 'prefer', 'require', 'verify-ca'
+or 'verify-full'
+
+`PostgreSQL Doc <https://www.postgresql.org/docs/current/static/libpq-ssl.html>`_
+
 .. _builtin_server:
 
 Builtin server
@@ -541,8 +553,8 @@ of the supported browsers by Odoo version is the following:
 .. _socat: http://www.dest-unreach.org/socat/
 .. _PostgreSQL connection settings:
 .. _listen to network interfaces:
-    http://www.postgresql.org/docs/9.3/static/runtime-config-connection.html
+    http://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
 .. _use an SSH tunnel:
-    http://www.postgresql.org/docs/9.3/static/ssh-tunnels.html
+    http://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
 .. _WSGI: http://wsgi.readthedocs.org/
 .. _POSBox: https://www.odoo.com/page/point-of-sale-hardware#part_2

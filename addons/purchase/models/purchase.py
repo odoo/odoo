@@ -352,7 +352,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_approve(self, force=False):
-        self.write({'state': 'purchase'})
+        self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
         if self.company_id.po_lock == 'lock':
             self.write({'state': 'done'})
@@ -917,14 +917,6 @@ class PurchaseOrderLine(models.Model):
             self.product_uom = seller_min_qty[0].product_uom
         else:
             self.product_qty = 1.0
-
-
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    @api.model
-    def _get_exceptions_domain(self):
-        return super(ProcurementGroup, self)._get_exceptions_domain() + [('created_purchase_line_id', '=', False)]
 
 
 class ProcurementRule(models.Model):

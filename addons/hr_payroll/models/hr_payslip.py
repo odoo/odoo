@@ -190,7 +190,8 @@ class HrPayslip(models.Model):
                     leave_time = (interval[1] - interval[0]).seconds / 3600
                     current_leave_struct['number_of_hours'] += leave_time
                     work_hours = contract.employee_id.get_day_work_hours_count(interval[0].date(), calendar=contract.resource_calendar_id)
-                    current_leave_struct['number_of_days'] += leave_time / work_hours
+                    if work_hours:
+                        current_leave_struct['number_of_days'] += leave_time / work_hours
 
             # compute worked days
             work_data = contract.employee_id.get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)

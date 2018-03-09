@@ -52,7 +52,15 @@ class SaleOrder(models.Model):
         return template and template.active and template or False
 
     def _get_default_online_payment(self):
-        return 1 if self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay' else 0
+        default_template = self._get_default_template()
+        if self.template_id:
+            return self.template_id.require_payment
+        elif default_template:
+            return default_template.require_payment
+        elif self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay':
+            return 1
+        else:
+            return 0
 
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
@@ -70,16 +78,9 @@ class SaleOrder(models.Model):
     require_payment = fields.Selection([
         (0, 'Online Signature'),
         (1, 'Online Payment')], default=_get_default_online_payment, string='Confirmation Mode',
-        compute='_compute_require_payment', store=True,
         help="Choose how you want to confirm an order to launch the delivery process. You can either "
              "request a digital signature or an upfront payment. With a digital signature, you can "
              "request the payment when issuing the invoice.")
-    @api.one
-    @api.depends('template_id')
-    def _compute_require_payment(self):
-        # Do not overwrite if the field is already set
-        if self.template_id and (self.require_payment is None or self.require_payment is False):
-            self.require_payment = self.template_id.require_payment
 
     @api.multi
     @api.returns('self', lambda value: value.id)

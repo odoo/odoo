@@ -419,13 +419,6 @@
                 obj().env.ref('stock.incomming_chicago_warehouse3').id]"/>
         </function>
 
-        <function model="stock.picking" name="force_assign">
-            <value model="stock.picking" eval="[
-                obj().env.ref('stock.outgoing_shipment_main_warehouse').id,
-                obj().env.ref('stock.outgoing_chicago_warehouse3').id,
-                obj().env.ref('stock.outgoing_shipment_main_warehouse2').id]"/>
-        </function>
-
         <function model="stock.picking" name="action_done">
             <value model="stock.picking" eval="[
                 obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,

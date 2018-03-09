@@ -218,9 +218,9 @@ return AbstractModel.extend({
             filters: params.filters,
         };
 
+        this.setDate(params.initialDate);
         // Use mode attribute in xml file to specify zoom timeline (day,week,month)
         // by default month.
-        this.setDate(params.initialDate, true);
         this.setScale(params.mode);
 
         _.each(this.data.filters, function (filter) {
@@ -260,9 +260,8 @@ return AbstractModel.extend({
     },
     /**
      * @param {Moment} start
-     * @param {boolean} highlight
      */
-    setDate: function (start, highlight) {
+    setDate: function (start) {
         this.data.start_date = this.data.end_date = this.data.target_date = this.data.highlight_date = start;
         this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
 
@@ -278,9 +277,6 @@ return AbstractModel.extend({
             default:
                 this.data.start_date = this.data.start_date.clone().startOf('day');
                 this.data.end_date = this.data.end_date.clone().endOf('day');
-        }
-        if (highlight) {
-            this.data.highlight_date = this.data.target_date;
         }
     },
     /**
