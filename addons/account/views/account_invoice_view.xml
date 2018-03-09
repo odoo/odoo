@@ -251,6 +251,8 @@
                             <field string="Vendor" name="partner_id"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_company_type': 'company'}"
                               domain="[('supplier', '=', True)]"/>
+                            <field name="vendor_bill_id" attrs="{'readonly': [('state','not in',['draft'])]}"
+                            options="{'no_create': True}" context="{'show_total_amount': True}"/>
                             <field name="reference" string="Vendor Reference"/>
                         </group>
                         <group>
@@ -285,6 +287,7 @@
                                         domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Amount"/>
                                     <field name="currency_id" invisible="1"/>
+                                    <field name="vendor_line_id" invisible="1"/>
                                 </tree>
                             </field>
                             <group>

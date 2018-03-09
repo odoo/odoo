@@ -286,6 +286,9 @@ class AccountInvoice(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='always')
+    vendor_bill_id = fields.Many2one('account.invoice', string='Vendor Bills',
+        readonly=True, states={'draft': [('readonly', False)]},
+        help="Encoding help. Pre-fills the document with all the lines from the choosen vendor bill.")
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
         readonly=True, states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
@@ -371,6 +374,79 @@ class AccountInvoice(models.Model):
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    @api.onchange('state', 'partner_id', 'invoice_line_ids')
+    def _onchange_allowed_vendor_ids(self):
+        '''
+        The purpose of the method is to define a domain for the available
+        vendor bills.
+        '''
+        result = {}
+
+        vendor_line_ids = self.invoice_line_ids.mapped('vendor_line_id')
+        result['domain'] = {'vendor_bill_id': [
+            ('state', 'in', ('open', 'paid')),
+            ('partner_id', 'child_of', self.partner_id.id),
+            ('id', 'not in', vendor_line_ids.mapped('invoice_id').ids),
+            ]}
+        return result
+
+    def _prepare_invoice_line_from_Vendor_line(self, line):
+        qty = line.quantity
+        if float_compare(qty, 0.0, precision_rounding=line.uom_id.rounding) <= 0:
+            qty = 0.0
+        taxes = line.invoice_line_tax_ids
+        invoice_line_tax_ids = line.invoice_id.fiscal_position_id.map_tax(taxes, line.product_id, line.invoice_id.partner_id)
+        invoice_line = self.env['account.invoice.line']
+        data = {
+            'vendor_line_id': line.id,
+            'name': line.name,
+            'origin': line.origin,
+            'uom_id': line.uom_id.id,
+            'product_id': line.product_id.id,
+            'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
+            'price_unit': line.vendor_line_id.currency_id.with_context(date=self.date_invoice).compute(line.price_unit, self.currency_id, round=False),
+            'quantity': qty,
+            'discount': 0.0,
+            'account_analytic_id': line.account_analytic_id.id,
+            'analytic_tag_ids': line.analytic_tag_ids.ids,
+            'invoice_line_tax_ids': invoice_line_tax_ids.ids
+        }
+        # account = invoice_line.get_invoice_line_account('in_invoice', line.product_id, line.vendor_line_id.fiscal_position_id, self.env.user.company_id)
+        if line.account_id:
+            data['account_id'] = line.account_id.id
+        return data
+
+    def _onchange_product_id(self):
+        domain = super(AccountInvoice, self)._onchange_product_id()
+        if self.vendor_bill_id:
+            # Use the Vendor Bill uom by default
+            self.uom_id = self.product_id.uom_po_id
+        return domain
+
+    # Load all unsold Vendor Bill lines
+    @api.onchange('vendor_bill_id')
+    def vendor_order_change(self):
+        if not self.vendor_bill_id:
+            return {}
+        if not self.partner_id:
+            self.partner_id = self.vendor_bill_id.partner_id.id
+
+        if not self.invoice_line_ids:
+            #as there's no invoice line yet, we keep the currency of the Vendor Bill
+            self.currency_id = self.vendor_bill_id.currency_id
+        new_lines = self.env['account.invoice.line']
+        for line in self.vendor_bill_id.invoice_line_ids - self.invoice_line_ids.mapped('vendor_line_id'):
+            data = self._prepare_invoice_line_from_Vendor_line(line)
+            new_line = new_lines.new(data)
+            new_line._set_additional_fields(self)
+            new_lines += new_line
+
+        self.invoice_line_ids += new_lines
+        self.payment_term_id = self.vendor_bill_id.payment_term_id
+        self.env.context = dict(self.env.context, from_purchase_order_change=True)
+        self.vendor_bill_id = False
+        return {}
 
     def _get_seq_number_next_stuff(self):
         self.ensure_one()
@@ -1467,6 +1543,7 @@ class AccountInvoiceLine(models.Model):
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
+    vendor_line_id = fields.Many2one('account.invoice.line', string='vendor order line', ondelete='set null', index=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure',
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
