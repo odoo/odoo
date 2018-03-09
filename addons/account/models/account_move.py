@@ -633,7 +633,7 @@ class AccountMoveLine(models.Model):
         """
         (debit_moves + credit_moves).read([field])
         to_create = []
-        cash_basis = debit_moves[0].account_id.internal_type in ('receivable', 'payable')
+        cash_basis = debit_moves and debit_moves[0].account_id.internal_type in ('receivable', 'payable') or False
         cash_basis_percentage_before_rec = []
         while (debit_moves and credit_moves):
             debit_move = debit_moves[0]
