@@ -1973,10 +1973,13 @@ class MailThread(models.AbstractModel):
         kw_author = kwargs.pop('author_id', False)
         if kw_author:
             author = self.env['res.partner'].sudo().browse(kw_author)
-            email_from = formataddr((author.name, author.email))
+            if not author.email:
+                raise exceptions.UserError(_("Please configure partner's email address to proceed further."))
         else:
             author = self.env.user.partner_id
-            email_from = formataddr((author.name, author.email))
+            if not author.email:
+                raise exceptions.UserError(_("Please configure your email address to proceed further."))
+        email_from = formataddr((author.name, author.email))
 
         msg_values = {
             'subject': subject,
