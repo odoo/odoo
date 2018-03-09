@@ -730,6 +730,7 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<div class="oe_chatter">' +
                     '<field name="activity_ids" widget="mail_activity"/>' +
@@ -774,6 +775,7 @@ QUnit.test('form activity widget on a new record', function (assert) {
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<div class="oe_chatter">' +
                     '<field name="activity_ids" widget="mail_activity"/>' +
@@ -811,6 +813,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<field name="m2m" widget="many2many_tags"/>' +
                 '<div class="oe_chatter">' +
