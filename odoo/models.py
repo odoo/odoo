@@ -3962,7 +3962,7 @@ class BaseModel(object):
             # invalidate and mark new-style fields to recompute; do this before
             # setting other fields, because it can require the value of computed
             # fields, e.g., a one2many checking constraints on records
-            self.modified(self._fields)
+            self.modified(self._fields, create=True)
 
             # defaults in context must be removed when call a one2many or many2many
             rel_context = {key: val
@@ -5270,7 +5270,7 @@ class BaseModel(object):
         self.env.invalidate(spec)
 
     @api.multi
-    def modified(self, fnames):
+    def modified(self, fnames, create=False):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
@@ -5281,7 +5281,7 @@ class BaseModel(object):
         # each field knows what to invalidate and recompute
         spec = []
         for fname in fnames:
-            spec += self._fields[fname].modified(self)
+            spec += self._fields[fname].modified(self, create=create)
 
         self.env.invalidate(spec)
 

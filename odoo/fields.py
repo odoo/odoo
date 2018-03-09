@@ -1054,7 +1054,7 @@ class Field(object):
     # Notification when fields are modified
     #
 
-    def modified(self, records):
+    def modified(self, records, create=False):
         """ Notify that field ``self`` has been modified on ``records``: prepare the
             fields/records to recompute, and return a spec indicating what to
             invalidate.
@@ -1870,13 +1870,23 @@ class _Relational(Field):
     def null(self, record):
         return record.env[self.comodel_name]
 
-    def modified(self, records):
+    def modified(self, records, create=False):
         # Invalidate cache for inverse fields, too. Note that the recomputation
         # of fields that depend on inverse fields is already covered by the
         # triggers.
-        spec = super(_Relational, self).modified(records)
+        spec = super(_Relational, self).modified(records, create=create)
         for invf in records._field_inverses[self]:
-            spec.append((invf, None))
+            if create:
+                try:
+                    ids = records.mapped(self.name)._ids
+                    if ids:
+                        spec.append((invf, ids))
+                except AccessError:
+                    # Caching should work regardless of access. As sudo will
+                    # not work in all cases, fallback on invalidating all
+                    spec.append((invf, None))
+            else:
+                spec.append((invf, None))
         return spec
 
 
