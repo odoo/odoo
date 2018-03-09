@@ -164,7 +164,7 @@ class MailController(http.Controller):
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
-    def mail_action_view(self, model=None, res_id=None, message_id=None, access_token=None, **kwargs):
+    def mail_action_view(self, model=None, res_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
             choose where to redirect the user is the following :
 
@@ -176,19 +176,8 @@ class MailController(http.Controller):
 
             models that have an access_token may apply variations on this.
         """
-        if message_id:
-            try:
-                message = request.env['mail.message'].sudo().browse(int(message_id)).exists()
-            except:
-                message = request.env['mail.message']
-            if message:
-                model, res_id = message.model, message.res_id
-            else:
-                # either a wrong message_id, either someone trying ids -> just go to messaging
-                return self._redirect_to_messaging()
-        elif res_id and isinstance(res_id, pycompat.string_types):
+        if res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
-
         return self._redirect_to_record(model, res_id, access_token)
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
