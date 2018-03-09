@@ -59,6 +59,11 @@ class Invite(models.TransientModel):
                     'res_id': wizard.res_id,
                     'no_auto_thread': True,
                 })
-                new_partners.with_context(auto_delete=True)._notify(message, force_send=True, send_after_commit=False, values={'add_sign': True})
+                mail = self.env['mail.mail'].create({
+                    'mail_message_id': message.id,
+                    'auto_delete': True,
+                    'recipient_ids': [(4, pid) for pid in new_partners.ids]
+                })
+                mail.send()
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}

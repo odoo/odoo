@@ -474,7 +474,7 @@ class HolidaysRequest(models.Model):
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         new_group = (
-            'group_hr_holidays_user', lambda partner: bool(partner.user_ids) and any(user.has_group('hr_holidays.group_hr_holidays_user') for user in partner.user_ids), {
+            'group_hr_holidays_user', lambda pid, rdata: rdata[2] == 'user' and any(user.has_group('hr_holidays.group_hr_holidays_user') for user in self.env['res.partner'].sudo().browse(pid).user_ids), {
                 'actions': hr_actions,
             })
 

@@ -664,36 +664,34 @@ class MailThread(models.AbstractModel):
           * actions: list of action buttons to display in the notification email.
             Each action is a dict containing url and title of the button.
 
-        Groups has a default value that you can find in mail_thread
-        _notify_classify_recipients method.
+        Groups has a default value that you can find in ``_notify_classify_recipients``.
         """
         return groups
 
     @api.multi
-    def _notify_classify_recipients(self, message, recipients):
-        # At this point, all access rights should be ok. We sudo everything to
-        # access rights checks and speedup the computation.
-        result = {}
-
+    def _notify_classify_recipients(self, recipient_data, record=None):
         access_link = self._notify_get_action_link('view')
 
-        if message.model:
-            model_name = self.env['ir.model']._get(message.model).display_name
-            view_title = _('View %s') % model_name
+        model = record._name if record else self._name
+        if model:
+            view_title = _('View %s') % self.env['ir.model']._get(model).display_name
         else:
             view_title = _('View')
 
         default_groups = [
-            ('user', lambda partner: bool(partner.user_ids) and not any(user.share for user in partner.user_ids), {}),
-            ('portal', lambda partner: bool(partner.user_ids) and all(user.share for user in partner.user_ids), {
+            ('user', lambda pid, rdata: rdata[2] == 'user', {}),
+            ('portal', lambda pid, rdata: rdata[2] == 'portal', {
                 'has_button_access': False,
             }),
-            ('customer', lambda partner: True, {
+            ('customer', lambda pid, rdata: True, {
                 'has_button_access': False,
             })
         ]
 
-        groups = self._notify_get_groups(message, default_groups)
+        if record and hasattr(record, '_notify_get_groups'):
+            groups = record._notify_get_groups(None, default_groups)
+        else:
+            groups = self._notify_get_groups(None, default_groups)
 
         for group_name, group_func, group_data in groups:
             group_data.setdefault('has_button_access', True)
@@ -701,18 +699,15 @@ class MailThread(models.AbstractModel):
                 'url': access_link,
                 'title': view_title})
             group_data.setdefault('actions', list())
-            group_data.setdefault('recipients', self.env['res.partner'])
+            group_data.setdefault('recipients', list())
 
-        for recipient in recipients:
+        for recipient in recipient_data:
             for group_name, group_func, group_data in groups:
-                if group_func(recipient):
-                    group_data['recipients'] |= recipient
+                if group_func(recipient[0], recipient):
+                    group_data['recipients'].append(recipient[0])
                     break
 
-        for group_name, group_method, group_data in groups:
-            result[group_name] = group_data
-
-        return result
+        return dict((group_name, group_data) for group_name, group_method, group_data in groups)
 
     @api.model
     def _notify_get_reply_to(self, res_ids, default=None):
@@ -1901,6 +1896,7 @@ class MailThread(models.AbstractModel):
         using already-computed values instead of having to rebrowse things. """
         # Notify recipients of the newly-created message (Inbox / Email + channels)
         message._notify(
+            self if values.get('res_id') else False,
             layout=notif_layout,
             force_send=self.env.context.get('mail_notify_force_send', True),
             values=notif_values,

@@ -37,32 +37,29 @@ class Partner(models.Model):
         return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)
 
     @api.model
-    def _notify_prepare_template_context(self, message, notif_values):
-        # compute signature
-        if not notif_values.pop('add_sign', True):
-            signature = False
-        elif message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
-            signature = message.author_id.user_ids[0].signature
-        elif message.author_id:
-            signature = "<p>-- <br/>%s</p>" % message.author_id.name
-        else:
-            signature = ""
+    def _notify_prepare_template_context(self, message, record, notif_values):
+        company, user, signature = False, False, ''
 
-        # compute Sent by
+        # compute author and company
+        if record and hasattr(record, 'company_id'):
+            company = record.company_id
         if message.author_id and message.author_id.user_ids:
             user = message.author_id.user_ids[0]
+            if notif_values.pop('add_sign', True):
+                signature = user.signature
         else:
             user = self.env.user
-        if user.company_id.website:
-            website_url = 'http://%s' % user.company_id.website if not user.company_id.website.lower().startswith(('http:', 'https:')) else user.company_id.website
+        if not company:
+            company = user.company_id
+
+        if company.website:
+            website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:
             website_url = False
 
         model_name = False
         if message.model:
             model_name = self.env['ir.model']._get(message.model).display_name
-
-        record_name = message.record_name
 
         tracking = []
         for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
@@ -72,14 +69,6 @@ class Partner(models.Model):
 
         is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
-        record = False
-        if message.res_id and message.model in self.env:
-            record = self.env[message.model].browse(message.res_id)
-
-        company = user.company_id
-        if record and hasattr(record, 'company_id'):
-            company = record.company_id
-
         return {
             'message': message,
             'signature': signature,
@@ -87,75 +76,38 @@ class Partner(models.Model):
             'company': company,
             'model_name': model_name,
             'record': record,
-            'record_name': record_name,
             'tracking_values': tracking,
             'is_discussion': is_discussion,
             'subtype': message.subtype_id,
         }
 
     @api.model
-    def _notify_prepare_email_values(self, message, notif_values):
-        # compute email references
-        references = message.parent_id.message_id if message.parent_id else False
-
-        # custom values
-        custom_values = dict()
-        if message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_specific_email_values'):
-            custom_values = self.env[message.model].browse(message.res_id)._notify_specific_email_values(message)
-
-        mail_values = {
-            'mail_message_id': message.id,
-            'mail_server_id': message.mail_server_id.id,
-            'auto_delete': notif_values.pop('mail_auto_delete', True),
-            'references': references,
-        }
-        mail_values.update(custom_values)
-        return mail_values
-
-    @api.model
-    def _notify_send(self, body, subject, recipients, **mail_values):
-        emails = self.env['mail.mail']
-        recipients_nbr = len(recipients)
-        for email_chunk in split_every(50, recipients.ids):
-            # TDE FIXME: missing message parameter. So we will find mail_message_id
-            # in the mail_values and browse it. It should already be in the
-            # cache so should not impact performances.
-            mail_message_id = mail_values.get('mail_message_id')
-            message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
-            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_email_recipients'):
-                tig = self.env[message.model].browse(message.res_id)
-                recipient_values = tig._notify_email_recipients(message, email_chunk)
+    def _notify_udpate_notifications(self, message, record, recipient_data):
+        for r in recipient_data:
+            if r[1] == 'email':
+                self.env['mail.notification'].sudo().create({
+                    'mail_message_id': message.id,
+                    'res_partner_id': r[0],
+                    'is_email': True,
+                    'is_read': True,  # handle by email discards Inbox notification
+                    'email_status': 'ready',
+                })
             else:
-                recipient_values = self.env['mail.thread']._notify_email_recipients(message, email_chunk)
-            create_values = {
-                'body_html': body,
-                'subject': subject,
-            }
-            create_values.update(mail_values)
-            create_values.update(recipient_values)
-            emails |= self.env['mail.mail'].create(create_values)
-        return emails, recipients_nbr
+                self.env['mail.notification'].sudo().create({
+                    'mail_message_id': message.id,
+                    'res_partner_id': r[0],
+                    'is_email': False,
+                    'is_read': False,
+                })
 
     @api.model
-    def _notify_udpate_notifications(self, emails):
-        for email in emails:
-            notifications = self.env['mail.notification'].sudo().search([
-                ('mail_message_id', '=', email.mail_message_id.id),
-                ('res_partner_id', 'in', email.recipient_ids.ids)])
-            notifications.write({
-                'is_email': True,
-                'is_read': True,  # handle by email discards Inbox notification
-                'email_status': 'ready',
-            })
+    def _notify(self, message, record, recipient_data, layout=False, force_send=False, send_after_commit=True, values=None):
+        """ Notify partners of a message either by email either by Inbox and by chat.
 
-    @api.multi
-    def _notify(self, message, layout=False, force_send=False, send_after_commit=True, values=None):
-        """ Method to send email linked to notified messages. The recipients are
-        the recordset on which this method is called.
-
-        :param boolean force_send: send notification emails now instead of letting the scheduler handle the email queue
-        :param boolean send_after_commit: send notification emails after the transaction end instead of durign the
-                                          transaction; this option is used only if force_send is True
+        :param recipient_data: list of (pid, DD, FF, GG)
+        :param layout: xml_id of layout to use to encapusulate notification emails
+        :param force_send: send notification emails now or use the email scheduler
+        :param send_after_commit: if force_send, send emails after the tx end instead of during the tx
         :param dict values: values used to compute the notification process, containing
 
          * add_sign: add user signature to notification email, default is True
@@ -163,9 +115,12 @@ class Partner(models.Model):
          * other values are given to the context used to render the notification template, allowing customization
 
         """
-        if not self.ids:
+        if not recipient_data:
             return True
         values = values if values is not None else {}
+
+        email_rdata = [d for d in recipient_data if d[1] == 'email']
+        inbox_rdata = [d for d in recipient_data if d[1] == 'inbox']
 
         template_xmlid = layout if layout else 'mail.message_notification_email'
         try:
@@ -174,41 +129,58 @@ class Partner(models.Model):
             _logger.warning('QWeb template %s not found when sending notification emails. Skipping.' % (template_xmlid))
             return False
 
-        base_template_ctx = self._notify_prepare_template_context(message, values)
-        base_mail_values = self._notify_prepare_email_values(message, values)
+        render_values = self._notify_prepare_template_context(message, record, values)
+
+        # prepare notification mail values
+        base_mail_values = {
+            'mail_message_id': message.id,
+            'mail_server_id': message.mail_server_id.id,
+            'auto_delete': values.pop('mail_auto_delete', True),
+            'references': message.parent_id.message_id if message.parent_id else False,
+        }
+        if record and hasattr(record, '_notify_specific_email_values'):
+            custom_values = record._notify_specific_email_values(message)
+            base_mail_values.update(custom_values)
 
         # classify recipients: actions / no action
-        if message.model and message.res_id and hasattr(self.env[message.model], '_notify_classify_recipients'):
-            recipients = self.env[message.model].browse(message.res_id)._notify_classify_recipients(message, self)
+        if record and hasattr(record, '_notify_classify_recipients'):
+            recipients = record._notify_classify_recipients( email_rdata)
         else:
-            recipients = self.env['mail.thread']._notify_classify_recipients(message, self)
+            recipients = self.env['mail.thread']._notify_classify_recipients(email_rdata)
 
-        emails = self.env['mail.mail']
-        recipients_nbr, recipients_max = 0, 50
-        for email_type, recipient_template_values in recipients.items():
-            if recipient_template_values['recipients']:
-                # generate notification email content
-                template_ctx = {**base_template_ctx, **recipient_template_values, **values}  # fixme: set button_unfollow to none
-                fol_values = {
-                    'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
-                    'body': base_template.render(template_ctx, engine='ir.qweb'),
-                }
-                fol_values['body'] = self.env['mail.thread']._replace_local_links(fol_values['body'])
-                # send email
-                new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['recipients'], **base_mail_values)
-                # update notifications
-                self._notify_udpate_notifications(new_emails)
+        emails, MailSudo = self.env['mail.mail'].sudo(), self.env['mail.mail'].sudo()
+        for rvals in recipients.values():
+            template_values = {**render_values, **rvals, **values}  # fixme: set button_unfollow to none
+            # 'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
+            body = base_template.render(template_values, engine='ir.qweb'),
+            body = self.env['mail.thread']._replace_local_links(body)
+            # send email
+            mail_mail_values = {'body_html': body}
+            mail_mail_values.update(base_mail_values)
+            # new_emails = self._notify_send(message, record, body, rvals['recipients'], **base_mail_values)
 
-                emails |= new_emails
-                recipients_nbr += new_recipients_nbr
+            for email_chunk in split_every(50, rvals['recipients']):
+                if record and hasattr(record, '_notify_email_recipients'):
+                    recipient_values = record._notify_email_recipients(message, email_chunk)
+                else:
+                    recipient_values = self.env['mail.thread']._notify_email_recipients(message, email_chunk)
+                mail_mail_values.update(recipient_values)
+                emails |= MailSudo.create(mail_mail_values)
+
+        # update notifications - ZIZISSE TEMPORARY
+        if record and hasattr(record, '_notify_create_notifications'):
+            record._notify_create_notifications(message, recipient_data)
+        else:
+            self._notify_udpate_notifications(message, record, recipient_data)
 
         # NOTE:
         #   1. for more than 50 followers, use the queue system
         #   2. do not send emails immediately if the registry is not loaded,
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
+        MAX_RECIPIENTS = 50
         test_mode = getattr(threading.currentThread(), 'testing', False)
-        if force_send and recipients_nbr < recipients_max and \
+        if force_send and len(emails) < MAX_RECIPIENTS and \
                 (not self.pool._init or test_mode):
             email_ids = emails.ids
             dbname = self.env.cr.dbname
@@ -227,15 +199,18 @@ class Partner(models.Model):
             else:
                 emails.send()
 
+        if inbox_rdata:
+            self._notify_by_chat(message, inbox_rdata)
+
         return True
 
-    @api.multi
-    def _notify_by_chat(self, message):
+    @api.model
+    def _notify_by_chat(self, message, recipient_data):
         """ Broadcast the message to all the partner since """
         message_values = message.message_format()[0]
         notifications = []
-        for partner in self:
-            notifications.append([(self._cr.dbname, 'ir.needaction', partner.id), dict(message_values)])
+        for partner_data in recipient_data:
+            notifications.append([(self._cr.dbname, 'ir.needaction', partner_data[0]), dict(message_values)])
         self.env['bus.bus'].sendmany(notifications)
 
     @api.model
