@@ -844,7 +844,9 @@ class AccountTax(models.Model):
     def name_get(self):
         result = []
         for tax in self:
-            result.append((tax.id, '%s - %s' % (tax.type_tax_use.capitalize(), tax.name)))
+            # get translation term of selection field
+            selection = self.env['account.tax']._fields['type_tax_use']._description_selection(self.env)
+            result.append((tax.id, '%s - %s' % (dict(selection)[tax.type_tax_use], tax.name)))
         return result
 
     @api.model
