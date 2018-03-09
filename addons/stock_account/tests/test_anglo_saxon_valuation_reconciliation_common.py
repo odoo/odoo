@@ -65,7 +65,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
 
         test_product_category = self._create_product_category()
 
-        uom = self.env['product.uom'].search([], limit=1)
+        uom = self.env['uom.uom'].search([], limit=1)
         test_product_delivery_inv_template = self.env['product.template'].create({
             'name': 'Test product template invoiced on delivery',
             'type': 'product',
