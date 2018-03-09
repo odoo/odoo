@@ -3295,7 +3295,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # mark fields to recompute; do this before setting other fields,
             # because the latter can require the value of computed fields, e.g.,
             # a one2many checking constraints on records
-            self.modified(self._fields)
+            self.modified(self._fields, create=True)
 
             # set the value of non-column fields
             if other_fields:
@@ -4669,7 +4669,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.env.cache.invalidate(spec)
 
     @api.multi
-    def modified(self, fnames):
+    def modified(self, fnames, create=False):
         """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
@@ -4685,7 +4685,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # invalidate mfield on self, and its inverses fields
             invalids.append((mfield, self._ids))
             for field in self._field_inverses[mfield]:
-                invalids.append((field, None))
+                if create:
+                    try:
+                        ids = self.mapped(mfield.name)._ids
+                        if ids:
+                            invalids.append((field, ids))
+                    except AccessError:
+                        # Caching should work regardless of access. As sudo will
+                        # not work in all cases, fallback on invalidating all
+                        invalids.append((field, None))
+                else:
+                    invalids.append((field, None))
             # group triggers by model and path to reduce the number of search()
             for field, path in self._field_triggers[mfield]:
                 triggers[(field.model_name, path)].add(field)
