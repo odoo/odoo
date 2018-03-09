@@ -252,9 +252,9 @@ var BaseSettingRenderer = FormRenderer.extend({
     _render: function () {
         var res = this._super.apply(this, arguments);
         if (!this.modules) {
-            this._initModules();
             this._activeCaseInsensitiveSearch();
         }
+        this._initModules();
         this._renderLeftPanel();
         this._initSearch();
         return res;
