@@ -33,7 +33,7 @@
         <field name="arch" type="xml">
             <form string="Goal definitions">
                 <header>
-                    <button string="Start Challenge" type="object" name="action_start" states="draft" class="oe_highlight"/>
+                    <button string="Start Challenge" type="object" name="action_start" states="draft" class="btn-primary"/>
                     <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
                     <button string="Send Report" type="object" name="action_report_progress" states="inprogress,done" groups="base.group_no_one"/>
                     <field name="state" widget="statusbar" clickable="True"/>

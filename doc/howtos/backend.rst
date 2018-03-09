@@ -421,9 +421,9 @@ Form views can also use plain HTML for more flexible layouts:
     <form string="Idea Form">
         <header>
             <button string="Confirm" type="object" name="action_confirm"
-                    states="draft" class="oe_highlight" />
+                    states="draft" class="btn-primary" />
             <button string="Mark as done" type="object" name="action_done"
-                    states="confirmed" class="oe_highlight"/>
+                    states="confirmed" class="btn-primary"/>
             <button string="Reset to draft" type="object" name="action_draft"
                     states="confirmed,done" />
             <field name="state" widget="statusbar"/>

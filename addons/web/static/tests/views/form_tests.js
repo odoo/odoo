@@ -5994,9 +5994,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<header>' +
-                        '<button name="some_method" class="oe_highlight" string="Button" type="object"/>' +
+                        '<button name="some_method" class="btn-primary" string="Button" type="object"/>' +
                     '</header>' +
-                    '<button name="other_method" class="oe_highlight" string="Button2" type="object"/>' +
+                    '<button name="other_method" class="btn-primary" string="Button2" type="object"/>' +
                 '</form>',
         });
 

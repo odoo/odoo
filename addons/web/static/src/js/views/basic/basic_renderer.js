@@ -345,6 +345,9 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} node
      */
     _handleAttributes: function ($el, node) {
+        if ($el.is('button')) {
+            return;
+        }
         if (node.attrs.class) {
             $el.addClass(node.attrs.class);
         }
@@ -500,6 +503,35 @@ var BasicRenderer = AbstractRenderer.extend({
                 });
             });
         });
+    },
+    /**
+     * Renders a button according to a given node element.
+     *
+     * @private
+     * @param {Object} node
+     * @param {Object} [options]
+     * @param {string} [options.extraClass]
+     * @param {boolean} [options.textAsTitle=false]
+     * @returns {jQuery}
+     */
+    _renderButtonFromNode: function (node, options) {
+        var btnOptions = {
+            attrs: _.omit(node.attrs, 'icon', 'string'),
+            icon: node.attrs.icon,
+        };
+        if (options && options.extraClass) {
+            var classes = btnOptions.attrs.class ? btnOptions.attrs.class.split(' ') : [];
+            btnOptions.attrs.class = _.uniq(classes.concat(options.extraClass.split(' '))).join(' ');
+        }
+        var str = (node.attrs.string || '').replace(/_/g, '');
+        if (str) {
+            if (options && options.textAsTitle) {
+                btnOptions.attrs.title = str;
+            } else {
+                btnOptions.text = str;
+            }
+        }
+        return dom.renderButton(btnOptions);
     },
     /**
      * Instantiates the appropriate AbstractField specialization for the given

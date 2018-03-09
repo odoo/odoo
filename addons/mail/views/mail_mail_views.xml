@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Email message">
                     <header>
-                        <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
+                        <button name="send" string="Send Now" type="object" states='outgoing' class="btn-primary"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
                         <button name="cancel" string="Cancel" type="object" states='outgoing'/>
                         <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>

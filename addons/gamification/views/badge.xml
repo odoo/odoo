@@ -35,7 +35,7 @@
         <field name="arch" type="xml">
             <form string="Badge">
                 <header>
-                    <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" attrs="{'invisible': [('remaining_sending','=',0)]}" />
+                    <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="btn-primary" attrs="{'invisible': [('remaining_sending','=',0)]}" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
@@ -137,7 +137,7 @@
                                     </div>
                                 </div>
                                 <div t-if="record.remaining_sending.value != 0" class="o_kanban_button">
-                                    <button type="action" name="%(action_grant_wizard)d" class="oe_highlight btn btn-sm btn-primary">Grant</button>
+                                    <button type="action" name="%(action_grant_wizard)d" class="btn btn-sm btn-primary">Grant</button>
                                 </div>
                             </div>
                         </div>

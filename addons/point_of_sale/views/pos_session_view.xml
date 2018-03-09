@@ -14,17 +14,17 @@
             <form string="Point of Sale Session" create="0">
                 <header>
                     <button name="action_pos_session_open" type="object" string="Open Session"
-                        attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
+                        attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="btn-primary"/>
                     <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
-                        class="oe_highlight"/>
+                        class="btn-primary"/>
                     <button name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}" 
-                        class="oe_highlight"/>
+                        class="btn-primary"/>
                     <button name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
                         attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
-                        class="oe_highlight"/>
+                        class="btn-primary"/>
                     <button name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
-                        class="oe_highlight"/>
+                        class="btn-primary"/>
                     
                     <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
                     

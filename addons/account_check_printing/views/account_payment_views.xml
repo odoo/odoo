@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="account.view_account_payment_form" />
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='post']" position="before">
-                    <button name="print_checks" class="oe_highlight" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'posted')]}" string="Print Check" type="object"/>
+                    <button name="print_checks" class="btn-primary" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'posted')]}" string="Print Check" type="object"/>
                     <button name="unmark_sent" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'sent')]}" string="Unmark Sent" type="object"/>
                 </xpath>
                 <xpath expr="//div[@name='amount_div']" position="after">

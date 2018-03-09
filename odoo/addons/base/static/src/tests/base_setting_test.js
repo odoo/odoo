@@ -36,7 +36,7 @@ QUnit.module('base_settings_tests', {
                         '</div> ' +
                     '</div> ' +
                     '<header>' +
-                        '<button string="Save" type="object" name="execute" class="oe_highlight" />' +
+                        '<button string="Save" type="object" name="execute" class="btn-primary" />' +
                         '<button string="Cancel" type="object" name="cancel" class="oe_link" />' +
                     '</header>' +
                     '<div class="o_setting_container">' +

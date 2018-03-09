@@ -43,9 +43,9 @@
             <form string="Allocation Request">
                 <field name="can_reset" invisible="1"/>
                 <header>
-                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
-                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
-                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="btn-primary"/>
+                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="btn-primary"/>
+                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="btn-primary"/>
                     <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="hr_holidays.group_hr_holidays_user"/>
                     <button string="Reset to Draft" name="action_draft" type="object"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>

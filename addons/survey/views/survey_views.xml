@@ -29,8 +29,8 @@
             <field name="arch" type="xml">
                 <form string="Survey User inputs" create="false">
                     <header>
-                        <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
-                        <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
+                        <button name="action_survey_resend" string="Send Invitation Again" type="object" class="btn-primary" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
+                        <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="btn-primary" />
                         <button name="action_survey_results" string="View Results" type="object" />
                         <field name="state" widget="statusbar"/>
                     </header>
@@ -157,9 +157,9 @@
                     <header groups="survey.group_survey_manager">
                         <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                        <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                        <button name="action_send_survey" string="Share and invite by email" type="object" class="btn-primary"  attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
-                        <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
+                        <button name="action_result_survey" string="View results" type="object" class="btn-primary" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>

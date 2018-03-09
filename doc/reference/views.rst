@@ -490,14 +490,14 @@ the logical steps are:
 3. Create the final invoice
 4. Send the goods
 
-Highlighted buttons (in red by default) emphasize the logical next step, to
+Highlighted buttons emphasizes the logical next step, to
 help the user. It is usually the first active button. On the other hand,
-:guilabel:`cancel` buttons *must* remain grey (normal).  For instance, in
-Invoice the button :guilabel:`Refund` must never be red.
+:guilabel:`cancel` buttons *must* remain normal. For instance, in
+Invoice the button :guilabel:`Refund` must never be highlighted.
 
-Technically, buttons are highlighted by adding the class "oe_highlight"::
+Technically, buttons are highlighted by adding the class "btn-primary"::
 
-    <button class="oe_highlight" name="..." type="..." states="..."/>
+    <button class="btn-primary" name="..." type="..." states="..."/>
 
 The Status
 ..........

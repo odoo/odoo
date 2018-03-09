@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='active_group']" position="before">
                     <group string="Expenses" name="timesheet">
-                        <field name="expense_manager_id"/>   
+                        <field name="expense_manager_id"/>
                     </group>
                 </xpath>
             </field>
@@ -100,11 +100,11 @@
                 <xpath expr="/form/*" position="before">
                     <header>
                         <widget name="attach_document" string="Attach Document" action="message_post" attrs="{'invisible': [('attachment_number', '&lt;=', 0)]}"/>
-                        <widget name="attach_document" string="Attach Document" action="message_post" class="oe_highlight" attrs="{'invisible': [('attachment_number', '&gt;=', 1)]}"/>
+                        <widget name="attach_document" string="Attach Document" action="message_post" class="btn-primary" attrs="{'invisible': [('attachment_number', '&gt;=', 1)]}"/>
                         <button name="action_submit_expenses" string="Submit to Manager" type="object" class="o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}"/>
-                        <button name="action_submit_expenses" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}"/>
+                        <button name="action_submit_expenses" string="Submit to Manager" type="object" class="btn-primary o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
-                        <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
+                        <button name="action_view_sheet" type="object" string="View Report" class="btn-primary" attrs="{'invisible': [('state', '=','draft')]}"/>
                     </header>
                 </xpath>
                 <xpath expr="/form/sheet/*" position="before">
@@ -409,9 +409,9 @@
             <field name="arch" type="xml">
                 <form string="Expense Reports" class="o_expense_sheet">
                  <header>
-                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_user" class="oe_highlight o_expense_sheet_approve"/>
-                    <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_manager" class="oe_highlight o_expense_sheet_post"/>
-                    <button name="%(hr_expense.hr_expense_sheet_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_manager"/>
+                    <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_user" class="btn-primary o_expense_sheet_approve"/>
+                    <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_manager" class="btn-primary o_expense_sheet_post"/>
+                    <button name="%(hr_expense.hr_expense_sheet_register_payment_wizard_action)d" type="action" string="Register Payment" class="btn-primary o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_manager"/>
                     <button name="reset_expense_sheets" states="cancel" string="Resubmit" type="object"/>
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
