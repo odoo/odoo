@@ -25,7 +25,7 @@ class except_orm(Exception):
             _logger.warn('except_orm is deprecated. Please use specific exceptions like UserError or AccessError. Caller: %s:%s', *caller)
         self.name = name
         self.value = value
-        self.args = (name, value)
+        self.args = (name, value) if value else (name, )
 
 
 class UserError(except_orm):

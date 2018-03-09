@@ -348,7 +348,7 @@ def load_information_from_description_file(module, mod_path=None):
         info['version'] = adapt_version(info['version'])
         return info
 
-    _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
+    _logger.debug('module %s: no manifest file found %s', module, manifest_file)
     return {}
 
 def load_openerp_module(module_name):
