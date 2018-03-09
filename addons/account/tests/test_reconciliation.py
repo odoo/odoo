@@ -623,3 +623,87 @@ class TestReconciliation(AccountingTestCase):
         # Checking if the direction of the move is correct
         full_rec_payable = full_rec_move.line_ids.filtered(lambda l: l.account_id == self.account_rsa)
         self.assertEqual(full_rec_payable.balance, 18.75)
+
+    def test_partial_reconcile_currencies_01(self):
+        """ Implements the failing scenario """
+        ####
+        # Day 1: Invoice Cust/001 to customer (expressed in USD)
+        # Market value of USD (day 1): 1 USD = 0.5 EUR
+        # * Dr. 100 USD / 50 EUR - Accounts receivable
+        # * Cr. 100 USD / 50 EUR - Revenue
+        ####
+        account_revenue = self.env['account.account'].search(
+            [('user_type_id', '=', self.env.ref(
+                'account.data_account_type_revenue').id)], limit=1)
+        dest_journal_id = self.env['account.journal'].search(
+            [('type', '=', 'purchase'),
+             ('company_id', '=', self.env.ref('base.main_company').id)],
+            limit=1)
+
+        # Delete any old rate - to make sure that we use the ones we need.
+        old_rates = self.env['res.currency.rate'].search(
+            [('currency_id', '=', self.currency_usd_id)])
+        old_rates.unlink()
+
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': time.strftime('%Y') + '-01-01',
+            'rate': 2,
+        })
+
+        invoice_cust_1 = self.account_invoice_model.create({
+            'partner_id': self.partner_agrolait_id,
+            'account_id': self.account_rcv.id,
+            'type': 'out_invoice',
+            'currency_id': self.currency_usd_id,
+            'date_invoice': time.strftime('%Y') + '-01-01',
+        })
+        self.account_invoice_line_model.create({
+            'quantity': 1.0,
+            'price_unit': 100.0,
+            'invoice_id': invoice_cust_1.id,
+            'name': 'product that cost 100',
+            'account_id': account_revenue.id,
+        })
+        invoice_cust_1.action_invoice_open()
+        self.assertEqual(invoice_cust_1.residual_company_signed, 50.0)
+        aml = invoice_cust_1.move_id.mapped('line_ids').filtered(
+            lambda x: x.account_id == account_revenue)
+        self.assertEqual(aml.credit, 50.0)
+        #####
+        # Day 2: Receive payment for half invoice Cust/1 (in USD)
+        # -------------------------------------------------------
+        # Market value of USD (day 2): 1 USD = 1 EUR
+
+        # Payment transaction:
+        # * Dr. 50 USD / 50 EUR - EUR Bank (valued at market price
+        # at the time of receiving the money)
+        # * Cr. 50 USD / 50 EUR - Accounts Receivable
+        #####
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': time.strftime('%Y') + '-01-02',
+            'rate': 1,
+        })
+        # register payment on invoice
+        payment = self.env['account.payment'].create(
+            {'payment_type': 'inbound',
+             'payment_method_id': self.env.ref(
+                 'account.account_payment_method_manual_in').id,
+             'partner_type': 'customer',
+             'partner_id': self.partner_agrolait_id,
+             'amount': 50,
+             'currency_id': self.currency_usd_id,
+             'payment_date': time.strftime('%Y') + '-01-02',
+             'journal_id': dest_journal_id.id,
+             })
+        payment.post()
+        payment_move_line = False
+        for l in payment.move_line_ids:
+            if l.account_id == invoice_cust_1.account_id:
+                payment_move_line = l
+        invoice_cust_1.register_payment(payment_move_line)
+        # We expect at this point that the invoice should still be open,
+        # because they owe us still 50 CC.
+        self.assertEqual(invoice_cust_1.state, 'open',
+                         'Invoice is in status %s' % invoice_cust_1.state)
