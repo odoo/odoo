@@ -10,7 +10,10 @@ class SaleCouponProgram(models.Model):
     _name = 'sale.coupon.program'
     _description = "Sales Coupon Program"
     _inherits = {'sale.coupon.rule': 'rule_id', 'sale.coupon.reward': 'reward_id'}
-    _order = "sequence"
+    # We should apply 'discount' promotion first to avoid offering free product when we should not.
+    # Eg: If the discount lower the SO total below the required threshold
+    # Note: This is only revelant when programs have the same sequence (which they have by default)
+    _order = "sequence, reward_type"
 
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="A program is available for the customers when active")
@@ -136,12 +139,9 @@ class SaleCouponProgram(models.Model):
     def _check_promo_code(self, order, coupon_code):
         message = {}
         applicable_programs = order._get_applicable_programs()
-        amount_total = order.amount_untaxed + order.reward_amount
-        if self.rule_minimum_amount_tax_inclusion == 'tax_included':
-            amount_total += order.amount_tax
         if self.maximum_use_number != 0 and self.order_count >= self.maximum_use_number:
             message = {'error': _('Promo code %s has been expired.') % (coupon_code)}
-        elif self._compute_program_amount('rule_minimum_amount', order.currency_id) > amount_total:
+        elif not self._filter_on_mimimum_amount(order):
             message = {'error': _('A minimum of %s %s should be purchased to get the reward') % (self.rule_minimum_amount, self.currency_id.name)}
         elif self.promo_code and self.promo_code == order.promo_code:
             message = {'error': _('The promo code is already applied on this order')}
@@ -151,7 +151,7 @@ class SaleCouponProgram(models.Model):
             message = {'error': _('Promo code is invalid')}
         elif self.rule_date_from and self.rule_date_from > order.date_order or self.rule_date_to and order.date_order > self.rule_date_to:
             message = {'error': _('Promo code is expired')}
-        elif order.promo_code:
+        elif order.promo_code and self.promo_code_usage == 'code_needed':
             message = {'error': _('Promotionals codes are not cumulative.')}
         elif self._is_global_discount_program() and order.applied_coupon_ids.mapped('program_id').filtered(lambda program: program._is_global_discount_program()):
             message = {'error': _('Global discounts are not cumulative.')}
@@ -172,12 +172,16 @@ class SaleCouponProgram(models.Model):
 
     @api.model
     def _filter_on_mimimum_amount(self, order):
-        # To get actual total amount of SO without any reward or discount
-        discounted_amount = sum(order.order_line.filtered(lambda line: line.is_reward_line).mapped('price_total'))
-        untaxed_amount = order.amount_untaxed - discounted_amount
+        untaxed_amount = order.amount_untaxed
+        tax_amount = order.amount_tax
+
+        # Some lines should not be considered when checking if threshold is met like delivery
+        untaxed_amount -= sum([line.price_subtotal for line in order._get_no_effect_on_threshold_lines()])
+        tax_amount -= sum([line.price_tax for line in order._get_no_effect_on_threshold_lines()])
+
         return self.filtered(lambda program:
             program.rule_minimum_amount_tax_inclusion == 'tax_included' and
-            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount + order.amount_tax or
+            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount + tax_amount or
             program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and
             program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount)
 

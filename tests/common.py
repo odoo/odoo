@@ -57,3 +57,10 @@ class TestSaleCouponCommon(common.TransactionCase):
             'rule_products_domain': "[('id', 'in', [%s])]" % (self.product_A.id),
             'active': True,
         })
+
+        self.tax_10pc_incl = self.env['account.tax'].create({
+            'name': "10% Tax incl",
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+        })
