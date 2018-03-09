@@ -65,3 +65,29 @@ class TestMailActivity(BaseFunctionalTest):
                     'res_id': test_record.id,
                 })
             # self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
+
+    def test_activity_filter_with_read_group(self):
+        test_partner = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+            'name': 'Test Partner',
+            'email': 'test@example.com',
+        })
+
+        self.env['mail.activity'].sudo().create({
+            'summary': 'Test Activity',
+            'date_deadline':  date.today() + relativedelta(days=2),
+            'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
+            'res_model_id': self.env['ir.model']._get(test_partner._name).id,
+            'res_id': test_partner.id,
+        })
+
+        self.env['mail.activity'].sudo().create({
+            'summary': 'Test Email Activity',
+            'date_deadline':  date.today() + relativedelta(days=2),
+            'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
+            'res_model_id': self.env['ir.model']._get(test_partner._name).id,
+            'res_id': test_partner.id,
+        })
+
+        # apply filter on res.partner for future activity and group by Sales Person
+        group = self.env['res.partner'].read_group([('activity_ids.date_deadline', '>', date.today())], ['user_id'], ['user_id'])
+        self.assertEqual(group[0]['user_id_count'], 1, 'Count should be 1 becasue only 1 record have 2 future activity')
