@@ -193,7 +193,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'res.country',
-        fields: ['name'],
+        fields: ['name', 'vat_label'],
         loaded: function(self,countries){
             self.countries = countries;
             self.company.country = null;
@@ -2118,6 +2118,7 @@ exports.Order = Backbone.Model.extend({
                 company_registry: company.company_registry,
                 contact_address: company.partner_id[1],
                 vat: company.vat,
+                vat_label: company.country.vat_label,
                 name: company.name,
                 phone: company.phone,
                 logo:  this.pos.company_logo_base64,
