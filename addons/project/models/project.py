@@ -872,7 +872,7 @@ class Task(models.Model):
             take_action = self._notify_get_action_link('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group = (
-                'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'group_project_user', lambda pid, rdata: rdata[2] == 'user' and any(user.has_group('project.group_project_user') for user in self.env['res.partner'].sudo().browse(pid).user_ids), {
                     'actions': project_actions,
                 })
             groups = [new_group] + groups

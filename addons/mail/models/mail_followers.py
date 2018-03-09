@@ -242,3 +242,48 @@ GROUP BY fol.id%s""" % (
                         update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
 
         return new, update
+
+    def _get_follower_info(self, records, subtype_id, pids=None, cids=None):
+        if records and subtype_id:
+            query = """
+WITH sub_followers AS (
+    SELECT fol.id, fol.partner_id, fol.channel_id
+    FROM mail_followers fol
+        RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
+        ON subrel.mail_followers_id = fol.id
+    WHERE subrel.mail_message_subtype_id = %s AND fol.res_model = %s AND fol.res_id = ANY(%s)
+)
+SELECT NULL AS cid, partner.id as pid, partner.partner_share as pshare, users.notification_type AS notif, array_agg(groups.id) AS groups
+    FROM res_partner partner
+        LEFT JOIN res_users users ON users.partner_id = partner.id
+        LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+        LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
+    WHERE partner.id = ANY(%s) OR EXISTS (
+        SELECT partner_id FROM sub_followers WHERE sub_followers.channel_id IS NULL AND sub_followers.partner_id = partner.id
+    )
+    GROUP BY partner.id, users.notification_type
+UNION
+SELECT channel.id AS cid, NULL AS pid, NULL AS pshare, CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
+    FROM mail_channel channel
+    WHERE channel.id = ANY (%s)
+    OR EXISTS (
+        SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
+    )"""
+            self.env.cr.execute(query, (subtype_id, records._name, records.ids, pids or [], cids or [],))
+            res = self.env.cr.fetchall()
+        elif pids or cids:
+            query = """
+SELECT NULL AS cid, partner.id as pid, partner.partner_share as pshare, users.notification_type AS notif, NULL AS groups
+    FROM res_partner partner
+    LEFT JOIN res_users users ON users.partner_id = partner.id
+    WHERE partner.id = ANY(%s)
+UNION
+SELECT channel.id AS cid, NULL AS pid, NULL AS pshare, CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups
+    FROM mail_channel channel
+    WHERE channel.id = ANY (%s)
+"""
+            self.env.cr.execute(query, (pids or [], cids or [],))
+            res = self.env.cr.fetchall()
+        else:
+            res = []
+        return res

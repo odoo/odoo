@@ -193,7 +193,7 @@ class Channel(models.Model):
         groups = super(Channel, self)._notify_get_groups(message, groups)
         for (index, (group_name, group_func, group_data)) in enumerate(groups):
             if group_name != 'customer':
-                groups[index] = (group_name, lambda partner: False, group_data)
+                groups[index] = (group_name, lambda pid, rdata: False, group_data)
         return groups
 
     @api.multi

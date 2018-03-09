@@ -1104,7 +1104,7 @@ class Lead(models.Model):
                 {'url': lost_action, 'title': _('Lost')}]
 
         new_group = (
-            'group_sale_salesman', lambda partner: bool(partner.user_ids) and any(user.has_group('sales_team.group_sale_salesman') for user in partner.user_ids), {
+            'group_sale_salesman', lambda pid, rdata: rdata[2] == 'user' and any(user.has_group('sales_team.group_sale_salesman') for user in self.env['res.partner'].sudo().browse(pid).user_ids), {
                 'actions': salesman_actions,
             })
 
