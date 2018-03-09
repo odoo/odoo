@@ -509,10 +509,15 @@ class Partner(models.Model, FormatAddress):
             del vals['is_company']
         result = result and super(Partner, self).write(vals)
         for partner in self:
-            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
-                self.env['res.users'].check_access_rights('write')
+            partner._check_related_users_write_access()
             partner._fields_sync(vals)
         return result
+
+    @api.multi
+    def _check_related_users_write_access(self):
+        self.ensure_one()
+        if any(u.has_group('base.group_user') for u in self.user_ids if u != self.env.user):
+            self.env['res.users'].check_access_rights('write')
 
     @api.model
     def create(self, vals):
