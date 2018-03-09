@@ -17,6 +17,7 @@ from lxml import etree
 import odoo
 from odoo.loglevels import ustr
 from odoo.tools import pycompat, misc
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -533,3 +534,16 @@ def decode_smtp_header(smtp_header):
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
     return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+
+
+def verify_ascii_address(address):
+    """
+    Verifies that the provided e-mail address is US-ASCII.
+    """
+    try:
+        address.encode('ascii')
+    except UnicodeEncodeError:
+        raise UserError(
+            "non-ASCII e-mail addresses are not currently supported by Odoo, please try again "
+            "with an ASCII e-mail address or a punycode-encoded e-mail address."
+        )

@@ -333,6 +333,8 @@ class Users(models.Model):
         user.partner_id.active = user.active
         if user.partner_id.company_id:
             user.partner_id.write({'company_id': user.company_id.id})
+        if vals.get('login'):
+            tools.mail.verify_ascii_address(vals['login'])
         return user
 
     @api.multi
@@ -375,6 +377,9 @@ class Users(models.Model):
             db = self._cr.dbname
             for id in self.ids:
                 self.__uid_cache[db].pop(id, None)
+
+        if values.get('login'):
+            tools.mail.verify_ascii_address(values['login'])
 
         return res
 

@@ -8,6 +8,7 @@ import unicodedata
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import ustr
+from odoo.tools.mail import verify_ascii_address
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -116,6 +117,9 @@ class Alias(models.Model):
         if parent_model_name:
             model = self.env['ir.model']._get(parent_model_name)
             vals['alias_parent_model_id'] = model.id
+        if vals.get('alias_domain'):
+            # only check the domain, since the alias_name goes through _clean_and_make_unique
+            verify_ascii_address(vals['alias_domain'])
         return super(Alias, self).create(vals)
 
     @api.multi
@@ -123,6 +127,9 @@ class Alias(models.Model):
         """"give a unique alias name if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), alias_ids=self.ids)
+        if vals.get('alias_domain'):
+            # only check the domain, since the alias_name goes through _clean_and_make_unique
+            verify_ascii_address(vals['alias_domain'])
         return super(Alias, self).write(vals)
 
     @api.multi

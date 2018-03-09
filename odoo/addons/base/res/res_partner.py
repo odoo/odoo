@@ -516,6 +516,8 @@ class Partner(models.Model):
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')
             partner._fields_sync(vals)
+        if vals.get('email'):
+            tools.mail.verify_ascii_address(vals['email'])
         return result
 
     @api.model
@@ -532,6 +534,8 @@ class Partner(models.Model):
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
+        if vals.get('email'):
+            tools.mail.verify_ascii_address(vals['email'])
         return partner
 
     @api.multi
