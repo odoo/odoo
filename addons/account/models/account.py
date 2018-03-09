@@ -410,7 +410,8 @@ class AccountJournal(models.Model):
     belongs_to_company = fields.Boolean('Belong to the user\'s current company', compute="_belong_to_company", search="_search_company_journals",)
 
     # Bank journals fields
-    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_id)]")
+    company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
+    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id)]")
     bank_statements_source = fields.Selection([('undefined', 'Undefined'),('manual', 'Record Manually')], string='Bank Feeds', default='undefined')
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
