@@ -145,12 +145,13 @@ def _is_studio_custom(path):
     Returns True if any of the records contains a context with the key
     studio in it, False if none of the records do
     """
-    path = os.path.join(path, 'data')
-    filenames = next(iter(os.walk(path)))[2]
-    filenames = [f for f in filenames if f.lower().endswith('.xml')]
+    filepaths = []
+    for level in os.walk(path):
+        filepaths += [os.path.join(level[0], fn) for fn in level[2]]
+    filepaths = [fp for fp in filepaths if fp.lower().endswith('.xml')]
 
-    for filename in filenames:
-        root = lxml.etree.parse(os.path.join(path, filename)).getroot()
+    for fp in filepaths:
+        root = lxml.etree.parse(fp).getroot()
 
         for record in root:
             # there might not be a context if it's a non-studio module

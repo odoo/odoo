@@ -81,7 +81,7 @@
                             </page>
                             <page string="Configuration">
                                 <group name="acquirer_config">
-                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
+                                    <field name="journal_id" context="{'default_type': 'bank'}" required="1"/>
                                     <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
                                     <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>

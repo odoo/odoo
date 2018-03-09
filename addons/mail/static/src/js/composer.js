@@ -591,7 +591,7 @@ var BasicComposer = Widget.extend({
     */
     _onKeydown: function (event) {
         switch(event.which) {
-            // UP, DOWN: prevent moving cursor if navigation in mention propositions
+            // UP, DOWN, TAB: prevent moving cursor if navigation in mention propositions
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN:
             case $.ui.keyCode.TAB:

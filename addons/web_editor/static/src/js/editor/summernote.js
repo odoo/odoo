@@ -2167,7 +2167,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     }
 
     // remove node without attributes (move content), and merge the same nodes
-    if (!dom.isImgFont(node)) {
      var className2, style, style2;
      for (i=0; i<nodes.length; i++) {
       node = nodes[i];
@@ -2208,7 +2207,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
         }
       }
      }
-    }
 
     range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset).select();
 };

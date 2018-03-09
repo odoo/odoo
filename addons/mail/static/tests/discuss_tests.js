@@ -44,10 +44,9 @@ QUnit.test('basic rendering', function (assert) {
         assert.strictEqual($sidebar.length, 1,
             "should have rendered a sidebar");
 
-        var $nocontent = discuss.$('.o_mail_chat_content');
-        assert.strictEqual($nocontent.length, 1,
+        assert.strictEqual(discuss.$('.o_mail_chat_content').length, 1,
             "should have rendered the content");
-        assert.strictEqual($nocontent.find('.o_mail_no_content').length, 1,
+        assert.strictEqual(discuss.$('.o_mail_no_content').length, 1,
             "should display no content message");
 
         var $inbox = $sidebar.find('.o_mail_chat_channel_item[data-channel-id=channel_inbox]');
