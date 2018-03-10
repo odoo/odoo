@@ -337,7 +337,7 @@ msgstr "Стандартна ціна"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Вартість методу"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
@@ -722,6 +722,12 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Якщо для товару увімкнено безперервну оцінку, система автоматично створить "
+"записи журналу, відповідні рухам акцій, із ціною товару, яку зазначено в "
+"\"Методі розрахунку\". Інвентарна вартість рахунку, встановлена у категорії "
+"товару, буде представляти поточну вартість інвентаря та вхідний і вихідний "
+"рахунок складу на фондовому ринку зберігатимуть позики колег для вхідних та "
+"вихідних товарів."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -1443,6 +1449,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Стандартна ціна: Вартість вручну оновлюється наприкінці певного періоду (зазвичай один раз на рік).\n"
+"Середня Ціна: Вартість перераховується на кожну вхідну відправку та використовується для оцінки товару.\n"
+"Реальна ціна: відображувана собівартість - це ціна останнього вихідного товару (буде використано, наприклад, при втраті запасу))."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
@@ -1736,7 +1745,7 @@ msgstr "Кількість непрочитаних повідомлень"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Оцінка"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1857,6 +1866,11 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Під час проведення оцінювання інвентаризації в режимі реального часу у цьому"
+" обліку відображатимуться статті журналу для всіх вхідних запасів, за "
+"винятком випадків, коли в місці джерела встановлено певний облік. Якщо не "
+"встановлено на товар, використовується той, який використовується в "
+"категорії товарів."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1866,6 +1880,10 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"При здійсненні оцінки інвентаризації в режимі реального часу у цьому обліку "
+"відображатимуться статті журналу всіх вихідних дій складу, якщо в місці "
+"призначення немає певного обліку про оцінку. Якщо не встановлено на товар, "
+"використовується той, який використовується в категорії товарів."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
