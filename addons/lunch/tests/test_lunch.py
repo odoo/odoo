@@ -15,7 +15,7 @@ class Test_Lunch(common.TransactionCase):
         self.product_Bolognese_id = self.product_bolognese_ref and self.product_bolognese_ref[1] or False
         self.new_id_order = self.env['lunch.order'].create({
             'user_id': self.demo_user.id,
-            'order_line_ids': '[]',
+            'order_line_ids': [],
             })
         self.new_id_order_line = self.env['lunch.order.line'].create({
             'order_id': self.new_id_order.id,
