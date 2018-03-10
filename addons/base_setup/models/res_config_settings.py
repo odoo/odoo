@@ -30,6 +30,7 @@ class ResConfigSettings(models.TransientModel):
     module_inter_company_rules = fields.Boolean("Manage Inter Company")
     module_pad = fields.Boolean("Collaborative Pads")
     module_voip = fields.Boolean("Asterisk (VoIP)")
+    module_phone_validation = fields.Boolean(string="Phone Validation")
     company_share_partner = fields.Boolean(string='Share partners to all companies',
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"

@@ -3,3 +3,4 @@
 
 from . import res_company
 from . import phone_validation_mixin
+from . import res_config_settings
