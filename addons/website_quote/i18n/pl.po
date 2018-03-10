@@ -7,18 +7,19 @@
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Slawomir Adamus <melthalion@gmail.com>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
 # Arek Smagacz <arek.smagacz@gmail.com>, 2016
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
 "PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Zdzisław Krajewski <zdzichucb@gmail.com>, 2016\n"
+"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +79,54 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Drogi ${object.partner_id.name},</p><br/>\n"
+"                <p>Twoje zamówienie <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> zostało potwierdzone!</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>Możesz zawsze sprawdzić swoje oferty, zamówienia i faktury online odwiedzając <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Portal klienta</a>.</p><br/>\n"
+"                % endif\n"
+"\n"
+"                <p>Jeśli masz jakieś pytania to skontaktuj się z nami.</p><br/>\n"
+"                <p>Dziękujemy za wybór ${object.company_id.name or \"us\"}!</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>Wysłane przez\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a> używając<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -140,7 +189,7 @@ msgstr "<i class=\"fa fa-check\"/> Zaakceptowane"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Akceptuj &amp; Przejdź do płatności"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -238,6 +287,8 @@ msgid ""
 "<span>I agree that by paying this proposal, I\n"
 "                                accept it on the behalf of </span>"
 msgstr ""
+"<span>Zgadzam się, że płacąc za tą ofertę, ja\n"
+"                                 akceptuję ją w imieniu </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -254,7 +305,7 @@ msgstr "<span>sugerowane produkty</span>"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr ""
+msgstr "<span>z warunkami płatności: </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
@@ -344,11 +395,13 @@ msgid ""
 "<strong>This offer expired!</strong><br/>\n"
 "                                  Contact us for new quote."
 msgstr ""
+"<strong>Ta oferta jest przeterminowana!</strong><br/>\n"
+"                                  Skontaktuj się z nami w celu uzyskania nowej oferty."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<strong>This offer expires in</strong>"
-msgstr ""
+msgstr "<strong>Ta oferta przeterminuje się za</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -356,6 +409,8 @@ msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
 msgstr ""
+"<strong>Ta oferta została anulowana.</strong> Skontaktuj się z nami w celu "
+"otrzymania nowej oferty."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -422,7 +477,7 @@ msgstr "zaawansowane JQuery"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Kwota przed rabatem"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -450,7 +505,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "Ask Changes"
-msgstr ""
+msgstr "Poproś o zmiany"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -560,7 +615,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "e-mail potwierdzający"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -573,7 +628,7 @@ msgstr "Skontaktuj się z nami"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Kontrolery i widoki"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -675,7 +730,7 @@ msgstr "Opis dla ofert online"
 #: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
-msgstr ""
+msgstr "Opis na ofertę online"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
@@ -727,7 +782,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr ""
+msgstr "Edytuj ofertę"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -766,7 +821,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Data ważności"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -813,11 +868,14 @@ msgstr ""
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
+"Daje kolejność sekwencji podczas wyświetlania listy pozycji ofert sprzedaży."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
 msgid "Gives the sequence order when displaying a list of suggested product."
 msgstr ""
+"Daje kolejność sekwencji podczas wyświetlania listy pozycji sugerowanych "
+"produktów."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -912,7 +970,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "z podatkiem)"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1122,7 +1180,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Liczba dni dla daty ważności oferty"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1136,7 +1194,7 @@ msgstr "Cele"
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Odoo Official Website"
-msgstr ""
+msgstr "Oficjalna strona Odoo"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1144,7 +1202,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo Web Client"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1183,19 +1241,19 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_website_description
 msgid "Option Description"
-msgstr ""
+msgstr "Opis opcji"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Optional Product:"
-msgstr ""
+msgstr "Produkty opcjonalne"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_line_option_line_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_options
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_options
 msgid "Optional Products Lines"
-msgstr ""
+msgstr "Pozycje produktów opcjonalnych"
 
 #. module: website_quote
 #: code:addons/website_quote/models/sale_order.py:169
@@ -1207,7 +1265,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:90
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "Zamówienie podpisane przez %s"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1217,7 +1275,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
-msgstr ""
+msgstr "Nasza oferta"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1227,12 +1285,12 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "Nasza Jakość"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Service"
-msgstr ""
+msgstr "Nasze Usługi"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1394,7 +1452,7 @@ msgstr "Oferta"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Ważność oferty"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
@@ -1440,7 +1498,7 @@ msgstr "widok oferty cenowej przez klienta"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Quote Date:"
-msgstr ""
+msgstr "Data oferty:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1450,7 +1508,7 @@ msgstr "Odrzuć"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject This Quote"
-msgstr ""
+msgstr "Odrzuć tą ofertę"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1637,6 +1695,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"Ten szablon wiadomości e-mail zostanie wysłany po potwierdzeniu. Pozostaw "
+"puste, aby niczego nie wysyłać."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1646,11 +1706,15 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"To jest <strong>przykładowy szablon oferty</strong>. Powinieneś\n"
+"                                dostosować ją pod swoje potrzeby w aplikacji <i>Sprzedaż</i>\n"
+"                                używając menu: Konfiguracja /\n"
+"                                Szablony ofert."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This order"
-msgstr ""
+msgstr "To zamówienie"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1662,7 +1726,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This quotation has been rejected."
-msgstr ""
+msgstr "Ta oferta została odrzucona."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1700,7 +1764,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Underscore"
-msgstr ""
+msgstr "Podkreśl"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1855,7 +1919,7 @@ msgstr "Twój odnośnik:"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your advantage:"
-msgstr ""
+msgstr "Twoje zalety:"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1878,12 +1942,12 @@ msgstr ""
 #. module: website_quote
 #: model:mail.template,subject:website_quote.confirmation_mail
 msgid "Your order ${object.name} is confirmed"
-msgstr ""
+msgstr "Twoje zamówienie ${object.name} jest potwierdzone!"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Twoja płatność została autoryzowana."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1944,7 +2008,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "if you want a new one."
-msgstr ""
+msgstr "jeśli chcesz nową."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
