@@ -844,16 +844,13 @@ class PaymentToken(models.Model):
             'partner_country_id': self.partner_id.country_id.id,
         })
 
-        try:
-            kwargs.update({'3d_secure': True})
-            tx.s2s_do_transaction(**kwargs)
-            # if 3D secure is called, then we do not refund right now
-            if tx.html_3ds:
-                return tx
-        except:
-            _logger.error('Error while validating a payment method')
-        finally:
+        kwargs.update({'3d_secure': True})
+        tx.s2s_do_transaction(**kwargs)
+
+        # if 3D secure is called, then we do not refund right now
+        if not tx.html_3ds:
             tx.s2s_do_refund()
+
         return tx
 
     @api.multi
