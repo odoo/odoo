@@ -1293,6 +1293,7 @@ var LinkDialog = Dialog.extend({
                 this.$('input.email-address').val(match = /mailto:(.+)/.exec(href) ? match[1] : '');
             } else {
                 this.$('input.url').val(href);
+                this.$('input.window-new').closest("div").show();
             }
         }
         this.preview();

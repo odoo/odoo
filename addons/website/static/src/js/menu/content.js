@@ -198,7 +198,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
             kwargs: {
                 context: context
             },
-        }).then(function () {
+        }).then(function (url) {
             // If from page manager: reload url, if from page itself: go to (possibly) new url
             if (self._getMainObject().model == 'website.page')
                 window.location.href = url.toLowerCase();

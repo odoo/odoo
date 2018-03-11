@@ -793,7 +793,7 @@ class PosOrder(models.Model):
                         'location_dest_id': move.location_dest_id.id,
                         'lot_id': lot_id,
                     })
-                if not pack_lots:
+                if not pack_lots and not float_is_zero(qty_done, precision_rounding=move.product_uom.rounding):
                     move.quantity_done = qty_done
         return has_wrong_lots
 

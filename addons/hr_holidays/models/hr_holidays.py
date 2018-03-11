@@ -216,7 +216,7 @@ class Holidays(models.Model):
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self.manager_id = self.employee_id and self.employee_id.parent_id
-        self.department_id = self.employee_id and self.employee_id.department_id
+        self.department_id = self.employee_id.department_id
 
     @api.multi
     @api.depends('number_of_days_temp', 'type')
