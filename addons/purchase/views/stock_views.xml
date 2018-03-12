@@ -22,24 +22,6 @@
             </field>
         </record>
 
-        <!-- Purchase button on orderpoints -->
-
-        <record id="view_warehouse_orderpoint_purchase_form" model="ir.ui.view">
-            <field name="name">stock.warehouse.orderpoint.purchase.form</field>
-            <field name="model">stock.warehouse.orderpoint</field>
-            <field name="inherit_id" ref="stock.view_warehouse_orderpoint_form"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button type="object"
-                        name="action_view_purchase"
-                        class="oe_stat_button"
-                        string="Purchases"
-                        icon="fa-refresh">
-                    </button>
-                </div>
-            </field>
-        </record>
-
         <record id="purchase_open_picking" model="ir.actions.act_window">
             <field name="name">Receptions</field>
             <field name="res_model">stock.picking</field>
