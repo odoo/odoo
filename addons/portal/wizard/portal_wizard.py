@@ -31,10 +31,9 @@ class PortalWizard(models.TransientModel):
 
     def _default_user_ids(self):
         # for each partner, determine corresponding portal.wizard.user records
-        partner_ids = self.env.context.get('active_ids', [])
         contact_ids = set()
         user_changes = []
-        for partner in self.env['res.partner'].sudo().browse(partner_ids):
+        for partner in self.env['res.partner'].sudo().get_active_records():
             contact_partners = partner.child_ids or [partner]
             for contact in contact_partners:
                 # make sure that each contact appears at most once in the list
