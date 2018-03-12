@@ -14,5 +14,4 @@ class StockPickingToBatch(models.TransientModel):
     def attach_pickings(self):
         # use active_ids to add picking line to the selected batch
         self.ensure_one()
-        picking_ids = self.env.context.get('active_ids')
-        return self.env['stock.picking'].browse(picking_ids).write({'batch_id': self.batch_id.id})
+        return self.env['stock.picking'].get_active_records().write({'batch_id': self.batch_id.id})
