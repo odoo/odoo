@@ -67,10 +67,10 @@ class ResConfigSettings(models.TransientModel):
     auto_done_setting = fields.Boolean("Lock Confirmed Sales", config_parameter='sale.auto_done_setting')
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
-    auth_signup_uninvited = fields.Selection([
+    sale_signup_method = fields.Selection([
         ('b2b', 'On invitation (B2B)'),
         ('b2c', 'Free sign up (B2C)'),
-    ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
+    ], string='Sales Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL Connector")
