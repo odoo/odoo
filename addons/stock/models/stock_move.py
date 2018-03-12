@@ -659,7 +659,7 @@ class StockMove(models.Model):
                 ('location_id', '=', move.location_id.id),
                 ('location_dest_id', '=', move.location_dest_id.id),
                 ('picking_type_id', '=', move.picking_type_id.id),
-                ('printed', '=', False),
+                # ('printed', '=', False),
                 ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
             if picking:
                 if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
