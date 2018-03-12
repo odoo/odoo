@@ -69,6 +69,10 @@ def copy_cache(records, env):
             for record_id in record_ids:
                 if record_id in src_cache:
                     # copy the cached value as such
+                    if isinstance(src_cache[record_id], FailedValue):
+                        # But not if it's a FailedValue, which often is an access error
+                        # because the other environment (eg. sudo()) is well expected to have access.
+                        continue
                     value = dst_cache[record_id] = src_cache[record_id]
                     if field.relational and isinstance(value, tuple):
                         todo[field.comodel_name].update(value)
@@ -1523,6 +1527,9 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT) if value else False
 
+    def convert_to_column(self, value, record):
+        return super(Date, self).convert_to_column(value or None, record)
+
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
@@ -1591,6 +1598,9 @@ class Datetime(Field):
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT) if value else False
+
+    def convert_to_column(self, value, record):
+        return super(Datetime, self).convert_to_column(value or None, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
