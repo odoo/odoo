@@ -129,7 +129,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.multi
     def create_invoices(self):
-        sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        sale_orders = self.env['sale.order'].get_active_records()
 
         if self.advance_payment_method == 'delivered':
             sale_orders.action_invoice_create()
