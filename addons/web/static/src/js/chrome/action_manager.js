@@ -283,7 +283,8 @@ var ActionManager = Widget.extend({
 
         // Listen to event "DOM_updated" to restore the scroll position
         core.bus.on('DOM_updated', this, function() {
-            if (this.inner_action) {
+            // DO NOT FORWARDPORT THIS
+            if (this.inner_action && !$('.dialog').length) {
                 this.trigger_up('scrollTo', {offset: this.inner_action.getScrollTop() || 0});
             }
         });
