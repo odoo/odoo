@@ -54,7 +54,7 @@ class SendSMS(models.TransientModel):
         if self.env.context.get('active_domain'):
             records = model.search(self.env.context.get('active_domain'))
         elif self.env.context.get('active_ids'):
-            records = model.browse(self.env.context.get('active_ids', []))
+            records = model.get_active_records()
         else:
             records = model.browse(self.env.context.get('active_id', []))
         return records
