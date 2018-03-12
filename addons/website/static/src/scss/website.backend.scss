@@ -5,17 +5,17 @@
         background-color: #ececec;
         div.o_box {
             @include clearfix;
-            color: $odoo-main-color-muted;
-            background-color: $odoo-view-background-color;
+            color: $o-main-color-muted;
+            background-color: $o-view-background-color;
             background-size: cover;
-            margin-top: $odoo-horizontal-padding;
+            margin-top: $o-horizontal-padding;
             position: static;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 
             h2, h4 {
                 text-transform: uppercase;
                 margin-top: 0;
-                color: $odoo-brand-primary;
+                color: $o-brand-primary;
             }
 
             h4 { margin: 0 0 0 8px; }
@@ -46,7 +46,7 @@
 
                     th {
                         text-transform: uppercase;
-                        color: $odoo-main-text-color;
+                        color: $o-main-text-color;
                         border-top-width: 0px;
                     }
                     td, th {
@@ -67,7 +67,7 @@
                 /*------------------------------------------*/
 
                 .gapi-analytics-data-chart svg g path, svg [class*="nv-series-"] {
-                    stroke: $odoo-main-color-muted !important;
+                    stroke: $o-main-color-muted !important;
                 }
 
                 svg {
@@ -86,19 +86,19 @@
                         .nv-series-0 {
                             stroke-width: 3 !important;
                             .nv-point {
-                                stroke: $odoo-brand-optional;
+                                stroke: $o-brand-optional;
                                 stroke-opacity: 1 !important;
                                 &.hover {
-                                    stroke: darken($odoo-brand-optional, 10%);
+                                    stroke: darken($o-brand-optional, 10%);
                                 }
                             }
                         }
                         .nv-series-1 {
                             .nv-point {
-                                stroke: $odoo-main-color-muted !important;
+                                stroke: $o-main-color-muted !important;
                                 stroke-opacity: 1 !important;
                                 &.hover {
-                                    stroke: darken($odoo-main-color-muted, 10%);
+                                    stroke: darken($o-main-color-muted, 10%);
                                 }
                             }
                         }
@@ -114,10 +114,10 @@
                         border: none;
                     }
                     tr:first-child .legend-color-guide > div {
-                        background-color: $odoo-brand-optional !important;
+                        background-color: $o-brand-optional !important;
                     }
                     tr:last-child .legend-color-guide > div {
-                        background-color: darken($odoo-brand-lightsecondary, 10%) !important;
+                        background-color: darken($o-brand-lightsecondary, 10%) !important;
                     }
                 }
             }
@@ -141,22 +141,22 @@
             .o_inner_box {
                 padding-top: 10px;
                 text-align: center;
-                border: 1px solid $odoo-view-background-color;
+                border: 1px solid $o-view-background-color;
                 height: 80px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 cursor: pointer;
                 color: white;
-                background-color: $odoo-brand-optional;
+                background-color: $o-brand-optional;
                     &:hover {
-                        background-color: darken($odoo-brand-optional, 10%);
+                        background-color: darken($o-brand-optional, 10%);
                     }
                 &.o_primary {
-                    background-color: $odoo-brand-primary;
+                    background-color: $o-brand-primary;
                     color: white;
                     &:hover {
-                        background-color: darken($odoo-brand-primary, 10%);
+                        background-color: darken($o-brand-primary, 10%);
                     }
                 }
                 .o_highlight {
@@ -167,10 +167,10 @@
 
         .o_graph_sales {
             .o_legend0 {
-                background-color: $odoo-brand-optional;
+                background-color: $o-brand-optional;
             }
             .o_legend1 {
-                background-color: $odoo-main-color-muted;
+                background-color: $o-main-color-muted;
             }
         }
 
@@ -249,24 +249,24 @@
 
             @keyframes increase {
               10% {
-                background-color: lighten($odoo-brand-optional, 30%);
-                border-color: $odoo-brand-optional;
-                color: $odoo-brand-optional;
+                background-color: lighten($o-brand-optional, 30%);
+                border-color: $o-brand-optional;
+                color: $o-brand-optional;
               }
             }
 
             @keyframes decrease {
               10% {
-                background-color: lighten($odoo-brand-optional, 30%);
-                border-color: $odoo-brand-optional;
-                color: $odoo-brand-optional;
+                background-color: lighten($o-brand-optional, 30%);
+                border-color: $o-brand-optional;
+                color: $o-brand-optional;
               }
             }
         }
 
         tr.o_product_template {
             cursor: pointer;
-            color: $odoo-main-text-color;
+            color: $o-main-text-color;
         }
 
         .o_loader {

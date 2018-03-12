@@ -5,7 +5,7 @@
 
 // LAYOUTING
 body.o_connected_user {
-    padding-top: $odoo-navbar-height!important;
+    padding-top: $o-navbar-height!important;
 }
 
 // MAIN MENU STYLE (added above navbar.scss)
@@ -15,7 +15,7 @@ body.o_connected_user {
     z-index: $zindex-modal - 10;
 
     font-family: $o-we-font-family;
-    font-size: $odoo-font-size-base;
+    font-size: $o-font-size-base;
     a:hover, a:focus {
         text-decoration: none;
     }
@@ -45,7 +45,7 @@ body.o_connected_user {
             }
 
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
-                @include button-variant(white, $odoo-brand-optional, $odoo-brand-optional);
+                @include button-variant(white, $o-brand-optional, $o-brand-optional);
             }
 
             > .fa-plus, > .fa-pencil {
@@ -352,7 +352,7 @@ body .modal {
 
 // ADD NEW PAGE MODAL
 #o_new_content_menu_choices {
-    @include o-position-absolute($odoo-navbar-height, 0, 0, 0);
+    @include o-position-absolute($o-navbar-height, 0, 0, 0);
     position: fixed;
     @include o-flex-display;
     @include o-justify-content(center);
@@ -436,7 +436,7 @@ body .modal {
     overflow: visible;
     display: block;
     .modal-dialog {
-        @include o-position-absolute($odoo-navbar-height + 10, 10px);
+        @include o-position-absolute($o-navbar-height + 10, 10px);
         width: auto;
         margin: 0;
         font-family: Roboto;
@@ -482,7 +482,7 @@ body .modal {
     @include o-w-preserve-btn;
     @include o-w-preserve-forms;
 
-    @include o-position-absolute($odoo-navbar-height, 0, 0);
+    @include o-position-absolute($o-navbar-height, 0, 0);
     position: fixed;
     z-index: 1001;
 }
@@ -523,15 +523,15 @@ body .modal {
 }
 #edit_website_pages {
     th {
-        background-color: $odoo-brand-primary;
+        background-color: $o-brand-primary;
         color: white;
     }
     td > a.fa {
         margin-left: 5px;
-        color: $odoo-brand-primary;
+        color: $o-brand-primary;
     }
     .fa-check, .fa-eye-slash {
-        color: $odoo-brand-optional;
+        color: $o-brand-optional;
     }
 }
 

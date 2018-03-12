@@ -1,7 +1,7 @@
 .o_kanban_view.o_kanban_dashboard.o_account_kanban {
 
     &.o_kanban_ungrouped .o_account_dashboard_header {
-        margin: (0 - $o-kanban-record-margin) ($o-kanban-record-margin - $odoo-horizontal-padding) $o-kanban-record-margin;
+        margin: (0 - $o-kanban-record-margin) ($o-kanban-record-margin - $o-horizontal-padding) $o-kanban-record-margin;
     }
 
     .o_account_dashboard_header {
@@ -11,10 +11,10 @@
         width: 100%;
         height: auto; // cancel o_form_view height 100%, which hides the help tip message at the bottom of the screen
         min-height: 0%; // cancel o_form_view min-height 100%, which hides the help tip message at the bottom of the screen
-        background-color: $odoo-view-background-color;
+        background-color: $o-view-background-color;
 
         .o_form_statusbar {
-            padding-right: $odoo-horizontal-padding;
+            padding-right: $o-horizontal-padding;
         }
 
         h4 {
@@ -52,8 +52,8 @@
             }
 
             &:last-of-type {
-                margin-left: $odoo-horizontal-padding;
-                padding-left: $odoo-horizontal-padding*.5;
+                margin-left: $o-horizontal-padding;
+                padding-left: $o-horizontal-padding*.5;
                 border-left: 1px solid $gray-lighter-dark;
             }
         }

@@ -112,10 +112,10 @@
             // o-kanban-colorpicker without customizing
             // '&:first-child > a::before' (transparent red-crossed colorpick)
             @mixin o-tag-colorpicker {
-                $o-tag-colorpicker-padding-right: $odoo-dropdown-hpadding - 2 * 5px; // FIXME was $o-kanban-inner-hmargin before scss convertion
+                $o-tag-colorpicker-padding-right: $o-dropdown-hpadding - 2 * 5px; // FIXME was $o-kanban-inner-hmargin before scss convertion
 
                 max-width: 100%;
-                padding: 3px $o-tag-colorpicker-padding-right 3px $odoo-dropdown-hpadding;
+                padding: 3px $o-tag-colorpicker-padding-right 3px $o-dropdown-hpadding;
 
                 > li {
                     display: inline-block;
@@ -136,7 +136,7 @@
 
                     &:last-of-type {
                         box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
-                        color: $odoo-main-text-color;
+                        color: $o-main-text-color;
                     }
                 }
             }
@@ -156,20 +156,20 @@
             }
         }
 
-        @for $size from 1 through $odoo-nb-ui-color {
+        @for $size from 1 through length($o-colors) {
             .o_tag_color_#{$size - 1} {
                 @if $size == 1 {
                     & {
                         background-color: white;
-                        color: nth($odoo-colors, $size);
-                        box-shadow: inset 0 0 0 2px nth($odoo-colors, $size);
+                        color: nth($o-colors, $size);
+                        box-shadow: inset 0 0 0 2px nth($o-colors, $size);
                     }
                     &::after {
-                        background-color: nth($odoo-colors, $size);
+                        background-color: nth($o-colors, $size);
                     }
                 } @else {
                     &, &::after {
-                        background-color: nth($odoo-colors, $size);
+                        background-color: nth($o-colors, $size);
                     }
                 }
             }
@@ -195,7 +195,7 @@
             }
 
             &.fa-star-o {
-                color: $odoo-main-color-muted;
+                color: $o-main-color-muted;
             }
             &.fa-star {
                 color: gold;
@@ -209,7 +209,7 @@
             font-size: 16px;
         }
         i.fa-star-o {
-            color: $odoo-main-color-muted;
+            color: $o-main-color-muted;
             &:hover {
                 color: gold;
             }
@@ -242,7 +242,7 @@
 
             > input {
                 @include o-flex(0, 0, auto);
-                margin: 0 $odoo-form-spacing-unit 0 0;
+                margin: 0 $o-form-spacing-unit 0 0;
             }
             > label {
                 margin: 0;
@@ -251,14 +251,14 @@
 
         &.o_horizontal {
             .o_radio_item {
-                margin-right: $odoo-form-spacing-unit * 2;
+                margin-right: $o-form-spacing-unit * 2;
             }
         }
 
         &.o_vertical {
             @include o-flex-flow(column, nowrap);
             .o_radio_item {
-                margin-bottom: $odoo-form-spacing-unit;
+                margin-bottom: $o-form-spacing-unit;
             }
         }
     }
@@ -274,7 +274,7 @@
             margin-right: 10px;
             border-radius: 100%;
             overflow: hidden;
-            background-color: $odoo-brand-optional;
+            background-color: $o-brand-optional;
 
             &:after { // Outside pie border to go over border-radius irregularities
                 content: " ";
@@ -289,7 +289,7 @@
                 @include o-transform-origin(0);
                 width: 50%;
                 height: 100%;
-                background-color: $odoo-view-background-color;
+                background-color: $o-view-background-color;
                 &.o_full {
                     background-color: inherit;
                 }
@@ -303,7 +303,7 @@
                 border-radius: 100%;
 
                 font-weight: 700;
-                color: $odoo-brand-primary;
+                color: $o-brand-primary;
             }
         }
     }
@@ -326,7 +326,7 @@
             width: 100%;
 
             color: white;
-            background-color: $odoo-brand-optional;
+            background-color: $o-brand-optional;
             opacity: 0;
             transition: opacity ease 400ms;
 
@@ -345,7 +345,7 @@
                     margin: 0px;
                     text-align: center;
                     &.o_select_file_button{
-                        background: $odoo-brand-optional;
+                        background: $o-brand-optional;
                     }
                     &.o_clear_file_button{
                         background: $brand-danger;

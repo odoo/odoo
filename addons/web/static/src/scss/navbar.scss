@@ -1,17 +1,17 @@
 
 .o_main_navbar {
     position: relative;
-    height: $odoo-navbar-height;
-    border-bottom: 1px solid $odoo-navbar-inverse-link-hover-bg;
-    background-color: $odoo-brand-primary;
+    height: $o-navbar-height;
+    border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
+    background-color: $o-brand-primary;
     color: white;
 
     > a, > button {
         float: left;
-        height: $odoo-navbar-height;
+        height: $o-navbar-height;
         border: none;
-        padding: 0 $odoo-horizontal-padding - 4px 0 $odoo-horizontal-padding;
-        line-height: $odoo-navbar-height;
+        padding: 0 $o-horizontal-padding - 4px 0 $o-horizontal-padding;
+        line-height: $o-navbar-height;
         background-color: transparent;
         text-align: center;
         color: inherit;
@@ -20,7 +20,7 @@
         @include user-select(none);
 
         &:hover, &:focus {
-            background-color: $odoo-navbar-inverse-link-hover-bg;
+            background-color: $o-navbar-inverse-link-hover-bg;
             color: inherit;
         }
         &:focus, &:active, &:focus:active {
@@ -36,12 +36,12 @@
         color: white;
         font-size: 22px;
         font-weight: 500;
-        line-height: $odoo-navbar-height;
+        line-height: $o-navbar-height;
 
         @media (max-width: $screen-xs-max) {
             float: none;
             margin: 0;
-            border-bottom: 1px solid $odoo-navbar-inverse-link-hover-bg;
+            border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
             color: transparent;
         }
     }
@@ -64,13 +64,13 @@
 
             > a {
                 display: block;
-                height: $odoo-navbar-height;
+                height: $o-navbar-height;
                 padding: 0 10px;
                 color: white;
-                line-height: $odoo-navbar-height;
+                line-height: $o-navbar-height;
 
                 &:hover {
-                    background-color: $odoo-navbar-inverse-link-hover-bg;
+                    background-color: $o-navbar-inverse-link-hover-bg;
                 }
 
                 &:focus, &:active, &:focus:active {
@@ -80,7 +80,7 @@
 
             &.o_extra_menu_items {
                 > a {
-                    width: $odoo-navbar-height;
+                    width: $o-navbar-height;
                     text-align: center;
                 }
                 &.open > ul {
@@ -88,12 +88,12 @@
 
                     > li {
                         > a {
-                            background-color: $odoo-brand-primary;
+                            background-color: $o-brand-primary;
                             color: white;
-                            border-bottom: 1px solid $odoo-brand-lightsecondary;
+                            border-bottom: 1px solid $o-brand-lightsecondary;
 
                             &.dropdown-toggle {
-                                background-color: lighten($odoo-brand-primary, 15%);
+                                background-color: lighten($o-brand-primary, 15%);
                                 pointer-events: none; // hack to prevent clicking on it because dropdown always opened
                             }
                         }
@@ -127,19 +127,19 @@
 
         @for $index from 3 through 5 {
             > li.o_menu_header_lvl_#{$index}, > li .o_menu_entry_lvl_#{$index} {
-                padding-left: $odoo-dropdown-hpadding + ($index - 2)*12px;
+                padding-left: $o-dropdown-hpadding + ($index - 2)*12px;
             }
         }
     }
 
     .open .dropdown-toggle {
-        background-color: $odoo-navbar-inverse-link-hover-bg;
+        background-color: $o-navbar-inverse-link-hover-bg;
     }
     .o_user_menu {
         margin-left: 6px;
 
         > a {
-            padding-right: $odoo-horizontal-padding;
+            padding-right: $o-horizontal-padding;
         }
 
         .oe_topbar_avatar {
@@ -152,7 +152,7 @@
         @include o-transition(height, 200ms, linear);
 
         position: relative;
-        height: $odoo-navbar-height;
+        height: $o-navbar-height;
         overflow: hidden;
 
         > ul {
@@ -186,15 +186,15 @@
             }
 
             &.o_menu_systray {
-                @include o-position-absolute(0px, $odoo-navbar-height, auto, $odoo-navbar-height);
-                height: $odoo-navbar-height;
+                @include o-position-absolute(0px, $o-navbar-height, auto, $o-navbar-height);
+                height: $o-navbar-height;
                 text-align: right;
 
                 > li {
                     display: inline-block;
 
                     &.open .dropdown-menu {
-                        @include o-position-absolute($odoo-navbar-height, 0, 0, 0);
+                        @include o-position-absolute($o-navbar-height, 0, 0, 0);
                         position: fixed;
                         width: auto;
                     }

@@ -18,7 +18,7 @@
 #web_editor-top-edit {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    height: $odoo-navbar-height;
+    height: $o-navbar-height;
     z-index: $zindex-modal - 9;
 
     background-color: rgba(0,0,0,0);
@@ -59,7 +59,7 @@
             }
 
             &.btn-primary {
-                @include button-variant(white, $odoo-brand-primary, $odoo-brand-primary);
+                @include button-variant(white, $o-brand-primary, $o-brand-primary);
             }
             &.btn-default {
                 @include button-variant(white, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
@@ -86,16 +86,13 @@
     padding: 4px;
 }
 html[lang] > body.editor_enable [data-oe-translation-state] {
-    $o-color-content-to-translate: rgb(255, 255, 90);
-    $o-color-translated-content: rgb(120, 215, 110);
-
-    background: rgba($o-color-content-to-translate, 0.5)!important;
+    background: rgba($o-we-content-to-translate-color, 0.5)!important;
 
     &[data-oe-translation-state="translated"] {
-        background: rgba($o-color-translated-content, 0.5)!important;
+        background: rgba($o-we-translated-content-color, 0.5)!important;
     }
     &.o_dirty {
-        background: rgba($o-color-translated-content, 0.25)!important;
+        background: rgba($o-we-translated-content-color, 0.25)!important;
     }
 }
 
@@ -118,8 +115,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
     #snippets_menu {
         @include o-flex(0, 0, auto);
-        height: $odoo-navbar-height;
-        line-height: $odoo-navbar-height;
+        height: $o-navbar-height;
+        line-height: $o-navbar-height;
         margin: 0;
         padding: 0;
         background: $o-we-color-dark;
@@ -254,28 +251,24 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 // DROPZONES
 @keyframes dropZoneInsert {
     to {
-        background-color: rgba($odoo-brand-primary, 0.2);
+        background-color: rgba($o-brand-primary, 0.2);
     }
 }
 #wrapwrap .oe_drop_zone {
-    background-color: rgba($odoo-brand-primary, 0.05);
+    background-color: rgba($o-brand-primary, 0.05);
     @include o-animation(dropZoneInsert, 1s, linear, 0s, infinite, alternate);
 
     &.oe_insert {
-        $odoo-dropzone-size: 40px;
-        $odoo-dropzone-border-width: 2px;
-        $odoo-dropzone-border: $odoo-dropzone-border-width dashed $odoo-brand-primary;
-
         z-index: 999;
 
-        border: $odoo-dropzone-border;
+        border: $o-we-dropzone-border;
         border-top: none;
         border-bottom: none;
 
         position: relative;
         width: 100%;
-        height: $odoo-dropzone-size;
-        margin: -$odoo-dropzone-size/2 0;
+        height: $o-we-dropzone-size;
+        margin: -$o-we-dropzone-size/2 0;
 
         @include o-transition(margin, 400ms, linear);
 
@@ -284,24 +277,24 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             display: block;
             width: 100%;
             height: 50%;
-            border-bottom: $odoo-dropzone-border;
+            border-bottom: $o-we-dropzone-border;
             box-sizing: content-box;
         }
 
         &.oe_vertical {
-            border: 2px dashed $odoo-brand-primary;
+            border: 2px dashed $o-brand-primary;
             border-left: none;
             border-right: none;
 
-            width: $odoo-dropzone-size;
+            width: $o-we-dropzone-size;
             float: left;
-            margin: 0 -$odoo-dropzone-size/2;
+            margin: 0 -$o-we-dropzone-size/2;
 
             &:after {
                 width: 50%;
                 height: 100%;
                 border-bottom: none;
-                border-right: $odoo-dropzone-border;
+                border-right: $o-we-dropzone-border;
             }
         }
     }
@@ -309,9 +302,6 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
 // MANIPULATORS
 #oe_manipulators {
-    $odoo-handle-edge-size: 1px;
-    $odoo-handle-border-width: 1px;
-
     position: relative;
 
     // SNIPPET MANIPULATORS
@@ -341,14 +331,12 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 white-space: nowrap;
 
                 .btn {
-                    $o-overlay-option-size: 25px;
-
                     display: inline-block;
-                    width: $o-overlay-option-size;
-                    height: $o-overlay-option-size;
+                    width: $o-we-overlay-option-size;
+                    height: $o-we-overlay-option-size;
                     padding: 0;
                     border: 1px solid $o-we-color-dark;
-                    line-height: $o-overlay-option-size;
+                    line-height: $o-we-overlay-option-size;
                     font-size: 11px;
                     border-radius: 0;
                     font-weight: normal;
@@ -485,7 +473,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                                     @include o-position-absolute($top: 5px, $left: 5px);
                                     content: "\f00c";
                                     font-family: "FontAwesome";
-                                    color: $odoo-brand-optional;
+                                    color: $o-brand-optional;
                                 }
                             }
                             &.dropdown-header {
@@ -544,29 +532,26 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
         &.o_top_cover > .oe_overlay_options {
             bottom: auto;
-            top: $odoo-handle-border-width;
-            right: $odoo-handle-border-width;
+            top: $o-we-handle-border-width;
+            right: $o-we-handle-border-width;
         }
 
         // HANDLES
         > .o_handles {
-            $o-handles-offset-to-hide: 10000px;
-            $o-handless-accent-color: #00e2ff;
-            @include o-position-absolute(-$o-handles-offset-to-hide, 0, auto, 0);
+            @include o-position-absolute(-$o-we-handles-offset-to-hide, 0, auto, 0);
 
             &:hover > .o_handle {
-                background-color: rgba($o-handless-accent-color, 0.05);
+                background-color: rgba($o-we-handles-accent-color, 0.05);
             }
 
             > .o_handle {
-                $o-handle-btn-size: 18px;
 
                 position: relative;
-                border: 0 solid $o-handless-accent-color;
+                border: 0 solid $o-we-handles-accent-color;
                 @include o-transition(background, 300ms);
 
                 &:hover, &.o_active {
-                    background-color: rgba($o-handless-accent-color, 0.2);
+                    background-color: rgba($o-we-handles-accent-color, 0.2);
 
                     &:before {
                         content: '';
@@ -574,7 +559,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                         width: 1px;
                         height: 100%;
                         margin-left: -1px;
-                        background-color: rgba($o-handless-accent-color, 0.5);
+                        background-color: rgba($o-we-handles-accent-color, 0.5);
                     }
 
                     &.w:before {
@@ -584,20 +569,20 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
 
                     &:after {
-                        border-color: darken($o-handless-accent-color, 10%);
-                        background-color: darken($o-handless-accent-color, 20%);
+                        border-color: darken($o-we-handles-accent-color, 10%);
+                        background-color: darken($o-we-handles-accent-color, 20%);
                     }
                 }
 
                 &:after {
                     display: block;
-                    width: $o-handle-btn-size;
-                    height: $o-handle-btn-size;
-                    border: solid 1px darken($o-handless-accent-color, 10%);
-                    line-height: $o-handle-btn-size - 2;
+                    width: $o-we-handles-btn-size;
+                    height: $o-we-handles-btn-size;
+                    border: solid 1px darken($o-we-handles-accent-color, 10%);
+                    line-height: $o-we-handles-btn-size - 2;
                     font-size: 14px;
                     font-family: FontAwesome;
-                    background-color: darken($o-handless-accent-color, 20%);
+                    background-color: darken($o-we-handles-accent-color, 20%);
                     color: white;
                 }
                 &.w:after, &.e:after {
@@ -625,46 +610,46 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 }
 
                 &.w {
-                    @include o-position-absolute($o-handles-offset-to-hide, auto, -$o-handles-offset-to-hide, 0);
-                    width: $odoo-handle-edge-size;
-                    border-width: $odoo-handle-border-width;
+                    @include o-position-absolute($o-we-handles-offset-to-hide, auto, -$o-we-handles-offset-to-hide, 0);
+                    width: $o-we-handle-edge-size;
+                    border-width: $o-we-handle-border-width;
                     border-right-width: 0;
                     cursor: e-resize;
 
                     &:after {
                         @include o-position-absolute($top: 50%, $left: 40%);
-                        margin-top: -$o-handle-btn-size/2;
+                        margin-top: -$o-we-handles-btn-size/2;
                     }
                 }
                 &.e {
-                    @include o-position-absolute($o-handles-offset-to-hide, 0, -$o-handles-offset-to-hide, auto);
-                    width: $odoo-handle-edge-size;
-                    border-right-width: $odoo-handle-border-width;
+                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, -$o-we-handles-offset-to-hide, auto);
+                    width: $o-we-handle-edge-size;
+                    border-right-width: $o-we-handle-border-width;
                     cursor: w-resize;
 
                     &:after {
                         @include o-position-absolute($top: 50%, $right: 40%);
-                        margin-top: -$o-handle-btn-size/2;
+                        margin-top: -$o-we-handles-btn-size/2;
                     }
                 }
                 &.n {
-                    @include o-position-absolute($o-handles-offset-to-hide, 0, auto, 0);
-                    border-top-width: $odoo-handle-border-width;
+                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, auto, 0);
+                    border-top-width: $o-we-handle-border-width;
                     cursor: ns-resize;
 
                     &:after {
                         @include o-position-absolute($left: 50%, $top: 40%);
-                        margin-left: -$o-handle-btn-size/2;
+                        margin-left: -$o-we-handles-btn-size/2;
                     }
                 }
                 &.s {
-                    @include o-position-absolute(auto, 0, -$o-handles-offset-to-hide, 0);
-                    border-bottom-width: $odoo-handle-border-width;
+                    @include o-position-absolute(auto, 0, -$o-we-handles-offset-to-hide, 0);
+                    border-bottom-width: $o-we-handle-border-width;
                     cursor: ns-resize;
 
                     &:after {
                         @include o-position-absolute($left: 50%, $bottom: 40%);
-                        margin-left: -$o-handle-btn-size/2;
+                        margin-left: -$o-we-handles-btn-size/2;
                     }
                 }
 
@@ -701,7 +686,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
 // NOTE EDITOR
 .note-popover .popover {
-    height: $odoo-navbar-height;
+    height: $o-navbar-height;
     top: 0 !important;
     left: 0 !important;
     padding: 0;
@@ -714,7 +699,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     box-shadow: none;
 
     .popover-content {
-        height: $odoo-navbar-height;
+        height: $o-navbar-height;
         white-space: nowrap;
         font-family: $o-we-font-family;
 
@@ -723,7 +708,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
 
         .btn {
-            height: $odoo-navbar-height;
+            height: $o-navbar-height;
             border: none;
             border-radius: 0;
             padding: $padding-base-vertical $padding-base-horizontal; // force this because of themes
@@ -1035,7 +1020,7 @@ table.colorpicker {
 
 // ENTER IN EDIT MODE
 body.editor_enable {
-    padding-top: $odoo-navbar-height!important;
+    padding-top: $o-navbar-height!important;
 
     #web_editor-top-edit {
         background-color: $o-we-color-dark;
@@ -1055,7 +1040,7 @@ body.editor_enable {
 }
 
 #web_editor_inside_iframe {
-    background-color: $odoo-brand-secondary;
+    background-color: $o-brand-secondary;
 
     #wrapwrap {
         position: relative;
@@ -1106,14 +1091,11 @@ body.editor_enable {
     }
 }
 @keyframes inputHighlighter {
-    from { background: $odoo-brand-optional; }
+    from { background: $o-brand-optional; }
     to   { width: 0; background: transparent; }
 }
 
 // INPUTS
-$o-switch-size: 2ex;
-$o-switch-inactive-color: $gray-lighter;
-
 .o_switch {
     @include o-flex-display;
     @include o-align-items(center);
@@ -1124,11 +1106,11 @@ $o-switch-inactive-color: $gray-lighter;
         display: none;
 
         + span {
-            background-color: $o-switch-inactive-color;
-            box-shadow: inset 0 0 0px 1px darken($o-switch-inactive-color,10%);
+            background-color: $o-we-switch-inactive-color;
+            box-shadow: inset 0 0 0px 1px darken($o-we-switch-inactive-color,10%);
             border-radius: 100rem;
-            height: $o-switch-size;
-            width: $o-switch-size * 1.8;
+            height: $o-we-switch-size;
+            width: $o-we-switch-size * 1.8;
             margin-right: 0.5em;
             display: inline-block;
             @include transition(all 0.3s $o-we-md-ease);
@@ -1137,13 +1119,13 @@ $o-switch-inactive-color: $gray-lighter;
                 content: "";
                 background: $o-we-color-paper;
                 display: block;
-                width: $o-switch-size - 0.2;
-                height: $o-switch-size - 0.2;
+                width: $o-we-switch-size - 0.2;
+                height: $o-we-switch-size - 0.2;
                 margin-top: 0.1ex;
                 margin-left: 0.1ex;
                 border-radius: 100rem;
                 @include transition(all 0.3s $o-we-md-ease);
-                box-shadow: 0 1px 1px darken($o-switch-inactive-color,35%), inset 0 0 0 1px lighten($o-switch-inactive-color,10%);
+                box-shadow: 0 1px 1px darken($o-we-switch-inactive-color,35%), inset 0 0 0 1px lighten($o-we-switch-inactive-color,10%);
             }
         }
 
@@ -1152,7 +1134,7 @@ $o-switch-inactive-color: $gray-lighter;
             @include o-linear-gradient(0deg, $o-we-color-success, darken($o-we-color-success, 10%));
 
             &:after {
-                margin-left: ($o-switch-size*1.8 - $o-switch-size) + 0.1;
+                margin-left: ($o-we-switch-size*1.8 - $o-we-switch-size) + 0.1;
             }
         }
     }
@@ -1248,8 +1230,7 @@ $o-switch-inactive-color: $gray-lighter;
 
 // ACE EDITOR
 .o_ace_view_editor {
-    $o-ace-color: #2F3129;
-    background: $o-ace-color;
+    background: $o-we-ace-color;
     color: white;
     @include o-flex-display;
     @include o-flex-flow(column, nowrap);
@@ -1289,7 +1270,7 @@ $o-switch-inactive-color: $gray-lighter;
     #ace-view-id {
         @include o-flex(0, 0, auto);
         padding: $grid-gutter-width/4 $grid-gutter-width/2;
-        background-color: lighten($o-ace-color, 10%);
+        background-color: lighten($o-we-ace-color, 10%);
     }
     #ace-view-editor {
         @mixin ace-line-error-mixin {
@@ -1383,10 +1364,10 @@ body .modal {
             }
 
             .o_existing_attachment_cell {
-                $odoo-border-image: 2px;
+                $o-border-image: 2px;
 
                 .o_existing_attachment_remove {
-                    @include o-position-absolute($odoo-border-image, 15px + $odoo-border-image);
+                    @include o-position-absolute($o-border-image, 15px + $o-border-image);
                     padding: 3px 5px 5px 5px;
                     background-color: rgba(white, 0.8);
                     text-shadow: 0 0 1px white;
@@ -1400,7 +1381,7 @@ body .modal {
                     }
                 }
                 .o_image {
-                    border: $odoo-border-image solid transparent;
+                    border: $o-border-image solid transparent;
                     cursor: pointer;
                     @include o-transition(opacity, 400ms);
 
@@ -1415,8 +1396,8 @@ body .modal {
                     }
                 }
                 &.o_selected .o_image {
-                    border-color: $odoo-brand-primary;
-                    box-shadow: 0px 0px 2px 2px $odoo-brand-secondary;
+                    border-color: $o-brand-primary;
+                    box-shadow: 0px 0px 2px 2px $o-brand-secondary;
                 }
                 &:hover .o_existing_attachment_remove {
                     opacity: 1;
@@ -1606,7 +1587,7 @@ body .modal {
                 display: block;
                 width: 100%;
                 height: 1px;
-                background: fadeOut(lighten($odoo-brand-optional, 30%), 50%);
+                background: fadeOut(lighten($o-brand-optional, 30%), 50%);
                 pointer-events: none;
                 &.grid-2 {
                     top: 66.66%

@@ -1,15 +1,15 @@
 .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
     // cancel padding of form_sheet
-    margin-top: -$odoo-sheet-cancel-tpadding;
-    margin-left: -$odoo-sheet-cancel-hpadding;
-    margin-right: -$odoo-sheet-cancel-hpadding;
-    margin-bottom: -$odoo-sheet-cancel-bpadding;
+    margin-top: -$o-sheet-cancel-tpadding;
+    margin-left: -$o-sheet-cancel-hpadding;
+    margin-right: -$o-sheet-cancel-hpadding;
+    margin-bottom: -$o-sheet-cancel-bpadding;
 }
 
 .o_mail_theme_selector {
     > a {
         @include o-position-absolute(0, 0, auto, 0);
-        height: $odoo-navbar-height;
+        height: $o-navbar-height;
         line-height: 31px;
         border-radius: 0;
         background-color: $o-we-color-darker;
@@ -33,7 +33,7 @@
     }
 
     .dropdown-menu {
-        @include o-position-absolute($odoo-navbar-height - 1, -1px, -1px, -1px);
+        @include o-position-absolute($o-navbar-height - 1, -1px, -1px, -1px);
         margin: 0;
         border-radius: 0;
         overflow: auto;
@@ -67,7 +67,7 @@
             }
 
             &.selected > a .o_thumb {
-                border: 2px solid $odoo-brand-primary;
+                border: 2px solid $o-brand-primary;
                 background-color: $o-we-color-dark;
             }
         }

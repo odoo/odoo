@@ -372,7 +372,7 @@
         }
 
         &.o_kanban_dragged {
-            background-color: $odoo-main-text-color;
+            background-color: $o-main-text-color;
 
             .o_kanban_record {
                 visibility: hidden;
@@ -431,7 +431,7 @@
             .o_kanban_add_column {
                 display: inline-block;
                 padding: 10px 14px;
-                background-color: $odoo-color-silver-dark;
+                background-color: $o-color-silver-dark;
             }
             .o_kanban_title {
                 margin-left: 10px;
@@ -478,7 +478,7 @@
         @include o-flex-flow(row, wrap);
         @include o-justify-content(flex-start);
 
-        padding: $o-kanban-record-margin ($odoo-horizontal-padding - $o-kanban-record-margin);
+        padding: $o-kanban-record-margin ($o-horizontal-padding - $o-kanban-record-margin);
 
         .o_kanban_record {
             @include o-flex(1, 1, auto);

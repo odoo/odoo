@@ -91,19 +91,19 @@
             font-size: small;
 
             .o_partner {
-                $partner-avatar-size: 24px;
                 position: relative; // required for old design compatibility
+
                 > a {
                     max-width: 160px;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
-                    height: $partner-avatar-size;
-                    padding: 3px $partner-avatar-size + 8px;
+                    height: $o-mail-partner-avatar-size;
+                    padding: 3px $o-mail-partner-avatar-size + 8px;
                 }
                 > img {
                     @include o-position-absolute;
-                    width: $partner-avatar-size;
+                    width: $o-mail-partner-avatar-size;
                 }
                 .o_remove_follower {
                     @include o-position-absolute(6px, 5px);

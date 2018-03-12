@@ -1,5 +1,5 @@
 %dropdown-li-a-padding {
-    padding: 3px $odoo-dropdown-hpadding;
+    padding: 3px $o-dropdown-hpadding;
 }
 
 .ui-autocomplete { // Copy style of bootstrap dropdown
@@ -21,7 +21,7 @@
 
         &.ui-state-focus {
             background-image: none;
-            background-color: $odoo-brand-primary;
+            background-color: $o-brand-primary;
             border: none;
             font-weight: normal;
             margin: 0;
@@ -29,7 +29,7 @@
         &.o_m2o_dropdown_option {
             padding-left: 20px;
             > a {
-                color: $odoo-brand-primary;
+                color: $o-brand-primary;
             }
         }
     }
@@ -64,7 +64,7 @@
 
         &.dropdown-header {
             @extend %dropdown-li-a-padding;
-            color: $odoo-main-text-color;
+            color: $o-main-text-color;
 
             @media (max-width: $screen-xs-max) {
                 color: white;

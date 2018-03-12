@@ -1,20 +1,18 @@
-$nb-calendar-colors: 24;
-
 @keyframes backgroundfade {
-    from {background-color: rgba($odoo-brand-primary, 0.5);}
+    from {background-color: rgba($o-brand-primary, 0.5);}
     to {background-color: #f5f5f5;}
 }
 
 .o_calendar_container {
     height: 100%;
-    @include o-webclient-padding($top: $odoo-horizontal-padding/2, $bottom: $odoo-horizontal-padding/2);
+    @include o-webclient-padding($top: $o-horizontal-padding/2, $bottom: $o-horizontal-padding/2);
     @include o-flex-display;
 
-    @for $index from 1 through $nb-calendar-colors {
+    @for $index from 1 through $o-nb-calendar-colors {
         .o_calendar_color_#{$index} {
             color: #0D0D0D;
-            background-color: adjust-hue(rgb(255, 192, 192), (360/($nb-calendar-colors+1) * $index) * 1deg);
-            border-color:  adjust-hue(rgb(255, 192, 192), (360/($nb-calendar-colors+1) * $index) * 1deg);
+            background-color: adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-color:  adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
             opacity: 0.7;
             &.o_event_hightlight {
                 font-weight: bold;
@@ -25,7 +23,7 @@ $nb-calendar-colors: 24;
             }
         }
         .o_underline_color_#{$index} {
-            border-bottom: 4px solid adjust-hue(rgba(255, 192, 192, 0.7), (360/($nb-calendar-colors+1) * $index) * 1deg);
+            border-bottom: 4px solid adjust-hue(rgba(255, 192, 192, 0.7), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
         }
     }
 
@@ -35,12 +33,12 @@ $nb-calendar-colors: 24;
 
         .o_calendar_widget {
             height: 100%;
-            background-color: $odoo-view-background-color;
+            background-color: $o-view-background-color;
             * {
                 z-index: 0; // FIXME
             }
             .fc-week-number, .fc-widget-header {
-                background-color: lighten($odoo-brand-secondary, 30%);
+                background-color: lighten($o-brand-secondary, 30%);
             }
             .o_avatar_square {
                 border-radius: 5px;
@@ -64,14 +62,14 @@ $nb-calendar-colors: 24;
     }
 
     .o_calendar_sidebar_container {
-        @include o-flex(0, 0, $odoo-horizontal-padding);
+        @include o-flex(0, 0, $o-horizontal-padding);
         position: relative;
 
         &.o_sidebar_hidden {
-            margin-right: -$odoo-horizontal-padding; // hack to display the toggler in the gutter
+            margin-right: -$o-horizontal-padding; // hack to display the toggler in the gutter
             .o_calendar_sidebar_toggler {
                 padding: 4px;
-                color: darken($odoo-webclient-background-color, 30%);
+                color: darken($o-webclient-background-color, 30%);
             }
         }
 
@@ -88,7 +86,7 @@ $nb-calendar-colors: 24;
         .o_calendar_sidebar {
             width: 250px;
             margin-left: 8px;
-            background: $odoo-view-background-color;
+            background: $o-view-background-color;
         }
 
         .ui-datepicker {
@@ -101,7 +99,7 @@ $nb-calendar-colors: 24;
             .ui-widget-header {
                 @include o-flex-display;
                 background: none;
-                background-color: lighten($odoo-brand-secondary, 30%);
+                background-color: lighten($o-brand-secondary, 30%);
                 border-radius: 0;
 
                 .ui-datepicker-prev, .ui-datepicker-next {
@@ -110,7 +108,7 @@ $nb-calendar-colors: 24;
                     cursor: pointer;
                     padding: 2px;
                     text-align: center;
-                    color: $odoo-main-text-color;
+                    color: $o-main-text-color;
                     &.ui-state-hover {
                         background: none;
                         border: none;
@@ -144,31 +142,31 @@ $nb-calendar-colors: 24;
             table {
                 td {
                     padding: 0 2px 2px 0;
-                    background-color: $odoo-view-background-color;
+                    background-color: $o-view-background-color;
                     a {
                         border: none;
                         background: none;
-                        background-color: lighten($odoo-brand-secondary, 40%);
+                        background-color: lighten($o-brand-secondary, 40%);
                         text-align: center;
                     }
                 }
                 .ui-state-default {
-                    color: $odoo-brand-primary;
+                    color: $o-brand-primary;
                     &:hover {
                         background: none;
-                        background-color: rgba($odoo-brand-primary, 0.5);
-                        border-color: $odoo-brand-primary;
-                        color: $odoo-view-background-color;
+                        background-color: rgba($o-brand-primary, 0.5);
+                        border-color: $o-brand-primary;
+                        color: $o-view-background-color;
                     };
                 }
                 .ui-state-active {
                     background: none;
-                    background-color: $odoo-brand-primary;
-                    color: $odoo-view-background-color;
+                    background-color: $o-brand-primary;
+                    color: $o-view-background-color;
                 }
                 .o_selected_range.o_color {
                     background: none;
-                    background-color: $odoo-brand-primary;
+                    background-color: $o-brand-primary;
                     animation: backgroundfade 3s forwards;
                 }
             }

@@ -1,11 +1,3 @@
-$actionColWidth: 15px;
-$mainTableBordersPadding: 3px;
-$lightBorder: 1px solid #bbb;
-$accountingBorder: 1px solid #000;
-$initialLineBackground: #f0f0f0;
-$infoColor: #44c;
-
-
 .o_reconciliation {
     h1 {
         width: 48%;
@@ -18,7 +10,7 @@ $infoColor: #44c;
         &.statement_name {
             @include o-text-overflow;
             &.editable:hover {
-                outline: 1px dashed $odoo-brand-optional;
+                outline: 1px dashed $o-brand-optional;
                 outline-offset: -1px;
                 cursor: pointer;
             }
@@ -51,7 +43,7 @@ $infoColor: #44c;
     .o_view_noreconciliation {
         max-width: none;
         padding: 0 10%;
-        color: $odoo-main-color-muted;
+        color: $o-main-color-muted;
         font-size: 125%;
     }
 
@@ -110,16 +102,16 @@ $infoColor: #44c;
             cursor: pointer;
         }
         tr.already_reconciled {
-            color: $infoColor;
+            color: $o-account-info-color;
         }
         tr.invalid {
             text-decoration: line-through;
         }
         thead td {
-            border-top: $lightBorder;
+            border-top: $o-account-light-border;
             padding-top: 4px;
             padding-bottom: 5px;
-            background-color: $initialLineBackground;
+            background-color: $o-account-initial-line-background;
         }
         tfoot td {
             color: #bbb;
@@ -182,7 +174,7 @@ $infoColor: #44c;
             td {
                 padding-top: 10px;
                 text-align: center;
-                color: $infoColor;
+                color: $o-account-info-color;
             }
         }
 
@@ -231,7 +223,7 @@ $infoColor: #44c;
             content: "\f067";
         }
         .match_controls {
-            padding: 0 0 5px ($actionColWidth+$mainTableBordersPadding);
+            padding: 0 0 5px ($o-account-action-col-width+$o-account-main-table-borders-padding);
 
             .filter {
                 width: 240px;
@@ -254,7 +246,7 @@ $infoColor: #44c;
         }
         .show_more {
             display: inline-block;
-            margin-left: ($actionColWidth+$mainTableBordersPadding);
+            margin-left: ($o-account-action-col-width+$o-account-main-table-borders-padding);
             margin-top: 5px;
         }
     }
@@ -262,7 +254,7 @@ $infoColor: #44c;
     /* Create view */
     .create {
         > div {
-            margin: 0 $actionColWidth;
+            margin: 0 $o-account-action-col-width;
             padding: 10px;
             overflow: auto;
             border: 1px solid #ddd;
@@ -294,7 +286,7 @@ $infoColor: #44c;
         .add_line_container {
             text-align: center;
             clear: both;
-            color: $infoColor;
+            color: $o-account-info-color;
             cursor: pointer;
         }
     }

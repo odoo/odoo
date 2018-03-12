@@ -25,30 +25,30 @@
 
     .o_thread_new_messages_separator {
         margin-bottom: 15px;
-        border-bottom: solid lighten($odoo-brand-primary, 15%) 1px;
+        border-bottom: solid lighten($o-brand-primary, 15%) 1px;
         text-align: right;
         .o_thread_separator_label {
             position: relative;
             top: 8px;
             padding: 0 10px;
             background: white;
-            color: lighten($odoo-brand-primary, 15%);
+            color: lighten($o-brand-primary, 15%);
             font-size: smaller;
         }
     }
 
     .o_thread_message {
         @include o-flex-display;
-        padding: 4px $odoo-horizontal-padding;
+        padding: 4px $o-horizontal-padding;
         margin-bottom: 0px;
 
         &.o_mail_not_discussion {
-            background-color: $mail-thread-note;
+            background-color: rgba($gray-lighter-dark, 0.5);
             border-bottom: 1px solid $gray-lighter-darker;
         }
 
         .o_thread_message_sidebar {
-            @include o-flex(0, 0, $mail-thread-avatar-size);
+            @include o-flex(0, 0, $o-mail-thread-avatar-size);
             margin-right: 10px;
             margin-top: 2px;
             text-align: center;
@@ -60,7 +60,7 @@
             }
 
             .o_thread_message_avatar {
-                max-width: $mail-thread-avatar-size;
+                max-width: $o-mail-thread-avatar-size;
             }
             .o_thread_message_side_date {
                 margin-left: -5px;
@@ -77,17 +77,17 @@
             cursor: pointer;
             opacity: 0;
             &.fa-star {
-                opacity: $mail-thread-icon-opacity;
+                opacity: $o-mail-thread-icon-opacity;
                 color: gold;
             }
         }
 
         &:hover, &.o_thread_selected_message {
             .o_thread_message_side_date {
-                opacity: $mail-thread-side-date-opacity;
+                opacity: $o-mail-thread-side-date-opacity;
             }
             .o_thread_icon {
-                opacity: $mail-thread-icon-opacity;
+                opacity: $o-mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
                 }
@@ -222,6 +222,6 @@
 
 .o_web_client.o_touch_device {
     .o_mail_thread .o_thread_icon {
-        opacity: $mail-thread-icon-opacity;
+        opacity: $o-mail-thread-icon-opacity;
     }
 }

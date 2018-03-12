@@ -1,6 +1,6 @@
-$o-theme-kanban-gray: #fcfcfc;
 
 .o_kanban_view.o_theme_kanban {
+    $o-theme-kanban-gray: #fcfcfc;
     background-color: $o-theme-kanban-gray;
 
     /// Un-grouped Layout (default)
@@ -9,8 +9,8 @@ $o-theme-kanban-gray: #fcfcfc;
         margin: 0 0 0 ($o-kanban-record-margin - 2 * $grid-gutter-width);
 
         @media (max-width: $screen-xs-max) {
-            padding-left: $odoo-horizontal-padding - $o-kanban-record-margin;
-            padding-right: $odoo-horizontal-padding;
+            padding-left: $o-horizontal-padding - $o-kanban-record-margin;
+            padding-right: $o-horizontal-padding;
         }
 
         .o_kanban_record {
@@ -35,7 +35,7 @@ $o-theme-kanban-gray: #fcfcfc;
         }
 
         &.o_theme_installed .o_theme_preview_top {
-            border-color: $odoo-brand-optional;
+            border-color: $o-brand-optional;
 
             > .fa-check-circle {
                 @include o-position-absolute(10px, 10px);

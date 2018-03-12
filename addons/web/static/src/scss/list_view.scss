@@ -1,9 +1,8 @@
-$odoo-list-group-header-color: lighten($odoo-brand-lightsecondary, 10%);
 
 .o_list_view {
     position: relative;
     cursor: pointer;
-    background-color: $odoo-view-background-color;
+    background-color: $o-view-background-color;
     margin-bottom: 0px;
 
     &.table {
@@ -13,7 +12,7 @@ $odoo-list-group-header-color: lighten($odoo-brand-lightsecondary, 10%);
     }
 
     thead {
-        color: $odoo-main-text-color;
+        color: $o-main-text-color;
         border-bottom: 1px solid #cacaca;
         > tr > th {
             border-left: 1px solid #dfdfdf;
@@ -25,9 +24,9 @@ $odoo-list-group-header-color: lighten($odoo-brand-lightsecondary, 10%);
 
     tfoot {
         cursor: default;
-        color: $odoo-list-footer-color;
-        background-color: $odoo-list-footer-bg-color;
-        font-weight: $odoo-list-footer-font-weight;
+        color: $o-list-footer-color;
+        background-color: $o-list-footer-bg-color;
+        font-weight: $o-list-footer-font-weight;
         border-top: 2px solid #cacaca;
         border-bottom: 1px solid #cacaca;
     }
@@ -105,9 +104,9 @@ $odoo-list-group-header-color: lighten($odoo-brand-lightsecondary, 10%);
             padding-top: 0;
             padding-bottom: 0;
             .o_pager_previous, .o_pager_next {
-                background-color: $odoo-list-group-header-color;
+                background-color: $o-list-group-header-color;
                 &:hover {
-                    background-color: darken($odoo-list-group-header-color, 10%);
+                    background-color: darken($o-list-group-header-color, 10%);
                 }
             }
         }
@@ -118,11 +117,11 @@ $odoo-list-group-header-color: lighten($odoo-brand-lightsecondary, 10%);
 
     tbody {
         tr:focus-within {
-            background-color: $odoo-form-lightsecondary;
+            background-color: $o-form-lightsecondary;
         }
         tr{
             .focussed {
-                background-color: $odoo-form-lightsecondary;
+                background-color: $o-form-lightsecondary;
             }
         }
     }

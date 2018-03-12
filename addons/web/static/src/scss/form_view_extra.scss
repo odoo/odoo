@@ -1,8 +1,8 @@
-$sheet-max-width: 860px;
-$sheet-min-width: 650px;
-$sheet-padding: 16px;
-
 .o_form_view {
+    $sheet-max-width: 860px;
+    $sheet-min-width: 650px;
+    $sheet-padding: 16px;
+
     &.o_form_nosheet.oe_form_nomargin {
         margin: 0;
     }
@@ -75,7 +75,7 @@ $sheet-padding: 16px;
                 .o_stat_value {
                     @include o-text-overflow(block);
                     font-weight: 700;
-                    color: $odoo-brand-primary;
+                    color: $o-brand-primary;
                 }
                 .o_stat_text {
                     @include o-text-overflow(block);
@@ -144,7 +144,7 @@ $sheet-padding: 16px;
 
     // Separators
     .o_horizontal_separator {
-        color: $odoo-brand-optional;
+        color: $o-brand-optional;
         font-weight: bold;
     }
 
