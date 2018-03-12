@@ -26,7 +26,7 @@ class MembershipInvoice(models.TransientModel):
                 'membership_product_id': self.product_id.id,
                 'amount': self.member_price
             }
-        invoice_list = self.env['res.partner'].browse(self._context.get('active_ids')).create_membership_invoice(datas=datas)
+        invoice_list = self.env['res.partner'].get_active_records().create_membership_invoice(datas=datas)
 
         search_view_ref = self.env.ref('account.view_account_invoice_filter', False)
         form_view_ref = self.env.ref('account.invoice_form', False)
