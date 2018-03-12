@@ -1,42 +1,40 @@
-// lessc@1.4.2
-
 // ============================
 // Mass Mailing "Theme Default"
 // ============================
 
 // ===== Default Theme palette =====
-@o_mm_def_color_alpha: #f5f5f5;
-@o_mm_def_color_beta: #ffffff;
-@o_mm_def_color_gamma: #706482;
-@o_mm_def_color_delta: #464646;
-@o_mm_def_color_epsilon: darken(@o_mm_def_color_gamma, 5%);
-@o_mm_def_color_zeta: #706482;
-@o_mm_def_color_eta: #87a6b5;
+$o-mm-def-color-alpha: #f5f5f5;
+$o-mm-def-color-beta: #ffffff;
+$o-mm-def-color-gamma: #706482;
+$o-mm-def-color-delta: #464646;
+$o-mm-def-color-epsilon: darken($o-mm-def-color-gamma, 5%);
+$o-mm-def-color-zeta: #706482;
+$o-mm-def-color-eta: #87a6b5;
 
 // ===== Default Theme variables =====
-@o_mm_def_body_width    : 600px;
-@o_mm_def_body_bobile   : 480px;
-@o_mm_def_b_radius      : 2px;
+$o-mm-def-body-width    : 600px;
+$o-mm-def-body-bobile   : 480px;
+$o-mm-def-b-radius      : 2px;
 
-@o_mm_def_font          : -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-@o_mm_def_text_color    : @o_mm_def_color_delta;
+$o-mm-def-font          : -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+$o-mm-def-text-color    : $o-mm-def-color-delta;
 
-@o_mm_def_btn_bg        : @o_mm_def_color_gamma;
-@o_mm_def_btn_text      : @o_mm_def_color_beta;
+$o-mm-def-btn-bg        : $o-mm-def-color-gamma;
+$o-mm-def-btn-text      : $o-mm-def-color-beta;
 
 // ===== Colors =====
 .bg-beta {
-    background-color: @o_mm_def_color_zeta;
-    color:  @o_mm_def_color_beta;
+    background-color: $o-mm-def-color-zeta;
+    color:  $o-mm-def-color-beta;
 }
 .text-beta {
-    color: @o_mm_def_color_zeta;
+    color: $o-mm-def-color-zeta;
 }
 .bg-delta {
-    background-color: @o_mm_def_color_eta;
+    background-color: $o-mm-def-color-eta;
 }
 .bg-gray-lighter {
-    background-color: @o_mm_def_color_alpha;
+    background-color: $o-mm-def-color-alpha;
 }
 
 td {
@@ -51,7 +49,7 @@ td {
     box-sizing: content-box;
     width: 94%;
     min-height: 100%;
-    background-color: @o_mm_def_color_alpha;
+    background-color: $o-mm-def-color-alpha;
     padding: 0 3%;
 
     // Forces on <p/> and <hx/> elements as several mail clients does not
@@ -60,8 +58,8 @@ td {
         font-size: 14px; // force bootstrap default
     }
     &, p, h1, h2, h3, h4, h5, h6 {
-        font-family: @o_mm_def_font;
-        color: lighten(@o_mm_def_text_color, 20%);
+        font-family: $o-mm-def-font;
+        color: lighten($o-mm-def-text-color, 20%);
     }
 
     > .o_mail_wrapper {
@@ -71,9 +69,9 @@ td {
                                    // same width
 
         .o_mail_wrapper_td {
-            width: @o_mm_def_body_width;
-            border: 1px solid darken(@o_mm_def_color_alpha, 2%);
-            background-color: @o_mm_def_color_beta;
+            width: $o-mm-def-body-width;
+            border: 1px solid darken($o-mm-def-color-alpha, 2%);
+            background-color: $o-mm-def-color-beta;
         }
     }
 }
@@ -81,27 +79,27 @@ td {
 // ===== Snippets (general) =====
 .o_mail_snippet_general {
     width: 100%;
-    max-width: @o_mm_def_body_width; // should not be necessary thanks to mail wrapper
+    max-width: $o-mm-def-body-width; // should not be necessary thanks to mail wrapper
     margin: 0 auto;
 
     h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-        color: @o_mm_def_text_color;
+        color: $o-mm-def-text-color;
     }
 
     .btn.btn-primary {
         -webkit-user-select: none;
-        color: @o_mm_def_btn_text;
+        color: $o-mm-def-btn-text;
         border: none;
         text-decoration: none;
         font-weight: normal;
-        font-family: @o_mm_def_font;
+        font-family: $o-mm-def-font;
         cursor: pointer;
-        border-radius: @o_mm_def_b_radius;
-        background-color: @o_mm_def_btn_bg;
+        border-radius: $o-mm-def-b-radius;
+        background-color: $o-mm-def-btn-bg;
     }
 
     a, .btn.btn-link {
-        color: @o_mm_def_color_epsilon;
+        color: $o-mm-def-color-epsilon;
         font-weight: bold;
         text-decoration: none !important;
 
@@ -118,20 +116,20 @@ td {
 
     .separator {
         height: 2px;
-        background-color: @o_mm_def_color_alpha;
+        background-color: $o-mm-def-color-alpha;
     }
 
     .bg-beta {
         h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-            color: @o_mm_def_color_beta;
+            color: $o-mm-def-color-beta;
         }
 
         .btn.btn-primary {
-            background-color: @o_mm_def_color_eta;
+            background-color: $o-mm-def-color-eta;
         }
 
         a, .btn.btn-link {
-            color: @o_mm_def_color_eta;
+            color: $o-mm-def-color-eta;
         }
     }
 
@@ -165,7 +163,7 @@ td {
 }
 
 .o_mail_block_steps {
-    background-color: @o_mm_def_color_alpha;
+    background-color: $o-mm-def-color-alpha;
 }
 
 .o_mail_block_two_cols, .o_mail_block_three_cols {
@@ -196,7 +194,7 @@ td {
     margin-left: 20px;
     margin-right: 20px;
     .o_mail_snippet_general{
-        background: darken(@o_mm_def_color_alpha, 2%);
+        background: darken($o-mm-def-color-alpha, 2%);
     }
 }
 
@@ -208,7 +206,7 @@ td {
 .o_mail_block_comparison_table {
     .separator {
         height: 1px;
-        background-color: darken(@o_mm_def_color_alpha, 15%);
+        background-color: darken($o-mm-def-color-alpha, 15%);
     }
     table table {
         td, th {
@@ -227,7 +225,7 @@ td {
 .o_mail_block_discount2 {
     .o_code {
         padding: 5px 10px;
-        background: @o_mm_def_color_alpha;
+        background: $o-mm-def-color-alpha;
         border-radius: 3px;
         font-family: monospace;
     }
@@ -235,7 +233,7 @@ td {
 
 .o_mail_block_footer_social {
     .o_mail_table_styles {
-        border-top: 2px solid @o_mm_def_color_alpha;
+        border-top: 2px solid $o-mm-def-color-alpha;
         padding-top: 20px;
         padding-bottom: 20px;
     }
@@ -253,7 +251,7 @@ td {
     .o_mail_footer_copy {
         font-size: 9px;
         font-weight: bold;
-        color: lighten(@o_mm_def_text_color, 30%);
+        color: lighten($o-mm-def-text-color, 30%);
     }
 
     &.o_mail_footer_social_center {
@@ -309,15 +307,15 @@ td {
 }
 
 // ===== Mobile =====
-@media screen and (max-width: @o_mm_def_body_bobile) {
+@media screen and (max-width: $o-mm-def-body-bobile) {
     .o_mail_col_mv {
         display: block!important;
-        max-width: @o_mm_def_body_bobile!important;
+        max-width: $o-mm-def-body-bobile!important;
         width: 100%!important;
     }
 
     .o_mail_table_styles {
-        max-width: @o_mm_def_body_bobile!important;
+        max-width: $o-mm-def-body-bobile!important;
         width: 100%!important;
     }
 }

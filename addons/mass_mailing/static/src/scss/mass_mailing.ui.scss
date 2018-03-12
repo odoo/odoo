@@ -1,25 +1,25 @@
 .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
     // cancel padding of form_sheet
-    margin-top: -@odoo-sheet-cancel-tpadding;
-    margin-left: -@odoo-sheet-cancel-hpadding;
-    margin-right: -@odoo-sheet-cancel-hpadding;
-    margin-bottom: -@odoo-sheet-cancel-bpadding;
+    margin-top: -$odoo-sheet-cancel-tpadding;
+    margin-left: -$odoo-sheet-cancel-hpadding;
+    margin-right: -$odoo-sheet-cancel-hpadding;
+    margin-bottom: -$odoo-sheet-cancel-bpadding;
 }
 
 .o_mail_theme_selector {
     > a {
-        .o-position-absolute(0, 0, auto, 0);
-        height: @odoo-navbar-height;
+        @include o-position-absolute(0, 0, auto, 0);
+        height: $odoo-navbar-height;
         line-height: 31px;
         border-radius: 0;
-        background-color: @o-we-color-darker;
-        color: @o-we-color-text-normal;
-        .o-flex-display();
-        .o-justify-content(center);
-        .o-align-items(center);
+        background-color: $o-we-color-darker;
+        color: $o-we-color-text-normal;
+        @include o-flex-display;
+        @include o-justify-content(center);
+        @include o-align-items(center);
 
         &:hover, &:focus, &:active {
-            color: @o-we-color-text-light;
+            color: $o-we-color-text-light;
         }
 
         i {
@@ -29,15 +29,15 @@
 
     &.open > a {
         color: white;
-        background-color: @o-we-color-dark;
+        background-color: $o-we-color-dark;
     }
 
     .dropdown-menu {
-        .o-position-absolute(@odoo-navbar-height - 1, -1px, -1px, -1px);
+        @include o-position-absolute($odoo-navbar-height - 1, -1px, -1px, -1px);
         margin: 0;
         border-radius: 0;
         overflow: auto;
-        background-color: @o-we-color-dark;
+        background-color: $o-we-color-dark;
 
         > li {
             margin: 0;
@@ -49,8 +49,8 @@
                     display: none;
                     background-size: cover;
                     padding-top: 50%;
-                    border: 1px solid @o-we-color-light;
-                    border-top: 1px solid @o-we-color-text-normal;
+                    border: 1px solid $o-we-color-light;
+                    border-top: 1px solid $o-we-color-text-normal;
 
                     &.logo {
                         display: block;
@@ -59,7 +59,7 @@
             }
 
             &:hover > a {
-                background-color: @o-we-color-darker;
+                background-color: $o-we-color-darker;
 
                 .o_thumb {
                     border: 1px solid white;
@@ -67,8 +67,8 @@
             }
 
             &.selected > a .o_thumb {
-                border: 2px solid @odoo-brand-primary;
-                background-color: @o-we-color-dark;
+                border: 2px solid $odoo-brand-primary;
+                background-color: $o-we-color-dark;
             }
         }
     }
@@ -93,17 +93,17 @@ body.o_force_mail_theme_choice {
                     max-width: 25%;
 
                     > a {
-                        .o-transition(all, 0.3s, ease);
+                        @include o-transition(all, 0.3s, ease);
 
                         .o_thumb {
                             display: none;
                             padding-top: 107%;
-                            border: 1px solid @o-we-color-light;
-                            border-top: 1px solid @o-we-color-text-normal;
-                            box-shadow: 0 5px 10px fade(black, 80%);
+                            border: 1px solid $o-we-color-light;
+                            border-top: 1px solid $o-we-color-text-normal;
+                            box-shadow: 0 5px 10px rgba(black, 0.8);
                             will-change: transform;
-                            .backface-visibility(hidden);
-                            .o-transition(all, 0.3s);
+                            @include backface-visibility(hidden);
+                            @include o-transition(all, 0.3s);
 
                             &.small {
                                 display: block;
@@ -121,10 +121,10 @@ body.o_force_mail_theme_choice {
                     }
 
                     &:hover > a {
-                        background-color: @o-we-color-dark;
+                        background-color: $o-we-color-dark;
 
                         .o_thumb {
-                            box-shadow: 0 5px 30px 1px fade(black, 60%);
+                            box-shadow: 0 5px 30px 1px rgba(black, 0.6);
                         }
                     }
 
@@ -135,7 +135,7 @@ body.o_force_mail_theme_choice {
                         opacity: 0.2;
 
                         > .fa {
-                            .o-position-absolute(0, 0, 0, 0);
+                            @include o-position-absolute(0, 0, 0, 0);
                             text-align: center;
                             font-size: 50px;
                             color: white;

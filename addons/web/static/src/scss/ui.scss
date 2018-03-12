@@ -3,9 +3,9 @@
 }
 
 .o_text_overflow {
-    .o-text-overflow();
+    @include o-text-overflow;
 }
 
 .ui-autocomplete {
-    z-index: @zindex-modal + 1;
+    z-index: $zindex-modal + 1;
 }

@@ -1,25 +1,25 @@
-@o-theme-kanban-gray: #fcfcfc;
+$o-theme-kanban-gray: #fcfcfc;
 
 .o_kanban_view.o_theme_kanban {
-    background-color: @o-theme-kanban-gray;
+    background-color: $o-theme-kanban-gray;
 
     /// Un-grouped Layout (default)
     &.o_kanban_ungrouped {
-        .o-justify-content(space-between);
-        margin: 0 0 0 (@o-kanban-record-margin - 2 * @grid-gutter-width);
+        @include o-justify-content(space-between);
+        margin: 0 0 0 ($o-kanban-record-margin - 2 * $grid-gutter-width);
 
-        @media (max-width: @screen-xs-max) {
-            padding-left: @odoo-horizontal-padding - @o-kanban-record-margin;
-            padding-right: @odoo-horizontal-padding;
+        @media (max-width: $screen-xs-max) {
+            padding-left: $odoo-horizontal-padding - $o-kanban-record-margin;
+            padding-right: $odoo-horizontal-padding;
         }
 
         .o_kanban_record {
-            .o-flex(1, 0, 220px);
+            @include o-flex(1, 0, 220px);
         }
     }
 
     .o_kanban_record {
-        margin-left: @grid-gutter-width * 2;
+        margin-left: $grid-gutter-width * 2;
         padding: 0;
         box-shadow: none;
         background: none;
@@ -29,26 +29,26 @@
             content: "•••";
             display: block;
             padding-left: 10px;
-            color: darken(@o-theme-kanban-gray, 10%);
+            color: darken($o-theme-kanban-gray, 10%);
             font: 12px/20px Courier, monospace;
             letter-spacing: -1px;
         }
 
         &.o_theme_installed .o_theme_preview_top {
-            border-color: @odoo-brand-optional;
+            border-color: $odoo-brand-optional;
 
             > .fa-check-circle {
-                .o-position-absolute(10px, 10px);
-                .square(20px);
+                @include o-position-absolute(10px, 10px);
+                @include square(20px);
                 font-size: 20px;
             }
         }
 
         .o_theme_preview_top {
-            border: 1px solid darken(@o-theme-kanban-gray, 20%);
+            border: 1px solid darken($o-theme-kanban-gray, 20%);
             border-radius: 2px;
-            .o-transform-origin(center, bottom);
-            .o-transition(all, .1s);
+            @include o-transform-origin(center, bottom);
+            @include o-transition(all, .1s);
 
             .o_theme_cover, .o_theme_logo, .o_theme_screenshot {
                 width: 100%;
@@ -74,19 +74,19 @@
         }
 
         .o_button_area {
-            .o-position-absolute(20px, -1px, -1px, -1px);
-            .o-transition(opacity, 100ms);
-            .o-flex-display();
-            .o-flex-flow(column, nowrap);
-            .o-justify-content(center);
-            .translate3d(0,0,0);
-            .o-linear-gradient(0deg, fade(black, 60%), fade(black, 30%));
+            @include o-position-absolute(20px, -1px, -1px, -1px);
+            @include o-transition(opacity, 100ms);
+            @include o-flex-display;
+            @include o-flex-flow(column, nowrap);
+            @include o-justify-content(center);
+            @include translate3d(0,0,0);
+            @include o-linear-gradient(0deg, rgba(black, 0.6), rgba(black, 0.3));
             padding: 10% 20%;
             opacity: 0;
             visibility: hidden;
 
             > .btn {
-                padding: @padding-large-vertical @padding-large-horizontal;
+                padding: $padding-large-vertical $padding-large-horizontal;
             }
 
             hr {
@@ -96,15 +96,15 @@
 
         &:not(.o_theme_installed) {
             .o_theme_preview_top:hover {
-                .o-transition(all, .3s);
-                .o-transform(translateY(-10px));
-                border-color: darken(@o-theme-kanban-gray, 26%);
+                @include o-transition(all, .3s);
+                @include o-transform(translateY(-10px));
+                border-color: darken($o-theme-kanban-gray, 26%);
                 box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
 
                 .o_button_area {
                     opacity: 1;
                     visibility: visible;
-                    .o-transition(opacity, 0.2s, ease, 0.1s);
+                    @include o-transition(opacity, 0.2s, ease, 0.1s);
                 }
             }
         }
@@ -113,7 +113,7 @@
     /// Grouped Layout
     &.o_kanban_grouped {
         .o_kanban_group {
-            background-color: @o-theme-kanban-gray;
+            background-color: $o-theme-kanban-gray;
             padding: 0 20px;
 
             .o_kanban_header {
@@ -121,7 +121,7 @@
 
                 .o_column_title {
                     padding: 0;
-                    color: @text-color;
+                    color: $text-color;
                 }
 
                 &:hover, &.open {
@@ -132,11 +132,11 @@
             }
 
             .o_theme_preview_top {
-                border-color: darken(@o-theme-kanban-gray, 16%);
+                border-color: darken($o-theme-kanban-gray, 16%);
             }
 
             &:nth-child(even) {
-                background-color: darken(@o-theme-kanban-gray, 4%);
+                background-color: darken($o-theme-kanban-gray, 4%);
 
                 .o_theme_cover, .o_theme_logo {
                     background-color: white;
