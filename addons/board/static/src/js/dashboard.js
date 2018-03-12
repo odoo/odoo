@@ -276,6 +276,14 @@ var DashBoard = form_common.FormWidget.extend({
                             };
                         });
                     }
+                    var calendar = am.inner_widget.views.calendar;
+                    if (calendar) {
+                        calendar.loaded.done(function () {
+                            calendar.controller.open_event = function (id, title) {
+                                new_form_action(Number(id));
+                            };
+                        });
+                    }
                 }
             });
             am.do_action = self.do_action.bind(self);
