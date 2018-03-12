@@ -813,31 +813,25 @@ class Picking(models.Model):
 
     @api.multi
     def _create_backorder(self, backorder_moves=[]):
-        """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
+        """ Move all non-done lines into a new backorder picking.
         """
-        # TDE note: o2o conversion, todo multi
         backorders = self.env['stock.picking']
         for picking in self:
-            backorder_moves = backorder_moves or picking.move_lines
-            if self._context.get('do_only_split'):
-                not_done_bo_moves = backorder_moves.filtered(lambda move: move.id not in self._context.get('split', []))
-            else:
-                not_done_bo_moves = backorder_moves.filtered(lambda move: move.state not in ('done', 'cancel'))
-            if not not_done_bo_moves:
-                continue
-            backorder_picking = picking.copy({
-                'name': '/',
-                'move_lines': [],
-                'move_line_ids': [],
-                'backorder_id': picking.id
-            })
-            picking.message_post(body=_("Back order <em>%s</em> <b>created</b>.") % (backorder_picking.name))
-            not_done_bo_moves.write({'picking_id': backorder_picking.id})
-            if not picking.date_done:
-                picking.write({'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-            backorder_picking.action_confirm()
-            backorder_picking.action_assign()
-            backorders |= backorder_picking
+            moves_to_backorder = picking.move_lines.filtered(lambda x: x.state not in ('done', 'cancel'))
+            if moves_to_backorder:
+                backorder_picking = picking.copy({
+                    'name': '/',
+                    'move_lines': [],
+                    'move_line_ids': [],
+                    'backorder_id': picking.id
+                })
+                picking.message_post(
+                    _('The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been created.') % (
+                        backorder_picking.id, backorder_picking.name))
+                moves_to_backorder.write({'picking_id': backorder_picking.id})
+                moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
+                backorder_picking.action_assign()
+                backorders |= backorder_picking
         return backorders
 
     def _put_in_pack(self):
