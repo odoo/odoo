@@ -100,7 +100,7 @@ tour.STEPS.MENU_MORE, {
 }, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="project.menu_main_pm"]',
-    content: _t("Good job! Your completed the Project Management tour."),
+    content: _t("Good job! You completed the Project Management tour."),
     position: 'bottom',
 }]);
 
