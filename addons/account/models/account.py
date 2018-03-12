@@ -358,6 +358,9 @@ class AccountJournal(models.Model):
     def _default_outbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_out')
 
+    def _get_bank_statements_available_sources(self):
+        return [('undefined', _('Undefined Yet')),('manual', _('Encode Manually'))]
+
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
@@ -424,7 +427,7 @@ class AccountJournal(models.Model):
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id)]")
-    bank_statements_source = fields.Selection([('undefined', 'Undefined Yet'),('manual', 'Encode Manually')], string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
+    bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
@@ -436,11 +439,6 @@ class AccountJournal(models.Model):
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
-
-    @api.depends('company_id')
-    def _compute_company_partner_id(self):
-        for record in self:
-            record.company_partner_id = record.company_id.partner_id
 
     @api.multi
     def _compute_alias_domain(self):
