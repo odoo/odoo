@@ -117,6 +117,7 @@ class ProductTemplate(models.Model):
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
     color = fields.Integer('Color Index')
 
+    is_product_variant = fields.Boolean(string='Is a product variant', compute='_compute_is_product_variant')
     attribute_line_ids = fields.One2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes')
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
@@ -233,6 +234,13 @@ class ProductTemplate(models.Model):
             template.weight = template.product_variant_ids.weight
         for template in (self - unique_variants):
             template.weight = 0.0
+
+    def _compute_is_product_variant(self):
+        for template in self:
+            if template._name == 'product.template':
+                template.is_product_variant = False
+            else:
+                template.is_product_variant = True
 
     @api.one
     def _set_weight(self):
