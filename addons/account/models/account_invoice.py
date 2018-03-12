@@ -189,7 +189,7 @@ class AccountInvoice(models.Model):
     @api.depends('move_id.line_ids.amount_residual')
     def _compute_payments(self):
         payment_lines = []
-        for line in self.move_id.line_ids:
+        for line in self.move_id.line_ids.filtered(lambda l: l.account_id.id == self.account_id.id):
             payment_lines.extend(filter(None, [rp.credit_move_id.id for rp in line.matched_credit_ids]))
             payment_lines.extend(filter(None, [rp.debit_move_id.id for rp in line.matched_debit_ids]))
         self.payment_move_line_ids = self.env['account.move.line'].browse(list(set(payment_lines)))
