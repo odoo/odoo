@@ -378,9 +378,9 @@ class Picking(models.Model):
     @api.depends('move_lines.date_expected')
     def _compute_scheduled_date(self):
         if self.move_type == 'direct':
-            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [False])
+            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
         else:
-            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [False])
+            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
 
     @api.one
     def _set_scheduled_date(self):
