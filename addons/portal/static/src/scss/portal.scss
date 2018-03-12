@@ -3,10 +3,10 @@
 /// rules.
 ///
 
-// Resize and vertically align navbar’s items relative to @navbar-height
-.o-w-fill-navbar(@ratio: 0.8) {
-    height: round(@navbar-height * @ratio);
-    margin-top: round(@navbar-height * (1 - @ratio) / 2);
+// Resize and vertically align navbar’s items relative to $navbar-height
+@mixin o-w-fill-navbar($ratio: 0.8) {
+    height: round($navbar-height * $ratio);
+    margin-top: round($navbar-height * (1 - $ratio) / 2);
 }
 
 // Frontend general
@@ -30,7 +30,7 @@ header {
         padding: 0 15px;
 
         img {
-            .o-w-fill-navbar();
+            @include o-w-fill-navbar;
         }
     }
 }
@@ -38,9 +38,9 @@ header {
     margin-bottom: 0;
     ul.nav > li {
         &.divider {
-            .o-w-fill-navbar();
-            border-right: 1px solid @navbar-default-link-disabled-color;
-            @media (max-width: @screen-xs-max) {
+            @include o-w-fill-navbar;
+            border-right: 1px solid $navbar-default-link-disabled-color;
+            @media (max-width: $screen-xs-max) {
                 display: none;
             }
         }
@@ -50,7 +50,7 @@ header {
         }
     }
     .nav.navbar-nav.pull-right {
-        @media (max-width: @screen-xs-max) {
+        @media (max-width: $screen-xs-max) {
             float: none!important;
         }
     }
@@ -146,15 +146,15 @@ hr {
 // Images spacing
 img, .media_iframe_video, .o_image {
     &.pull-right {
-        margin-left: @grid-gutter-width / 2;
+        margin-left: $grid-gutter-width / 2;
     }
     &.pull-left {
-        margin-right: @grid-gutter-width / 2;
+        margin-right: $grid-gutter-width / 2;
     }
 }
 img {
     // Make all images responsive by default but with inline-block display
-    .img-responsive(inline-block);
+    @include img-responsive(inline-block);
 }
 
 // Others
@@ -170,7 +170,7 @@ img {
         width: 100%;
     }
     div {
-        .o-position-absolute(@left: 0, @bottom: 0);
+        @include o-position-absolute($left: 0, $bottom: 0);
         background-color: rgba(0, 0, 0, 0.4);
         opacity: 0.85;
         width: 100%;
@@ -328,7 +328,7 @@ img {
         .o_portal_chatter_message_title {
             p {
                 font-size:85%;
-                color:@odoo-main-color-muted;
+                color:$odoo-main-color-muted;
                 margin: 0px;
             }
         }

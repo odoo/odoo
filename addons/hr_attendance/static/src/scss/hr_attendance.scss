@@ -14,12 +14,12 @@
 }
 
 #oe_hr_attendance_status {
-    color: @odoo-brand-secondary;
+    color: $odoo-brand-secondary;
     &.oe_hr_attendance_status_green {
-        color: @brand-success;
+        color: $brand-success;
     }
     &.oe_hr_attendance_status_red {
-        color: @brand-danger;
+        color: $brand-danger;
     }
 }
 
@@ -35,7 +35,7 @@
     top: 0px;
     bottom: auto;
 
-    @media (min-width: @screen-sm-min) {
+    @media (min-width: $screen-sm-min) {
         transform: translate(50%, -50%);
     }
 }
@@ -60,18 +60,18 @@
 }
 
 .o_hr_attendance_kiosk_mode_container {
-    .o-flex-display();
-    .o-flex-flow(column, nowrap);
-    .o-justify-content(center);
-    .o-align-items(center);
+    @include o-flex-display;
+    @include o-flex-flow(column, nowrap);
+    @include o-justify-content(center);
+    @include o-align-items(center);
 
-    @media (min-width: @screen-sm-min) {
-        .o-position-absolute(0, 0, 0, 0);
+    @media (min-width: $screen-sm-min) {
+        @include o-position-absolute(0, 0, 0, 0);
     }
 }
 
 .o_hr_attendance_warning_message {
-    color: @brand-warning;
+    color: $brand-warning;
 }
 .o_hr_attendance_random_message {
     font-style: italic;
@@ -113,7 +113,7 @@
         margin-bottom: 0;
     }
 
-    @media (min-width: @screen-sm-min) {
+    @media (min-width: $screen-sm-min) {
         flex: 0 0 auto;
         width: 550px;
         border-radius: 10px;
@@ -131,7 +131,7 @@
     top: 20px;
     right: 20px;
 
-    @media (min-width: @screen-sm-min) {
+    @media (min-width: $screen-sm-min) {
         flex: 0 0 auto;
         border-radius: 3px;
         background-color: rgba(255,255,255,0.5);
@@ -140,13 +140,13 @@
 }
 
 .o_hr_attendance_message_container {
-    .o-flex-display();
-    .o-flex-flow(column, nowrap);
-    .o-justify-content(center);
-    .o-align-items(center);
+    @include o-flex-display;
+    @include o-flex-flow(column, nowrap);
+    @include o-justify-content(center);
+    @include o-align-items(center);
 
-    @media (min-width: @screen-sm-min) {
-        .o-position-absolute(0, 0, 0, 0);
+    @media (min-width: $screen-sm-min) {
+        @include o-position-absolute(0, 0, 0, 0);
     }
 }
 
@@ -186,7 +186,7 @@
         margin-bottom: 0;
     }
 
-    @media (min-width: @screen-sm-min) {
+    @media (min-width: $screen-sm-min) {
         flex: 0 0 auto;
         width: 550px;
         border-radius: 10px;

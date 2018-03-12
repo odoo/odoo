@@ -1,6 +1,6 @@
 .o_followers {
     float: right;
-    @media (max-width: @screen-xs-max) {
+    @media (max-width: $screen-xs-max) {
         display: none !important; // Hide the followers in mobile
     }
 
@@ -38,7 +38,7 @@
         .o_followers_follow_button {
             width: 85px;
             padding-right: 0;
-            color: @text-color;
+            color: $text-color;
             font-weight: bold;
 
             .o_follow, .o_followers_unfollow, .o_followers_following {
@@ -62,10 +62,10 @@
 
             .fa {
                 &.fa-times {
-                    color: @brand-warning;
+                    color: $brand-warning;
                 }
                 &.fa-check {
-                    color: @brand-success;
+                    color: $brand-success;
                 }
             }
         }
@@ -91,26 +91,26 @@
             font-size: small;
 
             .o_partner {
-                @partner_avatar_size: 24px;
+                $partner-avatar-size: 24px;
                 position: relative; // required for old design compatibility
                 > a {
                     max-width: 160px;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
-                    height: @partner_avatar_size;
-                    padding: 3px @partner_avatar_size + 8px;
+                    height: $partner-avatar-size;
+                    padding: 3px $partner-avatar-size + 8px;
                 }
                 > img {
-                    .o-position-absolute();
-                    width: @partner_avatar_size;
+                    @include o-position-absolute;
+                    width: $partner-avatar-size;
                 }
                 .o_remove_follower {
-                    .o-position-absolute(6px, 5px);
+                    @include o-position-absolute(6px, 5px);
                     cursor: pointer;
                 }
                 .o_edit_subtype {
-                    .o-position-absolute(6px, 18px);
+                    @include o-position-absolute(6px, 18px);
                     cursor: pointer;
                 }
             }

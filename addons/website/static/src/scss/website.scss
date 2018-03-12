@@ -66,10 +66,10 @@ font[style*='background'], font[class*='bg-'] {
 }
 
 // "Cover" snippet
-@s_text_block_image_fw-padding: 0 30px;
+$s-text-block-image-fw-padding: 0 30px;
 .s_text_block_image_fw {
     .container {
-        padding: @s_text_block_image_fw-padding;
+        padding: $s-text-block-image-fw-padding;
         > .row > div {
             padding: 30px;
         }
@@ -120,7 +120,7 @@ table.table_desc tr td {
         color: inherit;
     }
     .text-muted {
-        color: @text-muted;
+        color: $text-muted;
     }
 }
 
@@ -129,8 +129,8 @@ table.table_desc tr td {
     border : 1px solid rgba(0, 0, 0, 0.15);
     .panel-body {
         border-top: none;
-        border-bottom-left-radius: (@panel-border-radius - 1);
-        border-bottom-right-radius: (@panel-border-radius - 1);
+        border-bottom-left-radius: ($panel-border-radius - 1);
+        border-bottom-right-radius: ($panel-border-radius - 1);
     }
 }
 
@@ -224,7 +224,7 @@ table.table_desc tr td {
 }
 div.carousel .container {
     > .carousel-caption {
-        .o-position-absolute(@right: 50%, @left: 50%);
+        @include o-position-absolute($right: 50%, $left: 50%);
         bottom: 20px;
         > div {
             position: absolute;
@@ -235,7 +235,7 @@ div.carousel .container {
         }
     }
     > .carousel-image {
-        .o-position-absolute(@top: 5%, @bottom: 5%);
+        @include o-position-absolute($top: 5%, $bottom: 5%);
         max-height: 90%;
         margin: 0 auto;
     }
@@ -453,7 +453,7 @@ div.carousel {
     .carousel-indicators li {
         box-shadow: 0 0 0 1px grey;
         &:hover:not(.active) {
-            background-color: @color-white-50;
+            background-color: $color-white-50;
         }
     }
     span.carousel-img img,
@@ -481,7 +481,7 @@ div.carousel {
     }
 
     > .s_parallax_bg {
-        .o-position-absolute(0, 0, 0, 0);
+        @include o-position-absolute(0, 0, 0, 0);
         background-size: cover;
         background-attachment: scroll;
         pointer-events: none;
@@ -493,7 +493,7 @@ div.carousel {
 
 // Company Team
 .s_company_team {
-    @media (max-width: @screen-sm-max) {
+    @media (max-width: $screen-sm-max) {
         img {
             max-width: 50%;
         }
@@ -501,30 +501,30 @@ div.carousel {
 }
 
 #wrapwrap .o_header_affix {
-    .o-position-absolute(0, 0, auto, 0);
+    @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    z-index: @zindex-modal - 20;
-    background: @navbar-default-bg;
-    border-bottom: @navbar-default-border;
+    z-index: $zindex-modal - 20;
+    background: $navbar-default-bg;
+    border-bottom: $navbar-default-border;
 
     margin-top: -200px;
-    .o-transition(margin-top, 500ms);
+    @include o-transition(margin-top, 500ms);
 
     &.affixed {
         margin-top: 0px;
     }
 }
 #oe_main_menu_navbar + #wrapwrap .o_header_affix {
-    top: @odoo-navbar-height;
+    top: $odoo-navbar-height;
 }
 
 .navbar .o_extra_menu_items.open > ul {
     > li {
         + li {
-            border-top: 1px solid @gray-lighter;
+            border-top: 1px solid $gray-lighter;
         }
         > a.dropdown-toggle {
-            background-color: @gray-lighter;
+            background-color: $gray-lighter;
             color: inherit; // Useful when the toggle is active
             pointer-events: none; // hack to prevent clicking on it because dropdown always opened
         }

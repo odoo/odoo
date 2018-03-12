@@ -1,11 +1,11 @@
-@breadcrumb-height: 30px;
+$breadcrumb-height: 30px;
 
 .o_control_panel {
-    .o-flex-display();
-    .o-flex-flow(row, wrap);
-    border-bottom: 1px solid darken(@odoo-control-panel-background-color, 20%);
-    .o-webclient-padding(@top: 10px, @bottom: 10px);
-    background-color: @odoo-control-panel-background-color;
+    @include o-flex-display;
+    @include o-flex-flow(row, wrap);
+    border-bottom: 1px solid darken($odoo-control-panel-background-color, 20%);
+    @include o-webclient-padding($top: 10px, $bottom: 10px);
+    background-color: $odoo-control-panel-background-color;
 
     > .breadcrumb {
         width: 50%;
@@ -13,7 +13,7 @@
         font-size: 18px;
 
         > li {
-            .o-text-overflow(@max-width: 90%);
+            @include o-text-overflow($max-width: 90%);
 
             > a {
                 cursor: pointer;
@@ -27,7 +27,7 @@
 
     > .o_cp_searchview {
         width: 50%;
-        min-height: @breadcrumb-height;
+        min-height: $breadcrumb-height;
     }
 
     .btn.o_enable_searchview {
@@ -37,8 +37,8 @@
     }
 
     > .o_cp_left {
-        .o-flex-display();
-        .o-justify-content(space-between);
+        @include o-flex-display;
+        @include o-justify-content(space-between);
         width: 50%;
         margin-top: 5px;
 
@@ -56,10 +56,10 @@
                 }
                 .o_form_binary_form span {
                     padding: 3px 25px;
-                    color: @btn-default-color;
+                    color: $btn-default-color;
                 }
                 .o_form_binary_form:hover {
-                    background-color: @table-bg-hover;
+                    background-color: $table-bg-hover;
                 }
             }
             .o_sidebar_delete_attachment {
@@ -72,7 +72,7 @@
     }
 
     > .o_cp_right {
-        .o-flex-display();
+        @include o-flex-display;
         width: 50%;
         margin-top: 5px;
 
@@ -80,11 +80,11 @@
             margin: auto 0 auto auto;
             padding-left: 5px;
             text-align: center;
-            .user-select(none);
+            @include user-select(none);
 
             > div {
-                .o-flex-display();
-                .o-align-items(center);
+                @include o-flex-display;
+                @include o-align-items(center);
             }
 
             .o_pager_counter {
@@ -93,24 +93,24 @@
         }
 
         > .o_cp_switch_buttons > .btn:first-child {
-            margin-left: @odoo-horizontal-padding;
+            margin-left: $odoo-horizontal-padding;
         }
     }
 }
 
 .o_x2m_control_panel {
-    .o-flex-display();
-    .o-flex-flow(row, wrap);
+    @include o-flex-display;
+    @include o-flex-flow(row, wrap);
 
     .o_cp_buttons {
-        .o-flex-display();
+        @include o-flex-display;
         margin-right: auto;
         > div {
             margin-top: 5px;
         }
     }
     .o_cp_pager {
-        .o-flex-display();
+        @include o-flex-display;
         margin-left: auto;
     }
 }

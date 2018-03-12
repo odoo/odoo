@@ -1,8 +1,8 @@
 // out: ../css/customer_facing_display.css, sourcemap: false, compress: false
 
 // =========== Variables ===========
-@color_gray_lighter: #f6f6f6;
-@color_gray_dark: #3E3E3E;
+$color-gray-lighter: #f6f6f6;
+$color-gray-dark: #3E3E3E;
 
 // =========== Animations ===========
 @keyframes item_in {
@@ -17,7 +17,7 @@
 }
 
 // =========== MIXINS ===========
-.pos-bg() {
+@mixin pos-bg {
     background-position: center top;
     background-size: contain;
     background-repeat: no-repeat;
@@ -31,53 +31,53 @@
 }
 
 // =========== VENDOR PREFIX ===========
-.flex-display() {
+@mixin flex-display {
     -webkit-display: flex;
     -moz-display: flex;
     -ms-display: flex;
     -o-display: flex;
     display: flex;
 }
-.flex-direction(@direction){
-    -webkit-flex-direction: @direction;
-    -moz-flex-direction: @direction;
-    -ms-flex-direction: @direction;
-    -o-flex-direction: @direction;
-    flex-direction: @direction;
+@mixin flex-direction($direction) {
+    -webkit-flex-direction: $direction;
+    -moz-flex-direction: $direction;
+    -ms-flex-direction: $direction;
+    -o-flex-direction: $direction;
+    flex-direction: $direction;
 };
-.flex-grow(@grow) {
-    -webkit-box-flex: @grow;
-    -webkit-flex-grow: @grow;
-    -moz-box-flex: @grow;
-    -ms-flex-positive: @grow;
-    flex-grow: @grow;
+@mixin flex-grow($grow) {
+    -webkit-box-flex: $grow;
+    -webkit-flex-grow: $grow;
+    -moz-box-flex: $grow;
+    -ms-flex-positive: $grow;
+    flex-grow: $grow;
 }
-.flex(@flex) {
-    -webkit-box-flex: @flex;
-    -webkit-flex: @flex;
-    -moz-box-flex: @flex;
-    -ms-flex: @flex;
-    flex: @flex;
+@mixin flex($flex) {
+    -webkit-box-flex: $flex;
+    -webkit-flex: $flex;
+    -moz-box-flex: $flex;
+    -ms-flex: $flex;
+    flex: $flex;
 }
-.align-items(@align){
-    -webkit-box-align: @align;
-    -webkit-align-items: @align;
-    -moz-box-align: @align;
-    -ms-flex-align: @align;
-    -ms-grid-row-align: @align;
-    align-items: @align;
+@mixin align-items($align) {
+    -webkit-box-align: $align;
+    -webkit-align-items: $align;
+    -moz-box-align: $align;
+    -ms-flex-align: $align;
+    -ms-grid-row-align: $align;
+    align-items: $align;
 };
-.justify-content(@justify){
-    -webkit-box-pack: @justify;
-    -webkit-justify-content: @justify;
-    -moz-box-pack: @justify;
-    -ms-flex-pack: @justify;
-    justify-content: @justify;
+@mixin justify-content($justify) {
+    -webkit-box-pack: $justify;
+    -webkit-justify-content: $justify;
+    -moz-box-pack: $justify;
+    -ms-flex-pack: $justify;
+    justify-content: $justify;
 }
-.flex-wrap(@wrap){
-    -webkit-flex-wrap: @wrap;
-    -ms-flex-wrap: @wrap;
-    flex-wrap: @wrap;
+@mixin flex-wrap($wrap) {
+    -webkit-flex-wrap: $wrap;
+    -ms-flex-wrap: $wrap;
+    flex-wrap: $wrap;
 }
 
 
@@ -89,28 +89,28 @@ body {
     font-smooth: always;
 
     .pos-customer_facing_display {
-        background-color: @color_gray_lighter;
+        background-color: $color-gray-lighter;
         font-size: 2vw;
         font-family: Futura, HelveticaNeue, Helvetica, Arial, "Lucida Grande", sans-serif;
         font-weight: 300;
         width: 100%;
         height: 100%;
-        .flex-display();
-        .flex-direction(row);
+        @include flex-display;
+        @include flex-direction(row);
 
         .pos-customer_products, .pos-payment_info {
             height: 100%;
             padding: 2%;
-            .flex-display();
-            .flex-direction(column);
-            .flex-grow(1);
+            @include flex-display;
+            @include flex-direction(column);
+            @include flex-grow(1);
         }
 
         .pos_orderlines {
             width: 100%;
             height: 100%;
-            .flex-display();
-            .flex-direction(column);
+            @include flex-display;
+            @include flex-direction(column);
 
             .pos_orderlines_list {
                 overflow-y: scroll;
@@ -124,10 +124,10 @@ body {
                 padding: 1%;
                 border-radius: 0.3vw;
                 height: auto;
-                .flex(0 1 auto);
-                .flex-display();
-                .flex-direction(row);
-                .align-items(center);
+                @include flex(0 1 auto);
+                @include flex-display;
+                @include flex-direction(row);
+                @include align-items(center);
 
                 &:last-of-type {
                     animation: item_in 1s ease;
@@ -155,11 +155,11 @@ body {
                     text-align: left;
                     margin-right: 4%;
                     font-size: 80%;
-                    .flex-grow(1);
+                    @include flex-grow(1);
 
                     &:first-child {
                         margin-right: 2%;
-                        .flex(1 1 1%);
+                        @include flex(1 1 1%);
                     }
 
                     &:nth-child(2) {
@@ -190,36 +190,36 @@ body {
         .pos-payment_info {
             max-width: 30%;
             padding: 2% 2% 1% 2%;
-            .flex-direction(column);
-            .justify-content(space-between);
+            @include flex-direction(column);
+            @include justify-content(space-between);
 
             .pos-adv, .pos-company_logo {
-                .pos-bg();
+                @include pos-bg;
             }
 
             .pos-company_logo {
                 background-image: url(/logo);
                 margin-bottom: 10%;
-                .flex(0 0 20%);
+                @include flex(0 0 20%);
             }
 
             .pos-adv {
                 margin-bottom: 5%;
                 border-bottom: 10px solid transparent;
-                box-shadow: 0 1px fade(@color_gray_lighter, 20%);
-                .flex(1 1 60%);
+                box-shadow: 0 1px rgba($color-gray-lighter, 0.2);
+                @include flex(1 1 60%);
             }
 
             .pos-payment_info_details{
                 .pos-total, .pos-paymentlines {
-                    .flex-direction(row);
-                    .flex-display();
-                    .flex-wrap(wrap);
-                    .justify-content(space-between);
-                    .align-items(baseline);
+                    @include flex-direction(row);
+                    @include flex-display;
+                    @include flex-wrap(wrap);
+                    @include justify-content(space-between);
+                    @include align-items(baseline);
 
                     > div {
-                        .flex(1 0 48%);
+                        @include flex(1 0 48%);
                         &:nth-child(even) {
                             font-weight: bold;
                             font-size: 120%;
@@ -241,7 +241,7 @@ body {
                 .pos-odoo_logo_container {
                     text-align: right;
                     margin-top: 10%;
-                    .flex(0 1 auto);
+                    @include flex(0 1 auto);
 
                     img {
                         max-width: 40px;
@@ -256,7 +256,7 @@ body {
         .pos-customer_facing_display {
             font-size: 2vh;
             height: 100%;
-            .flex-direction(column);
+            @include flex-direction(column);
 
             &:before {
                 content: "";
@@ -276,7 +276,7 @@ body {
                 width: 99vw;
                 margin:0.5vh;
                 border-width: 0;
-                .flex-display();
+                @include flex-display;
             }
 
             &.pos-js_no_ADV {
@@ -294,7 +294,7 @@ body {
                 overflow: hidden;
 
                 .pos_orderlines {
-                    .flex(1 0 auto);
+                    @include flex(1 0 auto);
 
                     .pos_orderlines_item {
                         > div:nth-child(2) {
@@ -309,7 +309,7 @@ body {
                         padding-right: 1.5vh;
                         height: auto;
                         .pos_orderlines_item {
-                            box-shadow: 0 .1vh .1vh darken(@color_gray_lighter, 10%);
+                            box-shadow: 0 .1vh .1vh darken($color-gray-lighter, 10%);
                             margin-bottom: 1vh;
                             > div {
                                 font-size: 100%;
@@ -324,10 +324,10 @@ body {
                 overflow: hidden;
                 padding-top: 0;
                 min-height: 120px;
-                .flex(0 1 23vw);
-                .flex-direction(row);
-                .align-items(center);
-                .justify-content(space-between);
+                @include flex(0 1 23vw);
+                @include flex-direction(row);
+                @include align-items(center);
+                @include justify-content(space-between);
 
                 .pos-company_logo {
                     margin: 0;
@@ -335,12 +335,12 @@ body {
                     margin-right: 5%;
                     height: 100%;
                     padding: 0;
-                    .flex(1 1 20%);
+                    @include flex(1 1 20%);
                 }
 
                 .pos-payment_info_details {
-                    .flex(0 1 50%);
-                    .flex-direction(column);
+                    @include flex(0 1 50%);
+                    @include flex-direction(column);
                     min-width: 170px;
 
                     .pos-total {
@@ -387,7 +387,7 @@ body {
                     display: none!important;
                 }
                 .pos-payment_info_details {
-                    .flex(1 0 100%);
+                    @include flex(1 0 100%);
 
                     .pos-total {
                         font-size: 6vw;
@@ -417,10 +417,10 @@ body {
             opacity: 0.1;
             background: repeating-linear-gradient(
                 45deg,
-                @color_gray_lighter,
-                @color_gray_lighter 5px,
-                @color_gray_dark 5px,
-                @color_gray_dark 10px
+                $color-gray-lighter,
+                $color-gray-lighter 5px,
+                $color-gray-dark 5px,
+                $color-gray-dark 10px
             )!important;
         }
 
@@ -469,42 +469,42 @@ body {
 
 // =========== PALETTE GENERATOR ===========
 .palette_variant (
-    @bg-info: @color_gray_dark,
-    @text-info: @color_gray_lighter,
-    @bg-products: @color_gray_lighter,
-    @text-products: lighten(@color_gray_dark, 10%),
-    @card-bg: white,
-    @card-text: @color_gray_dark,
-    @card-shadow: darken(@bg-products, 30%)) {
+    $bg-info: $color-gray-dark,
+    $text-info: $color-gray-lighter,
+    $bg-products: $color-gray-lighter,
+    $text-products: lighten($color-gray-dark, 10%),
+    $card-bg: white,
+    $card-text: $color-gray-dark,
+    $card-shadow: darken($bg-products, 30%)) {
 
     .pos-payment_info {
-        background: @bg-info;
-        color: @text-info;
+        background: $bg-info;
+        color: $text-info;
     }
 
     .pos-customer_products {
-        background: @bg-products;
-        color: @text-products;
+        background: $bg-products;
+        color: $text-products;
 
         .pos_orderlines_list .pos_orderlines_item {
-            background-color: @card-bg;
-            color: @card-text;
-            box-shadow: 0 .1vh .1vh @card-shadow;
+            background-color: $card-bg;
+            color: $card-text;
+            box-shadow: 0 .1vh .1vh $card-shadow;
             div:nth-child(2) {
-                border-color: fade(@card-text, 30%);
+                border-color: rgba($card-text, 0.3);
             }
         }
     }
 
     @media all and (orientation: portrait) {
         &:before {
-            background: @bg-info;
+            background: $bg-info;
         }
     }
 
     // Editor dropdown buttons
     #oe_manipulators .oe_overlay > .oe_overlay_options .snippet-option-pos_palette > ul > li > & {
-        background: @bg-products!important;
+        background: $bg-products!important;
 
         &:after {
             content: "";
@@ -513,28 +513,28 @@ body {
             right: 0;
             bottom:0;
             left: 50px;
-            background: @bg-info;
+            background: $bg-info;
         }
 
         &:before {
-            text-shadow: 0 0 1px (#fff - @bg-products);
+            text-shadow: 0 0 1px (#fff - $bg-products);
         }
     }
 };
 
 // =========== PALETTE  ===========
-.pos-palette_01 { .palette_variant(); }
-.pos-palette_02 { .palette_variant( #364152, #e6e7e8, #ecf2f6, #364152, white, @color_gray_dark, #364152 ); }
-.pos-palette_03 { .palette_variant( #1BA39C, @color_gray_lighter, #ececec ); }
-.pos-palette_04 { .palette_variant( #0b7b6c, @color_gray_lighter, #efeeec); }
-.pos-palette_05 { .palette_variant( #E26868, @color_gray_lighter, #ececec ); }
-.pos-palette_06 { .palette_variant( #9E373B, @color_gray_lighter); }
-.pos-palette_07 { .palette_variant( #ce9934, white, #ececec ); }
-.pos-palette_08 { .palette_variant( #a48c77, @color_gray_lighter, #ececec ); }
+.pos-palette_01 { @include palette-variant; }
+.pos-palette_02 { @include palette-variant(#364152, #e6e7e8, #ecf2f6, #364152, white, $color-gray-dark, #364152 ); }
+.pos-palette_03 { @include palette-variant(#1BA39C, $color-gray-lighter, #ececec ); }
+.pos-palette_04 { @include palette-variant(#0b7b6c, $color-gray-lighter, #efeeec); }
+.pos-palette_05 { @include palette-variant(#E26868, $color-gray-lighter, #ececec ); }
+.pos-palette_06 { @include palette-variant(#9E373B, $color-gray-lighter); }
+.pos-palette_07 { @include palette-variant(#ce9934, white, #ececec ); }
+.pos-palette_08 { @include palette-variant(#a48c77, $color-gray-lighter, #ececec ); }
 
-.pos-palette_09 { .palette_variant( linear-gradient(30deg, #014d43, #127e71), @color_gray_lighter, #ececec ); }
-.pos-palette_10 { .palette_variant( linear-gradient(30deg, #e2316c, #ea4c89), white, #ececec ); }
-.pos-palette_11 { .palette_variant( linear-gradient(30deg, #362b3d, #5b4a63), white, #ececec ); }
+.pos-palette_09 { @include palette-variant(linear-gradient(30deg, #014d43, #127e71), $color-gray-lighter, #ececec ); }
+.pos-palette_10 { @include palette-variant(linear-gradient(30deg, #e2316c, #ea4c89), white, #ececec ); }
+.pos-palette_11 { @include palette-variant(linear-gradient(30deg, #362b3d, #5b4a63), white, #ececec ); }
 
-.pos-palette_12 { .palette_variant( #434343, #e6e6e6, #5b5b5b, #bdb9b9, #f5f5f5); }
-.pos-palette_13 { .palette_variant( linear-gradient(30deg, #1a1b1f, #3d3f45), white, #a2a2ab, @color_gray_lighter, @color_gray_lighter); }
+.pos-palette_12 { @include palette-variant(#434343, #e6e6e6, #5b5b5b, #bdb9b9, #f5f5f5); }
+.pos-palette_13 { @include palette-variant(linear-gradient(30deg, #1a1b1f, #3d3f45), white, #a2a2ab, $color-gray-lighter, $color-gray-lighter); }

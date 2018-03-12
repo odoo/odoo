@@ -6,17 +6,17 @@
         }
 
         .o_kanban_card_settings {
-            padding-top: @odoo-horizontal-padding/2;
-            padding-bottom: @odoo-horizontal-padding/2;
+            padding-top: $odoo-horizontal-padding/2;
+            padding-bottom: $odoo-horizontal-padding/2;
 
             border-top: 1px solid;
-            border-color: @odoo-brand-lightsecondary;
+            border-color: $odoo-brand-lightsecondary;
         }
         .o_dashboard_star {
             font-size: 12px;
 
             &.fa-star-o {
-                color: @odoo-main-color-muted;
+                color: $odoo-main-color-muted;
                 &:hover {
                     color: gold;
                 }
@@ -27,7 +27,7 @@
         }
 
         .o_dashboard_graph {
-            margin-bottom: -@odoo-horizontal-padding/2;
+            margin-bottom: -$odoo-horizontal-padding/2;
         }
     }
 
@@ -58,7 +58,7 @@
                 }
                 g.tick.major {
                     // Don't know why, but leads to strange bold text
-                    // stroke: @odoo-brand-primary;
+                    // stroke: $odoo-brand-primary;
 
                     line {
                         display: none;
@@ -72,13 +72,13 @@
             g.nv-linesWrap {
                 g.nv-group.nv-series-0 {
                     fill-opacity: 0.3 !important;
-                    fill: @odoo-brand-primary !important;
-                    stroke: @odoo-brand-primary !important;
+                    fill: $odoo-brand-primary !important;
+                    stroke: $odoo-brand-primary !important;
 
                     .nv-point {
                         visibility: hidden;
                         r: 3;
-                        stroke: @odoo-brand-primary !important;
+                        stroke: $odoo-brand-primary !important;
                         fill: white;
                         stroke-width: 2;
                     }
@@ -99,11 +99,11 @@
                 g.nv-group.nv-series-0 {
                     g.past {
                         opacity: 0.5;
-                        fill: @odoo-brand-primary !important;
+                        fill: $odoo-brand-primary !important;
                     }
                     g.future {
                         opacity: 0.5;
-                        fill: @odoo-brand-optional !important;
+                        fill: $odoo-brand-optional !important;
                     }
                 }
             }

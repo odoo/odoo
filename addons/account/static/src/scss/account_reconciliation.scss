@@ -1,9 +1,9 @@
-@actionColWidth: 15px;
-@mainTableBordersPadding: 3px;
-@lightBorder: 1px solid #bbb;
-@accountingBorder: 1px solid #000;
-@initialLineBackground: #f0f0f0;
-@infoColor: #44c;
+$actionColWidth: 15px;
+$mainTableBordersPadding: 3px;
+$lightBorder: 1px solid #bbb;
+$accountingBorder: 1px solid #000;
+$initialLineBackground: #f0f0f0;
+$infoColor: #44c;
 
 
 .o_reconciliation {
@@ -16,9 +16,9 @@
         height: 1.5em;
         line-height: 1.5em;
         &.statement_name {
-            .o-text-overflow();
+            @include o-text-overflow;
             &.editable:hover {
-                outline: 1px dashed @odoo-brand-optional;
+                outline: 1px dashed $odoo-brand-optional;
                 outline-offset: -1px;
                 cursor: pointer;
             }
@@ -51,7 +51,7 @@
     .o_view_noreconciliation {
         max-width: none;
         padding: 0 10%;
-        color: @odoo-main-color-muted;
+        color: $odoo-main-color-muted;
         font-size: 125%;
     }
 
@@ -110,16 +110,16 @@
             cursor: pointer;
         }
         tr.already_reconciled {
-            color: @infoColor;
+            color: $infoColor;
         }
         tr.invalid {
             text-decoration: line-through;
         }
         thead td {
-            border-top: @lightBorder;
+            border-top: $lightBorder;
             padding-top: 4px;
             padding-bottom: 5px;
-            background-color: @initialLineBackground;
+            background-color: $initialLineBackground;
         }
         tfoot td {
             color: #bbb;
@@ -129,7 +129,7 @@
 
         .cell_action {
             width: 15px;
-            color: @gray;
+            color: $gray;
             background: #fff;
             border: 0;
             .fa-add-remove:before {
@@ -182,29 +182,19 @@
             td {
                 padding-top: 10px;
                 text-align: center;
-                color: @infoColor;
+                color: $infoColor;
             }
         }
 
         /* Icons */
 
         .toggle_match, .toggle_create {
-            .o-transform(rotate(0deg));
-            .o-transition(transform, 300ms);
+            @include o-transform(rotate(0deg));
+            @include o-transition(transform, 300ms);
         }
-        .visible_toggle {
+        .visible_toggle, &[data-mode="match"] .toggle_match, &[data-mode="create"] .toggle_create {
             visibility: visible !important;
-            .o-transform(rotate(90deg));
-        }
-        &[data-mode="match"] {
-            .toggle_match {
-                .visible_toggle;
-            }
-        }
-        &[data-mode="create"] {
-            .toggle_create {
-                .visible_toggle;
-            }
+            @include o-transform(rotate(90deg));
         }
 
         /* Match view & Create view */
@@ -214,18 +204,18 @@
             overflow: hidden;
             margin-top: 5px;
             margin-bottom: 5px;
-            .o-transition(max-height, 250ms);
+            @include o-transition(max-height, 250ms);
         }
         &[data-mode="match"] > .match {
             max-height: none;
-            .o-transition(max-height, 400ms);
+            @include o-transition(max-height, 400ms);
         }
         &[data-mode="create"] > .create {
             max-height: 210px;
-            .o-transition(max-height, 400ms);
+            @include o-transition(max-height, 400ms);
         }
     }
-        
+
     /* Match view */
 
     .match {
@@ -241,7 +231,7 @@
             content: "\f067";
         }
         .match_controls {
-            padding: 0 0 5px (@actionColWidth+@mainTableBordersPadding);
+            padding: 0 0 5px ($actionColWidth+$mainTableBordersPadding);
 
             .filter {
                 width: 240px;
@@ -264,7 +254,7 @@
         }
         .show_more {
             display: inline-block;
-            margin-left: (@actionColWidth+@mainTableBordersPadding);
+            margin-left: ($actionColWidth+$mainTableBordersPadding);
             margin-top: 5px;
         }
     }
@@ -272,7 +262,7 @@
     /* Create view */
     .create {
         > div {
-            margin: 0 @actionColWidth;
+            margin: 0 $actionColWidth;
             padding: 10px;
             overflow: auto;
             border: 1px solid #ddd;
@@ -304,7 +294,7 @@
         .add_line_container {
             text-align: center;
             clear: both;
-            color: @infoColor;
+            color: $infoColor;
             cursor: pointer;
         }
     }

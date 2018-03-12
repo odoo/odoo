@@ -13,14 +13,14 @@
         opacity: 0.2;
     }
     .o_demo_message {
-        color: @odoo-main-color-muted;
+        color: $odoo-main-color-muted;
         width: 100%;
-        .o-position-absolute(@left: 0, @top: 12%);
-        .o-flex-display();
-        .o-justify-content(center);
+        @include o-position-absolute($left: 0, $top: 12%);
+        @include o-flex-display;
+        @include o-justify-content(center);
     }
     .o_link_enable {
-        @media (min-width: @screen-md-min) {
+        @media (min-width: $screen-md-min) {
             border-right: 1px solid #ccc;
         }
         height: initial;
@@ -29,19 +29,19 @@
         overflow: hidden;
         text-overflow: ellipsis;
         a {
-            color: darken(@odoo-brand-lightsecondary, 40%);
+            color: darken($odoo-brand-lightsecondary, 40%);
         }
         &:hover {
-            background-color: @odoo-brand-lightsecondary;
+            background-color: $odoo-brand-lightsecondary;
         }
         .o_highlight {
-            color: @odoo-brand-optional;
+            color: $odoo-brand-optional;
             font-size: 20px;
             font-weight: bold;
         }
     }
     .o_link_disable {
-        @media (min-width: @screen-md-min) {
+        @media (min-width: $screen-md-min) {
             border-right: 1px solid #ccc;
         }
         height: initial;
@@ -50,7 +50,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         margin: 10px 0px;
-        color: darken(@odoo-brand-lightsecondary, 40%);
+        color: darken($odoo-brand-lightsecondary, 40%);
         .o_highlight {
             font-size: 20px;
             font-weight: bold;

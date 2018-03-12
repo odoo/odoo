@@ -1,8 +1,8 @@
-@odoo-submenu-width: 220px;
+$odoo-submenu-width: 220px;
 
 .o_web_client {
-    .o-flex-display();
-    .o-flex-flow(column, nowrap);
+    @include o-flex-display;
+    @include o-flex-flow(column, nowrap);
     overflow: hidden;
 
     &.o_fullscreen {
@@ -16,7 +16,7 @@
 
 
     .navbar {
-        .o-flex(0, 0, auto);
+        @include o-flex(0, 0, auto);
 
         li > a {
             padding: 4px 8px;
@@ -31,20 +31,20 @@
     }
 
     > .o_main {
-        .o-flex(1, 1, auto);
-        .o-flex-display();
+        @include o-flex(1, 1, auto);
+        @include o-flex-display;
         min-height: 0; // Allow flex to shrink this element as much as it wants
         height: 100%;
 
         .o_sub_menu {
-            .o-flex(0, 0, @odoo-submenu-width);
-            .o-flex-display();
-            .o-flex-flow(column, nowrap);
-            border-right: 1px solid darken(@odoo-control-panel-background-color, 20%);
-            background-color: @odoo-control-panel-background-color;
+            @include o-flex(0, 0, $odoo-submenu-width);
+            @include o-flex-display;
+            @include o-flex-flow(column, nowrap);
+            border-right: 1px solid darken($odoo-control-panel-background-color, 20%);
+            background-color: $odoo-control-panel-background-color;
 
             .o_sub_menu_logo {
-                .o-flex(0, 0, auto);
+                @include o-flex(0, 0, auto);
                 text-align: center;
                 position: relative;
 
@@ -68,20 +68,20 @@
             }
 
             .o_sub_menu_content {
-                .o-flex(1, 1, auto);
+                @include o-flex(1, 1, auto);
                 height:100%;
                 overflow-y: auto;
 
                 .oe_secondary_menu_section {
                     font-weight: bold;
                     margin-left: 8px;
-                    color: @odoo-brand-optional;
+                    color: $odoo-brand-optional;
                 }
                 .oe_secondary_submenu {
                     margin: 3px 0px 10px;
                     line-height: 1.1em;
                     >li:not(.active) > a {
-                        color: @odoo-main-text-color;
+                        color: $odoo-main-text-color;
                     }
                     > li > a {
                         padding: 4px 4px 4px 18px;
@@ -98,7 +98,7 @@
                         }
                     }
                     .oe_menu_text {
-                        .o-text-overflow();
+                        @include o-text-overflow;
                         max-width: 85%;
                         margin-top: 1px;
                     }
@@ -129,34 +129,34 @@
             }
 
             .o_sub_menu_footer {
-                .o-flex(0, 0, auto);
+                @include o-flex(0, 0, auto);
                 text-align: center;
 
                 > a {
                     font-weight: bold;
                     > span {
-                        color: @odoo-color-pink;
+                        color: $odoo-color-pink;
                     }
                 }
             }
         }
 
         .o_main_content {
-            .o-flex(1, 1, auto);
-            .o-flex-display();
-            .o-flex-flow(column, nowrap);
+            @include o-flex(1, 1, auto);
+            @include o-flex-display;
+            @include o-flex-flow(column, nowrap);
 
             .o_control_panel {
-                .o-flex(0, 0, auto);
+                @include o-flex(0, 0, auto);
             }
             .o_content {
-                .o-flex(1, 1, auto);
+                @include o-flex(1, 1, auto);
                 height: 100%;
                 overflow: auto;
                 position: relative;
 
                 > .o_view_controller {
-                    .o-position-absolute(0, 0, 0, 0);  // Get the 100% height of its flex parent
+                    @include o-position-absolute(0, 0, 0, 0);  // Get the 100% height of its flex parent
                     height: 100%;
                 }
             }

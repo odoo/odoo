@@ -3,19 +3,19 @@
 // ------------------------------------------------------------------
 .o_web_client {
     position: relative; // normally useless but required by bootstrap-datepicker
-    background-color: @odoo-webclient-background-color;
+    background-color: $odoo-webclient-background-color;
 }
 
 // ------------------------------------------------------------------
 // Misc. widgets
 // ------------------------------------------------------------------
-@notification-error-bg-color: #F16567;
-@notification-info-bg-color: #FCFBEA;
+$notification-error-bg-color: #F16567;
+$notification-info-bg-color: #FCFBEA;
 .o_notification_manager {
     width: 300px;
     max-width: 100%;
 
-    .o-position-absolute(@navbar-height, 0px);
+    @include o-position-absolute($navbar-height, 0px);
     z-index: 1100; // Bootstrap modal z-index is 1050
 
     .o_notification {
@@ -24,19 +24,19 @@
 
         opacity: 0;
 
-        background-color: @notification-info-bg-color;
-        box-shadow: 0px 0px 5px 1px @odoo-main-text-color;
+        background-color: $notification-info-bg-color;
+        box-shadow: 0px 0px 5px 1px $odoo-main-text-color;
 
         position: relative;
         .o_close {
-            .o-position-absolute(5px, 5px);
+            @include o-position-absolute(5px, 5px);
             color: rgba(0, 0, 0, 0.3);
             text-decoration: none;
         }
 
         .o_notification_title {
-            .o-flex-display();
-            .o-align-items(center);
+            @include o-flex-display;
+            @include o-align-items(center);
 
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             padding: 10px 10px 10px 20px;
@@ -56,7 +56,7 @@
 
         &.o_error {
             color: white;
-            background-color: @notification-error-bg-color;
+            background-color: $notification-error-bg-color;
         }
     }
 }
@@ -103,30 +103,30 @@ div.o_boolean_toggle {
     }
 
     > input:checked + .slider {
-        background-color: @odoo-brand-optional;
+        background-color: $odoo-brand-optional;
 
         &:before {
-            .translate(14px; 0px);
+            @include translate(14px, 0px);
         }
     }
 }
 
 // Full bg colors (bootstrap extension)
 .bg-success-full {
-    background-color: @brand-success;
+    background-color: $brand-success;
 }
 .bg-warning-full {
-    background-color: @brand-warning;
+    background-color: $brand-warning;
 }
 .bg-danger-full {
-    background-color: @brand-danger;
+    background-color: $brand-danger;
 }
 .bg-info-full {
-    background-color: @brand-info;
+    background-color: $brand-info;
 }
 
 .o_web_accesskey_overlay {
-    font-family: @font-family-sans-serif;
+    font-family: $font-family-sans-serif;
     position: absolute;
     width: 100%;
     height: 100%;

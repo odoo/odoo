@@ -1,28 +1,28 @@
 
 .o_domain_node {
-    @o-domain-selector-indent: 32px;
-    @o-domain-selector-panel-space: 60px;
-    @o-domain-selector-row-height: 35px; // should be greater than a "normal" row so that "header" parts are the same size of rows
-    @o-domain-animation-bar-height: 15px;
+    $o-domain-selector-indent: 32px;
+    $o-domain-selector-panel-space: 60px;
+    $o-domain-selector-row-height: 35px; // should be greater than a "normal" row so that "header" parts are the same size of rows
+    $o-domain-animation-bar-height: 15px;
 
     position: relative;
 
     // Rows in a domain node (selector) have a minimum height and holds the control panel
     .o_domain_selector_row {
-        .o-flex-display();
-        .o-align-items(center);
-        min-height: @o-domain-selector-row-height;
+        @include o-flex-display;
+        @include o-align-items(center);
+        min-height: $o-domain-selector-row-height;
 
         > * {
-            .o-flex(0, 0, auto);
+            @include o-flex(0, 0, auto);
         }
 
         > .o_domain_node_control_panel {
-            .o-position-absolute(@top: 0, @bottom: 0, @right: -@o-domain-selector-panel-space);
+            @include o-position-absolute($top: 0, $bottom: 0, $right: -$o-domain-selector-panel-space);
 
             > button {
                 float: left;
-                width: @o-domain-selector-panel-space/2;
+                width: $o-domain-selector-panel-space/2;
                 height: 100%;
                 padding: 0;
                 background-color: transparent;
@@ -35,7 +35,7 @@
                     padding-left: 5px;
 
                     &:hover {
-                        color: @brand-danger;
+                        color: $brand-danger;
                     }
                 }
             }
@@ -48,12 +48,12 @@
             position: relative;
 
             .o_domain_tree_operator_caret::after {
-                .o-caret-down();
+                @include o-caret-down;
             }
         }
 
         > .o_domain_node_children_container {
-            padding-left: @o-domain-selector-indent;
+            padding-left: $o-domain-selector-indent;
         }
 
         // Rules specific to domain root
@@ -67,15 +67,15 @@
             }
 
             &.o_edit_mode > .o_domain_node_children_container {
-                padding-right: @o-domain-selector-panel-space; // delete button is over the row
+                padding-right: $o-domain-selector-panel-space; // delete button is over the row
             }
 
             > .o_domain_debug_container {
                 display: block;
                 margin-top: 16px;
                 padding: 8px 10px 12px;
-                background: @gray-dark;
-                color: fade(white, 50%);
+                background: $gray-dark;
+                color: rgba(white, 0.5);
                 font-family: monospace;
                 font-weight: normal;
 
@@ -92,13 +92,13 @@
     // Rules specific to domain parts which do not contain sub-domain parts
     &.o_domain_leaf {
         &.o_read_mode {
-            .o-inline-flex-display();
+            @include o-inline-flex-display;
             margin-right: 4px;
         }
 
         > .o_domain_leaf_info {
-            background: @odoo-brand-lightsecondary;
-            border: 1px solid darken(@odoo-brand-lightsecondary, 10%);
+            background: $odoo-brand-lightsecondary;
+            border: 1px solid darken($odoo-brand-lightsecondary, 10%);
             padding: 2px 4px;
 
             > .o_field_selector {
@@ -119,21 +119,21 @@
         }
 
         > .o_domain_leaf_edition {
-            .o-flex-display();
+            @include o-flex-display;
             width: 100%;
-            padding: 4px (@o-domain-selector-panel-space/2) 4px 0;
+            padding: 4px ($o-domain-selector-panel-space/2) 4px 0;
 
             > * {
-                .o-flex(1, 1, 15%); // operator select
+                @include o-flex(1, 1, 15%); // operator select
                 width: auto;
                 background-color: white;
 
                 &:first-child { // field selector
-                    .o-flex(0, 1, 55%);
+                    @include o-flex(0, 1, 55%);
                 }
 
                 &:last-child { // field value
-                    .o-flex(1, 1, 25%);
+                    @include o-flex(1, 1, 25%);
                 }
 
                 + * {
@@ -146,13 +146,13 @@
             }
 
             .o_domain_leaf_value_tags {
-                .o-flex-display();
+                @include o-flex-display;
 
                 > * {
-                    .o-flex(0, 0, auto);
+                    @include o-flex(0, 0, auto);
                 }
                 > input {
-                    .o-flex(1, 1, auto);
+                    @include o-flex(1, 1, auto);
                     width: 0;
                     min-width: 50px;
                 }
@@ -164,16 +164,16 @@
     }
 
     // Animation effects
-    .o-transition(margin-bottom, .05s, ease, .05s);
+    @include o-transition(margin-bottom, .05s, ease, .05s);
 
     &::after {
         content: "";
-        .o-position-absolute(@left: 0, @right: 0, @top: 100%);
+        @include o-position-absolute($left: 0, $right: 0, $top: 100%);
         display: block;
-        height: @o-domain-animation-bar-height;
+        height: $o-domain-animation-bar-height;
         max-height: 0;
-        .o-linear-gradient(45deg, fade(@odoo-brand-optional, 40%), fade(@odoo-brand-optional, 10%));
-        .o-transition(max-height, .05s, ease, .05s);
+        @include o-linear-gradient(45deg, rgba($odoo-brand-optional, 0.4), rgba($odoo-brand-optional, 0.1));
+        @include o-transition(max-height, .05s, ease, .05s);
     }
 
     &.o_hover_btns, &.o_hover_add_node {
@@ -190,15 +190,15 @@
     }
 
     &.o_hover_add_node {
-        margin-bottom: @o-domain-animation-bar-height;
-        .o-transition(margin, .15s, ease, .5s);
+        margin-bottom: $o-domain-animation-bar-height;
+        @include o-transition(margin, .15s, ease, .5s);
 
         &::after {
-            max-height: @o-domain-animation-bar-height;
-            .o-transition(max-height, .15s, ease, .5s);
+            max-height: $o-domain-animation-bar-height;
+            @include o-transition(max-height, .15s, ease, .5s);
         }
         &.o_hover_add_inset_node::after {
-            left: @o-domain-selector-indent;
+            left: $o-domain-selector-indent;
         }
     }
 }
