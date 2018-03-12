@@ -69,6 +69,10 @@ def copy_cache(records, env):
             for record_id in record_ids:
                 if record_id in src_cache:
                     # copy the cached value as such
+                    if isinstance(src_cache[record_id], FailedValue):
+                        # But not if it's a FailedValue, which often is an access error
+                        # because the other environment (eg. sudo()) is well expected to have access.
+                        continue
                     value = dst_cache[record_id] = src_cache[record_id]
                     if field.relational and isinstance(value, tuple):
                         todo[field.comodel_name].update(value)
