@@ -103,16 +103,16 @@
     cursor: pointer;
     @include user-select(none);  // Prevent text selection when toggling the dropdowns
     > a { // dropdown togglers
-        color: $odoo-main-text-color;
+        color: $o-main-text-color;
         &:hover {
             text-decoration: none;
             font-weight: bold;
-            color: darken($odoo-main-text-color, 10%);
+            color: darken($o-main-text-color, 10%);
         }
     }
     &.open > a {
         font-weight: bold;
-        color: darken($odoo-main-text-color, 10%);
+        color: darken($o-main-text-color, 10%);
     }
 }
 

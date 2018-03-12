@@ -75,7 +75,7 @@
         }
         @media (max-width: $screen-xs-max) {
             .o_composer_button_send {
-                color: $odoo-brand-optional;
+                color: $o-brand-optional;
             }
         }
     }
@@ -95,13 +95,13 @@
 
     // Both inline and not-inline design. Mini-composer disabled.
     &:not(.o_chat_mini_composer) {
-        padding:  $mail-thread-avatar-size*0.5;
-        padding-left: $grid-gutter-width*0.5 + $mail-thread-avatar-size + $o-mail-chatter-gap;
+        padding:  $o-mail-thread-avatar-size*0.5;
+        padding-left: $grid-gutter-width*0.5 + $o-mail-thread-avatar-size + $o-mail-chatter-gap;
         border: 1px solid $gray-lighter-dark;
         border-top: none;
 
         .o_chatter_avatar {
-            @include o-position-absolute(0, $left:  -$mail-thread-avatar-size - $o-mail-chatter-gap);
+            @include o-position-absolute(0, $left:  -$o-mail-thread-avatar-size - $o-mail-chatter-gap);
         }
 
         .o_chatter_composer_info, .o_composer_suggested_partners {
@@ -193,7 +193,7 @@
                 border-radius: 0 3px 3px 0;
                 // Make the button appear as the same size as the subject input
                 padding: 10px $padding-base-horizontal;
-                border: 1px solid darken($odoo-brand-optional, 5%);
+                border: 1px solid darken($o-brand-optional, 5%);
                 border-left-width: 0;
             }
         }
@@ -296,7 +296,7 @@ $o-mail-attachment-margin: 5px;
         @include o-text-overflow(block);
 
         a {
-            @include o-hover-text-color($default-color: $odoo-main-text-color, $hover-color: $headings-color);
+            @include o-hover-text-color($default-color: $o-main-text-color, $hover-color: $headings-color);
         }
     }
 
@@ -423,7 +423,7 @@ $o-mail-attachment-margin: 5px;
     }
 }
 .o_modal_fullscreen {
-    z-index: $o-chat-window-zindex + 1;
+    z-index: $o-mail-chat-window-zindex + 1;
 
     .o_viewer_content {
         position: relative;

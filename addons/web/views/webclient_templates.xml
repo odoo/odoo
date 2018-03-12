@@ -1,17 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="web._assets_helpers">
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/_variables.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/mixins/_vendor-prefixes.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/mixins/_buttons.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/mixins/_clearfix.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/mixins/_size.scss"/>
-
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/variables.scss"/>
+    <template id="_assets_utils">
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/_mixins.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
     </template>
 
-    <template id="web.assets_common" name="Common Assets (used in backend interface and website)">
+    <template id="_assets_primary_variables">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/primary_variables.scss"/>
+    </template>
+
+    <template id="_assets_secondary_variables">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/secondary_variables.scss"/>
+    </template>
+
+    <template id="_assets_helpers">
+        <t t-call="web._assets_utils"/>
+        <t t-call="web._assets_primary_variables"/>
+        <t t-call="web._assets_secondary_variables"/>
+
+        <!-- Bootstrap variables should not be necessary, all pages come with bootstrap in at least one of their -->
+        <!-- bundle and, ideally, these should be available in all assets... with their odoo override. This system -->
+        <!-- however works for now as non-backend and non-frontend assets do not need overriden BS variables yet. -->
+        <link t-if="not no_bs_vars" rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/_variables.scss"/>
+    </template>
+
+    <template id="_assets_backend_helpers">
+        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden.scss"/>
+    </template>
+
+    <template id="_assets_frontend_helpers">
+        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_frontend.scss"/>
+    </template>
+
+    <template id="assets_common" name="Common Assets (used in backend interface and website)">
         <t t-call="web._assets_helpers"/>
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
@@ -97,14 +120,13 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
     </template>
 
-    <template id="web.assets_backend" name="Backend Assets (used in backend interface)">
-        <t t-call="web._assets_helpers"/>
+    <template id="assets_backend" name="Backend Assets (used in backend interface)">
+        <t t-call="web._assets_backend_helpers"/>
 
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
 
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient_extra.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient_layout.scss"/>
 
@@ -256,7 +278,7 @@
     </template>
 
     <template id="web.assets_frontend" name="Website Assets">
-        <t t-call="web._assets_helpers"/>
+        <t t-call="web._assets_frontend_helpers"/>
 
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
 

@@ -52,8 +52,8 @@
     <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
 </template>
 
-<template id="_assets_helpers" inherit_id="web._assets_helpers">
-    <xpath expr="link[last()]" position="after">
+<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.variables.scss"/>
     </xpath>
 </template>

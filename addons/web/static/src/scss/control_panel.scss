@@ -1,11 +1,10 @@
-$breadcrumb-height: 30px;
 
 .o_control_panel {
     @include o-flex-display;
     @include o-flex-flow(row, wrap);
-    border-bottom: 1px solid darken($odoo-control-panel-background-color, 20%);
+    border-bottom: 1px solid darken($o-control-panel-background-color, 20%);
     @include o-webclient-padding($top: 10px, $bottom: 10px);
-    background-color: $odoo-control-panel-background-color;
+    background-color: $o-control-panel-background-color;
 
     > .breadcrumb {
         width: 50%;
@@ -27,7 +26,7 @@ $breadcrumb-height: 30px;
 
     > .o_cp_searchview {
         width: 50%;
-        min-height: $breadcrumb-height;
+        min-height: $o-cp-breadcrumb-height;
     }
 
     .btn.o_enable_searchview {
@@ -93,7 +92,7 @@ $breadcrumb-height: 30px;
         }
 
         > .o_cp_switch_buttons > .btn:first-child {
-            margin-left: $odoo-horizontal-padding;
+            margin-left: $o-horizontal-padding;
         }
     }
 }

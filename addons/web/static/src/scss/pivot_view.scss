@@ -5,27 +5,27 @@
     // items corresponding to the clicked cell
     &.o_enable_linking {
         .o_pivot_cell_value:hover {
-            color: $odoo-brand-optional;
+            color: $o-brand-optional;
             cursor: pointer;
         }
     }
 
     table {
-        background-color: $odoo-view-background-color;
+        background-color: $o-view-background-color;
         width: auto;  // bootstrap override
 
         th {
             font-weight: normal;  // bootstrap override
-            background-color: lighten($odoo-brand-secondary, 40%);
+            background-color: lighten($o-brand-secondary, 40%);
         }
 
         @mixin o-pivot-header-cell {
-            background-color: lighten($odoo-brand-secondary, 40%);
+            background-color: lighten($o-brand-secondary, 40%);
             cursor: pointer;
             white-space: nowrap;
             @include user-select(none);
             &:hover {
-                background-color: lighten($odoo-brand-secondary, 30%);
+                background-color: lighten($o-brand-secondary, 30%);
             }
         }
 

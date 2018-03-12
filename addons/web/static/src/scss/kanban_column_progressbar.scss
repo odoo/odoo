@@ -1,10 +1,9 @@
-$o-kanban-counter-header-height: $o-kanban-header-title-height*0.6;
 
 @mixin o-kanban-css-filter($class, $accent-color) {
     // Provide CSS reordering and highlight
     &.o_kanban_group_show_#{$class} {
-        $mix-soft: mix($accent-color, $odoo-webclient-background-color, 5%);
-        $mix-full: mix($accent-color, $odoo-webclient-background-color);
+        $mix-soft: mix($accent-color, $o-webclient-background-color, 5%);
+        $mix-full: mix($accent-color, $o-webclient-background-color);
 
         &, .o_kanban_header {
             background-color: $mix-soft;
@@ -44,7 +43,7 @@ $o-kanban-counter-header-height: $o-kanban-header-title-height*0.6;
 // If columns has the progressbar, adapt the layout
 .o_kanban_view .o_kanban_group.o_kanban_has_progressbar {
     > .o_kanban_header .o_kanban_header_title {
-        height: $o-kanban-counter-header-height;
+        height: $o-kanban-header-title-height*0.6;
         margin-top: 5px;
     }
 

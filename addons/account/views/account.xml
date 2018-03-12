@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/variables.scss"/>
+        </xpath>
+    </template>
+
     <template id="assets_backend" name="account assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/account/static/src/css/account_bank_and_cash.css"/>

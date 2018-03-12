@@ -1,4 +1,3 @@
-$odoo-submenu-width: 220px;
 
 .o_web_client {
     @include o-flex-display;
@@ -37,11 +36,11 @@ $odoo-submenu-width: 220px;
         height: 100%;
 
         .o_sub_menu {
-            @include o-flex(0, 0, $odoo-submenu-width);
+            @include o-flex(0, 0, 220px);
             @include o-flex-display;
             @include o-flex-flow(column, nowrap);
-            border-right: 1px solid darken($odoo-control-panel-background-color, 20%);
-            background-color: $odoo-control-panel-background-color;
+            border-right: 1px solid darken($o-control-panel-background-color, 20%);
+            background-color: $o-control-panel-background-color;
 
             .o_sub_menu_logo {
                 @include o-flex(0, 0, auto);
@@ -75,13 +74,13 @@ $odoo-submenu-width: 220px;
                 .oe_secondary_menu_section {
                     font-weight: bold;
                     margin-left: 8px;
-                    color: $odoo-brand-optional;
+                    color: $o-brand-optional;
                 }
                 .oe_secondary_submenu {
                     margin: 3px 0px 10px;
                     line-height: 1.1em;
                     >li:not(.active) > a {
-                        color: $odoo-main-text-color;
+                        color: $o-main-text-color;
                     }
                     > li > a {
                         padding: 4px 4px 4px 18px;
@@ -135,7 +134,7 @@ $odoo-submenu-width: 220px;
                 > a {
                     font-weight: bold;
                     > span {
-                        color: $odoo-color-pink;
+                        color: $o-color-pink;
                     }
                 }
             }

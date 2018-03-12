@@ -232,41 +232,6 @@ a.o_underline {
     }
 }
 
-// Colors
-$gray-white: #fff;
-
-$color-alpha: #1cc1a9;
-$color-beta: #875A7B;
-$color-gamma: #BA3C3D;
-$color-delta: #0D6759;
-$color-epsilon: #0B2E59;
-
-// Greyscale transparent colours
-$color-black-25: rgba(black, 0.25);
-$color-black-50: rgba(black, 0.5);
-$color-black-75: rgba(black, 0.75);
-$color-white-25: rgba(white, 0.25);
-$color-white-50: rgba(white, 0.5);
-$color-white-75: rgba(white, 0.75);
-
-@mixin o-create-color-classes($name, $color, $complementary: o-get-most-contrast($color, $text-color, #FFF), $content-color: $color) {
-    .bg-#{$name} {
-        background-color: $color;
-        color: $complementary;
-        .text-muted {
-            color: rgba($complementary, 0.4);
-        }
-    }
-    body .text-#{$name} { // body to make the rules more important that bg-* ones
-        color: $content-color;
-    }
-}
-@mixin o-create-color-btn-classes($name, $color, $complementary: o-get-most-contrast($color, $text-color, #FFF), $border-color: darken($color, 5%)) {
-    .btn-#{$name} {
-        @include button-variant($complementary, $color, $border-color);
-    }
-}
-
 // Create classes for theme colors...
 @include o-create-color-classes(alpha, $color-alpha);
 @include o-create-color-classes(beta, $color-beta);

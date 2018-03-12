@@ -23,11 +23,11 @@
     @media (max-width: $screen-md-min) {
         overflow-x:scroll;
     }
-    background-color: $odoo-view-background-color;
+    background-color: $o-view-background-color;
     &.o_stock_reports_no_print {
         padding-bottom: 125px;
-        margin: $odoo-horizontal-padding auto;
-        @include o-webclient-padding($top: $odoo-sheet-vpadding, $bottom: $odoo-sheet-vpadding);
+        margin: $o-horizontal-padding auto;
+        @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
         .o_stock_reports_level0 {
             @include o-stock-reports-lines($border-width: 1px, $font-weight: normal, $border-top-style: solid, $border-bottom-style: groove);
         }

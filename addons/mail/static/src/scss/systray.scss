@@ -21,7 +21,7 @@
     }
     .o_notification_counter {
         @include o-position-absolute($top: 20%, $right: 1px);
-        background: $odoo-brand-optional;
+        background: $o-brand-optional;
         color: white;
         padding: 0em 0.3em;
         font-size: 0.7em;
@@ -34,7 +34,7 @@
             @include o-flex-display;
             @include o-align-items(center);
             @include o-justify-content(center);
-            color: $odoo-main-text-color;
+            color: $o-main-text-color;
             height: 50px;
         }
 
@@ -48,9 +48,9 @@
                 padding: 5px;
             }
             .o_filter_button {
-                color: $odoo-main-color-muted;
+                color: $o-main-color-muted;
                 &:hover, &.active {
-                    color: $odoo-brand-optional;
+                    color: $o-brand-optional;
                 }
                 &.active {
                     cursor: default;
@@ -130,7 +130,7 @@
                 left: 0px;
                 right: 0px;
                 background-color: white;
-                color: $odoo-main-text-color;
+                color: $o-main-text-color;
             }
         }
     }
