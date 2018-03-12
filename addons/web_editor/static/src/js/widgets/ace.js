@@ -117,7 +117,7 @@ var ViewEditor = Widget.extend({
     template: 'web_editor.ace_view_editor',
     xmlDependencies: ['/web_editor/static/src/xml/ace.xml'],
     jsLibs: [
-        '/web/static/lib/ace/ace.odoo-custom.js',
+        '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-xml.js',
             '/web/static/lib/ace/mode-less.js',
