@@ -22,7 +22,7 @@ Vibration, Notification, Toast through Odoo Web (via JavaScript). For this, you
 do not need to be a mobile developer, if you know Odoo JavaScript API you can
 access all available mobile features.
 
-.. warning:: This features works with **Odoo Enterprise 10.0+** only
+.. warning:: These features work with **Odoo Enterprise 10.0+** only
 
 How does it work? 
 =================
