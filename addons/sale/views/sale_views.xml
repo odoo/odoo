@@ -293,7 +293,8 @@
                                     </div>
                                     <field name="state" invisible="1"/>
                                 </form>
-                                <tree string="Sales Order Lines" editable="bottom" decoration-info="invoice_status=='to invoice'">
+                                <tree string="Sales Order Lines" editable="bottom" decoration-danger="line_type == 'section'"
+                                    decoration-info="invoice_status=='to invoice'" section_line="true" form_view_ref="sale.view_order_section_form">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_updatable" invisible="1"/>
                                     <field name="product_id"
@@ -303,7 +304,8 @@
                                         'default_lst_price': price_unit, 'default_description_sale': name}"
                                        />
                                     <field name="layout_category_id" groups="sale.group_sale_layout"/>
-                                    <field name="name"/>
+                                    <field name="line_type" invisible="1"/>
+                                    <field name="name" class="product_name"/>
                                     <field name="product_uom_qty"
                                         string="Ordered Qty"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
@@ -587,6 +589,23 @@
                 parent="sale_order_menu"
                 sequence="1" groups="sales_team.group_sale_salesman"/>
 
+        <record id="view_order_section_form" model="ir.ui.view">
+            <field name="name">sale.order.line.form</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <form string="Sales Order Section">
+                    <group>
+                        <field name="name" string="Section Name" widget="char"/>
+                        <field name="product_updatable" invisible="1"/>
+                        <field name="qty_delivered_method" invisible="1"/>
+                        <field name="qty_invoiced" invisible="1"/>
+                        <field name="line_type" invisible="1"/>
+                        <field name="sequence" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+                
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>
             <field name="model">sale.order.line</field>

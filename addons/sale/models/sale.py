@@ -881,7 +881,7 @@ class SaleOrderLine(models.Model):
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
-    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0)
+    price_unit = fields.Float('Unit Price', digits=dp.get_precision('Product Price'), default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', readonly=True, store=True)
@@ -894,10 +894,10 @@ class SaleOrderLine(models.Model):
 
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
-    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
+    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict')
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
-    product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
-    product_uom = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
+    product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), default=1.0)
+    product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
@@ -939,11 +939,13 @@ class SaleOrderLine(models.Model):
     ], related='order_id.state', string='Order Status', readonly=True, copy=False, store=True, default='draft')
 
     customer_lead = fields.Float(
-        'Delivery Lead Time', required=True, default=0.0,
+        'Delivery Lead Time', default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(string='Layout Sequence')
     # TODO: remove layout_category_sequence in master or make it work properly
+
+    line_type = fields.Selection([('section', 'Section'), ('note', 'Note')])
 
     @api.multi
     @api.depends('state', 'is_expense')
