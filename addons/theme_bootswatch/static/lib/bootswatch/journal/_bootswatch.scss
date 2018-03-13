@@ -1,15 +1,16 @@
-// Journal 3.2.0
+// Journal 3.3.7
 // Bootswatch
 // -----------------------------------------------------
 
-@import url("//fonts.googleapis.com/css?family=News+Cycle:400,700");
+$web-font-path: "https://fonts.googleapis.com/css?family=News+Cycle:400,700" !default;
+@import url(#{$web-font-path});
 
 // Navbar =====================================================================
 
 .navbar {
   font-size: 18px;
-  font-family: @font-family-sans-serif;
-  font-weight: @headings-font-weight;
+  font-family: $font-family-sans-serif;
+  font-weight: $headings-font-weight;
 
   &-default {
 
@@ -23,14 +24,14 @@
 
     .badge {
       background-color: #fff;
-      color: @navbar-inverse-bg;
+      color: $navbar-inverse-bg;
     }
   }
 }
 
 .navbar-brand {
-  font-size: 18px;
-  font-weight: @headings-font-weight;
+  font-size: inherit;
+  font-weight: $headings-font-weight;
   text-transform: uppercase;
 }
 
@@ -45,39 +46,63 @@
 .has-warning {
   .help-block,
   .control-label,
+  .radio,
+  .checkbox,
+  .radio-inline,
+  .checkbox-inline,
+  &.radio label,
+  &.checkbox label,
+  &.radio-inline label,
+  &.checkbox-inline label,
   .form-control-feedback {
-    color: @brand-danger;
+    color: $brand-danger;
   }
 
   .form-control,
   .form-control:focus {
-    border-color: @brand-danger;
+    border-color: $brand-danger;
   }
 }
 
 .has-error {
   .help-block,
   .control-label,
+  .radio,
+  .checkbox,
+  .radio-inline,
+  .checkbox-inline,
+  &.radio label,
+  &.checkbox label,
+  &.radio-inline label,
+  &.checkbox-inline label,
   .form-control-feedback {
-    color: @brand-primary;
+    color: $brand-primary;
   }
 
   .form-control,
   .form-control:focus {
-    border-color: @brand-primary;
+    border-color: $brand-primary;
   }
 }
 
 .has-success {
   .help-block,
   .control-label,
+  .radio,
+  .checkbox,
+  .radio-inline,
+  .checkbox-inline,
+  &.radio label,
+  &.checkbox label,
+  &.radio-inline label,
+  &.checkbox-inline label,
   .form-control-feedback {
-    color: @brand-success;
+    color: $brand-success;
   }
 
   .form-control,
   .form-control:focus {
-    border-color: @brand-success;
+    border-color: $brand-success;
   }
 }
 
@@ -98,8 +123,8 @@
 .jumbotron {
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: @font-family-sans-serif;
-    font-weight: @headings-font-weight;
+    font-family: $font-family-sans-serif;
+    font-weight: $headings-font-weight;
     color: #000;
   }
 }
