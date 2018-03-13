@@ -5,7 +5,6 @@ var base = require('web_editor.base');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var sAnimation = require('website.content.snippets.animation');
 var rpc = require('web.rpc');
 var time = require('web.time');
 
@@ -223,19 +222,12 @@ var PortalChatter = Widget.extend({
     },
 });
 
-sAnimation.registry.portal_chatter = sAnimation.Class.extend({
-    selector: ".o_portal_chatter",
-    destroy: function () {
-        this.$target.empty();
-        return this._super.apply(this, arguments);
-    },
-    start: function () {
-        if (!this.editableMode) {
-            var mail_thread = new PortalChatter(null, this.$el.data());
-            mail_thread.appendTo(this.$el);
-        }
-        return this._super.apply(this, arguments);
-    },
+base.ready().then(function () {
+    $('.o_portal_chatter').each(function (index) {
+        var $elem = $(this);
+        var mail_thread = new PortalChatter(null, $elem.data());
+        mail_thread.appendTo($elem);
+    });
 });
 
 return {

@@ -349,7 +349,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
-        <div id="discussion" class="hidden-print o_portal_chatter"
+        <div id="discussion" class="hidden-print o_portal_chatter o_not_editable"
             t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>
