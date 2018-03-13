@@ -1020,8 +1020,10 @@ class Cache(object):
         for field, field_cache in self._data.items():
             src_key = field.cache_key(src)
             dst_key = field.cache_key(dst)
-            for record_id, record_cache in field_cache.items():
-                if src_key in record_cache:
+            for record_cache in field_cache.values():
+                if src_key in record_cache and not isinstance(record_cache[src_key], SpecialValue):
+                    # But not if it's a SpecialValue, which often is an access error
+                    # because the other environment (eg. sudo()) is well expected to have access.
                     record_cache[dst_key] = record_cache[src_key]
 
     def invalidate(self, spec=None):

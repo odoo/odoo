@@ -233,6 +233,13 @@ class TestFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
+        # write on non-stored inverse field on severals records
+        foo1 = Category.create({'name': 'Foo'})
+        foo2 = Category.create({'name': 'Foo'})
+        (foo1 + foo2).write({'display_name': 'Bar'})
+        self.assertEqual(foo1.name, 'Bar')
+        self.assertEqual(foo2.name, 'Bar')
+
         record = self.env['test_new_api.compute.inverse']
 
         # create/write on 'foo' should only invoke the compute method

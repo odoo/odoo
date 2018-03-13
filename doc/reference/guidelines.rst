@@ -6,17 +6,26 @@
 Odoo Guidelines
 ===============
 
-This page introduces the new Odoo Coding Guidelines. Those aim to improve the quality of the code (e.g. better readability of source) and Odoo Apps. Indeed, proper code eases maintenance, aids debugging, lowers complexity and promotes reliability.
-
-These guidelines should be applied to every new module, and new development.
+This page introduces the Odoo Coding Guidelines. Those aim to improve the
+quality of Odoo Apps code. Indeed proper code improves readability, eases
+maintenance, helps debugging, lowers complexity and promotes reliability.
+These guidelines should be applied to every new module and to all new development.
 
 .. warning::
 
-    These guidelines are written with new modules and new files in mind. When
-    modifying existing files, the original style of the file strictly supersedes
-    any other style guidelines. In other words, never modify existing files in
-    order to apply these guidelines, to avoid disrupting the revision history of
-    each line. For more details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+    When modifying existing files in **stable version** the original file style
+    strictly supersedes any other style guidelines. In other words please never
+    modify existing files in order to apply these guidelines. It avoids disrupting
+    the revision history of code lines. Diff should be kept minimal. For more
+    details, see our `pull request guide <https://odoo.com/submit-pr>`_.
+
+.. warning::
+
+    When modifying existing files in **master (development) version** apply those
+    guidelines to existing code only for modified code or if most of the file is
+    under revision. In other words modify existing files structure only if it is
+    going under major changes. In that case first do a **move** commit then apply
+    the changes related to the feature.
 
 Module structure
 ================
@@ -913,50 +922,137 @@ Javascript and CSS
 Git
 ===
 
-Commit message
---------------
+Configure your git
+------------------
 
-Prefix your commit with
+Based on ancestral experience and oral tradition, the following things go a long
+way towards making your commits more helpful:
 
-- **[IMP]** for improvements
-- **[FIX]** for bug fixes
-- **[REF]** for refactoring
-- **[ADD]** for adding new resources
-- **[REM]** for removing of resources
-- **[MOV]** for moving files (Do not change content of moved file, otherwise
-  Git will loose track, and the history will be lost !), or simply moving code
-  from a file to another one.
-- **[MERGE]** for merge commits (only for forward/back-port)
-- **[CLA]** for signing the Odoo Individual Contributor License
+- Be sure to define both the user.email and user.name in your local git config
 
-Then, in the message itself, specify the part of the code impacted by
-your changes (module name, lib, transversal object, ...) and a description
-of the changes.
+  .. code-block:: text
 
-- Always include a meaningful commit message: it should be self explanatory
-  (long enough) including the name of the module that has been changed and the
-  reason behind the change. Do not use single words like "bugfix" or
-  "improvements".
-- Avoid commits which simultaneously impact multiple modules. Try to
-  split into different commits where impacted modules are different
-  (It will be helpful if we need to revert a module separately).
+     git config --global <var> <value>
+
+- Be sure to add your full name to your Github profile here. Please feel fancy
+  and add your team, avatar, your favorite quote, and whatnot ;-)
+
+Commit message structure
+------------------------
+
+Commit message has four parts: tag, module, short description and full
+description. Try to follow the preferred structure for your commit messages
 
 .. code-block:: text
 
-    [FIX] website, website_mail: remove unused alert div, fixes look of input-group-btn
+  [TAG] module: describe your change in a short sentence (ideally < 50 chars)
 
-    Bootstrap's CSS depends on the input-group-btn
-    element being the first/last child of its parent.
-    This was not the case because of the invisible
-    and useless alert.
+  Long version of the change description, including the rationale for the change,
+  or a summary of the feature being introduced.
 
-    [IMP] fields: reduce memory footprint of list/set field attributes
+  Please spend a lot more time describing WHY the change is being done rather
+  than WHAT is being changed. This is usually easy to grasp by actually reading
+  the diff. WHAT should be explained only if there are technical choices
+  or decision involved. In that case explain WHY this decision was taken.
 
-    [REF] web: add module system to the web client
+  End the message with references, such as task or bug numbers, PR numbers, and
+  OPW tickets, following the suggested format:
+  Related to task #taskId
+  #Fixes #12345  (link and close issue on Github)
+  #Closes #7865  (link and close PR on Github)
+  OPW-112233
 
-    This commit introduces a new module system for the javascript code.
-    Instead of using global ...
+Tag and module name
+-------------------
 
+Tags are used to prefix your commit. They should be one of the following
 
-.. note:: Use the long description to explain the *why* not the
-          *what*, the *what* can be seen in the diff
+- **[FIX]** for bug fixes: mostly used in stable version but also valid if you
+  are fixing a recent bug in development version;
+- **[REF]** for refactoring: when a feature is heavily rewritten;
+- **[ADD]** for adding new modules;
+- **[REM]** for removing resources: removing dead code, removing views,
+  removing modules, ...;
+- **[REV]** for reverting commits: if a commit causes issues or is not wanted
+  reverting it is done using this tag;
+- **[MOV]** for moving files: use git move and do not change content of moved file
+  otherwise Git may loose track and history of the file; also used when moving
+  code from one file to another;
+- **[REL]** for release commits: new major or minor stable versions;
+- **[IMP]** for improvements: most of the changes done in development version
+  are incremental improvements not related to another tag;
+- **[MERGE]** for merge commits: used in forward port of bug fixes but also as
+  main commit for feature involving several separated commits;
+- **[CLA]** for signing the Odoo Individual Contributor License;
+
+After tag comes the modified module name. Use the technical name as functional
+name may change with time. If several modules are modified, list them or use
+various to tell it is cross-modules. Unless really required or easier avoid
+modifying code across several modules in the same commit. Understanding module
+history may become difficult.
+
+Commit message header
+---------------------
+
+After tag and module name comes a meaningful commit message header. It should be
+self explanatory and include the reason behind the change. Do not use single words
+like "bugfix" or "improvements". Try to limit the header length to about 50 characters
+for readability.
+
+Commit message header should make a valid sentence once concatenated with
+``if applied, this commit will <header>``. For example ``[IMP] base: prevent to
+archive users linked to active partners`` is correct as it makes a valid sentence
+``if applied, this commit will prevent users to archive...``.
+
+Commit message full description
+-------------------------------
+
+In the message description specify the part of the code impacted by your changes
+(module name, lib, transversal object, ...) and a description of the changes.
+
+First explain WHY you are modifying code. What is important if someone goes back
+to your commit in about 4 decades (or 3 days) is why you did it. It is the
+purpose of the change.
+
+What you did can be found in the commit itself. If there was some technical choices
+involved it is a good idea to explain it also in the commit message after the why.
+For Odoo R&D developers "PO team asked me to do it" is not a valid why, by the way.
+
+Please avoid commits which simultaneously impact multiple modules. Try to split
+into different commits where impacted modules are different. It will be helpful
+if we need to revert changes in a given module separately.
+
+Don't hesitate to be a bit verbose. Most people will only see your commit message
+and judge everything you did in your life just based on those few sentences.
+No pressure at all.
+
+**You spend several hours, days or weeks working on meaningful features. Take
+some time to calm down and write clear and understandable commit messages.**
+
+If you are an Odoo R&D developer the WHY should be the purpose of the task you
+are working on. Full specifications make the core of the commit message.
+**If you are working on a task that lacks purpose and specifications please
+consider making them clear before continuing.**
+
+Finally here are some examples of correct commit messages :
+
+.. code-block:: text
+
+ [REF] models: use `parent_path` to implement parent_store
+
+  This replaces the former modified preorder tree traversal (MPTT) with the
+  fields `parent_left`/`parent_right`[...]
+
+ [FIX] account: remove frenglish
+
+  [...]
+
+  Closes #22793
+  Fixes #22769
+
+ [FIX] website: remove unused alert div, fixes look of input-group-btn
+
+  Bootstrap's CSS depends on the input-group-btn
+  element being the first/last child of its parent.
+  This was not the case because of the invisible
+  and useless alert.
