@@ -1279,6 +1279,11 @@ class DisableCacheMiddleware(object):
                 if k not in unwanted_keys:
                     new_headers.append((k, v))
 
+            extension = os.path.splitext(environ.get('PATH_INFO'))[1]
+            if extension in ('.eot', '.woff', '.woff2', '.ttf', '.otf'):
+                new_headers.append(('Access-Control-Allow-Origin', '*'))
+                new_headers.append(('Access-Control-Allow-Methods', 'GET'))
+
             start_response(status, new_headers)
         return self.app(environ, start_wrapped)
 
