@@ -169,3 +169,26 @@ class O2MSub3(models.Model):
     def _compute_name(self):
         for r in self:
             r.name = str(r.v)
+
+
+class O2MOnchangeParent(models.Model):
+    _name = 'test_testing_utilities.onchange_parent'
+
+    line_ids = fields.One2many('test_testing_utilities.onchange_line', 'parent')
+
+    @api.onchange('line_ids')
+    def _onchange_line_ids(self):
+        for line in self.line_ids.filtered(lambda l: l.flag):
+            self.env['test_testing_utilities.onchange_line'].new({'parent': self.id})
+
+
+class M2OOnchangeLine(models.Model):
+    _name = 'test_testing_utilities.onchange_line'
+
+    parent = fields.Many2one('test_testing_utilities.onchange_parent')
+    dummy = fields.Float()
+    flag = fields.Boolean(store=False)
+
+    @api.onchange('dummy')
+    def _onchange_flag(self):
+        self.flag = True
