@@ -160,6 +160,9 @@ class StockMoveLine(models.Model):
             lines |= picking_id.move_line_ids.filtered(lambda ml: ml.product_id == self.product_id and (ml.lot_id or ml.lot_name))
         return lines
 
+    def _should_bypass_quants_update(self):
+        return False
+
     @api.model
     def create(self, vals):
         vals['ordered_qty'] = vals.get('product_uom_qty')
@@ -275,7 +278,7 @@ class StockMoveLine(models.Model):
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
         next_moves = self.env['stock.move']
         if updates or 'qty_done' in vals:
-            for ml in self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product'):
+            for ml in self.filtered(lambda ml: ml.move_id.state == 'done' and ml.product_id.type == 'product' and not ml._should_bypass_quants_update()):
                 # undo the original move line
                 qty_done_orig = ml.move_id.product_uom._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -qty_done_orig, lot_id=ml.lot_id,
@@ -326,7 +329,7 @@ class StockMoveLine(models.Model):
         # done stock move should have its `quantity_done` equals to its `product_uom_qty`, and
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
-            moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
+            moves = self.filtered(lambda ml: ml.move_id.state == 'done' and not ml._should_bypass_quants_update()).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
         next_moves._do_unreserve()
