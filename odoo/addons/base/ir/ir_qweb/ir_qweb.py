@@ -341,6 +341,11 @@ class IrQWeb(models.AbstractModel, QWeb):
     def _get_field(self, record, field_name, expression, tagName, field_options, options, values):
         field = record._fields[field_name]
 
+        # adds template compile options for rendering fields
+        for k, v in options.items():
+            field_options.setdefault(k, v)
+
+        # adds generic field options
         field_options['tagName'] = tagName
         field_options['expression'] = expression
         field_options['type'] = field_options.get('widget', field.type)

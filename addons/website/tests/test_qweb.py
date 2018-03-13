@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import tools
 from odoo.modules.module import get_module_resource
 from odoo.tests.common import TransactionCase
@@ -22,18 +24,24 @@ class TestQweb(TransactionCase):
         })
 
         demo = self.env['res.users'].search([('login', '=', 'demo')])[0]
+        demo.write({"signature": '''<span class="toto">
+                span<span class="fa"></span><img src="/web/image/1"/>
+            </span>'''})
+
         demo_env = self.env(user=demo)
 
-        html = demo_env['ir.qweb'].render('website.test_template', {}, website_id= website.id)
+        html = demo_env['ir.qweb'].render('website.test_template', {"user": demo}, website_id= website.id)
+        html = html.strip().decode('utf8')
+        html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
         attachments = demo_env['ir.attachment'].search([('url', '=like', '/web/content/%-%/website.test_bundle.%')])
-        self.assertEquals(len(attachments), 2)
-        self.assertEqual(html.strip(), """<!DOCTYPE html>
+        self.assertEqual(len(attachments), 2)
+        self.assertEqual(html, ("""<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link href="http://test.cdn%(css)s" rel="stylesheet"/>
+        <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
@@ -44,5 +52,14 @@ class TestQweb(TransactionCase):
         <img src="http://test.cdn/website/static/img.png"/>
         <a href="http://test.external.link/link">x</a>
         <a href="http://test.cdn/web/content/local_link">x</a>
+        <span style="background-image: url('http://test.cdn/web/image/2')">xxx</span>
+        <div widget="html"><span class="toto">
+                span<span class="fa"></span><img src="http://test.cdn/web/image/1">
+            </span></div>
+        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/image" class="img img-responsive"/></div>
     </body>
-</html>""" % {"js": attachments[0].url, "css": attachments[1].url})
+</html>""" % {
+            "js": attachments[0].url,
+            "css": attachments[1].url,
+            "user_id": demo.id,
+        }).encode('utf8'))
