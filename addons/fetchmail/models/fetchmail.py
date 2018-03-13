@@ -46,7 +46,6 @@ class FetchmailServer(models.Model):
     date = fields.Datetime(string='Last Fetch Date', readonly=True)
     user = fields.Char(string='Username', readonly=True, states={'draft': [('readonly', False)]})
     password = fields.Char(readonly=True, states={'draft': [('readonly', False)]})
-    action_id = fields.Many2one('ir.actions.server', string='Server Action', help="Optional custom server action to trigger for each incoming mail, on the record that was created or updated by this mail")
     object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming mail as part of a conversation "
                                                                                 "corresponding to this document type. This will create "
                                                                                 "new documents for new conversations, or attach follow-up "
@@ -180,12 +179,6 @@ class FetchmailServer(models.Model):
                         except Exception:
                             _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
                             failed += 1
-                        if res_id and server.action_id:
-                            server.action_id.with_context({
-                                'active_id': res_id,
-                                'active_ids': [res_id],
-                                'active_model': self.env.context.get("thread_model", server.object_id.model)
-                            }).run()
                         imap_server.store(num, '+FLAGS', '\\Seen')
                         self._cr.commit()
                         count += 1
@@ -212,12 +205,6 @@ class FetchmailServer(models.Model):
                             except Exception:
                                 _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
                                 failed += 1
-                            if res_id and server.action_id:
-                                server.action_id.with_context({
-                                    'active_id': res_id,
-                                    'active_ids': [res_id],
-                                    'active_model': self.env.context.get("thread_model", server.object_id.model)
-                                }).run()
                             self.env.cr.commit()
                         if num_messages < MAX_POP_MESSAGES:
                             break
