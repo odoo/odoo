@@ -17,7 +17,7 @@ RUN apt-get update -qq &&  \
     apt-get upgrade -qq -y && \
     apt-get install \
         adduser \
-        node-less \
+        libsass \
         postgresql \
         postgresql-client \
         python3 \
@@ -30,6 +30,7 @@ RUN apt-get update -qq &&  \
         python3-html2text \
         python3-pil \
         python3-jinja2 \
+        python3-libsass \
         python3-lxml \
         python3-mako \
         python3-mock \
