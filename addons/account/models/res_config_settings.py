@@ -53,7 +53,11 @@ class ResConfigSettings(models.TransientModel):
     module_print_docsaway = fields.Boolean(string="Docsaway")
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
+    # Technical field to show `EU Digital Goods VAT` module installation option to companies belonging to Eurpean region
+    show_module_l10n_eu_service = fields.Boolean(compute='_compute_show_module_l10n_eu_service')
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
+    # Technical field to show `Taxcloud` module installation option to companies belonging to US
+    show_module_account_taxcloud = fields.Boolean(compute='_compute_show_module_account_taxcloud')
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
@@ -80,6 +84,24 @@ class ResConfigSettings(models.TransientModel):
             })
             wizard.onchange_chart_template_id()
             wizard.execute()
+
+    @api.depends('company_id')
+    def _compute_show_module_account_taxcloud(self):
+        # Show option to install the module `Account TaxCloud` to the users whose country is `United States`
+        # But, if ``Account TaxCloud` is installed, this option should be shown to all users regardless of their company's country
+        account_taxcloud_module = self.env['ir.module.module'].search([
+            ('name', '=', 'account_taxcloud')
+        ], limit=1)
+        self.show_module_account_taxcloud = account_taxcloud_module.state == 'installed' or self.env.user.company_id.country_id == self.env.ref('base.us')
+
+    @api.depends('company_id')
+    def _compute_show_module_l10n_eu_service(self):
+        # Show option to install the module `EU Digital Goods VAT` to the users whose company belongs to European region
+        # But, if the module `EU Digital Goods VAT` is installed, this option should be shown to all users regardless of their company's region
+        l10_eu_service_module = self.env['ir.module.module'].search([
+            ('name', '=', 'l10n_eu_service')
+        ], limit=1)
+        self.show_module_l10n_eu_service = l10_eu_service_module.state == 'installed' or self.env.ref('base.europe') in self.company_id.country_id.country_group_ids
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):

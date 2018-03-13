@@ -91,7 +91,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="taxcloud_settings">
+                            <field name="show_module_account_taxcloud" invisible="1"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="taxcloud_settings"  attrs="{'invisible': [('show_module_account_taxcloud', '=', False)]}">
                                 <div class="o_setting_left_pane">
                                     <field name="module_account_taxcloud"/>
                                 </div>
@@ -103,7 +104,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="eu_service" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
+                            <field name="show_module_l10n_eu_service" invisible="1"/>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="eu_service" attrs="{'invisible': [('show_module_l10n_eu_service', '=', False)]}" title="If you're selling digital goods to customers in the EU, you must charge VAT based on your customers' locations. This rule applies regardless of you are located. Digital goods are defined in the legislation as broadcasting, telecommunications, and services that are electronically supplied instead of shipped. Gift cards sent online are not included in the definition.">
                                 <div class="o_setting_left_pane">
                                     <field name="module_l10n_eu_service"/>
                                 </div>

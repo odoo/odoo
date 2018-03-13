@@ -1116,7 +1116,7 @@
                         <page string="Advanced Options">
                             <group>
                                 <group>
-                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="description"/>
                                     <field name="tax_group_id"/>
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
@@ -1945,7 +1945,7 @@
                         <page string="Advanced Options">
                             <group>
                                 <group>
-                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="description"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                 </group>
                                 <group>

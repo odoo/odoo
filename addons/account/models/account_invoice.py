@@ -292,7 +292,7 @@ class AccountInvoice(models.Model):
              "The payment terms may compute several due dates, for example 50% now, 50% in one month.")
     date = fields.Date(string='Accounting Date',
         copy=False,
-        help="Keep empty to use the invoice date.",
+        help="Fill in this field to force a different date on the accounting entry. Keep empty to use invoice date.",
         readonly=True, states={'draft': [('readonly', False)]})
 
     account_id = fields.Many2one('account.account', string='Account',
