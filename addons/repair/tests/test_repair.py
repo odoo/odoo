@@ -94,7 +94,7 @@ class TestRepair(AccountingTestCase):
             'group': True})
         # I click on "Create Invoice" button of this wizard to make invoice.
         context = {
-            "active_model": 'repair_order',
+            "active_model": 'repair.order',
             "active_ids": [repair.id],
             "active_id": repair.id
         }
