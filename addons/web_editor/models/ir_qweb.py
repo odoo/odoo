@@ -309,9 +309,27 @@ class Image(models.AbstractModel):
         elif options.get('zoom'):
             src_zoom = options['zoom']
 
-        img = '<img class="%s" src="%s" style="%s"%s%s/>' % \
-            (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '', ' data-zoom="1" data-zoom-image="%s"' % src_zoom if src_zoom else '')
-        return ir_qweb.unicodifier(img)
+        atts = {
+            u"class": classes,
+            u"src": src,
+            u"style": options.get('style'),
+            u"alt": alt,
+            u"data-zoom": src_zoom and u'1' or None,
+            u"data-zoom-image": src_zoom,
+        }
+
+        self.env['ir.qweb']._post_processing_att('img', atts, options)
+
+        img = ['<img']
+        for name, value in atts.iteritems():
+            img.append(' ')
+            img.append(escape(ir_qweb.unicodifier(name)))
+            img.append('="')
+            img.append(escape(ir_qweb.unicodifier(value)))
+            img.append('"')
+        img.append('/>')
+
+        return u''.join(img)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
 
