@@ -66,6 +66,7 @@ class AuthorizeForm(AuthorizeCommon):
             'x_invoice_num': 'SO004',
             'x_first_name': 'Norbert',
             'x_last_name': 'Buyer',
+            'x_company': 'Big Company',
             'x_address': 'Huge Street 2/543',
             'x_city': 'Sin City',
             'x_zip': '1000',
