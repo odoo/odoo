@@ -567,7 +567,7 @@ class SaleOrder(models.Model):
                 report_pages.append([])
             # Append category to current report page
             report_pages[-1].append({
-                'name': category and category.name or 'Uncategorized',
+                'name': category and category.name or _('Uncategorized'),
                 'subtotal': category and category.subtotal,
                 'pagebreak': category and category.pagebreak,
                 'lines': list(lines)

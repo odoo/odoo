@@ -2263,7 +2263,9 @@ exports.Order = Backbone.Model.extend({
                 }
             })
 
-            unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+            if (mapped_included_taxes.length > 0) {
+                unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+            }
 
             line.set_unit_price(unit_price);
         }
