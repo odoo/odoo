@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
 
 from odoo import models
 from odoo.http import request
+
+
+re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
 class QWeb(models.AbstractModel):
@@ -37,3 +41,5 @@ class QWeb(models.AbstractModel):
         for name, value in atts.iteritems():
             if name == self.URL_ATTRS.get(tagName) or name == self.CDN_TRIGGERS.get(tagName):
                 atts[name] = website.get_cdn_url(value)
+            elif name == 'style' and 'background-image' in value:
+                atts[name] = re_background_image.sub(lambda m: '%s%s' % (m.group(1), website.get_cdn_url(m.group(2))), value)
