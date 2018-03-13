@@ -1173,28 +1173,6 @@ class Lead(models.Model):
         defaults.update(custom_values)
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
-    @api.multi
-    def message_update(self, msg_dict, update_vals=None):
-        """ Overrides mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if update_vals is None:
-            update_vals = {}
-        if msg_dict.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
-            update_vals['priority'] = msg_dict.get('priority')
-        maps = {
-            'revenue': 'planned_revenue',
-            'probability': 'probability',
-        }
-        for line in msg_dict.get('body', '').split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower()):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-        return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
-
     def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)

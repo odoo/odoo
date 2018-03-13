@@ -935,23 +935,6 @@ class Task(models.Model):
     @api.multi
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
-        if update_vals is None:
-            update_vals = {}
-        maps = {
-            'cost': 'planned_hours',
-        }
-        for line in msg['body'].split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res:
-                match = res.group(1).lower()
-                field = maps.get(match)
-                if field:
-                    try:
-                        update_vals[field] = float(res.group(2).lower())
-                    except (ValueError, TypeError):
-                        pass
-
         email_list = self.email_split(msg)
         partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
         self.message_subscribe(partner_ids)
