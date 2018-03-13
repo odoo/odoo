@@ -12,6 +12,7 @@
                     <ul id="statement_format">
 
                     </ul>
+                    <p>You can install more file formats by <a style="cursor: pointer" type="action" name="account_bank_statement_import.install_more_import_formats_action">installing the related modules</a></p>
                     <field name="data_file" filename="filename" placeholder="Choose a file to import..."/>
                     <field name="filename" invisible="1"/>
                     <footer>
@@ -20,6 +21,14 @@
                     </footer>
                 </form>
             </field>
+        </record>
+
+        <record id="install_more_import_formats_action" model="ir.actions.act_window">
+            <field name="name">Install Import Format</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context" eval="{'search_default_name': 'account_bank_statement_import'}"/>
+            <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 
         <record id="action_account_bank_statement_import" model="ir.actions.act_window">

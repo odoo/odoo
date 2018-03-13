@@ -41,7 +41,7 @@ def _auto_install_l10n(cr, registry):
         if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
             module_list.append('account_yodlee')
         if country_code in SYSCOHADA_LIST + [
-            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO', 
+            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO',
             'PL', 'PT', 'RO', 'SI', 'TR', 'UK', 'VE', 'VN'
             ]:
             module_list.append('base_vat')
@@ -52,5 +52,6 @@ def _auto_install_l10n(cr, registry):
             europe_country_codes = [x.code for x in europe.country_ids]
             if country_code in europe_country_codes:
                 module_list.append('account_sepa')
+                module_list.append('account_bank_statement_import_camt')
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
         module_ids.sudo().button_install()
