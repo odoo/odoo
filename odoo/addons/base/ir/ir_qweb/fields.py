@@ -5,6 +5,8 @@ from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
+from lxml import etree
+
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date
 from .qweb import unicodifier
 
@@ -251,7 +253,14 @@ class HTMLConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return unicodifier(value) or u''
+        irQweb = self.env['ir.qweb']
+        # wrap value inside a body and parse it as HTML
+        body = etree.fromstring("<body>%s</body>" % value, etree.HTMLParser(encoding='utf-8'))[0]
+        # use pos processing for all nodes with attributes
+        for element in body.iter():
+            if element.attrib:
+                irQweb._post_processing_att(element.tag, element.attrib, options)
+        return etree.tostring(body, encoding='utf-8', method='html')[6:-7]
 
 
 class ImageConverter(models.AbstractModel):

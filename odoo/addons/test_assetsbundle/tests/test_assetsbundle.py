@@ -38,7 +38,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
     def _get_asset(self, xmlid, env=None):
         env = (env or self.env)
         files, remains = env['ir.qweb']._get_asset_content(xmlid, env.context)
-        return AssetsBundle(xmlid, files, remains, env=env)
+        return AssetsBundle(xmlid, files, env=env)
 
     def _any_ira_for_bundle(self, type):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
@@ -118,7 +118,6 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle0 = self._get_asset(self.jsbundle_xmlid)
         bundle0.js()
         files0 = bundle0.files
-        remains0 = bundle0.remains
         version0 = bundle0.version
 
         self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
@@ -141,11 +140,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle1 = self._get_asset(self.jsbundle_xmlid, env=self.env(context={'check_view_ids': view.ids}))
         bundle1.js()
         files1 = bundle1.files
-        remains1 = bundle1.remains
         version1 = bundle1.version
 
         self.assertNotEquals(files0, files1)
-        self.assertEquals(remains0, remains1)
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
@@ -247,7 +244,6 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
         bundle0.css()
         files0 = bundle0.files
-        remains0 = bundle0.remains
         version0 = bundle0.version
 
         self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
@@ -270,11 +266,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': view.ids, 'max_css_rules': 1}))
         bundle1.css()
         files1 = bundle1.files
-        remains1 = bundle1.remains
         version1 = bundle1.version
 
         self.assertNotEquals(files0, files1)
-        self.assertEquals(remains0, remains1)
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
@@ -317,6 +311,48 @@ class TestJavascriptAssetsBundle(TransactionCase):
         # the ir.attachment records should be deduplicated in the bundle's content
         content = bundle0.to_html()
         self.assertEqual(content.count('test_assetsbundle.bundle2.0.css'), 1)
+
+    def test_15_exteral_lib_assets(self):
+        html = self.env['ir.ui.view'].render_template('test_assetsbundle.template2')
+        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
+        self.assertEquals(len(attachments), 2)
+        self.assertEqual(html.strip(), """<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
+        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
+        <link href="%(css)s" rel="stylesheet"/>
+        <meta/>
+        <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
+        <script type="text/javascript" src="%(js)s"></script>
+    </head>
+    <body>
+    </body>
+</html>""" % {"js": attachments[0].url, "css": attachments[1].url})
+
+    def test_16_exteral_lib_assets_debug_mode(self):
+        html = self.env['ir.ui.view'].render_template('test_assetsbundle.template2', {"debug": "assets"})
+        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
+        self.assertEquals(len(attachments), 0)
+        self.assertEqual(html.strip(), """<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
+        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
+        <link href="/test_assetsbundle/static/src/css/test_cssfile1.css" type="text/css" rel="stylesheet"/>
+        <link href="/test_assetsbundle/static/src/css/test_cssfile2.css" type="text/css" rel="stylesheet"/>
+        <meta/>
+        <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
+        <script src="/test_assetsbundle/static/src/js/test_jsfile1.js" type="text/javascript"></script>
+        <script src="/test_assetsbundle/static/src/js/test_jsfile2.js" type="text/javascript"></script>
+        <script src="/test_assetsbundle/static/src/js/test_jsfile3.js" type="text/javascript"></script>
+    </head>
+    <body>
+    </body>
+</html>""")
+
 
 
 class TestAssetsBundleInBrowser(HttpCase):
