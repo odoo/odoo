@@ -34,8 +34,8 @@ class ContributionRegisterReport(models.AbstractModel):
         if not data.get('form'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
-        register_ids = self.env.context.get('active_ids', [])
-        contrib_registers = self.env['hr.contribution.register'].browse(register_ids)
+        contrib_registers = self.env['hr.contribution.register'].get_active_records()
+        register_ids = contrib_registers.ids
         date_from = data['form'].get('date_from', fields.Date.today())
         date_to = data['form'].get('date_to', str(datetime.now() + relativedelta(months=+1, day=1, days=-1))[:10])
         lines_data = self._get_payslip_lines(register_ids, date_from, date_to)
