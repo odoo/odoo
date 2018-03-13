@@ -403,7 +403,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 api.Environment.reset()
-                return odoo.modules.registry.Registry.new(cr.dbname, force_demo, status, update_module)
+                registry = odoo.modules.registry.Registry.new(
+                    cr.dbname, force_demo, status, update_module
+                )
+                registry.check_tables_exist(cr)
+                cr.commit()
+                return registry
 
         # STEP 6: verify custom views on every model
         if update_module:
