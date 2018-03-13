@@ -229,6 +229,13 @@ class IrHttp(models.AbstractModel):
             return request.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return request.env['res.lang'].search([], limit=1)
 
+    @classmethod
+    def _get_translation_frontend_modules_domain(cls):
+        """ Return a domain to list the domain adding web-translations and
+            dynamic resources that may be used frontend views
+        """
+        return []
+
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
     @classmethod

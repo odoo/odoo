@@ -295,17 +295,6 @@ class Website(Home):
                 modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
-    @http.route('/website/translations', type='json', auth="public", website=True)
-    def get_website_translations(self, lang, mods=None):
-        Modules = request.env['ir.module.module'].sudo()
-        modules = Modules.search([
-            '|', ('name', 'ilike', 'website'), ('name', '=', 'web_editor'),
-            ('state', '=', 'installed')
-        ]).mapped('name')
-        if mods:
-            modules += mods
-        return WebClient().translations(mods=modules, lang=lang)
-
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
         Model = request.env[object]

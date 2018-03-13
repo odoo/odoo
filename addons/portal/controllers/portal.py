@@ -6,8 +6,10 @@ import math
 from werkzeug import urls
 
 from odoo import fields as odoo_fields, tools, _
+from odoo.osv import expression
 from odoo.exceptions import ValidationError
 from odoo.http import Controller, request, route
+from odoo.addons.web.controllers.main import WebClient
 
 # --------------------------------------------------
 # Misc tools
