@@ -145,6 +145,12 @@ class MrpStockReport(models.TransientModel):
             ref = move_line.move_id.scrap_ids[0].name
         return res_model, res_id, ref
 
+    @api.model
+    def _quantity_to_str(self, from_uom, to_uom, qty):
+        """ workaround to apply the float rounding logic of t-esc on data prepared server side """
+        qty = from_uom._compute_quantity(qty, to_uom, rounding_method='HALF-UP')
+        return self.env['ir.qweb.field.float'].value_to_html(qty, {'decimal_precision': 'Product Unit of Measure'})
+
     def make_dict_move(self, level, parent_id, move_line, stream=False, unfoldable=False):
         res_model, res_id, ref = self.get_links(move_line)
         data = [{
@@ -155,7 +161,7 @@ class MrpStockReport(models.TransientModel):
             'model_id': move_line.id,
             'model':'stock.move.line',
             'product_id': move_line.product_id.display_name,
-            'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
+            'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
             'location': move_line.location_id.name + ' -> ' + move_line.location_dest_id.name,
             'reference_id': ref,
             'res_id': res_id,
@@ -175,7 +181,7 @@ class MrpStockReport(models.TransientModel):
                 'model': model or 'stock.move.line',
                 'product_id': move_line.product_id.display_name,
                 'lot_id': move_line.lot_id.name,
-                'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
+                'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
                 'location': move_line.location_dest_id.name,
                 'stream': stream,
                 'reference_id': False}]
@@ -189,7 +195,7 @@ class MrpStockReport(models.TransientModel):
                 'model': model or 'stock.quant',
                 'product_id': move_line.product_id.display_name,
                 'lot_id': move_line.lot_id.name,
-                'product_qty_uom': str(move_line.quantity) + ' ' + move_line.product_id.uom_id.name,
+                'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.quantity), move_line.product_id.uom_id.name),
                 'location': move_line.location_id.name,
                 'stream': stream,
                 'reference_id': False}]
