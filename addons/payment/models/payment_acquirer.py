@@ -312,6 +312,7 @@ class PaymentAcquirer(models.Model):
                 'billing_partner': billing_partner,
                 'billing_partner_id': billing_partner_id,
                 'billing_partner_name': billing_partner.name,
+                'billing_partner_commercial_company_name': billing_partner.commercial_company_name,
                 'billing_partner_lang': billing_partner.lang,
                 'billing_partner_email': billing_partner.email,
                 'billing_partner_zip': billing_partner.zip,
