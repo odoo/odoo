@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Ryan Cole admin@ryanc.me https://github.com/MGinshe
+Ryan Cole mginshe@gmail.com https://github.com/MGinshe
