@@ -79,7 +79,7 @@ class account_abstract_payment(models.AbstractModel):
         if not active_ids or active_model != 'account.invoice':
             return rec
 
-        invoices = self.env['account.invoice'].browse(active_ids)
+        invoices = self.env['account.invoice'].get_active_records()
 
         # Check all invoices are open
         if any(invoice.state != 'open' for invoice in invoices):
