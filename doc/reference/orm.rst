@@ -480,7 +480,7 @@ added.
 .. warning::
 
     It is not possible for a ``one2many`` or ``many2many`` field to modify 
-    it-self via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
+    itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
 
 Low-level SQL
 -------------
