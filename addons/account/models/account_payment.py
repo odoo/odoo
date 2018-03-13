@@ -319,16 +319,10 @@ class account_payment(models.Model):
     def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
-        if self.currency_id.is_zero(self.amount):
-            # In case of payment with 0 amount, allow to select a journal of type 'general' like
-            # 'Miscellaneous Operations' and set this journal by default.
-            journal_type = ['general']
-            self.payment_difference_handling = 'reconcile'
-        else:
-            if self.payment_type == 'inbound':
-                domain.append(('at_least_one_inbound', '=', True))
-            elif self.payment_type == 'outbound':
-                domain.append(('at_least_one_outbound', '=', True))
+        if self.payment_type == 'inbound':
+            domain.append(('at_least_one_inbound', '=', True))
+        elif self.payment_type == 'outbound':
+            domain.append(('at_least_one_outbound', '=', True))
         return {'domain': domain, 'journal_types': set(journal_type)}
 
     @api.onchange('amount', 'currency_id')
