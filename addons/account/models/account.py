@@ -799,6 +799,7 @@ class AccountTax(models.Model):
         'account.account',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
+        oldname='cash_basis_account',
         help='Account used as counterpart for the journal entry, for taxes eligible based on payments.')
     cash_basis_base_account_id = fields.Many2one(
         'account.account',
