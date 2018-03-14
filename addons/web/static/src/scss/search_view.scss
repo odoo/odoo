@@ -1,5 +1,4 @@
-@mixin o-search-options-dropdown-custom-li {
-    margin: 3px 25px;
+@mixin o-search-options-dropdown-custom-item {
     width: auto;
     max-width: 250px;
 }
@@ -116,7 +115,7 @@
             color: darken($o-main-text-color, 10%);
         }
     }
-    &.open > a {
+    &.show > a {
         font-weight: bold;
         color: darken($o-main-text-color, 10%);
     }
@@ -130,7 +129,7 @@
     a:before {
         @include o-caret-right;
         @include o-position-absolute($top: 50%, $left: 10px);
-        margin-top: (-$caret-width-base);
+        margin-top: (-$caret-width);
     }
 }
 .o_open_menu {
@@ -138,7 +137,7 @@
     a:before {
         @include o-caret-down;
         @include o-position-absolute($top: 50%, $left: 10px);
-        margin-top: (-$caret-width-base);
+        margin-top: (-$caret-width);
     }
 }
 
@@ -150,7 +149,7 @@
     overflow: auto;
 
     .o_filter_condition {
-        @include o-search-options-dropdown-custom-li;
+        @include o-search-options-dropdown-custom-item;
         margin-bottom: 8px;
         .o_or_filter { // or between conditions
             display: none;  // hidden for the first condition
@@ -177,7 +176,7 @@
     }
     .o_add_filter_menu { // apply and add buttons
         display: none;  // Needed by the webclient
-        @include o-search-options-dropdown-custom-li;
+        @include o-search-options-dropdown-custom-item;
     }
     .o_submenu_switcher {
         position: absolute;
@@ -196,7 +195,7 @@
     max-height: calc(100vh - 125px);
     overflow: auto;
 
-    .divider {display: none;} // hide the divider by default (no favorite)
+    .dropdown-divider {display: none;} // hide the divider by default (no favorite)
     .o-searchview-custom-private, .o-searchview-custom-public {
         .o-remove-filter {
             @include o-position-absolute(50%, 12px);
@@ -212,6 +211,6 @@
     }
     .o_save_name { // save button
         display: none; // hidden by default
-        @include o-search-options-dropdown-custom-li;
+        @include o-search-options-dropdown-custom-item;
     }
 }

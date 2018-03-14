@@ -162,7 +162,6 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web_calendar.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view_mobile.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_groupby_menu.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown_menu.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view_extra.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/data_export.scss"/>
@@ -399,8 +398,8 @@
                 <t t-call="web.menu_link"/>
             </li>
             <li id="menu_more_container" class="dropdown" style="display: none;">
-                <a role="menuitem" aria-haspopup="true" href="#" class="dropdown-toggle" data-toggle="dropdown" id="more_menu_button">More <b class="caret"></b></a>
-                <ul id="menu_more" class="dropdown-menu" role="menu"></ul>
+                <a role="menuitem" aria-haspopup="true" href="#" class="dropdown-toggle" data-toggle="dropdown" id="more_menu_button">More</a>
+                <div id="menu_more" class="dropdown-menu" role="menu"/>
             </li>
         </ul>
 

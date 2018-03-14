@@ -371,7 +371,7 @@ var Activity = AbstractActivityField.extend({
 var KanbanActivity = AbstractActivityField.extend({
     template: 'mail.KanbanActivity',
     events: {
-        'click .o_activity_btn': '_onButtonClicked',
+        'show.bs.dropdown': '_onDropdownShow',
         'click .o_schedule_activity': '_onScheduleActivity',
         'click .o_mark_as_done': '_onMarkActivityDone',
     },
@@ -411,7 +411,7 @@ var KanbanActivity = AbstractActivityField.extend({
             }).join(' ');
         });
         $span.addClass('o_activity_color_' + (this.activityState || 'default'));
-        if (this.$el.hasClass('open')) {
+        if (this.$el.hasClass('show')) {
             // note: this part of the rendering might be asynchronous
             this._renderDropdown();
         }
@@ -455,13 +455,9 @@ var KanbanActivity = AbstractActivityField.extend({
 
     /**
      * @private
-     * @param {MouseEvent} ev
      */
-    _onButtonClicked: function (ev) {
-        ev.preventDefault();
-        if (!this.$el.hasClass('open')) {
-            this._renderDropdown();
-        }
+    _onDropdownShow: function () {
+        this._renderDropdown();
     },
     /**
      * @private

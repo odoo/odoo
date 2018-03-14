@@ -290,14 +290,14 @@
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
 
-                                <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
-                                    <li><a role="menuitem" name="action_makeMeeting" type="object">Schedule Interview</a></li>
-                                    <li role="menuitem" aira-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
                             </div>
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
@@ -340,7 +340,7 @@
                                         </div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -971,7 +971,7 @@
             (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')})]"/>
         <field name="context">{}</field>  <!-- force empty -->
     </record>
-    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root" 
+    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
     sequence="99" action="hr_applicant_action_analysis"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>

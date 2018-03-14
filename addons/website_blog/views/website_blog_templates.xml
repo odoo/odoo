@@ -213,14 +213,14 @@
 
 <!-- Blog Post Complete -->
 <template id="blog_edit_options" inherit_id="website.user_navbar" name="Edit Blog Options">
-    <xpath expr="//li[@id='edit-in-backend']" position="after">
-        <li groups="website.group_website_designer" t-if="main_object._name == 'blog.post'">
+    <xpath expr="//a[@id='edit-in-backend']" position="after">
+        <t groups="website.group_website_designer" t-if="main_object._name == 'blog.post'">
             <form class="duplicate d-none" action="/blog/post_duplicate" method="POST">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input name="blog_post_id" t-att-value="blog_post.id if blog_post else None"/>
             </form>
-            <a href="#" class="duplicate" onclick="$(this).prev('form').submit()">Duplicate</a>
-        </li>
+            <a href="#" class="duplicate dropdown-item" onclick="$(this).prev('form').submit()">Duplicate</a>
+        </t>
     </xpath>
 </template>
 <template id="blog_post_complete" name="Blog Post">

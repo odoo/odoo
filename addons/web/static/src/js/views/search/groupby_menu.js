@@ -14,7 +14,7 @@ var DEFAULT_INTERVAL = 'month';
 var GroupByMenu = DropdownMenu.extend({
     events: _.extend({}, DropdownMenu.prototype.events,
     {
-        'click .o_add_custom_group a': '_onAddCustomGroupClick',
+        'click .o_add_custom_group': '_onAddCustomGroupClick',
         'click button.o_apply_group': '_onButtonApplyClick',
         'click .o_group_selector': '_onGroupSelectorClick',
     }),
@@ -85,7 +85,7 @@ var GroupByMenu = DropdownMenu.extend({
             category: 'groupByCategory',
             title: 'Group By',
             icon: 'fa fa-bars',
-            symbol: this.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret',
+            symbol: this.isMobile ? 'fa fa-chevron-right pull-right mt4' : false,
             style: style,
         };
         this._super(parent, dropdownHeader, groupbys, options);
@@ -98,7 +98,7 @@ var GroupByMenu = DropdownMenu.extend({
      * @private
      */
     start: function () {
-        this.$menu = this.$('ul.o_dropdown_menu');
+        this.$menu = this.$('.o_dropdown_menu');
         this.$menu.addClass('o_group_by_menu');
         var $generatorMenu = QWeb.render('GroupbyMenuGenerator', {widget: this});
         this.$menu.append($generatorMenu);

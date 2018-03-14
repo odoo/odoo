@@ -67,7 +67,7 @@ tour.register('rte', {
     trigger: ".note-color button.dropdown-toggle",
 }, {
     content: "change text color",
-    trigger: ".btn-group.open button[data-event=foreColor]:first",
+    trigger: ".btn-group.show button[data-event=foreColor]:first",
 }, {
     content: "change selection to change text bg-color again",
     trigger: '#editable_area > section .row > div:first h1 font:eq(2)',

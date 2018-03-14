@@ -324,16 +324,16 @@
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit</a></li></t>
-                                        <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
-                                        <li t-if="! record.active.value"><a role="menuitem" name="action_set_active" type="object">Restore</a></li>
-                                        <li t-if="record.active.value"><a role="menuitem" name="action_set_unactive" type="object">Archive</a></li>
-                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
-                                    </ul>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <a t-if="! record.active.value"  role="menuitem" name="action_set_active" type="object" class="dropdown-item">Restore</a>
+                                        <a t-if="record.active.value" role="menuitem" name="action_set_unactive" type="object" class="dropdown-item">Archive</a>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div>

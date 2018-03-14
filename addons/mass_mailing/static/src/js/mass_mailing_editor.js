@@ -197,7 +197,7 @@ snippets_editor.Class.include({
          * Add proposition to install enterprise themes if not installed.
          */
         var $mail_themes_upgrade = $dropdown.find(".o_mass_mailing_themes_upgrade");
-        $mail_themes_upgrade.on("click", "> a", function (e) {
+        $mail_themes_upgrade.on("click", function (e) {
             e.stopImmediatePropagation();
             e.preventDefault();
             odoo_top[window.callback+"_do_action"]("mass_mailing.action_mass_mailing_configuration");
@@ -208,15 +208,15 @@ snippets_editor.Class.include({
          * is pressed.
          */
         var selected_theme = false;
-        $dropdown.on("mouseenter", "li > a", function (e) {
+        $dropdown.on("mouseenter", ".dropdown-item", function (e) {
             if (first_choice) return;
             e.preventDefault();
-            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            var theme_params = themes_params[$(e.currentTarget).index()];
             switch_theme(theme_params);
         });
-        $dropdown.on("click", "li > a", function (e) {
+        $dropdown.on("click", ".dropdown-item", function (e) {
             e.preventDefault();
-            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            var theme_params = themes_params[$(e.currentTarget).index()];
             if (first_choice) {
                 switch_theme(theme_params);
                 $body.removeClass("o_force_mail_theme_choice");
@@ -244,7 +244,7 @@ snippets_editor.Class.include({
          */
         $dropdown.on("shown.bs.dropdown", function () {
             check_selected_theme();
-            $dropdown.find("li").removeClass("selected").filter(function () {
+            $dropdown.find(".dropdown-item").removeClass("selected").filter(function () {
                 return ($(this).has(".o_thumb[style=\""+ "background-image: url(" + (selected_theme && selected_theme.img) + "_small.png)"+ "\"]").length > 0);
             }).addClass("selected");
         });

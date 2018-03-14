@@ -18,15 +18,15 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
 
-                                    <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a role="menuitem" t-att-href="record.website_url.value">View Track</a></li>
-                                        <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit Track</a></li></t>
-                                        <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
-                                        <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Track</a>
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Track</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">

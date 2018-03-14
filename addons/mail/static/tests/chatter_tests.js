@@ -410,7 +410,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
     assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
         "activity widget should have been updated correctly");
-    assert.strictEqual($record.find('.o_mail_activity.open').length, 1,
+    assert.strictEqual($record.find('.o_mail_activity.show').length, 1,
         "dropdown should remain open when marking an activity as done");
     assert.strictEqual($record.find('.o_no_activity').length, 1, "should have no activity scheduled");
 
@@ -1466,9 +1466,9 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
     assert.strictEqual(form.$('.o_subtypes_list .o_subtype_checkbox:checked').length, 2,
         'two subtypes should be checked by default');
     form.$('.o_subtypes_list .dropdown-toggle').click(); // click to open the dropdown
-    assert.ok(form.$('.o_subtypes_list.open').length, 'dropdown should be opened');
+    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should be opened');
     form.$('.o_subtypes_list .o_subtype input[data-id=2]').click(); // uncheck second subtype
-    assert.ok(form.$('.o_subtypes_list.open').length, 'dropdown should remain opened');
+    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should remain opened');
     assert.ok(!form.$('.o_subtypes_list .o_subtype_checkbox[data-id=2]:checked').length,
         'second subtype should now be unchecked');
 

@@ -3,25 +3,24 @@
 
 <t t-name="mail.KanbanActivity">
     <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
-        <a class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
+        <a class="dropdown-toggle o-no-caret o_activity_btn" data-toggle="dropdown">
             <span class="fa fa-clock-o fa-lg fa-fw" t-att-title="widget.selection[widget.activityState]" role="img" t-att-aria-label="widget.selection[widget.activity_state]"/>
         </a>
-        <ul class="dropdown-menu o_activity" role="menu">
-        </ul>
+        <div class="dropdown-menu o_activity" role="menu"/>
     </div>
 </t>
 
 <t t-name="mail.KanbanActivityLoading">
-    <li class="text-center o_no_activity">
+    <div class="dropdown-item text-center o_no_activity">
         <span class="fa fa-spinner fa-spin fa-2x" role="img" aria-label="Loading..." title="Loading..."/>
-    </li>
+    </div>
 </t>
 
 <t t-name="mail.KanbanActivityDropdown">
-    <li role="menuitem" t-if="_.isEmpty(records)" class="text-center o_no_activity">
-        <span>No activities planned.</span>
-    </li>
-    <li t-if="!_.isEmpty(records)" aria-haspopup="true" role="menu">
+    <span role="menuitem" t-if="_.isEmpty(records)" class="dropdown-item-text text-center o_no_activity">
+        No activities planned.
+    </span>
+    <div t-else="" class="dropdown-item" aria-haspopup="true" role="menu">
         <ul class="nav o_activity_log" role="menu">
             <t t-foreach="_.keys(records)" t-as="key">
                 <t t-set="logs" t-value="records[key]" />
@@ -51,12 +50,12 @@
                 </li>
             </t>
         </ul>
-    </li>
-    <li role="menuitem" class="o_schedule_activity text-center">
+    </div>
+    <div role="menuitem" class="o_schedule_activity text-center">
         <a role="button" class="btn btn-link btn-block">
             <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
         </a>
-    </li>
+    </div>
 </t>
 
 </templates>

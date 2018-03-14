@@ -1612,10 +1612,7 @@ var AttachmentImage = AbstractField.extend({
 var StateSelectionWidget = AbstractField.extend({
     template: 'FormSelection',
     events: {
-        'click a': function (e) {
-            e.preventDefault();
-        },
-        'click li': '_setSelection'
+        'click .dropdown-item': '_setSelection',
     },
     supportedFieldTypes: ['selection'],
 
@@ -1696,13 +1693,12 @@ var StateSelectionWidget = AbstractField.extend({
      * @param {MouseEvent} ev
      */
     _setSelection: function (ev) {
-        var li = $(ev.target).closest('li');
-        if (li.length) {
-            var value = String(li.data('value'));
-            this._setValue(value);
-            if (this.mode === 'edit') {
-                this._render();
-            }
+        ev.preventDefault();
+        var $item = $(ev.currentTarget);
+        var value = String($item.data('value'));
+        this._setValue(value);
+        if (this.mode === 'edit') {
+            this._render();
         }
     },
 });

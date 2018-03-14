@@ -17,10 +17,10 @@ var _t = core._t;
  */
 var SnippetOption = Widget.extend({
     events: {
-        'mouseenter a': '_onLinkEnter',
-        'click a': '_onLinkClick',
+        'mouseenter': '_onLinkEnter',
+        'click': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave ul': '_onMouseleave',
+        'mouseleave .dropdown-menu': '_onMouseleave',
     },
     /**
      * When editing a snippet, its options are shown alongside the ones of its
@@ -30,7 +30,7 @@ var SnippetOption = Widget.extend({
     preventChildPropagation: false,
 
     /**
-     * The option `$el` is supposed to be the associated <li/> element in the
+     * The option `$el` is supposed to be the associated DOM element in the
      * options dropdown. The option controls another DOM element: the snippet it
      * customizes, which can be found at `$target`. Access to the whole edition
      * overlay is possible with `$overlay` (this is not recommended though).
@@ -115,18 +115,18 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one and only one class in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each <li/> having a `data-select-class`
+     * case is having a subdropdown with each item having a `data-select-class`
      * value allowing to choose the associated class.
      *
      * @param {boolean|string} previewMode
      *        - truthy if the option is enabled for preview or if leaving it (in
      *          that second case, the value is 'reset')
      *        - false if the option should be activated for good
-     * @param {*} value - the class to activate ($li.data('selectClass'))
-     * @param {jQuery} $li - the related DOMElement option
+     * @param {*} value - the class to activate ($opt.data('selectClass'))
+     * @param {jQuery} $opt - the related DOMElement option
      */
-    selectClass: function (previewMode, value, $li) {
-        var $group = $li && $li.closest('.dropdown-submenu');
+    selectClass: function (previewMode, value, $opt) {
+        var $group = $opt && $opt.closest('.dropdown-submenu');
         if (!$group || !$group.length) {
             $group = this.$el;
         }
@@ -141,12 +141,12 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one or multiple classes in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each <li/> having a `data-toggle-class`
+     * case is having a subdropdown with each item having a `data-toggle-class`
      * value allowing to toggle the associated class.
      *
      * @see this.selectClass
      */
-    toggleClass: function (previewMode, value, $li) {
+    toggleClass: function (previewMode, value, $opt) {
         var $lis = this.$el.find('[data-toggle-class]').addBack('[data-toggle-class]');
         var classes = $lis.map(function () {return $(this).data('toggleClass');}).get().join(' ');
         var activeClasses = $lis.filter('.active, :has(.active)').map(function () {return $(this).data('toggleClass');}).get().join(' ');
@@ -163,7 +163,7 @@ var SnippetOption = Widget.extend({
 
     /**
      * Override the helper method to search inside the $target element instead
-     * of the dropdown <li/> element.
+     * of the dropdown item element.
      *
      * @override
      */
@@ -225,13 +225,13 @@ var SnippetOption = Widget.extend({
      *        - truthy if the option is enabled for preview or if leaving it (in
      *          that second case, the value is 'reset')
      *        - false if the option should be activated for good
-     * @param {jQuery} $li - the related DOMElement option
+     * @param {jQuery} $opt - the related DOMElement option
      */
-    _select: function (previewMode, $li) {
+    _select: function (previewMode, $opt) {
         var self = this;
 
         // Options can say they respond to strong choice
-        if (previewMode && ($li.data('noPreview') || $li.parent().data('noPreview'))) {
+        if (previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
             return;
         }
         // If it is not preview mode, the user selected the option for good
@@ -243,7 +243,7 @@ var SnippetOption = Widget.extend({
 
         // Search for methods (data-...) (i.e. data-toggle-class) on the
         // selected (sub)option and its parents
-        var el = $li[0];
+        var el = $opt[0];
         var methods = [];
         do {
             methods.push([el, el.dataset]);
@@ -302,20 +302,25 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkEnter: function (ev) {
-        var $li = $(ev.currentTarget).parent();
-        if ($li.is('.dropdown-submenu')) {
-            var $menu = $li.children('.dropdown-menu');
+        var $opt = $(ev.target);
+        if (!$opt.hasClass('dropdown-item')) {
+            return;
+        }
+
+        var $dsmenu = $opt.parent('.dropdown-submenu');
+        if ($dsmenu.length) {
+            var $menu = $dsmenu.children('.dropdown-menu'); // FIXME
             if ($menu.length) {
-                var menuRightPosition = $li.offset().left + $li.outerWidth() + $menu.outerWidth();
+                var menuRightPosition = $dsmenu.offset().left + $dsmenu.outerWidth() + $menu.outerWidth();
                 $menu.toggleClass('o_open_to_left', menuRightPosition > $(window).outerWidth());
             }
         }
 
-        if (!$li.is(':hasData')) {
+        if (!$opt.is(':hasData')) {
             return;
         }
         this.__click = false;
-        this._select(true, $li);
+        this._select(true, $opt);
         this.$target.trigger('snippet-option-preview', [this]);
     },
     /**
@@ -325,13 +330,14 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkClick: function (ev) {
-        var $li = $(ev.currentTarget).parent(':hasData');
-        if (!$li.length) {
+        var $opt = $(ev.target);
+        if (!$opt.hasClass('dropdown-item') || !$opt.is(':hasData')) {
             return;
         }
+
         ev.preventDefault();
         this.__click = true;
-        this._select(false, $li);
+        this._select(false, $opt);
         this.$target.trigger('snippet-option-change', [this]);
     },
     /**
@@ -678,7 +684,7 @@ registry.colorpicker = SnippetOption.extend({
                 $toggles.parent().empty().append($clpicker);
             }
 
-            this.$el.find('li').append($pt);
+            this.$el.find('.dropdown-menu').append($pt);
         }
 
         var classes = [];
@@ -781,7 +787,7 @@ registry.background = SnippetOption.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: function (previewMode, value, $li) {
+    background: function (previewMode, value, $opt) {
         if (previewMode === 'reset' && value === undefined) {
             // No background has been selected and we want to reset back to the
             // original custom image
@@ -800,16 +806,16 @@ registry.background = SnippetOption.extend({
     /**
      * @override
      */
-    selectClass: function (previewMode, value, $li) {
-        this.background(previewMode, '', $li);
-        this._super(previewMode, value ? (value + ' oe_img_bg') : value, $li);
+    selectClass: function (previewMode, value, $opt) {
+        this.background(previewMode, '', $opt);
+        this._super(previewMode, value ? (value + ' oe_img_bg') : value, $opt);
     },
     /**
      * Opens a media dialog to add a custom background image.
      *
      * @see this.selectClass for parameters
      */
-    chooseImage: function (previewMode, value, $li) {
+    chooseImage: function (previewMode, value, $opt) {
         // Put fake image in the DOM, edit it and use it as background-image
         var $image = $('<img/>', {class: 'd-none', src: value}).appendTo(this.$target);
 
@@ -881,7 +887,7 @@ registry.background = SnippetOption.extend({
         this._super.apply(this, arguments);
 
         var src = this._getSrcFromCssValue();
-        this.$el.find('li[data-background]')
+        this.$el.find('[data-background]')
             .removeClass('active')
             .filter(function () {
                 var bgOption = $(this).data('background');
@@ -889,7 +895,7 @@ registry.background = SnippetOption.extend({
             })
             .addClass('active');
 
-        this.$el.find('li[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
+        this.$el.find('[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
     },
     /**
      * Sets the given value as custom background image.
@@ -938,7 +944,7 @@ registry.background_position = SnippetOption.extend({
      *
      * @see this.selectClass for parameters
      */
-    backgroundPosition: function (previewMode, value, $li) {
+    backgroundPosition: function (previewMode, value, $opt) {
         var self = this;
 
         this.previous_state = [this.$target.attr('class'), this.$target.css('background-size'), this.$target.css('background-position')];

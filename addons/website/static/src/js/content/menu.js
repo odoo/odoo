@@ -66,7 +66,7 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
 
         // Reset opened menus
-        this.$dropdowns.removeClass('open');
+        this.$dropdowns.removeClass('show');
         this.$navbarCollapses.removeClass('in').attr('aria-expanded', false);
     },
 });

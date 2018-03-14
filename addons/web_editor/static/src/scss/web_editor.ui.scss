@@ -409,7 +409,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                         }
                     }
                     // Open menu
-                    &.open .btn {
+                    &.show .btn {
                         background-color: $o-we-color-light;
                         &:before, &:after {
                             width: 9px;
@@ -430,43 +430,21 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                         border: 1px solid $o-we-color-dark;
                         border-radius: 0;
                         background-color: $o-we-color-light;
-                        a {
+
+                        .dropdown-item {
+                            position: relative;
                             color: $o-we-color-text-light;
                             font-weight: normal;
                             font-size: 12px;
                             padding: 5px 35px 5px 20px;
-                        }
 
-                        > li {
-                            position: relative;
                             &:hover {
                                 background-color: fade-out($o-we-color-dark, 0.5);
-                                > a {
-                                    color: white;
-                                    background: transparent;
-                                    cursor: pointer;
-                                }
-                                > .dropdown-menu {
-                                    display: block;
-                                    left: 100%;
-                                    top: 0;
-
-                                    &.o_open_to_left {
-                                        left: auto;
-                                        right: 100%;
-                                    }
-                                }
+                                color: white;
+                                background: transparent;
+                                cursor: pointer;
                             }
-                            &.dropdown-submenu:before {
-                                @include o-position-absolute($top: 10px, $right: 10px);
-                                @include o-caret-right(3px);
-                                border-left-color: $o-we-color-text-light;
-                            }
-                            &.divider {
-                                background-color: $o-we-color-divider;
-                                margin: 0 8px;
-                            }
-                            &.active > a {
+                            &.active {
                                 color: white;
                                 background-color: fade-out($o-we-color-dark, 0.5);
                                 &:before {
@@ -476,53 +454,73 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                                     color: $o-brand-optional;
                                 }
                             }
-                            &.dropdown-header {
-                                color: white;
-                                font-weight: bold;
-                                font-size: 12px;
-                                margin-top: 2px;
 
-                                &:hover {
-                                    background-color: initial;
-                                }
-
-                                &.o_main_header {
-                                    padding-left: 8px;
-                                }
-                                &.o_parent_editor_header {
-                                    color: wheat;
-                                    font-weight: 400;
-                                    font-size: 10px;
-                                    margin: 7px 0 4px 4px;
-                                    &::before {
-                                        content: "\f148";
-                                        @include o-position-absolute($top: 2px, $left: 8px);
-                                        font-family: FontAwesome;
-                                        transform: scaleX(-1);
-                                    }
-                                    ~ li:not(.dropdown-header) {
-                                        a {
-                                            font-size: 11px;
-                                            padding: 4px 35px 4px 20px;
-                                            opacity: 0.8;
-                                            &:hover {
-                                                opacity: 1;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            &.separator {
-                                display: block;
-                                margin: 4px 35px 4px 20px;
-                                height: 1px;
-                                background: rgba($o-we-color-text-light, 0.1);
-                            }
-
-                            > a > i {
+                            > i {
                                 width: 16px;
                                 margin-right: 8px;
+                            }
+                        }
+
+                        .dropdown-submenu {
+                            position: relative;
+
+                            &::before {
+                                @include o-position-absolute($top: 10px, $right: 10px);
+                                @include o-caret-right(3px);
+                                border-left-color: $o-we-color-text-light;
+                            }
+
+                            &:hover > .dropdown-menu {
+                                display: block;
+                                left: 100%;
+                                top: 0;
+
+                                &.o_open_to_left {
+                                    left: auto;
+                                    right: 100%;
+                                }
+                            }
+                        }
+
+                        .dropdown-divider {
+                            display: block;
+                            height: 1px;
+                            background: rgba($o-we-color-text-light, 0.1);
+                            margin: 0 8px;
+                        }
+
+                        .dropdown-header {
+                            color: white;
+                            font-weight: bold;
+                            font-size: 12px;
+                            margin-top: 2px;
+
+                            &:hover {
+                                background-color: initial;
+                            }
+
+                            &.o_main_header {
+                                padding-left: 8px;
+                            }
+                            &.o_parent_editor_header {
+                                color: wheat;
+                                font-weight: 400;
+                                font-size: 10px;
+                                margin: 7px 0 4px 4px;
+                                &::before {
+                                    content: "\f148";
+                                    @include o-position-absolute($top: 2px, $left: 8px);
+                                    font-family: FontAwesome;
+                                    transform: scaleX(-1);
+                                }
+                                ~ .dropdown-item {
+                                    font-size: 11px;
+                                    padding: 4px 35px 4px 20px;
+                                    opacity: 0.8;
+                                    &:hover {
+                                        opacity: 1;
+                                    }
+                                }
                             }
                         }
                     }
@@ -749,7 +747,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         > .btn-group {
             margin-top: -2px;
 
-            &.open, .btn-group.open {
+            &.show, .btn-group.show {
                 .dropdown-toggle {
                     border-top: 2px solid white;
                     background-color: $o-we-color-darker;
@@ -767,7 +765,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             border-radius: 0;
             background-color: $o-we-color-darker;
             color: $o-we-color-text-normal;
-            > li > a {
+            .dropdown-item {
                 width: 100%;
                 color: $o-we-color-text-light;
 
@@ -831,7 +829,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
 .note-popover .popover, .note-editor {
     .dropdown-menu {
-        > li > a {
+        .dropdown-item {
             > i {
                 visibility: hidden;
             }

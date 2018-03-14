@@ -319,15 +319,18 @@ var MentionManager = Widget.extend({
                 suggestions: suggestions,
             }));
             this.$el
-                .addClass('open')
-                .find('ul')
+                .addClass('show')
+                .find('.dropdown-menu')
+                .addClass('show')
                 .css('max-width', this._composer.$input.width())
                 .find('.o_mention_proposition')
                 .first()
                 .addClass('active');
             this._open = true;
         } else {
-            this.$el.removeClass('open');
+            this.$el.removeClass('show')
+                .find('.dropdown-menu')
+                .removeClass('show');
             this.$el.empty();
             this._open = false;
         }

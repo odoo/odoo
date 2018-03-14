@@ -49,7 +49,7 @@ var DataExport = Dialog.extend({
 
             function process_children() {
                 var $this = $(this);
-                if($this.hasClass('open')) {
+                if($this.hasClass('show')) {
                     $this.children('.o_export_tree_item')
                          .addClass('o_selected')
                          .each(process_children);
@@ -77,19 +77,19 @@ var DataExport = Dialog.extend({
 
             switch(e.keyCode || e.which) {
                 case $.ui.keyCode.LEFT:
-                    if ($elem.hasClass('open')) {
+                    if ($elem.hasClass('show')) {
                         this.on_expand_action(record);
                     }
                     break;
                 case $.ui.keyCode.RIGHT:
-                    if (!$elem.hasClass('open')) {
+                    if (!$elem.hasClass('show')) {
                         this.on_expand_action(record);
                     }
                     break;
                 case $.ui.keyCode.UP:
                     var $prev = $elem.prev('.o_export_tree_item');
                     if($prev.length === 1) {
-                        while($prev.hasClass('open')) {
+                        while($prev.hasClass('show')) {
                             $prev = $prev.children('.o_export_tree_item').last();
                         }
                     } else {
@@ -104,7 +104,7 @@ var DataExport = Dialog.extend({
                     break;
                 case $.ui.keyCode.DOWN:
                     var $next;
-                    if($elem.hasClass('open')) {
+                    if($elem.hasClass('show')) {
                         $next = $elem.children('.o_export_tree_item').first();
                     } else {
                         $next = $elem.next('.o_export_tree_item');
@@ -408,7 +408,7 @@ var DataExport = Dialog.extend({
         var self = this;
         if(expansion) {
             this.$('.o_export_tree_item[data-id="' + expansion + '"]')
-                .addClass('open')
+                .addClass('show')
                 .find('.o_expand_parent')
                 .toggleClass('fa-chevron-right fa-chevron-down')
                 .next()
@@ -429,8 +429,8 @@ var DataExport = Dialog.extend({
     },
     show_content: function(id) {
         var $this = this.$('.o_export_tree_item[data-id="' + id + '"]');
-        $this.toggleClass('open');
-        var is_open = $this.hasClass('open');
+        $this.toggleClass('show');
+        var is_open = $this.hasClass('show');
 
         $this.children('.o_expand_parent').toggleClass('fa-chevron-down', !!is_open).toggleClass('fa-chevron-right', !is_open);
 
@@ -441,8 +441,8 @@ var DataExport = Dialog.extend({
             if(!is_open) {
                 $child.hide();
             } else if(child_len === $child_field.eq(i).data('id').split("/").length) {
-                if ($child.hasClass('open')) {
-                    $child.removeClass('open');
+                if ($child.hasClass('show')) {
+                    $child.removeClass('show');
                     $child.children('.o_expand_parent').removeClass('fa-chevron-down').addClass('fa-chevron-right');
                 }
                 $child.show();

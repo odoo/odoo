@@ -135,9 +135,9 @@ var Followers = AbstractField.extend({
         var old_parent_model;
         var $list;
         if (dialog) {
-            $list = $('<ul>').appendTo(this.dialog.$el);
+            $list = $('<div>').appendTo(this.dialog.$el);
         } else {
-            $list = this.$('.o_subtypes_list ul');
+            $list = this.$('.o_subtypes_list .dropdown-menu');
         }
         $list.empty();
 
@@ -145,7 +145,7 @@ var Followers = AbstractField.extend({
 
         _.each(data, function (record) {
             if (old_parent_model !== record.parent_model && old_parent_model !== undefined) {
-                $list.append($('<li>').addClass('divider'));
+                $list.append($('<div>', {class: 'dropdown-divider'}));
             }
             old_parent_model = record.parent_model;
             record.followed = record.followed || undefined;
@@ -408,11 +408,11 @@ var Followers = AbstractField.extend({
         ev.stopPropagation();
         this._updateSubscription(ev);
         var $list = this.$('.o_subtypes_list');
-        if (!$list.hasClass('open')) {
-            $list.addClass('open');
+        if (!$list.hasClass('show')) {
+            $list.addClass('show');
         }
-        if (this.$('.o_subtypes_list ul')[0].children.length < 1) {
-            $list.removeClass('open');
+        if (this.$('.o_subtypes_list .dropdown-menu')[0].children.length < 1) {
+            $list.removeClass('show');
         }
     },
 });

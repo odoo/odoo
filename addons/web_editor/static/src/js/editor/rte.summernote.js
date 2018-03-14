@@ -142,7 +142,7 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($resizefa);
     }
     var $colorfa = $airPopover.find('.note-color').clone();
-    $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
+    $colorfa.find(".dropdown-menu").css('min-width', '172px');
     $resizefa.after($colorfa);
 
     // show dialog box and delete
