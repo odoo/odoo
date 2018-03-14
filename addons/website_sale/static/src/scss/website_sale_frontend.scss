@@ -2,9 +2,9 @@
 //## ----------------------------
 
 // Theming variables
-$o-wsale-wizard-thickness: 2px;
-$o-wsale-wizard-dot-size: 10px;
-$o-wsale-wizard-dot-active-glow: 4px;
+$o-wsale-wizard-thickness: 0.125rem;
+$o-wsale-wizard-dot-size: 0.625rem;
+$o-wsale-wizard-dot-active-glow: 0.25rem;
 
 $o-wsale-wizard-color-inner: white;
 $o-wsale-wizard-color-default: $gray-lighter;
@@ -69,11 +69,11 @@ $o-wsale-wizard-label-completed: $state-success-text;
 
             @include media-breakpoint-up(md) {
                 display: block;
-                margin: (10px + $tmp-dot-radius) 0 20px 0;
+                margin: (0.625rem + $tmp-dot-radius) 0 20px 0;
             }
             @include media-breakpoint-down(sm) {
                 margin-left: -15px;
-                font-size:24px;
+                font-size: 24px;
             }
         }
 
@@ -86,7 +86,7 @@ $o-wsale-wizard-label-completed: $state-success-text;
             .progress-wizard-dot {
                 animation: fadeIn 1s ease 0s 1 normal none running;
                 background: $o-wsale-wizard-dot-active;
-                box-shadow: 0 0 0 $o-wsale-wizard-dot-active-glow - 1px $o-wsale-wizard-color-inner,
+                box-shadow: 0 0 0 ($o-wsale-wizard-dot-active-glow - 0.0625rem) $o-wsale-wizard-color-inner,
                             0 0 0 $o-wsale-wizard-dot-active-glow rgba($o-wsale-wizard-dot-active, 0.5);
             }
 
