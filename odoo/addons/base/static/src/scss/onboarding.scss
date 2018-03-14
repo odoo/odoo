@@ -54,7 +54,7 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         flex-flow: row nowrap;
         justify-content: initial;
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
            flex-flow: column nowrap;
 
             .o_onboarding_folded_title {
@@ -71,7 +71,7 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         position: relative;
         opacity: 0.6;
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             text-align: left;
             margin-bottom: 16px;
             align-items: baseline;
@@ -229,7 +229,7 @@ $o-onboarding-violet-ui-2: #FBEEC8;
             .o_onboarding_folded_title {
                 padding: 6px 10px 6px 0;
 
-                @media (min-width: $screen-sm-min) {
+                @include media-breakpoint-up(md) {
                     border-right: 1px solid $gray-lighter-dark;
                 }
             }

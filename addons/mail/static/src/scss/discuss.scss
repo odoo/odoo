@@ -43,7 +43,7 @@
         overflow: auto;
         padding: $o-horizontal-padding 0;
 
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             width: $o-mail-chat-sidebar-width + 50px;
         }
 
@@ -116,11 +116,11 @@
         height: 100%;
         margin-left: $o-mail-chat-sidebar-width;
         position: relative;
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             overflow: auto;
         }
 
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             margin-left: $o-mail-chat-sidebar-width + 50px;
         }
 
@@ -260,7 +260,7 @@
 // ------------------------------------------------------------------
 // Mobile
 // ------------------------------------------------------------------
-@media (max-width: $screen-xs-max) {
+@include media-breakpoint-down(sm) {
     .o_mail_discuss {
         display: flex;
         flex-flow: column nowrap;
@@ -398,7 +398,7 @@
     }
 }
 
-@media (max-width: $screen-xs-max) {
+@include media-breakpoint-down(sm) {
 
     .o_main_navbar > ul.o_menu_systray > li.open .dropdown-menu {
         border: none;

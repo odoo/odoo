@@ -67,7 +67,7 @@
         .o_composer_button_full_composer {
             @include o-position-absolute(auto, 0);
         }
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             .o_composer_button_send {
                 color: $o-brand-optional;
             }
@@ -220,7 +220,7 @@
             .o_chatter_composer_tools {
                 flex: 0 0 auto;
             }
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 .o_composer_button_send {
                     display: inline-block;
                 }
@@ -264,10 +264,10 @@ $o-mail-attachment-margin: 5px;
     width: 100%;
     padding: $o-mail-attachment-margin;
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         width: 50%;
     }
-    @media (min-width: $screen-md-min) {
+    @include media-breakpoint-up(lg) {
         width: 25%;
     }
 
@@ -358,13 +358,13 @@ $o-mail-attachment-margin: 5px;
     > .o_attachment {
         width: 50%;
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             width: percentage(1/3);
         }
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             width: percentage(1/4);
         }
-        @media (min-width: $screen-lg-min) {
+        @include media-breakpoint-up(xl) {
             width: percentage(1/6);
         }
 

@@ -2,7 +2,7 @@
 @mixin o-base-settings-horizontal-padding($padding-base: $padding-small-vertical) {
     padding: $padding-base $o-horizontal-padding;
 
-    @media (min-width: $screen-lg-min) {
+    @include media-breakpoint-up(xl) {
         padding-left: $o-horizontal-padding*2;;
     }
 }
@@ -18,7 +18,7 @@
 .o_base_settings {
     height: 100%;
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         flex-flow: column nowrap;
     }
 
@@ -31,7 +31,7 @@
 
             .title, .o_setting_search {
                 flex: 1 0 auto;
-                width: $screen-xs-min*0.5;
+                width: map-get($o-extra-grid-breakpoints, vsm) / 2;
             }
 
             .o_setting_search {
@@ -75,7 +75,7 @@
 
         overflow: auto;
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             flex-flow: column nowrap;
         }
 
@@ -87,7 +87,7 @@
             overflow: auto;
             padding-top: $o-horizontal-padding*0.5;
 
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 flex: 0 0 $o-base-settings-mobile-tabs-height;
                 display: inline-flex;
                 position: relative;
@@ -119,7 +119,7 @@
                 }
 
                 // Mobile Tabs
-                @media (max-width: $screen-xs-max) {
+                @include media-breakpoint-down(sm) {
                     display: block;
                     @include o-position-absolute($left:100%);
                     @include size(auto, $o-base-settings-mobile-tabs-height);
@@ -190,7 +190,7 @@
                 }
 
                 .o_settings_container {
-                    max-width: $screen-md-min; // Provide a maximum container size to ensure readability
+                    max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
                     @include o-base-settings-horizontal-padding(0);
                 }
             }

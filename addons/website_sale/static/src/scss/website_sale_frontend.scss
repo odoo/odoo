@@ -25,14 +25,14 @@ $o-wsale-wizard-label-completed: $state-success-text;
     margin-top: $grid-gutter-width*0.5;
     padding: 0 $grid-gutter-width*0.5;
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         padding: 0;
     }
 
     .progress-wizard-step {
         position: relative;
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             margin-top: $tmp-dot-radius + $o-wsale-wizard-thickness*3.5;
             float: left;
             width: percentage(1/3);
@@ -41,7 +41,7 @@ $o-wsale-wizard-label-completed: $state-success-text;
                 width: percentage(1/4);
             }
         }
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             &.disabled, &.complete {
                 display:none;
             }
@@ -55,7 +55,7 @@ $o-wsale-wizard-label-completed: $state-success-text;
             border-radius: 50%;
             box-shadow: 0 0 0 $o-wsale-wizard-thickness $o-wsale-wizard-color-default;
 
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 @include o-position-absolute($left: 50%);
                 margin: (-$tmp-dot-radius) 0 0 (-$o-wsale-wizard-dot-size*0.5);
             }
@@ -67,11 +67,11 @@ $o-wsale-wizard-label-completed: $state-success-text;
             font-size: $font-size-base;
             display: inline-block;
 
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 display: block;
                 margin: (10px + $tmp-dot-radius) 0 20px 0;
             }
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 margin-left: -15px;
                 font-size:24px;
             }

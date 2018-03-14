@@ -10,7 +10,7 @@
     z-index: $zindex-modal;
     padding: 50px;
     margin: -5% auto 0 (-$reward-size / 2);
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         margin: -5% auto 0 (-$reward-size-mobile / 2);
     }
     background-image: -webkit-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
@@ -20,7 +20,7 @@
     animation: reward-fading ($reward-base-time * 0.5) ease-in-out 0s 1 normal forwards;
     @include o-position-absolute(20%, auto, auto, 50%);
     @include size($reward-size, $reward-size);
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         @include size($reward-size-mobile, $reward-size-mobile);
     }
 
@@ -75,7 +75,7 @@
     .o_reward_stars {
         display: block;
         @include size($reward-size * 0.75, $reward-size / 2);
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             @include size($reward-size-mobile * 0.75, $reward-size-mobile / 2);
         }
         @include o-position-absolute(18%, 7%);

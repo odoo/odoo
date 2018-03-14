@@ -6,7 +6,7 @@
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             margin-top: 0px;
             margin-bottom: 15px;
         }
@@ -54,7 +54,7 @@
             text-align: center;
             font-size: smaller;
 
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 margin-top: 4px;
                 font-size: x-small;
             }

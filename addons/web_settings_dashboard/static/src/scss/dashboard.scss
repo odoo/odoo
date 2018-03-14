@@ -18,7 +18,7 @@
     .o_web_settings_dashboard_col {
         padding: 10px 8px;
 
-        @media (max-width: $screen-sm-max) {
+        @include media-breakpoint-down(md) {
             padding: 5px 8px;
         }
 
@@ -46,7 +46,7 @@
                     font-size: 1.5em;
                 }
             }
-            @media (max-width: 1200px) {
+            @include media-breakpoint-down(lg) {
                 > li {
                     width: 100%;
                     margin-bottom: 5px;

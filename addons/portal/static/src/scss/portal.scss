@@ -40,7 +40,7 @@ header {
         &.divider {
             @include o-w-fill-navbar;
             border-right: 1px solid $navbar-default-link-disabled-color;
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 display: none;
             }
         }
@@ -50,7 +50,7 @@ header {
         }
     }
     .nav.navbar-nav.pull-right {
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             float: none!important;
         }
     }
@@ -283,7 +283,7 @@ img.o_we_custom_image {
         .navbar-brand {
             margin: 0;
 
-            @media (min-width: $grid-float-breakpoint) {
+            @include media-breakpoint-up(md) {
                 padding: $navbar-padding-vertical $navbar-padding-horizontal 0 0;
             }
         }
@@ -320,7 +320,7 @@ img.o_we_custom_image {
                 }
             }
 
-            @media (max-width: $grid-float-breakpoint) {
+            @include media-breakpoint-down(sm) {
                 .navbar-collapse {
                     z-index: 0;
                     box-shadow: inset 0 0 0 1px $btn-default-border;
@@ -335,7 +335,7 @@ img.o_we_custom_image {
                 }
             }
 
-            @media (min-width: $grid-float-breakpoint) {
+            @include media-breakpoint-up(md) {
                 > .container-fluid {
                     padding: 0;
 

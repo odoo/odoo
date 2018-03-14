@@ -87,7 +87,7 @@
         width: 100px;
     }
 
-    @media (max-width: 767px) {
+    @include media-breakpoint-down(sm) {
         .td-img,
         .td-price-total {
             display: none;
@@ -302,7 +302,7 @@
         max-height: 40px;
     }
 }
-@media (min-width: 992px) {
+@include media-breakpoint-up(lg) {
     #products_grid {
         &.col-md-12 {
             .oe-height-1 {
@@ -353,7 +353,7 @@
         }
     }
 }
-@media (min-width: 1200px) {
+@include media-breakpoint-up(xl) {
     #products_grid {
         &.col-md-12 {
             .oe-height-1 {
@@ -404,7 +404,7 @@
         }
     }
 }
-@media (max-width: 768px) {
+@include media-breakpoint-down(sm) {
     #products_grid {
         table,
         tbody,

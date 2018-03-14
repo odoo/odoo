@@ -28,7 +28,7 @@
     font: normal 1.2em $font-family-monospace;
     color: white;
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         @include o-position-absolute(20px, 20px);
         width: auto;
         padding: 3px 10px 3px 10px;
@@ -44,7 +44,7 @@
     align-items: center;
     @include o-position-absolute(0, 0, 0, 0);
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         justify-content: center;
     }
 }
@@ -55,13 +55,13 @@
     position: relative;
     background-color: fade-out(white, 0.1);
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         overflow: hidden;
         padding: 0 2em 2em;
         flex: 1 0 auto;
     }
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         padding: 2em 4em;
         width: auto;
         max-width: 550px;
@@ -72,11 +72,11 @@
     }
 
     .o_hr_attendance_kiosk_welcome_row {
-        @media (min-width: $screen-sm-min){
+        @include media-breakpoint-up(md) {
             display: flex;
             align-items: center;
         }
-        @media (max-width: $screen-sm-max){
+        @include media-breakpoint-down(md) {
             > div {
                 margin-bottom: 20px;
             }
@@ -138,12 +138,12 @@
             @include square(50px);
         }
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             margin: 1em -2em 0;
             background: transparent;
         }
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             margin: 0;
             height: 90px;
             border-radius: .2em .2em 0 0;
