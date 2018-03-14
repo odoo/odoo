@@ -26,10 +26,11 @@ class ResCompany(models.Model):
         '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need
         to perform some comparison between new/old values. This method forces the lock dates to be irreversible.
 
-        * The lock date for advisers can't be unset.
-        * The lock date for advisers must be higher than the lock date for non-advisers.
-        * The lock date for advisers must be higher than the last day of the previous month.
-        * The lock date for advisers must be higher than the previous lock date set if exists.
+        * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set
+        after the lock date for users.
+        * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set after the
+        last day of the previous month.
+        * The new lock date for advisors must be set after the previous lock date.
 
         :param vals: The values passed to the write method.
         '''
@@ -45,13 +46,13 @@ class ResCompany(models.Model):
             old_fiscalyear_lock_date = company.fiscalyear_lock_date and\
                 time.strptime(company.fiscalyear_lock_date, DEFAULT_SERVER_DATE_FORMAT)
 
-            # The user attempts to remove the existing fiscal year lock date
+            # The user attempts to remove the lock date for advisors
             if old_fiscalyear_lock_date and not fiscalyear_lock_date and 'fiscalyear_lock_date' in vals:
-                raise ValidationError(_('The lock date for all users is irreversible and can\'t be removed'))
+                raise ValidationError(_('The lock date for advisors is irreversible and can\'t be removed.'))
 
-            # The user attempts to set a fiscal year lock date prior to the previous one
+            # The user attempts to set a lock date for advisors prior to the previous one
             if old_fiscalyear_lock_date and fiscalyear_lock_date and fiscalyear_lock_date < old_fiscalyear_lock_date:
-                raise ValidationError(_('The lock date for all users is irreversible and must be strictly higher than the previous date.'))
+                raise ValidationError(_('The new lock date for advisors must be set after the previous lock date.'))
 
             # In case of no new fiscal year in vals, fallback to the oldest
             if not fiscalyear_lock_date:
@@ -60,9 +61,9 @@ class ResCompany(models.Model):
                 else:
                     continue
 
-            # The user attempts to set a fiscal year lock date prior to the last day of previous month
+            # The user attempts to set a lock date for advisors prior to the last day of previous month
             if fiscalyear_lock_date <= previous_month:
-                raise ValidationError(_('The lock date for all users must be higher than the last day of the previous month.'))
+                raise ValidationError(_('You cannot lock a period that is not finished yet. Please make sure that the lock date for advisors is not set after the last day of the previous month.'))
 
             # In case of no new period lock date in vals, fallback to the one defined in the company
             if not period_lock_date:
@@ -71,6 +72,6 @@ class ResCompany(models.Model):
                 else:
                     continue
 
-            # The user attempts to set a fiscal year lock date prior to the period lock date
+            # The user attempts to set a lock date for advisors prior to the lock date for users
             if period_lock_date > fiscalyear_lock_date:
-                raise ValidationError(_('The lock date for all users must be higher or equal to the lock date for non-advisers.'))
+                raise ValidationError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set after the lock date for users.'))

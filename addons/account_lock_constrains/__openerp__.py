@@ -7,9 +7,9 @@
     'description': """
     Make the lock date irreversible:
 
-    - The lock date for advisors must be higher of equals of the lock date for users.
-    - The lock date for advisors must be higher of the last day of previous month.
-    - The lock date for advisors must be strictly higher of the previous one.
+    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set after the lock date for users.
+    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set after the last day of the previous month.
+    * The new lock date for advisors must be set after the previous lock date.
     """,
     'depends' : ['account'],
     'data': [],
