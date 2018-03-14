@@ -228,6 +228,9 @@ actual arch.
 * if True, the view always extends its parent
 * if False, the view currently does not extend its parent but can be enabled
          """)
+    is_modified = fields.Boolean(
+        default=False, help="Whether the view has been modified or not."
+    )
 
 
     def _get_arch_fs(self, view):
@@ -257,7 +260,7 @@ actual arch.
     @api.depends('arch_db', 'arch_fs')
     def _compute_arch(self):
         for view in self:
-            if 'xml' in config['dev_mode']:
+            if 'xml' in config['dev_mode'] and not self.is_modified:
                 view.arch = pycompat.to_text(self._get_arch_fs(view) or view.arch_db)
             else:
                 view.arch = pycompat.to_text(view.arch_db)
@@ -281,6 +284,7 @@ actual arch.
             arch_fs = self._get_arch_fs(view)
             if arch_fs:
                 view.arch = pycompat.to_text(arch_fs)
+                view.update({'is_modified': False})
         return self
 
     @api.depends('arch')
@@ -420,6 +424,11 @@ actual arch.
 
     @api.multi
     def write(self, vals):
+        # If the view is user-modified we set is_modified to true, for two reasons:
+        #   1. To know if the view has been modified by the user
+        #   2. So that in dev mode we change from loading the arch_fs to loading the arch_db
+        if ('arch' in vals or 'arch_base' in vals) and 'install_mode_data' not in self._context:
+            vals['is_modified'] = True
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
         custom_view = self.env['ir.ui.view.custom'].search([('ref_id', 'in', self.ids)])

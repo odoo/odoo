@@ -209,13 +209,11 @@ class Http(models.AbstractModel):
 
                     # This is too annoying to type each time...
                     def dt(datetime):
-                        return fields.Datetime.fromstring(datetime)
+                        return fields.Datetime.from_string(datetime)
 
                     views = IrUiView._views_get(exception.qweb['template'])
-                    # Get modified views by comparing the create and write datetimes
-                    # this won't work at 100% because sometimes these times differ even if the
-                    # user hasn't modified them manually.
-                    m_views = [v for v in views if dt(v.create_date) != dt(v.write_date)]
+                    # Only show user-modified views...
+                    m_views = [view for view in views if view.is_modified]
                     # Show latest modified views first
                     values['views'] = reversed(sorted(m_views, key=lambda v: dt(v.write_date)))
             elif code == 403:
