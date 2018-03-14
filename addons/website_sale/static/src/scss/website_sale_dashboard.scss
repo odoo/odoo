@@ -20,7 +20,7 @@
         justify-content: center;
     }
     .o_link_enable {
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             border-right: 1px solid #ccc;
         }
         height: initial;
@@ -41,7 +41,7 @@
         }
     }
     .o_link_disable {
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             border-right: 1px solid #ccc;
         }
         height: initial;

@@ -253,7 +253,7 @@
     }
     // Radio buttons
     &.o_field_radio {
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             display: inline-block;
         }
         .o_radio_input {
@@ -365,7 +365,7 @@
                 cursor: pointer;
             }
         }
-        @media (max-width: $screen-xs-min) {
+        @include media-breakpoint-down(xs, $o-extra-grid-breakpoints) {
             .o_form_image_controls{
                 position: initial;
                 opacity: 1;

@@ -16,7 +16,7 @@
     }
     .oe_inline {
         width: auto!important;
-        @media (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
             &.o_inner_group {
                 width: 1px!important;
             }
@@ -31,7 +31,7 @@
         float: right!important;
     }
 
-    @media (min-width: $screen-xs-min) {
+    @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
         .o_row {
             &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
                 display: flex;
@@ -103,7 +103,7 @@
             max-width: $container-sm - (2 * $o-horizontal-padding);
         }
 
-        @media (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
             .o_row {
                 > .o_field_widget, > div {
                     flex: 1 1 auto;
@@ -425,7 +425,7 @@
     // Text field with oe_inline class
     .o_field_text.oe_inline {
         width: 100%!important;
-        @media (min-width: $screen-xs-min) {
+        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
             width: 45%!important;
         }
     }

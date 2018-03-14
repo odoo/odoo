@@ -8,22 +8,22 @@
         padding: $o-mail-attachment-margin;
         flex: 0 1 50%;
 
-        @media (min-width: $screen-sm-min) {
+        @include media-breakpoint-up(md) {
             flex: 0 0 percentage(1/3);
         }
 
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             flex: 0 0 percentage(1/5);
         }
 
-        @media (min-width: $screen-lg-min){
+        @include media-breakpoint-up(xl) {
             flex: 0 0 percentage(1/6);
         }
 
         .o_image_box {
             padding-top: 50%;
 
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 padding-top: 75%;
             }
         }

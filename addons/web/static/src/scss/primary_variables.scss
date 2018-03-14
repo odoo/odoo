@@ -36,8 +36,21 @@ $o-tooltip-text-color: #777777;
 $o-tooltip-title-text-color: #4c4c4c;
 
 // Layout
-$screen-xs-min: 475px;
-$screen-xl-min: 1534px;
+//
+// Extension of BS4. This is not redefining the BS4 variable directly as we only
+// need the extra ones for media queries (not creating new breakpoint classes).
+// Note: default BS4 values are hardcoded here while it should be possible to
+// merge with the default BS variable (but we would have to take care of
+// ordering & cie).
+$o-extra-grid-breakpoints: (
+    xs: 0,
+    vsm: 475px,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1534px,
+);
 
 $o-form-group-cols: 12;
 $o-form-spacing-unit: 5px;

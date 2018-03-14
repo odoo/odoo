@@ -129,11 +129,11 @@
                 flex-flow: row wrap;
                 justify-content: flex-start;
                 > .o_inner_box {
-                    @media (max-width: $screen-sm-min) {
+                    @include media-breakpoint-down(sm) {
                         flex: 1 1 200px;
                         display: block !important;
                     }
-                    @media (min-width: $screen-sm-min) {
+                    @include media-breakpoint-up(md) {
                         flex: 0 0 16.6%;
                     }
                 }
@@ -209,7 +209,7 @@
 
             .o_properties_selection {
 
-                @media (min-width: $screen-md-min) {
+                @include media-breakpoint-up(lg) {
                     display: flex;
                 }
 

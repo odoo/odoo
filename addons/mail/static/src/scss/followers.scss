@@ -1,6 +1,6 @@
 .o_followers {
     float: right;
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         display: none !important; // Hide the followers in mobile
     }
 

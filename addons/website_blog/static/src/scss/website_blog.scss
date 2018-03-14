@@ -92,7 +92,7 @@
     }
 
     /* mobile preview: for blog h1,h2 font-size and cover-footer height of image overlapas */
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         .o_blog_cover_container {
             > .blog_title {
                 > h1 {

@@ -199,12 +199,12 @@
 }
 
 // Mobile rules
-@media only screen and (max-width: 768px) {
+@include media-breakpoint-down(sm) {
     .o_calendar_container {
         padding: 0;
     }
 }
-@media (max-width: $screen-xs-max) {
+@include media-breakpoint-down(sm) {
     .o_control_panel {
         .o_calendar_button_today {
             float: right;
