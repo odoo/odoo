@@ -164,7 +164,7 @@ class MailController(http.Controller):
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
-    def mail_action_view(self, model=None, res_id=None, message_id=None, access_token=None, **kwargs):
+    def mail_action_view(self, model=None, res_id=None, access_token=None, **kwargs):
         """ Generic access point from notification emails. The heuristic to
             choose where to redirect the user is the following :
 
@@ -176,52 +176,9 @@ class MailController(http.Controller):
 
             models that have an access_token may apply variations on this.
         """
-        if message_id:
-            try:
-                message = request.env['mail.message'].sudo().browse(int(message_id)).exists()
-            except:
-                message = request.env['mail.message']
-            if message:
-                model, res_id = message.model, message.res_id
-            else:
-                # either a wrong message_id, either someone trying ids -> just go to messaging
-                return self._redirect_to_messaging()
-        elif res_id and isinstance(res_id, pycompat.string_types):
+        if res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
-
         return self._redirect_to_record(model, res_id, access_token)
-
-    @http.route('/mail/follow', type='http', auth='user', methods=['GET'])
-    def mail_action_follow(self,  model, res_id, token=None):
-        comparison, record, redirect = self._check_token_and_record_or_redirect(model, int(res_id), token)
-        if comparison and record:
-            try:
-                record.sudo().message_subscribe_users()
-            except Exception:
-                return self._redirect_to_messaging()
-        return redirect
-
-    @http.route('/mail/unfollow', type='http', auth='user', methods=['GET'])
-    def mail_action_unfollow(self, model, res_id, token=None):
-        comparison, record, redirect = self._check_token_and_record_or_redirect(model, int(res_id), token)
-        if comparison and record:
-            try:
-                # TDE CHECKME: is sudo really necessary ?
-                record.sudo().message_unsubscribe_users([request.uid])
-            except Exception:
-                return self._redirect_to_messaging()
-        return redirect
-
-    @http.route('/mail/new', type='http', auth='user')
-    def mail_action_new(self, model, res_id, action_id):
-        # TDE NOTE: this controller is deprecated and will disappear before v11.
-        if model not in request.env:
-            return self._redirect_to_messaging()
-        params = {'view_type': 'form', 'model': model}
-        if action_id:
-            # Probably something to do
-            params['action'] = action_id
-        return werkzeug.utils.redirect('/web?#%s' % url_encode(params))
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
     def mail_action_assign(self, model, res_id, token=None):
