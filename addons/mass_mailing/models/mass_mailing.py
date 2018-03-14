@@ -638,6 +638,13 @@ class MassMailing(models.Model):
         }
 
     @api.multi
+    def action_schedule_date(self):
+        self.ensure_one()
+        action = self.env.ref('mass_mailing.mass_mailing_schedule_date_action').read()[0]
+        action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
+        return action
+
+    @api.multi
     def put_in_queue(self):
         self.write({'sent_date': fields.Datetime.now(), 'state': 'in_queue'})
 
