@@ -328,6 +328,7 @@
                                     <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="date" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="refund_invoice_id" string="Associated Invoice" attrs="{'invisible': [('type', '!=', 'in_refund')]}"/>
                                 </group>
                             </group>
                         </page>
@@ -469,6 +470,7 @@
                                     <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
                                     <field name="name"/>
+                                    <field name="refund_invoice_id" string="Associated Invoice" attrs="{'invisible': [('type', '!=', 'out_refund')]}"/>
                                 </group>
                             </group>
                             <field name="tax_line_ids">
