@@ -330,21 +330,6 @@ options.registry.sizing_x = options.registry.sizing.extend({
 });
 
 options.registry.layout_column = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        var handlesSelector = '.o_add_column:not(.o_disable_btn), .o_remove_column:not(.o_disable_btn)';
-        this.$overlay.find(handlesSelector).removeClass('readonly');
-        this.$overlay.on('click', handlesSelector, this._onButtonClick.bind(this));
-        return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    onFocus: function () {
-        this._toggleButtons();
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -387,7 +372,6 @@ options.registry.layout_column = options.Class.extend({
         }
 
         this._resizeColumns();
-        this._toggleButtons();
         this.trigger_up('cover_update');
     },
     /**
@@ -409,28 +393,6 @@ options.registry.layout_column = options.Class.extend({
         if (colOffset) {
             $columns.first().addClass('col-md-offset-' + colOffset);
         }
-    },
-    /**
-     * Toggles plus/minus buttons.
-     *
-     * @private
-     */
-    _toggleButtons: function () {
-        var colsLength = this.$target.children().length;
-        this.$overlay.find('.o_add_column').toggleClass('o_disable_btn', colsLength >= 6);
-        this.$overlay.find('.o_remove_column').toggleClass('o_disable_btn', colsLength <= 1);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onButtonClick: function (ev) {
-        this._updateColumnCount($(ev.currentTarget).hasClass('o_add_column') ? +1 : -1);
     },
 });
 
