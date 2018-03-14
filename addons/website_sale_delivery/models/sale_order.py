@@ -30,7 +30,7 @@ class SaleOrder(orm.Model):
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {}
-            res[order.id]['amount_delivery'] = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
+            res[order.id]['amount_delivery'] = sum([line.price_total for line in order.order_line if line.is_delivery])
         return res
 
     def _has_delivery(self, cr, uid, ids, field_name, arg, context=None):
