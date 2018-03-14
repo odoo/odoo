@@ -429,7 +429,7 @@ QUnit.module('relational_fields', {
 
         $('button:contains(Filters)').click();
         $('.o_add_custom_filter:visible').click();  // Add a custom filter, datetime field is selected
-        assert.strictEqual($('li.o_filter_condition select.o_searchview_extended_prop_field').val(), 'datetime',
+        assert.strictEqual($('.o_filter_condition select.o_searchview_extended_prop_field').val(), 'datetime',
             "datetime field should be selected");
         $('.o_apply_filter').click();
 

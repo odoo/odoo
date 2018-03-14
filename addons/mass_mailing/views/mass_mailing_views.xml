@@ -313,17 +313,13 @@
                                     </div>
                                     <div class="o_kanban_card_manage_pane">
                                         <div class="o_kanban_card_manage_section o_dropdown_kanban dropdown">
-                                            <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                                 <span class="fa fa-ellipsis-v"/>
                                             </a>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li t-if="widget.editable">
-                                                    <a role="menuitem" type="edit">Edit</a>
-                                                </li>
-                                                <li t-if="widget.deletable">
-                                                    <a role="menuitem" type="delete">Delete</a>
-                                                </li>
-                                            </ul>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -566,15 +562,15 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
                                 <div class="o_dropdown_kanban dropdown">
-                                    <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    <div class="dropdown-menu" role="menu">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         <t t-if="widget.deletable">
-                                            <li><a role="menuitem" type="delete">Delete</a></li>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                         </t>
-                                    </ul>
+                                    </div>
                                 </div>
                                  <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
@@ -920,20 +916,20 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing_campaign">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
+                                    <div class="dropdown-menu" role="menu">
                                         <t t-if="widget.editable">
-                                            <li><a role="menuitem" type="edit">Settings</a></li>
+                                            <a role="menuitem" type="edit" class="dropdown-item">Settings</a>
                                         </t>
                                         <t t-if="widget.deletable">
-                                            <li><a role="menuitem" type="delete">Delete</a></li>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                         </t>
-                                        <li role="separator" class="divider"/>
-                                        <li role="separator" class="dropdown-header">Colour</li>
-                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" role="menu" data-field="color"/></li>
-                                    </ul>
+                                        <div role="separator" class="dropdown-divider"/>
+                                        <div role="separator" class="dropdown-header">Colour</div>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
                                 </div>
                                  <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top mb16">

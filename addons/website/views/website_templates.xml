@@ -79,13 +79,13 @@
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
+            <span t-field="submenu.name"/>
         </a>
-        <ul class="dropdown-menu" role="menu">
+        <div class="dropdown-menu" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu"/>
             </t>
-        </ul>
+        </div>
     </li>
 </template>
 
@@ -314,15 +314,16 @@
                     <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
                     <span class="caret ml4"/>
                 </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li t-foreach="languages" t-as="lg">
+                <div class="dropdown-menu" role="menu">
+                    <t t-foreach="languages" t-as="lg">
                         <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                           class="dropdown-item js_change_lang"
                            t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
-                           t-att-data-lang="lg[0]" class="js_change_lang">
+                           t-att-data-lang="lg[0]">
                             <t t-esc="lg[1].split('/').pop()"/>
                         </a>
-                    </li>
-                </ul>
+                    </t>
+                </div>
             </div>
         </li>
         <li groups="website.group_website_publisher">
@@ -341,16 +342,12 @@
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
-            <button type="button" t-attf-class="btn btn-secondary dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
+            <button type="button" t-attf-class="btn btn-secondary dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
+            <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-raw="0"/>
-                <li t-if="publish_edit">
-                    <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
-                    title='Edit in backend'>Edit</a>
-                </li>
-            </ul>
+                <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
+                    title='Edit in backend' class="dropdown-item" t-if="publish_edit">Edit</a>
+            </div>
         </div>
     </div>
 </template>
@@ -879,18 +876,19 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
               <t t-call="website.website_search_box"/>
           </form>
           <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
-              <button class="btn btn-secondary" type="button" data-toggle="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
                   <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
                   <span class="d-none d-xl-inline" t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-                  <span class="caret" role="img" aria-label="Dropdown menu" title="Dropdown menu"></span>
               </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="portal_searchbar_sortby">
-                  <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                      <a role="menuitem" t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+              <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby" role="menu">
+                  <t t-foreach="searchbar_sortings" t-as="option">
+                      <a role="menuitem"
+                         t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)"
+                         t-attf-class="dropdown-item#{sortby == option and ' active' or ''}">
                           <span t-esc="searchbar_sortings[option].get('label')"/>
                       </a>
-                  </li>
-              </ul>
+                  </t>
+              </div>
           </div>
           <h3 class="mt16">Manage Your Pages</h3>
           <t t-if="not pages">

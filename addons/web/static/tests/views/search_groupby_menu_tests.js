@@ -35,8 +35,8 @@ QUnit.module('GroupByMenu', {
 
         var groupByMenu = createGroupByMenu(this.groupbys, this.fields);
         groupByMenu.$('button:first').click();
-        assert.strictEqual(groupByMenu.$('li').length, 2, 'should have 2 li');
-        assert.strictEqual(groupByMenu.$('li:nth-child(2)').text().trim(), 'some group by',
+        assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 2, 'should have 2 elements');
+        assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').eq(1).text().trim(), 'some group by',
             'should have proper filter name');
         groupByMenu.destroy();
     });
@@ -46,7 +46,7 @@ QUnit.module('GroupByMenu', {
 
         var groupByMenu = createGroupByMenu([], {});
         groupByMenu.$('button:first').click();
-        assert.strictEqual(groupByMenu.$('li').length, 0, 'should have 0 li');
+        assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 0, 'should have 0 element');
         groupByMenu.destroy();
     });
 
@@ -58,7 +58,7 @@ QUnit.module('GroupByMenu', {
             {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}}
             );
         groupByMenu.$('button:first').click();
-        assert.strictEqual(groupByMenu.$('li').length, 1, 'should have 1 li');
+        assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 1, 'should have 1 element');
         groupByMenu.destroy();
     });
 
@@ -69,7 +69,7 @@ QUnit.module('GroupByMenu', {
         groupByMenu.$('button:first').click();
         var selector = groupByMenu.$('select.o_group_selector');
         assert.ok(!selector.is(":visible"), 'should be invisible');
-        groupByMenu.$('.o_add_custom_group a').click();
+        groupByMenu.$('.o_add_custom_group').click();
         selector = groupByMenu.$('select.o_group_selector');
         assert.ok(selector.is(":visible"), 'should be visible');
         groupByMenu.destroy();
@@ -85,11 +85,11 @@ QUnit.module('GroupByMenu', {
             }
         );
         groupByMenu.$('button:first').click();
-        groupByMenu.$('li.o_add_custom_group a').click();
+        groupByMenu.$('.o_add_custom_group').click();
         assert.strictEqual(groupByMenu.$('select').val(), 'fieldName',
             'the select value should be "fieldName"');
         groupByMenu.$('button.o_apply_group').click();
-        assert.strictEqual(groupByMenu.$('li.o_menu_item.selected').length, 1, 'there should be a groupby selected');
+        assert.strictEqual(groupByMenu.$('.o_menu_item.selected').length, 1, 'there should be a groupby selected');
         groupByMenu.destroy();
     });
 
@@ -107,7 +107,7 @@ QUnit.module('GroupByMenu', {
 
         var groupByMenu = createGroupByMenu(this.groupbys, this.fields, {
             intercepts: {
-                menu_item_toggled: function(ev) {
+                menu_item_toggled: function (ev) {
                     assert.strictEqual(ev.data.itemId, 'green');
                     assert.strictEqual(ev.data.isActive, true);
                 },
@@ -143,7 +143,7 @@ QUnit.module('GroupByMenu', {
         var groupByMenu = createGroupByMenu(this.groupbys,
             {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}}
         );
-        groupByMenu.$el.click(function(event) {
+        groupByMenu.$el.click(function (event) {
             // we do not want a click to get out and change the url, for example
             throw new Error('No click should get out of the groupby menu');
         });

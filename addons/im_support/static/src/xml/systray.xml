@@ -3,10 +3,10 @@
 
     <t t-extend="mail.systray.MessagingMenu">
         <t t-jquery=".o_mail_systray_dropdown" t-operation="append">
-            <li t-if="widget.supportChannel" class="o_mail_systray_dropdown_bottom">
+            <div t-if="widget.supportChannel" class="o_mail_systray_dropdown_bottom">
                 <t t-set="preview" t-value="widget.supportChannel"/>
                 <t t-call="mail.Preview"/>
-            </li>
+            </div>
         </t>
     </t>
 

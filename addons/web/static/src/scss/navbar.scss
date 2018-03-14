@@ -86,7 +86,7 @@
                     width: $o-navbar-height;
                     text-align: center;
                 }
-                &.open > ul {
+                &.show > ul {
                     padding: 0;
 
                     > li {
@@ -115,27 +115,23 @@
 
         &.o_menu_systray {
             float: right;
-            .open .dropdown-menu {
-                left: auto;
-                right: 0;
-            }
         }
     }
 
-    .open .dropdown-menu {
+    .dropdown-menu.show {
         max-height: 90vh; // the dropdown should not overstep the viewport
         min-width: 100%;
         overflow: auto;
         margin-top: 0;
 
         @for $index from 3 through 5 {
-            > li.o_menu_header_lvl_#{$index}, > li .o_menu_entry_lvl_#{$index} {
+            .o_menu_header_lvl_#{$index}, .o_menu_entry_lvl_#{$index} {
                 padding-left: $o-dropdown-hpadding + ($index - 2)*12px;
             }
         }
     }
 
-    .open .dropdown-toggle {
+    .show .dropdown-toggle {
         background-color: $o-navbar-inverse-link-hover-bg;
     }
     .o_user_menu {
@@ -165,7 +161,7 @@
                     display: none;
                 }
 
-                &.open .dropdown-menu {
+                .dropdown-menu.show {
                     max-height: none;
                 }
             }
@@ -173,7 +169,7 @@
             &.o_menu_sections {
                 width: 100%;
 
-                > li.open .dropdown-menu {
+                .dropdown-menu.show {
                     position: static;
                     float: none;
                     background-color: transparent;
@@ -181,7 +177,7 @@
                     border: none;
                     overflow: visible;
 
-                    > li > a {
+                    > .dropdown-item {
                         background-color: transparent;
                         color: inherit;
                     }
@@ -196,7 +192,7 @@
                 > li {
                     display: inline-block;
 
-                    &.open .dropdown-menu {
+                    .dropdown-menu.show {
                         @include o-position-absolute($o-navbar-height, 0, 0, 0);
                         position: fixed;
                         width: auto;
@@ -225,10 +221,10 @@
 }
 
 @include media-breakpoint-down(md) {
-     .o_switch_company_menu > .dropdown-menu {
-         padding-top: 0px;
-         li.bg-info {
-             padding: 10px;
-         }
-     }
- }
+    .o_switch_company_menu > .dropdown-menu {
+        padding-top: 0px;
+        .bg-info {
+            padding: 10px;
+        }
+    }
+}

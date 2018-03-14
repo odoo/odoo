@@ -2347,8 +2347,8 @@ QUnit.module('Views', {
         var $actions = $('.o_web_client .o_control_panel .btn-group .dropdown-menu')[1].children;
         assert.strictEqual($actions.length, 3,
             "there should be 3 actions");
-        var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-menu li a')[2];
-        assert.strictEqual($customAction.text.trim(), 'Action event',
+        var $customAction = $('.o_web_client .o_control_panel .btn-group .dropdown-item:nth(2)');
+        assert.strictEqual($customAction.text().trim(), 'Action event',
             "the custom action should have 'Action event' as name");
 
         list.destroy();

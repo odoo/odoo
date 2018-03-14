@@ -11,12 +11,10 @@
         </template>
 
         <template id="share_page_menu" inherit_id="website.user_navbar">
-            <xpath expr="//li/a[@data-action='promote-current-page']/.." position="after">
-                <li>
-                    <a href="/r" id="o_website_links_share_page">
-                        <span title="Track this page to count clicks">Track this Page</span>
-                    </a>
-                </li>
+            <xpath expr="//a[@data-action='promote-current-page']" position="after">
+                <a href="/r" id="o_website_links_share_page" class="dropdown-item">
+                    <span title="Track this page to count clicks">Track this Page</span>
+                </a>
             </xpath>
 
         </template>

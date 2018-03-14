@@ -18,7 +18,7 @@ var _t = core._t;
 var SwitchCompanyMenu = Widget.extend({
     template: 'SwitchCompanyMenu',
     events: {
-        'click .dropdown-menu li a[data-menu]': '_onClick',
+        'click .dropdown-item[data-menu]': '_onClick',
     },
     /**
      * @override
@@ -53,8 +53,8 @@ var SwitchCompanyMenu = Widget.extend({
             } else {
                 a = '<span style="margin-right: 24px;"/>';
             }
-            companiesList += '<li><a href="#" data-menu="company" data-company-id="' +
-                            company[0] + '">' + a + company[1] + '</a></li>';
+            companiesList += '<a href="#" class="dropdown-item" data-menu="company" data-company-id="' +
+                            company[0] + '">' + a + company[1] + '</a>';
         });
         this.$('.dropdown-menu').html(companiesList);
         return this._super();

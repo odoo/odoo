@@ -16,18 +16,18 @@
                 <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
                 <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
                 <span class="o_kanban_config dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a role="menuitem" class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                    <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
+                    <div class="dropdown-menu" role="menu">
+                        <a role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
                         <t t-if="widget.grouped_by_m2o">
-                            <li t-if="widget.editable and widget.id"><a role="menuitem" class="o_column_edit" href="#">Edit Stage</a></li>
-                            <li t-if="widget.deletable and widget.id"><a role="menuitem" class="o_column_delete" href="#">Delete</a></li>
+                            <a t-if="widget.editable and widget.id" role="menuitem" class="dropdown-item o_column_edit" href="#">Edit Stage</a>
+                            <a t-if="widget.deletable and widget.id" role="menuitem" class="dropdown-item o_column_delete" href="#">Delete</a>
                         </t>
                         <t t-if="widget.has_active_field">
-                            <li><a class="o_column_archive_records" href="#">Archive All</a></li>
-                            <li><a class="o_column_unarchive_records" href="#">Unarchive All</a></li>
+                            <a href="#" class="dropdown-item o_column_archive_records">Archive All</a>
+                            <a href="#" class="dropdown-item o_column_unarchive_records">Unarchive All</a>
                         </t>
-                    </ul>
+                    </div>
                 </span>
                 <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
             </div>

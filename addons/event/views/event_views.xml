@@ -238,7 +238,7 @@
                                 <div>
                                     <field name="seats_availability" widget='radio'/>
                                     <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                        to 
+                                        to
                                     </span>
                                     <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
                                 </div>
@@ -305,15 +305,15 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
+                                    <div class="dropdown-menu" role="menu">
                                         <t t-if="widget.deletable">
-                                            <li><a role="menuitem" type="delete">Delete</a></li>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                         </t>
-                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
-                                    </ul>
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    </div>
                                 </div>
                                 <div class="o_event_left">
                                     <div class="o_day"><t t-esc="record.date_begin.raw_value.getDate()"/></div>

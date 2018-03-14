@@ -150,7 +150,7 @@
                 @include o-kanban-dropdown;
                 margin: (-$o-kanban-inside-vgutter - 1px) (-$o-kanban-inside-hgutter - 1px) 0 0;
             }
-            &.open .dropdown-toggle {
+            &.show .dropdown-toggle {
                 @include o-kanban-dropdown-open;
             }
             .dropdown-menu {
@@ -159,7 +159,7 @@
             }
         }
 
-        &:hover .o_dropdown_kanban, .o_dropdown_kanban.open {
+        &:hover .o_dropdown_kanban, .o_dropdown_kanban.show {
             visibility: visible;
         }
 
@@ -342,7 +342,7 @@
                 margin-left: $o-kanban-inside-hgutter*2;
             }
 
-            &:hover .o_kanban_config, .o_kanban_config.open {
+            &:hover .o_kanban_config, .o_kanban_config.show {
                 visibility: visible;
                 margin-left: $o-kanban-inside-hgutter;
             }

@@ -47,17 +47,15 @@
         @param {boolean} [suggestions.divider=false]
     -->
     <t t-name="mail.MentionSuggestions">
-        <ul class="dropdown-menu" role="menu">
+        <div class="dropdown-menu" role="menu">
             <t t-foreach="suggestions" t-as="suggestion">
-                <li role="separator" t-if="suggestion.divider" class="divider"/>
-                <li t-if="!suggestion.divider" class="o_mention_proposition" t-att-data-id="suggestion.id">
-                    <a role="menuitem" href="#"/>
-                </li>
+                <div role="separator" t-if="suggestion.divider" class="dropdown-divider"/>
+                <a t-else="" href="#" class="dropdown-item o_mention_proposition" t-att-data-id="suggestion.id" role="menuitem"/>
             </t>
-        </ul>
+        </div>
     </t>
     <t t-name="mail.MentionSuggestions.Partner" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
             <t t-if="suggestion.email">
                 <span class="o_mention_info">(<t t-esc="suggestion.email"/>)</span>
@@ -65,18 +63,18 @@
         </t>
     </t>
     <t t-name="mail.MentionSuggestions.Channel" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
         </t>
     </t>
     <t t-name="mail.MentionSuggestions.CannedResponse" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.source"/></span>
             <span class="o_mention_info"><t t-esc="suggestion.substitution"/></span>
         </t>
     </t>
     <t t-name="mail.MentionSuggestions.Command" t-extend="mail.MentionSuggestions">
-        <t t-jquery=".o_mention_proposition a" t-operation="append">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
             <span class="o_mention_name">/<t t-esc="suggestion.name"/></span>
             <span class="o_mention_info"><t t-esc="suggestion.help"/></span>
         </t>

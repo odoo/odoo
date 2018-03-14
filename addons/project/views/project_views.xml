@@ -552,19 +552,17 @@
                                         </small>
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                        <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li t-if="widget.editable"><a role="menuitem" type="set_cover">Set Cover Image</a></li>
-                                            <li t-if="widget.editable"><a role="menuitem" type="edit">Edit Task</a></li>
-                                            <li t-if="widget.deletable"><a role="menuitem" type="delete">Delete</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            <li role="separator" class="dropdown-header">Record's Colour</li>
-                                            <li role="menuitem" aria-haspopup="true">
-                                                <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
-                                            </li>
-                                        </ul>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item">Set Cover Image</a>
+                                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Task</a>
+                                            <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            <div role="separator" class="dropdown-divider"></div>
+                                            <div role="separator" class="dropdown-header">Record's Colour</div>
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">

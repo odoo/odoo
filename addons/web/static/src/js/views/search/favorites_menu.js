@@ -14,14 +14,11 @@ var _t = core._t;
 return Widget.extend({
     template: 'SearchView.FavoriteMenu',
     events: {
-        'click li': function (event) {
-            event.stopImmediatePropagation();
+        'click .dropdown-item': function (ev) {
+            ev.preventDefault();
         },
-        'click li a': function (event) {
-            event.preventDefault();
-        },
-        'click .o_save_search a': function (event) {
-            event.preventDefault();
+        'click .o_save_search': function (ev) {
+            ev.preventDefault();
             this.toggle_save_menu();
         },
         'click .o_save_name button': 'save_favorite',
@@ -49,8 +46,8 @@ return Widget.extend({
         this.$save_search = this.$('.o_save_search');
         this.$save_name = this.$('.o_save_name');
         this.$inputs = this.$save_name.find('input');
-        this.$user_divider = this.$('.divider.user_filter');
-        this.$shared_divider = this.$('.divider.shared_filter');
+        this.$user_divider = this.$('.dropdown-divider.user_filter');
+        this.$shared_divider = this.$('.dropdown-divider.shared_filter');
         this.$inputs.eq(0).val(this.searchview.get_title());
         var $shared_filter = this.$inputs.eq(1),
             $default_filter = this.$inputs.eq(2);
@@ -207,7 +204,7 @@ return Widget.extend({
         };
     },
     clear_selection: function () {
-        this.$('li.selected').removeClass('selected');
+        this.$('.selected').removeClass('selected');
     },
     /**
      * Adds a filter description to the filters dict
@@ -230,10 +227,10 @@ return Widget.extend({
             this.$shared_divider.show();
         }
         if (!(key in this.$filters)) {
-            var $filter = $('<li>')
+            var $filter = $('<div>', {class: 'position-relative'})
                 .addClass(filter.user_id ? 'o-searchview-custom-private'
                                          : 'o-searchview-custom-public')
-                .append($('<a>', {'href': '#'}).text(filter.name))
+                .append($('<a>', {href: '#', class: 'dropdown-item'}).text(filter.name))
                 .append($('<span>', {
                     class: 'fa fa-trash-o o-remove-filter',
                     on: {
@@ -256,7 +253,7 @@ return Widget.extend({
         });
         if (current) {
             this.query.remove(current);
-            this.$filters[this.key_for(filter)].removeClass('selected');
+            this.$filters[this.key_for(filter)].find('.dropdown-item').removeClass('selected');
             return;
         }
         this.query.reset([this.facet_for(filter)], {
@@ -268,7 +265,7 @@ return Widget.extend({
             this.searchview.dataset.set_sort(sort_items);
         }
 
-        this.$filters[this.key_for(filter)].addClass('selected');
+        this.$filters[this.key_for(filter)].find('.dropdown-item').addClass('selected');
     },
     remove_filter: function (filter, $filter, key) {
         var self = this;
