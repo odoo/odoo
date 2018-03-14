@@ -876,10 +876,15 @@ var FieldX2Many = AbstractField.extend({
         this.pager = new Pager(this, this.value.count, this.value.offset + 1, this.value.limit, {
             single_page_hidden: true,
             withAccessKey: false,
+            validate: function () {
+                var isList = self.view.arch.tag === 'tree';
+                // TODO: we should have some common method in the basic renderer...
+                return isList ? self.renderer.unselectRow() : $.when();
+            },
         });
         this.pager.on('pager_changed', this, function (new_state) {
-            this.trigger_up('load', {
-                id: this.value.id,
+            self.trigger_up('load', {
+                id: self.value.id,
                 limit: new_state.limit,
                 offset: new_state.current_min - 1,
                 on_success: function (value) {
