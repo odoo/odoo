@@ -359,6 +359,11 @@ var BasicModel = AbstractModel.extend({
                 elem._changes = null;
                 elem._isDirty = false;
             }
+            elem.offset = 0;
+            if (elem.tempLimitIncrement) {
+                elem.limit -= elem.tempLimitIncrement;
+                delete elem.tempLimitIncrement;
+            }
         });
     },
     /**
