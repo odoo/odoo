@@ -2430,7 +2430,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('datetime field in form view', function (assert) {
+    QUnit.test('datetime field in form view 2', function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
@@ -2449,8 +2449,7 @@ QUnit.module('basic_fields', {
         });
         testUtils.patch(basicFields.FieldDate, {
             _setValue: function () {
-                throw "The time format of the language must be taken into account."
-                return this._super.apply(this, arguments);
+                throw "The time format of the language must be taken into account.";
             },
         });
         form.$buttons.find('.o_form_button_create').click();

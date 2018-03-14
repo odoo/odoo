@@ -27,11 +27,16 @@
     }
 }
 
-// Need to put datetimepicker widget above everything else
-// The '.dropdown-menu' part is needed to override default bootstrap rule as
+
+// The 'div.dropdown-menu' part is needed to override default bootstrap rule as
 // this file is unfortunately placed in common assets.
-.bootstrap-datetimepicker-widget.dropdown-menu {
+div.dropdown-menu.bootstrap-datetimepicker-widget{
+    // Need to put datetimepicker widget above everything else
     z-index: $zindex-modal + 1;
+
+    // Also fix the dropdown width
+    width: auto;
+    min-width: 15rem;
 }
 
 .datepicker {
