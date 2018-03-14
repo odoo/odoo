@@ -482,13 +482,37 @@ odoo.define('website_sale.website_sale', function (require) {
         }
     });
 
-    // Deactivate image zoom for mobile devices, since it might prevent users to scroll
+    // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
     if (!config.device.isMobile) {
-        $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
-        // In carousel, On page load zoomOdoo unable to get variant image height/width because images are not displayed at that time
-        // So, reintialize zoomOdoo for active image when carousel image change
-        $('#o-carousel-product').on('slid.bs.carousel', function (ev) {
-            $(ev.relatedTarget).find('img').zoomOdoo();
+        // get natural height / width before images appear on the page (for instance in carousel)
+        function getImageSize($img, callback) {
+            var wait = setInterval(function() {
+                var w = $img.prop('naturalWidth'),
+                    h = $img.prop('naturalHeight');
+                if(w && h) {
+                    done(w, h);
+                }
+            }, 0);
+            function done() {
+                clearInterval(wait);
+                callback.apply(this, arguments);
+            }
+        }
+
+        var autoZooom = $('.ecom-zoomable').hasClass('ecom-autozoom');
+        _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
+            var $img = $(el);
+            getImageSize($img, function(width, height) {
+            // enable zoom only if image is bigger than 500 x 500 pixels
+                if (Math.min(width, height) >= 500) {
+                    if (autoZooom) {
+                        $img.zoomOdoo({event: 'mouseenter', attach: '#o-carousel-product'});
+                    }
+                    else {
+                        $img.zoomOdoo({attach: '#o-carousel-product'});
+                    }
+                }
+            });
         });
     }
 });

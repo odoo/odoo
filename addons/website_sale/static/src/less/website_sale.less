@@ -829,11 +829,16 @@ a.no-decoration {
 }
 
 .ecom-zoomable {
-    img[data-zoom] {
-        cursor: zoom-in;
+    &:not(.ecom-autozoom) {
+        img[data-zoom] {
+            cursor: zoom-in;
+        }
     }
     .o_editable img[data-zoom] {
         cursor: pointer;
+    }
+    #o-carousel-product + div.zoomodoo-flyout {
+        max-height: 400px;
     }
 }
 

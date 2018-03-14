@@ -517,6 +517,12 @@
         </xpath>
     </template>
 
+    <template inherit_id='website_sale.product_picture_magnify' id="product_picture_magnify_auto" active="False" customize_show="True" name="Auto Zoom">
+        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
+            <attribute name="class" separator=" " add="ecom-autozoom" />
+        </xpath>
+    </template>
+
     <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
         <xpath expr="//div[@id='product_full_description']" position="after">
             <div class="container mt32" t-if="product.alternative_product_ids">
