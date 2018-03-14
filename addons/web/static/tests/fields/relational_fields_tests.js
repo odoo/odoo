@@ -2077,7 +2077,7 @@ QUnit.module('relational_fields', {
             data: this.data,
             arch: '<form>' +
                     '<field name="p">' +
-                        '<tree editable="bttom">' +
+                        '<tree editable="bottom">' +
                             '<field name="trululu"/>' +
                         '</tree>' +
                     '</field>' +
@@ -3994,6 +3994,37 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editable one2many list, pager is updated', function (assert) {
+        assert.expect(1);
+
+        this.data.turtle.records.push({id:4, turtle_foo: 'stephen hawking'});
+        this.data.partner.records[0].turtles = [1,2,3,4];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom" limit="3">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // add a record, then click in form view to confirm it
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$el.click();
+
+        assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 5',
+            "pager should display the correct total");
+        form.destroy();
+    });
+
+
     QUnit.test('one2many list (non editable): edition', function (assert) {
         assert.expect(12);
 
@@ -4299,6 +4330,34 @@ QUnit.module('relational_fields', {
             "should still have 0 data rows");
 
         assert.verifySteps(['read', 'default_get', 'default_get']);
+        form.destroy();
+    });
+
+    QUnit.test('editable one2many list, adding line when only one page', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].turtles=[1,2,3];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom" limit="3">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // add a record, to reach the page size limit
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        // the record currently being added should not count in the pager
+        assert.ok(!form.$('.o_cp_pager').is(':visible'),
+            "pager should not be visible");
         form.destroy();
     });
 
