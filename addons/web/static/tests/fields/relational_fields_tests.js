@@ -2172,6 +2172,92 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many list add *many* records, remove, re-add', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.timmy.domain = [['color', '=', 2]];
+        this.data.partner.fields.timmy.onChange = true;
+        this.data.partner_type.fields.product_ids = {string: "Product", type: "many2many", relation: 'product'};
+
+        for (var i=0; i<50; i++) {
+            var new_record_partner_type = {id: 100+i, display_name: "batch" + i, color: 2};
+            this.data.partner_type.records.push(new_record_partner_type);
+        }
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                            '<field name="product_ids" widget="many2many_tags"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,false,search': '<search><field name="display_name"/><field name="color"/></search>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    assert.deepEqual(args.args[0], [1], "should call get_formview_id with correct id");
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // First round: add 51 records in batch
+        form.$buttons.find('.btn.btn-primary.btn-sm.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        var $modal = $('.modal-dialog.modal-lg');
+
+        assert.equal($modal.length, 1,
+            'There should be one modal');
+
+        $modal.find('thead input[type=checkbox]').click(); //select all the records we created in batch + 'gold'
+
+        $modal.find('.btn.btn-sm.btn-primary.o_select_button').click();
+
+        var m2m_records = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_data_cell:not(.o_many2many_tags_cell)');
+        assert.equal(m2m_records.length, 51,
+            'We should have added all the records present in the search view to the m2m field'); // the 50 in batch + 'gold'
+
+        form.$buttons.find('.btn.btn-primary.btn-sm.o_form_button_save').click();
+
+        // Secound round: remove one record
+        form.$buttons.find('.btn.btn-primary.btn-sm.o_form_button_edit').click();
+        var trash_buttons = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_list_record_delete');
+
+        trash_buttons.first().click();
+
+        var pager_limit = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit');
+        assert.equal(pager_limit.text(), '50',
+            'We should have 50 records in the m2m field');
+
+        // Third round: re-add 1 records
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        $modal = $('.modal-dialog.modal-lg');
+
+        assert.equal($modal.length, 1,
+            'There should be one modal');
+
+        $modal.find('thead input[type=checkbox]').click();
+
+        $modal.find('.btn.btn-sm.btn-primary.o_select_button').click();
+        
+        pager_limit = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit');
+        assert.equal(pager_limit.text(), '51',
+            'We should have 51 records in the m2m field');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {

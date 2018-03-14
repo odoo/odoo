@@ -1646,6 +1646,12 @@ var BasicModel = AbstractModel.extend({
                 // handle multiple add: command[2] may be a dict of values (1
                 // record added) or an array of dict of values
                 var data = _.isArray(command.ids) ? command.ids : [command.ids];
+
+                // Ensure the local data repository (list) boundaries can handle incoming records (data)
+                if (data.length + list.res_ids.length > list.limit) {
+                    list.limit = data.length + list.res_ids.length;
+                }
+
                 var list_records = {};
                 _.each(data, function (d) {
                     rec = self._makeDataPoint({
