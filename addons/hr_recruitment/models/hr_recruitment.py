@@ -88,7 +88,7 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.partner.mixin','mail.thread', 'mail.activity.mixin', 'utm.mixin']
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
@@ -365,30 +365,19 @@ class Applicant(models.Model):
         self = self.with_context(default_user_id=False)
         val = msg.get('from').split('<')[0]
         defaults = {
-            'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
-            'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
-            'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
         if custom_values:
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
-
-    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message, values, notif_layout, notif_values)
+    
+    def _message_partner_update_condition(self):
+        """
+        additionnal condition to update the partner record
+        """
+        return [('stage_id.fold', '=', False)]
 
     @api.multi
     def create_employee_from_applicant(self):
