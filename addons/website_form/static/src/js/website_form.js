@@ -15,7 +15,7 @@ odoo.define('website_form.animation', function (require) {
         willStart: function () {
             var def;
             if (!$.fn.datetimepicker) {
-                def = ajax.loadJS("/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js");
+                def = ajax.loadJS("/web/static/lib/tempusdominus/tempusdominus.js");
             }
             return $.when(this._super.apply(this, arguments), def);
         },
