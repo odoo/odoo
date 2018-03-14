@@ -44,9 +44,11 @@ data.ready = function () {
 function translations() {
     function translate_node(node) {
         if(node.nodeType === 3) { // TEXT_NODE
-            if(node.nodeValue.match(/\S/)) {
+            var $pnode = $(node.parentElement);
+            if(node.nodeValue.match(/\S/) && ! $pnode.attr('translated')) {
                 var space = node.nodeValue.match(/^([\s]*)([\s\S]*?)([\s]*)$/);
                 node.nodeValue = space[1] + $.trim(_t(space[2])) + space[3];
+                $pnode.attr('translated', true);
             }
         }
         else if(node.nodeType === 1 && node.hasChildNodes()) { // ELEMENT_NODE

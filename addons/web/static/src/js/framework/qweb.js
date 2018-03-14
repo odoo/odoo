@@ -42,8 +42,10 @@ function preprocess_node() {
                 return;
             }
             var match = /^(\s*)([\s\S]+?)(\s*)$/.exec(this.node.data);
-            if (match) {
+            var $pnode = $(this.node.parentElement);
+            if (match && ! $pnode.attr('translated')) {
                 this.node.data = match[1] + _t(match[2]) + match[3];
+                $pnode.attr('translated', true);
             }
             break;
         case Node.ELEMENT_NODE:
