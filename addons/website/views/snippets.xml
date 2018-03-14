@@ -764,128 +764,119 @@
     <t t-call="web_editor.snippet_options"/>
 
     <div data-js='gallery' data-selector=".o_gallery">
-        <li data-add-images="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
-        <li data-remove-all-images="true" data-no-preview="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
-        <li class="separator"/>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-magic"/>Mode</a>
-            <ul class="dropdown-menu" role="menu">
-                <li data-mode="nomode"><a role="menuitem" href="#">Float</a></li>
-                <li data-mode="masonry"><a role="menuitem" href="#">Masonry</a></li>
-                <li data-mode="grid"><a role="menuitem" href="#">Grid</a></li>
-                <li data-mode="slideshow"><a role="menuitem" href="#">Slideshow</a></li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
-            <ul class="dropdown-menu" role="menu">
-                 <li data-interval="1000"><a role="menuitem" href="#">1s</a></li>
-                 <li data-interval="2000"><a role="menuitem" href="#">2s</a></li>
-                 <li data-interval="3000"><a role="menuitem" href="#">3s</a></li>
-                 <li data-interval="5000"><a role="menuitem" href="#">5s</a></li>
-                 <li data-interval="10000"><a role="menuitem" href="#">10s</a></li>
-                 <li data-interval="0"><a role="menuitem" href="#">Disable autoplay</a></li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-th"/>Columns</a>
-            <ul class="dropdown-menu" role="menu">
-                <li data-columns="1"><a role="menuitem" href="#">1</a></li>
-                <li data-columns="2"><a role="menuitem" href="#">2</a></li>
-                <li data-columns="3"><a role="menuitem" href="#">3</a></li>
-                <li data-columns="4"><a role="menuitem" href="#">4</a></li>
-                <li data-columns="6"><a role="menuitem" href="#">6</a></li>
-                <li data-columns="12"><a role="menuitem" href="#">12</a></li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-arrows-h"/>Images spacing</a>
-
-            <ul class="dropdown-menu" role="menu">
-                <li data-select-class="o_spc-none"><a role="menuitem" href="#">None</a></li>
-                <li data-select-class="o_spc-small"><a role="menuitem" href="#">Small</a></li>
-                <li data-select-class="o_spc-medium"><a role="menuitem" href="#">Medium</a></li>
-                <li data-select-class="o_spc-big"><a role="menuitem" href="#">Big</a></li>
-            </ul>
-        </li>
-        <li class="dropdown-submenu">
-           <a tabindex="-2" href="#"><i class="fa fa-paint-brush"/>Styling</a>
-           <ul class="dropdown-menu" role="menu">
-               <li data-styling=""><a role="menuitem" href="#">Square</a></li>
-               <li data-styling="img-rounded"><a role="menuitem" href="#">Rounded corners</a></li>
-               <li data-styling="img-thumbnail"><a role="menuitem" href="#">Thumbnails</a></li>
-               <li data-styling="img-circle"><a role="menuitem" href="#">Circle</a></li>
-               <li data-styling="shadow"><a role="menuitem" href="#">Shadows</a></li>
-           </ul>
-        </li>
-        <li class="separator"/>
+        <a href="#" class="dropdown-item" data-add-images="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add images</a>
+        <a href="#" class="dropdown-item" data-remove-all-images="true" data-no-preview="true"><i class="fa fa-trash"/>Remove all images</a>
+        <div class="dropdown-divider"/>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-magic"/>Mode</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-mode="nomode">Float</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-mode="masonry">Masonry</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-mode="grid">Grid</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-mode="slideshow">Slideshow</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Slideshow speed</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="1000">1s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="2000">2s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="3000">3s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="5000">5s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="10000">10s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="0">Disable autoplay</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-th"/>Columns</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-columns="1">1</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-columns="2">2</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-columns="3">3</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-columns="4">4</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-columns="6">6</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-columns="12">12</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-arrows-h"/>Images spacing</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-none">None</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-small">Small</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-medium">Medium</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_spc-big">Big</a>
+            </div>
+        </div>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-paint-brush"/>Styling</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-styling="">Square</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-styling="img-rounded">Rounded corners</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-styling="img-thumbnail">Thumbnails</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-styling="img-circle">Circle</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-styling="shadow">Shadows</a>
+            </div>
+        </div>
+        <div class="dropdown-divider"/>
     </div>
 
     <div data-js="background"
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
-        <li data-choose-image="true" data-no-preview="true">
-            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Choose Background Image</a>
-        </li>
+        <a tabindex="-1" href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/>Choose Background Image</a>
     </div>
 
     <div data-js="background_position"
         data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
-        <li class="background_position_li" data-background-position="true" data-no-preview="true">
-            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
-        </li>
+        <a tabindex="-1" href="#" class="dropdown-item background_position_li" data-background-position="true" data-no-preview="true"><i class="fa fa-arrows"/>Background Image Sizing</a>
     </div>
 
     <div data-js="colorpicker"
         data-selector="section, :not(.o_gallery > .container) > .carousel"
         data-exclude=".parallax">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
-            <ul class="dropdown-menu" role="menu">
-                <li></li>
-            </ul>
-        </li>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
     </div>
     <div data-js="colorpicker"
         data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
         data-palette-exclude="grayscale"
         data-palette-default="transparent_grayscale"
         data-palette-title="Overlay Color">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
-            <ul class="dropdown-menu" role="menu">
-                <li></li>
-            </ul>
-        </li>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Overlay color</a>
+            <div class="dropdown-menu" role="menu"/>
+        </div>
     </div>
 
     <div data-js='gallery_img' data-selector=".o_gallery img">
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-refresh"/>Re-order</a>
-            <ul class="dropdown-menu" role="menu" data-no-preview="true">
-                <li data-position="first"><a role="menuitem" href="#">Move to first</a></li>
-                <li data-position="prev"><a role="menuitem" href="#">Move to previous</a></li>
-                <li data-position="next"><a role="menuitem" href="#">Move to next</a></li>
-                <li data-position="last"><a role="menuitem" href="#">Move to last</a></li>
-            </ul>
-        </li>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-refresh"/>Re-order</a>
+            <div class="dropdown-menu" role="menu" data-no-preview="true">
+                <a href="#" class="dropdown-item" role="menuitem" data-position="first">Move to first</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-position="prev">Move to previous</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-position="next">Move to next</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-position="last">Move to last</a>
+            </div>
+        </div>
     </div>
 
     <div data-js='carousel'
         data-selector=":not(.o_gallery > .container) > .carousel">
-        <li class="divider"></li>
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
-            <ul class="dropdown-menu" role="menu">
-                 <li data-interval="1000"><a role="menuitem" href="#">1s</a></li>
-                 <li data-interval="2000"><a role="menuitem" href="#">2s</a></li>
-                 <li data-interval="3000"><a role="menuitem" href="#">3s</a></li>
-                 <li data-interval="5000"><a role="menuitem" href="#">5s</a></li>
-                 <li data-interval="10000"><a role="menuitem" href="#">10s</a></li>
-                 <li data-interval="0"><a role="menuitem" href="#">Disable autoplay</a></li>
-            </ul>
-        </li>
-        <li data-add-slide="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
-        <li data-remove-slide="true" data-no-preview="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
+        <div class="dropdown-divider"/>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Slideshow speed</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="1000">1s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="2000">2s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="3000">3s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="5000">5s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="10000">10s</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-interval="0">Disable autoplay</a>
+            </div>
+        </div>
+        <a href="#" class="dropdown-item" data-add-slide="true" data-no-preview="true"><i class="fa fa-plus-circle"/>Add Slide</a>
+        <a href="#"  class="dropdown-item" data-remove-slide="true" data-no-preview="true"><i class="fa fa-trash-o"/>Remove Slide</a>
     </div>
 
     <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
@@ -899,17 +890,17 @@
         data-selector="section"
         data-target="> * > .row"
         data-exclude=".s_text_block_image_fw, .s_company_team, .s_big_picture">
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-columns"/>Number of columns</a>
-            <ul class="dropdown-menu" role="menu" data-no-preview="true">
-                <li data-select-count="1"><a role="menuitem" href="#">1</a></li>
-                <li data-select-count="2"><a role="menuitem" href="#">2</a></li>
-                <li data-select-count="3"><a role="menuitem" href="#">3</a></li>
-                <li data-select-count="4"><a role="menuitem" href="#">4</a></li>
-                <li data-select-count="5"><a role="menuitem" href="#">5</a></li>
-                <li data-select-count="6"><a role="menuitem" href="#">6</a></li>
-            </ul>
-        </li>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-columns"/>Number of columns</a>
+            <div class="dropdown-menu" role="menu" data-no-preview="true">
+                <a href="#" class="dropdown-item" role="menuitem" data-select-count="1">1</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-count="2">2</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-count="3">3</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-count="4">4</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-count="5">5</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-count="6">6</a>
+            </div>
+        </div>
     </div>
 
     <div data-js="sizing_x"
@@ -929,53 +920,51 @@
     </div>
 
     <div data-selector=".o_image_floating">
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-expand"/>Margin</a>
-            <ul class="dropdown-menu" role="menu">
-                <li data-select-class="o_margin_xl"><a role="menuitem" href="#">Extra-Large</a></li>
-                <li data-select-class="o_margin_l"><a role="menuitem" href="#">Large</a></li>
-                <li data-select-class="o_margin_m"><a role="menuitem" href="#">Medium</a></li>
-                <li data-select-class="o_margin_s"><a role="menuitem" href="#">Small</a></li>
-                <li data-select-class=""><a role="menuitem" href="#">None</a></li>
-            </ul>
-        </li>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-expand"/>Margin</a>
+            <div class="dropdown-menu" role="menu">
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_xl">Extra-Large</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_l">Large</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_m">Medium</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="o_margin_s">Small</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="">None</a>
+            </div>
+        </div>
     </div>
 
     <div data-selector=".o_image_floating">
-        <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-magnet"/>Float</a>
-            <ul class="dropdown-menu" role="menu" data-no-preview="true">
-                <li data-select-class="pull-left"><a role="menuitem" href="#">Left</a></li>
-                <li data-select-class="pull-right"><a role="menuitem" href="#">Right</a></li>
-            </ul>
-        </li>
+        <div class="dropdown-submenu">
+            <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-magnet"/>Float</a>
+            <div class="dropdown-menu" role="menu" data-no-preview="true">
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="pull-left">Left</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-select-class="pull-right">Right</a>
+            </div>
+        </div>
     </div>
 
     <div data-js="parallax" data-selector=".parallax">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-clock-o"/>Scroll Speed</a>
-            <ul class="dropdown-menu" role="menu" name="parallax-scroll">
-                <li data-scroll="0"><a role="menuitem" href="#">No-scroll</a></li>
-                <li class="separator" role="separator"/>
-                <li data-scroll="1"><a role="menuitem" href="#">Fixed</a></li>
-                <li class="separator" role="separator"/>
-                <li data-scroll="0.6"><a role="menuitem" href="#">Very Slow</a></li>
-                <li data-scroll="1.2"><a role="menuitem" href="#">Slow</a></li>
-                <li data-scroll="1.6"><a role="menuitem" href="#">Fast</a></li>
-                <li data-scroll="2"><a role="menuitem" href="#">Very Fast</a></li>
-            </ul>
-        </li>
+        <div class="dropdown-submenu">
+            <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Scroll Speed</a>
+            <div class="dropdown-menu" role="menu" name="parallax-scroll">
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0">No-scroll</a>
+                <div class="dropdown-divider" role="separator"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1">Fixed</a>
+                <div class="dropdown-divider" role="separator"/>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="0.6">Very Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.2">Slow</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="1.6">Fast</a>
+                <a href="#" class="dropdown-item" role="menuitem" data-scroll="2">Very Fast</a>
+            </div>
+        </div>
     </div>
 
     <div data-js='ul'
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <li data-toggle-class="o_ul_folded"><a href="#">Folded list</a></li>
+        <a href="#" class="dropdown-item" data-toggle-class="o_ul_folded">Folded list</a>
     </div>
 
     <div data-js="facebookPage" data-selector=".o_facebook_page">
-        <li data-fb-page-options="true" data-no-preview="true">
-            <a href="#"><i class="fa fa-facebook"/>Options</a>
-        </li>
+        <a href="#" class="dropdown-item" data-fb-page-options="true" data-no-preview="true"><i class="fa fa-facebook"/>Options</a>
     </div>
 
     <div data-js='collapse'

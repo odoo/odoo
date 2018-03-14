@@ -363,11 +363,11 @@ var FormRenderer = BasicRenderer.extend({
                 text: _t("More"),
             }));
 
-            var $ul = $("<ul>", {'class': "dropdown-menu o_dropdown_more", role: "menu"});
+            var $dropdown = $("<div>", {'class': "dropdown-menu o_dropdown_more", role: "menu"});
             _.each(folded_buttons, function ($button) {
-                $('<li>').appendTo($ul).append($button);
+                $button.addClass('dropdown-item').appendTo($dropdown);
             });
-            $ul.appendTo($result);
+            $dropdown.appendTo($result);
         }
 
         this._handleAttributes($result, node);

@@ -958,15 +958,15 @@ range.WrappedRange.prototype.isContentEditable = function () {
 
 renderer.tplButtonInfo.fontsize = function (lang, options) {
     var items = options.fontSizes.reduce(function (memo, v) {
-        return memo + '<li><a data-event="fontSize" href="#" data-value="' + v + '">' +
+        return memo + '<a data-event="fontSize" href="#" class="dropdown-item" data-value="' + v + '">' +
                   '<i class="fa fa-check"></i> ' + v +
-                '</a></li>';
+                '</a>';
     }, '');
 
     var sLabel = '<span class="note-current-fontsize">11</span>';
     return renderer.getTemplate().button(sLabel, {
         title: lang.font.size,
-        dropdown: '<ul class="dropdown-menu">' + items + '</ul>'
+        dropdown: '<div class="dropdown-menu">' + items + '</div>'
     });
 };
 

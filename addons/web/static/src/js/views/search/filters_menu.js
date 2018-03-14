@@ -76,7 +76,7 @@ var FiltersMenu = DropdownMenu.extend({
             category: 'filterCategory',
             title: 'Filters',
             icon: 'fa fa-filter',
-            symbol: this.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'
+            symbol: this.isMobile ? 'fa fa-chevron-right pull-right mt4' : false,
         };
         this._super(parent, dropdownHeader, filters, this.fields);
     },
@@ -88,7 +88,7 @@ var FiltersMenu = DropdownMenu.extend({
      * @private
      */
     start: function () {
-        this.$menu = this.$('ul.o_dropdown_menu');
+        this.$menu = this.$('.o_dropdown_menu');
         this.$menu.addClass('o_filters_menu');
         var generatorMenu = QWeb.render('FiltersMenuGenerator', {widget: this});
         this.$menu.append(generatorMenu);

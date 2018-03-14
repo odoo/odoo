@@ -5,7 +5,7 @@
 .ui-autocomplete { // Copy style of bootstrap dropdown
     background-image: none;
     background-color: $dropdown-bg;
-    border: 1px solid $dropdown-border;
+    border: $dropdown-border-width solid $dropdown-border-color;
     font-size: $font-size-base;
     padding: 5px 0px;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
@@ -41,7 +41,7 @@
     .o_inline_dropdown {
         position: relative;
 
-        &> .dropdown-menu {
+        & > .dropdown-menu {
             top: 0;
             left: 100%;
         }
@@ -52,9 +52,12 @@
 }
 
 @mixin dropdown-menu-mixin {
-    .open .dropdown-menu > li {
-        position: relative; // to allow absolute positionning inside the li
-        > a {
+    .show .dropdown-menu {
+        > * {
+            position: relative; // to allow absolute positionning inside the items
+        }
+        
+        .dropdown-item {
             &:focus, &:active, &:focus:active {
                 outline: none;
             }
@@ -62,7 +65,7 @@
             @extend %dropdown-li-a-padding;
         }
 
-        &.dropdown-header {
+        .dropdown-header {
             @extend %dropdown-li-a-padding;
             color: $o-main-text-color;
 

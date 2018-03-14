@@ -97,13 +97,13 @@
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
                 <div class="o_dropdown_kanban dropdown">
-                    <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                         <span class="fa fa-ellipsis-v"/>
                     </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a role="menuitem" type="delete">Delete</a></li>
-                        <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                    </ul>
+                    <div class="dropdown-menu" role="menu">
+                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </div>
                 </div>
                   <span>
                     <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/></a>

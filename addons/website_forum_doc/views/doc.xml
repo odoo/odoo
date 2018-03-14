@@ -37,14 +37,14 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li t-if="widget.editable"><a type="edit" role="menuitem">Edit Post</a></li>
-                                    <li t-if="widget.deletable"><a type="delete" role="menuitem">Delete</a></li>
-                                    <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" type="edit" class="dropdown-item" t-if="widget.editable">Edit Post</a>
+                                    <a role="menuitem" type="delete" class="dropdown-item" t-if="widget.deletable">Delete</a>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
                             </div>
                             <div class="o_kanban_record_top">
                                 <b class="o_kanban_record_title"><field name="name"/></b>

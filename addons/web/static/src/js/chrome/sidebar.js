@@ -11,7 +11,7 @@ var _t = core._t;
 
 var Sidebar = Widget.extend({
     events: {
-        "click .dropdown-menu li a": "_onDropdownClicked"
+        "click .dropdown-item": "_onDropdownClicked"
     },
     /**
      * @override
@@ -177,9 +177,10 @@ var Sidebar = Widget.extend({
         this.$el.html(QWeb.render('Sidebar', {widget: this}));
 
         // Hides Sidebar sections when item list is empty
-        this.$('.o_dropdown').each(function () {
-            if (!$(this).find('li').length) {
-                $(this).hide();
+        _.each(this.$('.o_dropdown'), function (el) {
+            var $dropdown = $(el);
+            if (!$dropdown.find('.dropdown-item').length) {
+                $dropdown.hide();
             }
         });
         this.$("[title]").tooltip({

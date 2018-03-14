@@ -199,7 +199,7 @@ var SnippetEditor = Widget.extend({
 
         // Attach own and parent options on the current overlay
         var $style_button = this.$el.find('.oe_options');
-        var $ul = $style_button.find('ul:first');
+        var $ul = $style_button.find('.dropdown-menu:first');
         var $headers = $ul.find('.dropdown-header:data(editor)');
         _.each($headers, (function (el) {
             var $el = $(el);
@@ -218,7 +218,7 @@ var SnippetEditor = Widget.extend({
         }).bind(this));
 
         // Activate the overlay
-        $style_button.toggleClass('d-none', $ul.children(':not(.o_main_header):not(.divider):not(.d-none)').length === 0);
+        $style_button.toggleClass('d-none', $ul.children(':not(.o_main_header):not(.dropdown-divider):not(.d-none)').length === 0);
         this.cover();
         this.$el.toggleClass('oe_active', !!focus);
 
@@ -262,13 +262,13 @@ var SnippetEditor = Widget.extend({
     _initializeOptions: function () {
         var self = this;
         var $styles = this.$el.find('.oe_options');
-        var $ul = $styles.find('ul:first');
+        var $ul = $styles.find('.dropdown-menu:first');
         this.styles = {};
         this.selectorSiblings = [];
         this.selectorChildren = [];
 
         var i = 0;
-        $ul.append($('<li/>', {class: 'dropdown-header o_main_header', text: this._getName()}).data('editor', this));
+        $ul.append($('<div/>', {class: 'dropdown-header o_main_header', text: this._getName()}).data('editor', this));
         var defs = _.map(this.templateOptions, function (val, option_id) {
             if (!val.selector.is(self.$target)) {
                 return;
@@ -277,7 +277,7 @@ var SnippetEditor = Widget.extend({
             if (val['drop-in']) self.selectorChildren.push(val['drop-in']);
 
             var optionName = val.option;
-            var $el = val.$el.children('li').clone(true).addClass('snippet-option-' + optionName);
+            var $el = val.$el.children().clone(true).addClass('snippet-option-' + optionName);
             var option = new (options.registry[optionName] || options.Class)(
                 self,
                 val.base_target ? self.$target.find(val.base_target).eq(0) : self.$target,
@@ -288,7 +288,7 @@ var SnippetEditor = Widget.extend({
             option.__order = i++;
             return option.attachTo($el);
         });
-        $ul.append($('<li/>', {class: 'divider'}));
+        $ul.append($('<div/>', {class: 'dropdown-divider'}));
 
         var $parents = this.$target.parents();
         _.each($parents, function (parent) {
@@ -296,7 +296,7 @@ var SnippetEditor = Widget.extend({
             if (parentEditor) {
                 for (var styleName in parentEditor.styles) {
                     if (!parentEditor.styles[styleName].preventChildPropagation) {
-                        $ul.append($('<li/>', {class: 'dropdown-header o_parent_editor_header', text: parentEditor._getName()}).data('editor', parentEditor));
+                        $ul.append($('<div/>', {class: 'dropdown-header o_parent_editor_header', text: parentEditor._getName()}).data('editor', parentEditor));
                         break;
                     }
                 }

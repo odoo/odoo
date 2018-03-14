@@ -23,12 +23,12 @@ var DebugManager = Widget.extend({
     template: "WebClient.DebugManager",
     events: {
         "click a[data-action]": "perform_callback",
-        "mouseover .o_debug_dropdowns > li:not(.open)": function(e) {
+        "mouseover .o_debug_dropdowns > li:not(.show)": function(e) {
             // Open other dropdowns on mouseover
-            var $opened = this.$('.o_debug_dropdowns > li.open');
+            var $opened = this.$('.o_debug_dropdowns > li.show');
             if($opened.length) {
-                $opened.removeClass('open');
-                $(e.currentTarget).addClass('open').find('> a').focus();
+                $opened.removeClass('show');
+                $(e.currentTarget).addClass('show').find('> a').focus();
             }
         },
     },

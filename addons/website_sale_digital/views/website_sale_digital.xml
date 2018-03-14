@@ -6,13 +6,13 @@
             <t t-if="attachments">
                 <span class="dropdown">
                     <button class="btn btn-xs btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                        Downloads <span class="caret"></span>
+                        Downloads
                     </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                         <t t-foreach="attachments" t-as="a">
-                            <li><a role="menuitem" tabindex="-1" t-att-href="'/my/download?attachment_id=%i' % a['id']"><t t-esc="a['name']"/></a></li>
+                            <a role="menuitem" tabindex="-1" t-att-href="'/my/download?attachment_id=%i' % a['id']" class="dropdown-item"><t t-esc="a['name']"/></a>
                         </t>
-                    </ul>
+                    </div>
                 </span>
             </t>
         </xpath>

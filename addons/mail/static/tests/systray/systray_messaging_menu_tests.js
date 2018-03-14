@@ -242,7 +242,7 @@ QUnit.test("messaging menu widget: mark as read on thread preview", function ( a
     messagingMenu.$('.dropdown-toggle').click();
     assert.ok(messagingMenu.$el.hasClass('o_mail_systray_item'),
         'should be the instance of widget');
-    assert.ok(messagingMenu.$el.hasClass('open'),
+    assert.ok(messagingMenu.$el.hasClass('show'),
         'MessagingMenu should be open');
 
     var $preview = messagingMenu.$('.o_mail_preview.o_preview_unread');

@@ -159,15 +159,14 @@
             <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
             <a role="button" href="#" class="dropdown-toggle btn btn-secondary" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
-                <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu" role="menu">
-                <li t-foreach="website_sale_pricelists" t-as="pl">
-                    <a role="menuitem" t-att-href="'/shop/change_pricelist/%s' % pl.id">
+            <div class="dropdown-menu" role="menu">
+                <t t-foreach="website_sale_pricelists" t-as="pl">
+                    <a role="menuitem" t-att-href="'/shop/change_pricelist/%s' % pl.id" class="dropdown-item">
                         <span class="switcher_pricelist" t-att-data-pl_id="pl.id" t-esc="pl.name" />
                     </a>
-                </li>
-            </ul>
+                </t>
+            </div>
         </div>
     </template>
 
@@ -253,16 +252,15 @@
                     </t>
                     <t t-else='1'>
                         <span>Sort by</span>
-                        <span class="caret"></span>
                     </t>
                 </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li t-foreach="website_sale_sortable" t-as="sortby">
-                        <a role="menuitem" t-att-href="keep('/shop', order=sortby[1])">
+                <div class="dropdown-menu" role="menu">
+                    <t t-foreach="website_sale_sortable" t-as="sortby">
+                        <a role="menuitem" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
                             <span t-raw="sortby[0]"/>
                         </a>
-                    </li>
-                </ul>
+                    </t>
+                </div>
             </div>
         </xpath>
     </template>

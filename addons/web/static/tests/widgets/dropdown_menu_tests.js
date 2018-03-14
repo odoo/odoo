@@ -44,9 +44,9 @@ QUnit.module('Web', {
         assert.expect(2);
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
-        assert.strictEqual(dropdownMenu.$('li').length, 4, 'should have 4 li counting the dividers');
-        assert.strictEqual(dropdownMenu.$('li:nth-child(2)').text().trim(), 'Some Item',
-            'first li should have "Some Item" description');
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4, 'should have 4 elements counting the dividers');
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').eq(1).text().trim(), 'Some Item',
+            'first element should have "Some Item" description');
         dropdownMenu.destroy();
     });
 
@@ -57,7 +57,7 @@ QUnit.module('Web', {
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items, {
             intercepts: {
-                menu_item_toggled: function(ev) {
+                menu_item_toggled: function (ev) {
                     eventNumber++;
                     assert.strictEqual(ev.data.itemId, 1);
                     if (eventNumber === 1) {
@@ -86,7 +86,7 @@ QUnit.module('Web', {
         assert.expect(0);
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
-        dropdownMenu.$el.click(function() {
+        dropdownMenu.$el.click(function () {
             // we do not want a click to get out and change the url, for example
             throw new Error('No click should get out of the dropdown menu');
         });
@@ -103,13 +103,13 @@ QUnit.module('Web', {
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
         // open dropdown
         dropdownMenu.$('button:first').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 4);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
         // open options menu
         dropdownMenu.$('span.fa-caret-right').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 7);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 7);
         // close options menu
         dropdownMenu.$('span.fa-caret-down').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 4);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
 
         dropdownMenu.destroy();
     });
@@ -123,10 +123,10 @@ QUnit.module('Web', {
         dropdownMenu.$('button:first').click();
         // open options menu
         dropdownMenu.$('span.fa-caret-right').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 7);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 7);
         dropdownMenu.$('button:first').click();
         dropdownMenu.$('button:first').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 4);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
 
         dropdownMenu.destroy();
     });
@@ -140,7 +140,7 @@ QUnit.module('Web', {
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items, {
             intercepts: {
-                menu_item_toggled: function(ev) {
+                menu_item_toggled: function (ev) {
                     eventNumber++;
                     if (eventNumber === 1) {
                         assert.strictEqual(ev.data.itemId, 1);
@@ -152,7 +152,7 @@ QUnit.module('Web', {
                         assert.strictEqual(ev.data.optionId, false);
                     }
                 },
-                item_option_changed: function(ev) {
+                item_option_changed: function (ev) {
                     if (eventNumber === 1) {
                         assert.strictEqual(ev.data.itemId, 1);
                         assert.strictEqual(ev.data.isActive, true);
@@ -165,20 +165,20 @@ QUnit.module('Web', {
         dropdownMenu.$('button:first').click();
         // open options menu
         dropdownMenu.$('span.fa-caret-right').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 7);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 7);
         // Don't forget there is a hidden li.divider element at first place among children
         assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
-        dropdownMenu.$('li.o_item_option:first').click();
+        dropdownMenu.$('.o_item_option:first').click();
         assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
         assert.ok(dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
-        dropdownMenu.$('li.o_item_option:nth-child(3)').click();
+        dropdownMenu.$('.o_item_option:nth-child(3)').click();
         assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
         assert.ok(dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
-        dropdownMenu.$('li.o_item_option:nth-child(3)').click();
+        dropdownMenu.$('.o_item_option:nth-child(3)').click();
         assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
@@ -190,15 +190,15 @@ QUnit.module('Web', {
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items, {
             intercepts: {
-                menu_item_deleted: function(ev) {
+                menu_item_deleted: function (ev) {
                     assert.strictEqual(ev.data.itemId, 2);
                 },
             },
         });
         dropdownMenu.$('button:first').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 4);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
         dropdownMenu.$('span.o_trash_button').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 2);
+        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 2);
         dropdownMenu.destroy();
     });
 });

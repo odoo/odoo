@@ -738,7 +738,7 @@ QUnit.module('Views', {
 
         // Select state in kanban
         kanban.$('.o_status').first().click();
-        kanban.$('.o_selection ul:first li:first').click();
+        kanban.$('.o_selection .dropdown-item:first').click();
         assert.ok(kanban.$('.o_status').first().hasClass('o_status_green'),
             "Kanban state should be done (Green)");
         kanban.destroy();
@@ -2789,10 +2789,10 @@ QUnit.module('Views', {
                         '<t t-name="kanban-box">' +
                             '<div color="color">' +
                                 '<div class="o_dropdown_kanban dropdown">' +
-                                    '<a class="dropdown-toggle btn" data-toggle="dropdown" href="#">' +
+                                    '<a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#">' +
                                             '<span class="fa fa-bars fa-lg"/>' +
                                     '</a>' +
-                                    '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' +
+                                    '<ul class="dropdown-menu" role="menu">' +
                                         '<li>' +
                                             '<ul class="oe_kanban_colorpicker"/>' +
                                         '</li>' +

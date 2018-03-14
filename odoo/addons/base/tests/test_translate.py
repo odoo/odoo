@@ -165,7 +165,7 @@ class TranslationToolsTestCase(unittest.TestCase):
                             </li>
                             <li class="dropdown" id="menu_more_container" style="display: none;">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">More <b class="caret"/></a>
-                                <ul class="dropdown-menu" id="menu_more"/>
+                                <div class="dropdown-menu" id="menu_more"/>
                             </li>
                         </ul>
                     </t>"""

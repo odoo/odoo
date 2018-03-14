@@ -72,7 +72,7 @@
 // ------------------------------------------------------------------
 // Caret
 // ------------------------------------------------------------------
-@mixin o-caret-down($caret-width: $caret-width-base) {
+@mixin o-caret-down($caret-width: $caret-width) {
     @include utils-caret-boilerplate;
     border-bottom: 0;
     border-left: $caret-width solid transparent;
@@ -80,7 +80,7 @@
     border-top: $caret-width solid;
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
-@mixin o-caret-up($caret-width: $caret-width-base) {
+@mixin o-caret-up($caret-width: $caret-width) {
     @include utils-caret-boilerplate;
     border-bottom: $caret-width solid;
     border-left: $caret-width solid transparent;
@@ -88,7 +88,7 @@
     border-top: 0;
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
-@mixin o-caret-left($caret-width: $caret-width-base) {
+@mixin o-caret-left($caret-width: $caret-width) {
     @include utils-caret-boilerplate;
     border-bottom: $caret-width solid transparent;
     border-left: 0;
@@ -96,7 +96,7 @@
     border-top: $caret-width solid transparent;
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
-@mixin o-caret-right($caret-width: $caret-width-base) {
+@mixin o-caret-right($caret-width: $caret-width) {
     @include utils-caret-boilerplate;
     border-bottom: $caret-width solid transparent;
     border-left: $caret-width solid;
@@ -108,25 +108,22 @@
 // ------------------------------------------------------------------
 // Dropdowns
 // ------------------------------------------------------------------
-@mixin o-selected-li {
-    li {
+@mixin o-selected-li { // FIXME use active ?
+    .dropdown-item {
         position: relative;
-        > a {
-            color: $o-main-text-color;
-            &:hover {
-                color: darken($o-main-text-color, 10%);
-            }
+        color: $o-main-text-color;
+        &:hover {
+            color: darken($o-main-text-color, 10%);
         }
+
         &.selected {
-            > a {
-                color: darken($o-main-text-color, 10%);
-                font-weight: bold;
-                &:before {
-                    font-family: FontAwesome;
-                    position: absolute;
-                    left: 6px;
-                    content: "\f00c";
-                }
+            color: darken($o-main-text-color, 10%);
+            font-weight: bold;
+            &:before {
+                font-family: FontAwesome;
+                position: absolute;
+                left: 6px;
+                content: "\f00c";
             }
         }
     }

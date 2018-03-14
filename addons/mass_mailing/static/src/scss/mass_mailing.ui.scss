@@ -27,7 +27,7 @@
         }
     }
 
-    &.open > a {
+    &.show > a {
         color: white;
         background-color: $o-we-color-dark;
     }
@@ -39,26 +39,23 @@
         overflow: auto;
         background-color: $o-we-color-dark;
 
-        > li {
-            margin: 0;
+        .dropdown-item { 
+            padding: 10px 10px;
 
-            > a {
-                padding: 10px 10px;
+            .o_thumb {
+                display: none;
+                background-size: cover;
+                padding-top: 50%;
+                border: 1px solid $o-we-color-light;
+                border-top: 1px solid $o-we-color-text-normal;
 
-                .o_thumb {
-                    display: none;
-                    background-size: cover;
-                    padding-top: 50%;
-                    border: 1px solid $o-we-color-light;
-                    border-top: 1px solid $o-we-color-text-normal;
-
-                    &.logo {
-                        display: block;
-                    }
+                &.logo {
+                    display: block;
                 }
             }
 
-            &:hover > a {
+
+            &:hover {
                 background-color: $o-we-color-darker;
 
                 .o_thumb {
@@ -66,7 +63,7 @@
                 }
             }
 
-            &.selected > a .o_thumb {
+            &.selected .o_thumb {
                 border: 2px solid $o-brand-primary;
                 background-color: $o-we-color-dark;
             }
@@ -86,41 +83,39 @@ body.o_force_mail_theme_choice {
             .dropdown-menu {
                 display: block;
 
-                > li {
+                .dropdown-item {
                     margin: 0;
                     float: left;
+                    clear: none;
                     width: 100%;
                     max-width: 25%;
+                    transition: all 0.3s ease 0s;
 
-                    > a {
+                    .o_thumb {
+                        display: none;
+                        padding-top: 107%;
+                        border: 1px solid $o-we-color-light;
+                        border-top: 1px solid $o-we-color-text-normal;
+                        box-shadow: 0 5px 10px rgba(black, 0.8);
+                        will-change: transform;
+                        backface-visibility: hidden;
                         transition: all 0.3s ease 0s;
 
-                        .o_thumb {
-                            display: none;
-                            padding-top: 107%;
-                            border: 1px solid $o-we-color-light;
-                            border-top: 1px solid $o-we-color-text-normal;
-                            box-shadow: 0 5px 10px rgba(black, 0.8);
-                            will-change: transform;
-                            backface-visibility: hidden;
-                            transition: all 0.3s ease 0s;
+                        &.small {
+                            display: block;
+                        }
 
+                        @media screen and (min-width: 900px) {
                             &.small {
-                                display: block;
+                                display: none;
                             }
-
-                            @media screen and (min-width: 900px) {
-                                &.small {
-                                    display: none;
-                                }
-                                &.large {
-                                    display: block;
-                                }
+                            &.large {
+                                display: block;
                             }
                         }
                     }
 
-                    &:hover > a {
+                    &:hover {
                         background-color: $o-we-color-dark;
 
                         .o_thumb {
@@ -128,7 +123,7 @@ body.o_force_mail_theme_choice {
                         }
                     }
 
-                    &.o_mass_mailing_themes_upgrade > a .o_thumb {
+                    &.o_mass_mailing_themes_upgrade .o_thumb {
                         position: relative;
                         display: block;
                         border: 1px dashed white;

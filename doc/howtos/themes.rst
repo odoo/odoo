@@ -763,11 +763,11 @@ We start by adding a new file in our views folder - name it **options.xml** and 
       <div data-selector=".snippet_testimonial"> <!-- Options group -->
         <li class="dropdown-submenu">
           <a href="#">Your Option</a>
-          <ul class="dropdown-menu"> <!-- Options list -->
-            <li data-select-class="opt_shadow"><a>Shadow Images</a></li>
-            <li data-select-class="opt_grey_bg"><a>Grey Bg</a></li>
-            <li data-select-class=""><a>None</a></li>
-          </ul>
+          <div class="dropdown-menu"> <!-- Options list -->
+            <a href="#" class="dropdown-item" data-select-class="opt_shadow">Shadow Images</a>
+            <a href="#" class="dropdown-item" data-select-class="opt_grey_bg">Grey Bg</a>
+            <a href="#" class="dropdown-item" data-select-class="">None</a>
+          </div>
         </li>
       </div>
     </xpath>

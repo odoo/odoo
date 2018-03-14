@@ -90,10 +90,10 @@
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                         <i class="fa fa-cog" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
                                     </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li><a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1">Design Welcome Message</a></li>
-                                        <li><a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum">Forum Settings</a></li>
-                                    </ul>
+                                    <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1" class="dropdown-item">Design Welcome Message</a>
+                                        <a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum" class="dropdown-item">Forum Settings</a>
+                                    </div>
                                 </span>
                             </form>
                         </li>
@@ -137,14 +137,13 @@
                         </a>
                         <t t-if="multi_type">
                             <button type="button" class="btn btn-primary btn-lg col-sm-2 dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
                                 <span class="sr-only">Select Post</span>
                             </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li t-if="forum.allow_question"><a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=question">Ask a Question</a></li>
-                                <li t-if="forum.allow_link"><a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=link">Submit a Link</a></li>
-                                <li t-if="forum.allow_discussion"><a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion">New Discussion</a></li>
-                            </ul>
+                            <div class="dropdown-menu" role="menu">
+                                <a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=question" class="dropdown-item" t-if="forum.allow_question">Ask a Question</a>
+                                <a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=link" class="dropdown-item" t-if="forum.allow_link">Submit a Link</a>
+                                <a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion" class="dropdown-item" t-if="forum.allow_discussion">New Discussion</a>
+                            </div>
                         </t>
                     </div>
                     <div class="panel panel-default">
@@ -418,40 +417,21 @@
                   <t t-if="sorting == 'create_date desc'"> by newest</t>
                   <t t-if="sorting == 'child_count desc'"> by most answered</t>
                   <t t-if="sorting == 'vote_count desc'"> by most voted</t>
-                  <b class="caret"/>
               </a>
-              <ul class="dropdown-menu" role="menu">
-                  <li role="separator" class="dropdown-header">Filter on</li>
-                  <li t-att-class="filters == 'all' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
-                  </li>
-                  <li t-att-class="filters == 'unanswered' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')">Unanswered</a>
-                  </li>
-                  <li t-if="uid" t-att-class="filters == 'followed' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')">Followed</a>
-                  </li>
-                  <li role="separator" t-if="tag" class="dropdown-header">Tags</li>
-                  <li t-if="tag" t-att-class="tag and 'active' or None ">
-                      <a role="menuitem" href=""><t t-esc="tag.name"/></a>
-                  </li>
-                  <li role="separator" class="dropdown-header">Sort by</li>
-                  <li t-att-class="sorting == 'relevancy desc' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevance</a>
-                  </li>
-                  <li t-att-class="sorting == 'write_date desc' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">Last activity date</a>
-                  </li>
-                  <li t-att-class="sorting == 'create_date desc' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='create_date desc')">Newest</a>
-                  </li>
-                  <li t-att-class="sorting == 'child_count desc' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='child_count desc')">Most answered</a>
-                  </li>
-                  <li t-att-class="sorting == 'vote_count desc' and 'active' or None ">
-                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote_count desc')">Most voted</a>
-                  </li>
-              </ul>
+              <div class="dropdown-menu" role="menu">
+                  <div role="separator" class="dropdown-header">Filter on</div>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')" t-attf-class="dropdown-item#{filters == 'all' and ' active' or ''}">All</a>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')" t-attf-class="dropdown-item#{filters == 'unanswered' and ' active' or ''}">Unanswered</a>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')" t-if="uid" t-attf-class="dropdown-item#{filters == 'followed' and ' active' or ''}">Followed</a>
+                  <div role="separator" t-if="tag" class="dropdown-header">Tags</div>
+                  <a role="menuitem" href="" t-if="tag" t-attf-class="dropdown-item#{tag and ' active' or None}"><t t-esc="tag.name"/></a>
+                  <div role="separator" class="dropdown-header">Sort by</div>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')" t-attf-class="dropdown-item#{sorting == 'relevancy desc' and ' active' or ''}">Relevance</a>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')" t-attf-class="dropdown-item#{sorting == 'write_date desc' and ' active' or ''}">Last activity date</a>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='create_date desc')" t-attf-class="dropdown-item#{sorting == 'create_date desc' and ' active' or ''}">Newest</a>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='child_count desc')" t-attf-class="dropdown-item#{sorting == 'child_count desc' and ' active' or ''}">Most answered</a>
+                  <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote_count desc')" t-attf-class="dropdown-item#{sorting == 'vote_count desc' and ' active' or ''}">Most voted</a>
+              </div>
             </small>
         </h2>
         <div t-foreach="question_ids" t-as="question" class="mb16">
@@ -1220,19 +1200,12 @@
                     <t t-if="queue_type == 'validation'"> Pending</t>
                     <t t-if="queue_type == 'flagged'"> Flagged</t>
                     <t t-if="queue_type == 'offensive'"> Offensive</t>
-                    <b class="caret"/>
                 </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li t-att-class="queue_type == 'validation' and 'active' or None ">
-                        <a role="menuitem" data-type='validation' t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
-                    </li>
-                    <li t-att-class="queue_type == 'flagged' and 'active' or None ">
-                        <a role="menuitem" data-type='flagged' t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
-                    </li>
-                    <li t-if="uid" t-att-class="queue_type == 'offensive' and 'active' or None ">
-                        <a role="menuitem" data-type='offensive' t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
-                    </li>
-                </ul>
+                <div class="dropdown-menu" role="menu">
+                    <a role="menuitem" data-type='validation' t-attf-href="/forum/#{slug(forum)}/validation_queue" t-attf-class="dropdown-item#{queue_type == 'validation' and ' active' or ''}">Pending</a>
+                    <a role="menuitem" data-type='flagged' t-attf-href="/forum/#{slug(forum)}/flagged_queue" t-attf-class="dropdown-item#{queue_type == 'flagged' and ' active' or ''}">Flagged</a>
+                    <a role="menuitem" data-type='offensive' t-attf-href="/forum/#{slug(forum)}/offensive_posts" t-if="uid" t-attf-class="dropdown-item#{queue_type == 'offensive' and ' active' or ''}">Offensive</a>
+                </div>
             </span>
         </h2>
         <div class="text-center" t-if="count_posts == 0">
