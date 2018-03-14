@@ -1,5 +1,5 @@
 // MOBILE LAYOUT CUSTOMIZATIONS
-@media screen and (max-width: $screen-xs-max) {
+@include media-breakpoint-down(sm) {
     #o_employee_right {
         .o_org_chart_title {
             font-size: 20px;
@@ -10,7 +10,7 @@
 }
 
 // SMALL DESKTOP LAYOUT
-@media screen and (min-width: $screen-sm-min) {
+@include media-breakpoint-up(md) {
     #o_employee_container {
         display: flex;
         width: 100%;
@@ -31,14 +31,14 @@
 }
 
 // MEDIUM DESKTOP LAYOUT
-@media screen and (min-width: $screen-md-min){
+@include media-breakpoint-up(lg) {
     #o_employee_right {
         flex: 0 1 33%;
     }
 }
 
 // LARGE DESKTOP LAYOUT
-@media screen and (min-width: $screen-lg-min){
+@include media-breakpoint-up(xl) {
     #o_employee_right {
         flex: 0 1 30%;
     }

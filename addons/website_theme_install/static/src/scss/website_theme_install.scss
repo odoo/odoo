@@ -8,7 +8,7 @@
         justify-content: space-between;
         margin: 0 0 0 ($o-kanban-record-margin - 2 * $grid-gutter-width);
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             padding-left: $o-horizontal-padding - $o-kanban-record-margin;
             padding-right: $o-horizontal-padding;
         }

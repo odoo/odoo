@@ -9,12 +9,12 @@
     flex-basis: 33%;
 
     // col-sm-6
-    @media (max-width: $screen-sm-max) {
+    @include media-breakpoint-down(md) {
         flex-basis: 50%;
     }
 
     // col-xs-12
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         flex-basis: 100%;
     }
 }

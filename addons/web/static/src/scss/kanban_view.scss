@@ -5,7 +5,7 @@
     align-content: stretch;
     overflow-x: visible;
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         padding: 0px!important;
         overflow-x: auto;
     }
@@ -15,7 +15,7 @@
         border: 1px solid $gray-lighter-dark;
         background-color: white;
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter-mobile;
         }
         &:focus, &:focus-within {
@@ -142,7 +142,7 @@
         .o_dropdown_kanban {
             @include o-position-absolute($o-kanban-inside-vgutter, $o-kanban-inside-hgutter);
             visibility: hidden;
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 visibility: visible;
             }
 
@@ -207,7 +207,7 @@
 
             > button, > a {
                 @include o-position-absolute($right: $o-kanban-record-margin, $bottom: $o-kanban-record-margin);
-                @media (max-width: $screen-xs-max) {
+                @include media-breakpoint-down(sm) {
                     right: $o-kanban-inside-hgutter-mobile;
                 }
             }
@@ -258,7 +258,7 @@
 
             + div {
                 padding-left: $o-kanban-image-width + $o-kanban-inside-hgutter;
-                @media (max-width: $screen-xs-max) {
+                @include media-breakpoint-down(sm) {
                     padding-left:  $o-kanban-image-width + $o-kanban-inside-hgutter-mobile;
                 }
             }
@@ -484,7 +484,7 @@
             width: $o-kanban-default-record-width;
             margin: ($o-kanban-record-margin * 0.5) $o-kanban-record-margin;
 
-            @media (max-width: $screen-xs-max) {
+            @include media-breakpoint-down(sm) {
                 margin: 0 0 -1px 0;
                 flex: 1 0 100%;
             }

@@ -65,7 +65,7 @@
             min-height: 50px;
             overflow-y: auto;
 
-            @media (min-width: $screen-sm-min) {
+            @include media-breakpoint-up(md) {
                 .o_mail_preview {
                     min-height: 50px;
                     padding: 5px;
@@ -105,7 +105,7 @@
 
 // Mobile rules
 // Goal: mock the design of Discuss in mobile
-@media (max-width: $screen-xs-max) {
+@include media-breakpoint-down(sm) {
     .o_mail_systray_item {
         .o_notification_counter {
             top: 10%;

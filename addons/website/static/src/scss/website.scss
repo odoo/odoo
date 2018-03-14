@@ -493,7 +493,7 @@ div.carousel {
 
 // Company Team
 .s_company_team {
-    @media (max-width: $screen-sm-max) {
+    @include media-breakpoint-down(md) {
         img {
             max-width: 50%;
         }
@@ -547,7 +547,7 @@ div.carousel {
     .js_language_selector {
         display: inline-block;
     }
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         .row {
             display: flex;
             > div {

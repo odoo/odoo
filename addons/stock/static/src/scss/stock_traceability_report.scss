@@ -20,7 +20,7 @@
     }
 }
 .o_stock_reports_page {
-    @media (max-width: $screen-md-min) {
+    @include media-breakpoint-down(md) {
         overflow-x:scroll;
     }
     background-color: $o-view-background-color;

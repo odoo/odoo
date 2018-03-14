@@ -66,7 +66,7 @@
             @extend %dropdown-li-a-padding;
             color: $o-main-text-color;
 
-            @media (max-width: $screen-sm-max) {
+            @include media-breakpoint-down(md) {
                 color: white;
                 text-decoration: underline;
             }

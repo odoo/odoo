@@ -33,7 +33,7 @@
                     padding: 10px;
                     font-size: 13px;
                 }
-                @media (max-width: $screen-xs-max) {
+                @include media-breakpoint-down(sm) {
                     width: 70%;
                     > textarea {
                         padding: 15px 10px;
@@ -44,7 +44,7 @@
                 @include o-position-absolute($right: 0px, $top: 0px);
                 button {
                     padding: 10px;
-                    @media (max-width: $screen-xs-max) {
+                    @include media-breakpoint-down(sm) {
                         padding: 13px;
                     }
                     &.btn-icon {

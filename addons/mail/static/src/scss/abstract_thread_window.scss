@@ -14,7 +14,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     z-index: $o-mail-thread-window-zindex;
     box-shadow: -5px -5px 10px rgba(black, 0.18);
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         width: 100%;
         height: 100%!important;
         box-shadow: none;
@@ -37,7 +37,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         background-color: $o-brand-primary;
         padding: 8px;
 
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             height: $o-mail-chat-header-height;
             padding-top: 12px;
             border-radius: 0px;
@@ -101,7 +101,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     cursor: pointer;
     box-shadow: none;
 
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         display: none;
     }
 
