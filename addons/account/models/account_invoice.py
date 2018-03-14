@@ -888,6 +888,14 @@ class AccountInvoice(models.Model):
         return iml
 
     @api.multi
+    def _get_account_partner(self):
+        '''Se crea el metodo para poder sobreescribir en personalizaciones de clientes particulares
+        A favor de este partner se realiza el asiento contable,
+        por seguridad otro metodo busca el commercial_partner_id asociado al indicado aqui.
+        '''
+        return self.partner_id
+
+    @api.multi
     def action_move_create(self):
         """ Creates invoice related analytics and financial move lines """
         account_move = self.env['account.move']
@@ -918,7 +926,12 @@ class AccountInvoice(models.Model):
             if self._context.get('error_msg'):
                 ctx.update({'error_msg': self._context['error_msg']})
             #El codigo removido en esa seccion esta en el metodo _get_payable_accounts
-            part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
+
+            #SECCION MODIFICADA POR TRESCLOUD
+            #hook para hacer los asientos contables a favor de terceros
+            move_partner_id = inv._get_account_partner()
+            part = self.env['res.partner']._find_accounting_partner(move_partner_id)
+            
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
             line = inv.group_lines(iml, line)
 
@@ -1314,6 +1327,8 @@ class AccountInvoiceLine(models.Model):
         '''
         Este metodo va ser modificado en ecua_fiscal_positions_core para agregar el impuesto de retencion renta
         '''
+        if self._context.get('force_supplier_taxes_id'):
+            return self._context.get('force_supplier_taxes_id')
         return self.product_id.supplier_taxes_id or self.account_id.tax_ids
 
     def _set_taxes(self):
