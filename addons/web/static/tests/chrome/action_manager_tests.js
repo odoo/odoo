@@ -784,6 +784,56 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('should not push a loaded state of a client action', function (assert) {
+        assert.expect(4);
+
+        var ClientAction = Widget.extend({
+            init: function (parent, action, options) {
+                this._super.apply(this, arguments);
+                this.controllerID = options.controllerID;
+            },
+            start: function () {
+                var self = this;
+                var $button = $('<button>').text('Click Me!');
+                $button.on('click', function () {
+                    self.trigger_up('push_state', {
+                        controllerID: self.controllerID,
+                        state: {someValue: 'X'},
+                    });
+                });
+                this.$el.append($button);
+                return this._super.apply(this, arguments);
+            },
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                push_state: function (ev) {
+                    assert.step('push_state');
+                    assert.deepEqual(ev.data.state, {
+                        action: 9,
+                        someValue: 'X',
+                        title: 'A Client Action',
+                    });
+                },
+            },
+        });
+        actionManager.loadState({action: 9});
+
+        assert.verifySteps([], "should not push the loaded state");
+
+        actionManager.$('button').click();
+
+        assert.verifySteps(['push_state'],
+            "should push the state of it changes afterwards");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('change a param of an ir.actions.client in the url', function (assert) {
         assert.expect(7);
 
