@@ -1,12 +1,12 @@
 odoo.define('hr_attendance.kiosk_confirm', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Widget = require('web.Widget');
 var QWeb = core.qweb;
 
 
-var KioskConfirm = Widget.extend({
+var KioskConfirm = AbstractAction.extend({
     events: {
         "click .o_hr_attendance_back_button": function () { this.do_action(this.next_action, {clear_breadcrumbs: true}); },
         "click .o_hr_attendance_sign_in_out_icon": function () {

@@ -9,11 +9,11 @@ class AccountAnalyticLine(models.Model):
     _description = 'Analytic Line'
     _order = 'date desc'
 
-    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
     general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict', readonly=True,
                                          related='move_id.account_id', store=True, domain=[('deprecated', '=', False)])
-    move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
+    move_id = fields.Many2one('account.move.line', string='Journal Item', ondelete='cascade', index=True)
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
 

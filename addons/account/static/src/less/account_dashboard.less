@@ -1,12 +1,16 @@
 .o_kanban_view.o_kanban_dashboard.o_account_kanban {
 
-    &:not(.o_kanban_nocontent) .o_account_dashboard_header{
+    &.o_kanban_ungrouped .o_account_dashboard_header {
         margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
     }
 
     .o_account_dashboard_header {
         .o-flex(1, 0, 100%);
         .o-flex-flow(column, nowrap);
+        .o-align-self(flex-start);
+        width: 100%;
+        height: auto; // cancel o_form_view height 100%, which hides the help tip message at the bottom of the screen
+        min-height: 0%; // cancel o_form_view min-height 100%, which hides the help tip message at the bottom of the screen
         background-color: @odoo-view-background-color;
 
         .o_form_statusbar {

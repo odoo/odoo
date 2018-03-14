@@ -3,9 +3,9 @@
 # * website_forum
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Antonio Trueba, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Jose Manuel <admin@jaboweb.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
@@ -24,13 +24,14 @@
 # luis galaviz galindo <luisg-96@hotmail.com>, 2016
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2016
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: David Arnold <blaggacao@users.noreply.github.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,6 +80,32 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table "
+"cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td "
+"valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size:"
+" 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" "
+"alt=\"${user.company_id.name}\"></td></tr></tbody></table></div><div "
+"summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 "
+"auto; background: #FFFFFF repeat top /100%;color:#777777\"><table "
+"cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px;"
+" border-collapse:collapse; background:inherit; "
+"color:inherit\"><tbody><tr><td valign=\"top\" style=\"width:600px; "
+"padding:0px 10px 5px 5px;\"><div><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0;margin:0px "
+"auto;padding:0\"></div></td></tr></tbody></table></div><div "
+"style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%; color:#777777\"><table "
+"cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify;"
+" margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\"><tbody><tr><td style=\"padding:0px 10px 5px 5px;font-size: "
+"14px;\"><p></p><p></p><p></p><a style=\"margin-left: 15px; padding:5px 10px;"
+" border-radius: 3px; background-color:#875A7B; text-align:center; text-"
+"decoration:none; color:#F7FBFD;\" "
+"href=\"${ctx.get('token_url')}\"></a><p></p></td></tr></tbody></table></div>"
 
 #. module: website_forum
 #. openerp-web
@@ -99,7 +126,7 @@ msgstr "${object.company_id.name} Validación de los foros"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -119,6 +146,8 @@ msgid ""
 "(Un)archiving a forum automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
+"Al (des)archivar un foro, sus publicaciones se (des)archivan "
+"automáticamente. ¿Desea continuar?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -126,6 +155,8 @@ msgid ""
 "(Un)archiving a post automatically (un)archives its answers. Do you want to "
 "proceed?"
 msgstr ""
+"Al (des)archivar una publicación, sus respuestas se (des)archivan "
+"automáticamente. ¿Desea continuar?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -193,7 +224,7 @@ msgstr ""
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
-msgstr ""
+msgstr "<b/>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -262,7 +293,7 @@ msgid ""
 "    description text in your answer, even if it's just a\n"
 "    copy/paste. Links are welcome, but should be complementary to\n"
 "    answer, referring sources or additional reading."
-msgstr ""
+msgstr "<b/>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -271,7 +302,7 @@ msgid ""
 " solution description text in your answer, even if it's just a copy/paste. "
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
-msgstr ""
+msgstr "<b/>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -418,13 +449,13 @@ msgstr "<span> por <span>"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "A new answer on"
-msgstr ""
+msgstr "Una nueva respuesta en"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "A new question"
-msgstr ""
+msgstr "Una nueva pregunta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
@@ -433,6 +464,9 @@ msgid ""
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question. (Hover the mouse to follow/unfollow tag(s))"
 msgstr ""
+"Una etiqueta es un rótulo que categoriza su pregunta\n"
+" con otras preguntas similares. El uso de las etiquetas adecuadas facilita\n"
+" que otros usuarios encuentren y contesten a su pregunta. (Pase el puntero por encima para seguir/dejar de seguir etiquetas)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -746,7 +780,7 @@ msgstr "Golpeado"
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
 #, python-format
 msgid "By sharing you answer, you will get additional"
-msgstr ""
+msgstr "Si comparte su respuesta, obtendrá más"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_accept
@@ -910,7 +944,7 @@ msgstr "Cerrar"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "Close Post"
-msgstr ""
+msgstr "Cerrar publicación"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
@@ -925,7 +959,7 @@ msgstr "Cerrar publicaciones propias"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "Close post"
-msgstr ""
+msgstr "Cerrar publicación"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_uid
@@ -1016,12 +1050,12 @@ msgstr "Convertir todas las respuestas a comentarios y viceversa"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Convert as a comment"
-msgstr ""
+msgstr "Convertir en comentario"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Convert as an answer"
-msgstr ""
+msgstr "Convertir en respuesta"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_accept
@@ -1061,7 +1095,7 @@ msgstr "Fecha de Creación"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_tag_create
 msgid "Create new tags"
-msgstr ""
+msgstr "Crear nuevas etiquetas"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_32
@@ -1201,7 +1235,7 @@ msgstr "Editar su respuesta previa"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Edit Your Profile"
-msgstr ""
+msgstr "Editar perfil"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
@@ -1259,7 +1293,7 @@ msgstr "Informado"
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:19
 #, python-format
 msgid "Enter a name for your new forum."
-msgstr ""
+msgstr "Ingrese un nombre para su nuevo foro."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1335,7 +1369,7 @@ msgstr "Primer voto positivo"
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flag"
-msgstr ""
+msgstr "Señalización"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
@@ -1551,6 +1585,9 @@ msgid ""
 "'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
 "canadian taxes?"
 msgstr ""
+"¿Cómo se puede crear un inventario físico con fecha anterior? ¿Cómo se "
+"computa el campo \"horas restantes\" en las tareas? ¿Cómo se configuran los "
+"impuestos canadienses TPS y TVQ?"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
@@ -1628,6 +1665,8 @@ msgid ""
 "Inventory Date Problem, Task remaining hours, Can you help solve solve my "
 "tax computation problem in Canada?"
 msgstr ""
+"Problema con fecha de inventario, horas restantes en tareas, ¿podrían "
+"ayudarme con el cálculo de impuestos canadienses?"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_favourite
@@ -1754,7 +1793,7 @@ msgstr "Vínculos"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "Mark as offensive"
-msgstr ""
+msgstr "Señalar como ofensivo"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
@@ -1793,6 +1832,8 @@ msgstr "Más votadas"
 msgid ""
 "Move this question to the top of the list by sharing it on social networks."
 msgstr ""
+"Coloque esta pregunta en la parte superior de la lista con solo compartirla "
+"en redes sociales."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_vote
@@ -1878,13 +1919,13 @@ msgstr "No se puede votar un post propio"
 #: code:addons/website_forum/models/forum.py:932
 #, python-format
 msgid "Not enough karma to create a new Tag"
-msgstr ""
+msgstr "Karma insuficiente para crear una nueva etiqueta"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid "Not enough karma to retag."
-msgstr ""
+msgstr "Karma insuficiente para cambiar etiqueta."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -1926,7 +1967,7 @@ msgstr "Ofensivo"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "Offensive Post"
-msgstr ""
+msgstr "Publicación ofensiva"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
@@ -2177,7 +2218,7 @@ msgstr "Pregunta establecida como favorita por 5 usuarios"
 #: code:addons/website_forum/controllers/main.py:335
 #, python-format
 msgid "Question should not be empty."
-msgstr ""
+msgstr "El campo de la pregunta no debe quedar vacío."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2221,7 +2262,7 @@ msgstr "Re: %s"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reactivate"
-msgstr ""
+msgstr "Reactivar"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2279,7 +2320,7 @@ msgstr "Cálculo de relevancia"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reopen"
-msgstr ""
+msgstr "Reabrir"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
@@ -2329,12 +2370,12 @@ msgstr "Segundo parámetro relevante"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See post"
-msgstr ""
+msgstr "Ver publicación"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "See question"
-msgstr ""
+msgstr "Ver pregunta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2406,7 +2447,7 @@ msgstr "Contador de insignias de plata"
 #: code:addons/website_forum/static/src/js/website_forum.js:26
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
-msgstr ""
+msgstr "Lo sentimos, debe iniciar sesión para realizar esta acción"
 
 #. module: website_forum
 #. openerp-web
@@ -2642,7 +2683,7 @@ msgstr "Este post ya está marcado"
 msgid ""
 "This post is currently awaiting moderation and not yet published... Do you "
 "want <i>Accept</i> or <i>Reject</i> this post ?"
-msgstr ""
+msgstr "<i/><i/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
@@ -2689,7 +2730,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_count
 msgid "Total Votes"
-msgstr ""
+msgstr "Votos totales"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2797,7 +2838,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
-msgstr ""
+msgstr "Validar pregunta"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -2834,7 +2875,7 @@ msgstr "Esperando validación"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
 msgid "Waiting post"
-msgstr ""
+msgstr "Esperando publicación"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2908,7 +2949,7 @@ msgstr "¿Porqué pueden otras personas editar mis preguntas/respuestas?"
 msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
-msgstr ""
+msgstr "<br/>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:138
@@ -2922,7 +2963,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
-msgstr ""
+msgstr "No puede publicar una respuesta vacía."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3104,16 +3145,18 @@ msgid ""
 "has been posted and require your validation. Click here to access the "
 "question :"
 msgstr ""
+"ha sido publicada y requiere su validación. Haga clic aquí para acceder a la"
+" pregunta:"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the post :"
-msgstr ""
+msgstr "ha sido publicada. Haga clic aquí para acceder a la publicación:"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 msgid "has been posted. Click here to access the question :"
-msgstr ""
+msgstr "ha sido publicada. Haga clic aquí para acceder a la pregunta:"
 
 #. module: website_forum
 #. openerp-web

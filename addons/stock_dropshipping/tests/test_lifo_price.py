@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from datetime import date
-
-from odoo import tools
+from odoo import fields, tools
 from odoo.modules.module import get_module_resource
 from odoo.tests import common, Form
 
@@ -20,9 +16,6 @@ class TestLifoPrice(common.TransactionCase):
 
         self._load('account', 'test', 'account_minimal_test.xml')
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
-
-        # Set the company currency as EURO for the sake of repeatibility
-        self.env.ref('base.main_company').write({'currency_id': self.env.ref('base.EUR').id})
 
         # Set product category removal strategy as LIFO
         product_category_001 = self.env['product.category'].create({
@@ -40,8 +33,8 @@ class TestLifoPrice(common.TransactionCase):
         product_form.categ_id = product_category_001
         product_form.lst_price = 100.0
         product_form.standard_price = 70.0
-        product_form.uom_id = self.env.ref('product.product_uom_kgm')
-        product_form.uom_po_id = self.env.ref('product.product_uom_kgm')
+        product_form.uom_id = self.env.ref('uom.product_uom_kgm')
+        product_form.uom_po_id = self.env.ref('uom.product_uom_kgm')
         # these are not available (visible) in either product or variant
         # for views, apparently from the UI you can only set the product
         # category (or hand-assign the property_* version which seems...)
@@ -89,10 +82,10 @@ class TestLifoPrice(common.TransactionCase):
         # Let us send some goods
         out_form = Form(self.env['stock.picking'])
         out_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        out_form.scheduled_date = date.today().strftime('%Y-%m-%d')
         with out_form.move_lines.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0
+            move.date_expected = fields.Date.context_today(self.env['stock.move.line'])
         outgoing_lifo_shipment = out_form.save()
 
         # I assign this outgoing shipment

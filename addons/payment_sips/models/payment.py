@@ -42,8 +42,8 @@ class AcquirerSips(models.Model):
     provider = fields.Selection(selection_add=[('sips', 'Sips')])
     sips_merchant_id = fields.Char('Merchant ID', help="Used for production only", required_if_provider='sips', groups='base.group_user')
     sips_secret = fields.Char('Secret Key', size=64, required_if_provider='sips', groups='base.group_user')
-    sips_test_url = fields.Char("Test's url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.sips-atos.com/paymentInit')
-    sips_prod_url = fields.Char("Prod's url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
+    sips_test_url = fields.Char("Test url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.sips-atos.com/paymentInit')
+    sips_prod_url = fields.Char("Production url", required_if_provider='sips', groups='base.group_no_one', default='https://payment-webinit.simu.sips-atos.com/paymentInit')
     sips_version = fields.Char("Interface Version", required_if_provider='sips', groups='base.group_no_one', default='HP_2.3')
 
     def _sips_generate_shasign(self, values):
@@ -76,7 +76,7 @@ class AcquirerSips(models.Model):
         if self.environment == 'prod':
             # For production environment, key version 2 is required
             merchant_id = getattr(self, 'sips_merchant_id')
-            key_version = '2'
+            key_version = self.env['ir.config_parameter'].sudo().get_param('sips.key_version', '2')
         else:
             # Test key provided by Atos Wordline works only with version 1
             merchant_id = '002001000000001'

@@ -21,8 +21,8 @@ class TestPacking(TransactionCase):
                 'name': self.ref('base.res_partner_2'),
                 'min_qty': 2.0,
             })],
-            'uom_id': self.ref('product.product_uom_unit'),
-            'uom_po_id': self.ref('product.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
+            'uom_po_id': self.ref('uom.product_uom_unit'),
         })
 
         # Create an incoming picking for this product of 300 PCE from suppliers to stock
@@ -64,7 +64,7 @@ class TestPacking(TransactionCase):
         pick1.move_line_ids[0].write({'result_package_id': package1.id, 'qty_done': 120})
         new_pack1 = self.env['stock.move.line'].create({
           'product_id': product1.id,
-          'product_uom_id': self.ref('product.product_uom_unit'),
+          'product_uom_id': self.ref('uom.product_uom_unit'),
           'picking_id': pick1.id,
           'lot_id': lot_a.id,
           'qty_done': 120.0,
@@ -74,7 +74,7 @@ class TestPacking(TransactionCase):
         })
         new_pack2 = self.env['stock.move.line'].create({
           'product_id': product1.id,
-          'product_uom_id': self.ref('product.product_uom_unit'),
+          'product_uom_id': self.ref('uom.product_uom_unit'),
           'picking_id': pick1.id,
           'result_package_id': package3.id,
           'qty_done': 60.0,

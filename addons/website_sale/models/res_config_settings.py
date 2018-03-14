@@ -37,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Digital Content")
     module_website_sale_wishlist = fields.Boolean("Wishlists")
     module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
-    module_website_sale_stock = fields.Boolean("Inventory", help='Installs *e-Commerce Inventory*')
+    module_website_sale_stock = fields.Boolean("Inventory", help='Installs the "Website Delivery Information" application')
 
     module_account_invoicing = fields.Boolean("Invoicing")
 

@@ -21,8 +21,8 @@ class Event(models.Model):
 
     website_menu = fields.Boolean('Dedicated Menu',
         help="Creates menus Introduction, Location and Register on the page "
-             " of the event on the website.")
-    menu_id = fields.Many2one('website.menu', 'Event Menu')
+             " of the event on the website.", copy=False)
+    menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
 
     def _compute_is_participating(self):
         # we don't allow public user to see participating label

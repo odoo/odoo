@@ -1,8 +1,10 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 import time
 import unittest
 
 
+@tagged('post_install', '-at_install')
 class TestReconciliation(AccountingTestCase):
 
     """Tests for reconciliation (account.tax)
@@ -25,7 +27,8 @@ class TestReconciliation(AccountingTestCase):
         self.currency_swiss_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_euro_id = self.env.ref("base.EUR").id
-        self.env.ref('base.main_company').write({'currency_id': self.currency_euro_id})
+        company = self.env.ref('base.main_company')
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_euro_id, company.id])
         self.account_rcv = partner_agrolait.property_account_receivable_id or self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
         self.account_rsa = partner_agrolait.property_account_payable_id or self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.product = self.env.ref("product.product_product_4")

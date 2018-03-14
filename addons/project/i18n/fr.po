@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Clo <clo@odoo.com>, 2016
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
@@ -32,13 +32,15 @@
 # fr rev <e2ffr04@hotmail.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017\n"
+"Last-Translator: fr trans <e2ffr05@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -308,12 +310,12 @@ msgstr "# Tâches"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "Nombre de jours ouvrés à attribuer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "Nombre de jours ouvrés à clôturer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -439,7 +441,7 @@ msgstr ""
 msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -590,7 +592,7 @@ msgstr "Archivé"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Me l'assigner"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -643,7 +645,7 @@ msgstr "Pièce jointe"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Les pièces jointes ne provenant pas d'un message."
 
 #. module: project
 #: code:addons/project/models/project.py:119
@@ -748,6 +750,8 @@ msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
 msgstr ""
+"Choisir un projet à sous-tâches permet à la fois d'activer les sous-tâches "
+"et de définir leur projet par défaut (éventuellement le projet lui-même)"
 
 #. module: project
 #. openerp-web
@@ -1179,7 +1183,7 @@ msgstr "Vert"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Étiquette Kanban verte"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -1189,7 +1193,7 @@ msgstr "Gris"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Étiquette Kanban grise"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1471,6 +1475,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Permet à l'entreprise de personnaliser l'installation du pad à utiliser pour"
+" créer des liens vers de nouveaux pads (exemple : http://etherpad.com/)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -1562,7 +1568,7 @@ msgstr "Nom"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Nom de la tâche :"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1625,12 +1631,12 @@ msgstr "Maintenant que le projet est en place, <b>créez quelques tâches</b>."
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Nombre de jours ouvrés pour ouvrir la tâche"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Nombre de jours ouvrés pour clôturer la tâche"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -1981,7 +1987,7 @@ msgstr "ID de l'enregistrement du fil"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "Couleur de l'enregistrement"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -1991,7 +1997,7 @@ msgstr "Rouge"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Indicateur Kanban rouge"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -2041,19 +2047,19 @@ msgstr "Chercher dans Tout"
 #: code:addons/project/controllers/portal.py:94
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Rechercher dans Client"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:93
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Rechercher dans Messages"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Rechercher dans Étapes"
 
 #. module: project
 #. openerp-web
@@ -2108,7 +2114,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Divisez vos tâches pour organiser votre travail en sous-étapes"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:85
@@ -2155,7 +2161,7 @@ msgstr "Favoris"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "Explication des étoiles"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
@@ -2423,6 +2429,8 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"Ces adresses e-mail seront ajoutées au champ CC (Copie à) de tous les e-mails entrants\n"
+"        et sortants pour cet enregistrement après leur envoi. Séparez les adresses multiples avec une virgule."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_from
@@ -2579,7 +2587,7 @@ msgstr "Utilisez les tâches comme"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Utiliser un pad collaboratif à texte riche sur les tâches"
 
 #. module: project
 #. openerp-web
@@ -2647,32 +2655,32 @@ msgstr "Temps de travail"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Temps de travail pour attribuer"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Temps de travail pour clôturer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Jours de travail pour attribuer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Jours de travail pour clôturer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Heures de travail pour attribuer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Heures ouvrées pour clôturer une tâche"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -2725,6 +2733,9 @@ msgid ""
 "The sub-task's project of the parent task's project should be this task's "
 "project"
 msgstr ""
+"Vous ne pouvez pas définir une tâche parente si le projet auquel elle "
+"appartient n'est pas correctement configuré. Le projet de la sous-tâche ou "
+"le projet de la tâche parente doit correspondre au projet de cette tâche."
 
 #. module: project
 #: code:addons/project/models/project.py:77

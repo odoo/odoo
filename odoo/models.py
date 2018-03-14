@@ -50,7 +50,7 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet, pycompat
+                   Collector, LastOrderedSet, OrderedSet, pycompat, groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -239,8 +239,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     _rec_name = None            # field to use for labeling records
     _order = 'id'               # default order for searching results
     _parent_name = 'parent_id'  # the many2one field used as parent field
-    _parent_store = False       # set to True to compute MPTT (parent_left, parent_right)
-    _parent_order = False       # order to use for siblings in MPTT
+    _parent_store = False       # set to True to compute parent_path field
     _date_name = 'date'         # field to use for default calendar view
     _fold_name = 'fold'         # field to determine folded groups in kanban views
 
@@ -651,8 +650,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             :param fields: list of lists of fields to traverse
             :return: list of lists of corresponding values
         """
+        import_compatible = self.env.context.get('import_compat', True)
         lines = []
-        for record in self:
+
+        def splittor(rs):
+            """ Splits the self recordset in batches of 1000 (to avoid
+            entire-recordset-prefetch-effects) & removes the previous batch
+            from the cache after it's been iterated in full
+            """
+            for idx in range(0, len(rs), 1000):
+                sub = rs[idx: idx+1000]
+                for rec in sub:
+                    yield rec
+                rs.invalidate_cache(ids=sub.ids)
+
+        # memory stable but ends up prefetching 275 fields (???)
+        for idx, record in enumerate(splittor(self)):
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
@@ -684,8 +697,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     else:
                         primary_done.append(name)
 
-                        # This is a special case, its strange behavior is intended!
-                        if field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
+                        # in import_compat mode, m2m should always be exported as
+                        # a comma-separated list of xids in a single cell
+                        if import_compatible and field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
                             xml_ids = [r.__export_xml_id() for r in value]
                             current[i] = ','.join(xml_ids) or False
                             continue
@@ -793,9 +807,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
-
-        if ids and self._context.get('defer_parent_store_computation'):
-            self._parent_store_compute()
 
         return {'ids': ids, 'messages': messages}
 
@@ -1989,31 +2000,41 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model_cr
     def _parent_store_compute(self):
+        """ Compute parent_path field from scratch. """
         if not self._parent_store:
             return
 
-        _logger.info('Computing parent left and right for table %s...', self._table)
-        cr = self._cr
-        select = "SELECT id FROM %s WHERE %s=%%s ORDER BY %s" % \
-                    (self._table, self._parent_name, self._parent_order)
-        update = "UPDATE %s SET parent_left=%%s, parent_right=%%s WHERE id=%%s" % self._table
-
-        def process(root, left):
-            """ Set root.parent_left to ``left``, and return root.parent_right + 1 """
-            cr.execute(select, (root,))
-            right = left + 1
-            for (id,) in cr.fetchall():
-                right = process(id, right)
-            cr.execute(update, (left, right, root))
-            return right + 1
-
-        select0 = "SELECT id FROM %s WHERE %s IS NULL ORDER BY %s" % \
-                    (self._table, self._parent_name, self._parent_order)
-        cr.execute(select0)
-        pos = 0
-        for (id,) in cr.fetchall():
-            pos = process(id, pos)
-        self.invalidate_cache(['parent_left', 'parent_right'])
+        # Each record is associated to a string 'parent_path', that represents
+        # the path from the record's root node to the record. The path is made
+        # of the node ids suffixed with a slash (see example below). The nodes
+        # in the subtree of record are the ones where 'parent_path' starts with
+        # the 'parent_path' of record.
+        #
+        #               a                 node | id | parent_path
+        #              / \                  a  | 42 | 42/
+        #            ...  b                 b  | 63 | 42/63/
+        #                / \                c  | 84 | 42/63/84/
+        #               c   d               d  | 85 | 42/63/85/
+        #
+        # Note: the final '/' is necessary to match subtrees correctly: '42/63'
+        # is a prefix of '42/630', but '42/63/' is not a prefix of '42/630/'.
+        _logger.info('Computing parent_path for table %s...', self._table)
+        query = """
+            WITH RECURSIVE __parent_store_compute(id, parent_path) AS (
+                SELECT row.id, concat(row.id, '/')
+                FROM {table} row
+                WHERE row.{parent} IS NULL
+            UNION
+                SELECT row.id, concat(comp.parent_path, row.id, '/')
+                FROM {table} row, __parent_store_compute comp
+                WHERE row.{parent} = comp.id
+            )
+            UPDATE {table} row SET parent_path = comp.parent_path
+            FROM __parent_store_compute comp
+            WHERE row.id = comp.id
+        """.format(table=self._table, parent=self._parent_name)
+        self.env.cr.execute(query)
+        self.invalidate_cache(['parent_path'])
         return True
 
     @api.model_cr
@@ -2099,7 +2120,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.pool.post_init(self._reflect)
 
         cr = self._cr
-        parent_store_compute = False
         update_custom_fields = self._context.get('update_custom_fields', False)
         must_create_table = not tools.table_exists(cr, self._table)
 
@@ -2108,9 +2128,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 tools.create_model_table(cr, self._table, self._description)
 
             if self._parent_store:
-                if not tools.column_exists(cr, self._table, 'parent_left'):
+                if not tools.column_exists(cr, self._table, 'parent_path'):
                     self._create_parent_columns()
-                    parent_store_compute = True
 
             self._check_removed_columns(log=False)
 
@@ -2139,9 +2158,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if must_create_table:
             self._execute_sql()
 
-        if parent_store_compute:
-            self._parent_store_compute()
-
     @api.model_cr
     def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
@@ -2151,18 +2167,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model_cr
     def _create_parent_columns(self):
-        tools.create_column(self._cr, self._table, 'parent_left', 'INTEGER')
-        tools.create_column(self._cr, self._table, 'parent_right', 'INTEGER')
-        if 'parent_left' not in self._fields:
-            _logger.error("add a field parent_left on model %s: parent_left = fields.Integer('Left Parent', index=True)", self._name)
-        elif not self._fields['parent_left'].index:
-            _logger.error('parent_left field on model %s must be indexed! Add index=True to the field definition)', self._name)
-        if 'parent_right' not in self._fields:
-            _logger.error("add a field parent_right on model %s: parent_right = fields.Integer('Left Parent', index=True)", self._name)
-        elif not self._fields['parent_right'].index:
-            _logger.error("parent_right field on model %s must be indexed! Add index=True to the field definition)", self._name)
-        if self._fields[self._parent_name].ondelete not in ('cascade', 'restrict'):
-            _logger.error("The field %s on model %s must be set as ondelete='cascade' or 'restrict'", self._parent_name, self._name)
+        tools.create_column(self._cr, self._table, 'parent_path', 'VARCHAR')
+        if 'parent_path' not in self._fields:
+            _logger.error("add a field parent_path on model %s: parent_path = fields.Char(index=True)", self._name)
+        elif not self._fields['parent_path'].index:
+            _logger.error('parent_path field on model %s must be indexed! Add index=True to the field definition)', self._name)
 
     @api.model_cr
     def _add_sql_constraints(self):
@@ -2385,10 +2394,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             cls._rec_name = 'name'
         elif 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
-
-        # make sure parent_order is set when necessary
-        if cls._parent_store and not cls._parent_order:
-            cls._parent_order = cls._order
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -2833,47 +2838,48 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             raise UserError(_('Unable to delete this document because it is used as a default property'))
 
         # Delete the records' properties.
-        self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
+        with self.env.norecompute():
+            self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
 
-        self.check_access_rule('unlink')
+            self.check_access_rule('unlink')
 
-        cr = self._cr
-        Data = self.env['ir.model.data'].sudo().with_context({})
-        Defaults = self.env['ir.default'].sudo()
-        Attachment = self.env['ir.attachment']
+            cr = self._cr
+            Data = self.env['ir.model.data'].sudo().with_context({})
+            Defaults = self.env['ir.default'].sudo()
+            Attachment = self.env['ir.attachment']
 
-        for sub_ids in cr.split_for_in_conditions(self.ids):
-            query = "DELETE FROM %s WHERE id IN %%s" % self._table
-            cr.execute(query, (sub_ids,))
+            for sub_ids in cr.split_for_in_conditions(self.ids):
+                query = "DELETE FROM %s WHERE id IN %%s" % self._table
+                cr.execute(query, (sub_ids,))
 
-            # Removing the ir_model_data reference if the record being deleted
-            # is a record created by xml/csv file, as these are not connected
-            # with real database foreign keys, and would be dangling references.
-            #
-            # Note: the following steps are performed as superuser to avoid
-            # access rights restrictions, and with no context to avoid possible
-            # side-effects during admin calls.
-            data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
-            if data:
-                data.unlink()
+                # Removing the ir_model_data reference if the record being deleted
+                # is a record created by xml/csv file, as these are not connected
+                # with real database foreign keys, and would be dangling references.
+                #
+                # Note: the following steps are performed as superuser to avoid
+                # access rights restrictions, and with no context to avoid possible
+                # side-effects during admin calls.
+                data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
+                if data:
+                    data.unlink()
 
-            # For the same reason, remove the defaults having some of the
-            # records as value
-            Defaults.discard_records(self.browse(sub_ids))
+                # For the same reason, remove the defaults having some of the
+                # records as value
+                Defaults.discard_records(self.browse(sub_ids))
 
-            # For the same reason, remove the relevant records in ir_attachment
-            # (the search is performed with sql as the search method of
-            # ir_attachment is overridden to hide attachments of deleted
-            # records)
-            query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
-            cr.execute(query, (self._name, sub_ids))
-            attachments = Attachment.browse([row[0] for row in cr.fetchall()])
-            if attachments:
-                attachments.unlink()
+                # For the same reason, remove the relevant records in ir_attachment
+                # (the search is performed with sql as the search method of
+                # ir_attachment is overridden to hide attachments of deleted
+                # records)
+                query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
+                cr.execute(query, (self._name, sub_ids))
+                attachments = Attachment.browse([row[0] for row in cr.fetchall()])
+                if attachments:
+                    attachments.unlink()
 
-        # invalidate the *whole* cache, since the orm does not handle all
-        # changes made in the database, like cascading delete!
-        self.invalidate_cache()
+            # invalidate the *whole* cache, since the orm does not handle all
+            # changes made in the database, like cascading delete!
+            self.invalidate_cache()
 
         # recompute new-style fields
         if self.env.recompute and self._context.get('recompute', True):
@@ -2969,7 +2975,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._check_concurrency()
         self.check_access_rights('write')
 
-        bad_names = {'id', 'parent_left', 'parent_right'}
+        bad_names = {'id', 'parent_path'}
         if self._log_access:
             bad_names.update(LOG_ACCESS_COLUMNS)
 
@@ -2978,6 +2984,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         inverse_vals = {}
         inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
         unknown_names = []
+        inverse_fields = []
         protected_fields = []
         for key, val in vals.items():
             if key in bad_names:
@@ -2992,7 +2999,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 inherited_vals[field.related_field.model_name][key] = val
             elif field.inverse:
                 inverse_vals[key] = val
-                protected_fields.append(field)
+                inverse_fields.append(field)
+                protected_fields.extend(self._field_computed.get(field, [field]))
 
         if unknown_names:
             _logger.warning("%s.write() with unknown fields: %s",
@@ -3021,8 +3029,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 self.modified(set(inverse_vals) - set(store_vals))
                 for record in self:
                     record._cache.update(record._convert_to_cache(inverse_vals, update=True))
-                for key in inverse_vals:
-                    self._fields[key].determine_inverse(self)
+
+                # in case several fields use the same inverse method, call it once
+                for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
+                    fields[0].determine_inverse(self)
+
                 self.modified(set(inverse_vals) - set(store_vals))
 
                 # check Python constraints for inversed fields
@@ -3043,7 +3054,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         cr = self._cr
 
-        # determine records that require updating parent_left, parent_right
+        # determine records that require updating parent_path
         parent_records = self._parent_store_update_prepare(vals)
 
         # determine SQL values
@@ -3132,7 +3143,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # check Python constraints
         self._validate_fields(vals)
 
-        # update parent_left/parent_right
+        # update parent_path
         if parent_records:
             parent_records._parent_store_update(vals)
 
@@ -3165,7 +3176,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # add missing defaults
         vals = self._add_missing_default_values(vals)
 
-        bad_names = {'id', 'parent_left', 'parent_right'}
+        bad_names = {'id', 'parent_path'}
         if self._log_access:
             bad_names.update(LOG_ACCESS_COLUMNS)
 
@@ -3174,6 +3185,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         inverse_vals = {}
         inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
         unknown_names = []
+        inverse_fields = []
         protected_fields = []
         for key, val in vals.items():
             if key in bad_names:
@@ -3188,7 +3200,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 inherited_vals[field.related_field.model_name][key] = val
             elif field.inverse:
                 inverse_vals[key] = val
-                protected_fields.append(field)
+                inverse_fields.append(field)
+                protected_fields.extend(self._field_computed.get(field, [field]))
 
         if unknown_names:
             _logger.warning("%s.create() with unknown fields: %s",
@@ -3209,8 +3222,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         with self.env.protecting(protected_fields, record):
             # put the values of inverse fields in cache, and inverse them
             record._cache.update(record._convert_to_cache(inverse_vals))
-            for key in inverse_vals:
-                self._fields[key].determine_inverse(record)
+
+            # in case several fields use the same inverse method, call it once
+            for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
+                fields[0].determine_inverse(record)
+
             record.modified(set(inverse_vals) - set(store_vals))
 
             # check Python constraints for inversed fields
@@ -3231,9 +3247,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for name, field in self._fields.items():
             if field.type == 'boolean' and field.store:
                 vals.setdefault(name, False)
-
-        # prepare the update of parent_left, parent_right
-        parent_store = self._parent_store_create_prepare(vals)
 
         # determine SQL values
         columns = []                    # list of (column_name, format, value)
@@ -3275,9 +3288,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # from now on, self is the new record
         self = self.browse(cr.fetchone()[0])
 
-        # update parent_left, parent_right
-        if parent_store:
-            self._parent_store_update(vals)
+        # update parent_path
+        self._parent_store_create(vals)
 
         with self.env.protecting(protected_fields, self):
             # mark fields to recompute; do this before setting other fields,
@@ -3303,10 +3315,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # check Python constraints
             self._validate_fields(vals)
 
-            # recompute fields
-            if self.env.recompute and self._context.get('recompute', True):
-                self.recompute()
-
         self.check_access_rule('create')
 
         # add translations
@@ -3318,142 +3326,76 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         return self
 
-    def _parent_store_create_prepare(self, vals):
-        """ Prepare the creation of a record, and return whether its
-            parent_left/parent_right fields must be updated after creation.
-        """
-        if not self._parent_store or self._context.get('defer_parent_store_computation'):
-            return False
+    def _parent_store_create(self, vals):
+        """ Set the parent_path field on ``self`` after its creation. """
+        if not self._parent_store:
+            return
 
-        if self.pool._init:
-            self.pool._init_parent.add(self._name)
-            return False
-
-        # temporarily put the node at the top-level rightmost position
-        query = "SELECT COALESCE(MAX(parent_right) + 1, 0) FROM {}"
-        self._cr.execute(query.format(self._table))
-        parent_left = self._cr.fetchone()[0]
-        vals.setdefault(self._parent_name, False)
-        vals['parent_left'] = parent_left
-        vals['parent_right'] = parent_left + 1
-        return True
+        parent_val = vals.get(self._parent_name)
+        if parent_val:
+            query = """
+                UPDATE {0}
+                SET parent_path=concat((SELECT parent_path FROM {0} WHERE id=%s), id, '/')
+                WHERE id IN %s
+            """
+            params = [parent_val, tuple(self.ids)]
+        else:
+            query = "UPDATE {} SET parent_path=concat(id, '/') WHERE id IN %s"
+            params = [tuple(self.ids)]
+        self._cr.execute(query.format(self._table), params)
 
     def _parent_store_update_prepare(self, vals):
-        """ Return the records in ``self`` that must update their parent_left,
-            parent_right fields, in their sibling order. This must be called
-            before updating the parent field.
+        """ Return the records in ``self`` that must update their parent_path
+            field. This must be called before updating the parent field.
         """
-        if not self._parent_store or self._parent_name not in vals or \
-                self._context.get('defer_parent_store_computation'):
+        if not self._parent_store or self._parent_name not in vals:
             return self.browse()
 
-        if self.pool._init:
-            self.pool._init_parent.add(self._name)
-            return self.browse()
-
-        # The parent_left/right computation may take up to 5 seconds. No need to
-        # recompute the values if the parent is the same.
-        #
-        # Note: to respect parent_order, nodes must be processed in order, so
-        # the result must be ordered properly.
+        # No need to recompute the values if the parent is the same.
         parent_val = vals[self._parent_name]
         if parent_val:
             query = """ SELECT id FROM {0}
-                        WHERE id IN %s AND ({1} != %s OR {1} IS NULL)
-                        ORDER BY {2} """
+                        WHERE id IN %s AND ({1} != %s OR {1} IS NULL) """
             params = [tuple(self.ids), parent_val]
         else:
             query = """ SELECT id FROM {0}
-                        WHERE id IN %s AND {1} IS NOT NULL
-                        ORDER BY {2} """
+                        WHERE id IN %s AND {1} IS NOT NULL """
             params = [tuple(self.ids)]
-        query = query.format(self._table, self._parent_name, self._parent_order)
+        query = query.format(self._table, self._parent_name)
         self._cr.execute(query, params)
         return self.browse([row[0] for row in self._cr.fetchall()])
 
     def _parent_store_update(self, vals):
-        """ Update the parent_left/parent_right fields of ``self``. """
+        """ Update the parent_path field of ``self``. """
         cr = self.env.cr
+
+        # determine new prefix in parent_path, and check for recursion
         parent_val = vals[self._parent_name]
         if parent_val:
-            clause, params = '{}=%s'.format(self._parent_name), [parent_val]
+            query = "SELECT parent_path FROM {} WHERE id=%s"
+            cr.execute(query.format(self._table), [parent_val])
+            new_prefix = cr.fetchone()[0]
+
+            parent_ids = {int(label) for label in new_prefix.split('/')[:-1]}
+            if not parent_ids.isdisjoint(self._ids):
+                raise UserError(_("Recursivity Detected."))
+
         else:
-            clause, params = '{} IS NULL'.format(self._parent_name), []
+            new_prefix = ''
 
-        modified_ids = set()
-        for record in self:
-            # retrieve record's siblings data (this CANNOT be fetched
-            # outside the loop, as it needs to be refreshed after each
-            # update, in case several nodes are sequentially inserted one
-            # next to the other)
-            query = """ SELECT id, parent_left, parent_right FROM {}
-                        WHERE {} ORDER BY {} """
-            cr.execute(query.format(self._table, clause, self._parent_order), params)
-            siblings = cr.fetchall()
-
-            # determine record's position among its siblings
-            index = next(pos
-                         for pos, data in enumerate(siblings)
-                         if data[0] == record.id)
-
-            # retrieve record's current data
-            pleft0, pright0 = siblings[index][1:]
-            width = pright0 - pleft0 + 1
-
-            # determine new parent_left of current record
-            if index:
-                # record comes right after its closest left sibling
-                pleft1 = (siblings[index - 1][2] or 0) + 1
-            else:
-                # record is the first node of its parent
-                if not parent_val:
-                    pleft1 = 0          # the first node starts at 0
-                else:
-                    query = "SELECT parent_left FROM {} WHERE id=%s"
-                    cr.execute(query.format(self._table), [parent_val])
-                    pleft1 = cr.fetchone()[0] + 1
-
-            if pleft0 == pleft1:
-                continue
-
-            if pleft0 < pleft1 <= pright0:
-                raise UserError(_('Recursivity Detected.'))
-
-            # We have to slide values in the interval [x,x+a+b) in order to
-            # swap the subsets in [x,x+a) and [x+a,x+a+b), respectively.
-            #
-            #             x          x+a         x+b        x+a+b
-            #             |-----------|-----------|-----------|
-            #     before: A A A A A A B B B B B B B B B B B B
-            #      after: B B B B B B B B B B B B A A A A A A
-            #
-            query1 = """
-                UPDATE {}
-                SET parent_left = parent_left + (CASE
-                        WHEN parent_left<%(x)s THEN 0
-                        WHEN parent_left<%(x)s+%(a)s THEN %(b)s
-                        WHEN parent_left<%(x)s+%(a)s+%(b)s THEN -%(a)s
-                        ELSE 0 END),
-                    parent_right = parent_right + (CASE
-                        WHEN parent_right<%(x)s THEN 0
-                        WHEN parent_right<%(x)s+%(a)s THEN %(b)s
-                        WHEN parent_right<%(x)s+%(a)s+%(b)s THEN -%(a)s
-                        ELSE 0 END)
-                WHERE (parent_left BETWEEN %(x)s AND %(x)s+%(a)s+%(b)s-1)
-                   OR (parent_right BETWEEN %(x)s AND %(x)s+%(a)s+%(b)s-1)
-                RETURNING id
-            """
-            if pleft0 < pleft1:
-                # x = pleft0, a = width, x+a+b = pleft1
-                params1 = dict(x=pleft0, a=width, b=pleft1 - pleft0 - width)
-            else:
-                # x = pleft1, x+a = pleft0, b = width
-                params1 = dict(x=pleft1, a=pleft0 - pleft1, b=width)
-
-            cr.execute(query1.format(self._table), params1)
-            modified_ids.update(row[0] for row in cr.fetchall())
-
-        self.browse(modified_ids).modified(['parent_left', 'parent_right'])
+        # update parent_path of all records and their descendants
+        query = """
+            UPDATE {0} child
+            SET parent_path = concat(%s, substr(child.parent_path,
+                    length(node.parent_path) - length(node.id || '/') + 1))
+            FROM {0} node
+            WHERE node.id IN %s
+            AND child.parent_path LIKE concat(node.parent_path, '%%')
+            RETURNING child.id
+        """
+        cr.execute(query.format(self._table), [new_prefix, tuple(self.ids)])
+        modified_ids = {row[0] for row in cr.fetchall()}
+        self.browse(modified_ids).modified(['parent_path'])
 
     # TODO: ameliorer avec NULL
     @api.model
@@ -3741,7 +3683,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 default['state'] = value
 
         # build a black list of fields that should not be copied
-        blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
+        blacklist = set(MAGIC_COLUMNS + ['parent_path'])
         whitelist = set(name for name, field in self._fields.items() if not field.inherited)
 
         def blacklist_given_fields(model):
@@ -4977,15 +4919,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         done = set()
 
         # dummy assignment: trigger invalidations on the record
-        for name in todo:
-            if name == 'id':
-                continue
-            value = record[name]
-            field = self._fields[name]
-            if field.type == 'many2one' and field.delegate and not value:
-                # do not nullify all fields of parent record for new records
-                continue
-            record[name] = value
+        with env.do_in_onchange():
+            for name in todo:
+                if name == 'id':
+                    continue
+                value = record[name]
+                field = self._fields[name]
+                if field.type == 'many2one' and field.delegate and not value:
+                    # do not nullify all fields of parent record for new records
+                    continue
+                record[name] = value
 
         result = {}
         dirty = set()
@@ -5025,10 +4968,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 subtree = subtree[name]
 
         # collect values from dirty fields
-        result['value'] = {
-            name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
-            for name in dirty
-        }
+        with env.do_in_onchange():
+            result['value'] = {
+                name: self._fields[name].convert_to_onchange(record[name], record, subnames[name])
+                for name in dirty
+            }
 
         return result
 

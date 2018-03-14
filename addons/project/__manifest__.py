@@ -29,6 +29,7 @@
         'views/project_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
+        'views/mail_activity_views.xml',
         'views/project_assets.xml',
         'views/project_portal_templates.xml',
         'views/project_rating_templates.xml',

@@ -1,4 +1,4 @@
-odoo.define('website.WebsiteRoot.instance', function (require) {
+odoo.define('root.widget', function (require) {
 'use strict';
 
 require('web.dom_ready');

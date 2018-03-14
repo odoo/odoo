@@ -27,7 +27,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         res = []
         total = []
         cr = self.env.cr
-        user_company = self.env.user.company_id.id
+        company_ids = self.env.context.get('company_ids', (self.env.user.company_id.id,))
         move_state = ['draft', 'posted']
         if target_move == 'posted':
             move_state = ['posted']
@@ -41,7 +41,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         if reconciled_after_date:
             reconciliation_clause = '(l.reconciled IS FALSE OR l.id IN %s)'
             arg_list += (tuple(reconciled_after_date),)
-        arg_list += (date_from, user_company)
+        arg_list += (date_from, tuple(company_ids))
         query = '''
             SELECT DISTINCT l.partner_id, UPPER(res_partner.name)
             FROM account_move_line AS l left join res_partner on l.partner_id = res_partner.id, account_account, account_move am
@@ -51,7 +51,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND (account_account.internal_type IN %s)
                 AND ''' + reconciliation_clause + '''
                 AND (l.date <= %s)
-                AND l.company_id = %s
+                AND l.company_id IN %s
             ORDER BY UPPER(res_partner.name)'''
         cr.execute(query, arg_list)
 
@@ -76,8 +76,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     AND (COALESCE(l.date_maturity,l.date) > %s)\
                     AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
                 AND (l.date <= %s)
-                AND l.company_id = %s'''
-        cr.execute(query, (tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, user_company))
+                AND l.company_id IN %s'''
+        cr.execute(query, (tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, tuple(company_ids)))
         aml_ids = cr.fetchall()
         aml_ids = aml_ids and [x[0] for x in aml_ids] or []
         for line in self.env['account.move.line'].browse(aml_ids):
@@ -117,7 +117,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             else:
                 dates_query += ' <= %s)'
                 args_list += (periods[str(i)]['stop'],)
-            args_list += (date_from, user_company)
+            args_list += (date_from, tuple(company_ids))
 
             query = '''SELECT l.id
                     FROM account_move_line AS l, account_account, account_move am
@@ -127,7 +127,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                         AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
                         AND ''' + dates_query + '''
                     AND (l.date <= %s)
-                    AND l.company_id = %s'''
+                    AND l.company_id IN %s'''
             cr.execute(query, args_list)
             partners_amount = {}
             aml_ids = cr.fetchall()
@@ -223,4 +223,6 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             'time': time,
             'get_partner_lines': movelines,
             'get_direction': total,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }

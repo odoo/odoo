@@ -51,3 +51,8 @@ class TestExpenseCommon(TestAccountNoChartCommon):
             'employee_id': cls.employee.id,
             'journal_id': cls.journal.id,
         })
+        cls.expense_sheet2 = cls.env['hr.expense.sheet'].create({
+            'name': 'Second Expense for Johnny Employee',
+            'employee_id': cls.employee.id,
+            'journal_id': cls.journal.id,
+        })

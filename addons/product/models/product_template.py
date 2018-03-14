@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
             raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
 
     def _get_default_uom_id(self):
-        return self.env["product.uom"].search([], limit=1, order='id').id
+        return self.env["uom.uom"].search([], limit=1, order='id').id
 
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
@@ -89,6 +89,8 @@ class ProductTemplate(models.Model):
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
         help="The weight of the contents in Kg, not including any packaging, etc.")
+    weight_uom_id = fields.Many2one('uom.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
+    weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.name', readonly=True)
 
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
@@ -98,11 +100,11 @@ class ProductTemplate(models.Model):
         'product.pricelist', 'Pricelist', store=False,
         help='Technical field. Used for searching on pricelists, not stored in database.')
     uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default Unit of Measure used for all stock operation.")
     uom_po_id = fields.Many2one(
-        'product.uom', 'Purchase Unit of Measure',
+        'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure.")
     company_id = fields.Many2one(
@@ -191,7 +193,7 @@ class ProductTemplate(models.Model):
     def _set_template_price(self):
         if self._context.get('uom'):
             for template in self:
-                value = self.env['product.uom'].browse(self._context['uom'])._compute_price(template.price, template.uom_id)
+                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(template.price, template.uom_id)
                 template.write({'list_price': value})
         else:
             self.write({'list_price': self.price})
@@ -233,6 +235,25 @@ class ProductTemplate(models.Model):
             template.weight = template.product_variant_ids.weight
         for template in (self - unique_variants):
             template.weight = 0.0
+
+    @api.model
+    def _get_weight_uom_id_from_ir_config_parameter(self):
+        """ Get the unit of measure to interpret the `weight` field. By default, we considerer
+        that weights are expressed in kilograms. Users can configure to express them in pounds
+        by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
+        and "1" as value.
+        """
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        product_weight_in_lbs_param = get_param('product.weight_in_lbs')
+        if product_weight_in_lbs_param == '1':
+            return self.env.ref('uom.product_uom_lb')
+        else:
+            return self.env.ref('uom.product_uom_kgm')
+
+    def _compute_weight_uom_id(self):
+        weight_uom_id = self._get_weight_uom_id_from_ir_config_parameter()
+        for product_template in self:
+            product_template.weight_uom_id = weight_uom_id
 
     @api.one
     def _set_weight(self):
@@ -315,6 +336,7 @@ class ProductTemplate(models.Model):
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         # TDE FIXME: should probably be copy_data
         self.ensure_one()
@@ -357,7 +379,7 @@ class ProductTemplate(models.Model):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
         if not uom and self._context.get('uom'):
-            uom = self.env['product.uom'].browse(self._context['uom'])
+            uom = self.env['uom.uom'].browse(self._context['uom'])
         if not currency and self._context.get('currency'):
             currency = self.env['res.currency'].browse(self._context['currency'])
 
@@ -394,7 +416,7 @@ class ProductTemplate(models.Model):
         for tmpl_id in self.with_context(active_test=False):
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
-            variant_alone = tmpl_id.attribute_line_ids.filtered(lambda line: len(line.value_ids) == 1).mapped('value_ids')
+            variant_alone = tmpl_id.attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant and len(line.value_ids) == 1).mapped('value_ids')
             for value_id in variant_alone:
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
@@ -406,7 +428,7 @@ class ProductTemplate(models.Model):
             ]
 
             # get the value (id) sets of existing variants
-            existing_variants = {frozenset(variant.attribute_value_ids.ids) for variant in tmpl_id.product_variant_ids}
+            existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant).ids) for variant in tmpl_id.product_variant_ids}
             # -> for each value set, create a recordset of values to create a
             #    variant for if the value set isn't already a variant
             to_create_variants = [
@@ -443,3 +465,10 @@ class ProductTemplate(models.Model):
                     variant.write({'active': False})
                     pass
         return True
+
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("product"),
+        )
+        return super(ProductTemplate, self).get_empty_list_help(help)

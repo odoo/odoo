@@ -13,14 +13,14 @@ class TestSaleMrpFlow(common.TransactionCase):
         super(TestSaleMrpFlow, self).setUp()
         # Useful models
         self.StockMove = self.env['stock.move']
-        self.ProductUom = self.env['product.uom']
+        self.UoM = self.env['uom.uom']
         self.MrpProduction = self.env['mrp.production']
         self.Inventory = self.env['stock.inventory']
         self.InventoryLine = self.env['stock.inventory.line']
         self.ProductProduce = self.env['mrp.product.produce']
 
-        self.categ_unit = self.env.ref('product.product_uom_categ_unit')
-        self.categ_kgm = self.env.ref('product.product_uom_categ_kgm')
+        self.categ_unit = self.env.ref('uom.product_uom_categ_unit')
+        self.categ_kgm = self.env.ref('uom.product_uom_categ_kgm')
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.warehouse = self.env.ref('stock.warehouse0')
 
@@ -37,26 +37,26 @@ class TestSaleMrpFlow(common.TransactionCase):
                 p.route_ids.add(r)
             return p.save()
 
-        self.uom_kg = self.ProductUom.create({
+        self.uom_kg = self.UoM.create({
             'name': 'Test-KG',
             'category_id': self.categ_kgm.id,
             'factor_inv': 1,
             'factor': 1,
             'uom_type': 'reference',
             'rounding': 0.000001})
-        self.uom_gm = self.ProductUom.create({
+        self.uom_gm = self.UoM.create({
             'name': 'Test-G',
             'category_id': self.categ_kgm.id,
             'uom_type': 'smaller',
             'factor': 1000.0,
             'rounding': 0.001})
-        self.uom_unit = self.ProductUom.create({
+        self.uom_unit = self.UoM.create({
             'name': 'Test-Unit',
             'category_id': self.categ_unit.id,
             'factor': 1,
             'uom_type': 'reference',
             'rounding': 1.0})
-        self.uom_dozen = self.ProductUom.create({
+        self.uom_dozen = self.UoM.create({
             'name': 'Test-DozenA',
             'category_id': self.categ_unit.id,
             'factor_inv': 12,
@@ -166,8 +166,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         mnf_product_a = self.env['mrp.production'].search([('product_id', '=', product_a.id)])
 
         self.assertTrue(mnf_product_a, 'Manufacturing order not created.')
-        self.assertEqual(mnf_product_a.product_qty, 10, 'Wrong product quantity in manufacturing order.')
-        self.assertEqual(mnf_product_a.product_uom_id, self.uom_dozen, 'Wrong unit of measure in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_qty, 120, 'Wrong product quantity in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_uom_id, self.uom_unit, 'Wrong unit of measure in manufacturing order.')
         self.assertEqual(mnf_product_a.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
         # ------------------------------------------------------------------------------------------

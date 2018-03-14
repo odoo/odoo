@@ -27,8 +27,6 @@ class ResConfigSettings(models.TransientModel):
         implied_group="purchase.group_manage_vendor_price")
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
     is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")
-    group_analytic_account_for_purchases = fields.Boolean('Analytic accounting for purchases',
-        implied_group='purchase.group_analytic_accounting')
     po_lead = fields.Float(related='company_id.po_lead')
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",

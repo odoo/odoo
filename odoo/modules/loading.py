@@ -44,12 +44,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
-            if tools.config.options['test_commit']:
-                cr.commit()
-            else:
-                cr.rollback()
-                # avoid keeping stale xml_id, etc. in cache
-                odoo.registry(cr.dbname).clear_caches()
+            cr.rollback()
+            # avoid keeping stale xml_id, etc. in cache
+            odoo.registry(cr.dbname).clear_caches()
 
 
     def _get_files_of_kind(kind):

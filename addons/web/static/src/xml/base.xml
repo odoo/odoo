@@ -125,7 +125,6 @@
     </div>
 </t>
 <t t-name="Warning" t-extend="Notification">
-    <t t-jquery=".o_notification">$(this).addClass('o_error');</t>
     <t t-jquery=".o_icon" t-operation="replace">
         <span class="o_icon fa fa-3x fa-exclamation"/>
     </t>
@@ -177,8 +176,6 @@
     </div>
 </form>
 
-<div t-name="ActionManager" class="o_content"/>
-
 <t t-name="ControlPanel">
     <div class="o_control_panel">
         <ol class="breadcrumb"/>
@@ -201,9 +198,9 @@
     </div>
 </t>
 
-<t t-name="ViewManager.switch-buttons">
+<t t-name="ControlPanel.SwitchButtons">
     <t t-foreach="views" t-as="view">
-        <button type="button" t-att-accesskey="view.accesskey"
+        <button type="button" t-att-accesskey="view.accessKey"
             t-attf-class="btn btn-icon fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
             t-att-aria-label="view.type"
             t-att-data-view-type="view.type" t-att-title="view.label"/>
@@ -259,14 +256,14 @@
         <li class="divider"/>
         <t t-if="view.type === 'form'">
             <li><a href="#" data-action="set_defaults">Set Defaults</a></li>
-            <t t-if="view.controller.getSelectedIds().length === 1">
+            <t t-if="controller.getSelectedIds().length === 1">
                 <li><a href="#" data-action="get_metadata">View Metadata</a></li>
             </t>
         </t>
         <li><a href="#" data-action="fvg">Fields View Get</a></li>
         <t t-if="can_edit">
             <li>
-              <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">
+              <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id">
                 <t t-if="view.type == 'form'">Edit Form view</t>
                 <t t-elif="view.type == 'list'">Edit List view</t>
                 <t t-elif="view.type == 'kanban'">Edit Kanban view</t>
@@ -277,7 +274,7 @@
                 <t t-else="1">Edit view, type: <t t-esc="_.str.capitalize(view.type)"/></t>
               </a>
             </li>
-            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.fields_view.view_id">Edit Search view</a></li>
+            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.searchFieldsView.view_id">Edit SearchView</a></li>
         </t>
     </t>
 </t>
@@ -489,9 +486,11 @@
         <button class="btn btn-default fa fa-pie-chart o_graph_button" title="Pie Chart" data-mode="pie"/>
     </div>
 </t>
-<div t-name="GraphView.error" class="oe_view_nocontent" >
-    <p><strong><t t-esc="title"/></strong></p>
-    <p><t t-esc="description"/></p>
+<div t-name="GraphView.error" class="o_view_nocontent" >
+    <div class="o_nocontent_help">
+        <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
+        <p><t t-esc="description"/></p>
+    </div>
 </div>
 
 <div t-name="PivotView" class="o_pivot">
@@ -541,12 +540,17 @@
         </t>
     </ul>
 </t>
-<div t-name="PivotView.nodata" class="oe_view_nocontent" >
-    <p><strong>No data to display.</strong></p>
-    <p>
-        No data available for this pivot table.  Try to add some records, or make sure
-        that there is at least one measure and no active filter in the search bar.
-    </p>
+<div t-name="PivotView.nodata">
+    <div class="o_view_nocontent">
+        <div class="o_nocontent_help">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p><p>
+                Try to add some records, or make sure
+                that there is at least one measure and no active filter in the search bar.
+            </p>
+        </div>
+    </div>
 </div>
 
 <t t-name="FormSelection">
@@ -906,6 +910,7 @@
         </t>
     </div>
 </t>
+
 <t t-name="HiddenInputFile">
     <div t-attf-class="o_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
         <form class="o_form_binary_form" t-att-target="fileupload_id"
@@ -920,6 +925,31 @@
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>
 </t>
+
+<t t-name="FieldPdfViewer">
+    <div class="o_field_pdfviewer">
+        <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8">
+            <span class="o_form_binary_progress">Uploading...</span>
+            <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
+            <button class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select" type="button"></button>
+            <button class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear" type="button"></button>
+        </div>
+        <iframe class="o_pdfview_iframe o_field_pdfviewer"/>
+        <t t-call="HiddenInputPDFFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
+        </t>
+    </div>
+</t>
+
+<t t-name="HiddenInputPDFFile" t-extend="HiddenInputFile">
+    <!-- remove the inputs and put a new one for pdf only -->
+    <t t-jquery="input[type='file']" t-operation="replace"/>
+    <t t-jquery="form" t-operation="append">
+        <input type="file" class="o_input_file" name="ufile" accept="application/pdf"/>
+    </t>
+</t>
+
 <div t-name="FieldBinaryFileUploader" t-attf-class="oe_fileupload #{widget.attrs.class ? widget.attrs.class :''}">
     <div class="oe_placeholder_files"/>
     <div t-if="widget.mode !== 'readonly'" class="oe_add">
@@ -1348,6 +1378,22 @@
         <img class="icon" t-att-src="imgurl"></img>
         <span class="appName"><t t-esc="string"/></span>
     </div>
+</t>
+
+<t t-name="AttachDocument">
+    <button class="btn btn-sm btn-default o_attachment_button">
+        <span class="o_attach_document"><t t-esc="widget.node.attrs.string"/></span>
+        <span class="hide">
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                <t t-set="multi_upload" t-value="true"/>
+                <input type="hidden" name="model" t-att-value="widget.res_model"/>
+                <input type="hidden" name="id" t-att-value="widget.res_id"/>
+                <input type="hidden" name="session_id" t-att-value="widget.getSession().session_id"/>
+            </t>
+        </span>
+    </button>
 </t>
 
 </templates>

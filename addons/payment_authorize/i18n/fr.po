@@ -3,21 +3,22 @@
 # * payment_authorize
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
+# Martin Trigaux, 2016
 # Melanie Bernard <mbe@odoo.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# Florian Hatat, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Daniel & Delphine <dd2013@leschoupinous.net>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +58,8 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Authorize : données reçues sans référence (%s), trans_id (%s) ou empreinte "
+"(%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -71,17 +74,17 @@ msgstr "Numéro de carte"
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Nom du titulaire de la carte"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Date d'expiration (MM/AA)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Comment se faire payer avec Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -101,13 +104,13 @@ msgstr "Fournisseur"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Enregistrer les cartes"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:372
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "La création du profil client dans Authorize.Net a échoué."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -115,6 +118,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Contient la référence unique pour cette combinaison partenaire/jeton de "
+"paiement dans le backend Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
@@ -124,6 +129,10 @@ msgid ""
 "invoicing), you need it to automatically charge the customer when you issue "
 "an invoice."
 msgstr ""
+"Cette option permet aux clients d'enregistrer leur carte bancaire en tant "
+"que jeton de paiement et de la réutiliser ultérieurement. Si vous gérez les "
+"abonnements (facturation récurrente), vous devez débiter le client "
+"automatiquement lors de l'émission d'une facture."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

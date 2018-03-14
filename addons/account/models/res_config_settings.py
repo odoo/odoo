@@ -28,6 +28,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
+    group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     module_account_asset = fields.Boolean(string='Assets Management')
@@ -36,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
-    module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
+    module_account_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
         help='This allows you to group received checks before you deposit them to the bank.\n'
              '-This installs the module account_batch_deposit.')
@@ -68,8 +69,10 @@ class ResConfigSettings(models.TransientModel):
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
+                'code_digits': self.chart_template_id.code_digits,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
+                'code_digits': self.chart_template_id.code_digits,
                 'complete_tax_set': self.chart_template_id.complete_tax_set,
                 'currency_id': self.currency_id.id,
                 'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,

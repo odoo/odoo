@@ -19,14 +19,36 @@
             <field name="name">Physical</field>
         </record>
 
+        <!-- Expensable products -->
+        <record id="expense_product" model="product.product">
+            <field name="name">General Expense</field>
+            <field name="list_price">14.0</field>
+            <field name="standard_price">8.0</field>
+            <field name="type">service</field>
+            <field name="default_code">EXP</field>
+            <field name="categ_id" ref="product.cat_expense"/>
+        </record>
+
+        <record id="expense_hotel" model="product.product">
+            <field name="name">Hotel Accommodation</field>
+            <field name="list_price">400.0</field>
+            <field name="standard_price">400.0</field>
+            <field name="type">service</field>
+            <field name="default_code">EXP</field>
+            <field name="uom_id" ref="uom.product_uom_day"/>
+            <field name="uom_po_id" ref="uom.product_uom_day"/>
+            <field name="categ_id" ref="cat_expense"/>
+        </record>
+
+        <!-- Service products -->
         <record id="service_order_01" model="product.product">
             <field name="name">Prepaid Consulting</field>
             <field name="categ_id" ref="product_category_3"/>
             <field name="standard_price">40</field>
             <field name="list_price">90</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product_uom_hour"/>
-            <field name="uom_po_id" ref="product_uom_hour"/>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="description">Example of product to invoice on order.</field>
             <field name="default_code">SERV_ORDER</field>
         </record>
@@ -37,8 +59,8 @@
             <field name="standard_price">200.0</field>
             <field name="list_price">180.0</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">SERV_DEL</field>
         </record>
 
@@ -48,8 +70,8 @@
             <field name="standard_price">160</field>
             <field name="list_price">180</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Example of products to invoice based on cost.</field>
             <field name="default_code">SERV_COST</field>
         </record>
@@ -60,8 +82,8 @@
             <field name="standard_price">55.0</field>
             <field name="list_price">70.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">PROD_DEL</field>
         </record>
 
@@ -71,8 +93,8 @@
             <field name="standard_price">35.0</field>
             <field name="list_price">40.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">PROD_DEL02</field>
         </record>
 
@@ -82,8 +104,8 @@
             <field name="standard_price">235.0</field>
             <field name="list_price">280.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">PROD_ORDER</field>
         </record>
 
@@ -93,8 +115,8 @@
             <field name="standard_price">20.5</field>
             <field name="list_price">30.75</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product_uom_hour"/>
-            <field name="uom_po_id" ref="product_uom_hour"/>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="description">Example of products to invoice based on delivery.</field>
         </record>
 
@@ -104,11 +126,10 @@
             <field name="standard_price">25.5</field>
             <field name="list_price">38.25</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product_uom_hour"/>
-            <field name="uom_po_id" ref="product_uom_hour"/>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="description">Example of product to invoice based on delivery.</field>
         </record>
-
 
         <record id="product_product_3" model="product.product">
             <field name="name">Computer SC234</field>
@@ -116,8 +137,8 @@
             <field name="list_price">450.0</field>
             <field name="standard_price">300.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">17" LCD Monitor&#xA;Processor AMD 8-Core</field>
             <field name="default_code">PCSC234</field>
         </record>
@@ -162,8 +183,8 @@
             <field name="standard_price">500.0</field>
             <field name="list_price">750.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">7.9‑inch (diagonal) LED-backlit, 128Gb&#xA;Dual-core A5 with quad-core graphics&#xA;FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="default_code">E-COM01</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_3')])]"/>
@@ -203,11 +224,11 @@
         <record id="product_product_4_product_template" model="product.template">
             <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2'), ref('product.product_attribute_line_3')])]"/>
         </record>
-        
+
         <record id="product_product_4d" model="product.product">
             <field name="active" eval="False"/>
         </record>
-        
+
         <record id="product_attribute_price_1" model="product.attribute.price">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="value_id" ref="product_attribute_value_2"/>
@@ -220,8 +241,8 @@
             <field name="standard_price">140.0</field>
             <field name="list_price">247.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Bose's smallest portable Bluetooth speaker</field>
             <field name="default_code">E-COM05</field>
         </record>
@@ -233,8 +254,8 @@
             <field name="standard_price">600.0</field>
             <field name="list_price">147.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Custom computer shipped in kit.</field>
             <field name="default_code">E-COM06</field>
         </record>
@@ -252,8 +273,8 @@
             <field name="standard_price">800.0</field>
             <field name="list_price">320.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM07</field>
             <field name='weight'>0.330</field>
         </record>
@@ -271,8 +292,8 @@
             <field name="standard_price">70.0</field>
             <field name="list_price">79.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM08</field>
         </record>
 
@@ -282,8 +303,8 @@
             <field name="standard_price">1299.0</field>
             <field name="list_price">1799.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM09</field>
             <field name='weight'>9.54</field>
         </record>
@@ -294,8 +315,8 @@
             <field name="standard_price">10.0</field>
             <field name="list_price">47.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM10</field>
         </record>
 
@@ -305,8 +326,8 @@
             <field name="standard_price">12.50</field>
             <field name="list_price">14</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM11</field>
         </record>
 
@@ -316,8 +337,8 @@
             <field name="standard_price">14</field>
             <field name="list_price">16.50</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">E-COM12</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1')])]"/>
         </record>
@@ -343,7 +364,7 @@
         <record id="product_product_11_product_template" model="product.template">
             <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_4')])]"/>
         </record>
-        
+
         <record id="product_attribute_price_2" model="product.attribute.price">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="value_id" ref="product_attribute_value_2"/>
@@ -358,8 +379,8 @@
             <field name="standard_price">18</field>
             <field name="list_price">12.50</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">M-Wir</field>
         </record>
 
@@ -369,8 +390,8 @@
             <field name="standard_price">78.0</field>
             <field name="list_price">85.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">RAM-SR5</field>
         </record>
 
@@ -380,8 +401,8 @@
             <field name="standard_price">20.0</field>
             <field name="list_price">25.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">C-Case</field>
         </record>
 
@@ -391,8 +412,8 @@
             <field name="standard_price">860.0</field>
             <field name="list_price">975.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">HDD-SH1</field>
         </record>
 
@@ -402,8 +423,8 @@
             <field name="standard_price">1700.0</field>
             <field name="list_price">1950.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">MBi9</field>
         </record>
         <record id="product_product_22" model="product.product">
@@ -412,8 +433,8 @@
             <field name="standard_price">2010.0</field>
             <field name="list_price">2100.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">CPUi5</field>
         </record>
 
@@ -423,8 +444,8 @@
             <field name="standard_price">876.0</field>
             <field name="list_price">885.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">CARD</field>
         </record>
 
@@ -434,8 +455,8 @@
             <field name="standard_price">2870.0</field>
             <field name="list_price">2950.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">17" Monitor, 4GB RAM&#xA;Standard-1294P Processor</field>
             <field name="default_code">LAP-E5</field>
         </record>
@@ -446,8 +467,8 @@
             <field name="standard_price">3300.0</field>
             <field name="list_price">3645.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Custom Laptop based on customer's requirement.</field>
             <field name="default_code">LAP-CUS</field>
         </record>
@@ -458,8 +479,8 @@
             <field name="standard_price">25000.0</field>
             <field name="list_price">23500.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Dvorak keyboard&#xA;left-handed mouse</field>
             <field name="default_code">CONS_DEL03</field>
         </record>
@@ -470,8 +491,8 @@
             <field name="standard_price">45000.0</field>
             <field name="list_price">40000.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">raid 1, 512ECC ram</field>
             <field name="default_code">CONS_DEL02</field>
         </record>
@@ -482,8 +503,8 @@
             <field name="standard_price">65000.0</field>
             <field name="list_price">60000.0</field>
             <field name="type">consu</field>
-            <field name="uom_id" ref="product_uom_unit"/>
-            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">raid 10, 2048ECC ram</field>
             <field name="default_code">CONS_DEL01</field>
         </record>

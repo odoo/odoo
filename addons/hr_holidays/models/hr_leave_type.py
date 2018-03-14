@@ -6,6 +6,7 @@
 import logging
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -14,8 +15,11 @@ _logger = logging.getLogger(__name__)
 class HolidaysType(models.Model):
     _name = "hr.leave.type"
     _description = "Leave Type"
+    _order = "sequence, id"
 
     name = fields.Char('Leave Type', required=True, translate=True)
+    sequence = fields.Integer(default=100,
+                              help='The type with the smallest sequence is the default value in leave request')
     categ_id = fields.Many2one('calendar.event.type', string='Meeting Type',
         help='Once a leave is validated, Odoo will create a corresponding meeting of this type in the calendar.')
     color_name = fields.Selection([
@@ -52,9 +56,56 @@ class HolidaysType(models.Model):
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Virtual Remaining Leaves',
         help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval')
 
-    double_validation = fields.Boolean(string='Apply Double Validation',
-        help="When selected, the Allocation/Leave Requests for this type require a second validation to be approved.")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+
+    validation_type = fields.Selection([('hr', 'Human Resource Responsible'),
+                                      ('manager', 'Manager'),
+                                      ('both', 'Double Validation')],
+                                     default='hr',
+                                     string='Validation By')
+
+    employee_applicability = fields.Selection([('both', 'On Leave As Well As On Allocation'),
+                                            ('leave', 'Only On Leave'),
+                                            ('allocation', 'Only On Allocation')],
+                                           default='both', string='Available For Employee :',
+                                           help='This leave type will be available on Leave / Allocation request based on selected value')
+
+    validity_start = fields.Date("Start Date", default=fields.Date.today(),
+                                 help='Adding validity to types of leaves so that it cannot be selected outside'
+                                 'this time period')
+    validity_stop = fields.Date("End Date")
+
+    valid = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
+
+    time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave', string="Kind of Leave",
+                                 help="Whether this should be computed as a holiday or as work time (eg: formation)")
+
+    @api.multi
+    @api.constrains('validity_start', 'validity_stop')
+    def _check_validity_dates(self):
+        for htype in self:
+            if htype.validity_start and htype.validity_stop and \
+               htype.validity_start > htype.validity_stop:
+                raise ValidationError(_("End of validity period should be greater than start of validity period"))
+
+    @api.multi
+    @api.depends('validity_start', 'validity_stop', 'limit')
+    def _compute_valid(self):
+        dt = self._context.get('default_date_from', fields.Date.today())
+
+        for holiday_type in self:
+            if holiday_type.validity_start and holiday_type.validity_stop:
+                holiday_type.valid = ((dt < holiday_type.validity_stop) and (dt > holiday_type.validity_start))
+            else:
+                holiday_type.valid = not holiday_type.validity_stop
+
+    def _search_valid(self, operator, value):
+        dt = self._context.get('default_date_from', fields.Date.today())
+        signs = ['>=', '<='] if operator == '=' else ['<=', '>=']
+
+        return ['|', ('validity_stop', operator, False), '&',
+                ('validity_stop', signs[0] if value else signs[1], dt),
+                ('validity_start', signs[1] if value else signs[0], dt)]
 
     @api.multi
     def get_days(self, employee_id):

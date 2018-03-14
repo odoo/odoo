@@ -1,7 +1,9 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
 import datetime
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestAccountCustomerInvoice(AccountTestUsers):
 
     def test_customer_invoice(self):

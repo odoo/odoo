@@ -13,6 +13,7 @@ def registry():
     return odoo.registry(common.get_db_name())
 
 
+@common.tagged('standard', 'at_install')
 class TestExecute(unittest.TestCase):
     """ Try cr.execute with wrong parameters """
 

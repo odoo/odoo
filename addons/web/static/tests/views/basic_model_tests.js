@@ -74,6 +74,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 assert.deepEqual(args.kwargs.context, {
                     active_field: 2,
+                    bin_size: true,
                     someKey: 'some value',
                 }, "should have sent the correct context");
                 return this._super.apply(this, arguments);
@@ -664,6 +665,42 @@ QUnit.module('Views', {
 
         assert.verifySteps(['default_get'],
             "there should be default_get");
+
+        model.destroy();
+    });
+
+    QUnit.test('default_get returning a non requested field', function (assert) {
+        // 'default_get' returns a default value for the fields given in
+        // arguments. It should not return a value for fields that have not be
+        // requested. However, it happens (e.g. res.users), and the webclient
+        // should not crash when this situation occurs (the field should simply
+        // be ignored).
+        assert.expect(2);
+
+        this.params.context = {};
+        this.params.fieldNames = ['category'];
+        this.params.res_id = undefined;
+        this.params.type = 'record';
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === 'default_get') {
+                    result.product_ids = [[6, 0, [37, 41]]];
+                }
+                return result;
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.ok('category' in record.data,
+                "should have processed 'category'");
+            assert.notOk('product_ids' in record.data,
+                "should have ignored 'product_ids'");
+        });
 
         model.destroy();
     });

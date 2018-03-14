@@ -140,24 +140,33 @@ class Web_Editor(http.Controller):
     # add attachment (images or link)
     #------------------------------------------------------
     @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'])
-    def attach(self, func, upload=None, url=None, disable_optimization=None, **kwargs):
+    def attach(self, upload=None, url=None, disable_optimization=None, filters=None, **kwargs):
         # the upload argument doesn't allow us to access the files if more than
         # one file is uploaded, as upload references the first file
         # therefore we have to recover the files from the request object
         Attachments = request.env['ir.attachment']  # registry for the attachment table
 
+        res_model = kwargs.get('res_model', 'ir.ui.view')
+        res_id = res_model != 'ir.ui.view' and kwargs.get('res_id') or None
+
         uploads = []
         message = None
         if not upload: # no image provided, storing the link and the image name
             name = url.split("/").pop()                       # recover filename
+            datas_fname = name
+            if filters:
+                datas_fname = filters + '_' + datas_fname
             attachment = Attachments.create({
                 'name': name,
+                'datas_fname': datas_fname,
                 'type': 'url',
                 'url': url,
                 'public': True,
-                'res_model': 'ir.ui.view',
+                'res_id': res_id,
+                'res_model': res_model,
             })
-            uploads += attachment.read(['name', 'mimetype', 'checksum', 'url'])
+            attachment.generate_access_token()
+            uploads += attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
         else:                                                  # images provided
             try:
                 attachments = request.env['ir.attachment']
@@ -175,22 +184,29 @@ class Web_Editor(http.Controller):
                     except IOError as e:
                         pass
 
+                    name = c_file.filename
+                    datas_fname = name
+                    if filters:
+                        datas_fname = filters + '_' + datas_fname
                     attachment = Attachments.create({
-                        'name': c_file.filename,
+                        'name': name,
                         'datas': base64.b64encode(data),
-                        'datas_fname': c_file.filename,
+                        'datas_fname': datas_fname,
                         'public': True,
-                        'res_model': 'ir.ui.view',
+                        'res_id': res_id,
+                        'res_model': res_model,
                     })
+                    attachment.generate_access_token()
                     attachments += attachment
-                uploads += attachments.read(['name', 'mimetype', 'checksum', 'url'])
+                uploads += attachments.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
             except Exception as e:
                 logger.exception("Failed to upload image to attachment")
                 message = pycompat.text_type(e)
 
         return """<script type='text/javascript'>
-            window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(uploads), json.dumps(message))
+            window.attachments = %s;
+            window.error = %s;
+        </script>""" % (json.dumps(uploads), json.dumps(message))
 
     #------------------------------------------------------
     # remove attachment (images or link)

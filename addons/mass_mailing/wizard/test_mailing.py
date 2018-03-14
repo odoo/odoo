@@ -20,7 +20,7 @@ class TestMassMailing(models.TransientModel):
         test_emails = tools.email_split(self.email_to)
         for test_mail in test_emails:
             # Convert links in absolute URLs before the application of the shortener
-            mailing.write({'body_html': self.env['mail.template']._replace_local_links(mailing.body_html)})
+            mailing.write({'body_html': self.env['mail.thread']._replace_local_links(mailing.body_html)})
             mail_values = {
                 'email_from': mailing.email_from,
                 'reply_to': mailing.reply_to,

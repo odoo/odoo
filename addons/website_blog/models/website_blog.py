@@ -207,11 +207,12 @@ class BlogPost(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.ensure_one()
-        if 'website_published' in vals and 'published_date' not in vals:
-            if (self.published_date or '') <= fields.Datetime.now():
-                vals['published_date'] = vals['website_published'] and fields.Datetime.now()
-        result = super(BlogPost, self).write(vals)
+        result = True
+        for post in self:
+            copy_vals = dict(vals)
+            if 'website_published' in vals and 'published_date' not in vals and (post.published_date or '') <= fields.Datetime.now():
+                copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
+            result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)
         return result
 
@@ -232,11 +233,13 @@ class BlogPost(models.Model):
         }
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(BlogPost, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Add access button to everyone if the document is published. """
+        groups = super(BlogPost, self)._notify_get_groups(message, groups)
 
-        for group_name, group_method, group_data in groups:
-            group_data['has_button_access'] = True
+        if self.website_published:
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
 
         return groups
 

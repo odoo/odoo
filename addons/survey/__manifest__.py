@@ -1,13 +1,12 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 {
     'name': 'Survey',
-    'version': '2.0',
+    'version': '3.0',
     'category': 'Marketing',
     'description': """
-Create beautiful web surveys and visualize answers
-==================================================
+Create beautiful surveys and visualize answers
+==============================================
 
 It depends on the answers or reviews of some questions by different users. A
 survey may have multiple pages. Each page may contain multiple questions and
@@ -17,7 +16,7 @@ sent mails with personal token for the invitation of the survey.
     """,
     'summary': 'Create surveys, collect answers and print statistics',
     'website': 'https://www.odoo.com/page/survey',
-    'depends': ['mail', 'website'],
+    'depends': ['http_routing', 'mail'],
     'data': [
         'security/survey_security.xml',
         'security/ir.model.access.csv',

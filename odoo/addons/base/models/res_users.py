@@ -84,7 +84,6 @@ class Groups(models.Model):
     color = fields.Integer(string='Color Index')
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
-    is_portal = fields.Boolean('Portal', help="If checked, this group is usable as a portal.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
@@ -752,7 +751,11 @@ class GroupsView(models.Model):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
-            view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
+
+            new_context = dict(view._context)
+            new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
+            new_context['lang'] = None
+            view.with_context(new_context).write({'arch': xml_content})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """
@@ -949,7 +952,7 @@ class ChangePasswordUser(models.TransientModel):
     _name = 'change.password.user'
     _description = 'Change Password Wizard User'
 
-    wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True)
+    wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
     user_login = fields.Char(string='User Login', readonly=True)
     new_passwd = fields.Char(string='New Password', default='')

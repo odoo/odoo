@@ -20,7 +20,7 @@ var qweb = core.qweb;
 var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
-var MAX_LEGEND_LENGTH = 25 * (1 + config.device.size_class);
+var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
     className: "o_graph_svg_container",
@@ -55,6 +55,8 @@ return AbstractRenderer.extend({
      * returning immediately, then wait a tiny interval before actually
      * displaying the data.
      *
+     * @override
+     * @private
      * @returns {Deferred} The _super deferred is actually resolved immediately
      */
     _render: function () {
@@ -71,8 +73,7 @@ return AbstractRenderer.extend({
             this.$el.empty();
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("No data to display"),
-                description: _t("No data available for this chart. " +
-                    "Try to add some records, or make sure that " +
+                description: _t("Try to add some records, or make sure that " +
                     "there is no active filter in the search bar."),
             }));
         } else {

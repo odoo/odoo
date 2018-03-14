@@ -147,7 +147,7 @@ class MailComposer(models.TransientModel):
         return super(MailComposer, self).check_access_rule(operation)
 
     @api.multi
-    def _notify(self, force_send=False, user_signature=True):
+    def _notify(self, layout=False, force_send=False, send_after_commit=True, values=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -197,6 +197,7 @@ class MailComposer(models.TransientModel):
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
+        notif_layout = self._context.get('custom_layout')
         for wizard in self:
             # Duplicate attachments linked to the email.template.
             # Indeed, basic mail.compose.message wizard duplicates attachments in mass
@@ -216,11 +217,6 @@ class MailComposer(models.TransientModel):
 
             Mail = self.env['mail.mail']
             ActiveModel = self.env[wizard.model if wizard.model else 'mail.thread']
-            if wizard.template_id:
-                # template user_signature is added when generating body_html
-                # mass mailing: use template auto_delete value -> note, for emails mass mailing only
-                Mail = Mail.with_context(mail_notify_user_signature=False)
-                ActiveModel = ActiveModel.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete)
             if not hasattr(ActiveModel, 'message_post'):
                 ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
             if wizard.composition_mode == 'mass_post':
@@ -255,6 +251,11 @@ class MailComposer(models.TransientModel):
                         ActiveModel.browse(res_id).message_post(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
+                            notif_layout=notif_layout,
+                            notif_values={
+                                'add_sign': not bool(wizard.template_id),
+                                'mail_auto_delete': wizard.template_id.auto_delete if wizard.template_id else False,
+                            },
                             **mail_values)
 
                 if wizard.composition_mode == 'mass_mail':
@@ -277,8 +278,8 @@ class MailComposer(models.TransientModel):
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
-            # reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).browse(res_ids).message_get_reply_to(default=self.email_from)
-            reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).message_get_reply_to(res_ids, default=self.email_from)
+            # reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).browse(res_ids)._notify_get_reply_to(default=self.email_from)
+            reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model)._notify_get_reply_to(res_ids, default=self.email_from)
 
         for res_id in res_ids:
             # static wizard (mail.message) values
@@ -298,8 +299,8 @@ class MailComposer(models.TransientModel):
 
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                if self.model in self.env and hasattr(self.env[self.model], 'message_get_email_values'):
-                    mail_values.update(self.env[self.model].browse(res_id).message_get_email_values())
+                if self.model in self.env and hasattr(self.env[self.model], '_notify_specific_email_values'):
+                    mail_values.update(self.env[self.model].browse(res_id)._notify_specific_email_values(False))
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail

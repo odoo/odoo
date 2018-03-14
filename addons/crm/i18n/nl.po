@@ -6,7 +6,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
@@ -121,6 +121,98 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Hoera!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Uw Odoo CRM applicatie is klaar.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">Wat nu?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Probeer een lead aan te maken door een e-mail te sturen naar </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        Volg uw opportuniteiten op in uw verkoop funnel door simpelweg de kaarten van de ene kolom naar de andere te slepen</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Automatisch uw leads aan verkopers toewijzen met lead scoring,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Blijf in contact met uw potentiële klant met efficiënte e-mail campagnes,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Krijg waardevolle inzichten van enquêtes,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Krijg slimme rapportering en accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>En nog veel meer...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Hulp nodig?</span>\n"
+"                                <span style=\"font-style:italic;\">U bent niet alleen</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We zouden het geweldig vinden om je te ondersteunen. Contacteer ons via ons\n"
+"                                <a href=\"https://www.odoo.com/help\">support formulier</a> indien u vragen heeft.\n"
+"                                U kan ook ontdekken hoe u het beste uit de Odoo CRM haalt met onze  </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Gebruikers documentatie</span></a>\n"
+"                                </span><span> of met onze</span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API documentatie</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Geniet van uw Odoo Experience,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Het Odoo team<br/>PS: Mensen houden van Odoo, controleer </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">wat ze erover zeggen.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -1042,7 +1134,7 @@ msgstr "Verwachte omzet"
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_expected_revenue
 msgid "Expected Revenue by Channel"
-msgstr ""
+msgstr "Verwachte omzet per kanaal"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -1154,7 +1246,7 @@ msgstr "Ga, ga ga! Proficiat met uw eerste deal."
 #: code:addons/crm/static/src/js/tour.js:79
 #, python-format
 msgid "Good job! Your completed the tour of the CRM."
-msgstr ""
+msgstr "Goed gedaan! U heeft de CRM toer voltooid."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2667,17 +2759,17 @@ msgstr "Titel"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "To Close This Month"
-msgstr ""
+msgstr "Te sluiten deze maand"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "To Close This Week"
-msgstr ""
+msgstr "Te sluiten deze week"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "To Close Today"
-msgstr ""
+msgstr "Vandaag te sluiten"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2901,12 +2993,12 @@ msgstr "Gewonnen"
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
 msgid "Won by Channel"
-msgstr ""
+msgstr "Gewonnen per kanaal"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_country
 msgid "Won by Country"
-msgstr ""
+msgstr "Gewonnen per land"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_won

@@ -6,14 +6,13 @@ import odoo.tests
 
 RE_ONLY = re.compile('QUnit\.only\(')
 
-class WebSuite(odoo.tests.HttpCase):
 
-    post_install = True
-    at_install = False
+@odoo.tests.tagged('post_install', '-at_install')
+class WebSuite(odoo.tests.HttpCase):
 
     def test_01_js(self):
         # webclient desktop test suite
-        self.phantom_js('/web/tests?mod=web', "", "", login='admin', timeout=300)
+        self.phantom_js('/web/tests?mod=web', "", "", login='admin', timeout=420)
 
     def test_02_js(self):
         # webclient mobile test suite

@@ -151,7 +151,7 @@ class StockMove(models.Model):
         # all grouped in the same picking.
         if not self.picking_type_id:
             return self
-        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id)
+        bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id, company_id=self.company_id.id)
         if not bom or bom.type != 'phantom':
             return self
         phantom_moves = self.env['stock.move']
@@ -195,6 +195,12 @@ class StockMove(models.Model):
             move_lines = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
         else:
             move_lines = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_id)
+
+        # Sanity check: if the product is a serial number and `lot` is already present in the other
+        # consumed move lines, raise.
+        if lot and self.product_id.tracking == 'serial' and lot in self.move_line_ids.filtered(lambda ml: ml.qty_done).mapped('lot_id'):
+            raise UserError(_('You cannot consume the same serial number twice. Please correct the serial numbers encoded.'))
+
         for ml in move_lines:
             rounding = ml.product_uom_id.rounding
             if float_compare(qty_to_add, 0, precision_rounding=rounding) <= 0:
@@ -232,6 +238,7 @@ class StockMove(models.Model):
                 'move_id': self.id,
                 'product_id': self.product_id.id,
                 'location_id': location_id.id if location_id else self.location_id.id,
+                'production_id': self.raw_material_production_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom.id,
@@ -241,6 +248,12 @@ class StockMove(models.Model):
             if lot:
                 vals.update({'lot_id': lot.id})
             self.env['stock.move.line'].create(vals)
+
+    def _get_upstream_documents_and_responsibles(self, visited):
+            if self.created_production_id and self.created_production_id.state not in ('done', 'cancel'):
+                return [(self.created_production_id, self.created_production_id.user_id, visited)]
+            else:
+                return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
 
 class PushedFlow(models.Model):

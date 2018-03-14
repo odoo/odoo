@@ -3,9 +3,8 @@
 import hashlib
 import hmac
 import time
-import unittest
-from lxml import objectify
 from werkzeug import urls
+from lxml import objectify
 
 import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -14,8 +13,7 @@ from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class AuthorizeCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -28,8 +26,7 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         # self.authorize.auto_confirm = 'confirm_so'
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class AuthorizeForm(AuthorizeCommon):
 
     def _authorize_generate_hashing(self, values):
@@ -181,7 +178,9 @@ class AuthorizeForm(AuthorizeCommon):
         # check state
         self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
 
-    @unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
+
+@odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
+class AuthorizeForm(AuthorizeCommon):
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing
         authorize = self.authorize

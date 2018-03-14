@@ -18,7 +18,7 @@ class ProductionLot(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     create_date = fields.Datetime('Creation Date')
@@ -42,17 +42,3 @@ class ProductionLot(models.Model):
         # We only care for the quants in internal or transit locations.
         quants = self.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
         self.product_qty = sum(quants.mapped('quantity'))
-
-    @api.multi
-    def action_traceability(self):
-        move_ids = self.mapped('quant_ids').mapped('history_ids').ids
-        if not move_ids:
-            return False
-        return {
-            'domain': [('id', 'in', move_ids)],
-            'name': _('Traceability'),
-            'view_mode': 'tree,form',
-            'view_type': 'form',
-            'context': {'tree_view_ref': 'stock.view_move_tree'},
-            'res_model': 'stock.move',
-            'type': 'ir.actions.act_window'}

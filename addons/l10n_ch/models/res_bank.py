@@ -28,6 +28,7 @@ class ResBank(models.Model):
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
+    acc_type = fields.Selection(selection_add=[("postal", "Postal")])
     l10n_ch_postal = fields.Char(help='The ISR number of the company within the bank', compute='_compute_l10n_ch_postal')
 
     @api.depends('acc_number')

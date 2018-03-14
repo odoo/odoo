@@ -60,7 +60,7 @@ class MrpProduction(models.Model):
         readonly=True, required=True, track_visibility='onchange',
         states={'confirmed': [('readonly', False)]})
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     picking_type_id = fields.Many2one(
@@ -607,3 +607,10 @@ class MrpProduction(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('production_id', '=', self.id)]
         return action
+    
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("manufacturing order"),
+        )
+        return super(MrpProduction, self).get_empty_list_help(help)

@@ -3,14 +3,14 @@
 # * mrp_repair
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Antonio Trueba, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -23,15 +23,16 @@
 # Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
+# Gustavo Valverde, 2017
 # Nicole Kist <nki@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Nicole Kist <nki@odoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 #. module: mrp_repair
 #: model:mail.template,subject:mrp_repair.mail_template_mrp_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.partner_id.name}"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -94,6 +95,8 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
+"<?xml "
+"version=\"1.0\"?><data><p></p><p><strong></strong><strong></strong></p><p></p><p></p></data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -103,17 +106,17 @@ msgstr "<i>(Añadir)</i>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr ""
+msgstr "<strong/>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operations</strong>"
-msgstr ""
+msgstr "<strong/>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Parts</strong>"
-msgstr ""
+msgstr "<strong/>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -143,7 +146,7 @@ msgstr "<strong>Total</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong/>"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -288,7 +291,7 @@ msgstr "Cliente"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Dirección por defecto"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -588,7 +591,7 @@ msgstr "Empresa"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "Partes"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -608,7 +611,7 @@ msgstr "Tarifa de la empresa seleccionada"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "Imprimir presupuesto"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
@@ -807,7 +810,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "Enviar presupuesto"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:540

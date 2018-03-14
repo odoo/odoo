@@ -76,4 +76,6 @@ class ReportTrialBalance(models.AbstractModel):
             'docs': docs,
             'time': time,
             'Accounts': account_res,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }

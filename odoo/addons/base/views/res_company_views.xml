@@ -110,7 +110,13 @@
             <field name="res_model">res.company</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="help">Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new company
+              </p><p>
+                Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.
+              </p>
+            </field>
         </record>
         <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_users"/>
 

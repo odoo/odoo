@@ -51,6 +51,11 @@
             <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar">
                 <ul class="list-inline">
                     <li>
+                        <a class="o_rotate" href="#">
+                            <i class="fa fa-2x fa-repeat"></i>
+                        </a>
+                    </li>
+                    <li>
                         <a class="o_zoom_out" href="#">
                             <i class="fa fa-2x fa-search-minus"></i>
                         </a>
@@ -111,7 +116,7 @@
         </t>
         <t t-if="options.channel_id==='channel_starred'">
             <div class="o_thread_title">No starred message</div>
-            <div> You can mark any message as 'starred', and it shows up in this channel.</div>
+            <div>You can mark any message as 'starred', and it shows up in this channel.</div>
         </t>
     </div>
 
@@ -131,7 +136,7 @@
     </t>
 
     <t t-name="mail.ChatThread.Message">
-        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '')" t-att-data-message-id="message.id">
+        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '') + (message.is_discussion ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.id">
             <div t-if="options.display_avatar" class="o_thread_message_sidebar">
                 <t t-if="!message.mailto and message.author_id[0]">
                     <img t-if="message.avatar_src and message.display_author"
@@ -152,7 +157,7 @@
                     t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.id" title="Mark as Todo"/>
             </div>
-            <div t-att-class="'o_thread_message_core' + (message.is_note ? ' o_mail_note' : '')">
+            <div class='o_thread_message_core'>
                 <p t-if="message.display_author" class="o_mail_info">
                     <t t-if="message.is_note">
                         Note by
@@ -262,7 +267,7 @@
     </t>
 
     <t t-name="mail.Attachment">
-        <t t-set="type" t-value="attachment.mimetype.split('/').shift()"/>
+        <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <t t-if="type == 'image'">
                 <div class="o_image_box">

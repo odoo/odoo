@@ -4,7 +4,7 @@ from datetime import timedelta, datetime
 import calendar
 
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round, float_is_zero
 
@@ -130,6 +130,12 @@ Best Regards,'''))
             if values.get('cash_account_code_prefix'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code)
+
+            #forbid the change of currency_id if there are already some accounting entries existing
+            if 'currency_id' in values and values['currency_id'] != company.currency_id.id:
+                if self.env['account.move.line'].search([('company_id', '=', company.id)]):
+                    raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
+
         return super(ResCompany, self).write(values)
 
     @api.model
@@ -174,7 +180,6 @@ Best Regards,'''))
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
         company = self.env.user.company_id
-        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -265,7 +270,7 @@ Best Regards,'''))
             default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
 
             if not default_journal:
-                raise UserError(_("No miscellaneous journal could be found. Please create one before proceeding."))
+                raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),
