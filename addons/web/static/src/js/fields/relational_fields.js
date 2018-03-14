@@ -928,6 +928,7 @@ var FieldX2Many = AbstractField.extend({
      *                     did not agree to discard.
      */
     _saveLine: function (recordID) {
+        var self = this;
         var def = $.Deferred();
         var fieldNames = this.renderer.canBeSaved(recordID);
         if (fieldNames.length) {
@@ -939,7 +940,9 @@ var FieldX2Many = AbstractField.extend({
         } else {
             this.renderer.setRowMode(recordID, 'readonly').done(def.resolve.bind(def));
         }
-        return def;
+        return def.then(function () {
+            self.pager.updateState({ size: self.value.count });
+        });
     },
     /**
      * Parses the 'columnInvisibleFields' attribute to search for the domains
@@ -1177,7 +1180,20 @@ var FieldOne2Many = FieldX2Many.extend({
         return this._super.apply(this, arguments).then(function () {
             if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
                 if (ev.data.changes[self.name].operation === 'CREATE') {
-                    var index = self.editable === 'top' ? 0 : self.value.data.length - 1;
+                    var index = 0;
+                    if (self.editable !== 'top') {
+                        index = self.value.data.length - 1;
+                        // we consider that a new record, created in the bottom,
+                        // does not count as a record worth mentioning in the
+                        // pager, at least not until the line has been saved.
+                        // We prevent the pager from increasing its size, which
+                        // means that the pager is not displayed when we just
+                        // reach the limit.  For example, if limit is 3, if we
+                        // have 3 records, and we click on add, we will see the
+                        // 4 records on the same page, but we do not want a
+                        // pager.
+                        self.pager.updateState({ size: self.value.count - 1});
+                    }
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
                 }
