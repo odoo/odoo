@@ -23,6 +23,7 @@
         'wizard/mail_compose_message_views.xml',
         'wizard/mass_mailing_list_merge_views.xml',
         'wizard/test_mailing_views.xml',
+        'wizard/mass_mailing_schedule_date_views.xml',
         'views/mass_mailing_report_views.xml',
         'views/mass_mailing_stats_views.xml',
         'views/link_tracker_views.xml',
