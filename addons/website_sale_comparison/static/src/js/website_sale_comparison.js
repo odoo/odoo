@@ -1,7 +1,7 @@
 odoo.define('website_sale_comparison.comparison', function (require) {
 "use strict";
 
-require('web.dom_ready')
+require('web.dom_ready');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var _t = core._t;
@@ -68,6 +68,12 @@ var ProductComparison = Widget.extend({
         $('body').on('click', '.comparator-popover .o_comparelist_products .o_remove', function (e){
             self.rm_from_comparelist(e);
         });
+        $('body').on('click', '.o_comparelist_remove', function (e){
+            self.rm_from_comparelist(e);
+            var new_link = '/shop/compare/?products=' + self.comparelist_product_ids.toString();
+            window.location = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
+        });
+
         $("#o_comparelist_table tr").click(function(){
             $($(this).data('target')).children().slideToggle(100);
             $(this).find('.fa-chevron-circle-down, .fa-chevron-circle-right').toggleClass('fa-chevron-circle-down fa-chevron-circle-right');
