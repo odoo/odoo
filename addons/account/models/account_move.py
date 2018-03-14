@@ -449,7 +449,7 @@ class AccountMoveLine(models.Model):
                 raise ValidationError(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
 
     @api.multi
-    @api.constrains('amount_currency')
+    @api.constrains('amount_currency', 'debit', 'credit')
     def _check_currency_amount(self):
         for line in self:
             if line.amount_currency:
