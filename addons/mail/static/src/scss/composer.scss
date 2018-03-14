@@ -190,7 +190,7 @@
             .o_composer_button_send {
                 border-radius: 0 3px 3px 0;
                 // Make the button appear as the same size as the subject input
-                padding: 10px $padding-base-horizontal;
+                padding: 10px $input-btn-padding-x;
                 border: 1px solid darken($o-brand-optional, 5%);
                 border-left-width: 0;
             }
@@ -402,7 +402,7 @@ $o-mail-attachment-margin: 5px;
                 @include o-position-absolute($bottom: 7px);
                 width: 80%;
                 @include o-text-overflow(inline-block);
-                font-size: $font-size-small;
+                font-size: $font-size-sm;
             }
 
             .o_attachment_download {
@@ -449,7 +449,7 @@ $o-mail-attachment-margin: 5px;
 
             .o_close_btn {
                 @include o-position-absolute(-1px, $grid-gutter-width*0.5);
-                font-size: $font-size-h1;
+                font-size: $h1-font-size;
                 font-weight: 300;
             }
         }

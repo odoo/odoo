@@ -1,5 +1,5 @@
 // MIXINS
-@mixin o-base-settings-horizontal-padding($padding-base: $padding-small-vertical) {
+@mixin o-base-settings-horizontal-padding($padding-base: $input-btn-padding-y-sm) {
     padding: $padding-base $o-horizontal-padding;
 
     @include media-breakpoint-up(xl) {
@@ -60,7 +60,7 @@
             border: 0;
 
             .btn-primary, .btn-link  {
-                padding: $padding-small-vertical $padding-small-horizontal;
+                padding: $btn-padding-y-sm $btn-padding-x-sm;
             }
 
             .btn-link {
