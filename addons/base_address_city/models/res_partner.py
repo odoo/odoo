@@ -4,6 +4,8 @@
 from lxml import etree
 
 from odoo import api, models, fields
+from odoo.tools.translate import _
+
 
 class Partner(models.Model):
     _inherit = 'res.partner'
@@ -28,10 +30,10 @@ class Partner(models.Model):
             replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
-                <field name='city' attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
-                <field name='city_id' attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
+                <field name='city' placeholder="%s" attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
+                <field name='city_id' placeholder="%s" attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
             </div>
-            """
+            """ % (_('City'), _('City'))
             city_id_node = etree.fromstring(replacement_xml)
             city_node.getparent().replace(city_node, city_id_node)
 
