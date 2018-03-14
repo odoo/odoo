@@ -65,7 +65,7 @@ class PortalMixin(models.AbstractModel):
             access_link = self._notify_get_action_link('view', **additional_params)
 
             new_group = [
-                ('portal_customer', lambda partner: partner.id == customer.id, {
+                ('portal_customer', lambda pid, rdata: pid == customer.id, {
                     'has_button_access': False,
                     'button_access': {
                         'url': access_link,
