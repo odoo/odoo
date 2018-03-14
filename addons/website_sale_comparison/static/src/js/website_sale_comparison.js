@@ -55,7 +55,11 @@ var ProductComparison = Widget.extend({
             if (self.comparelist_product_ids.length < self.product_compare_limit) {
                 var prod = $(this).data('product-product-id');
                 if (e.currentTarget.classList.contains('o_add_compare_dyn')) {
-                    prod = parseInt($(this).parent().find('.product_id').val());
+                    prod = $(this).parent().find('.product_id').val();
+                    if (!prod) { // case List View Variants
+                        prod = $(this).parent().find('input:checked').first().val();
+                    }
+                    prod = parseInt(prod, 10);
                 }
                 self.add_new_products(prod);
                 website_sale_utils.animate_clone($('#comparelist .o_product_panel_header'), $(this).closest('form'), -50, 10);
