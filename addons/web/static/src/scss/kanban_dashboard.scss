@@ -70,9 +70,9 @@
                     padding-right: $o-kanban-dashboard-dropdown-complex-gap;
 
                     > .o_kanban_card_manage_title {
-                        margin: ($line-height-computed / 2) 0;
+                        margin: (($font-size-base * $line-height-base) / 2) 0;
                         color: $headings-color;
-                        font-size: $font-size-h5;
+                        font-size: $h5-font-size;
                         font-weight: 500;
                         line-height: $headings-line-height;
                     }
@@ -137,7 +137,7 @@
         // Identify subtitles without classes
         .o_kanban_primary_left .o_primary > span:nth-child(2) > strong {
             font-weight: 500;
-            font-size: $font-size-small;
+            font-size: $font-size-sm;
             color: $text-muted;
         }
 
