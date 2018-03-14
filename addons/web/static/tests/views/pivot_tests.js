@@ -1,7 +1,6 @@
 odoo.define('web.pivot_tests', function (require) {
 "use strict";
 
-var Context = require('web.Context');
 var core = require('web.core');
 var PivotView = require('web.PivotView');
 var testUtils = require('web.test_utils');
@@ -153,7 +152,12 @@ QUnit.module('Views', {
             },
             viewOptions: {
                 action: {
-                    views: [[2, 'form'], [5, 'kanban'], [false, 'list'], [false, 'pivot']],
+                    views: [
+                        { viewID: 2, type: 'form' },
+                        { viewID: 5, type: 'kanban' },
+                        { viewID: false, type: 'list' },
+                        { viewID: false, type: 'pivot' },
+                    ],
                 },
                 context: {someKey: true, search_default_test: 3},
                 title: 'Partners',
@@ -446,14 +450,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
         pivot.$buttons.find('li[data-field=__count] a').click();
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -471,14 +475,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
         pivot.update({domain: [['foo', '=', 12345]]});
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -497,7 +501,7 @@ QUnit.module('Views', {
             arch: '<pivot string="Partners"></pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.destroy();
     });
@@ -515,13 +519,13 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.update({domain: [['foo', '=', 12345]]});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should still have a no_content_helper");
         pivot.update({domain: []});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
 
         // tries to open a field selection menu, to make sure it was not
@@ -739,7 +743,33 @@ QUnit.module('Views', {
             },
         });
 
-        $('.o_pivot_download').click();
+        pivot.$buttons.find('.o_pivot_download').click();
+        pivot.destroy();
+    });
+
+    QUnit.test('can download a file without data', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records = [];
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            session: {
+                get_file: function (args) {
+                    assert.strictEqual(args.url, '/web/pivot/export_xls',
+                        "should call get_file with correct parameters");
+                    args.complete();
+                },
+            },
+        });
+
+        pivot.$buttons.find('.o_pivot_download').click();
         pivot.destroy();
     });
 

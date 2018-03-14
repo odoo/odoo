@@ -973,7 +973,7 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the user clicks on the 'Add an item' link (list case) or the
+     * Called when the user clicks on the 'Add a line' link (list case) or the
      * 'Add' button (kanban case).
      *
      * @abstract
@@ -1008,7 +1008,10 @@ var FieldX2Many = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onDiscardChanges: function (ev) {
-        ev.data.fieldName = this.name;
+        if (ev.target !== this) {
+            ev.stopPropagation();
+            this.trigger_up('discard_changes', _.extend({}, ev.data, {fieldName: this.name}));
+        }
     },
     /**
      * Called when the renderer asks to edit a line, in that case simply tells
@@ -1105,6 +1108,7 @@ var FieldX2Many = AbstractField.extend({
      * @param {OdooEvent} event
      */
     _onResequence: function (event) {
+        event.stopPropagation();
         var self = this;
         this.trigger_up('freeze_order', {id: this.value.id});
         var rowIDs = event.data.rowIDs.slice();
@@ -1942,6 +1946,11 @@ var FieldStatus = AbstractField.extend({
         this._super.apply(this, arguments);
         this._setState();
         this._onClickStage = _.debounce(this._onClickStage, 300, true); // TODO maybe not useful anymore ?
+
+        // Retro-compatibility: clickable used to be defined in the field attrs
+        // instead of options.
+        // If not set, the statusbar is not clickable.
+        this.isClickable = !!this.attrs.clickable || !!this.nodeOptions.clickable;
     },
 
     //--------------------------------------------------------------------------
@@ -1992,7 +2001,7 @@ var FieldStatus = AbstractField.extend({
         this.$el.html(qweb.render("FieldStatus.content", {
             selection_unfolded: selections[0],
             selection_folded: selections[1],
-            clickable: !!this.attrs.clickable,
+            clickable: this.isClickable,
         }));
     },
 

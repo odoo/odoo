@@ -117,7 +117,7 @@
                                 </td>
                                 <td class="text-right" t-if="move_line.state == 'done'">
                                     <t t-if="move_line.ordered_qty != move_line.qty_done">
-                                        <t t-set="backorder" t-value="True"/>
+                                        <t t-set="backorder" t-value="o.search([('backorder_id', '=', o.id), ('state', 'not in', ['cancel', 'done'])])"/>
                                     </t>
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>

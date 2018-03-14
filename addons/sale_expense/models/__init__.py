@@ -3,4 +3,4 @@
 
 from . import analytic
 from . import hr_expense
-from . import product_template
+from . import sale_order

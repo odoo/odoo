@@ -39,18 +39,7 @@ Default = object()                      # default value for __init__() methods
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    src, dst = records.env.cache, env.cache
-    todo, done = set(records), set()
-    while todo:
-        record = todo.pop()
-        if record not in done:
-            done.add(record)
-            target = record.with_env(env)
-            for field in src.get_fields(record):
-                value = src.get(record, field)
-                dst.set(target, field, value)
-                if value and field.type in ('many2one', 'one2many', 'many2many', 'reference'):
-                    todo.update(field.convert_to_record(value, record))
+    env.cache.copy(records, env)
 
 def first(records):
     """ Return the first record in ``records``, with the same prefetching. """
@@ -283,8 +272,9 @@ class Field(MetaField('DummyField', (object,), {})):
         'args': EMPTY_DICT,             # the parameters given to __init__()
         '_attrs': EMPTY_DICT,           # the field's non-slot attributes
         '_module': None,                # the field's module name
+        '_modules': None,               # modules that define this field
         '_setup_done': None,            # the field's setup state: None, 'base' or 'full'
-        '_sequence': None,               # absolute ordering of the field
+        '_sequence': None,              # absolute ordering of the field
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
@@ -402,16 +392,20 @@ class Field(MetaField('DummyField', (object,), {})):
     def _get_attrs(self, model, name):
         """ Return the field parameter attributes as a dictionary. """
         # determine all inherited field attributes
+        modules = set()
         attrs = {}
         if not (self.args.get('automatic') or self.args.get('manual')):
             # magic and custom fields do not inherit from parent classes
             for field in reversed(resolve_mro(model, name, self._can_setup_from)):
                 attrs.update(field.args)
+                if '_module' in field.args:
+                    modules.add(field.args['_module'])
         attrs.update(self.args)         # necessary in case self is not in class
 
         attrs['args'] = self.args
         attrs['model_name'] = model._name
         attrs['name'] = name
+        attrs['_modules'] = modules
 
         # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
@@ -572,7 +566,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         # copy the cache of draft records into others' cache
-        if records.env != others.env:
+        if records.env.in_onchange and records.env != others.env:
             copy_cache(records - records.filtered('id'), others.env)
         #
         # Traverse fields one by one for all records, in order to take advantage

@@ -165,12 +165,12 @@ var Dialog = Widget.extend({
         this.destroy();
     },
 
-    destroy: function (reason) {
+    destroy: function (arg) {
         // Need to trigger before real destroy but if 'closed' handler destroys
         // the widget again, we want to avoid infinite recursion
         if (!this.__closed) {
             this.__closed = true;
-            this.trigger("closed", reason);
+            this.trigger("closed", arg);
         }
 
         if (this.isDestroyed()) {

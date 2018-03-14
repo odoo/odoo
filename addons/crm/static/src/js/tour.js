@@ -16,15 +16,15 @@ tour.register('crm_tour', {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
+    position: "bottom",
+}, {
+    trigger: ".o_kanban_quick_create input:first",
+    content: _t("<b>Choose a name</b> for your opportunity."),
     position: "right",
 }, {
-    trigger: ".modal-body input:first",
-    auto: true
-}, {
-    trigger: ".modal-footer button:first",
-    extra_trigger: '.o_opportunity_kanban',
-    content: _t("Create the opportunity."),
-    position: "bottom",
+    trigger: ".o_kanban_quick_create .o_kanban_add",
+    content: _t("Click here to <b>add your opportunity</b>."),
+    position: "right",
 }, {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),

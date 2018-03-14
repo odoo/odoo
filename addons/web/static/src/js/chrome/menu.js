@@ -118,6 +118,8 @@ var Menu = Widget.extend({
             $main_menu = $clicked_menu;
         }
 
+        this.current_primary_menu = $main_menu.data('menu');
+
         // Activate current main menu
         this.$el.find('.active').removeClass('active');
         $main_menu.parent().addClass('active');
@@ -205,6 +207,19 @@ var Menu = Widget.extend({
     on_menu_click: function(ev) {
         ev.preventDefault();
         this.menu_click($(ev.currentTarget).data('menu'));
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the id of the current primary (first level) menu.
+     *
+     * @returns {integer}
+     */
+    getCurrentPrimaryMenu: function () {
+        return this.current_primary_menu;
     },
 });
 

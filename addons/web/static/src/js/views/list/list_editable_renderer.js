@@ -38,7 +38,7 @@ ListRenderer.include({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
 
-        // if addCreateLine is true, the renderer will add a 'Add an item' link
+        // if addCreateLine is true, the renderer will add a 'Add a line' link
         // at the bottom of the list view
         this.addCreateLine = params.addCreateLine;
 
@@ -58,8 +58,13 @@ ListRenderer.include({
      * @returns {Deferred}
      */
     start: function () {
-        if (this._isEditable()) {
-            this.$el.css({height: '100%'});
+        // deliberately use the 'editable' attribute instead of '_isEditable'
+        // function, because the groupBy must not be taken into account to
+        // enable the '_onWindowClicked' handler (otherwise, an editable grouped
+        // list which is reloaded without groupBy wouldn't have this handler
+        // bound, and edited rows couldn't be left by clicking outside the list)
+        if (this.editable) {
+            this.$el.css({height: '100%'}); // seems useless: to remove in master
             core.bus.on('click', this, this._onWindowClicked.bind(this));
         }
         return this._super();
@@ -516,7 +521,7 @@ ListRenderer.include({
     _renderRows: function () {
         var $rows = this._super();
         if (this.addCreateLine) {
-            var $a = $('<a href="#">').text(_t("Add an item"));
+            var $a = $('<a href="#">').text(_t("Add a line"));
             var $td = $('<td>')
                         .attr('colspan', this._getNumberOfCols())
                         .addClass('o_field_x2many_list_row_add')
@@ -682,7 +687,7 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is called when we click on the 'Add an Item' button in a sub
+     * This method is called when we click on the 'Add a line' button in a sub
      * list such as a one2many in a form view.
      *
      * @param {MouseEvent} event

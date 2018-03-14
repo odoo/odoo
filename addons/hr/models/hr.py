@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo import tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 
 _logger = logging.getLogger(__name__)
@@ -68,6 +68,7 @@ class Job(models.Model):
         return super(Job, self.with_context(mail_create_nosubscribe=True)).create(values)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {})
@@ -111,13 +112,14 @@ class Employee(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
     # private partner
     address_home_id = fields.Many2one(
-        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.')
+        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.',
+        groups="hr.group_hr_user")
     is_address_home_a_company = fields.Boolean(
         'The employee adress has a company linked',
         compute='_compute_is_address_home_a_company',
     )
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)')
+        'res.country', 'Nationality (Country)', groups="hr.group_hr_user")
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -139,9 +141,9 @@ class Employee(models.Model):
         domain="[('partner_id', '=', address_home_id)]",
         groups="hr.group_hr_user",
         help='Employee bank salary account')
-    permit_no = fields.Char('Work Permit No')
-    visa_no = fields.Char('Visa No')
-    visa_expire = fields.Date('Visa Expire Date')
+    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user")
+    visa_no = fields.Char('Visa No', groups="hr.group_hr_user")
+    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user")
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
@@ -232,44 +234,16 @@ class Employee(models.Model):
         super(Employee, self).unlink()
         return resources.unlink()
 
-    @api.multi
-    def action_follow(self):
-        """ Wrapper because message_subscribe_users take a user_ids=None
-            that receive the context without the wrapper.
-        """
-        return self.message_subscribe_users()
-
-    @api.multi
-    def action_unfollow(self):
-        """ Wrapper because message_unsubscribe_users take a user_ids=None
-            that receive the context without the wrapper.
-        """
-        return self.message_unsubscribe_users()
-
-    @api.model
-    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
-        """ Overwrite of the original method to always follow user_id field,
-            even when not track_visibility so that a user will follow it's employee
-        """
-        if auto_follow_fields is None:
-            auto_follow_fields = ['user_id']
-        user_field_lst = []
-        for name, field in self._fields.items():
-            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
-                user_field_lst.append(name)
-        return user_field_lst
-
-    @api.multi
-    def _message_auto_subscribe_notify(self, partner_ids):
-        # Do not notify user it has been marked as follower of its employee.
-        return
-
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
         """Checks that choosen address (res.partner) is not linked to a company.
         """
         for employee in self:
-            employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
+            try:
+                employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
+            except AccessError:
+                employee.is_address_home_a_company = False
+
 
 class Department(models.Model):
     _name = "hr.department"

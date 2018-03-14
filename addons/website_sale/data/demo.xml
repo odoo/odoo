@@ -33,7 +33,7 @@
                         </div>
                     </div>
                 </section>
-                <section class="mt16">
+                <section class="mt16 mb16">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5 col-md-offset-1">
@@ -545,6 +545,7 @@ Weight: 31 grams</field>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
             <field name="price_discount">20</field>
+            <field name="min_quantity">2</field>
             <field name="compute_price">formula</field>
         </record>
 
@@ -794,7 +795,7 @@ Weight: 31 grams</field>
             <field name="name">iPad Mini</field>
             <field name="product_id" ref="product.product_product_6"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">599.0</field>
         </record>
 
@@ -815,7 +816,7 @@ Weight: 31 grams</field>
             <field name="name">iPad Retina Display</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">900</field>
         </record>
 
@@ -836,7 +837,7 @@ Weight: 31 grams</field>
             <field name="name">iPad Retina Display</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">750</field>
         </record>
 
@@ -857,7 +858,7 @@ Weight: 31 grams</field>
             <field name="name">iMac</field>
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">1199.0</field>
         </record>
 
@@ -878,7 +879,7 @@ Weight: 31 grams</field>
             <field name="name">iPad Retina Display</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">349.0</field>
         </record>
 
@@ -899,7 +900,7 @@ Weight: 31 grams</field>
             <field name="name">iMac</field>
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">1599.00</field>
         </record>
 
@@ -920,7 +921,7 @@ Weight: 31 grams</field>
             <field name="name">iMac</field>
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">1349.00</field>
         </record>
 
@@ -941,7 +942,7 @@ Weight: 31 grams</field>
             <field name="name">iMac</field>
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">1799.00</field>
         </record>
 
@@ -960,7 +961,7 @@ Weight: 31 grams</field>
             <field name="name">Laptop E5023</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2950.00</field>
         </record>
 
@@ -969,7 +970,7 @@ Weight: 31 grams</field>
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -989,7 +990,7 @@ Weight: 31 grams</field>
             <field name="name">iPod</field>
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">16.50</field>
         </record>
 
@@ -1009,7 +1010,7 @@ Weight: 31 grams</field>
             <field name="name">Apple Wireless Keyboard</field>
             <field name="product_id" ref="product.product_product_9"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">47.0</field>
         </record>
 
@@ -1031,7 +1032,7 @@ Weight: 31 grams</field>
             <field name="name">iMac</field>
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">1799.0</field>
         </record>
 
@@ -1067,7 +1068,7 @@ Weight: 31 grams</field>
             <field name="name">Computer Case</field>
             <field name="product_id" ref="product.product_product_16"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">25.0</field>
         </record>
 

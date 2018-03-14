@@ -72,8 +72,8 @@ class TestCommonSaleNoChart(TestAccountNoChartCommon):
             'property_account_income_categ_id': cls.account_income_product.id
         })
         # Products
-        uom_unit = cls.env.ref('product.product_uom_unit')
-        uom_hour = cls.env.ref('product.product_uom_hour')
+        uom_unit = cls.env.ref('uom.product_uom_unit')
+        uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.product_order = cls.env['product.product'].create({
             'name': "Zed+ Antivirus",
             'standard_price': 235.0,
@@ -143,7 +143,7 @@ class TestCommonSaleNoChart(TestAccountNoChartCommon):
         # Create an expense journal
         user_type_expense = cls.env.ref('account.data_account_type_expenses')
         cls.account_expense_for_products = cls.env['account.account'].create({
-            'code': 'NC1113',
+            'code': 'EXP_PROD13',
             'name': 'Expense - Test Purchase Account',
             'user_type_id': user_type_expense.id
         })

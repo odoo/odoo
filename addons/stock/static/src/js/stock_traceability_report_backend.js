@@ -1,8 +1,8 @@
 odoo.define('stock.stock_report_generic', function (require) {
 'use strict';
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Widget = require('web.Widget');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var session = require('web.session');
 var ReportWidget = require('stock.ReportWidget');
@@ -11,7 +11,7 @@ var crash_manager = require('web.crash_manager');
 
 var QWeb = core.qweb;
 
-var stock_report_generic = Widget.extend(ControlPanelMixin, {
+var stock_report_generic = AbstractAction.extend(ControlPanelMixin, {
     // Stores all the parameters of the action.
     init: function(parent, action) {
         this.actionManager = parent;
@@ -23,6 +23,8 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
         this.given_context.active_id = action.context.active_id || action.params.active_id;
         this.given_context.model = action.context.active_model || false;
         this.given_context.ttype = action.context.ttype || false;
+        this.given_context.auto_unfold = action.context.auto_unfold || false;
+        this.given_context.lot_name = action.context.lot_name || false;
         return this._super.apply(this, arguments);
     },
     willStart: function() {
@@ -37,8 +39,11 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
         }
         def.then(function () {
             self.report_widget.$el.html(self.html);
-            if(self.given_context['ttype'] == 'downstream'){
-                self.report_widget.$el.find('.o_report_heading').html('<h1>Downstream Traceability</h1>');
+            self.report_widget.$el.find('.o_report_heading').html('<h1>Traceability Report</h1>')
+            if (self.given_context.auto_unfold) {
+                _.each(self.$el.find('.fa-caret-right'), function (line) {
+                    self.report_widget.autounfold(line, self.given_context.lot_name);
+                });
             }
         });
     },
@@ -68,7 +73,6 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
             this.renderButtons();
         }
         var status = {
-            breadcrumbs: this.actionManager.get_breadcrumbs(),
             cp_content: {$buttons: this.$buttons},
         };
         return this.update_control_panel(status);

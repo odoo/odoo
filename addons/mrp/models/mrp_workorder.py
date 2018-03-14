@@ -35,7 +35,7 @@ class MrpWorkorder(models.Model):
         related='production_id.product_id', readonly=True,
         help='Technical: used in views only.', store=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         related='production_id.product_uom_id', readonly=True,
         help='Technical: used in views only.')
     production_availability = fields.Selection(
@@ -345,13 +345,14 @@ class MrpWorkorder(models.Model):
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
-            production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
-            if production_move.has_tracking != 'none':
-                move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
-                if move_line:
-                    move_line.product_uom_qty += self.qty_producing
-                else:
-                    move_line.create({'move_id': production_move.id,
+            production_moves = self.production_id.move_finished_ids.filtered(lambda x: (x.state not in ('done', 'cancel')))
+            for production_move in production_moves:
+                if production_move.product_id.id == self.production_id.product_id.id and production_move.has_tracking != 'none':
+                    move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                    if move_line:
+                        move_line.product_uom_qty += self.qty_producing
+                    else:
+                        move_line.create({'move_id': production_move.id,
                                  'product_id': production_move.product_id.id,
                                  'lot_id': self.final_lot_id.id,
                                  'product_uom_qty': self.qty_producing,
@@ -360,9 +361,12 @@ class MrpWorkorder(models.Model):
                                  'workorder_id': self.id,
                                  'location_id': production_move.location_id.id, 
                                  'location_dest_id': production_move.location_dest_id.id,
-                                 })
-            else:
-                production_move.quantity_done += self.qty_producing
+                        })
+                elif production_move.unit_factor:
+                    rounding = production_move.product_uom.rounding
+                    production_move.quantity_done += float_round(self.qty_producing * production_move.unit_factor, precision_rounding=rounding)
+                else:
+                    production_move.quantity_done += self.qty_producing
 
         if not self.next_work_order_id:
             for by_product_move in self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel'))):

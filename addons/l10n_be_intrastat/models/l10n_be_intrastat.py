@@ -152,8 +152,6 @@ class StockWarehouse(models.Model):
     region_id = fields.Many2one('l10n_be_intrastat.region', string='Intrastat region')
 
     def get_regionid_from_locationid(self, location):
-        location_ids = location.search([('parent_left', '<=', location.parent_left), ('parent_right', '>=', location.parent_right)])
-        warehouses = self.search([('lot_stock_id', 'in', location_ids.ids), ('region_id', '!=', False)], limit=1)
-        if warehouses:
-            return warehouses.region_id.id
-        return None
+        domain = [('lot_stock_id', 'parent_of', location.ids), ('region_id', '!=', False)]
+        warehouses = self.search(domain, limit=1)
+        return warehouses.region_id.id or None

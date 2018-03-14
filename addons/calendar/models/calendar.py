@@ -151,6 +151,7 @@ class Attendee(models.Model):
         return super(Attendee, self).create(values)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
@@ -823,7 +824,7 @@ class Meeting(models.Model):
     attendee_ids = fields.One2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade')
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}, default=_default_partners)
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
-    is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='# Meetings Highlight')
+    is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='Is the Event Highlighted')
 
     @api.multi
     def _compute_attendee(self):
@@ -1190,8 +1191,8 @@ class Meeting(models.Model):
         freq = self.rrule_type  # day/week/month/year
         result = ''
         if freq:
-            interval_srting = self.interval and (';INTERVAL=' + str(self.interval)) or ''
-            result = 'FREQ=' + freq.upper() + get_week_string(freq) + interval_srting + get_end_date() + get_month_string(freq)
+            interval_string = self.interval and (';INTERVAL=' + str(self.interval)) or ''
+            result = 'FREQ=' + freq.upper() + get_week_string(freq) + interval_string + get_end_date() + get_month_string(freq)
         return result
 
     def _rrule_default_values(self):
@@ -1478,7 +1479,7 @@ class Meeting(models.Model):
                     partners_to_notify = meeting.partner_ids.ids
                     event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
-                        partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
+                        partners_to_notify.extend(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime') or
@@ -1681,6 +1682,7 @@ class Meeting(models.Model):
         return events
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = default or {}

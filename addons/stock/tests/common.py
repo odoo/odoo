@@ -9,7 +9,7 @@ class TestStockCommon(common.TransactionCase):
         super(TestStockCommon, self).setUp()
 
         self.ProductObj = self.env['product.product']
-        self.UomObj = self.env['product.uom']
+        self.UomObj = self.env['uom.uom']
         self.PartnerObj = self.env['res.partner']
         self.ModelDataObj = self.env['ir.model.data']
         self.StockPackObj = self.env['stock.move.line']
@@ -27,11 +27,15 @@ class TestStockCommon(common.TransactionCase):
         self.picking_type_out = self.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
         self.supplier_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')
         self.stock_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock')
-        self.pack_location = self.ModelDataObj.xmlid_to_res_id('stock.location_pack_zone')
-        self.output_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_output')
+        pack_location = self.env.ref('stock.location_pack_zone')
+        pack_location.active = True
+        self.pack_location = pack_location.id
+        output_location = self.env.ref('stock.stock_location_output')
+        output_location.active = True
+        self.output_location = output_location.id
         self.customer_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_customers')
-        self.categ_unit = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_unit')
-        self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_kgm')
+        self.categ_unit = self.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_unit')
+        self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_kgm')
 
         # Product Created A, B, C, D
         self.productA = self.ProductObj.create({'name': 'Product A', 'type': 'product'})

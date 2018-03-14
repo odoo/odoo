@@ -95,7 +95,7 @@ class IrActionsReport(models.Model):
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
     print_report_name = fields.Char('Printed Report Name',
-                                    help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the object and time variables.")
+                                    help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     attachment_use = fields.Boolean(string='Reload from Attachment',
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
@@ -559,7 +559,7 @@ class IrActionsReport(models.Model):
     def render_qweb_pdf(self, res_ids=None, data=None):
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
-        if tools.config['test_enable'] and not tools.config['test_report_directory']:
+        if tools.config['test_enable']:
             return self.render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
@@ -678,7 +678,7 @@ class IrActionsReport(models.Model):
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
         if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
-            template = self.env.ref('base.view_company_report_form_with_print')
+            template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),
                 'type': 'ir.actions.act_window',

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
@@ -14,7 +14,7 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 # Stanislas Sodonon <stanislas.sodonon@gmail.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Florian Hatat, 2016
 # Nissar Chababy <funilrys@outlook.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2016
@@ -25,9 +25,9 @@
 # Lucas Deliege <lud@odoo.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Mickaël Audigane <maudigane@teclib.com>, 2016
-# ShevAbam <shevabam@gmail.com>, 2016
+# ShevAbam, 2016
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
-# Fabrice Henrion <fhe@odoo.com>, 2016
+# Fabrice Henrion, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
@@ -37,9 +37,9 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2016
 # Benjamin Delagoutte <ben@ampletus.fr>, 2016
 # Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2016
-# Stéphane Bidoul (ACSONE) <stephane.bidoul@acsone.eu>, 2016
+# Stéphane Bidoul (ACSONE), 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Hamid Darabi, 2016
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2016
 # salwa belhadj <salwa.belhadj@gmail.com>, 2016
 # Lamia Ishak <lamiaishak@hotmail.co.uk>, 2016
@@ -66,13 +66,14 @@
 # Florent de Labarre <florent@iguanayachts.com>, 2017
 # Fabri Yohann <psn@fabri.pw>, 2017
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -320,6 +321,35 @@ msgid ""
 "</table>\n"
 "</div>"
 msgstr ""
+"<div><table bgcolor=\"#ededed\" border=\"0\" cellpadding=\"0\" "
+"style=\"padding: 20px; background-color: #ededed; border-"
+"collapse:separate;\" summary=\"o_mail_notification\" "
+"width=\"100%\"><tbody><tr><td align=\"center\" style=\"min-width: "
+"590px;\"><table bgcolor=\"#875A7B\" border=\"0\" cellpadding=\"0\" style"
+"=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; "
+"border-collapse:separate;\" width=\"590\"><tr><td valign=\"middle\"><span "
+"style=\"font-size:20px; color:white; font-weight: bold;\"/></td><td "
+"align=\"right\" valign=\"middle\"><img alt=\"${company.name}\" "
+"src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\"/></td></tr></table></td></tr><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table bgcolor=\"#ffffff\" "
+"border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"rgb(255, 255, 255); padding: 20px; border-collapse:separate;\" "
+"width=\"590\"><tbody><td style=\"font-family:Arial,Helvetica,sans-serif; "
+"color: #555; font-size: 14px;\" "
+"valign=\"top\"/></tbody></table></td></tr><tr><td align=\"center\" style"
+"=\"min-width: 590px;\"><table bgcolor=\"#875A7B\" border=\"0\" "
+"cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"rgb(135,90,123); padding: 20px; border-collapse:separate;\" "
+"width=\"590\"><tr><td align=\"left\" style=\"color: #fff; padding-top: 10px;"
+" padding-bottom: 10px; font-size: 12px;\" valign=\"middle\"><br/></td><td "
+"align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: "
+"10px; font-size: 12px;\" valign=\"middle\"><a "
+"href=\"mailto:${company.email}\" style=\"text-decoration:none; color: "
+"white;\"/><br/><a href=\"${company.website}\" style=\"text-decoration:none; "
+"color: white;\"/></td></tr></table></td></tr><tr><td align=\"center\"><a "
+"href=\"https://www.odoo.com\" "
+"target=\"_blank\"/></td></tr></tbody></table></div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -369,6 +399,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Cher ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Voici, en pièce jointe, votre \n"
+"% if object.number:\n"
+"facture <strong>${object.number}</strong>\n"
+"% else:\n"
+"facture\n"
+"% endif\n"
+"% if object.origin:\n"
+"(avec la référence ${object.origin})\n"
+"% endif\n"
+", son montant s'élève à <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"émis par ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Voir la facture</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Cette facture est déjà payée.</p>\n"
+"% else:\n"
+"    <p>Merci de procéder au payement dès que possible.</p>\n"
+"% endif\n"
+"\n"
+"<p>Merci,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1162,6 +1236,8 @@ msgid ""
 "Account used as counterpart for the journal entry, for taxes eligible based "
 "on payments."
 msgstr ""
+"Compte utilisé comme contrepartie pour la pièce comptable, pour les taxes "
+"exigibles en fonction des paiements."
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_reverse_entry_ir_actions_server
@@ -1179,7 +1255,7 @@ msgstr "Comptabilité"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting App Options"
-msgstr ""
+msgstr "Options d'application Comptabilité"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
@@ -1506,7 +1582,7 @@ msgstr "Activer l'impression et le dépôt de chèques "
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr ""
+msgstr "Autoriser la gestion d'arrondi d'espèces"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1756,6 +1832,8 @@ msgstr "Appliquer automatiquement cette position fiscale"
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
 msgstr ""
+"Appliquer seulement si le pays de livraison ou de facturation correspond au "
+"groupe."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
@@ -6090,6 +6168,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Paiement manuel : soyez payé en espèces, par chèque ou par tout autre moyen externe à Odoo.\n"
+"Paiement électronique : soyez payé automatiquement par un acquéreur en demandant une transaction sur une carte enregistrée par le client lors de l'achat ou de l'inscription en ligne (jeton de paiement).\n"
+"Dépôt groupé : encaissez plusieurs chèques clients à la fois en générant un dépôt groupé à envoyer à votre banque. Lors de l'encodage du relevé bancaire dans Odoo, vous pouvez rapprocher la transaction et le dépôt groupé. Activez cette option dans les paramètres."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6102,6 +6183,11 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit,module account_batch_deposit must be installed.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
+"Paiement manuel : soyez payé en espèces, par chèque ou par tout autre moyen externe à Odoo.\n"
+"Paiement électronique : soyez payé automatiquement par un acquéreur en demandant une transaction sur une carte enregistrée par le client lors de l'achat ou de l'inscription en ligne (jeton de paiement).\n"
+"Chèque : payez par chèque en l'imprimant depuis Odoo.\n"
+"Dépôt groupé : encaissez plusieurs chèques clients à la fois en générant un dépôt groupé à envoyer à votre banque. Lors de l'encodage du relevé bancaire dans Odoo, vous pouvez rapprocher la transaction et le dépôt groupé. Pour activer le dépôt groupé, vous devez installer le module account_batch_deposit (compte-dépôt-groupé).\n"
+"Virement SEPA : payez en envoyant un fichier de virement SEPA à votre banque. Pour activer les virements SEPA, vous devez installer le module account_sepa (compte-sepa)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_outbound_payment_method_ids
@@ -6433,6 +6519,8 @@ msgid ""
 "No miscellaneous journal could be found. Please create one before "
 "proceeding."
 msgstr ""
+"Aucun journal des opérations diverses n'a été trouvé. Veuillez en créer un "
+"avant de continuer."
 
 #. module: account
 #: code:addons/account/models/account.py:116
@@ -7518,6 +7606,8 @@ msgstr "Compte de résultat"
 msgid ""
 "Programming error: wizard action executed without active_ids in context."
 msgstr ""
+"Erreur de programmation : action de l'assistant exécutée sans active_ids "
+"dans le contexte."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -8792,7 +8882,7 @@ msgstr "Taxe à appliquer"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr ""
+msgstr "TaxCloud"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -9452,6 +9542,8 @@ msgstr "La séquence du journal %s est désactivée."
 #: model:ir.model.fields,help:account.field_account_cash_rounding_rounding_method
 msgid "The tie-breaking rule used for float rounding operations"
 msgstr ""
+"Règle utilisée en cas d'égalité pour les opérations d'arrondi de nombre "
+"décimal"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -10265,6 +10357,10 @@ msgid ""
 "                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
+"Utilisez cette option si vous voulez annuler une facture et en créer une\n"
+" nouvelle. La note de crédit sera créée, validée et rapprochée\n"
+" avec la facture actuelle. Une nouvelle facture brouillon\n"
+" que vous pourrez modifier sera créée."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -10763,6 +10859,8 @@ msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
 msgstr ""
+"Vous ne pouvez pas avoir de compte client/fournisseur qui ne peut pas faire "
+"l'objet d'un rapprochement. (code de compte : %s)"
 
 #. module: account
 #. openerp-web

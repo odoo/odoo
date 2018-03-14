@@ -186,19 +186,12 @@ class AccountBankStatementImport(models.TransientModel):
                 if not line_vals.get('bank_account_id'):
                     # Find the partner and his bank account or create the bank account. The partner selected during the
                     # reconciliation process will be linked to the bank when the statement is closed.
-                    partner_id = False
-                    bank_account_id = False
                     identifying_string = line_vals.get('account_number')
                     if identifying_string:
                         partner_bank = self.env['res.partner.bank'].search([('acc_number', '=', identifying_string)], limit=1)
                         if partner_bank:
-                            bank_account_id = partner_bank.id
-                            partner_id = partner_bank.partner_id.id
-                        else:
-                            bank_account_id = self.env['res.partner.bank'].create({'acc_number': line_vals['account_number']}).id
-                    line_vals['partner_id'] = partner_id
-                    line_vals['bank_account_id'] = bank_account_id
-
+                            line_vals['bank_account_id'] = partner_bank.id
+                            line_vals['partner_id'] = partner_bank.partner_id.id
         return stmts_vals
 
     def _create_bank_statements(self, stmts_vals):
@@ -224,8 +217,6 @@ class AccountBankStatementImport(models.TransientModel):
             if len(filtered_st_lines) > 0:
                 # Remove values that won't be used to create records
                 st_vals.pop('transactions', None)
-                for line_vals in filtered_st_lines:
-                    line_vals.pop('account_number', None)
                 # Create the satement
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
                 statement_ids.append(BankStatement.create(st_vals).id)

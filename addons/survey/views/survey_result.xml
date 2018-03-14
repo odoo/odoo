@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
-    <template id="assets_frontend_result" inherit_id="website.assets_frontend" name="Survey Results assets">
-        <xpath expr="." position="inside">
-            <script src="/web/static/lib/nvd3/d3.v3.js"></script>
-            <script src="/web/static/lib/nvd3/nv.d3.js"></script>
-            <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
-            <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"></link>
-            <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
-        </xpath>
-    </template>
     <template id="result" name="Survey Result">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="oe_structure" />
             <div class="container js_surveyresult">
                 <t t-call="survey.back" />
@@ -325,7 +316,7 @@
         </div>
     </template>
     <template id="no_result" name="Survey Result">
-        <t t-call="website.layout">
+        <t t-call="survey.layout">
             <div class="container">
                 <t t-call="survey.back" />
                 <h2><span t-field='survey.title'></span></h2>

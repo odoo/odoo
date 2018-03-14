@@ -13,13 +13,11 @@ class Category(models.Model):
     _order = 'name'
     _parent_store = True
     _parent_name = 'parent'
-    _parent_order = 'name'
 
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
-    parent_left = fields.Integer("Left Parent", index=True)
-    parent_right = fields.Integer("Right Parent", index=True)
+    parent_path = fields.Char(index=True)
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
     dummy = fields.Char(store=False)
@@ -326,31 +324,71 @@ class Related(models.Model):
     related_name = fields.Char(related='name', string='A related on Name')
     related_related_name = fields.Char(related='related_name', string='A related on a related on Name')
 
+    message = fields.Many2one('test_new_api.message')
+    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
+    message_currency = fields.Many2one(related="message.author", string='Message Author')
+
+class ComputeProtected(models.Model):
+    _name = 'test_new_api.compute.protected'
+
+    foo = fields.Char(default='')
+    bar = fields.Char(compute='_compute_bar', store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
 
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
-
-    counts = {'compute': 0, 'inverse': 0}
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
 
     @api.depends('foo')
     def _compute_bar(self):
-        self.counts['compute'] += 1
+        self._context.get('log', []).append('compute')
         for record in self:
             record.bar = record.foo
 
     def _inverse_bar(self):
-        self.counts['inverse'] += 1
+        self._context.get('log', []).append('inverse')
         for record in self:
             record.foo = record.bar
+
+
+class MultiComputeInverse(models.Model):
+    """ Model with the same inverse method for several fields. """
+    _name = 'test_new_api.multi_compute_inverse'
+
+    foo = fields.Char(default='', required=True)
+    bar1 = fields.Char(compute='_compute_bars', inverse='_inverse_bar1', store=True)
+    bar2 = fields.Char(compute='_compute_bars', inverse='_inverse_bar23', store=True)
+    bar3 = fields.Char(compute='_compute_bars', inverse='_inverse_bar23', store=True)
+
+    @api.depends('foo')
+    def _compute_bars(self):
+        self._context.get('log', []).append('compute')
+        for record in self:
+            substrs = record.foo.split('/') + ['', '', '']
+            record.bar1, record.bar2, record.bar3 = substrs[:3]
+
+    def _inverse_bar1(self):
+        self._context.get('log', []).append('inverse1')
+        for record in self:
+            record.write({'foo': '/'.join([record.bar1, record.bar2, record.bar3])})
+
+    def _inverse_bar23(self):
+        self._context.get('log', []).append('inverse23')
+        for record in self:
+            record.write({'foo': '/'.join([record.bar1, record.bar2, record.bar3])})
 
 
 class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
 
     foo = fields.Char(company_dependent=True)
+
 
 class CompanyDependentAttribute(models.Model):
     _name = 'test_new_api.company.attr'

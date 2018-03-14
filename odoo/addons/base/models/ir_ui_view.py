@@ -71,7 +71,7 @@ def keep_query(*keep_params, **additional_params):
     if not keep_params and not additional_params:
         keep_params = ('*',)
     params = additional_params.copy()
-    qs_keys = list(request.httprequest.args)
+    qs_keys = list(request.httprequest.args) if request else []
     for keep_param in keep_params:
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
@@ -115,33 +115,31 @@ def _hasclass(context, *cls):
 
 def get_view_arch_from_file(filename, xmlid):
     doc = etree.parse(filename)
-    node = None
-    for n in doc.xpath('//*[@id="%s"]' % (xmlid)):
-        if n.tag in ('template', 'record'):
-            node = n
-            break
-    if node is None:
-        # fallback search on template with implicit module name
-        for n in doc.xpath('//*[@id="%s"]' % (xmlid.split('.')[1])):
-            if n.tag in ('template', 'record'):
-                node = n
-                break
-    if node is not None:
-        if node.tag == 'record':
-            field = node.find('field[@name="arch"]')
-            _fix_multiple_roots(field)
-            inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
-            return field.text + inner
-        elif node.tag == 'template':
-            # The following dom operations has been copied from convert.py's _tag_template()
-            if not node.get('inherit_id'):
-                node.set('t-name', xmlid)
-                node.tag = 't'
-            else:
-                node.tag = 'data'
-            node.attrib.pop('id', None)
-            return etree.tostring(node, encoding='unicode')
-    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid)
+
+    xmlid_search = (xmlid, xmlid.split('.')[1])
+
+    # when view is created from model with inheritS of ir_ui_view, the xml id has been suffixed by '_ir_ui_view'
+    suffix = '_ir_ui_view'
+    if xmlid.endswith(suffix):
+        xmlid_search += (xmlid.rsplit(suffix, 1)[0], xmlid.split('.')[1].rsplit(suffix, 1)[0])
+
+    for node in doc.xpath('//*[%s]' % ' or '.join(["@id='%s'" % _id for _id in xmlid_search])):
+        if node.tag in ('template', 'record'):
+            if node.tag == 'record':
+                field = node.find('field[@name="arch"]')
+                _fix_multiple_roots(field)
+                inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
+                return field.text + inner
+            elif node.tag == 'template':
+                # The following dom operations has been copied from convert.py's _tag_template()
+                if not node.get('inherit_id'):
+                    node.set('t-name', xmlid)
+                    node.tag = 't'
+                else:
+                    node.tag = 'data'
+                node.attrib.pop('id', None)
+                return etree.tostring(node, encoding='unicode')
+    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid_search)
     return None
 
 def add_text_before(node, text):
@@ -258,14 +256,12 @@ actual arch.
             data = dict(arch_db=view.arch)
             if 'install_mode_data' in self._context:
                 imd = self._context['install_mode_data']
-                if '.' not in imd['xml_id']:
-                    imd['xml_id'] = '%s.%s' % (imd['module'], imd['xml_id'])
-                if self._name == imd['model'] and (not view.xml_id or view.xml_id == imd['xml_id']):
-                    # we store the relative path to the resource instead of the absolute path, if found
-                    # (it will be missing e.g. when importing data-only modules using base_import_module)
-                    path_info = get_resource_from_path(imd['xml_file'])
-                    if path_info:
-                        data['arch_fs'] = '/'.join(path_info[0:2])
+
+                # we store the relative path to the resource instead of the absolute path, if found
+                # (it will be missing e.g. when importing data-only modules using base_import_module)
+                path_info = get_resource_from_path(imd['xml_file'])
+                if path_info:
+                    data['arch_fs'] = '/'.join(path_info[0:2])
             view.write(data)
 
     @api.depends('arch')

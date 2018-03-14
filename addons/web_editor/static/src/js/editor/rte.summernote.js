@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var Class = require('web.Class');
 var core = require('web.core');
 var mixins = require('web.mixins');
+var base = require('web_editor.base');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
 var weWidgets = require('web_editor.widget');
@@ -394,6 +395,9 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
+        options: {
+            lastFilters: ['background'],
+        },
     });
     return new $.Deferred().reject();
 };
@@ -417,6 +421,9 @@ dom.isImg = function (node) {
 };
 var fn_is_forbidden_node = dom.isForbiddenNode || function () {};
 dom.isForbiddenNode = function (node) {
+    if (node.tagName === "BR") {
+        return false;
+    }
     return fn_is_forbidden_node(node) || $(node).is(".media_iframe_video");
 };
 var fn_is_img_font = dom.isImgFont || function () {};
@@ -427,8 +434,8 @@ dom.isImgFont = function (node) {
     var className = (node && node.className || "");
     if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
         var classNames = className.split(/\s+/);
-        for (var k=0; k<weWidgets.fontIcons.length; k++) {
-            if (_.intersection(weWidgets.fontIcons[k].alias, classNames).length) {
+        for (var k=0; k<base.fontIcons.length; k++) {
+            if (_.intersection(base.fontIcons[k].alias, classNames).length) {
                 return true;
             }
         }
@@ -1029,7 +1036,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             return;
         }
         data.__alreadyDone = true;
-        var altDialog = new weWidgets.alt(this,
+        var altDialog = new weWidgets.AltDialog(this,
             data.options || {},
             data.$editable,
             data.media
@@ -1077,8 +1084,12 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             return;
         }
         data.__alreadyDone = true;
+
         var mediaDialog = new weWidgets.MediaDialog(this,
-            data.options || {},
+            _.extend({
+                res_model: data.$editable.data('oe-model'),
+                res_id: data.$editable.data('oe-id'),
+            }, data.options),
             data.$editable,
             data.media
         );

@@ -51,6 +51,17 @@ class SaleOrder(models.Model):
         template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
         return template and template.active and template or False
 
+    def _get_default_online_payment(self):
+        default_template = self._get_default_template()
+        if self.template_id:
+            return self.template_id.require_payment
+        elif default_template:
+            return default_template.require_payment
+        elif self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay':
+            return 1
+        else:
+            return 0
+
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
         readonly=True,
@@ -66,12 +77,13 @@ class SaleOrder(models.Model):
     quote_viewed = fields.Boolean('Quotation Viewed')
     require_payment = fields.Selection([
         (0, 'Online Signature'),
-        (1, 'Online Payment')], default=0, string='Confirmation Mode',
+        (1, 'Online Payment')], default=_get_default_online_payment, string='Confirmation Mode',
         help="Choose how you want to confirm an order to launch the delivery process. You can either "
              "request a digital signature or an upfront payment. With a digital signature, you can "
              "request the payment when issuing the invoice.")
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if self.template_id and self.template_id.number_of_days > 0:
             default = dict(default or {})
@@ -197,8 +209,8 @@ class SaleOrder(models.Model):
 
     def get_portal_confirmation_action(self):
         """ Template override default behavior of pay / sign chosen in sales settings """
-        if self.template_id:
-            return 'sign' if self.require_payment == 1 else 'pay'
+        if self.require_payment is not None or self.require_payment is not False:
+            return 'pay' if self.require_payment == 1 else 'sign'
         return super(SaleOrder, self).get_portal_confirmation_action()
 
     @api.multi
@@ -228,7 +240,7 @@ class SaleOrderOption(models.Model):
     website_description = fields.Html('Line Description', sanitize_attributes=False, translate=html_translate)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
-    uom_id = fields.Many2one('product.uom', 'Unit of Measure ', required=True)
+    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
     quantity = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of suggested product.")
 

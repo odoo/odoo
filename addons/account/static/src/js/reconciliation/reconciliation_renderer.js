@@ -126,7 +126,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 type: 'rainbow_man',
                 fadeout: 'no',
                 message: $done,
-                click_close: false,
             });
             this.$el.css('min-height', '450px');
         }
@@ -354,7 +353,21 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         // reconciliation_proposition
         var $props = this.$('.accounting_view tbody').empty();
-        var props = _.filter(state.reconciliation_proposition, {'display': true});
+
+        // loop state propositions
+        var props = [];
+        var nb_debit_props = 0;
+        var nb_credit_props = 0;
+        _.each(state.reconciliation_proposition, function (prop) {
+            if (prop.display) {
+                props.push(prop);
+                if (prop.amount < 0)
+                    nb_debit_props += 1;
+                else if (prop.amount > 0)
+                    nb_credit_props += 1;
+            }
+        });
+
         _.each(props, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
@@ -362,18 +375,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .appendTo($line.find('.cell_info_popover'))
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
-
-            if ((state.balance.amount_currency !== 0 || line.partial_reconcile) && props.length === 1 &&
-                    line.already_paid === false &&
-                    (
-                        (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
-                        (state.st_line.amount < 0 && state.st_line.amount > props[0].amount))
-                    ) {
+            if (line.already_paid === false &&
+                ((state.balance.amount_currency < 0 || line.partial_reconcile) && nb_credit_props == 1
+                    && line.amount > 0 && state.st_line.amount > 0 && state.st_line.amount < line.amount) ||
+                ((state.balance.amount_currency > 0 || line.partial_reconcile) && nb_debit_props == 1
+                    && line.amount < 0 && state.st_line.amount < 0 && state.st_line.amount > line.amount)) {
                 var $cell = $line.find(line.amount > 0 ? '.cell_right' : '.cell_left');
                 var text;
                 if (line.partial_reconcile) {
                     text = _t("Undo the partial reconciliation.");
-                    $cell.text(state.st_line.amount_str);
+                    $cell.text(line.write_off_amount_str);
                 } else {
                     text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
                 }
@@ -415,14 +426,24 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 this._renderCreate(state);
             }
             var data = this.model.get(this.handleCreateRecord).data;
-            this.model.notifyChanges(this.handleCreateRecord, state.createForm);
-            var record = this.model.get(this.handleCreateRecord);
-            _.each(this.fields, function (field, fieldName) {
-                if (self._avoidFieldUpdate[fieldName]) return;
-                if (fieldName === "partner_id") return;
-                if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                    field.reset(record);
-                }
+            this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
+                // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
+                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
+                    var defs = [];
+                    _.each(state.createForm.analytic_tag_ids, function (tag) {
+                        defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
+                    });
+                    $.when.apply($, defs).then(function () {
+                        var record = self.model.get(self.handleCreateRecord);
+                        _.each(self.fields, function (field, fieldName) {
+                            if (self._avoidFieldUpdate[fieldName]) return;
+                            if (fieldName === "partner_id") return;
+                            if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                                field.reset(record);
+                            }
+                        });
+                    });
+                });
             });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
@@ -468,7 +489,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
 
     /**
-     * create account_id, tax_id, analytic_account_id, label and amount field
+     * create account_id, tax_id, analytic_account_id, analytic_tag_ids, label and amount fields
      *
      * @private
      * @param {object} state - statement line
@@ -479,18 +500,25 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.journal',
             type: 'many2one',
             name: 'journal_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.tax',
             type: 'many2one',
             name: 'tax_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.analytic.account',
             type: 'many2one',
             name: 'analytic_account_id',
+        }, {
+            relation: 'account.analytic.tag',
+            type: 'many2many',
+            name: 'analytic_tag_ids',
         }, {
             type: 'char',
             name: 'label',
@@ -517,6 +545,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
 
+            self.fields.analytic_tag_ids = new relational_fields.FieldMany2ManyTags(self,
+                'analytic_tag_ids', record, {mode: 'edit'});
+
             self.fields.label = new basic_fields.FieldChar(self,
                 'label', record, {mode: 'edit'});
 
@@ -529,6 +560,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
+            self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
@@ -612,8 +644,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
     /**
      * @private
+     * @param {input event} event
      */
-    _onFilterChange: function () {
+    _onFilterChange: function (event) {
         this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
     },
     /**
@@ -626,7 +659,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             return;
         }
         if(event.keyCode === 13) {
-            if (_.findWhere(this.model.lines, {mode: 'create'}).balance.amount) {
+            var created_lines = _.findWhere(this.model.lines, {mode: 'create'});
+            if (created_lines && created_lines.balance.amount) {
                 this._onCreateProposition();
             }
             return;
@@ -663,7 +697,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectMoveLine: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('add_proposition', {'data': moveLineId});
@@ -673,7 +707,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectProposition: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('remove_proposition', {'data': moveLineId});

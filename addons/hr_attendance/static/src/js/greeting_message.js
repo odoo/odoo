@@ -1,13 +1,13 @@
 odoo.define('hr_attendance.greeting_message', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Widget = require('web.Widget');
 
 var _t = core._t;
 
 
-var GreetingMessage = Widget.extend({
+var GreetingMessage = AbstractAction.extend({
     template: 'HrAttendanceGreetingMessage',
 
     events: {

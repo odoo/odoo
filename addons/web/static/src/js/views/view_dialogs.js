@@ -165,9 +165,6 @@ var FormViewDialog = ViewDialog.extend({
         }
 
         fields_view_def.then(function (viewInfo) {
-            if (self.recordID) {
-                self.model.addFieldsInfo(self.recordID, viewInfo);
-            }
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
                 context: self.context,
@@ -175,8 +172,9 @@ var FormViewDialog = ViewDialog.extend({
                 currentId: self.res_id || undefined,
                 index: 0,
                 mode: self.res_id && self.options.readonly ? 'readonly' : 'edit',
-                footer_to_buttons: true,
+                footerToButtons: true,
                 default_buttons: false,
+                withControlPanel: false,
                 model: self.model,
                 parentID: self.parentID,
                 recordID: self.recordID,
@@ -190,9 +188,9 @@ var FormViewDialog = ViewDialog.extend({
             }
             self.form_view.appendTo(fragment)
                 .then(function () {
-                    var $buttons = $('<div>');
-                    self.form_view.renderButtons($buttons);
                     self.opened().always(function () {
+                        var $buttons = $('<div>');
+                        self.form_view.renderButtons($buttons);
                         if ($buttons.children().length) {
                             self.$footer.empty().append($buttons.contents());
                         }
@@ -257,11 +255,12 @@ var SelectCreateDialog = ViewDialog.extend({
             this.$footer.find(".o_select_button").prop('disabled', !event.data.selection.length);
         },
         search: function (event) {
-            event.stopPropagation(); // prevent this event from bubbling up to the view manager
+            event.stopPropagation(); // prevent this event from bubbling up to the action manager
             var d = event.data;
             var searchData = this._process_search_data(d.domains, d.contexts, d.groupbys);
             this.list_controller.reload(searchData);
         },
+        get_controller_context: '_onGetControllerContext',
     }),
 
     /**
@@ -410,7 +409,7 @@ var SelectCreateDialog = ViewDialog.extend({
             on_saved: function (record) {
                 var values = [{
                     id: record.res_id,
-                    display_name: record.data.display_name,
+                    display_name: record.data.display_name || record.data.name,
                 }];
                 self.on_selected(values);
             },
@@ -418,6 +417,24 @@ var SelectCreateDialog = ViewDialog.extend({
         dialog.on('closed', this, this.close);
         return dialog;
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles a context request: provides to the caller the context of the
+     * list controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested context
+     */
+    _onGetControllerContext: function (ev) {
+        ev.stopPropagation();
+        var context = this.list_controller && this.list_controller.getContext();
+        ev.data.callback(context || {});
+    }
 });
 
 return {

@@ -31,4 +31,4 @@ class HolidaysSummaryDept(models.TransientModel):
             'model': 'hr.department',
             'form': data
         }
-        return self.env.ref('hr_holidays.action_report_holidayssummary').report_action(departments, data=datas)
+        return self.env.ref('hr_holidays.action_report_holidayssummary').with_context(from_transient_model=True).report_action(departments, data=datas)

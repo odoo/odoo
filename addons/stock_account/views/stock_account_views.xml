@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="stock.view_inventory_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="accounting_date"/>
+                    <field name="accounting_date" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                 </xpath>
             </field>
         </record>
@@ -43,9 +43,9 @@
             <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
-                <field name="uom_id" position="after">
+                <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
                     <field name="to_refund"/>
-                </field>
+                </xpath>
             </field>
         </record>
 

@@ -238,11 +238,43 @@ class MailTemplate(models.Model):
             self.null_value = False
 
     @api.multi
+    def write(self, vals):
+        # This override is for checking that the template is correct when
+        # saving it
+        if vals.get('body_html'):
+            # render_template can return empty results if the mako rendering
+            # crashes or if the body_html is empty, therefore we will only
+            # perform this check if the new body_html is non-empty
+            if vals.get('model_id'):
+                _model = self.env['ir.model'].sudo().browse(
+                    vals['model_id']).model
+            else:
+                _model = self.model
+
+            Model = self.env[_model]
+            if not Model._abstract:
+                # Get the latest record so as to not use older, potentially
+                # deprecated/obsolete records
+                res_ids = Model.search([], limit=1, order='id DESC').ids[:1]
+                if res_ids:
+                    render = self.render_template(
+                        vals['body_html'], _model, res_ids)
+
+                    if not any(render.values()):
+                        raise UserError(_(
+                            "Template rendering failed, this could mean that "
+                            "your template contains python syntax errors"
+                        ))
+
+        return super(MailTemplate, self).write(vals)
+
+    @api.multi
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
                        name=_("%s (copy)") % self.name)
@@ -283,45 +315,8 @@ class MailTemplate(models.Model):
     # ----------------------------------------
 
     @api.model
-    def _replace_local_links(self, html):
-        """ Post-processing of html content to replace local links to absolute
-        links, using web.base.url as base url. """
-        if not html:
-            return html
-
-        # form a tree
-        root = lxml.html.fromstring(html)
-        if not len(root) and root.text is None and root.tail is None:
-            html = u'<div>%s</div>' % html
-            root = lxml.html.fromstring(html, encoding='unicode')
-
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        base = urls.url_parse(base_url)
-
-        def _process_link(url):
-            new_url = urls.url_parse(url)
-            if new_url.scheme and new_url.netloc:
-                return url
-            return new_url.replace(scheme=base.scheme, netloc=base.netloc).to_url()
-
-        # check all nodes, replace :
-        # - img src -> check URL
-        # - a href -> check URL
-        for node in root.iter():
-            if node.tag == 'a' and node.get('href'):
-                node.set('href', _process_link(node.get('href')))
-            elif node.tag == 'img' and not node.get('src', 'data').startswith(u'data'):
-                node.set('src', _process_link(node.get('src')))
-
-        html = lxml.html.tostring(root, pretty_print=False, method='html', encoding='unicode')
-        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-        if html.startswith(u'<div>') and html.endswith(u'</div>'):
-            html = html[5:-6]
-        return html
-
-    @api.model
     def render_post_process(self, html):
-        html = self._replace_local_links(html)
+        html = self.env['mail.thread']._replace_local_links(html)
         return html
 
     @api.model

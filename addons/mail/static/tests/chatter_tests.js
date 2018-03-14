@@ -2,6 +2,8 @@ odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
 var Composers = require('mail.composer');
+var ChatManager = require('mail.ChatManager');
+var mailTestUtils = require('mail.testUtils');
 
 var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
@@ -11,6 +13,7 @@ var testUtils = require('web.test_utils');
 
 var BasicComposer = Composers.BasicComposer;
 
+var createBusService = mailTestUtils.createBusService;
 var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
 
@@ -18,6 +21,7 @@ QUnit.module('mail', {}, function () {
 
 QUnit.module('Chatter', {
     beforeEach: function () {
+        this.services = [ChatManager, createBusService()];
         this.data = {
             partner: {
                 fields: {
@@ -94,6 +98,7 @@ QUnit.test('basic rendering', function (assert) {
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -104,9 +109,8 @@ QUnit.test('basic rendering', function (assert) {
                     '<field name="activity_ids" widget="mail_activity"/>' +
                 '</div>' +
             '</form>',
-        res_id: 2,
         mockRPC: function (route, args) {
-            if ('/web/dataset/call_kw/mail.followers/read' === route) {
+            if (route === '/web/dataset/call_kw/mail.followers/read') {
                 unwanted_read_count++;
             }
             if (route === '/mail/read_followers') {
@@ -118,28 +122,7 @@ QUnit.test('basic rendering', function (assert) {
             }
             return this._super(route, args);
         },
-        intercepts: {
-            get_messages: function (event) {
-                // msgRpc++;
-                event.stopPropagation();
-                event.data.callback($.when([{
-                    attachment_ids: [],
-                    body: "",
-                    date: moment("2016-12-20 09:35:40"),
-                    id: 34,
-                    res_id: 3,
-                    author_id: ["3", "Fu Ck Mil Grom"],
-                }]));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
-            get_session: function (event) {
-                event.stopPropagation();
-                event.data.callback({uid: 1});
-            },
-        },
+        res_id: 2,
     });
 
     assert.ok(form.$('.o_mail_activity').length, "there should be an activity widget");
@@ -160,13 +143,14 @@ QUnit.test('basic rendering', function (assert) {
     form.destroy();
 });
 
-QUnit.test('chatter is not rendered in mode === create', function (assert) {
-    assert.expect(4);
+QUnit.test('chatter in create mode', function (assert) {
+    assert.expect(9);
 
     var form = createView({
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -182,31 +166,37 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
             }
             return this._super(route, args);
         },
-        intercepts: {
-            get_messages: function (event) {
-                event.stopPropagation();
-                event.data.callback($.when([]));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
-        },
     });
 
     assert.strictEqual(form.$('.o_chatter').length, 1,
         "chatter should be displayed");
 
+    // entering create mode
     form.$buttons.find('.o_form_button_create').click();
+    assert.ok(form.$el.find('.o_form_view').hasClass('o_form_editable'),
+        "we should be in create mode");
+    assert.strictEqual(form.$('.o_chatter').length, 1,
+        "chatter should still be displayed in create mode");
 
-    assert.strictEqual(form.$('.o_chatter').length, 0,
-        "chatter should not be displayed");
+    // topbar buttons disabled in create mode (e.g. 'send message')
+    assert.strictEqual(form.$('.o_chatter_topbar button:not(:disabled)').length, 0,
+        "button should be disabled in create mode");
 
+    // chatter containing a single message with 'Creating a record...'
+    assert.strictEqual(form.$('.o_mail_thread').length, 1,
+        "there should be a mail thread");
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "there should be a single thread message");
+    assert.strictEqual(form.$('.o_thread_message_content').text().trim(),
+        "Creating a new record...",
+        "the content of the message should be 'Creating a new record...'");
+
+    // getting out of create mode by saving
     form.$('.o_field_char').val('coucou').trigger('input');
     form.$buttons.find('.o_form_button_save').click();
 
     assert.strictEqual(form.$('.o_chatter').length, 1,
-        "chatter should be displayed");
+        "chatter should still be displayed after saving from create mode");
 
     // check if chatter buttons still work
     form.$('.o_chatter_button_new_message').click();
@@ -217,12 +207,13 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
 });
 
 QUnit.test('chatter rendering inside the sheet', function (assert) {
-    assert.expect(4);
+    assert.expect(5);
 
     var form = createView({
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -242,25 +233,17 @@ QUnit.test('chatter rendering inside the sheet', function (assert) {
             }
             return this._super(route, args);
         },
-        intercepts: {
-            get_messages: function (event) {
-                event.stopPropagation();
-                event.data.callback($.when([]));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
-        },
     });
 
     assert.strictEqual(form.$('.o_chatter').length, 1,
         "chatter should be displayed");
 
     form.$buttons.find('.o_form_button_create').click();
+    assert.ok(form.$el.find('.o_form_view').hasClass('o_form_editable'),
+        "we should be in create mode");
 
-    assert.strictEqual(form.$('.o_chatter').length, 0,
-        "chatter should not be displayed");
+    assert.strictEqual(form.$('.o_chatter').length, 1,
+        "chatter should be displayed");
 
     form.$('.o_field_char').val('coucou').trigger('input');
     form.$buttons.find('.o_form_button_save').click();
@@ -368,12 +351,12 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 
     // click on the activity button to re-open dropdown
     $record.find('.o_activity_btn').click();
-    assert.strictEqual(rpcCount, 2, 'no RPC should be done as the activities are now in cache');
+    assert.strictEqual(rpcCount, 3, 'should have reloaded the activities');
 
     // mark activity as done
     $record.find('.o_mark_as_done').click();
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
-    assert.strictEqual(rpcCount, 4, 'should have done an RPC to mark activity as done, and a read');
+    assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
         "activity widget should have been updated correctly");
     assert.strictEqual($record.find('.o_mail_activity.open').length, 1,
@@ -385,7 +368,12 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 
 QUnit.test('chatter: post, receive and star messages', function (assert) {
     var done = assert.async();
-    assert.expect(27);
+    assert.expect(28);
+    
+    var unpatchWindowGetSelection = testUtils.patchWindowGetSelection();
+
+    var bus = new Bus();
+    var BusService = createBusService(bus);
 
     // Remove the mention throttle to speed up the test
     var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
@@ -396,20 +384,21 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         attachment_ids: [],
         author_id: ["1", "John Doe"],
         body: "A message",
-        date: moment("2016-12-20 09:35:40"),
+        date: "2016-12-20 09:35:40",
         displayed_author: "John Doe",
         id: 1,
         is_note: false,
+        is_discussion: true,
         is_starred: false,
         model: 'partner',
         res_id: 2,
     }];
-    var bus = new Bus();
     var getSuggestionsDef = $.Deferred();
     var form = createView({
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: [ChatManager, BusService],
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -420,6 +409,12 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
+            if (args.method === 'message_format') {
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(args.args[0], msg.id);
+                });
+                return $.when(requested_msgs);
+            }
             if (args.method === 'message_get_suggested_recipients') {
                 return $.when({2: []});
             }
@@ -427,58 +422,49 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                 getSuggestionsDef.resolve();
                 return $.when([{email: "test@odoo.com", id: 1, name: "Test User"}]);
             }
-            return this._super(route, args);
-        },
-        session: {},
-        intercepts: {
-            get_messages: function (event) {
-                event.stopPropagation();
-                var requested_msgs = _.filter(messages, function (msg) {
-                    return _.contains(event.data.options.ids, msg.id);
-                });
-                event.data.callback($.when(requested_msgs));
-            },
-            post_message: function (event) {
-                event.stopPropagation();
+            if (args.method === 'message_post') {
                 var msg_id = messages[messages.length-1].id + 1;
                 messages.push({
-                    attachment_ids: [],
+                    attachment_ids: args.kwargs.attachment_ids,
                     author_id: ["42", "Me"],
-                    body: event.data.message.content,
-                    date: moment(), // now
+                    body: args.kwargs.body,
+                    date: "2016-12-20 10:35:40",
                     displayed_author: "Me",
                     id: msg_id,
-                    is_note: event.data.message.subtype === 'mail.mt_note',
+                    is_note: args.kwargs.subtype === 'mail.mt_note',
+                    is_discussion: args.kwargs.subtype === 'mail.mt_comment',
                     is_starred: false,
                     model: 'partner',
                     res_id: 2,
                 });
-                bus.trigger('new_message', {
-                    id: msg_id,
-                    model: event.data.options.model,
-                    res_id: event.data.options.res_id,
-                });
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(bus);
-            },
-            toggle_star_status: function (event) {
-                event.stopPropagation();
-                assert.strictEqual(event.data.message_id, 2,
+                return $.when(msg_id);
+            }
+            if (args.method === 'toggle_message_starred') {
+                assert.ok(_.contains(args.args[0], 2),
                     "toggle_star_status should have been triggered for message 2 (twice)");
-                var msg = _.findWhere(messages, {id: event.data.message_id});
+                var msg = _.findWhere(messages, {id: args.args[0][0]});
                 msg.is_starred = !msg.is_starred;
-                bus.trigger('update_message', msg);
-            },
+                // simulate notification received by chat_manager from longpoll
+                var data = {
+                    info: false,
+                    message_ids: [msg.id],
+                    starred: msg.is_starred,
+                    type: 'toggle_star',
+                };
+                var notification = [[false, 'res.partner'], data];
+                bus.trigger('notification', [notification]);
+                return $.when();
+            }
+            return this._super(route, args);
         },
+        session: {},
     });
 
     assert.ok(form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
         "log note button should be available");
     assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain one message");
-    assert.ok(!form.$('.o_thread_message:first() .o_mail_note').length,
-        "the message shouldn't be a note");
+    assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('A message') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('John Doe') >= 0,
@@ -487,12 +473,12 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     // send a message
     form.$('.o_chatter_button_new_message').click();
     assert.ok(!$('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be opened");
-    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_text_field:first()').text("My first message");
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 2, "thread should contain two messages");
-    assert.ok(!form.$('.o_thread_message:first() .o_mail_note').length,
-        "the last message shouldn't be a note");
+    assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the last message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('Me') >= 0,
@@ -501,12 +487,12 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     // log a note
     form.$('.o_chatter_button_log_note').click();
     assert.ok(!$('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be opened");
-    form.$('.oe_chatter .o_composer_text_field:first()').val("My first note");
+    form.$('.oe_chatter .o_composer_text_field:first()').text("My first note");
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 3, "thread should contain three messages");
-    assert.ok(form.$('.o_thread_message:first() .o_mail_note').length,
-        "the last message should be a note");
+    assert.ok(!form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the last message should not be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first note') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('Me') >= 0,
@@ -527,10 +513,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     // very basic test of mention
     form.$('.o_chatter_button_new_message').click();
     var $input = form.$('.oe_chatter .o_composer_text_field:first()');
-    $input.val('@');
-    // the cursor position must be set for the mention manager to detect that we are mentionning
-    $input[0].selectionStart = 1;
-    $input[0].selectionEnd = 1;
+    $input.text('@');
     $input.trigger('keyup');
 
     assert.strictEqual(getSuggestionsDef.state(), "pending",
@@ -548,8 +531,14 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
             assert.strictEqual(form.$('.o_mention_proposition .o_mention_info').text(), '(test@odoo.com)',
                 "suggestion should be displayed correctly");
 
+            $(".o_mention_proposition > a").trigger("click");
+            assert.strictEqual($(".o_composer_input a").length, 1, "mention is 'green' in edit mode");
+
             BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
+
+            //cleanup
             form.destroy();
+            unpatchWindowGetSelection();
             done();
         });
 });
@@ -558,11 +547,11 @@ QUnit.test('chatter: post a message and switch in edit mode', function (assert) 
     assert.expect(5);
 
     var messages = [];
-    var bus = new Bus();
     var form = createView({
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -574,43 +563,33 @@ QUnit.test('chatter: post a message and switch in edit mode', function (assert) 
         res_id: 2,
         session: {},
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+            if (args.method === 'message_format') {
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(args.args[0], msg.id);
+                });
+                return $.when(requested_msgs);
+            }
+            if (args.method === 'message_get_suggested_recipients') {
                 return $.when({2: []});
             }
-            return this._super(route, args);
-        },
-        intercepts: {
-            get_messages: function (event) {
-                event.stopPropagation();
-                var requested_msgs = _.filter(messages, function (msg) {
-                    return _.contains(event.data.options.ids, msg.id);
-                });
-                event.data.callback($.when(requested_msgs));
-            },
-            post_message: function (event) {
-                event.stopPropagation();
+            if (args.method === 'message_post') {
                 messages.push({
-                    attachment_ids: [],
+                    attachment_ids: args.kwargs.attachment_ids,
                     author_id: ["42", "Me"],
-                    body: event.data.message.content,
-                    date: moment(), // now
+                    body: args.kwargs.body,
+                    date: "2016-12-20 10:35:40",
                     displayed_author: "Me",
                     id: 42,
-                    is_note: event.data.message.subtype === 'mail.mt_note',
+                    is_note: args.kwargs.subtype === 'mail.mt_note',
+                    is_discussion: args.kwargs.subtype === 'mail.mt_comment',
                     is_starred: false,
                     model: 'partner',
                     res_id: 2,
                 });
-                bus.trigger('new_message', {
-                    id: 42,
-                    model: event.data.options.model,
-                    res_id: event.data.options.res_id,
-                });
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(bus);
-            },
+                return $.when(42);
+            }
+
+            return this._super(route, args);
         },
     });
 
@@ -618,7 +597,7 @@ QUnit.test('chatter: post a message and switch in edit mode', function (assert) 
 
     // send a message
     form.$('.o_chatter_button_new_message').click();
-    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_text_field:first()').text("My first message");
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain a message");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
@@ -664,18 +643,21 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         }],
         author_id: ["1", "John Doe"],
         body: "Attachement viewer test",
-        date: moment("2016-12-20 09:35:40"),
+        date: "2016-12-20 09:35:40",
         displayed_author: "John Doe",
         id: 1,
         is_note: false,
+        is_discussion: true,
         is_starred: false,
         model: 'partner',
         res_id: 2,
     }];
+
     var form = createView({
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -685,26 +667,19 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
                 '</div>' +
             '</form>',
         res_id: 2,
-        mockRPC: function (route) {
-            if(_.str.contains(route, '/mail/attachment/preview/') ||
+        mockRPC: function (route, args) {
+            if (args.method === 'message_format') {
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(args.args[0], msg.id);
+                });
+                return $.when(requested_msgs);
+            }
+            if (_.str.contains(route, '/mail/attachment/preview/') ||
                 _.str.contains(route, '/web/static/lib/pdfjs/web/viewer.html')){
                 var canvas = document.createElement('canvas');
                 return $.when(canvas.toDataURL());
             }
             return this._super.apply(this, arguments);
-        },
-        intercepts: {
-            get_messages: function (event) {
-                event.stopPropagation();
-                var requested_msgs = _.filter(messages, function (msg) {
-                    return _.contains(event.data.options.ids, msg.id);
-                });
-                event.data.callback($.when(requested_msgs));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
         },
     });
     assert.strictEqual(form.$('.o_thread_message .o_attachment').length, 4,
@@ -713,11 +688,11 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "image caption should have correct download link");
     // click on first image attachement
     form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[src*="/web/image/1?unique=1"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
     $('.modal .arrow.arrow-right.move_next span').click();
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[src*="/web/image/2?unique=1"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");
@@ -725,10 +700,132 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
     // click on pdf attachement
     form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').eq(3).click();
-    assert.strictEqual($('.o_modal_fullscreen iframe[src*="/web/content/4"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen iframe[data-src*="/web/content/4"]').length, 1,
         "Modal popup should open with the pdf preview");
     // close attachment popup
     $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
+    form.destroy();
+});
+
+QUnit.test('form activity widget: read RPCs', function (assert) {
+    // Records of model 'mail.activity' may be updated in business flows (e.g.
+    // the date of a 'Meeting' activity is updated when the associated meeting
+    // is dragged&dropped in the Calendar view). Because of that, the activities
+    // must be reloaded when the form is reloaded (the widget can't keep an
+    // internal cache).
+    assert.expect(6);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var nbReads = 0;
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'read' && args.model === 'mail.activity') {
+                nbReads++;
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(nbReads, 1, "should have read the activities");
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "should display an activity");
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message .o_activity_date').text(),
+        'Today', "the activity should be today");
+
+    form.$buttons.find('.o_form_button_edit').click();
+    form.$buttons.find('.o_form_button_save').click();
+
+    assert.strictEqual(nbReads, 1, "should not have re-read the activities");
+
+    // simulate a date change, and a reload of the form view
+    var tomorrow = moment().add(1, 'day').format("YYYY-MM-DD");
+    this.data['mail.activity'].records[0].date_deadline = tomorrow;
+    form.reload();
+
+    assert.strictEqual(nbReads, 2, "should have re-read the activities");
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message .o_activity_date').text(),
+        'Tomorrow', "the activity should be tomorrow");
+
+    form.destroy();
+});
+
+QUnit.test('form activity widget on a new record', function (assert) {
+    assert.expect(0);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'read' && args.model === 'mail.activity') {
+                throw new Error("should not do a read on mail.activity");
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    form.destroy();
+});
+
+QUnit.test('form activity widget with another x2many field in view', function (assert) {
+    assert.expect(1);
+
+    this.data.partner.fields.m2m = {string: "M2M", type: 'many2many', relation: 'partner'};
+
+    this.data.partner.records[0].m2m = [2];
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<field name="m2m" widget="many2many_tags"/>' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+    });
+
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "should display an activity");
+
     form.destroy();
 });
 
@@ -750,6 +847,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -761,27 +859,22 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
+            if (args.method === 'message_format') {
+                return $.when([]);
+            }
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_feedback' for id 1");
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
                 return $.when();
             }
-            if (args.method === 'read' && checkReadArgs) {
+            if (args.method === 'read' && args.model === 'partner' && checkReadArgs) {
                 assert.deepEqual(args.args[1], ['activity_ids', 'message_ids', 'display_name'],
                     "should only read the mail fields");
             }
             return this._super.apply(this, arguments);
         },
         intercepts: {
-            get_messages: function (event) {
-                event.stopPropagation();
-                event.data.callback($.when([]));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
             do_action: function (event) {
                 assert.deepEqual(event.data.action, {
                     context: {
@@ -818,6 +911,7 @@ QUnit.test('form activity widget: schedule activity does not discard changes', f
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -835,10 +929,6 @@ QUnit.test('form activity widget: schedule activity does not discard changes', f
             return this._super.apply(this, arguments);
         },
         intercepts: {
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
             do_action: function (event) {
                 event.data.options.on_close();
             },
@@ -861,7 +951,7 @@ QUnit.test('form activity widget: schedule activity does not discard changes', f
 });
 
 QUnit.test('form activity widget: mark as done and remove', function (assert) {
-    assert.expect(14);
+    assert.expect(15);
 
     var self = this;
 
@@ -889,6 +979,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -900,6 +991,12 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
+            if (args.method === 'message_format') {
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(args.args[0], msg.id);
+                });
+                return $.when(requested_msgs);
+            }
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.ok(_.isEqual(args.args[0], [1]), "should call 'unlink' for id 1");
             } else if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
@@ -912,10 +1009,11 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
                     attachment_ids: [],
                     author_id: ["1", "John Doe"],
                     body: "The activity has been done",
-                    date: moment("2016-12-20 09:35:40"),
+                    date: "2016-12-20 09:35:40",
                     displayed_author: "John Doe",
                     id: 1,
                     is_note: true,
+                    is_discussion: false,
                 });
                 route = '/web/dataset/call_kw/mail.activity/unlink';
                 args.method = 'unlink';
@@ -932,16 +1030,6 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
                 }
             }
             return this._super.apply(this, arguments);
-        },
-        intercepts: {
-            get_messages: function (event) {
-                event.stopPropagation();
-                event.data.callback($.when(messages));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            }
         },
     });
 
@@ -969,6 +1057,8 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         "there should be no more activity");
     assert.strictEqual(form.$('.o_mail_thread .o_thread_message').length, 1,
         "a chatter message should have been generated");
+    assert.strictEqual(form.$('.o_thread_message:contains(The activity has been done)').length, 1,
+        "the message's body should be correct");
     form.destroy();
 });
 
@@ -988,6 +1078,7 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -1108,6 +1199,7 @@ QUnit.test('followers widget: do not display follower duplications', function (a
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form>' +
                 '<sheet></sheet>' +
                 '<div class="oe_chatter">' +
@@ -1166,6 +1258,7 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="foo"/>' +
@@ -1178,6 +1271,16 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
+            if (args.method === 'message_format') {
+                return $.when([{
+                    attachment_ids: [],
+                    body: "",
+                    date: "2016-12-20 09:35:40",
+                    id: 34,
+                    res_id: 3,
+                    author_id: ["3", "Fu Ck Mil Grom"],
+                }]);
+            }
             if (route === '/mail/read_followers') {
                 return $.when({
                     followers: [],
@@ -1187,25 +1290,6 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
             return this._super(route, args);
         },
         intercepts: {
-            chat_manager_ready: function (event) {
-                // we delay the return of the chat_manager ready event
-                event.data.callback(def);
-            },
-            get_messages: function (event) {
-                event.stopPropagation();
-                event.data.callback($.when([{
-                    attachment_ids: [],
-                    body: "",
-                    date: moment("2016-12-20 09:35:40"),
-                    id: 34,
-                    res_id: 3,
-                    author_id: ["3", "Fu Ck Mil Grom"],
-                }]));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
             get_session: function (event) {
                 event.stopPropagation();
                 event.data.callback({uid: 1});
@@ -1214,10 +1298,10 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
     });
 
     form.destroy();
-    // here, the chat_manager system is ready, and the chatter can try to render
+    // here, the chatManager system is ready, and the chatter can try to render
     // itself. We simply make sure here that no crashes occur (since the form
     // view is destroyed, all rpcs will be dropped, and many other mechanisms
-    // relying on events will not work, such as _getBus)
+    // relying on events will not work, such as the chat bus)
     def.resolve();
 });
 

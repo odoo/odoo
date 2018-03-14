@@ -49,8 +49,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new bank.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new bank
               </p><p>
                 Manage bank records you want to be used in the system.
               </p>
@@ -62,11 +62,18 @@
             <field name="model">res.partner.bank</field>
             <field name="arch" type="xml">
                 <form string="Bank account">
-                    <group col="4">
-                        <field name="acc_number"/>
-                        <field name="bank_id"/>
-                        <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <group>
+                        <group>
+                            <field name="acc_number"/>
+                            <field name="acc_type"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="bank_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
+                            <field name="acc_holder_name" groups="base.group_no_one"/>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -101,8 +108,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a bank account.
+              <p class="o_view_nocontent_smiling_face">
+                Create a bank account
               </p>
             </field>
         </record>

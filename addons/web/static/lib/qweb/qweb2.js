@@ -358,7 +358,12 @@ QWeb2.Engine = (function() {
                 req.open('GET', s, async);
                 if (async) {
                     req.addEventListener("load", function() {
-                        if (req.status == 200) {
+                        // 0, not being a valid HTTP status code, is used by browsers
+                        // to indicate success for a non-http xhr response
+                        // (for example, using the file:// protocol)
+                        // https://developer.mozilla.org/fr/docs/Web/API/XMLHttpRequest
+                        // https://bugzilla.mozilla.org/show_bug.cgi?id=331610
+                        if (req.status == 200 || req.status == 0) {
                             callback(null, self._parse_from_request(req));
                         } else {
                             callback(new Error("Can't load template " + s + ", http status " + req.status));

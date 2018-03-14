@@ -192,12 +192,6 @@ class FleetVehicle(models.Model):
         else:
             self.image_medium = False
 
-    @api.model
-    def create(self, data):
-        vehicle = super(FleetVehicle, self.with_context(mail_create_nolog=True)).create(data)
-        vehicle.message_post(body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name, vehicle.license_plate))
-        return vehicle
-
     @api.multi
     def write(self, vals):
         """
@@ -247,9 +241,11 @@ class FleetVehicle(models.Model):
             @return: the costs log view
         """
         self.ensure_one()
+        copy_context = dict(self.env.context)
+        copy_context.pop('group_by', None)
         res = self.env['ir.actions.act_window'].for_xml_id('fleet', 'fleet_vehicle_costs_action')
         res.update(
-            context=dict(self.env.context, default_vehicle_id=self.id, search_default_parent_false=True),
+            context=dict(copy_context, default_vehicle_id=self.id, search_default_parent_false=True),
             domain=[('vehicle_id', '=', self.id)]
         )
         return res

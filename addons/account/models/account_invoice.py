@@ -41,7 +41,7 @@ MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
 
 class AccountInvoice(models.Model):
     _name = "account.invoice"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Invoice"
     _order = "date_invoice desc, number desc, id desc"
 
@@ -350,7 +350,7 @@ class AccountInvoice(models.Model):
     payment_move_line_ids = fields.Many2many('account.move.line', string='Payment Move Lines', compute='_compute_payments', store=True)
     user_id = fields.Many2one('res.users', string='Salesperson', track_visibility='onchange',
         readonly=True, states={'draft': [('readonly', False)]},
-        default=lambda self: self.env.user)
+        default=lambda self: self.env.user, copy=False)
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position',
         readonly=True, states={'draft': [('readonly', False)]})
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', compute_sudo=True,
@@ -570,7 +570,7 @@ class AccountInvoice(models.Model):
             default_template_id=template and template.id or False,
             default_composition_mode='comment',
             mark_invoice_as_sent=True,
-            custom_layout="account.mail_template_data_notification_email_account_invoice",
+            custom_layout="mail.mail_notification_borders",
             force_email=True
         )
         return {
@@ -808,13 +808,17 @@ class AccountInvoice(models.Model):
         return self.filtered(lambda inv: inv.state != 'cancel').action_cancel()
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(AccountInvoice, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Give access button to users and portal customer as portal is integrated
+        in account. Customer and portal group have probably no right to see
+        the document so they don't have the access button. """
+        groups = super(AccountInvoice, self)._notify_get_groups(message, groups)
 
-        for group_name, group_method, group_data in groups:
-            if group_name == 'customer':
-                continue
-            group_data['has_button_access'] = True
+        if self.state not in ('draft', 'cancel'):
+            for group_name, group_method, group_data in groups:
+                if group_name in ('customer', 'portal'):
+                    continue
+                group_data['has_button_access'] = True
 
         return groups
 
@@ -876,6 +880,7 @@ class AccountInvoice(models.Model):
             'sequence': tax['sequence'],
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
             'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
+            'analytic_tag_ids': tax['analytic'] and line.analytic_tag_ids.ids or False,
         }
 
         # If the taxes generate moves on the same financial account as the invoice line,
@@ -884,7 +889,6 @@ class AccountInvoice(models.Model):
         # to ensure the tax move is allocated to the proper analytic account.
         if not vals.get('account_analytic_id') and line.account_analytic_id and vals['account_id'] == line.account_id.id:
             vals['account_analytic_id'] = line.account_analytic_id.id
-
         return vals
 
     @api.multi
@@ -992,12 +996,10 @@ class AccountInvoice(models.Model):
                 'product_id': line.product_id.id,
                 'uom_id': line.uom_id.id,
                 'account_analytic_id': line.account_analytic_id.id,
+                'analytic_tag_ids': analytic_tag_ids,
                 'tax_ids': tax_ids,
                 'invoice_id': self.id,
-                'analytic_tag_ids': analytic_tag_ids
             }
-            if line['account_analytic_id']:
-                move_line_dict['analytic_line_ids'] = [(0, 0, line._get_analytic_line())]
             res.append(move_line_dict)
         return res
 
@@ -1013,6 +1015,8 @@ class AccountInvoice(models.Model):
                 if tax.amount_type == "group":
                     for child_tax in tax.children_tax_ids:
                         done_taxes.append(child_tax.id)
+
+                analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -1023,6 +1027,7 @@ class AccountInvoice(models.Model):
                     'price': tax_line.amount_total,
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
+                    'analytic_tag_ids': analytic_tag_ids,
                     'invoice_id': self.id,
                     'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
                 })
@@ -1192,25 +1197,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def line_get_convert(self, line, part):
-        return {
-            'date_maturity': line.get('date_maturity', False),
-            'partner_id': part,
-            'name': line['name'],
-            'debit': line['price'] > 0 and line['price'],
-            'credit': line['price'] < 0 and -line['price'],
-            'account_id': line['account_id'],
-            'analytic_line_ids': line.get('analytic_line_ids', []),
-            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
-            'currency_id': line.get('currency_id', False),
-            'quantity': line.get('quantity', 1.00),
-            'product_id': line.get('product_id', False),
-            'product_uom_id': line.get('uom_id', False),
-            'analytic_account_id': line.get('account_analytic_id', False),
-            'invoice_id': line.get('invoice_id', False),
-            'tax_ids': line.get('tax_ids', False),
-            'tax_line_id': line.get('tax_line_id', False),
-            'analytic_tag_ids': line.get('analytic_tag_ids', False),
-        }
+        return self.env['product.product']._convert_prepared_anglosaxon_line(line, part)
 
     @api.multi
     def action_cancel(self):
@@ -1340,6 +1327,7 @@ class AccountInvoice(models.Model):
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
+        values['payment_term_id'] = False
         values['refund_invoice_id'] = invoice.id
 
         if date:
@@ -1443,21 +1431,6 @@ class AccountInvoiceLine(models.Model):
     _description = "Invoice Line"
     _order = "invoice_id,sequence,id"
 
-    @api.multi
-    def _get_analytic_line(self):
-        ref = self.invoice_id.number
-        return {
-            'name': self.name,
-            'date': self.invoice_id.date_invoice,
-            'account_id': self.account_analytic_id.id,
-            'unit_amount': self.quantity,
-            'amount': self.price_subtotal_signed,
-            'product_id': self.product_id.id,
-            'product_uom_id': self.uom_id.id,
-            'general_account_id': self.account_id.id,
-            'ref': ref,
-        }
-
     @api.one
     @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
         'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
@@ -1490,7 +1463,7 @@ class AccountInvoiceLine(models.Model):
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
-    uom_id = fields.Many2one('product.uom', string='Unit of Measure',
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure',
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
@@ -1640,6 +1613,13 @@ class AccountInvoiceLine(models.Model):
         result = {}
         if not self.uom_id:
             self.price_unit = 0.0
+        else:
+            if self.invoice_id.type in ('in_invoice', 'in_refund'):
+                price_unit = self.product_id.standard_price
+            else:
+                price_unit = self.product_id.lst_price
+            self.price_unit = self.product_id.uom_id._compute_price(price_unit, self.uom_id)
+
         if self.product_id and self.uom_id:
             if self.product_id.uom_id.category_id.id != self.uom_id.category_id.id:
                 warning = {
@@ -1685,6 +1665,7 @@ class AccountInvoiceTax(models.Model):
                     'tax_id': tax.tax_id.id,
                     'account_id': tax.account_id.id,
                     'account_analytic_id': tax.account_analytic_id.id,
+                    'analytic_tag_ids': tax.analytic_tag_ids.ids or False,
                 })
                 if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                     tax.base = tax_grouped[tax.invoice_id.id][key]['base']
@@ -1696,6 +1677,7 @@ class AccountInvoiceTax(models.Model):
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     amount = fields.Monetary('Tax Amount')
     amount_rounding = fields.Monetary('Amount Delta')
     amount_total = fields.Monetary(string="Amount Total", compute='_compute_amount_total')
@@ -1740,6 +1722,7 @@ class AccountPaymentTerm(models.Model):
     def compute(self, value, date_ref=False):
         date_ref = date_ref or fields.Date.today()
         amount = value
+        sign = value < 0 and -1 or 1
         result = []
         if self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(self.env.context['currency_id'])
@@ -1747,7 +1730,7 @@ class AccountPaymentTerm(models.Model):
             currency = self.env.user.company_id.currency_id
         for line in self.line_ids:
             if line.value == 'fixed':
-                amt = currency.round(line.value_amount)
+                amt = sign * currency.round(line.value_amount)
             elif line.value == 'percent':
                 amt = currency.round(value * (line.value_amount / 100.0))
             elif line.value == 'balance':
@@ -1777,6 +1760,8 @@ class AccountPaymentTerm(models.Model):
 
     @api.multi
     def unlink(self):
+        if self.env['account.invoice'].search([('payment_term_id', 'in', self.ids)]):
+            raise UserError(_('You can not delete payment terms as other records still reference it. However, you can archive it.'))
         property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in self])])
         property_recs.unlink()
         return super(AccountPaymentTerm, self).unlink()
@@ -1813,6 +1798,7 @@ class AccountPaymentTermLine(models.Model):
         if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
             raise ValidationError(_('Percentages for Payment Terms Line must be between 0 and 100.'))
 
+    @api.one
     @api.constrains('days')
     def _check_days(self):
         if self.option in ('day_following_month', 'day_current_month') and self.days <= 0:

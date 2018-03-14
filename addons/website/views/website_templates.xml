@@ -117,13 +117,16 @@
     </xpath>
     <xpath expr="//t[@t-set='head_website']" position="replace">
         <t t-set="head_website">
+            <meta name="generator" content="Odoo"/>
+
             <meta t-if="main_object and 'website_indexed' in main_object
                 and not main_object.website_indexed" name="robots" content="noindex"/>
-            <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
+            <t t-set="meta_description" t-value="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
-            <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
+            <t t-set="meta_keywords" t-value="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
-            <meta name="generator" content="Odoo"/>
+            <meta t-if="meta_description" name="description" t-att-content="meta_description"/>
+            <meta t-if="meta_keywords" name="keywords" t-att-content="meta_keywords"/>
 
             <!-- OpenGraph tags for Facebook sharing -->
             <meta property="og:title" t-att-content="additional_title" />
@@ -936,10 +939,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                           <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td class="text-right">
-                              <a class="mr4 fa fa-lg fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
-                              <a class="mr4 fa fa-lg fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
-                              <a class="mr4 fa fa-lg fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
-                              <a class="fa fa-lg fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+                              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
+                              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
+                              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
+                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
                           </td>
                       </tr>
                   </t>

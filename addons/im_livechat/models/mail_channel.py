@@ -104,7 +104,7 @@ class MailChannel(models.Model):
     @api.model
     def get_empty_list_help(self, help):
         if help:
-            return '<p">%s</p>' % (help)
+            help
         return super(MailChannel, self).get_empty_list_help(help)
 
     def _define_command_history(self):
@@ -134,8 +134,5 @@ class MailChannel(models.Model):
 
     # Rating Mixin
 
-    def rating_get_parent_model_name(self, values):
-        return 'im_livechat.channel'
-
-    def rating_get_parent_id(self):
-        return self.livechat_channel_id.id
+    def rating_get_parent(self):
+        return 'livechat_channel_id'

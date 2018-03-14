@@ -737,18 +737,15 @@ class expression(object):
 
         def child_of_domain(left, ids, left_model, parent=None, prefix=''):
             """ Return a domain implementing the child_of operator for [(left,child_of,ids)],
-                either as a range using the parent_left/right tree lookup fields
+                either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
                 return FALSE_DOMAIN
-            if left_model._parent_store and (not left_model.pool._init) and (not context.get('defer_parent_store_computation')):
-                # TODO: Improve where joins are implemented for many with '.', replace by:
-                # doms += ['&',(prefix+'.parent_left','<',rec.parent_right),(prefix+'.parent_left','>=',rec.parent_left)]
-                doms = []
-                for rec in left_model.browse(ids):
-                    if doms:
-                        doms.insert(0, OR_OPERATOR)
-                    doms += [AND_OPERATOR, ('parent_left', '<', rec.parent_right), ('parent_left', '>=', rec.parent_left)]
+            if left_model._parent_store:
+                doms = OR([
+                    [('parent_path', '=like', rec.parent_path + '%')]
+                    for rec in left_model.browse(ids)
+                ])
                 if prefix:
                     return [(left, 'in', left_model.search(doms).ids)]
                 return doms
@@ -762,17 +759,17 @@ class expression(object):
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
             """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
-                either as a range using the parent_left/right tree lookup fields
+                either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,parent_ids)] """
-            if left_model._parent_store and (not left_model.pool._init) and (not context.get('defer_parent_store_computation')):
-                doms = []
-                for rec in left_model.browse(ids):
-                    if doms:
-                        doms.insert(0, OR_OPERATOR)
-                    doms += [AND_OPERATOR, ('parent_right', '>', rec.parent_left), ('parent_left', '<=',  rec.parent_left)]
+            if left_model._parent_store:
+                parent_ids = [
+                    int(label)
+                    for rec in left_model.browse(ids)
+                    for label in rec.parent_path.split('/')[:-1]
+                ]
                 if prefix:
-                    return [(left, 'in', left_model.search(doms).ids)]
-                return doms
+                    return [(left, 'in', parent_ids)]
+                return [('id', 'in', parent_ids)]
             else:
                 parent_name = parent or left_model._parent_name
                 parent_ids = set()

@@ -151,7 +151,7 @@ class WebsiteSale(http.Controller):
             else:
                 price = variant.website_public_price / quantity
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price, price])
+            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price / quantity, price])
         return attribute_value_ids
 
     def _get_search_order(self, post):
@@ -749,7 +749,7 @@ class WebsiteSale(http.Controller):
         values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s' and acq.registration_view_template_id]
         values['tokens'] = request.env['payment.token'].search(
             [('partner_id', '=', order.partner_id.id),
-            ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
+            ('acquirer_id', 'in', acquirers.ids)])
 
         return values
 
@@ -846,9 +846,11 @@ class WebsiteSale(http.Controller):
         # we proceed the s2s payment
         res = tx.confirm_sale_token()
         # we then redirect to the page that validates the payment by giving it error if there's one
-        if res is not True:
-            return request.redirect('/shop/payment/validate?success=False&error=%s' % res)
-        return request.redirect('/shop/payment/validate?success=True')
+        if tx.state != 'authorized' or not tx.acquirer_id.capture_manually:
+            if res is not True:
+                return request.redirect('/shop/payment/validate?success=False&error=%s' % res)
+            return request.redirect('/shop/payment/validate?success=True')
+        return request.redirect('/shop/payment/validate')
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):

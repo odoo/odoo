@@ -58,6 +58,10 @@ function checkXML(xml) {
  * @returns {string} formatted xml
  */
 function formatXML(xml) {
+    // do nothing if an inline script is present to avoid breaking it
+    if (/<script(?: [^>]*)?>[^<][\s\S]*<\/script>/i.test(xml)) {
+        return xml;
+    }
     return window.vkbeautify.xml(xml, 4);
 }
 /**
@@ -113,7 +117,7 @@ var ViewEditor = Widget.extend({
     template: 'web_editor.ace_view_editor',
     xmlDependencies: ['/web_editor/static/src/xml/ace.xml'],
     jsLibs: [
-        '/web/static/lib/ace/ace.odoo-custom.js',
+        '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-xml.js',
             '/web/static/lib/ace/mode-less.js',
@@ -192,7 +196,6 @@ var ViewEditor = Widget.extend({
      */
     start: function () {
         this.$viewEditor = this.$('#ace-view-editor');
-        this.$editor = this.$('.ace_editor');
 
         this.$typeSwitcherChoices = this.$('.o_ace_type_switcher_choice');
         this.$typeSwitcherBtn = this.$('.o_ace_type_switcher > .dropdown-toggle');
@@ -210,6 +213,7 @@ var ViewEditor = Widget.extend({
 
         this.aceEditor = window.ace.edit(this.$viewEditor[0]);
         this.aceEditor.setTheme('ace/theme/monokai');
+        this.$editor = this.$('.ace_editor');
 
         var refX = 0;
         var resizing = false;
@@ -567,7 +571,7 @@ var ViewEditor = Widget.extend({
             Dialog.alert(this, '', {
                 title: _t("Server error"),
                 $content: $('<div/>').html(
-                    _t("A server error occured. Please check you correctly signed in and that the file you are saving is well-formed.")
+                    _t("A server error occured. Please check you correctly signed in and that the file you are saving is correctly formatted.")
                     + '<br/>'
                     + error
                 )
@@ -742,7 +746,7 @@ var ViewEditor = Widget.extend({
 
             var text = data.text || '';
             if (!isSelected) {
-                text = Array($elem.data('level')).join('-') + ' ' + text;
+                text = Array(($elem.data('level') || 0) + 1).join('-') + ' ' + text;
             }
             var $div = $('<div/>',  {
                 text: text,

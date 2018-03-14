@@ -7,9 +7,9 @@
         <t t-if="not object.name and object.parent_name">
             <span itemprop="name" t-esc="object.parent_name"/>
         </t>
-        <div t-if="options.get('country_image') and 'country_id' in fields and object.country_id and object.country_id.image">
+        <t t-if="options.get('country_image') and 'country_id' in fields and object.country_id and object.country_id.image">
             <span t-field="object.country_id.image" t-options='{"widget": "image", "class": "country_flag"}'/>
-        </div>
+        </t>
     </div>
 </template>
 <template id="contact">

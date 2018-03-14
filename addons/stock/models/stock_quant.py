@@ -26,7 +26,7 @@ class StockQuant(models.Model):
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
     company_id = fields.Many2one(related='location_id.company_id',
         string='Company', store=True, readonly=True)
@@ -58,10 +58,14 @@ class StockQuant(models.Model):
         action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [
             ('product_id', '=', self.product_id.id),
-            '|', ('location_id', '=', self.location_id.id),
-            ('location_dest_id', '=', self.location_id.id),
+            '|',
+                ('location_id', '=', self.location_id.id),
+                ('location_dest_id', '=', self.location_id.id),
             ('lot_id', '=', self.lot_id.id),
-            ('package_id', '=', self.package_id.id)]
+            '|',
+                ('package_id', '=', self.package_id.id),
+                ('result_package_id', '=', self.package_id.id),
+        ]
         return action
 
     @api.constrains('product_id')
@@ -420,7 +424,7 @@ class QuantPackage(models.Model):
 
     def unpack(self):
         for package in self:
-            move_lines_to_remove = self.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
+            move_lines_to_remove = package.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
             if move_lines_to_remove:
                 move_lines_to_remove.write({'result_package_id': False})
             else:

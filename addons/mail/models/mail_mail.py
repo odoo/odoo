@@ -152,39 +152,30 @@ class MailMail(models.Model):
     # ------------------------------------------------------
 
     @api.multi
-    def send_get_mail_body(self, partner=None):
+    def _send_prepare_body(self):
         """Return a specific ir_email body. The main purpose of this method
         is to be inherited to add custom content depending on some module."""
         self.ensure_one()
-        body = self.body_html or ''
-        return body
+        return self.body_html or ''
 
     @api.multi
-    def send_get_mail_to(self, partner=None):
-        """Forge the email_to with the following heuristic:
-          - if 'partner', recipient specific (Partner Name <email>)
-          - else fallback on mail.email_to splitting """
-        self.ensure_one()
-        if partner:
-            email_to = [formataddr((partner.name or 'False', partner.email or 'False'))]
-        else:
-            email_to = tools.email_split_and_format(self.email_to)
-        return email_to
-
-    @api.multi
-    def send_get_email_dict(self, partner=None):
+    def _send_prepare_values(self, partner=None):
         """Return a dictionary for specific email values, depending on a
         partner, or generic to the whole recipients given by mail.email_to.
 
             :param Model partner: specific recipient partner
         """
         self.ensure_one()
-        body = self.send_get_mail_body(partner=partner)
+        body = self._send_prepare_body()
         body_alternative = tools.html2plaintext(body)
+        if partner:
+            email_to = [formataddr((partner.name or 'False', partner.email or 'False'))]
+        else:
+            email_to = tools.email_split_and_format(self.email_to)
         res = {
             'body': body,
             'body_alternative': body_alternative,
-            'email_to': self.send_get_mail_to(partner=partner),
+            'email_to': email_to,
         }
         return res
 
@@ -255,13 +246,6 @@ class MailMail(models.Model):
                     if mail.state != 'exception' and mail.auto_delete:
                         mail.sudo().unlink()
                     continue
-                # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
-                if mail.model:
-                    model = self.env['ir.model']._get(mail.model)[0]
-                else:
-                    model = None
-                if model:
-                    mail = mail.with_context(model_name=model.name)
 
                 # load attachment binary data with a separate read(), as prefetching all
                 # `datas` (binary field) could bloat the browse cache, triggerring
@@ -272,9 +256,9 @@ class MailMail(models.Model):
                 # specific behavior to customize the send email for notified partners
                 email_list = []
                 if mail.email_to:
-                    email_list.append(mail.send_get_email_dict())
+                    email_list.append(mail._send_prepare_values())
                 for partner in mail.recipient_ids:
-                    email_list.append(mail.send_get_email_dict(partner=partner))
+                    email_list.append(mail._send_prepare_values(partner=partner))
 
                 # headers
                 headers = {}

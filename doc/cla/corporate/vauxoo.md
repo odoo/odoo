@@ -41,3 +41,5 @@ Mariano Fernandez mariano@vauxoo.com https://github.com/Batuto
 Edgar Rivero edgar@vauxoo.com https://github.com/egrivero
 Alexander Olivares alexander@vauxoo.com https://github.com/alxolivares
 Jose Manuel Robles josemanuel@vauxoo.com https://github.com/keylor2906
+Erick Birbe erick@vauxoo.com https://github.com/ebirbe
+Tomas Alvarez tomas@vauxoo.com https://github.com/tomeyro

@@ -150,6 +150,7 @@ class ResUsers(models.Model):
         return user
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         sup = super(ResUsers, self)
