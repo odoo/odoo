@@ -192,12 +192,6 @@ class FleetVehicle(models.Model):
         else:
             self.image_medium = False
 
-    @api.model
-    def create(self, data):
-        vehicle = super(FleetVehicle, self.with_context(mail_create_nolog=True)).create(data)
-        vehicle.message_post(body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name, vehicle.license_plate))
-        return vehicle
-
     @api.multi
     def write(self, vals):
         """

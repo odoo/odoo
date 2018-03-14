@@ -176,7 +176,6 @@
         <field name="arch" type="xml">
             <kanban class="o_hr_employee_kanban">
                 <field name="id"/>
-                <field name="message_is_follower"/>
                 <field name="message_follower_ids"/>
                 <field name="message_ids"/>
                 <field name="message_needaction_counter"/>
@@ -210,13 +209,6 @@
                                 <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
                                 <li t-if="record.mobile_phone.raw_value"><i class="fa fa-mobile"></i> <field name="mobile_phone"/></li>
                             </ul>
-                            <div class="o_kanban_button">
-                                <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="o_follow_btn o_following btn btn-sm btn-default">
-                                    <span class="o_unfollow">Unfollow</span>
-                                    <span class="o_following">Following</span>
-                                </button>
-                                <button t-if="!record.message_is_follower.raw_value" name="action_follow" type="object" class="o_follow_btn o_follow btn btn-sm btn-primary">Follow</button>
-                            </div>
                         </div>
                     </div>
                     </t>
