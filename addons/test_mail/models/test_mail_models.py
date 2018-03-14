@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-
+from odoo.addons.mail.models.mail_partner import MailPartnerMixin
 
 class MailTestSimple(models.Model):
     """ A very simple model only inheriting from mail.thread when only
@@ -112,3 +112,24 @@ class MailModel(models.Model):
     def _value_pc(self):
         for record in self:
             record.value_pc = float(record.value) / 100
+
+
+class MailTestPartner(models.Model):
+    _name = 'mail.partner.test'
+    _inherit = ['mail.partner.mixin', 'mail.thread']
+
+    name = fields.Char('Name')
+    value = fields.Integer()
+    value2 = fields.Integer()
+
+    def _message_partner_update_condition(self):
+        return MailPartnerMixin._message_partner_update_condition(self)
+
+    def _emails_subscribe(self, msg):
+        return MailPartnerMixin._emails_subscribe(self, msg)
+
+    def _emails_subscribe_if_exists(self, msg):
+        return MailPartnerMixin._emails_subscribe_if_exists(self, msg)
+
+    def _partner_creation_strategy(self, msg):
+        return MailPartnerMixin._partner_creation_strategy(self, msg)
