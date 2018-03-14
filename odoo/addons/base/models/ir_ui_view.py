@@ -229,7 +229,7 @@ actual arch.
 * if False, the view currently does not extend its parent but can be enabled
          """)
     is_modified = fields.Boolean(
-        default=False, help="Whether the view has been modified or not."
+        string="Modified", default=False, help="Whether the view has been modified or not."
     )
 
 
@@ -278,13 +278,26 @@ actual arch.
 
     def restore_views(self):
         """
-        Restore views to default by reloading the .xml file contents.
+        Restore views to default.
+
+        This method will restore the arch to the contents of the .xml file found in the
+        file-system, if there's no corresponding file for a specific view, we assume that it's a
+        code-generated view and thus we resort to upgrading the module.
         """
+        to_upgrade = []
+
         for view in self:
             arch_fs = self._get_arch_fs(view)
             if arch_fs:
                 view.arch = pycompat.to_text(arch_fs)
-                view.update({'is_modified': False})
+            else:
+                to_upgrade.append(view.model_data_id.module)
+            view.update({'is_modified': False})
+
+        self.env['ir.module.module'].search([
+            ('name', 'in', to_upgrade)
+        ]).button_immediate_upgrade()
+
         return self
 
     @api.depends('arch')
