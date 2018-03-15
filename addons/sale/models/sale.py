@@ -136,7 +136,7 @@ class SaleOrder(models.Model):
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
 
     invoice_count = fields.Integer(string='# of Invoices', compute='_get_invoiced', readonly=True)
-    invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
+    invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False, search='_search_invoice_ids')
     invoice_status = fields.Selection([
         ('upselling', 'Upselling Opportunity'),
         ('invoiced', 'Fully Invoiced'),
@@ -157,6 +157,10 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
+
+    def _search_invoice_ids(self, operator, value):
+        invoices = self.mapped('order_line.invoice_lines.invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
+        return [('id', 'in', invoices.ids)]
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
