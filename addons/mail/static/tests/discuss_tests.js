@@ -293,5 +293,89 @@ QUnit.test('no crash focusout emoji button', function (assert) {
     });
 });
 
+QUnit.test('load the older messages automaticall', function (assert) {
+    assert.expect(4);
+    var done = assert.async();
+
+    // Remove throttles to speed up the test
+    var channelThrottle = ChatManager.prototype.CHANNEL_SEEN_THROTTLE;
+    var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
+    ChatManager.prototype.CHANNEL_SEEN_THROTTLE = 1;
+    BasicComposer.prototype.MENTION_THROTTLE = 1;
+
+    var bus = new Bus();
+    var BusService = createBusService(bus);
+    var loadMoreDef = $.Deferred();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+
+    var msgData = [];
+    var loadMore = 0;
+    _.each(_.range(1, 41), function (num) {
+        msgData.push(
+            {id: num, body: "<p>test" + num + "</p>", author_id:["1", "Me"], channel_ids:[1]}
+        );
+    });
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: [ChatManager, BusService],
+        mockRPC: function (route, args) {
+            if (args.method === 'message_fetch') {
+                loadMore += args.kwargs.limit;
+                var message = msgData.slice(0, loadMore)
+                if (loadMore >= msgData.length) {
+                    loadMore = msgData.length;
+                    loadMoreDef.resolve();
+                }
+                return $.when(message);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_chat_sidebar').find('.o_mail_chat_channel_item[data-channel-id=1]');
+        assert.strictEqual($general.length, 1, "should have the channel item with id 1");
+        assert.strictEqual($general.attr('title'), 'general', "should have the title 'general'");
+
+        loadMore = 0;
+        // click on general
+        $general.click();
+
+        var mailThread = discuss.$('.o_mail_thread');
+
+        // should not load all messages; there are more messages then limit
+        var lastMessageID = mailThread.find('.o_thread_message').last().data('messageId');
+        assert.strictEqual(lastMessageID, loadMore, "should not load all messages");
+        // scroll top to load more messages
+        mailThread.scrollTop(0);
+
+        loadMoreDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+            // check load more is called
+            var lastMessageID = mailThread.find('.o_thread_message').last().data('messageId');
+            assert.strictEqual(lastMessageID, loadMore, "should load all messages");
+
+            // Restore throttles and window.getSelection
+            BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
+            ChatManager.prototype.CHANNEL_SEEN_THROTTLE = channelThrottle;
+            discuss.destroy();
+            done();
+        });
+    });
+});
+
 });
 });
