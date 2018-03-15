@@ -501,6 +501,9 @@ class Website(models.Model):
             'website_sale_current_pl': False,
         })
 
+# https://tosbourn.com/list-of-countries-without-a-postcode/
+optional_address_field_country = {'zip': ['ao','ag','aw','bs','bz','bj','bw','bq','bf','bi','cm','cf','km','cd','cg','ck','ci','cw','dj','dm','tp','gq','er','fj','tf','gm','ga','gh','gd','gy','hm','hk','ki','ly','mo','nr','an','nu','kp','qa','rw','kn','st','sc','sl','sb','sr','sy','tp','tg','tk','to','tv','ug','ae','vu','ye','zw','ie']}
+
 
 class ResCountry(models.Model):
     _inherit = 'res.country'
@@ -510,6 +513,15 @@ class ResCountry(models.Model):
 
     def get_website_sale_states(self, mode='billing'):
         return self.sudo().state_ids
+
+    @api.multi
+    def _get_specific_mandatory_fields(self):
+        self.ensure_one()
+        mandatory_fields = []
+        for field in optional_address_field_country.keys():
+            if self.code.lower() not in optional_address_field_country[field]:
+                mandatory_fields.append(field)
+        return mandatory_fields
 
 
 class ResPartner(models.Model):

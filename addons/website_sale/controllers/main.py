@@ -1054,5 +1054,6 @@ class WebsiteSale(http.Controller):
         return dict(
             fields=country.get_address_fields(),
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
-            phone_code=country.phone_code
+            phone_code=country.phone_code,
+            other_mandatory_fields=country._get_specific_mandatory_fields()
         )
