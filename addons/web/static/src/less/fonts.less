@@ -6,24 +6,16 @@
 .lato-font(@type, @weight, @style) {
     @font-face {
         font-family: 'Lato';
-        src: url('@{lato-font-path}/Lato-@{type}-webfont.eot');
-        src: url('@{lato-font-path}/Lato-@{type}-webfont.eot?#iefix') format('embedded-opentype'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.woff') format('woff'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.woff2') format('woff2'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.ttf') format('truetype'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.svg#Lato') format('svg');
+        src: url('@{lato-font-path}/Lato-@{type}-webfont.woff') format('woff'),
+             url('@{lato-font-path}/Lato-@{type}-webfont.woff2') format('woff2');
         font-weight: @weight;
         font-style: @style;
     }
 
     @font-face {
         font-family: 'Lato-@{type}';
-        src: url('@{lato-font-path}/Lato-@{type}-webfont.eot');
-        src: url('@{lato-font-path}/Lato-@{type}-webfont.eot?#iefix') format('embedded-opentype'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.woff') format('woff'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.woff2') format('woff2'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.ttf') format('truetype'),
-             url('@{lato-font-path}/Lato-@{type}-webfont.svg#Roboto') format('svg');
+        src: url('@{lato-font-path}/Lato-@{type}-webfont.woff') format('woff'),
+             url('@{lato-font-path}/Lato-@{type}-webfont.woff2') format('woff2');
     }
 }
 
