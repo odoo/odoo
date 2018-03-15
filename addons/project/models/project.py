@@ -433,7 +433,7 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
+    _inherit = ['mail.partner.mixin', 'portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
 
@@ -507,7 +507,7 @@ class Task(models.Model):
     notes = fields.Text(string='Notes')
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',track_visibility='onchange')
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
-    remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
+    remaining_hours = fields.Float(string='Remaining Hours', digits=(16, 2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
@@ -531,9 +531,6 @@ class Task(models.Model):
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
-    email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
-    email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
-        and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign', store=True, group_operator="avg")
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
@@ -897,7 +894,7 @@ class Task(models.Model):
         return {task.id: aliases.get(task.project_id.id, False) for task in tasks}
 
     @api.multi
-    def email_split(self, msg):
+    def _emails_subscribe_if_exists(self, msg):
         email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
         # check left-part is not already an alias
         aliases = self.mapped('project_id.alias_name')
@@ -909,28 +906,13 @@ class Task(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
-        # remove default author when going through the mail gateway. Indeed we
-        # do not want to explicitly set user_id to False; however we do not
-        # want the gateway user to be responsible if no other responsible is
-        # found.
-        create_context = dict(self.env.context or {})
-        create_context['default_user_id'] = False
         if custom_values is None:
             custom_values = {}
         defaults = {
-            'name': msg.get('subject') or _("No Subject"),
-            'email_from': msg.get('from'),
-            'email_cc': msg.get('cc'),
-            'planned_hours': 0.0,
-            'partner_id': msg.get('author_id')
+            'planned_hours': 0.0
         }
         defaults.update(custom_values)
-
-        task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        email_list = task.email_split(msg)
-        partner_ids = [p for p in task._find_partner_from_emails(email_list, force_create=False) if p]
-        task.message_subscribe(partner_ids)
-        return task
+        return super(Task, self).message_new(msg, custom_values=defaults)
 
     @api.multi
     def message_update(self, msg, update_vals=None):
@@ -952,9 +934,6 @@ class Task(models.Model):
                     except (ValueError, TypeError):
                         pass
 
-        email_list = self.email_split(msg)
-        partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
-        self.message_subscribe(partner_ids)
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
     @api.multi
@@ -984,18 +963,8 @@ class Task(models.Model):
         res['headers'] = repr(headers)
         return res
 
-    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message, values, notif_layout, notif_values)
+    def _message_partner_update_condition(self):
+        return [('stage_id.fold', '=', False)]
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})
