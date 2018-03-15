@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="suppadvance_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">Supplier Advance Payment</field>
+        <field name="account_id" ref="pcg_4091"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Supplier Advance Payment</field>
+    </record>
+    <record id="custadvance_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">Customer Advance Payment</field>
+        <field name="account_id" ref="pcg_419"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Customer Advance Payment</field>
+    </record>
+    <record id="bankcomm_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">Bank Commision</field>
+        <field name="account_id" ref="pcg_627" />
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Bank Commision</field>
+    </record>
+    <record id="interest_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">Interest</field>
+        <field name="account_id" ref="pcg_766"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Interest</field>
+    </record>
+    <record id="inttransfer_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">Internal Transfer</field>
+        <field name="account_id" ref="pcg_581"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Internal Transfer</field>
+    </record>
+    <record id="payroll_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">Payroll</field>
+        <field name="account_id" ref="pcg_421"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Payroll</field>
+    </record>
+    <record id="pendsettl_template" model="account.reconcile.model.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">Pending Settlement</field>
+        <field name="account_id" ref="pcg_473"/>
+        <field name="amount_type">percentage</field>
+        <field name="amount">100</field>
+        <field name="label">Pending Settlement</field>
+    </record>
+</odoo>

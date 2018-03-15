@@ -9,11 +9,13 @@
     <!-- Chart template -->
     <record id="ro_chart_template" model="account.chart.template">
         <field name="name">Romania - Chart of Accounts</field>
+        <field name="complete_tax_set" eval="True"/>
         <field name="bank_account_code_prefix">512</field>
         <field name="cash_account_code_prefix">531</field>
         <field name="transfer_account_code_prefix">581</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.RON"/>
+        <field name="use_anglo_saxon" eval="True"/>
     </record>
 
     <!-- Account Templates -->
@@ -23,6 +25,8 @@
         <field name="code">1011</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_101"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1012" model="account.account.template">
@@ -30,6 +34,8 @@
         <field name="code">1012</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_101"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1015" model="account.account.template">
@@ -37,6 +43,8 @@
         <field name="code">1015</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_101"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1016" model="account.account.template">
@@ -44,6 +52,9 @@
         <field name="code">1016</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_101"/>
+        <field name="reconcile" eval="False"/>
+        <field name="note">Acest cont mai apare doar la entităţile care nu au finalizat procedurile legale de transfer al bunurilor de natura patrimoniului public.</field>
     </record>
 
     <record id="pcg_1017" model="account.account.template">
@@ -51,6 +62,9 @@
         <field name="code">1017</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_101"/>
+        <field name="reconcile" eval="False"/>
+        <field name="note">Acest cont apare doar la entităţile care deţin, potrivit legii, bunuri de natura patrimoniului privat.</field>
     </record>
 
     <record id="pcg_1018" model="account.account.template">
@@ -58,13 +72,8 @@
         <field name="code">1018</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
-    </record>
-
-    <record id="pcg_1041" model="account.account.template">
-        <field name="name">Prime de emisiune</field>
-        <field name="code">1041</field>
-        <field name="user_type_id" ref="account.data_account_type_equity"/>
-        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_101"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1031" model="account.account.template">
@@ -72,6 +81,8 @@
         <field name="code">1031</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_103"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1033" model="account.account.template">
@@ -79,6 +90,9 @@
         <field name="code">1033</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_103"/>
+        <field name="reconcile" eval="False"/>
+        <field name="note">Acest cont apare numai în situaţiile financiare anuale consolidate.</field>
     </record>
 
     <record id="pcg_1038" model="account.account.template">
@@ -86,6 +100,9 @@
         <field name="code">1038</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_103"/>
+        <field name="reconcile" eval="False"/>
+        <field name="note">Acest cont apare numai în situaţiile financiare anuale consolidate.</field>
     </record>
 
     <record id="pcg_1041" model="account.account.template">
@@ -93,6 +110,8 @@
         <field name="code">1041</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_104"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1042" model="account.account.template">
@@ -100,6 +119,8 @@
         <field name="code">1042</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_104"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1043" model="account.account.template">
@@ -107,6 +128,8 @@
         <field name="code">1043</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_104"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1044" model="account.account.template">
@@ -114,6 +137,8 @@
         <field name="code">1044</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_104"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_105" model="account.account.template">
@@ -121,6 +146,8 @@
         <field name="code">105</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_10"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1061" model="account.account.template">
@@ -128,6 +155,8 @@
         <field name="code">1061</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_106"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1063" model="account.account.template">
@@ -135,6 +164,8 @@
         <field name="code">1063</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_106"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1068" model="account.account.template">
@@ -142,6 +173,8 @@
         <field name="code">1068</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_106"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_107" model="account.account.template">
@@ -149,6 +182,8 @@
         <field name="code">107</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_10"/>
+        <field name="reconcile" eval="False"/>
         <field name="note">Acest cont apare numai in situatiile financiare anuale consolidate</field>
     </record>
 
@@ -157,6 +192,8 @@
         <field name="code">1081</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_108"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1082" model="account.account.template">
@@ -164,6 +201,8 @@
         <field name="code">1082</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_108"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1091" model="account.account.template">
@@ -171,6 +210,8 @@
         <field name="code">1091</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_109"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1092" model="account.account.template">
@@ -178,6 +219,8 @@
         <field name="code">1092</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_109"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1095" model="account.account.template">
@@ -185,6 +228,8 @@
         <field name="code">1095</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_109"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1171" model="account.account.template">
@@ -192,6 +237,8 @@
         <field name="code">1171</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_117"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1172" model="account.account.template">
@@ -199,6 +246,8 @@
         <field name="code">1172</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_117"/>
+        <field name="reconcile" eval="False"/>
         <field name="note">Acest cont apare doar la agentii economici care au aplicat Reglementarile contabile aprobate prin OMFP nr. 94/2001 si panã la inchiderea soldului acestui cont</field>
     </record>
 
@@ -207,6 +256,8 @@
         <field name="code">1173</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_117"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1174" model="account.account.template">
@@ -214,6 +265,8 @@
         <field name="code">1174</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_117"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1175" model="account.account.template">
@@ -221,6 +274,8 @@
         <field name="code">1175</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_117"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1176" model="account.account.template">
@@ -228,13 +283,17 @@
         <field name="code">1176</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_117"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_121" model="account.account.template">
         <field name="name">Profit sau pierdere</field>
         <field name="code">121</field>
-        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="user_type_id" ref="account.data_unaffected_earnings"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_12"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_129" model="account.account.template">
@@ -242,13 +301,17 @@
         <field name="code">129</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_12"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1411" model="account.account.template">
         <field name="name">Câştiguri legate de vânzarea instrumentelor de capitaluri proprii</field>
         <field name="code">1411</field>
-        <field name="user_type_id" ref="account.data_unaffected_earnings"/>
+        <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_141"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1412" model="account.account.template">
@@ -256,6 +319,8 @@
         <field name="code">1412</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/><!--TODO OCO était unaffected_earnings-->
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_141"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1491" model="account.account.template">
@@ -263,6 +328,8 @@
         <field name="code">1491</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_149"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1495" model="account.account.template">
@@ -270,6 +337,8 @@
         <field name="code">1495</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_149"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1498" model="account.account.template">
@@ -277,6 +346,8 @@
         <field name="code">1498</field>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_149"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1511" model="account.account.template">
@@ -284,6 +355,8 @@
         <field name="code">1511</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1512" model="account.account.template">
@@ -291,6 +364,8 @@
         <field name="code">1512</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1513" model="account.account.template">
@@ -298,6 +373,8 @@
         <field name="code">1513</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
         <field name="note">Acest cont apare doar la agentii economici care au aplicat Reglementarile contabile aprobate prin OMFP nr. 94/2001 si pana la scoaterea din evidenta a imobilizarilor corporale in valoarea carora au fost incluse aceste provizioane. Ca urmare, aceste provizioane nu se mai pot constitui in baza prezentelor reglementari.</field>
     </record>
 
@@ -306,6 +383,8 @@
         <field name="code">1514</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1515" model="account.account.template">
@@ -313,6 +392,8 @@
         <field name="code">1515</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1516" model="account.account.template">
@@ -320,6 +401,8 @@
         <field name="code">1516</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1517" model="account.account.template">
@@ -327,6 +410,8 @@
         <field name="code">1517</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1518" model="account.account.template">
@@ -334,6 +419,8 @@
         <field name="code">1518</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_151"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1614" model="account.account.template">
@@ -341,6 +428,8 @@
         <field name="code">1614</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_161"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1615" model="account.account.template">
@@ -348,6 +437,8 @@
         <field name="code">1615</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_161"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1617" model="account.account.template">
@@ -355,6 +446,8 @@
         <field name="code">1617</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_161"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1618" model="account.account.template">
@@ -362,6 +455,8 @@
         <field name="code">1618</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_161"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1621" model="account.account.template">
@@ -369,6 +464,8 @@
         <field name="code">1621</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_162"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1622" model="account.account.template">
@@ -376,6 +473,8 @@
         <field name="code">1622</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_162"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1623" model="account.account.template">
@@ -383,6 +482,8 @@
         <field name="code">1623</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_162"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1624" model="account.account.template">
@@ -390,6 +491,8 @@
         <field name="code">1624</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_162"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1625" model="account.account.template">
@@ -397,6 +500,8 @@
         <field name="code">1625</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_162"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1626" model="account.account.template">
@@ -404,6 +509,8 @@
         <field name="code">1626</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_162"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1627" model="account.account.template">
@@ -411,6 +518,8 @@
         <field name="code">1627</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_162"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1661" model="account.account.template">
@@ -418,6 +527,8 @@
         <field name="code">1661</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_166"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1663" model="account.account.template">
@@ -425,6 +536,8 @@
         <field name="code">1663</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_166"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_167" model="account.account.template">
@@ -432,6 +545,8 @@
         <field name="code">167</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_16"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1681" model="account.account.template">
@@ -439,6 +554,8 @@
         <field name="code">1681</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_168"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1682" model="account.account.template">
@@ -446,6 +563,8 @@
         <field name="code">1682</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_168"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1685" model="account.account.template">
@@ -453,6 +572,8 @@
         <field name="code">1685</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_168"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1686" model="account.account.template">
@@ -460,6 +581,8 @@
         <field name="code">1686</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_168"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1687" model="account.account.template">
@@ -467,6 +590,8 @@
         <field name="code">1687</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_168"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1691" model="account.account.template">
@@ -474,6 +599,8 @@
         <field name="code">1691</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_169"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_1692" model="account.account.template">
@@ -481,6 +608,8 @@
         <field name="code">1692</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_169"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_201" model="account.account.template">
@@ -488,6 +617,8 @@
         <field name="code">201</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_20"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_203" model="account.account.template">
@@ -495,6 +626,8 @@
         <field name="code">203</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_20"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_205" model="account.account.template">
@@ -502,6 +635,8 @@
         <field name="code">205</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_20"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_206" model="account.account.template">
@@ -509,6 +644,8 @@
         <field name="code">206</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_20"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2071" model="account.account.template">
@@ -516,6 +653,8 @@
         <field name="code">2071</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_207"/>
+        <field name="reconcile" eval="False"/>
         <field name="note">Acest cont apare, de regula, in situatiile financiare anuale consolidate</field>
     </record>
 
@@ -524,6 +663,8 @@
         <field name="code">2075</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_207"/>
+        <field name="reconcile" eval="False"/>
         <field name="note">Acest cont apare numai in situatiile financiare anuale consolidate</field>
     </record>
 
@@ -532,6 +673,8 @@
         <field name="code">208</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_20"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2111" model="account.account.template">
@@ -539,6 +682,8 @@
         <field name="code">2111</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_211"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2112" model="account.account.template">
@@ -546,6 +691,8 @@
         <field name="code">2112</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_211"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_212" model="account.account.template">
@@ -553,6 +700,8 @@
         <field name="code">212</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_21"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2131" model="account.account.template">
@@ -560,6 +709,8 @@
         <field name="code">2131</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_213"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2132" model="account.account.template">
@@ -567,6 +718,8 @@
         <field name="code">2132</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_213"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2133" model="account.account.template">
@@ -574,6 +727,8 @@
         <field name="code">2133</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_213"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_214" model="account.account.template">
@@ -581,6 +736,8 @@
         <field name="code">214</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_21"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_215" model="account.account.template">
@@ -588,6 +745,8 @@
         <field name="code">215</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_21"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_216" model="account.account.template">
@@ -595,6 +754,8 @@
         <field name="code">216</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_21"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_217" model="account.account.template">
@@ -602,6 +763,8 @@
         <field name="code">217</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_21"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_223" model="account.account.template">
@@ -609,6 +772,8 @@
         <field name="code">223</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_22"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_224" model="account.account.template">
@@ -616,6 +781,8 @@
         <field name="code">224</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_22"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_227" model="account.account.template">
@@ -623,6 +790,8 @@
         <field name="code">227</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_22"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_231" model="account.account.template">
@@ -630,6 +799,8 @@
         <field name="code">231</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_23"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_235" model="account.account.template">
@@ -637,6 +808,8 @@
         <field name="code">235</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_23"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_261" model="account.account.template">
@@ -644,6 +817,8 @@
         <field name="code">261</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_26"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_262" model="account.account.template">
@@ -651,6 +826,8 @@
         <field name="code">262</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_26"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_263" model="account.account.template">
@@ -658,6 +835,8 @@
         <field name="code">263</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_26"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_264" model="account.account.template">
@@ -665,6 +844,8 @@
         <field name="code">264</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_26"/>
+        <field name="reconcile" eval="False"/>
         <field name="note">Acest cont apare numai in situatiile financiare anuale consolidate</field>
     </record>
 
@@ -673,6 +854,8 @@
         <field name="code">265</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_26"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_266" model="account.account.template">
@@ -680,6 +863,8 @@
         <field name="code">266</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_26"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2671" model="account.account.template">
@@ -687,6 +872,8 @@
         <field name="code">2671</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2672" model="account.account.template">
@@ -694,6 +881,8 @@
         <field name="code">2672</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2673" model="account.account.template">
@@ -701,6 +890,8 @@
         <field name="code">2673</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2674" model="account.account.template">
@@ -708,6 +899,8 @@
         <field name="code">2674</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2675" model="account.account.template">
@@ -715,6 +908,8 @@
         <field name="code">2675</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2676" model="account.account.template">
@@ -722,6 +917,8 @@
         <field name="code">2676</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2677" model="account.account.template">
@@ -729,6 +926,8 @@
         <field name="code">2677</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2678" model="account.account.template">
@@ -736,6 +935,8 @@
         <field name="code">2678</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2679" model="account.account.template">
@@ -743,6 +944,8 @@
         <field name="code">2679</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_267"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2691" model="account.account.template">
@@ -750,6 +953,8 @@
         <field name="code">2691</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_269"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2692" model="account.account.template">
@@ -757,6 +962,8 @@
         <field name="code">2692</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_269"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2693" model="account.account.template">
@@ -764,6 +971,8 @@
         <field name="code">2693</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_269"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2695" model="account.account.template">
@@ -771,6 +980,8 @@
         <field name="code">2695</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_269"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2801" model="account.account.template">
@@ -778,6 +989,8 @@
         <field name="code">2801</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_280"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2803" model="account.account.template">
@@ -785,6 +998,8 @@
         <field name="code">2803</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_280"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2805" model="account.account.template">
@@ -792,6 +1007,8 @@
         <field name="code">2805</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_280"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2806" model="account.account.template">
@@ -799,6 +1016,8 @@
         <field name="code">2806</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_280"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2807" model="account.account.template">
@@ -806,6 +1025,8 @@
         <field name="code">2807</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_280"/>
+        <field name="reconcile" eval="False"/>
         <field name="note">Acest cont apare, de regula, in situatiile financiare anuale consolidate</field>
     </record>
 
@@ -814,6 +1035,8 @@
         <field name="code">2808</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_280"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2811" model="account.account.template">
@@ -821,6 +1044,8 @@
         <field name="code">2811</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_281"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2812" model="account.account.template">
@@ -828,6 +1053,8 @@
         <field name="code">2812</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_281"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2813" model="account.account.template">
@@ -835,6 +1062,8 @@
         <field name="code">2813</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_281"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2814" model="account.account.template">
@@ -842,6 +1071,8 @@
         <field name="code">2814</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_281"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2815" model="account.account.template">
@@ -849,6 +1080,8 @@
         <field name="code">2815</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_281"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2816" model="account.account.template">
@@ -856,6 +1089,8 @@
         <field name="code">2816</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_281"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2817" model="account.account.template">
@@ -863,6 +1098,8 @@
         <field name="code">2817</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_281"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2903" model="account.account.template">
@@ -870,6 +1107,8 @@
         <field name="code">2903</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_290"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2905" model="account.account.template">
@@ -877,6 +1116,8 @@
         <field name="code">2905</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_290"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2906" model="account.account.template">
@@ -884,6 +1125,8 @@
         <field name="code">2906</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_290"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2908" model="account.account.template">
@@ -891,6 +1134,8 @@
         <field name="code">2908</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_290"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2911" model="account.account.template">
@@ -898,6 +1143,8 @@
         <field name="code">2911</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_291"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2912" model="account.account.template">
@@ -905,6 +1152,8 @@
         <field name="code">2912</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_291"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2913" model="account.account.template">
@@ -912,6 +1161,8 @@
         <field name="code">2913</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_291"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2914" model="account.account.template">
@@ -919,6 +1170,8 @@
         <field name="code">2914</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_291"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2915" model="account.account.template">
@@ -926,6 +1179,8 @@
         <field name="code">2915</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_291"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2916" model="account.account.template">
@@ -933,6 +1188,8 @@
         <field name="code">2916</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_291"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2917" model="account.account.template">
@@ -940,6 +1197,8 @@
         <field name="code">2917</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_291"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2931" model="account.account.template">
@@ -947,6 +1206,8 @@
         <field name="code">2931</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_293"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2935" model="account.account.template">
@@ -954,6 +1215,8 @@
         <field name="code">2935</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_293"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2961" model="account.account.template">
@@ -961,6 +1224,8 @@
         <field name="code">2961</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_296"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2962" model="account.account.template">
@@ -968,6 +1233,8 @@
         <field name="code">2962</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_296"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2963" model="account.account.template">
@@ -975,6 +1242,8 @@
         <field name="code">2963</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_296"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2964" model="account.account.template">
@@ -982,6 +1251,8 @@
         <field name="code">2964</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_296"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2965" model="account.account.template">
@@ -989,6 +1260,8 @@
         <field name="code">2965</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_296"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2966" model="account.account.template">
@@ -996,6 +1269,8 @@
         <field name="code">2966</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_296"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_2968" model="account.account.template">
@@ -1003,6 +1278,8 @@
         <field name="code">2968</field>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_296"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_301" model="account.account.template">
@@ -1010,6 +1287,8 @@
         <field name="code">301</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_30"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3021" model="account.account.template">
@@ -1017,6 +1296,8 @@
         <field name="code">3021</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_302"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3022" model="account.account.template">
@@ -1024,6 +1305,8 @@
         <field name="code">3022</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_302"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3023" model="account.account.template">
@@ -1031,6 +1314,8 @@
         <field name="code">3023</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_302"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3024" model="account.account.template">
@@ -1038,6 +1323,8 @@
         <field name="code">3024</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_302"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3025" model="account.account.template">
@@ -1045,6 +1332,8 @@
         <field name="code">3025</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_302"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3026" model="account.account.template">
@@ -1052,6 +1341,8 @@
         <field name="code">3026</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_302"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3028" model="account.account.template">
@@ -1059,6 +1350,8 @@
         <field name="code">3028</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_302"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_303" model="account.account.template">
@@ -1066,6 +1359,8 @@
         <field name="code">303</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_30"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_308" model="account.account.template">
@@ -1073,6 +1368,8 @@
         <field name="code">308</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_30"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_321" model="account.account.template">
@@ -1080,6 +1377,8 @@
         <field name="code">321</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_32"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_322" model="account.account.template">
@@ -1087,6 +1386,8 @@
         <field name="code">322</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_32"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_323" model="account.account.template">
@@ -1094,6 +1395,8 @@
         <field name="code">323</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_32"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_326" model="account.account.template">
@@ -1101,6 +1404,8 @@
         <field name="code">326</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_32"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_327" model="account.account.template">
@@ -1108,6 +1413,8 @@
         <field name="code">327</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_32"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_328" model="account.account.template">
@@ -1115,6 +1422,8 @@
         <field name="code">328</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_32"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_331" model="account.account.template">
@@ -1122,6 +1431,8 @@
         <field name="code">331</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_33"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_332" model="account.account.template">
@@ -1129,6 +1440,8 @@
         <field name="code">332</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_33"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_341" model="account.account.template">
@@ -1136,6 +1449,8 @@
         <field name="code">341</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_34"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_345" model="account.account.template">
@@ -1143,6 +1458,8 @@
         <field name="code">345</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_34"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_346" model="account.account.template">
@@ -1150,6 +1467,8 @@
         <field name="code">346</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_34"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_347" model="account.account.template">
@@ -1157,6 +1476,8 @@
         <field name="code">347</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_34"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_348" model="account.account.template">
@@ -1164,6 +1485,8 @@
         <field name="code">348</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_34"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_351" model="account.account.template">
@@ -1171,6 +1494,8 @@
         <field name="code">351</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_35"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_354" model="account.account.template">
@@ -1178,6 +1503,8 @@
         <field name="code">354</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_35"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_356" model="account.account.template">
@@ -1185,6 +1512,8 @@
         <field name="code">356</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_35"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_357" model="account.account.template">
@@ -1192,6 +1521,8 @@
         <field name="code">357</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_35"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_358" model="account.account.template">
@@ -1199,6 +1530,8 @@
         <field name="code">358</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_35"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_361" model="account.account.template">
@@ -1206,6 +1539,8 @@
         <field name="code">361</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_36"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_368" model="account.account.template">
@@ -1213,6 +1548,8 @@
         <field name="code">368</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_36"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_371" model="account.account.template">
@@ -1220,6 +1557,8 @@
         <field name="code">371</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_37"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_378" model="account.account.template">
@@ -1227,6 +1566,8 @@
         <field name="code">378</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_37"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_381" model="account.account.template">
@@ -1234,6 +1575,8 @@
         <field name="code">381</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_38"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_388" model="account.account.template">
@@ -1241,6 +1584,8 @@
         <field name="code">388</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_38"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_391" model="account.account.template">
@@ -1248,6 +1593,8 @@
         <field name="code">391</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_39"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3921" model="account.account.template">
@@ -1255,6 +1602,8 @@
         <field name="code">3921</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_392"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3922" model="account.account.template">
@@ -1262,6 +1611,8 @@
         <field name="code">3922</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_392"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_393" model="account.account.template">
@@ -1269,6 +1620,8 @@
         <field name="code">393</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_39"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3941" model="account.account.template">
@@ -1276,6 +1629,8 @@
         <field name="code">3941</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_394"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3945" model="account.account.template">
@@ -1283,6 +1638,8 @@
         <field name="code">3945</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_394"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3946" model="account.account.template">
@@ -1290,6 +1647,8 @@
         <field name="code">3946</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_394"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3947" model="account.account.template">
@@ -1297,6 +1656,8 @@
         <field name="code">3947</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_394"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3951" model="account.account.template">
@@ -1304,6 +1665,8 @@
         <field name="code">3951</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3952" model="account.account.template">
@@ -1311,6 +1674,8 @@
         <field name="code">3952</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3953" model="account.account.template">
@@ -1318,6 +1683,8 @@
         <field name="code">3953</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3954" model="account.account.template">
@@ -1325,6 +1692,8 @@
         <field name="code">3954</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3955" model="account.account.template">
@@ -1332,6 +1701,8 @@
         <field name="code">3955</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3956" model="account.account.template">
@@ -1339,6 +1710,8 @@
         <field name="code">3956</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3957" model="account.account.template">
@@ -1346,6 +1719,8 @@
         <field name="code">3957</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_3958" model="account.account.template">
@@ -1353,6 +1728,8 @@
         <field name="code">3958</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_395"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_396" model="account.account.template">
@@ -1360,6 +1737,8 @@
         <field name="code">396</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_39"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_397" model="account.account.template">
@@ -1367,6 +1746,8 @@
         <field name="code">397</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_39"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="pcg_398" model="account.account.template">
@@ -1374,6 +1755,8 @@
         <field name="code">398</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_39"/>
+        <field name="reconcile" eval="False"/>
     </record>
 
     <record id="ro_pcg_pay" model="account.account.template">
@@ -1381,6 +1764,7 @@
         <field name="code">401</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_4"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1389,6 +1773,7 @@
         <field name="code">403</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_4"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1397,6 +1782,7 @@
         <field name="code">404</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_4"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1405,6 +1791,7 @@
         <field name="code">405</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_4"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1413,6 +1800,7 @@
         <field name="code">408</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_4"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1421,6 +1809,7 @@
         <field name="code">4091</field>
         <field name="user_type_id" ref="account.data_account_type_payable" />
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_409"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1429,6 +1818,7 @@
         <field name="code">4092</field>
         <field name="user_type_id" ref="account.data_account_type_payable" />
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_409"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1437,6 +1827,7 @@
         <field name="code">4093</field>
         <field name="user_type_id" ref="account.data_account_type_payable" />
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_409"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1445,6 +1836,7 @@
         <field name="code">4094</field>
         <field name="user_type_id" ref="account.data_account_type_payable" />
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_409"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1453,6 +1845,7 @@
         <field name="code">4111</field>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_411"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1461,6 +1854,7 @@
         <field name="code">4118</field>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_411"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1469,6 +1863,7 @@
         <field name="code">413</field>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_41"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1477,6 +1872,7 @@
         <field name="code">418</field>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_41"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1485,6 +1881,7 @@
         <field name="code">419</field>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_41"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1493,6 +1890,7 @@
         <field name="code">421</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_42"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1501,6 +1899,7 @@
         <field name="code">423</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_42"/>
     </record>
 
     <record id="pcg_424" model="account.account.template">
@@ -1508,14 +1907,16 @@
         <field name="code">424</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_42"/>
         <field name="note">Se utilizeaza atunci cand exista baza legala pentru acordarea acestora</field>
     </record>
 
     <record id="pcg_425" model="account.account.template">
         <field name="name">Avansuri acordate personalului</field>
         <field name="code">425</field>
-        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_42"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1524,6 +1925,7 @@
         <field name="code">426</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_42"/>
     </record>
 
     <record id="pcg_427" model="account.account.template">
@@ -1531,7 +1933,7 @@
         <field name="code">427</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="reconcile" eval="True"/>
+        <field name="group_id" ref="l10n_ro.account_group_42"/>
     </record>
 
     <record id="pcg_4281" model="account.account.template">
@@ -1539,6 +1941,7 @@
         <field name="code">4281</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_428"/>
     </record>
 
     <record id="pcg_4282" model="account.account.template">
@@ -1546,6 +1949,7 @@
         <field name="code">4282</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_428"/>
     </record>
 
     <record id="pcg_4311" model="account.account.template">
@@ -1553,6 +1957,7 @@
         <field name="code">4311</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_431"/>
     </record>
 
     <record id="pcg_4312" model="account.account.template">
@@ -1560,6 +1965,7 @@
         <field name="code">4312</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_431"/>
     </record>
 
     <record id="pcg_4313" model="account.account.template">
@@ -1567,6 +1973,7 @@
         <field name="code">4313</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_431"/>
     </record>
 
     <record id="pcg_4314" model="account.account.template">
@@ -1574,6 +1981,16 @@
         <field name="code">4314</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_431"/>
+    </record>
+
+    <record id="pcg_4318" model="account.account.template">
+        <field name="name">Alte contribuţii pentru asigurările sociale de sănătate</field>
+        <field name="code">4318</field>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_431"/>
+        <field name="note">În acest cont se înregistrează contribuţia datorată, potrivit legii, de alte persoane decât angajaţii, pentru asigurările sociale de sănătate.</field>
     </record>
 
     <record id="pcg_4371" model="account.account.template">
@@ -1581,6 +1998,7 @@
         <field name="code">4371</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_437"/>
     </record>
 
     <record id="pcg_4372" model="account.account.template">
@@ -1588,6 +2006,7 @@
         <field name="code">4372</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_437"/>
     </record>
 
     <record id="pcg_4381" model="account.account.template">
@@ -1595,6 +2014,7 @@
         <field name="code">4381</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_438"/>
     </record>
 
     <record id="pcg_4382" model="account.account.template">
@@ -1602,6 +2022,7 @@
         <field name="code">4382</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_438"/>
     </record>
 
     <record id="pcg_4411" model="account.account.template">
@@ -1609,6 +2030,7 @@
         <field name="code">4411</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_441"/>
     </record>
 
     <record id="pcg_4418" model="account.account.template">
@@ -1616,6 +2038,8 @@
         <field name="code">4418</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_441"/>
+        <field name="note">Se utilizează pentru evidenţierea impozitului pe venitul microîntreprinderilor, definite conform legii.</field>
     </record>
 
     <record id="pcg_4423" model="account.account.template">
@@ -1623,6 +2047,7 @@
         <field name="code">4423</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_442"/> 
     </record>
 
     <record id="pcg_4424" model="account.account.template">
@@ -1630,6 +2055,7 @@
         <field name="code">4424</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_442"/> 
     </record>
 
     <record id="pcg_4426" model="account.account.template">
@@ -1637,6 +2063,7 @@
         <field name="code">4426</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_442"/> 
     </record>
 
     <record id="pcg_4427" model="account.account.template">
@@ -1644,6 +2071,7 @@
         <field name="code">4427</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_442"/> 
     </record>
 
     <record id="pcg_44281" model="account.account.template">
@@ -1651,6 +2079,7 @@
         <field name="code">44281</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_4428"/> 
     </record>
 
     <record id="pcg_44282" model="account.account.template">
@@ -1658,6 +2087,7 @@
         <field name="code">44282</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_4428"/> 
     </record>
 
     <record id="pcg_444" model="account.account.template">
@@ -1665,7 +2095,7 @@
         <field name="code">444</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="reconcile" eval="True"/>
+        <field name="group_id" ref="l10n_ro.account_group_44"/>
     </record>
 
     <record id="pcg_4451" model="account.account.template">
@@ -1673,6 +2103,7 @@
         <field name="code">4451</field>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_445"/>
     </record>
 
     <record id="pcg_4452" model="account.account.template">
@@ -1680,6 +2111,7 @@
         <field name="code">4452</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_445"/>
     </record>
 
     <record id="pcg_4458" model="account.account.template">
@@ -1687,6 +2119,7 @@
         <field name="code">4458</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_445"/>
     </record>
 
     <record id="pcg_446" model="account.account.template">
@@ -1694,7 +2127,7 @@
         <field name="code">446</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="reconcile" eval="True"/>
+        <field name="group_id" ref="l10n_ro.account_group_44"/>
     </record>
 
     <record id="pcg_447" model="account.account.template">
@@ -1702,6 +2135,7 @@
         <field name="code">447</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_44"/>
     </record>
 
     <record id="pcg_4481" model="account.account.template">
@@ -1709,6 +2143,7 @@
         <field name="code">4481</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_448"/>
     </record>
 
     <record id="pcg_4482" model="account.account.template">
@@ -1716,6 +2151,7 @@
         <field name="code">4482</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_448"/>
     </record>
 
     <record id="pcg_4511" model="account.account.template">
@@ -1723,6 +2159,7 @@
         <field name="code">4511</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_451"/>
     </record>
 
     <record id="pcg_4518" model="account.account.template">
@@ -1730,6 +2167,7 @@
         <field name="code">4518</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_451"/>
     </record>
 
     <record id="pcg_4531" model="account.account.template">
@@ -1737,6 +2175,7 @@
         <field name="code">4531</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_453"/>
     </record>
 
     <record id="pcg_4538" model="account.account.template">
@@ -1744,6 +2183,7 @@
         <field name="code">4538</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_453"/>
     </record>
 
     <record id="pcg_4551" model="account.account.template">
@@ -1751,6 +2191,7 @@
         <field name="code">4551</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_455"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1759,6 +2200,7 @@
         <field name="code">4558</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_455"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1767,6 +2209,7 @@
         <field name="code">456</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_45"/>
     </record>
 
     <record id="pcg_457" model="account.account.template">
@@ -1774,6 +2217,7 @@
         <field name="code">457</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_45"/>
     </record>
 
     <record id="pcg_4581" model="account.account.template">
@@ -1781,6 +2225,7 @@
         <field name="code">4581</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_458"/>
     </record>
 
     <record id="pcg_4582" model="account.account.template">
@@ -1788,6 +2233,7 @@
         <field name="code">4582</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_458"/>
     </record>
 
     <record id="pcg_461" model="account.account.template">
@@ -1795,6 +2241,7 @@
         <field name="code">461</field>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_46"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1803,6 +2250,7 @@
         <field name="code">462</field>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_46"/>
         <field name="reconcile" eval="True"/>
     </record>
 
@@ -1811,6 +2259,7 @@
         <field name="code">4661</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_466"/>
     </record>
 
     <record id="pcg_4662" model="account.account.template">
@@ -1818,6 +2267,7 @@
         <field name="code">4662</field>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_466"/>
     </record>
 
     <record id="pcg_471" model="account.account.template">
@@ -1825,6 +2275,7 @@
         <field name="code">471</field>
         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_47"/>
     </record>
 
     <record id="pcg_472" model="account.account.template">
@@ -1832,6 +2283,7 @@
         <field name="code">472</field>
         <field name="user_type_id" ref="account.data_account_type_prepayments"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_47"/>
     </record>
 
     <record id="pcg_473" model="account.account.template">
@@ -1839,6 +2291,7 @@
         <field name="code">473</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_47"/>
     </record>
 
     <record id="pcg_4751" model="account.account.template">
@@ -1846,6 +2299,7 @@
         <field name="code">4751</field>
         <field name="user_type_id" ref="account.data_account_type_other_income"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_475"/>
     </record>
 
      <record id="pcg_4752" model="account.account.template">
@@ -1853,6 +2307,7 @@
         <field name="code">4752</field>
         <field name="user_type_id" ref="account.data_account_type_other_income"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_475"/>
     </record>
 
      <record id="pcg_4753" model="account.account.template">
@@ -1860,6 +2315,7 @@
         <field name="code">4753</field>
         <field name="user_type_id" ref="account.data_account_type_other_income"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_475"/>
     </record>
 
     <record id="pcg_4754" model="account.account.template">
@@ -1867,6 +2323,7 @@
         <field name="code">4754</field>
         <field name="user_type_id" ref="account.data_account_type_other_income"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_475"/>
     </record>
 
      <record id="pcg_4758" model="account.account.template">
@@ -1874,6 +2331,7 @@
         <field name="code">4758</field>
         <field name="user_type_id" ref="account.data_account_type_other_income"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_475"/>
     </record>
 
      <record id="pcg_478" model="account.account.template">
@@ -1881,6 +2339,7 @@
         <field name="code">478</field>
         <field name="user_type_id" ref="account.data_account_type_other_income"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_47"/>
     </record>
 
     <record id="pcg_481" model="account.account.template">
@@ -1888,6 +2347,7 @@
         <field name="code">481</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_48"/>
     </record>
 
     <record id="pcg_482" model="account.account.template">
@@ -1895,6 +2355,7 @@
         <field name="code">482</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_48"/>
     </record>
 
     <record id="pcg_491" model="account.account.template">
@@ -1902,6 +2363,7 @@
         <field name="code">491</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_49"/>
     </record>
 
     <record id="pcg_495" model="account.account.template">
@@ -1909,6 +2371,7 @@
         <field name="code">495</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_49"/>
     </record>
 
     <record id="pcg_496" model="account.account.template">
@@ -1916,6 +2379,7 @@
         <field name="code">496</field>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_49"/>
     </record>
 
     <record id="pcg_501" model="account.account.template">
@@ -1923,6 +2387,7 @@
         <field name="code">501</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_50"/>
     </record>
 
     <record id="pcg_505" model="account.account.template">
@@ -1930,6 +2395,7 @@
         <field name="code">505</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_50"/>
     </record>
 
     <record id="pcg_506" model="account.account.template">
@@ -1937,6 +2403,7 @@
         <field name="code">506</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_50"/>
     </record>
 
     <record id="pcg_507" model="account.account.template">
@@ -1944,6 +2411,7 @@
         <field name="code">507</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_50"/>
     </record>
 
     <record id="pcg_5081" model="account.account.template">
@@ -1951,6 +2419,7 @@
         <field name="code">5081</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_508"/>
     </record>
 
     <record id="pcg_5088" model="account.account.template">
@@ -1958,6 +2427,7 @@
         <field name="code">5088</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_508"/>
     </record>
 
     <record id="pcg_5091" model="account.account.template">
@@ -1965,6 +2435,7 @@
         <field name="code">5091</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_509"/>
     </record>
 
     <record id="pcg_5092" model="account.account.template">
@@ -1972,6 +2443,7 @@
         <field name="code">5092</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_509"/>
     </record>
 
     <record id="pcg_5112" model="account.account.template">
@@ -1979,6 +2451,7 @@
         <field name="code">5112</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_511"/>
     </record>
 
     <record id="pcg_5113" model="account.account.template">
@@ -1986,6 +2459,7 @@
         <field name="code">5113</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_511"/>
     </record>
 
     <record id="pcg_5114" model="account.account.template">
@@ -1993,6 +2467,7 @@
         <field name="code">5114</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_511"/>
     </record>
 
 
@@ -2001,6 +2476,7 @@
         <field name="code">5121</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_512"/>
     </record>
 
 
@@ -2009,6 +2485,7 @@
         <field name="code">5124</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_512"/>
     </record>
 
     <record id="pcg_5125" model="account.account.template">
@@ -2016,6 +2493,7 @@
         <field name="code">5125</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_512"/>
     </record>
 
     <record id="pcg_5186" model="account.account.template">
@@ -2023,6 +2501,7 @@
         <field name="code">5186</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_518"/>
     </record>
 
     <record id="pcg_5187" model="account.account.template">
@@ -2030,6 +2509,7 @@
         <field name="code">5187</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_518"/>
     </record>
 
     <record id="pcg_5191" model="account.account.template">
@@ -2037,6 +2517,7 @@
         <field name="code">5191</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5192" model="account.account.template">
@@ -2044,6 +2525,7 @@
         <field name="code">5192</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5193" model="account.account.template">
@@ -2051,6 +2533,7 @@
         <field name="code">5193</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5194" model="account.account.template">
@@ -2058,6 +2541,7 @@
         <field name="code">5194</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5195" model="account.account.template">
@@ -2065,6 +2549,7 @@
         <field name="code">5195</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5196" model="account.account.template">
@@ -2072,6 +2557,7 @@
         <field name="code">5196</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5197" model="account.account.template">
@@ -2079,6 +2565,7 @@
         <field name="code">5197</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5198" model="account.account.template">
@@ -2086,6 +2573,7 @@
         <field name="code">5198</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_519"/>
     </record>
 
     <record id="pcg_5311" model="account.account.template">
@@ -2093,6 +2581,7 @@
         <field name="code">5311</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_531"/>
     </record>
 
     <record id="pcg_5314" model="account.account.template">
@@ -2100,6 +2589,7 @@
         <field name="code">5314</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_531"/>
     </record>
 
     <record id="pcg_5321" model="account.account.template">
@@ -2107,6 +2597,7 @@
         <field name="code">5321</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_532"/>
     </record>
 
     <record id="pcg_5322" model="account.account.template">
@@ -2114,6 +2605,7 @@
         <field name="code">5322</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_532"/>
     </record>
 
     <record id="pcg_5323" model="account.account.template">
@@ -2121,6 +2613,7 @@
         <field name="code">5323</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_532"/>
     </record>
 
     <record id="pcg_5328" model="account.account.template">
@@ -2128,6 +2621,7 @@
         <field name="code">5328</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_532"/>
     </record>
 
     <record id="pcg_5411" model="account.account.template">
@@ -2135,6 +2629,7 @@
         <field name="code">5411</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_541"/>
     </record>
 
     <record id="pcg_5412" model="account.account.template">
@@ -2142,6 +2637,7 @@
         <field name="code">5412</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_541"/>
     </record>
 
     <record id="pcg_542" model="account.account.template">
@@ -2149,6 +2645,7 @@
         <field name="code">542</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_54"/>
         <field name="note">in acest cont vor fi evidentiate si sumele acordate prin sistemul de carduri</field>
     </record>
 
@@ -2157,7 +2654,7 @@
         <field name="code">581</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="reconcile" eval="True"/>
+        <field name="group_id" ref="l10n_ro.account_group_58"/>
     </record>
 
     <record id="pcg_591" model="account.account.template">
@@ -2165,6 +2662,7 @@
         <field name="code">591</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_59"/>
     </record>
 
     <record id="pcg_595" model="account.account.template">
@@ -2172,6 +2670,7 @@
         <field name="code">595</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_59"/>
     </record>
 
     <record id="pcg_596" model="account.account.template">
@@ -2179,6 +2678,7 @@
         <field name="code">596</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_59"/>
     </record>
 
     <record id="pcg_598" model="account.account.template">
@@ -2186,6 +2686,7 @@
         <field name="code">598</field>
         <field name="user_type_id" ref="account.data_account_type_liquidity"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_59"/>
     </record>
 
     <record id="pcg_601" model="account.account.template">
@@ -2193,6 +2694,7 @@
         <field name="code">601</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="pcg_6021" model="account.account.template">
@@ -2200,6 +2702,7 @@
         <field name="code">6021</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_602"/>
     </record>
 
     <record id="pcg_6022" model="account.account.template">
@@ -2207,6 +2710,7 @@
         <field name="code">6022</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_602"/>
     </record>
 
     <record id="pcg_6023" model="account.account.template">
@@ -2214,6 +2718,7 @@
         <field name="code">6023</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_602"/>
     </record>
 
     <record id="pcg_6024" model="account.account.template">
@@ -2221,6 +2726,7 @@
         <field name="code">6024</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_602"/>
     </record>
 
     <record id="pcg_6025" model="account.account.template">
@@ -2228,6 +2734,7 @@
         <field name="code">6025</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_602"/>
     </record>
 
     <record id="pcg_6026" model="account.account.template">
@@ -2235,6 +2742,7 @@
         <field name="code">6026</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_602"/>
     </record>
 
     <record id="pcg_6028" model="account.account.template">
@@ -2242,6 +2750,7 @@
         <field name="code">6028</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_602"/>
     </record>
 
     <record id="pcg_603" model="account.account.template">
@@ -2249,6 +2758,7 @@
         <field name="code">603</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="pcg_604" model="account.account.template">
@@ -2256,6 +2766,7 @@
         <field name="code">604</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="pcg_605" model="account.account.template">
@@ -2263,6 +2774,7 @@
         <field name="code">605</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="pcg_606" model="account.account.template">
@@ -2270,6 +2782,7 @@
         <field name="code">606</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="ro_pcg_expense" model="account.account.template">
@@ -2277,6 +2790,7 @@
         <field name="code">607</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="pcg_608" model="account.account.template">
@@ -2284,6 +2798,7 @@
         <field name="code">608</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="pcg609" model="account.account.template">
@@ -2291,6 +2806,7 @@
         <field name="code">609</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_60"/>
     </record>
 
     <record id="pcg_611" model="account.account.template">
@@ -2298,6 +2814,7 @@
         <field name="code">611</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_61"/>
     </record>
 
     <record id="pcg_612" model="account.account.template">
@@ -2305,6 +2822,7 @@
         <field name="code">612</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_61"/>
     </record>
 
     <record id="pcg_613" model="account.account.template">
@@ -2312,6 +2830,7 @@
         <field name="code">613</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_61"/>
     </record>
 
     <record id="pcg_614" model="account.account.template">
@@ -2319,6 +2838,7 @@
         <field name="code">614</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_61"/>
     </record>
 
     <record id="pcg_615" model="account.account.template">
@@ -2326,6 +2846,7 @@
         <field name="code">615</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_61"/>
     </record>
 
     <record id="pcg_621" model="account.account.template">
@@ -2333,6 +2854,7 @@
         <field name="code">621</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_622" model="account.account.template">
@@ -2340,6 +2862,7 @@
         <field name="code">622</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_623" model="account.account.template">
@@ -2347,6 +2870,7 @@
         <field name="code">623</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_624" model="account.account.template">
@@ -2354,6 +2878,7 @@
         <field name="code">624</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_625" model="account.account.template">
@@ -2361,6 +2886,7 @@
         <field name="code">625</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_626" model="account.account.template">
@@ -2368,6 +2894,7 @@
         <field name="code">626</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_627" model="account.account.template">
@@ -2375,6 +2902,7 @@
         <field name="code">627</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_628" model="account.account.template">
@@ -2382,6 +2910,7 @@
         <field name="code">628</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_62"/>
     </record>
 
     <record id="pcg_6351" model="account.account.template">
@@ -2389,6 +2918,7 @@
         <field name="code">6351</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_635"/>
     </record>
 
     <record id="pcg_6352" model="account.account.template">
@@ -2396,6 +2926,7 @@
         <field name="code">6352</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_635"/>
     </record>
 
     <record id="pcg_641" model="account.account.template">
@@ -2403,6 +2934,7 @@
         <field name="code">641</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_64"/>
     </record>
 
     <record id="pcg_6421" model="account.account.template">
@@ -2410,6 +2942,7 @@
         <field name="code">6421</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_642"/>
     </record>
 
     <record id="pcg_6422" model="account.account.template">
@@ -2417,6 +2950,7 @@
         <field name="code">6422</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_642"/>
     </record>
 
     <record id="pcg_643" model="account.account.template">
@@ -2424,6 +2958,7 @@
         <field name="code">643</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_64"/>
     </record>
 
     <record id="pcg_644" model="account.account.template">
@@ -2431,6 +2966,7 @@
         <field name="code">644</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_64"/>
     </record>
 
     <record id="pcg_6451" model="account.account.template">
@@ -2438,6 +2974,7 @@
         <field name="code">6451</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_645"/>
     </record>
 
     <record id="pcg_6452" model="account.account.template">
@@ -2445,6 +2982,7 @@
         <field name="code">6452</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_645"/>
     </record>
 
     <record id="pcg_6453" model="account.account.template">
@@ -2452,6 +2990,7 @@
         <field name="code">6453</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_645"/>
     </record>
 
     <record id="pcg_6455" model="account.account.template">
@@ -2459,6 +2998,7 @@
         <field name="code">6455</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_645"/>
     </record>
 
     <record id="pcg_6456" model="account.account.template">
@@ -2466,6 +3006,7 @@
         <field name="code">6456</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_645"/>
     </record>
 
     <record id="pcg_6457" model="account.account.template">
@@ -2473,6 +3014,7 @@
         <field name="code">6457</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_645"/>
     </record>
 
     <record id="pcg_6458" model="account.account.template">
@@ -2480,6 +3022,7 @@
         <field name="code">6458</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_645"/>
     </record>
 
     <record id="pcg_6511" model="account.account.template">
@@ -2487,6 +3030,7 @@
         <field name="code">6511</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_651"/>
     </record>
 
     <record id="pcg_6512" model="account.account.template">
@@ -2494,6 +3038,7 @@
         <field name="code">6512</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_651"/>
     </record>
 
     <record id="pcg_6513" model="account.account.template">
@@ -2501,6 +3046,7 @@
         <field name="code">6513</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_651"/>
     </record>
 
     <record id="pcg_652" model="account.account.template">
@@ -2508,6 +3054,7 @@
         <field name="code">652</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_65"/>
     </record>
 
     <record id="pcg_654" model="account.account.template">
@@ -2515,6 +3062,7 @@
         <field name="code">654</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_65"/>
     </record>
 
     <record id="pcg_655" model="account.account.template">
@@ -2522,6 +3070,7 @@
         <field name="code">655</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_65"/>
     </record>
 
     <record id="pcg_6581" model="account.account.template">
@@ -2529,6 +3078,7 @@
         <field name="code">6581</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_658"/>
     </record>
 
     <record id="pcg_6582" model="account.account.template">
@@ -2536,6 +3086,7 @@
         <field name="code">6582</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_658"/>
     </record>
 
     <record id="pcg_6583" model="account.account.template">
@@ -2543,6 +3094,7 @@
         <field name="code">6583</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_658"/>
     </record>
 
     <record id="pcg_6586" model="account.account.template">
@@ -2550,6 +3102,7 @@
         <field name="code">6586</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_658"/>
     </record>
 
     <record id="pcg_6587" model="account.account.template">
@@ -2557,6 +3110,7 @@
         <field name="code">6587</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_658"/>
     </record>
 
     <record id="pcg_65881" model="account.account.template">
@@ -2564,6 +3118,7 @@
         <field name="code">65881</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_6588"/>
     </record>
 
     <record id="pcg_65882" model="account.account.template">
@@ -2571,6 +3126,7 @@
         <field name="code">65882</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_6588"/>
     </record>
 
     <record id="pcg_663" model="account.account.template">
@@ -2578,6 +3134,7 @@
         <field name="code">663</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_66"/>
     </record>
 
     <record id="pcg_6641" model="account.account.template">
@@ -2585,6 +3142,7 @@
         <field name="code">6641</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_664"/>
     </record>
 
     <record id="pcg_6642" model="account.account.template">
@@ -2592,6 +3150,7 @@
         <field name="code">6642</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_664"/>
     </record>
 
     <record id="pcg_6651" model="account.account.template">
@@ -2599,6 +3158,7 @@
         <field name="code">6651</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_665"/>
     </record>
 
     <record id="pcg_6652" model="account.account.template">
@@ -2606,6 +3166,7 @@
         <field name="code">6652</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_665"/>
     </record>
 
     <record id="pcg_666" model="account.account.template">
@@ -2613,6 +3174,7 @@
         <field name="code">666</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_66"/>
     </record>
 
     <record id="pcg_667" model="account.account.template">
@@ -2620,6 +3182,7 @@
         <field name="code">667</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_66"/>
     </record>
 
     <record id="pcg_668" model="account.account.template">
@@ -2627,6 +3190,7 @@
         <field name="code">668</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_66"/>
     </record>
 
     <record id="pcg_6811" model="account.account.template">
@@ -2634,6 +3198,7 @@
         <field name="code">6811</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_681"/>
     </record>
 
     <record id="pcg_6812" model="account.account.template">
@@ -2641,6 +3206,7 @@
         <field name="code">6812</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_681"/>
     </record>
 
     <record id="pcg_6813" model="account.account.template">
@@ -2648,6 +3214,7 @@
         <field name="code">6813</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_681"/>
     </record>
 
     <record id="pcg_6814" model="account.account.template">
@@ -2655,6 +3222,7 @@
         <field name="code">6814</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_681"/>
     </record>
 
     <record id="pcg_6817" model="account.account.template">
@@ -2662,6 +3230,7 @@
         <field name="code">6817</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_681"/>
     </record>
 
     <record id="pcg_6861" model="account.account.template">
@@ -2669,6 +3238,7 @@
         <field name="code">6861</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_686"/>
     </record>
 
     <record id="pcg_6863" model="account.account.template">
@@ -2676,6 +3246,7 @@
         <field name="code">6863</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_686"/>
     </record>
 
     <record id="pcg_6864" model="account.account.template">
@@ -2683,6 +3254,7 @@
         <field name="code">6864</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_686"/>
     </record>
 
     <record id="pcg_6865" model="account.account.template">
@@ -2690,6 +3262,7 @@
         <field name="code">6865</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_686"/>
     </record>
 
     <record id="pcg_6868" model="account.account.template">
@@ -2697,6 +3270,7 @@
         <field name="code">6868</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_686"/>
     </record>
 
     <record id="pcg_691" model="account.account.template">
@@ -2704,6 +3278,7 @@
         <field name="code">691</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_69"/>
     </record>
 
     <record id="pcg_698" model="account.account.template">
@@ -2711,6 +3286,7 @@
         <field name="code">698</field>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_69"/>
         <field name="note">Se utilizeaza conform reglementarilor legale</field>
     </record>
 
@@ -2719,6 +3295,7 @@
         <field name="code">7015</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_701"/>
     </record>
 
     <record id="pcg_7017" model="account.account.template">
@@ -2726,6 +3303,7 @@
         <field name="code">7017</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_701"/>
     </record>
 
     <record id="pcg_7018" model="account.account.template">
@@ -2733,6 +3311,7 @@
         <field name="code">7018</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_701"/>
     </record>
 
     <record id="pcg_702" model="account.account.template">
@@ -2740,6 +3319,7 @@
         <field name="code">702</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
     </record>
 
     <record id="pcg_703" model="account.account.template">
@@ -2747,6 +3327,7 @@
         <field name="code">703</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
     </record>
 
     <record id="pcg_704" model="account.account.template">
@@ -2754,6 +3335,7 @@
         <field name="code">704</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
     </record>
 
     <record id="pcg_705" model="account.account.template">
@@ -2761,6 +3343,7 @@
         <field name="code">705</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
     </record>
 
     <record id="pcg_706" model="account.account.template">
@@ -2768,6 +3351,7 @@
         <field name="code">706</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
     </record>
 
     <record id="ro_pcg_sale" model="account.account.template">
@@ -2775,6 +3359,7 @@
         <field name="code">707</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
         <field name="note">707-607 = adaosul comercial</field>
     </record>
 
@@ -2783,6 +3368,7 @@
         <field name="code">708</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
     </record>
 
     <record id="pcg_709" model="account.account.template">
@@ -2790,6 +3376,7 @@
         <field name="code">709</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_70"/>
     </record>
 
     <record id="pcg_711" model="account.account.template">
@@ -2797,6 +3384,7 @@
         <field name="code">711</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_71"/>
     </record>
 
     <record id="pcg_712" model="account.account.template">
@@ -2804,6 +3392,7 @@
         <field name="code">712</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_71"/>
     </record>
 
     <record id="pcg_721" model="account.account.template">
@@ -2811,6 +3400,7 @@
         <field name="code">721</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_72"/>
     </record>
 
     <record id="pcg_722" model="account.account.template">
@@ -2818,6 +3408,7 @@
         <field name="code">722</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_72"/>
     </record>
 
     <record id="pcg_725" model="account.account.template">
@@ -2825,6 +3416,7 @@
         <field name="code">725</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_72"/>
     </record>
 
     <record id="pcg_7411" model="account.account.template">
@@ -2832,6 +3424,7 @@
         <field name="code">7411</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
         <field name="note">Se ia in calcul la determinarea cifrei de afaceri</field>
     </record>
 
@@ -2840,6 +3433,7 @@
         <field name="code">7412</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7413" model="account.account.template">
@@ -2847,6 +3441,7 @@
         <field name="code">7413</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7414" model="account.account.template">
@@ -2854,6 +3449,7 @@
         <field name="code">7414</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7415" model="account.account.template">
@@ -2861,6 +3457,7 @@
         <field name="code">7415</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7416" model="account.account.template">
@@ -2868,6 +3465,7 @@
         <field name="code">7416</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7417" model="account.account.template">
@@ -2875,6 +3473,7 @@
         <field name="code">7417</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7418" model="account.account.template">
@@ -2882,6 +3481,7 @@
         <field name="code">7418</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7419" model="account.account.template">
@@ -2889,6 +3489,7 @@
         <field name="code">7419</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_741"/>
     </record>
 
     <record id="pcg_7511" model="account.account.template">
@@ -2896,6 +3497,7 @@
         <field name="code">7511</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_751"/>
     </record>
 
     <record id="pcg_7512" model="account.account.template">
@@ -2903,6 +3505,7 @@
         <field name="code">7512</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_751"/>
     </record>
 
     <record id="pcg_7513" model="account.account.template">
@@ -2910,6 +3513,7 @@
         <field name="code">7513</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_751"/>
     </record>
 
     <record id="pcg_754" model="account.account.template">
@@ -2917,6 +3521,7 @@
         <field name="code">754</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_75"/>
     </record>
 
     <record id="pcg_755" model="account.account.template">
@@ -2924,6 +3529,7 @@
         <field name="code">755</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_75"/>
     </record>
 
     <record id="pcg_7581" model="account.account.template">
@@ -2931,6 +3537,7 @@
         <field name="code">7581</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_758"/>
     </record>
 
     <record id="pcg_7582" model="account.account.template">
@@ -2938,6 +3545,7 @@
         <field name="code">7582</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_758"/>
     </record>
 
     <record id="pcg_7583" model="account.account.template">
@@ -2945,6 +3553,7 @@
         <field name="code">7583</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_758"/>
     </record>
 
     <record id="pcg_7584" model="account.account.template">
@@ -2952,6 +3561,7 @@
         <field name="code">7584</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_758"/>
     </record>
 
     <record id="pcg_7588" model="account.account.template">
@@ -2959,6 +3569,7 @@
         <field name="code">7588</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_758"/>
     </record>
 
     <record id="pcg_7611" model="account.account.template">
@@ -2966,6 +3577,7 @@
         <field name="code">7611</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_761"/>
     </record>
 
     <record id="pcg_7612" model="account.account.template">
@@ -2973,6 +3585,7 @@
         <field name="code">7612</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_761"/>
     </record>
 
     <record id="pcg_7613" model="account.account.template">
@@ -2980,6 +3593,7 @@
         <field name="code">7613</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_761"/>
     </record>
 
     <record id="pcg_7615" model="account.account.template">
@@ -2987,6 +3601,7 @@
         <field name="code">7615</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_761"/>
     </record>
 
     <record id="pcg_762" model="account.account.template">
@@ -2994,6 +3609,7 @@
         <field name="code">762</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_76"/>
     </record>
 
     <record id="pcg_7641" model="account.account.template">
@@ -3001,6 +3617,7 @@
         <field name="code">7641</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_764"/>
     </record>
 
     <record id="pcg_7642" model="account.account.template">
@@ -3008,6 +3625,7 @@
         <field name="code">7642</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_764"/>
     </record>
 
     <record id="pcg_7651" model="account.account.template">
@@ -3015,6 +3633,7 @@
         <field name="code">7651</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_765"/>
     </record>
 
     <record id="pcg_7652" model="account.account.template">
@@ -3022,6 +3641,7 @@
         <field name="code">7652</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_765"/>
     </record>
 
     <record id="pcg_766" model="account.account.template">
@@ -3029,6 +3649,7 @@
         <field name="code">766</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_76"/>
     </record>
 
     <record id="pcg_767" model="account.account.template">
@@ -3036,6 +3657,7 @@
         <field name="code">767</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_76"/>
         <field name="note">(contrepartie 667)</field>
     </record>
 
@@ -3044,6 +3666,7 @@
         <field name="code">768</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_76"/>
     </record>
 
     <record id="pcg_7812" model="account.account.template">
@@ -3051,6 +3674,7 @@
         <field name="code">7812</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_781"/>
     </record>
 
     <record id="pcg_7813" model="account.account.template">
@@ -3058,6 +3682,7 @@
         <field name="code">7813</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_781"/>
     </record>
 
     <record id="pcg_7814" model="account.account.template">
@@ -3065,6 +3690,7 @@
         <field name="code">7814</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_781"/>
     </record>
 
     <record id="pcg_7815" model="account.account.template">
@@ -3073,6 +3699,7 @@
         <field name="note">Acest cont apare numai in situatiile anuale consolidate</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_781"/>
     </record>
 
     <record id="pcg_7863" model="account.account.template">
@@ -3080,6 +3707,7 @@
         <field name="code">7863</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_786"/>
     </record>
 
     <record id="pcg_7864" model="account.account.template">
@@ -3087,6 +3715,7 @@
         <field name="code">7864</field>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="group_id" ref="l10n_ro.account_group_786"/>
     </record>
 
     <record id="pcg_8011" model="account.account.template">

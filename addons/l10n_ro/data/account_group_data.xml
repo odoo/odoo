@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_group_all" model="account.group">
+        <field name="name">CLASELE 1-7</field>
+    </record>
+    <record id="account_group_cls_15" model="account.group">
+        <field name="name">CLASELE 1-6</field>
+        <field name="parent_id" ref="l10n_ro.account_group_all"/>
+    </record>
+    <record id="account_group_cls_67" model="account.group">
+        <field name="name">CLASELE 6-7</field>
+        <field name="parent_id" ref="l10n_ro.account_group_all"/>
+    </record>
+    <record id="account_group_1" model="account.group">
+        <field name="name">CONTURI DE CAPITALURI, PROVIZIOANE, ÎMPRUMUTURI ŞI DATORII ASIMILATE</field>
+        <field name="code_prefix">1</field>
+        <field name="parent_id" ref="l10n_ro.account_group_cls_15"/>
+    </record>
+    <record id="account_group_10" model="account.group">
+        <field name="name">Capital şi rezerve</field>
+        <field name="code_prefix">10</field>
+        <field name="parent_id" ref="l10n_ro.account_group_1"/>
+    </record>
+    <record id="account_group_101" model="account.group">
+        <field name="name">Capital</field>
+        <field name="code_prefix">101</field>
+        <field name="parent_id" ref="l10n_ro.account_group_10"/>
+    </record>
+    <record id="account_group_103" model="account.group">
+        <field name="name">Alte elemente de capitaluri proprii</field>
+        <field name="code_prefix">103</field>
+        <field name="parent_id" ref="l10n_ro.account_group_10"/>
+    </record>
+    <record id="account_group_104" model="account.group">
+        <field name="name">Prime de capital</field>
+        <field name="code_prefix">104</field>
+        <field name="parent_id" ref="l10n_ro.account_group_10"/>
+    </record>
+    <record id="account_group_106" model="account.group">
+        <field name="name">Rezerve</field>
+        <field name="code_prefix">106</field>
+        <field name="parent_id" ref="l10n_ro.account_group_10"/>
+    </record>
+    <record id="account_group_108" model="account.group">
+        <field name="name">Interese care nu controlează</field>
+        <field name="code_prefix">108</field>
+        <field name="parent_id" ref="l10n_ro.account_group_10"/>
+    </record>
+    <record id="account_group_109" model="account.group">
+        <field name="name">Acţiuni proprii</field>
+        <field name="code_prefix">109</field>
+        <field name="parent_id" ref="l10n_ro.account_group_10"/>
+    </record>
+    <record id="account_group_11" model="account.group">
+        <field name="name">Rezultatul reportat</field>
+        <field name="code_prefix">11</field>
+        <field name="parent_id" ref="l10n_ro.account_group_1"/>
+    </record>
+    <record id="account_group_117" model="account.group">
+        <field name="name">Acţiuni proprii</field>
+        <field name="code_prefix">117</field>
+        <field name="parent_id" ref="l10n_ro.account_group_11"/>
+    </record>
+    <record id="account_group_12" model="account.group">
+        <field name="name">Rezultatul exerciţiului financiar</field>
+        <field name="code_prefix">12</field>
+        <field name="parent_id" ref="l10n_ro.account_group_1"/>
+    </record>
+    <record id="account_group_14" model="account.group">
+        <field name="name">Câştiguri sau pierderi legate de emiterea, răscumpărarea, vânzarea, cedarea cu titlu gratuit sau anularea instrumentelor de capitaluri proprii</field>
+        <field name="code_prefix">14</field>
+        <field name="parent_id" ref="l10n_ro.account_group_1"/>
+    </record>
+    <record id="account_group_141" model="account.group">
+        <field name="name">Câştiguri legate de vânzarea sau anularea instrumentelor de capitaluri proprii</field>
+        <field name="code_prefix">141</field>
+        <field name="parent_id" ref="l10n_ro.account_group_14"/>
+    </record>
+    <record id="account_group_149" model="account.group">
+        <field name="name">Pierderi legate de emiterea, răscumpărarea, vânzarea, cedarea cu titlu gratuit sau anularea instrumentelor de capitaluri proprii</field>
+        <field name="code_prefix">149</field>
+        <field name="parent_id" ref="l10n_ro.account_group_14"/>
+    </record>
+    <record id="account_group_15" model="account.group">
+        <field name="name">Provizioane</field>
+        <field name="code_prefix">15</field>
+        <field name="parent_id" ref="l10n_ro.account_group_1"/>
+    </record>
+    <record id="account_group_151" model="account.group">
+        <field name="name">Provizioane</field>
+        <field name="code_prefix">151</field>
+        <field name="parent_id" ref="l10n_ro.account_group_15"/>
+    </record>
+    <record id="account_group_16" model="account.group">
+        <field name="name">Împrumuturi şi datorii asimilate</field>
+        <field name="code_prefix">16</field>
+        <field name="parent_id" ref="l10n_ro.account_group_1"/>
+    </record>
+    <record id="account_group_161" model="account.group">
+        <field name="name">Împrumuturi din emisiuni de obligaţiuni</field>
+        <field name="code_prefix">161</field>
+        <field name="parent_id" ref="l10n_ro.account_group_16"/>
+    </record>
+    <record id="account_group_162" model="account.group">
+        <field name="name">Credite bancare pe termen lung</field>
+        <field name="code_prefix">162</field>
+        <field name="parent_id" ref="l10n_ro.account_group_16"/>
+    </record>
+    <record id="account_group_166" model="account.group">
+        <field name="name">Datorii care privesc imobilizările financiare</field>
+        <field name="code_prefix">166</field>
+        <field name="parent_id" ref="l10n_ro.account_group_16"/>
+    </record>
+    <record id="account_group_168" model="account.group">
+        <field name="name">Dobânzi aferente împrumuturilor şi datoriilor asimilate</field>
+        <field name="code_prefix">168</field>
+        <field name="parent_id" ref="l10n_ro.account_group_16"/>
+    </record>
+    <record id="account_group_169" model="account.group">
+        <field name="name">Prime privind rambursarea obligaţiunilor şi a altor datorii</field>
+        <field name="code_prefix">169</field>
+        <field name="parent_id" ref="l10n_ro.account_group_16"/>
+    </record>
+        <record id="account_group_2" model="account.group">
+        <field name="name">CONTURI DE IMOBILIZĂRI</field>
+        <field name="code_prefix">2</field>
+        <field name="parent_id" ref="l10n_ro.account_group_cls_15"/>
+    </record>
+    <record id="account_group_20" model="account.group">
+        <field name="name">Imobilizări necorporale</field>
+        <field name="code_prefix">20</field>
+        <field name="parent_id" ref="l10n_ro.account_group_2"/>
+    </record>
+    <record id="account_group_207" model="account.group">
+        <field name="name">Fond comercial</field>
+        <field name="code_prefix">207</field>
+        <field name="parent_id" ref="l10n_ro.account_group_20"/>
+    </record>
+    <record id="account_group_21" model="account.group">
+        <field name="name">Imobilizări corporale</field>
+        <field name="code_prefix">21</field>
+        <field name="parent_id" ref="l10n_ro.account_group_2"/>
+    </record>
+    <record id="account_group_211" model="account.group">
+        <field name="name">Terenuri şi amenajări de terenuri</field>
+        <field name="code_prefix">211</field>
+        <field name="parent_id" ref="l10n_ro.account_group_21"/>
+    </record>
+    <record id="account_group_213" model="account.group">
+        <field name="name">Instalaţii tehnice şi mijloace de transport</field>
+        <field name="code_prefix">213</field>
+        <field name="parent_id" ref="l10n_ro.account_group_21"/>
+    </record>
+    <record id="account_group_22" model="account.group">
+        <field name="name">Imobilizări corporale în curs de aprovizionare</field>
+        <field name="code_prefix">22</field>
+        <field name="parent_id" ref="l10n_ro.account_group_2"/>
+    </record>
+    <record id="account_group_23" model="account.group">
+        <field name="name">Imobilizări în curs</field>
+        <field name="code_prefix">23</field>
+        <field name="parent_id" ref="l10n_ro.account_group_2"/>
+    </record>
+    <record id="account_group_26" model="account.group">
+        <field name="name">Imobilizări financiare</field>
+        <field name="code_prefix">26</field>
+        <field name="parent_id" ref="l10n_ro.account_group_2"/>
+    </record>
+    <record id="account_group_267" model="account.group">
+        <field name="name">Creanţe imobilizate</field>
+        <field name="code_prefix">267</field>
+        <field name="parent_id" ref="l10n_ro.account_group_26"/>
+    </record>
+    <record id="account_group_269" model="account.group">
+        <field name="name">Vărsăminte de efectuat pentru imobilizări financiare</field>
+        <field name="code_prefix">269</field>
+        <field name="parent_id" ref="l10n_ro.account_group_26"/>
+    </record>
+    <record id="account_group_28" model="account.group">
+        <field name="name">Amortizări privind imobilizările</field>
+        <field name="code_prefix">28</field>
+        <field name="parent_id" ref="l10n_ro.account_group_2"/>
+    </record>
+    <record id="account_group_280" model="account.group">
+        <field name="name">Amortizări privind imobilizările necorporale</field>
+        <field name="code_prefix">280</field>
+        <field name="parent_id" ref="l10n_ro.account_group_28"/>
+    </record>
+    <record id="account_group_281" model="account.group">
+        <field name="name">Amortizări privind imobilizările corporale</field>
+        <field name="code_prefix">281</field>
+        <field name="parent_id" ref="l10n_ro.account_group_28"/>
+    </record>
+    <record id="account_group_29" model="account.group">
+        <field name="name">Ajustări pentru deprecierea sau pierderea de valoare a imobilizărilor</field>
+        <field name="code_prefix">29</field>
+        <field name="parent_id" ref="l10n_ro.account_group_2"/>
+    </record>
+    <record id="account_group_290" model="account.group">
+        <field name="name">Ajustări pentru deprecierea imobilizărilor necorporale</field>
+        <field name="code_prefix">290</field>
+        <field name="parent_id" ref="l10n_ro.account_group_29"/>
+    </record>
+    <record id="account_group_291" model="account.group">
+        <field name="name">Ajustări pentru deprecierea imobilizărilor corporale</field>
+        <field name="code_prefix">291</field>
+        <field name="parent_id" ref="l10n_ro.account_group_29"/>
+    </record>
+    <record id="account_group_293" model="account.group">
+        <field name="name">Ajustări pentru deprecierea imobilizărilor în curs de execuţie</field>
+        <field name="code_prefix">293</field>
+        <field name="parent_id" ref="l10n_ro.account_group_29"/>
+    </record>
+    <record id="account_group_296" model="account.group">
+        <field name="name">Ajustări pentru pierderea de valoare a imobilizărilor financiare</field>
+        <field name="code_prefix">296</field>
+        <field name="parent_id" ref="l10n_ro.account_group_29"/>
+    </record>
+    <record id="account_group_3" model="account.group">
+        <field name="name">CONTURI DE STOCURI ŞI PRODUCŢIE ÎN CURS DE EXECUŢIE</field>
+        <field name="code_prefix">3</field>
+        <field name="parent_id" ref="l10n_ro.account_group_cls_15"/>
+    </record>
+    <record id="account_group_30" model="account.group">
+        <field name="name">Stocuri de materii prime şi materiale</field>
+        <field name="code_prefix">30</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_302" model="account.group">
+        <field name="name">Materiale consumabile</field>
+        <field name="code_prefix">302</field>
+        <field name="parent_id" ref="l10n_ro.account_group_30"/>
+    </record>
+    <record id="account_group_32" model="account.group">
+        <field name="name">Stocuri în curs de aprovizionare</field>
+        <field name="code_prefix">32</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_33" model="account.group">
+        <field name="name">Producţie în curs de execuţie</field>
+        <field name="code_prefix">33</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_34" model="account.group">
+        <field name="name">Produse</field>
+        <field name="code_prefix">34</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_35" model="account.group">
+        <field name="name">Stocuri aflate la terţi</field>
+        <field name="code_prefix">35</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_36" model="account.group">
+        <field name="name">Active biologice de natura stocurilor</field>
+        <field name="code_prefix">36</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_37" model="account.group">
+        <field name="name">Mărfuri</field>
+        <field name="code_prefix">37</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_38" model="account.group">
+        <field name="name">Ambalaje</field>
+        <field name="code_prefix">38</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_39" model="account.group">
+        <field name="name">Ajustări pentru deprecierea stocurilor şi producţiei în curs de execuţie</field>
+        <field name="code_prefix">39</field>
+        <field name="parent_id" ref="l10n_ro.account_group_3"/>
+    </record>
+    <record id="account_group_392" model="account.group">
+        <field name="name">Ajustări pentru deprecierea materialelor</field>
+        <field name="code_prefix">392</field>
+        <field name="parent_id" ref="l10n_ro.account_group_39"/>
+    </record>
+    <record id="account_group_393" model="account.group">
+        <field name="name">Ajustări pentru deprecierea producţiei în curs de execuţie</field>
+        <field name="code_prefix">393</field>
+        <field name="parent_id" ref="l10n_ro.account_group_39"/>
+    </record>
+    <record id="account_group_394" model="account.group">
+        <field name="name">Ajustări pentru deprecierea produselor</field>
+        <field name="code_prefix">394</field>
+        <field name="parent_id" ref="l10n_ro.account_group_39"/>
+    </record>
+    <record id="account_group_395" model="account.group">
+        <field name="name">Ajustări pentru deprecierea stocurilor aflate la terţi</field>
+        <field name="code_prefix">395</field>
+        <field name="parent_id" ref="l10n_ro.account_group_39"/>
+    </record>
+    <record id="account_group_4" model="account.group">
+        <field name="name">CONTURI DE TERŢI</field>
+        <field name="code_prefix">4</field>
+        <field name="parent_id" ref="l10n_ro.account_group_cls_15"/>
+    </record>
+    <record id="account_group_40" model="account.group">
+        <field name="name">Furnizori şi conturi asimilate</field>
+        <field name="code_prefix">40</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_409" model="account.group">
+        <field name="name">Furnizori - debitori</field>
+        <field name="code_prefix">409</field>
+        <field name="parent_id" ref="l10n_ro.account_group_40"/>
+    </record>
+    <record id="account_group_41" model="account.group">
+        <field name="name">Clienţi şi conturi asimilate</field>
+        <field name="code_prefix">41</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_411" model="account.group">
+        <field name="name">Clienţi</field>
+        <field name="code_prefix">411</field>
+        <field name="parent_id" ref="l10n_ro.account_group_41"/>
+    </record>
+    <record id="account_group_42" model="account.group">
+        <field name="name">Personal şi conturi asimilate</field>
+        <field name="code_prefix">42</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_428" model="account.group">
+        <field name="name">Alte datorii şi creanţe în legătură cu personalul</field>
+        <field name="code_prefix">428</field>
+        <field name="parent_id" ref="l10n_ro.account_group_42"/>
+    </record>
+    <record id="account_group_43" model="account.group">
+        <field name="name">Asigurări sociale, protecţia socială şi conturi asimilate</field>
+        <field name="code_prefix">43</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_431" model="account.group">
+        <field name="name">Asigurări sociale</field>
+        <field name="code_prefix">431</field>
+        <field name="parent_id" ref="l10n_ro.account_group_43"/>
+    </record>
+    <record id="account_group_437" model="account.group">
+        <field name="name">Ajutor de şomaj</field>
+        <field name="code_prefix">437</field>
+        <field name="parent_id" ref="l10n_ro.account_group_43"/>
+    </record>
+    <record id="account_group_438" model="account.group">
+        <field name="name">Alte datorii şi creanţe sociale</field>
+        <field name="code_prefix">438</field>
+        <field name="parent_id" ref="l10n_ro.account_group_43"/>
+    </record>
+    <record id="account_group_44" model="account.group">
+        <field name="name">Bugetul statului, fonduri speciale şi conturi asimilate</field>
+        <field name="code_prefix">44</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_441" model="account.group">
+        <field name="name">Impozitul pe profit/venit</field>
+        <field name="code_prefix">441</field>
+        <field name="parent_id" ref="l10n_ro.account_group_44"/>
+    </record>
+    <record id="account_group_442" model="account.group">
+        <field name="name">Taxa pe valoarea adăugată</field>
+        <field name="code_prefix">442</field>
+        <field name="parent_id" ref="l10n_ro.account_group_44"/>
+    </record>
+    <record id="account_group_4428" model="account.group">
+        <field name="name">TVA neexigibilă</field>
+        <field name="code_prefix">4428</field>
+        <field name="parent_id" ref="l10n_ro.account_group_442"/>
+    </record>
+    <record id="account_group_445" model="account.group">
+        <field name="name">Subvenţii</field>
+        <field name="code_prefix">445</field>
+        <field name="parent_id" ref="l10n_ro.account_group_44"/>
+    </record>
+    <record id="account_group_448" model="account.group">
+        <field name="name">Alte datorii şi creanţe cu bugetul statului</field>
+        <field name="code_prefix">448</field>
+        <field name="parent_id" ref="l10n_ro.account_group_44"/>
+    </record>
+    <record id="account_group_45" model="account.group">
+        <field name="name">Grup şi acţionari/asociaţi</field>
+        <field name="code_prefix">45</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_451" model="account.group">
+        <field name="name">Decontări între entităţile afiliate</field>
+        <field name="code_prefix">451</field>
+        <field name="parent_id" ref="l10n_ro.account_group_45"/>
+    </record>
+    <record id="account_group_453" model="account.group">
+        <field name="name">Decontări cu entităţile asociate şi entităţile controlate în comun</field>
+        <field name="code_prefix">453</field>
+        <field name="parent_id" ref="l10n_ro.account_group_45"/>
+    </record>
+    <record id="account_group_455" model="account.group">
+        <field name="name">Sume datorate acţionarilor/asociaţilor</field>
+        <field name="code_prefix">455</field>
+        <field name="parent_id" ref="l10n_ro.account_group_45"/>
+    </record>
+    <record id="account_group_458" model="account.group">
+        <field name="name">Decontări din operaţiuni în participaţie</field>
+        <field name="code_prefix">458</field>
+        <field name="parent_id" ref="l10n_ro.account_group_45"/>
+    </record>
+    <record id="account_group_46" model="account.group">
+        <field name="name">Debitori şi creditori diverşi</field>
+        <field name="code_prefix">46</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_466" model="account.group">
+        <field name="name">Decontări din operaţiuni de fiducie</field>
+        <field name="code_prefix">466</field>
+        <field name="parent_id" ref="l10n_ro.account_group_46"/>
+    </record>
+    <record id="account_group_47" model="account.group">
+        <field name="name">Conturi de subvenţii, regularizare şi asimilate</field>
+        <field name="code_prefix">47</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_475" model="account.group">
+        <field name="name">Subvenţii pentru investiţii</field>
+        <field name="code_prefix">475</field>
+        <field name="parent_id" ref="l10n_ro.account_group_47"/>
+    </record>
+    <record id="account_group_48" model="account.group">
+        <field name="name">Decontări în cadrul unităţii</field>
+        <field name="code_prefix">48</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_49" model="account.group">
+        <field name="name">Ajustări pentru deprecierea creanţelor</field>
+        <field name="code_prefix">49</field>
+        <field name="parent_id" ref="l10n_ro.account_group_4"/>
+    </record>
+    <record id="account_group_5" model="account.group">
+        <field name="name">CONTURI DE TREZORERIE</field>
+        <field name="code_prefix">5</field>
+        <field name="parent_id" ref="l10n_ro.account_group_cls_15"/>
+    </record>
+    <record id="account_group_50" model="account.group">
+        <field name="name">Investiţii pe termen scurt</field>
+        <field name="code_prefix">50</field>
+        <field name="parent_id" ref="l10n_ro.account_group_5"/>
+    </record>
+    <record id="account_group_508" model="account.group">
+        <field name="name">Alte investiţii pe termen scurt şi creanţe asimilate</field>
+        <field name="code_prefix">508</field>
+        <field name="parent_id" ref="l10n_ro.account_group_50"/>
+    </record>
+    <record id="account_group_509" model="account.group">
+        <field name="name">Vărsăminte de efectuat pentru investiţiile pe termen scurt</field>
+        <field name="code_prefix">509</field>
+        <field name="parent_id" ref="l10n_ro.account_group_50"/>
+    </record>
+    <record id="account_group_51" model="account.group">
+        <field name="name">Conturi la bănci</field>
+        <field name="code_prefix">51</field>
+        <field name="parent_id" ref="l10n_ro.account_group_5"/>
+    </record>
+    <record id="account_group_511" model="account.group">
+        <field name="name">Valori de încasat</field>
+        <field name="code_prefix">511</field>
+        <field name="parent_id" ref="l10n_ro.account_group_51"/>
+    </record>
+    <record id="account_group_512" model="account.group">
+        <field name="name">Valori de încasat</field>
+        <field name="code_prefix">512</field>
+        <field name="parent_id" ref="l10n_ro.account_group_51"/>
+    </record>
+    <record id="account_group_518" model="account.group">
+        <field name="name">Valori de încasat</field>
+        <field name="code_prefix">518</field>
+        <field name="parent_id" ref="l10n_ro.account_group_51"/>
+    </record>
+    <record id="account_group_519" model="account.group">
+        <field name="name">Valori de încasat</field>
+        <field name="code_prefix">519</field>
+        <field name="parent_id" ref="l10n_ro.account_group_51"/>
+    </record>
+    <record id="account_group_53" model="account.group">
+        <field name="name">Casa</field>
+        <field name="code_prefix">53</field>
+        <field name="parent_id" ref="l10n_ro.account_group_5"/>
+    </record>
+    <record id="account_group_531" model="account.group">
+        <field name="name">Casa</field>
+        <field name="code_prefix">531</field>
+        <field name="parent_id" ref="l10n_ro.account_group_53"/>
+    </record>
+    <record id="account_group_532" model="account.group">
+        <field name="name">Alte valori</field>
+        <field name="code_prefix">532</field>
+        <field name="parent_id" ref="l10n_ro.account_group_53"/>
+    </record>
+    <record id="account_group_54" model="account.group">
+        <field name="name">Acreditive</field>
+        <field name="code_prefix">54</field>
+        <field name="parent_id" ref="l10n_ro.account_group_5"/>
+    </record>
+    <record id="account_group_541" model="account.group">
+        <field name="name">Acreditive</field>
+        <field name="code_prefix">541</field>
+        <field name="parent_id" ref="l10n_ro.account_group_54"/>
+    </record>
+    <record id="account_group_58" model="account.group">
+        <field name="name">Viramente interne</field>
+        <field name="code_prefix">58</field>
+        <field name="parent_id" ref="l10n_ro.account_group_5"/>
+    </record>
+    <record id="account_group_59" model="account.group">
+        <field name="name">Ajustări pentru pierderea de valoare a conturilor de trezorerie</field>
+        <field name="code_prefix">59</field>
+        <field name="parent_id" ref="l10n_ro.account_group_5"/>
+    </record>
+    <record id="account_group_6" model="account.group">
+        <field name="name">CONTURI DE CHELTUIELI</field>
+        <field name="code_prefix">6</field>
+        <field name="parent_id" ref="l10n_ro.account_group_cls_67"/>
+    </record>
+    <record id="account_group_60" model="account.group">
+        <field name="name">Cheltuieli privind stocurile</field>
+        <field name="code_prefix">60</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_602" model="account.group">
+        <field name="name">Cheltuieli cu materialele consumabile</field>
+        <field name="code_prefix">602</field>
+        <field name="parent_id" ref="l10n_ro.account_group_60"/>
+    </record>
+    <record id="account_group_61" model="account.group">
+        <field name="name">Cheltuieli cu serviciile executate de terţi</field>
+        <field name="code_prefix">61</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_62" model="account.group">
+        <field name="name">Cheltuieli cu alte servicii executate de terţi</field>
+        <field name="code_prefix">62</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_63" model="account.group">
+        <field name="name">Cheltuieli cu alte impozite, taxe şi vărsăminte asimilate</field>
+        <field name="code_prefix">63</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_635" model="account.group">
+        <field name="name">Cheltuieli cu alte impozite, taxe şi vărsăminte asimilate</field>
+        <field name="code_prefix">635</field>
+        <field name="parent_id" ref="l10n_ro.account_group_63"/>
+    </record>
+    <record id="account_group_64" model="account.group">
+        <field name="name">Cheltuieli cu personalul</field>
+        <field name="code_prefix">64</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_642" model="account.group">
+        <field name="name">Cheltuieli cu avantajele în natură şi tichetele acordate salariaţilor</field>
+        <field name="code_prefix">642</field>
+        <field name="parent_id" ref="l10n_ro.account_group_64"/>
+    </record>
+    <record id="account_group_645" model="account.group">
+        <field name="name">Cheltuieli privind asigurările şi protecţia socială</field>
+        <field name="code_prefix">645</field>
+        <field name="parent_id" ref="l10n_ro.account_group_64"/>
+    </record>
+    <record id="account_group_65" model="account.group">
+        <field name="name">Alte cheltuieli de exploatare</field>
+        <field name="code_prefix">65</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_651" model="account.group">
+        <field name="name">Cheltuieli din operaţiuni de fiducie</field>
+        <field name="code_prefix">651</field>
+        <field name="parent_id" ref="l10n_ro.account_group_65"/>
+    </record>
+    <record id="account_group_658" model="account.group">
+        <field name="name">Alte cheltuieli de exploatare</field>
+        <field name="code_prefix">658</field>
+        <field name="parent_id" ref="l10n_ro.account_group_65"/>
+    </record>
+    <record id="account_group_6588" model="account.group">
+        <field name="name">Alte cheltuieli de exploatare</field>
+        <field name="code_prefix">6588</field>
+        <field name="parent_id" ref="l10n_ro.account_group_658"/>
+    </record>
+    <record id="account_group_66" model="account.group">
+        <field name="name">Cheltuieli financiare</field>
+        <field name="code_prefix">66</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_664" model="account.group">
+        <field name="name">Cheltuieli privind investiţiile financiare cedate</field>
+        <field name="code_prefix">664</field>
+        <field name="parent_id" ref="l10n_ro.account_group_66"/>
+    </record>
+    <record id="account_group_665" model="account.group">
+        <field name="name">Cheltuieli din diferenţe de curs valutar</field>
+        <field name="code_prefix">665</field>
+        <field name="parent_id" ref="l10n_ro.account_group_66"/>
+    </record>
+    <record id="account_group_68" model="account.group">
+        <field name="name">Cheltuieli cu amortizările, provizioanele şi ajustările pentru depreciere sau pierdere de valoare</field>
+        <field name="code_prefix">68</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_681" model="account.group">
+        <field name="name">Cheltuieli de exploatare privind amortizările, provizioanele şi ajustările pentru depreciere</field>
+        <field name="code_prefix">681</field>
+        <field name="parent_id" ref="l10n_ro.account_group_68"/>
+    </record>
+    <record id="account_group_681" model="account.group">
+        <field name="name">Cheltuieli de exploatare privind amortizările, provizioanele şi ajustările pentru depreciere</field>
+        <field name="code_prefix">681</field>
+        <field name="parent_id" ref="l10n_ro.account_group_68"/>
+    </record>
+    <record id="account_group_686" model="account.group">
+        <field name="name">Cheltuieli financiare privind amortizările, provizioanele şi ajustările pentru pierdere de valoare</field>
+        <field name="code_prefix">686</field>
+        <field name="parent_id" ref="l10n_ro.account_group_68"/>
+    </record>
+    <record id="account_group_69" model="account.group">
+        <field name="name">Cheltuieli cu impozitul pe profit şi alte impozite</field>
+        <field name="code_prefix">69</field>
+        <field name="parent_id" ref="l10n_ro.account_group_6"/>
+    </record>
+    <record id="account_group_7" model="account.group">
+        <field name="name">CONTURI DE VENITURI</field>
+        <field name="code_prefix">7</field>
+        <field name="parent_id" ref="l10n_ro.account_group_cls_67"/>
+    </record>
+    <record id="account_group_70" model="account.group">
+        <field name="name">Cifra de afaceri netă</field>
+        <field name="code_prefix">70</field>
+        <field name="parent_id" ref="l10n_ro.account_group_7"/>
+    </record>
+    <record id="account_group_701" model="account.group">
+        <field name="name">Venituri din vânzarea produselor finite, produselor agricole şi a activelor biologice de natura stocurilor</field>
+        <field name="code_prefix">701</field>
+        <field name="parent_id" ref="l10n_ro.account_group_70"/>
+    </record>
+    <record id="account_group_71" model="account.group">
+        <field name="name">Venituri aferente costului producţiei în curs de execuţie</field>
+        <field name="code_prefix">71</field>
+        <field name="parent_id" ref="l10n_ro.account_group_7"/>
+    </record>
+    <record id="account_group_72" model="account.group">
+        <field name="name">Venituri din producţia de imobilizări</field>
+        <field name="code_prefix">72</field>
+        <field name="parent_id" ref="l10n_ro.account_group_7"/>
+    </record>
+    <record id="account_group_74" model="account.group">
+        <field name="name">Venituri din subvenţii de exploatare</field>
+        <field name="code_prefix">74</field>
+        <field name="parent_id" ref="l10n_ro.account_group_7"/>
+    </record>
+    <record id="account_group_741" model="account.group">
+        <field name="name">Venituri din subvenţii de exploatare</field>
+        <field name="code_prefix">741</field>
+        <field name="parent_id" ref="l10n_ro.account_group_74"/>
+    </record>
+    <record id="account_group_75" model="account.group">
+        <field name="name">Alte venituri din exploatare</field>
+        <field name="code_prefix">75</field>
+        <field name="parent_id" ref="l10n_ro.account_group_7"/>
+    </record>
+    <record id="account_group_751" model="account.group">
+        <field name="name">Venituri din operaţiuni de fiducie</field>
+        <field name="code_prefix">751</field>
+        <field name="parent_id" ref="l10n_ro.account_group_75"/>
+    </record>
+    <record id="account_group_758" model="account.group">
+        <field name="name">Alte venituri din exploatare</field>
+        <field name="code_prefix">758</field>
+        <field name="parent_id" ref="l10n_ro.account_group_75"/>
+    </record>
+    <record id="account_group_76" model="account.group">
+        <field name="name">Venituri financiare</field>
+        <field name="code_prefix">76</field>
+        <field name="parent_id" ref="l10n_ro.account_group_7"/>
+    </record>
+    <record id="account_group_761" model="account.group">
+        <field name="name">Venituri din imobilizări financiare</field>
+        <field name="code_prefix">761</field>
+        <field name="parent_id" ref="l10n_ro.account_group_76"/>
+    </record>
+    <record id="account_group_764" model="account.group">
+        <field name="name">Venituri din investiţii financiare cedate</field>
+        <field name="code_prefix">764</field>
+        <field name="parent_id" ref="l10n_ro.account_group_76"/>
+    </record>
+    <record id="account_group_765" model="account.group">
+        <field name="name">Venituri din diferenţe de curs valutar</field>
+        <field name="code_prefix">765</field>
+        <field name="parent_id" ref="l10n_ro.account_group_76"/>
+    </record>
+    <record id="account_group_78" model="account.group">
+        <field name="name">Venituri din provizioane, amortizări şi ajustări pentru depreciere sau pierdere de valoare</field>
+        <field name="code_prefix">78</field>
+        <field name="parent_id" ref="l10n_ro.account_group_7"/>
+    </record>
+    <record id="account_group_781" model="account.group">
+        <field name="name">Venituri din provizioane şi ajustări pentru depreciere privind activitatea de exploatare</field>
+        <field name="code_prefix">781</field>
+        <field name="parent_id" ref="l10n_ro.account_group_78"/>
+    </record>
+    <record id="account_group_786" model="account.group">
+        <field name="name">Venituri financiare din amortizări şi ajustări pentru pierdere de valoare</field>
+        <field name="code_prefix">786</field>
+        <field name="parent_id" ref="l10n_ro.account_group_78"/>
+    </record>
+</odoo>
