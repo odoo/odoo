@@ -112,7 +112,8 @@
         .hidden-xs.btn-default {
             transform: translate(-50%, -50%);
             @include o-position-absolute(0, $left:0);
-            @include square(2em);
+            width: 2em;
+            height: 2em;
             border-radius: 50%;
             padding-left: 14px;
             line-height: 1.5em;
@@ -133,9 +134,10 @@
         background: linear-gradient(linear, left top, right bottom, #77717e, #c9a8a9);
 
         img {
+            width: 50px;
+            height: 50px;
             background: white;
             border: 1px solid #d7d7d7;
-            @include square(50px);
         }
 
         @include media-breakpoint-down(sm) {
@@ -152,7 +154,8 @@
             transform: translateY(3px);
 
             img {
-                @include square(80px);
+                width: 80px;
+                height: 80px;
                 transform: translateX(-50%)translateY(35%);
                 @include o-position-absolute($bottom: 0);
             }
