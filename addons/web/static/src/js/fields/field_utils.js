@@ -585,6 +585,7 @@ return {
         datetime: formatDateTime,
         float: formatFloat,
         float_time: formatFloatTime,
+        float_toggle: formatFloat,
         html: _.identity, // todo
         integer: formatInteger,
         many2many: formatX2Many,
@@ -603,6 +604,7 @@ return {
         datetime: parseDateTime, // todo
         float: parseFloat,
         float_time: parseFloatTime,
+        float_toggle: parseFloat,
         html: _.identity, // todo
         integer: parseInteger,
         many2many: _.identity, // todo
