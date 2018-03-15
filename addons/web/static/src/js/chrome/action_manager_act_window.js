@@ -224,6 +224,31 @@ ActionManager.include({
         return action.controllers[viewType];
     },
     /**
+     * Destroys the controllers and search view of a given action of type
+     * 'ir.actions.act_window'.
+     *
+     * @private
+     * @param {Object} action
+     */
+    _destroyWindowAction: function (action) {
+        var self = this;
+        _.each(action.controllers, function (controllerDef) {
+            controllerDef.then(function (controller) {
+                delete self.controllers[controller.jsID];
+                if (controller.widget) {
+                    controller.widget.destroy();
+                }
+            });
+            // reject the deferred if it is not yet resolved, so that the
+            // controller is correctly destroyed as soon as it is ready, and
+            // its reference is removed
+            controllerDef.reject();
+        });
+        if (action.searchView) {
+            action.searchView.destroy();
+        }
+    },
+    /**
      * Executes actions of type 'ir.actions.act_window'.
      *
      * @private
@@ -245,7 +270,7 @@ ActionManager.include({
         }
         action.flags = this._generateActionFlags(action);
 
-        return this._loadViews(action).then(function (fieldsViews) {
+        return this.dp.add(this._loadViews(action)).then(function (fieldsViews) {
             var views = self._generateActionViews(action, fieldsViews);
             action._views = action.views;  // save the initial attribute
             action.views = views;
@@ -291,7 +316,7 @@ ActionManager.include({
                 if (mainView) {
                     defs.push(self._createViewController(action, mainView.type, {}, {lazy: true}));
                 }
-                return $.when.apply($, defs);
+                return self.dp.add($.when.apply($, defs));
             }).then(function (controller, lazyLoadedController) {
                 action.controllerID = controller.jsID;
                 return self._executeAction(action, options).done(function () {
@@ -302,7 +327,7 @@ ActionManager.include({
                         }, {clear: false});
                     }
                 });
-            });
+            }).fail(self._destroyWindowAction.bind(self, action));
         });
     },
     /**
@@ -490,25 +515,10 @@ ActionManager.include({
      * @private
      */
     _removeAction: function (actionID) {
-        var self = this;
         var action = this.actions[actionID];
         if (action.type === 'ir.actions.act_window') {
             delete this.actions[action.jsID];
-            _.each(action.controllers, function (controllerDef) {
-                controllerDef.then(function (controller) {
-                    delete self.controllers[controller.jsID];
-                    if (controller.widget) {
-                        controller.widget.destroy();
-                    }
-                });
-                // reject the deferred if it is not yet resolved, so that the
-                // controller is correctly destroyed as soon as it is ready, and
-                // its reference is removed
-                controllerDef.reject();
-            });
-            if (action.searchView) {
-                action.searchView.destroy();
-            }
+            this._destroyWindowAction(action);
         } else {
             this._super.apply(this, arguments);
         }
