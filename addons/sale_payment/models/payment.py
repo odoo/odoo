@@ -150,7 +150,7 @@ class PaymentTransaction(models.Model):
             tx = False
         if (tx and tx.acquirer_id != acquirer) or (tx and tx.sale_order_id != order):  # filter unmatching
             tx = False
-        if tx and payment_token and tx.payment_token_id and payment_token != tx.payment_token_id:  # new or distinct token
+        if tx and payment_token and tx.payment_token_id and payment_token != tx.payment_token_id and tx.state != 'pending':  # new or distinct token
             tx = False
 
         # still draft tx, no more info -> rewrite on tx or create a new one depending on parameter
