@@ -116,7 +116,7 @@ class PaymentAcquirer(models.Model):
         "Payment tokens allow your customer to reuse their cards in the e-commerce "
         "or allow you to charge an invoice directly on a credit card. If set to "
         "'let the customer decide', ecommerce customers will have a checkbox displayed on the payment page.")
-    token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support')
+    token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
 
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
     fees_active = fields.Boolean('Add Extra Fees')
@@ -142,6 +142,12 @@ class PaymentAcquirer(models.Model):
         help="Small-sized image of this provider. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
+
+    def _search_is_tokenized(self, operator, value):
+        tokenized = self._get_feature_support()['tokenize']
+        if (operator, value) in [('=', True), ('!=', False)]:
+            return [('provider', 'in', tokenized)]
+        return [('provider', 'not in', tokenized)]
 
     @api.multi
     def _compute_feature_support(self):
