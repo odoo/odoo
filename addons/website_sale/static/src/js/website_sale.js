@@ -375,12 +375,12 @@ odoo.define('website_sale.website_sale', function (require) {
         });
         $('.oe_cart').on('click', '.js_change_shipping', function() {
           if (!$('body.editor_enable').length) { //allow to edit button text with editor
-            var $old = $('.all_shipping').find('.panel.border_primary');
+            var $old = $('.all_shipping').find('.card.border_primary');
             $old.find('.btn-ship').toggle();
             $old.addClass('js_change_shipping');
             $old.removeClass('border_primary');
 
-            var $new = $(this).parent('div.one_kanban').find('.panel');
+            var $new = $(this).parent('div.one_kanban').find('.card');
             $new.find('.btn-ship').toggle();
             $new.removeClass('js_change_shipping');
             $new.addClass('border_primary');

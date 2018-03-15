@@ -29,11 +29,11 @@
                     <img class="img img-fluid center-block" src="/web/binary/company_logo" alt="Logo"/>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <h2>Calendar Invitation <small><t t-esc="event.name"/></small></h2>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
                             <span class="pull-right label label-info">
                                 <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>

@@ -6,14 +6,14 @@
                 <label class="control-label" for="name">Your Name</label>
                 <input type="text" name="partner_name" id="o_portal_sign_name" class="form-control" t-att-value="widget.options.partnerName"/>
             </div>
-            <div class="panel panel-default mt16 mb0" id="o_portal_sign_draw">
-                <div class="panel-heading">
+            <div class="card mt16 mb0" id="o_portal_sign_draw">
+                <div class="card-header">
                     <div class="pull-right">
                         <a role="button" id="o_portal_sign_clear" class="btn btn-xs">Clear</a>
                     </div>
                     <strong>Draw your signature</strong>
                 </div>
-                <div id="o_portal_signature" class="panel-body" style="padding: 0"/>
+                <div id="o_portal_signature" class="card-body" style="padding: 0"/>
             </div>
             <div class="mt16 clearfix">
               <button type="submit" class="btn btn-primary o_portal_sign_submit pull-right"><t t-esc="widget.options.signLabel or 'Accept &amp; Sign'"/></button>

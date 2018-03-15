@@ -27,7 +27,7 @@
       <t t-call="portal.portal_searchbar">
         <t t-set="title">Purchase Orders</t>
       </t>
-      <div t-if="orders" class="panel panel-default">
+      <div t-if="orders" class="card">
       <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
         <thead>
           <tr class="active">
@@ -68,8 +68,8 @@
       <t t-set="purchase_order" t-value="order"/>
       <div id="optional_placeholder"></div>
       <div class="container">
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="card">
+            <div class="card-header">
               <div class="row">
                 <div class="col-lg-12">
                   <h4>
@@ -79,7 +79,7 @@
                 </div>
               </div>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <div class="mb8">
                   <strong>Date:</strong> <span t-field="order.date_order" t-options='{"widget": "date"}'/>
               </div>

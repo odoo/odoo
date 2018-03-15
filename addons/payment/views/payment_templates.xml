@@ -40,12 +40,12 @@
             <input type="hidden" t-if="error_url" name="error_url" t-att-value="error_url"/>
             <input type="hidden" t-if="callback_method" name="callback_method" t-att-value="callback_method"/>
 
-            <div class="panel panel-default">
+            <div class="card">
                 <t t-set="acquirers_count" t-value="(len(s2s_acquirers) if s2s_acquirers else 0) + (len(form_acquirers) if form_acquirers else 0)"/>
                 <t t-set="pms_count" t-value="len(pms) if pms else 0"/>
                 <t t-set="MAX_BRAND_LINE" t-value="3"/>
                 <t t-foreach="s2s_acquirers" t-as="acq">
-                    <div class="panel-body">
+                    <div class="card-body">
                         <label>
                             <t t-if="mode == 'manage'">
                                 <input type="radio" t-att-data-acquirer-id="acq.id"
@@ -81,7 +81,7 @@
                             </t>
                         </ul>
                     </div>
-                    <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'d-none' if(acquirers_count &gt; 1 and pms_count==0 and s2s_acquirers[0]!=acq) else 'd-none' if pms_count &gt;0 else ''}}">
+                    <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="card-footer {{'d-none' if(acquirers_count &gt; 1 and pms_count==0 and s2s_acquirers[0]!=acq) else 'd-none' if pms_count &gt;0 else ''}}">
                         <div class="clearfix">
                             <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
                                 <t t-set="id" t-value="acq.id"/>
@@ -92,7 +92,7 @@
                     </div>
                 </t>
                 <t t-if="mode == 'payment'" t-foreach="form_acquirers" t-as="acq">
-                    <div class="panel-body">
+                    <div class="card-body">
                         <label>
                             <input type="radio" t-att-data-acquirer-id="acq.id"
                                 t-att-data-form-payment="true"
@@ -118,12 +118,12 @@
                             </t>
                         </ul>
                     </div>
-                    <div t-attf-id="o_payment_form_acq_{{acq.id}}" t-attf-class="d-none {{'panel-footer' if acq.save_token == 'ask' else ''}}">
+                    <div t-attf-id="o_payment_form_acq_{{acq.id}}" t-attf-class="d-none {{'card-footer' if acq.save_token == 'ask' else ''}}">
                         <label t-if="acq.save_token == 'ask'"><input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/> Save my payment data</label>
                     </div>
                 </t>
                 <t t-foreach="pms" t-as="pm">
-                    <div class="panel-body">
+                    <div class="card-body">
                         <label>
                             <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
                             <span class="payment_option_name" t-esc="pm.name"/>

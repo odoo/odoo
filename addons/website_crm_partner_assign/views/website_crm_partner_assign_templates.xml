@@ -235,7 +235,7 @@
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
             </div>
-            <div t-if="leads" class="panel panel-default">
+            <div t-if="leads" class="card">
                 <table class="table table-hover">
                     <thead>
                         <tr class="active">
@@ -301,7 +301,7 @@
                     There are no opportunities.
                 </div>
             </t>
-            <div class="panel panel-default" t-if="opportunities">
+            <div class="card" t-if="opportunities">
                 <table class="table table-hover">
                     <thead>
                         <tr class="active">
@@ -337,8 +337,8 @@
 
     <template id="portal_my_lead" name="My Lead">
         <t t-call="portal.portal_layout">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <div class="row">
                         <div class="col-lg-12">
                             <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
@@ -352,7 +352,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body row">
+                <div class="card-body row">
                     <div class="col-lg-6">
                         <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
                             <label class="col-4">Customer</label>
@@ -503,8 +503,8 @@
 
     <template id="portal_my_opportunity" name="My Opportunity">
         <t t-call="portal.portal_layout">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <div class="row">
                         <div class="col-lg-12">
                             <h4 style="display:inline-block">
@@ -535,7 +535,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <div class="col-lg-6">
                         <div>
                             <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-primary" style="margin-bottom: 10px;">Edit Contact</button>

@@ -31,7 +31,7 @@
                 <t t-foreach="channels" t-as="channel">
                     <div t-if="channel_index % 3 == 0" class="clearfix"/>
                     <div class="col-md-4 mb32">
-                        <div class="well well-sm">
+                        <div class="card card-body">
                             <div>
                                 <a t-attf-href="/slides/#{slug(channel)}">
                                     <img t-if="channel.promoted_slide_id" t-attf-src="/web/image/slide.slide/#{channel.promoted_slide_id.id}/image_medium" class="img-fluid oe_slides_channel_thumbnail" alt="Promoted slide"/>
@@ -324,7 +324,7 @@
 <!-- Embedded template: display a list of slides in a grid view -->
 <template id='slides_grid_view' name="Slides (Grid View)">
     <div class="col-xl-3 col-lg-4 col-md-6 col-12 mt16 mb16" t-foreach="slides" t-as="slide">
-        <div class="well well-sm oe_slides_thumbnail_container">
+        <div class="card card-body oe_slides_thumbnail_container">
             <a t-attf-href="/slides/slide/#{slug(slide)}">
                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-fluid img-thumbnail oe_slides_grid_thumbnail" alt="slide.name"/>
             </a>
@@ -385,7 +385,7 @@
                             <i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private
                         </h3>
                         <t t-if="slide.channel_id.access_error_msg">
-                            <div t-field="slide.channel_id.access_error_msg" class="well oe_no_empty"/>
+                            <div t-field="slide.channel_id.access_error_msg" class="card card-body oe_no_empty"/>
                         </t>
                     </div>
 
@@ -633,29 +633,33 @@
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="related" class="tab-pane active mt4">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-12 panel panel-default">
-                                <ul class="media-list panel-body">
-                                    <t t-set="related_slides_list" t-value="list(related_slides)"/>
-                                    <t t-if="not related_slides_list">
-                                        No presentation available.
-                                    </t>
-                                    <t t-foreach="related_slides_list" t-as="slide">
-                                        <t t-call="website_slides.related_slides"/>
-                                    </t>
-                                </ul>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+                                <div class="card">
+                                    <ul class="media-list card-body">
+                                        <t t-set="related_slides_list" t-value="list(related_slides)"/>
+                                        <t t-if="not related_slides_list">
+                                            No presentation available.
+                                        </t>
+                                        <t t-foreach="related_slides_list" t-as="slide">
+                                            <t t-call="website_slides.related_slides"/>
+                                        </t>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" id="most_viewed" class="tab-pane  mt4">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-12 panel panel-default">
-                                <ul class="media-list panel-body">
-                                    <t t-set="most_viewed_slides_list" t-value="list(most_viewed_slides)"/>
-                                    <t t-if="not list(most_viewed_slides_list)">
-                                        No presentation available.
-                                    </t>
-                                    <t t-foreach="most_viewed_slides_list" t-as="slide">
-                                        <t t-call="website_slides.related_slides"/>
-                                    </t>
-                                </ul>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+                                <div class="card">
+                                    <ul class="media-list card-body">
+                                        <t t-set="most_viewed_slides_list" t-value="list(most_viewed_slides)"/>
+                                        <t t-if="not list(most_viewed_slides_list)">
+                                            No presentation available.
+                                        </t>
+                                        <t t-foreach="most_viewed_slides_list" t-as="slide">
+                                            <t t-call="website_slides.related_slides"/>
+                                        </t>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

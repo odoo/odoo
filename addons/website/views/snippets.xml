@@ -237,20 +237,20 @@
 </template>
 
 <template id="s_well" name="Well">
-    <div class="well s_well clearfix">
-        <p>
-            Explain the benefits you offer. Don't write about products or
-            services here, write about solutions.
-        </p>
+    <div class="card s_well clearfix">
+        <div class="card-body">
+            <p>
+                Explain the benefits you offer. Don't write about products or
+                services here, write about solutions.
+            </p>
+        </div>
     </div>
 </template>
 
 <template id="s_panel" name="Panel">
-    <div class="panel panel-default o_panel s_panel">
-        <div class="panel-heading ">
-            <h3 class="panel-title">Feature Title</h3>
-        </div>
-        <div class="panel-body">
+    <div class="card o_panel s_panel">
+        <h3 class="card-header">Feature Title</h3>
+        <div class="card-body">
             <p>
                 Panels are a great tool to compare offers or to emphasize on
                 key features. To compare products, use the inside columns.
@@ -307,14 +307,14 @@
             <h2 class="text-center">Our Offers</h2>
             <div class="row">
                 <div class="col-lg-4 col-12">
-                    <div class="panel bg-gray-light">
-                        <div class="panel-heading text-center" style="background-color: rgba(255, 255, 255, 0.1)">
+                    <div class="card bg-gray-light">
+                        <div class="card-header text-center" style="background-color: rgba(255, 255, 255, 0.1)">
                             <h3 style="margin: 0">Beginner</h3>
                             <p style="margin: 0">
                                 Starter package
                             </p>
                         </div>
-                        <div class="panel-body text-center">
+                        <div class="card-body text-center">
                             <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">35</b><small>.00</small></h3>
                             <div>user / month (billed annually)</div>
                         </div>
@@ -324,7 +324,7 @@
                             <li class="list-group-item">No customization</li>
                             <li class="list-group-item">No support</li>
                         </ul>
-                        <div class="panel-footer text-center">
+                        <div class="card-footer text-center">
                             <p class="text-muted">
                                 <i>Instant setup, satisfied or reimbursed.</i>
                             </p>
@@ -333,12 +333,12 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-12">
-                    <div class="panel bg-beta">
-                        <div class="panel-heading text-center" style="background-color: rgba(255, 255, 255, 0.1)">
+                    <div class="card bg-beta">
+                        <div class="card-header text-center" style="background-color: rgba(255, 255, 255, 0.1)">
                             <h3 style="margin: 0">Professional</h3>
                             <p style="margin: 0">Enterprise package</p>
                         </div>
-                        <div class="panel-body text-center">
+                        <div class="card-body text-center">
                             <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">65</b><small>.00</small></h3>
                             <div>user / month (billed annually)</div>
                         </div>
@@ -348,19 +348,19 @@
                             <li class="list-group-item">Limited customization</li>
                             <li class="list-group-item">Email support</li>
                         </ul>
-                        <div class="panel-footer text-center">
+                        <div class="card-footer text-center">
                             <p class="text-muted"><i>Instant setup, satisfied or reimbursed.</i></p>
                             <a role="button" href="/contactus" class="btn btn-primary btn-lg">Order now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-12">
-                    <div class="panel bg-gray-light">
-                        <div class="panel-heading text-center" style="background-color: rgba(255, 255, 255, 0.1)">
+                    <div class="card bg-gray-light">
+                        <div class="card-header text-center" style="background-color: rgba(255, 255, 255, 0.1)">
                             <h3 style="margin: 0">Expert</h3>
                             <p style="margin: 0">Ultimate package</p>
                         </div>
-                        <div class="panel-body text-center">
+                        <div class="card-body text-center">
                             <h3 style="margin: 0"><span>$</span><b style="font-size: 60px">125</b><small>.00</small></h3>
                             <div>user / month (billed annually)</div>
                         </div>
@@ -370,7 +370,7 @@
                             <li class="list-group-item">Unlimited customization</li>
                             <li class="list-group-item">24x7 toll-free support</li>
                         </ul>
-                        <div class="panel-footer text-center">
+                        <div class="card-footer text-center">
                             <p class="text-muted"><i>Instant setup, satisfied or reimbursed.</i></p>
                             <a role="button" href="/contactus" class="btn btn-primary btn-lg">Contact us</a>
                         </div>
@@ -479,15 +479,11 @@
     <section class="s_faq_collapse">
         <div class="container">
             <h2 class="page-header"> General Terms and Conditions / Service Policies </h2>
-            <div class="panel-group" role="tablist">
-                <div class="panel">
-                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
-                        <h4 class="panel-title">
-                            Terms of service
-                        </h4>
-                    </div>
-                    <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body bg-white-50">
+            <div class="accordion" role="tablist">
+                <div class="card">
+                    <h4 class="card-header bg-gray-lighter" role="tab" data-toggle="collapse">Terms of service</h4>
+                    <div class="collapse" role="tabpanel">
+                        <div class="card-body bg-white-50">
                             <p>
                                 These terms of service ("Terms", "Agreement") are an agreement between the website
                                 ("Website operator", "us", "we" or "our") and you ("User", "you" or "your").
@@ -499,14 +495,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
-                        <h4 class="panel-title">
-                            Links to other websites
-                        </h4>
-                    </div>
-                    <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body bg-white-50">
+                <div class="card">
+                    <h4 class="card-header bg-gray-lighter" role="tab" data-toggle="collapse">Links to other websites</h4>
+                    <div class="collapse" role="tabpanel">
+                        <div class="card-body bg-white-50">
                             <p>
                                 Although this Website may be linked to other websites, we are not, directly or
                                 indirectly, implying any approval, association, sponsorship, endorsement, or
@@ -520,14 +512,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
-                        <h4 class="panel-title">
-                            Use Of Cookies
-                        </h4>
-                    </div>
-                    <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body bg-white-50">
+                <div class="card">
+                    <h4 class="card-header bg-gray-lighter" role="tab" data-toggle="collapse">Use Of Cookies</h4>
+                    <div class="collapse" role="tabpanel">
+                        <div class="card-body bg-white-50">
                             <p>Website may use cookies to personalize and facilitate maximum navigation of the
                                 User by this site. The User may configure his / her browser to notify and
                                 reject the installation of the cookies sent by us.</p>
@@ -909,8 +897,8 @@
     </div>
 
     <div data-js='content'
-        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .oe_share, .o_image_floating"
-        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .oe_share"
+        data-selector="blockquote, .card, .s_panel, .o_facebook_page, .oe_share, .o_image_floating"
+        data-drop-near="p, h1, h2, h3, blockquote, .card, .o_facebook_page, .s_panel, .oe_share"
         data-drop-in=".content">
     </div>
 
@@ -968,8 +956,8 @@
     </div>
 
     <div data-js='collapse'
-         data-selector='.panel-group > .panel:has(> .panel-collapse)'
-         data-drop-in='.panel-group:has(> .panel > .panel-collapse)'>
+         data-selector='.accordion > .card:has(> .collapse)'
+         data-drop-in='.accordion:has(> .card > .collapse)'>
     </div>
 
     <div data-js="menu_data"
