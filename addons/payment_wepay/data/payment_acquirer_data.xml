@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment.payment_acquirer_wepay" model="payment.acquirer">
+        <field name="name">WePay</field>
+        <field name="provider">wepay</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="view_template_id" ref="wepay_form"/>
+        <field name="registration_view_template_id" ref="wepay_s2s_form"/>
+        <field name="environment">test</field>
+        <field name="pre_msg" type="html">
+            <p>
+                You will be redirected to the wepay website after clicking on the payment button.
+            </p>
+        </field>
+    </record>
+
+    <record id="config_payment_wepay_test_client_id" model="ir.config_parameter">
+        <field name="key">payment_wepay_test_client_id</field>
+        <field name="value">122032</field>
+    </record>
+
+    <record id="config_payment_wepay_test_client_secret" model="ir.config_parameter">
+        <field name="key">payment_wepay_test_client_secret</field>
+        <field name="value">df31dc4650</field>
+    </record>
+
+    <record id="config_payment_wepay_prod_client_id" model="ir.config_parameter">
+        <field name="key">payment_wepay_prod_client_id</field>
+        <field name="value"></field>
+    </record>
+
+    <record id="config_payment_wepay_prod_client_secret" model="ir.config_parameter">
+        <field name="key">payment_wepay_prod_client_secret</field>
+        <field name="value"></field>
+    </record>
+</odoo>
