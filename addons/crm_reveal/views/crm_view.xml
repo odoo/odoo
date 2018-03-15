@@ -1,0 +1,25 @@
+<odoo>
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="reveal_ip" groups="base.group_no_one" attrs="{'invisible': [('reveal_ip', '=', False)]}"/>
+                <field name="iap_credits" groups="base.group_no_one" attrs="{'invisible': [('reveal_ip', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="crm_case_form_view_oppor" model="ir.ui.view">
+        <field name="name">crm.lead.oppor.inherited.crm</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="reveal_ip" groups="base.group_no_one" attrs="{'invisible': [('reveal_ip', '=', False)]}"/>
+                <field name="iap_credits" groups="base.group_no_one" attrs="{'invisible': [('reveal_ip', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

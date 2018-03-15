@@ -1,0 +1,121 @@
+<odoo>
+
+    <data noupdate="1">
+        <!-- Scheduler for Lead Gereration -->
+        <record forcecreate="True" id="ir_cron_crm_reveal_lead" model="ir.cron">
+            <field name="name">Crm Reveal: lead generation</field>
+            <field name="model_id" ref="model_crm_reveal_rule"/>
+            <field name="state">code</field>
+            <field name="code">model.process_lead_generation()</field>
+            <field eval="False" name="active"/>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+
+    <record model="ir.ui.view" id="lead_acquisition_rule_form">
+        <field name="name">lead.acquisition.rule.form</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="test_rule" string="Test Rule" type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_lead_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o">
+                            <div class="o_stat_info">
+                                <field name="leads_count"/>
+                                <span class="o_stat_text"> Lead(s)</span>
+                            </div>
+                        </button>
+                        <button name="toggle_active" type="object" groups="base.group_user" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    <div class="badge pull-right"><field name="calculate_credits" class="mb0"/> Credit / Lead</div>
+                    <div class="oe_title">
+                        <h1 class="o_row">
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="lead_for"/>
+                            <field name="country_ids" widget="many2many_tags"/>
+                            <field name="regex_url"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="filter_page" string="Filters">
+                            <group>
+                                <group>
+                                    <h2>Company Filter</h2>
+                                    <field name="industry_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="company_size_min"/>
+                                    <field name="company_size_max"/>
+                                </group>
+                                <group attrs="{'invisible': [('lead_for', '!=', 'people')]}">
+                                    <h2>People Filter</h2>
+                                    <field name="preferred_role_id"/>
+                                    <field name="other_role_ids" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('preferred_role_id','=', False)]}"/>
+                                    <field name="seniority_id"/>
+                                    <field name="extra_contacts"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="lead_opportunity_data_page" string="Lead / Opportunity Data">
+                            <group>
+                                <group>
+                                    <field name="lead_type" groups="crm.group_use_lead"/>
+                                    <field name="suffix"/>
+                                    <field name="team_id"/>
+                                    <field name="user_id"/>
+                                </group>
+                                <group>
+                                    <field name="stage_id" attrs="{'invisible': [('lead_type', '=', 'lead')]}"/>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                    <field name="priority" widget="priority"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="lead_acquisition_rule_list">
+        <field name="name">lead.acquisition.rule.list</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="lead_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="lead_acquisition_rule">
+        <field name="name">Acquisition Rules</field>
+        <field name="res_model">crm.reveal.rule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- This menu is display in CRM app when crm_reveal is installed-->
+    <menuitem
+        id="lead_generation_menu_crm"
+        name="Lead Generation"
+        parent="crm.crm_menu_config"
+        sequence="10"/>
+
+    <menuitem
+        action="lead_acquisition_rule"
+        id="menu_lead_acquisition_rule"
+        parent="lead_generation_menu_crm"
+        sequence="1"/>
+
+</odoo>

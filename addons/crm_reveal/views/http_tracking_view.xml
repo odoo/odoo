@@ -1,0 +1,49 @@
+<odoo>
+
+    <record id="http_traking_pageview_list_view" model="ir.ui.view">
+        <field name="name">http.pageview.tree.inherited</field>
+        <field name="model">http.pageview</field>
+        <field name="inherit_id" ref="http_tracking.http_pageview_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='session_id']" position="after">
+                <field name="crm_reveal_scanned" />
+                <field name="reveal" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="http_traking_pageview_form_view" model="ir.ui.view">
+        <field name="name">http.pageview.form.inherited</field>
+        <field name="model">http.pageview</field>
+        <field name="inherit_id" ref="http_tracking.http_pageview_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='view_date']" position="after">
+                <field name="crm_reveal_scanned" />
+                <field name="reveal" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="http_traking_session_form_view" model="ir.ui.view">
+        <field name="name">http.session.form.inherited</field>
+        <field name="model">http.session</field>
+        <field name="inherit_id" ref="http_tracking.http_session_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="lead_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="http_traking_session_tree_view" model="ir.ui.view">
+        <field name="name">http.session.list.inherited</field>
+        <field name="model">http.session</field>
+        <field name="inherit_id" ref="http_tracking.http_session_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_time']" position="after">
+                <field name="lead_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
