@@ -46,6 +46,16 @@
             <div class="clearfix"/>
         </div>
     </t>
+
+    <t t-name="EmailBadge">
+        <span t-foreach="emails" t-as="email" class="badge">
+            <span class="o_badge_text">
+                <t t-esc='email' />
+            </span>
+            <span class="fa fa-times o_badge_remove" title="Remove Email" role="button" />
+        </span>
+    </t>
+
     <t t-name="DashboardInvitations">
         <div class="text-center o_web_settings_dashboard_invitations">
             <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;"></i>
@@ -63,24 +73,21 @@
             </div>
             <hr/>
             <div class="o_web_settings_dashboard_invitation_form">
-                <strong>Invite new users:</strong>
-                <textarea rows="3" id="user_emails" placeholder="Enter e-mail addresses (one per line)"></textarea>
-                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Invite</strong></button>
+                <p><strong>Invite new users:</strong></p>
+                <textarea id="user_emails" class="o_input" placeholder="Enter e-mail addresses"/>
+                <button class="btn btn-primary btn-block o_web_settings_dashboard_invite mt16" role="button" data-loading-text="Inviting..."><strong>Invite</strong></button>
             </div>
-            <div>
-                <small class="o_web_settings_dashboard_pending_users text-muted text-center">
-                    <t t-if="pending_users.length">
+            <div class="o_web_settings_dashboard_pending_users mt8">
+                <t t-if="pending_users.length">
+                    <p><strong>Pending invitations:</strong></p>
+                    <span t-foreach="pending_users" t-as="pending">
+                        <a href="#"><div class="badge o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
+                    </span>
+                    <t t-if="pending_users.length &lt; widget.data.pending_count">
                         <br/>
-                        <strong>Pending invitations:</strong><br/>
-                        <t t-foreach="pending_users" t-as="pending">
-                            <a href="#"><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
-                        </t>
-                        <t t-if="pending_users.length &lt; widget.data.pending_count">
-                            <br/>
-                            <a href="#"><div class="o_web_settings_dashboard_more"><t t-esc="widget.data.pending_count - pending_users.length"/> more</div></a>
-                        </t>
+                        <a href="#"><div class="o_web_settings_dashboard_more"><t t-esc="widget.data.pending_count - pending_users.length"/> more</div></a>
                     </t>
-                </small>
+                </t>
             </div>
         </div>
     </t>
