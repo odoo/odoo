@@ -313,9 +313,9 @@ var ImageWidget = MediaWidget.extend({
                 }
                 if (!self.$media.is('img')) {
                     // Note: by default the images receive the bootstrap opt-in
-                    // img-responsive class. We cannot make them all responsive
+                    // img-fluid class. We cannot make them all responsive
                     // by design because of libraries and client databases img.
-                    self._replaceMedia($('<img/>', {class: 'img-responsive o_we_custom_image'}));
+                    self._replaceMedia($('<img/>', {class: 'img-fluid o_we_custom_image'}));
                 }
                 self.$media.attr('src', img.src);
 
@@ -459,7 +459,7 @@ var ImageWidget = MediaWidget.extend({
             var $div = $(el);
             if (/gif|jpe|jpg|png/.test($div.data('mimetype'))) {
                 var $img = $('<img/>', {
-                    class: 'img-responsive',
+                    class: 'img-fluid',
                     src: $div.data('url') || $div.data('src'),
                 });
                 var def = $.Deferred();

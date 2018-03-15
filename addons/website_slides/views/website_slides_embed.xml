@@ -81,7 +81,7 @@
                                             <h4><t t-esc="suggest_slide.name"/></h4>
                                         </div>
                                         <span class="oe-image-thumbnail">
-                                            <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{suggest_slide.id}/image_thumb" alt="suggest_slide.name"/>
+                                            <img class="img-fluid" t-attf-src="/web/image/slide.slide/#{suggest_slide.id}/image_thumb" alt="suggest_slide.name"/>
                                         </span>
                                     </a>
 
@@ -90,15 +90,15 @@
                         </div>
                         <t t-if="slide.slide_type in ('presentation', 'document')">
                             <div id="PDFViewerLoader" class="oe_slides_loader">
-                                <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{slide.id}/image_medium" style="margin:auto;height:100%" alt="suggest_slide.name"/>
+                                <img class="img-fluid" t-attf-src="/web/image/slide.slide/#{slide.id}/image_medium" style="margin:auto;height:100%" alt="suggest_slide.name"/>
                                 <h4 class="text-center">
                                     <i class="fa fa-spinner fa-spin"></i> Loading ...
                                 </h4>
                             </div>
-                            <canvas id="PDFViewerCanvas" class="img-responsive" style="margin:auto;height:100%;display:none;"></canvas>
+                            <canvas id="PDFViewerCanvas" class="img-fluid" style="margin:auto;height:100%;display:none;"></canvas>
                         </t>
                         <t t-if="slide.slide_type in ('infographic')">
-                            <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%" alt="Slide image"/>
+                            <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-fluid" style="width:100%" alt="Slide image"/>
                         </t>
                     </div>
                     <!-- Fixed bottom navbar -->

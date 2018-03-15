@@ -878,7 +878,7 @@ options.registry.gallery = options.Class.extend({
         dialog.on('save', this, function (attachments) {
             for (var i = 0 ; i < attachments.length; i++) {
                 $('<img/>', {
-                    class: 'img img-responsive',
+                    class: 'img img-fluid',
                     src: attachments[i].src,
                     'data-index': ++index,
                 }).appendTo($container);
