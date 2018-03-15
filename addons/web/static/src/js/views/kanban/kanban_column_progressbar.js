@@ -133,9 +133,8 @@ var KanbanColumnProgressBar = Widget.extend({
         });
         if (this.progressBarHelp && _.every(this.subgroupCounts, function (val) { return val === 0; })) {
             this.$el.tooltip({
-                delay: '0',
-                trigger:'hover',
-                placement: 'top',
+                delay: 0,
+                trigger: 'hover',
                 title: this.progressBarHelp,
             });
         }
@@ -152,9 +151,8 @@ var KanbanColumnProgressBar = Widget.extend({
             // Adapt tooltip
             $bar.attr('data-original-title', count + ' ' + key);
             $bar.tooltip({
-                delay: '0',
-                trigger:'hover',
-                placement: 'top'
+                delay: 0,
+                trigger: 'hover',
             });
 
             // Adapt active state
