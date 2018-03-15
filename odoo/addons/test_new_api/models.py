@@ -195,9 +195,14 @@ class Multi(models.Model):
     """
     _name = 'test_new_api.multi'
 
-    name = fields.Char(related='partner.name', readonly=True)
+    name = fields.Char(readonly=True, compute='_compute_display_name')
     partner = fields.Many2one('res.partner')
     lines = fields.One2many('test_new_api.multi.line', 'multi')
+
+    @api.depends('partner')
+    def _compute_display_name(self):
+        for rec in self:
+            rec.name = rec.partner.name if rec.partner else rec.env.user.partner_id.name
 
     @api.onchange('name')
     def _onchange_name(self):
