@@ -321,8 +321,6 @@ var BaseSettingRenderer = FormRenderer.extend({
 });
 
 var BaseSettingController = FormController.extend({
-    custom_events: _.extend({}, FormController.prototype.custom_events, {}),
-
     init: function () {
         this._super.apply(this, arguments);
         this.renderer.activeSettingTab = this.initialState.context.module;
@@ -334,10 +332,6 @@ var BaseSettingView = FormView.extend({
         Renderer: BaseSettingRenderer,
         Controller: BaseSettingController,
     }),
-
-    getRenderer: function (parent, state) {
-        return new BaseSettingRenderer(parent, state, this.rendererParams);
-    }
 });
 
 view_registry.add('base_settings', BaseSettingView);
