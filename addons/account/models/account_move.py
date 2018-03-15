@@ -908,7 +908,9 @@ class AccountMoveLine(models.Model):
 
     def _get_pair_to_reconcile(self):
         #field is either 'amount_residual' or 'amount_residual_currency' (if the reconciled account has a secondary currency set)
-        field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
+        company_currency_id = self[0].account_id.company_id.currency_id
+        account_curreny_id = self[0].account_id.currency_id
+        field = (account_curreny_id and company_currency_id != account_curreny_id) and 'amount_residual_currency' or 'amount_residual'
         #reconciliation on bank accounts are special cases as we don't want to set them as reconciliable
         #but we still want to reconcile entries that are reversed together in order to clear those lines
         #in the bank reconciliation report.
@@ -946,8 +948,9 @@ class AccountMoveLine(models.Model):
         #there is no more pair to reconcile so return what move_line are left
         if not sm_credit_move or not sm_debit_move:
             return self
-
-        field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
+        company_currency_id = self[0].account_id.company_id.currency_id
+        account_curreny_id = self[0].account_id.currency_id
+        field = (account_curreny_id and company_currency_id != account_curreny_id) and 'amount_residual_currency' or 'amount_residual'
         if not sm_debit_move.debit and not sm_debit_move.credit:
             #both debit and credit field are 0, consider the amount_residual_currency field because it's an exchange difference entry
             field = 'amount_residual_currency'
