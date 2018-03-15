@@ -885,9 +885,7 @@
     <img class="img img-responsive"
         t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
-        t-att-name="widget.name"
-        t-att-width="widget.nodeOptions.size ? widget.nodeOptions.size[0] : widget.attrs.img_width || widget.attrs.width"
-        t-att-height="widget.nodeOptions.size ? widget.nodeOptions.size[1] : widget.attrs.img_height || widget.attrs.height"/>
+        t-att-name="widget.name"/>
 </t>
 <t t-name="FieldBinaryFile">
     <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
