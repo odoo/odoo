@@ -196,7 +196,7 @@ renderer.tplPopovers = function (lang, options) {
 
     setTimeout(function () {
         $airPopover.add($linkPopover).add($imagePopover).find("button")
-            .tooltip('destroy')
+            .tooltip('dispose')
             .tooltip({
                 container: 'body',
                 trigger: 'hover',
@@ -895,7 +895,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
                 if (!show_tooltip) return;
                 $target.tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
                 setTimeout(function () {
-                    $target.tooltip('destroy');
+                    $target.tooltip('dispose');
                 }, 800);
             }, 400);
         });
