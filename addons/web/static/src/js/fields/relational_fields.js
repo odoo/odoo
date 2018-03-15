@@ -2016,7 +2016,9 @@ var FieldStatus = AbstractField.extend({
      * @param {MouseEvent} e
      */
     _onClickStage: function (e) {
-        this._setValue($(e.currentTarget).data("value"));
+        if(this.attrs.clickable){
+            this._setValue($(e.currentTarget).data("value"));
+        }
     },
 });
 
