@@ -132,7 +132,7 @@
 // ------------------------------------------------------------------
 // Hovering effects
 // ------------------------------------------------------------------
-@mixin o-hover-text-color($default-color: $text-color, $hover-color: $link-color) {
+@mixin o-hover-text-color($default-color: $body-color, $hover-color: $link-color) {
     color: $default-color;
 
     &:hover, &:focus, &.focus {
@@ -221,7 +221,7 @@
     border: 1px solid transparent;
     border-bottom: none;
     vertical-align: top;
-    color: $text-color;
+    color: $body-color;
 
     &:hover {
         color: $headings-color;
@@ -288,7 +288,7 @@
     > a {
         margin: auto auto auto (-$link-padding-gap);
         padding: 3px $link-padding-gap;
-        color: $text-color;
+        color: $body-color;
         display: block;
 
         &:hover {
