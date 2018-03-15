@@ -126,7 +126,8 @@ class Employee(models.Model):
     ], groups="hr.group_hr_user", default="male")
     marital = fields.Selection([
         ('single', 'Single'),
-        ('married', 'Married (or similar)'),
+        ('married', 'Married'),
+        ('cohabitant', 'Legal Cohabitant'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
     ], string='Marital Status', groups="hr.group_hr_user", default='single')
