@@ -153,7 +153,7 @@ var SnippetEditor = Widget.extend({
         });
 
         var $parent = this.$target.parent();
-        this.$target.find('*').andSelf().tooltip('destroy');
+        this.$target.find('*').andSelf().tooltip('dispose');
         this.$target.remove();
         this.$el.remove();
 

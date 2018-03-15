@@ -45,7 +45,7 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
     destroy: function () {
         if (this.$buttons) {
             // remove jquery's tooltip() handlers
-            this.$buttons.find('button').off().tooltip('destroy');
+            this.$buttons.find('button').off().tooltip('dispose');
         }
         this._super.apply(this, arguments);
     },

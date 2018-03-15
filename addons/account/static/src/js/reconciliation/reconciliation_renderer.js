@@ -485,7 +485,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     _destroyPopover: function ($el) {
         var popover = $el.data('bs.popover');
         if (popover) {
-            popover.destroy();
+            popover.dispose();
         }
     },
     /**
@@ -775,7 +775,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     _onTogglePartialReconcile: function (e) {
         e.stopPropagation();
         var popover = $(e.target).data('bs.popover');
-        popover && popover.destroy();
+        popover && popover.dispose();
         this.trigger_up('toggle_partial_reconcile');
     }
 });

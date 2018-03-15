@@ -143,7 +143,7 @@ var Menu = Widget.extend({
         }
         // add a tooltip to cropped menu items
         this.$secondary_menus.find('.oe_secondary_submenu li a span').each(function() {
-            $(this).tooltip(this.scrollWidth > this.clientWidth ? {title: $(this).text().trim(), placement: 'right'} :'destroy');
+            $(this).tooltip(this.scrollWidth > this.clientWidth ? {title: $(this).text().trim(), placement: 'right'} : 'dispose');
        });
     },
     /**
