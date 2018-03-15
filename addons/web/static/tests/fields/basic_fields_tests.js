@@ -1760,7 +1760,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldImage');
 
     QUnit.test('image fields are correctly rendered', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage';
@@ -1792,6 +1792,8 @@ QUnit.module('basic_fields', {
         assert.ok(form.$('div[name="document"] > img').hasClass('img-responsive'),
             "the image should have the correct class");
         assert.strictEqual(form.$('div[name="document"] > img').attr('width'), "90",
+            "the image should correctly set its attributes");
+        assert.strictEqual(form.$('div[name="document"] > img').css('max-width'), "90px",
             "the image should correctly set its attributes");
         form.destroy();
 
