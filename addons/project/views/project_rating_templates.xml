@@ -21,8 +21,8 @@
                             </t>
                             <t t-foreach="projects" t-as="project">
                                 <div t-if="project.percentage_satisfaction_project != -1" class="col-md-6 col-4 col-lg-4 col-xl-4">
-                                    <div class="thumbnail">
-                                        <div>
+                                    <div class="card">
+                                        <div class="card-body">
                                             <div class="caption">
                                                 <span class="label label-default pull-right"><t t-esc="project.privacy_visibility"/></span>
                                                 <h4><t t-esc="project.name"/></h4>

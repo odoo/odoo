@@ -132,11 +132,9 @@
                                 </ul>
                             </div>
                         </div><div class="col-md-3">
-                            <div class="panel panel-default mt48" id="about_doc">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Need more info?</h3>
-                                </div>
-                                <div class="panel-body">
+                            <div class="card mt48" id="about_doc">
+                                <h3 class="card-header">Need more info?</h3>
+                                <div class="card-body">
                                     <div class="text-muted">
                                         This documentation page has been extracted
                                         from the Q&amp;A section where you can
@@ -189,35 +187,37 @@
                     </p>
                 </section>
                 <div class="container">
-                    <div class="well">
-                        <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <input name="post_id" t-att-value="post.id" type="hidden"/>
-                            <div class="form-group">
-                                <label class="col-lg-3 control-label" for="reason">Question:</label>
-                                <div class="col-lg-8 mt8">
-                                    <span t-field="post.name"/>
+                    <div class="card">
+                        <div class="card-body">
+                            <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input name="post_id" t-att-value="post.id" type="hidden"/>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" for="reason">Question:</label>
+                                    <div class="col-lg-8 mt8">
+                                        <span t-field="post.name"/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-lg-3 control-label" for="reason">Publish in Chapter:</label>
-                                <div class="col-lg-8">
-                                    <select class="form-control" name="toc_id">
-                                        <option/>
-                                        <t t-foreach="chapters or []" t-as="chapter">
-                                            <option t-att-value="chapter.id"><t t-esc="chapter.display_name"/></option>
-                                        </t>
-                                    </select>
+                                <div class="form-group">
+                                    <label class="col-lg-3 control-label" for="reason">Publish in Chapter:</label>
+                                    <div class="col-lg-8">
+                                        <select class="form-control" name="toc_id">
+                                            <option/>
+                                            <t t-foreach="chapters or []" t-as="chapter">
+                                                <option t-att-value="chapter.id"><t t-esc="chapter.display_name"/></option>
+                                            </t>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="offset-lg-3 col-lg-8">
-                                    <button class="btn btn-primary">Push to documentation</button>
-                                    <span class="text-muted">or</span>
-                                    <a role="button" class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
+                                <div class="form-group">
+                                    <div class="offset-lg-3 col-lg-8">
+                                        <button class="btn btn-primary">Push to documentation</button>
+                                        <span class="text-muted">or</span>
+                                        <a role="button" class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <section class="container">

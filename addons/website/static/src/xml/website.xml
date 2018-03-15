@@ -62,15 +62,17 @@
     </div>
 
     <div t-name="website.rename_page">
-        <div class="well">
-            <form class="form-horizontal">
-                <div class="form-group mb0">
-                    <label for="new_name" class="control-label col-md-4">Rename Page To:</label>
-                    <div class="col-md-8">
-                        <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us"/>
+        <div class="card">
+            <div class="card-body">
+                <form class="form-horizontal">
+                    <div class="form-group mb0">
+                        <label for="new_name" class="control-label col-md-4">Rename Page To:</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us"/>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
         <t t-call="website.dependencies"/>
     </div>

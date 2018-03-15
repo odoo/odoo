@@ -41,7 +41,7 @@ if(!$('.js_surveyresult').length) {
 
         // Replacing Library's Default Tooltip with our Custom One
         chart.tooltip(function(key, x, y, e) {
-            return '<h5 class="panel-primary"><div class="panel-heading">' + x + '</div></h5>' +
+            return '<h5 class="bg-primary text-white"><div class="card-header">' + x + '</div></h5>' +
             '<p>' + '<b>Responses : </b>' + key + '</p>' +
             '<p>' + "<b>Total Vote : </b>" + y + '</p>';
         });

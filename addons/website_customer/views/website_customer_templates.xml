@@ -185,11 +185,11 @@
 
 <template id="implemented_by_block" name="Partner Implemented By Block">
         <t t-if="partner.assigned_partner_id and partner.assigned_partner_id.website_published">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <h4>Implemented By</h4>
                 </div>
-                <div class="panel-body text-center">
+                <div class="card-body text-center">
         <h4>
             <a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}">
               <span t-field="partner.assigned_partner_id"/>
@@ -201,7 +201,7 @@
                 t-options='{"widget": "image", "class": "center-block"}'
              />
         </div>
-        <address class="well text-left">
+        <address class="text-left">
              <div t-field="partner.assigned_partner_id" t-options='{
                  "widget": "contact",
                  "fields": ["address", "website", "phone", "email"]

@@ -331,11 +331,9 @@
             <div class="clearfix"/>
 
             <t t-if="not event.is_online">
-                <div class="panel panel-default" t-if="event.address_id">
-                    <div class="panel-heading">
-                        <h4>Where</h4>
-                    </div>
-                    <div class="panel-body">
+                <div class="card" t-if="event.address_id">
+                    <h4 class="card-header">Where</h4>
+                    <div class="card-body">
                         <t t-if="event.google_map_img()">
                             <a t-att-href="event.google_map_link()" target="_BLANK">
                                <img t-att-src="event.google_map_img()" width="100%%" alt="Google Maps"/>
@@ -352,31 +350,25 @@
                 </div>
             </t>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>When</h4>
-                </div>
-                <div class="panel-body">
+            <div class="card">
+                <h4 class="card-header">When</h4>
+                <div class="card-body">
                     <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
                     <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 
-            <div class="panel panel-default" t-if="event.organizer_id">
-                <div class="panel-heading">
-                    <h4>Organizer</h4>
-                </div>
-                <div class="panel-body" t-field="event.organizer_id" t-options='{
+            <div class="card" t-if="event.organizer_id">
+                <h4 class="card-header">Organizer</h4>
+                <div class="card-body" t-field="event.organizer_id" t-options='{
                     "widget": "contact",
                     "fields": ["name", "phone", "mobile", "email"]
                     }'/>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>Social Stream</h4>
-                </div>
-                <div class="panel-body">
+            <div class="card">
+                <h4 class="card-header">Social Stream</h4>
+                <div class="card-body">
                     <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
                     <div t-if="event.twitter_hashtag" class="mt16">
                         <p><strong>Participate on Twitter</strong></p>
@@ -414,9 +406,9 @@
     <t t-set="tickets_available" t-value="event.seats_available or event.seats_availability == 'unlimited'"/>
     <t t-set="buy" t-value="tickets_available and event.state == 'confirm'"/>
     <div itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
-        <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" class="panel panel-default" t-if="buy">
+        <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" class="card" t-if="buy">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <div class="panel-heading d-none d-lg-block">
+            <div class="card-header d-none d-lg-block">
                 <div class="row">
                     <div class="col-lg-3">
                         <h5><b>Ticket Type</b></h5>
@@ -457,7 +449,7 @@
                     </select>
                 </t>
             </t>
-            <div class="panel-footer">
+            <div class="card-footer">
                 <div class="row">
                     <div class="col-lg-4 offset-lg-8 col-xl-3 offset-xl-9">
                         <button type="submit" class="btn btn-primary btn-lg btn-block a-submit" t-attf-id="#{event.id}">
@@ -485,7 +477,7 @@
 </template>
 
 <template id="ticket" name="Ticket offer template">
-    <div class="col-12 d-lg-none panel-heading mb4">
+    <div class="col-12 d-lg-none card-header mb4">
         <h5>
             <strong>Ticket Type:</strong>
             <t t-raw="name"/>
@@ -494,7 +486,7 @@
             <t t-raw="description"/>
         </small>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         <div class="row" itemscope="itemscope" itemtype="http://schema.org/Offer">
             <div class="col-lg-3 d-none d-lg-block" t-raw="name"/>
             <div class="col-6 d-lg-none">
@@ -660,7 +652,7 @@
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <div data-js='country_events'
             data-selector=".oe_country_events"
-            data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
+            data-drop-near="p, h1, h2, h3, blockquote, .card"
             data-drop-in=".content"
            >
         </div>

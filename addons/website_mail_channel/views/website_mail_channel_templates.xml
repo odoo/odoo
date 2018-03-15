@@ -67,7 +67,7 @@
                                <button href="#" class="btn btn-primary js_follow_btn">Unsubscribe</button>
                             </span>
                         </div>
-                        <p class="js_mg_details d-none well well-sm">
+                        <p class="js_mg_details d-none">
                             <span class="js_mg_email d-none"><a href="#" class="js_mg_email"><i class="fa fa-envelope-o"/> send mail</a> - </span>
                             <a href="#" class="js_mg_link"><i class="fa fa-file-o"/> archives</a> -
                             <a role="button" href="#" class="js_unfollow_btn"><i class="fa fa-times"/> unsubscribe</a>
@@ -296,7 +296,7 @@
                 </div>
             </li>
         </ul>
-        <p t-if="messages and (msg_more_count or 0) > 0 and thread_header" class="well well-sm">
+        <p t-if="messages and (msg_more_count or 0) > 0 and thread_header">
             <button class="fa btn-link o_mg_read_more"
                 t-attf-data-href="/groups/#{slug(group)}/#{slug(thread_header)}/get_replies"
                 t-attf-data-msg-id="#{messages[-1].id}">

@@ -42,7 +42,7 @@
                     There are no projects.
                 </div>
             </t>
-            <div t-if="projects" class="panel panel-default">
+            <div t-if="projects" class="card">
                 <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
                     <thead>
                         <tr class="active">
@@ -73,8 +73,8 @@
 
     <template id="portal_my_project" name="My Project">
         <t t-call="portal.portal_layout">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <div class="row">
                         <div class="col-lg-12">
                             <h4>
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <div class='row'>
                         <div class="col-lg-6">
                             <t t-if="project.partner_id">
@@ -124,7 +124,7 @@
                     There are no tasks.
                 </div>
             </t>
-            <div t-if="grouped_tasks" class="panel panel-default">
+            <div t-if="grouped_tasks" class="card">
                 <div class="table-responsive">
                     <t t-foreach="grouped_tasks" t-as="tasks">
                         <table class="table table-hover o_portal_my_doc_table">
@@ -163,8 +163,8 @@
 
     <template id="portal_my_task" name="My Task">
         <t t-call="portal.portal_layout">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <div class="row">
                         <div class="col-lg-12">
                             <h4>
@@ -175,7 +175,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <div class="mb8" t-if="user.partner_id.id in task.sudo().project_id.message_partner_ids.ids">
                         <strong>Project:</strong> <a t-attf-href="/my/project/#{task.project_id.id}" t-field="task.project_id.name"/>
                     </div>
@@ -192,7 +192,7 @@
                                     <address t-field="task.user_id" t-field-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
                                 </div>
                             </div>
-                            <div t-if="task.attachment_ids" class='panel-footer'>
+                            <div t-if="task.attachment_ids" class='card-footer'>
                                 <strong>
                                     <t t-if='len(task.attachment_ids)&gt;1'>Attachments</t>
                                     <t t-else="">Attachment</t>
