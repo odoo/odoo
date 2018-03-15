@@ -430,6 +430,8 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def write(self, vals):
+        if 'expense_line_ids' in vals and self.state == 'approve' and not self.user_has_groups('hr_expense.group_hr_expense_manager'):
+            raise UserError(_("You don't the rights to add lines on an approved expense report."))
         res = super(HrExpenseSheet, self).write(vals)
         self.check_consistency()
         if vals.get('employee_id'):
