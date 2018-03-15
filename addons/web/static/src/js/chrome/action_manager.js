@@ -61,7 +61,6 @@ var ActionManager = Widget.extend({
         // dialog (i.e. coming from an action with target='new')
         this.currentDialogController = null;
     },
-
     /**
      * @override
      */
@@ -144,7 +143,7 @@ var ActionManager = Widget.extend({
      *   loaded and appended to the DOM ; rejected if the action can't be
      *   executed (e.g. if doAction has been called to execute another action
      *   before this one was complete).
-    */
+     */
     doAction: function (action, options) {
         var self = this;
         options = _.defaults({}, options, {
@@ -907,13 +906,13 @@ var ActionManager = Widget.extend({
         }
     },
     /**
-    * Intercepts and triggers a redirection on a link
-    *
-    * @private
-    * @param {OdooEvent} ev
-    * @param {integer} ev.data.res_id
-    * @param {string} ev.data.res_model
-    */
+     * Intercepts and triggers a redirection on a link.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.res_id
+     * @param {string} ev.data.res_model
+     */
     _onRedirect: function (ev) {
         this.do_action({
             type:'ir.actions.act_window',

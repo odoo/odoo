@@ -276,6 +276,102 @@ QUnit.module('ActionManager', {
         testUtils.unpatch(Widget);
     });
 
+    QUnit.test('no memory leaks when executing an action while loading views', function (assert) {
+        assert.expect(1);
+
+        var def;
+        var delta = 0;
+        testUtils.patch(Widget, {
+            init: function () {
+                delta += 1;
+                this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                delta -= 1;
+                this._super.apply(this, arguments);
+            },
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+               var result = this._super.apply(this, arguments);
+                if (args.method === 'load_views') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute action 4 to know the number of widgets it instantiates
+        actionManager.doAction(4);
+        var n = delta;
+
+        // execute a first action (its 'load_views' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3, {clear_breadcrumbs: true});
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4, {clear_breadcrumbs: true});
+        def.resolve();
+
+        assert.strictEqual(n, delta,
+            "all widgets of action 3 should have been destroyed");
+
+        actionManager.destroy();
+        testUtils.unpatch(Widget);
+    });
+
+    QUnit.test('no memory leaks when executing an action while loading data of default view', function (assert) {
+        assert.expect(1);
+
+        var def;
+        var delta = 0;
+        testUtils.patch(Widget, {
+            init: function () {
+                delta += 1;
+                this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                delta -= 1;
+                this._super.apply(this, arguments);
+            },
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route) {
+                var result = this._super.apply(this, arguments);
+                if (route === '/web/dataset/search_read') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute action 4 to know the number of widgets it instantiates
+        actionManager.doAction(4);
+        var n = delta;
+
+        // execute a first action (its 'search_read' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3, {clear_breadcrumbs: true});
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4, {clear_breadcrumbs: true});
+        def.resolve();
+
+        assert.strictEqual(n, delta,
+            "all widgets of action 3 should have been destroyed");
+
+        actionManager.destroy();
+        testUtils.unpatch(Widget);
+    });
+
     QUnit.test('action with "no_breadcrumbs" set to true', function (assert) {
         assert.expect(2);
 
@@ -1248,6 +1344,101 @@ QUnit.module('ActionManager', {
             'load_views', // action 3
             '/web/dataset/search_read', // search read of list view of action 3
             'read', // read the opened record of action 3 (this request is blocked)
+            '/web/action/load', // action 4
+            'load_views', // action 4
+            '/web/dataset/search_read', // search read action 4
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('execute a new action while loading views', function (assert) {
+        assert.expect(10);
+
+        var def;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method || route);
+                if (args.method === 'load_views') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute a first action (its 'load_views' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3);
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4);
+        def.resolve();
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should display the kanban view of action 4");
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // action 3
+            '/web/action/load', // action 4
+            'load_views', // action 4
+            '/web/dataset/search_read', // search read action 4
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('execute a new action while loading data of default view', function (assert) {
+        assert.expect(11);
+
+        var def;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method || route);
+                if (route === '/web/dataset/search_read') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute a first action (its 'search_read' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3);
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4);
+        def.resolve();
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should display the kanban view of action 4");
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // action 3
+            '/web/dataset/search_read', // search read action 3
             '/web/action/load', // action 4
             'load_views', // action 4
             '/web/dataset/search_read', // search read action 4
