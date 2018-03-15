@@ -1,4 +1,4 @@
-odoo.define('web.base_setting_test', function (require) {
+odoo.define('base.settings_tests', function (require) {
 "use strict";
 
 var testUtils = require('web.test_utils');
