@@ -29,7 +29,7 @@ class Image(models.AbstractModel):
         if options.get('qweb_img_raw_data', False):
             return super(Image, self).record_to_html(record, field_name, options)
 
-        aclasses = ['img', 'img-responsive'] if options.get('qweb_img_responsive', True) else ['img']
+        aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
         aclasses += options.get('class', '').split()
         classes = ' '.join(pycompat.imap(escape, aclasses))
 

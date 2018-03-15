@@ -1828,7 +1828,7 @@ QUnit.module('basic_fields', {
             "the widget should have the correct class");
         assert.strictEqual(form.$('div[name="document"] > img').length, 1,
             "the widget should contain an image");
-        assert.ok(form.$('div[name="document"] > img').hasClass('img-responsive'),
+        assert.ok(form.$('div[name="document"] > img').hasClass('img-fluid'),
             "the image should have the correct class");
         assert.strictEqual(form.$('div[name="document"] > img').attr('width'), "90",
             "the image should correctly set its attributes");
@@ -4679,14 +4679,14 @@ QUnit.module('basic_fields', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.img.img-responsive').length, 2,
+        assert.strictEqual(form.$('.img.img-fluid').length, 2,
             "Two images should be rendered");
         assert.strictEqual(form.$('.img.btn-info').length, 0,
             "No image should be selected");
 
         // select first image
-        form.$(".img.img-responsive:first").click();
-        assert.ok(form.$(".img.img-responsive:first").hasClass('btn-info'),
+        form.$(".img.img-fluid:first").click();
+        assert.ok(form.$(".img.img-fluid:first").hasClass('btn-info'),
             "First image should be selected");
 
         form.destroy();

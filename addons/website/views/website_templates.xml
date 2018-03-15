@@ -843,7 +843,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </address>
     <t t-if="res_company.google_map_img()">
         <a t-att-href="res_company.google_map_link()" target="_BLANK">
-           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
+           <img class="thumbnail img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
         </a>
     </t>
 </template>

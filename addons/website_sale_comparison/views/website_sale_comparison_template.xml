@@ -78,7 +78,7 @@
                                         <strong class='pull-right'>x</strong>
                                     </a>
                                     <a t-att-href="'/shop/product/%s' % slug(product.product_tmpl_id)">
-                                        <img t-attf-src="/web/image/product.product/#{product.id}/image/200x150" class="img img-responsive" style="margin:auto;" alt="Product image"/>
+                                        <img t-attf-src="/web/image/product.product/#{product.id}/image/200x150" class="img img-fluid" style="margin:auto;" alt="Product image"/>
                                     </a>
                                     <div class='product_summary'>
                                         <a class="o_product_comparison_table" t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
@@ -123,7 +123,7 @@
     <template id="product_product" name="Comparator - Product row in comparator popover">
         <div class="row mt8 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
             <div class="col-sm-3 col-xs-3 mb8">
-                <img class="img img-responsive" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" alt="Product image"/>
+                <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" alt="Product image"/>
             </div>
             <div class="col-sm-7 col-xs-7 mb8 text-left">
                 <h5>

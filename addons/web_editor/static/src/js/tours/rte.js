@@ -37,7 +37,7 @@ tour.register('rte', {
             '<p>Harum trium sententiarum nulli prorsus assentior.</p>\n'+
             '        </div>\n'+
             '        <div class="col-md-6 mt16">\n'+
-            '            <img class="img img-responsive shadow mb16" src="/web/static/src/img/logo.png" alt="Odoo text and image block">\n'+
+            '            <img class="img img-fluid shadow mb16" src="/web/static/src/img/logo.png" alt="Odoo text and image block">\n'+
             '        </div>\n'+
             '    </div>\n'+
             '</section>\n';
