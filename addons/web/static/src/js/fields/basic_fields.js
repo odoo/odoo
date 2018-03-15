@@ -2691,7 +2691,7 @@ var ImageSelection = AbstractField.extend({
         _.each(this.nodeOptions, function (val, key) {
             var $container = $('<div>').addClass('col-xs-3 text-center');
             var $img = $('<img>')
-                .addClass('img img-responsive img-thumbnail ml16')
+                .addClass('img img-fluid img-thumbnail ml16')
                 .toggleClass('btn-info', key === self.value)
                 .attr('src', val.image_link)
                 .data('key', key);

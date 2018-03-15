@@ -994,7 +994,7 @@ registry.background_position = SnippetOption.extend({
 
             var img_url = /\(['"]?([^'"]+)['"]?\)/g.exec(self.$target.css('background-image'));
             img_url = (img_url && img_url[1]) || '';
-            var $img = $('<img/>', {class: 'img img-responsive', src: img_url});
+            var $img = $('<img/>', {class: 'img img-fluid', src: img_url});
             $img.on('load', function () {
                 self._bindImageEvents($img);
             });
