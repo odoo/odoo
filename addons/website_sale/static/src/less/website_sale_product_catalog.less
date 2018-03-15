@@ -1,0 +1,112 @@
+.s_product_catalog {
+    min-height: 270px;
+    .o-product-catalog-slider {
+        position: relative;
+        .o-slider-control {
+            .o-position-absolute(@top: 50%);
+            font-size: 18px;
+            &[data-slide=prev] {
+                left: -5px;
+            }
+            &[data-slide=next] {
+                right: -5px;
+            }
+        }
+    }
+    .o-product-item {
+        border: 1px solid @gray-lighter;
+        .o-product-rating {
+            .o-position-absolute(@right: 20px);
+            display: none;
+        }
+        .o-product-image {
+            height: 200px;
+            .img {
+                margin: auto;
+                max-height: 100%;
+                max-width: 100%;
+            }
+        }
+        .o-product-details {
+            padding: 5px;
+            border-top: 1px solid @gray-lighter;
+            .o-product-name {
+                .o-text-overflow();
+                display: block;
+            }
+            .o-product-description {
+                .o-text-overflow();
+                height: 60px;
+                font-size: 0.8em;
+                display: none;
+            }
+        }
+        .o-action-buttons {
+            .btn-group {
+                display: none;
+                border-top: 1px solid @gray-lighter;
+                border-right: 1px solid @gray-lighter;
+                .btn {
+                    background: none;
+                    border-radius: 0px;
+                }
+                &:hover {
+                    background-color: @gray-lighter;
+                }
+                &:last-child {
+                    border-right-width: 0px;
+                }
+            }
+        }
+    }
+    .o-view-products-btn {
+        display: none;
+    }
+    &.enable_rating .o-product-rating {
+        display: block;
+    }
+    &.enable_product_description .o-product-item .o-product-description {
+        display: block;
+    }
+    &.enable_add_to_cart_btn .o-product-item .o-action-buttons .o-add-to-cart-btn {
+        display: table-cell;
+    }
+    &.enable_view_products_btn .o-view-products-btn {
+        display: inline-block;
+    }
+}
+
+// Adjust slider arrow in edit mode
+.o_editable {
+    .s_product_catalog {
+        .o-slider-control {
+            &[data-slide=prev] {
+                left: 0px;
+            }
+            &[data-slide=next] {
+                right: 0px;
+            }
+        }
+    }
+}
+
+// Customize select2 for better usability
+.o-product-catalog-manual-selection .select2-container-multi .select2-choices {
+    min-height: 60px;
+    .select2-search-choice {
+        padding-left: 8px;
+        cursor: pointer;
+        div {
+            margin-right: 15px;
+            &:before {
+                content: '\f0c9';
+                font-family: FontAwesome;
+                margin-right: 6px;
+                color: @gray-light;
+            }
+        }
+        .select2-search-choice-close {
+            left: auto;
+        }
+    }
+}

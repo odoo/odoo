@@ -1033,3 +1033,30 @@ class WebsiteSale(http.Controller):
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
             phone_code=country.phone_code
         )
+
+    @http.route('/get_product_catalog_details', type='json', auth='public', website=True)
+    def get_product_catalog_details(self, domain, order=None, limit=None):
+        ProductTemplate = request.env['product.template']
+        product_details = []
+        products = ProductTemplate.search(domain, order=order, limit=limit)
+        if products:
+            is_products_available = True
+            currency_id = request.website.get_current_pricelist().currency_id
+            for product in products:
+                product_details.append({
+                    'id': product.id,
+                    'name': product.name,
+                    'description_sale': '<br/>'.join((product.description_sale or '').split('\n')),  # Replace \n with <br/>
+                    'price': tools.misc.formatLang(request.env, product.website_price, currency_obj=currency_id),
+                    'product_variant_id': product.product_variant_id.id,
+                    'product_variant_count': product.product_variant_count,
+                    'rating': product.rating_get_stats(),
+                })
+        else:
+            is_products_available = bool(ProductTemplate.search_count([]))
+        return {
+            'products': product_details,
+            'is_rating_active': request.env.ref('website_sale.product_comment').active,
+            'is_products_available': is_products_available,
+            'is_sales_manager': request.env.user.has_group('sales_team.group_sale_manager')
+        }

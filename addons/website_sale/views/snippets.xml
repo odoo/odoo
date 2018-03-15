@@ -38,4 +38,79 @@
     </xpath>
 
 </template>
+
+<!-- External snippets -->
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_sale']" position="replace"/>
+</template>
+
+<template id="register_s_product_catalog" name="Product Catalog" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_sale.s_product_catalog" t-thumbnail="/website/static/src/img/blocks/product_catalog.png"/>
+    </xpath>
+</template>
+
+<!-- Snippets -->
+<template id="s_product_catalog" name="Product Catalog">
+    <section class="s_product_catalog enable_view_products_btn pt8 pb8" data-type="horizontal" data-x="3" data-y="1" data-order="name_asc" data-selection="all"/>
+</template>
+
+<template id="s_product_catalog_snippet_options" inherit_id="website.snippet_options">
+    <xpath expr="//div" position="after">
+        <div data-selector=".s_product_catalog" data-js="product_catalog">
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#"><i class="fa fa-th-large"></i>Mode</a>
+                <ul class="dropdown-menu">
+                    <li data-type="horizontal" data-no-preview="true"><a href="#">Slider</a></li>
+                    <li data-type="grid" data-no-preview="true"><a href="#">Grid</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu o_grid_size">
+                <a tabindex="-1" href="#"><i class="fa fa-th"></i>Size</a>
+                <ul class="dropdown-menu" name="size">
+                    <li data-grid-size="" data-no-preview="true">
+                        <a href="#">
+                            <table>
+                                <tr><td class="selected"></td><td></td><td></td><td></td></tr>
+                                <tr><td></td><td></td><td></td><td></td></tr>
+                                <tr><td></td><td></td><td></td><td></td></tr>
+                                <tr><td></td><td></td><td></td><td></td></tr>
+                            </table>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#"><i class="fa fa-hand-pointer-o"></i>Product Selection</a>
+                <ul class="dropdown-menu" name="selection">
+                    <li data-selection="all" data-no-preview="true"><a href="#">All</a></li>
+                    <li data-selection="category" data-no-preview="true"><a href="#">Specific Category</a></li>
+                    <li data-selection="manual" data-no-preview="true"><a href="#">Manually</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu o_order_by">
+                <a tabindex="-1" href="#"><i class="fa fa-sort"></i>Order By</a>
+                <ul class="dropdown-menu" name="order">
+                    <li data-order="price_desc" data-no-preview="true"><a href="#"><i class="fa fa-sort-numeric-desc"></i>Price High to Low</a></li>
+                    <li data-order="price_asc" data-no-preview="true"><a href="#"><i class="fa fa-sort-numeric-asc"></i>Price Low to High</a></li>
+                    <li data-order="name_asc" data-no-preview="true"><a href="#"><i class="fa fa-sort-alpha-asc"></i>Name A to Z</a></li>
+                    <li data-order="name_desc" data-no-preview="true"><a href="#"><i class="fa fa-sort-alpha-desc"></i>Name Z to A</a></li>
+                    <li data-order="newest_to_oldest" data-no-preview="true"><a href="#"><i class="fa fa-chevron-down"></i>Newest to Oldest</a></li>
+                    <li data-order="oldest_to_newest" data-no-preview="true"><a href="#"><i class="fa fa-chevron-up"></i>Oldest to Newest</a></li>
+                </ul>
+            </li>
+            <li class="dropdown-submenu o_display_options">
+                <a tabindex="-1" href="#"><i class="fa fa-eye"></i>Display Options</a>
+                <ul class="dropdown-menu">
+                    <li data-toggle-class="enable_product_description"><a href="#"><i class="fa fa-comment"></i>Product Description</a></li>
+                    <li data-toggle-class="enable_rating"><a href="#"><i class="fa fa-star"></i>Product Rating</a></li>
+                    <li data-toggle-class="enable_add_to_cart_btn"><a href="#"><i class="fa fa-shopping-cart"></i>Add to Cart</a></li>
+                    <li class="separator" />
+                    <li data-toggle-class="enable_view_products_btn"><a href="#"><i class="fa fa-eye"></i>View All Products</a></li>
+                </ul>
+            </li>
+        </div>
+    </xpath>
+</template>
+
 </odoo>
