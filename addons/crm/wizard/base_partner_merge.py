@@ -379,7 +379,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param partner_ids : list of partner ids to sort
         """
         return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, p.create_date),
+            key=lambda p: (p.active, (p.create_date or '')),
             reverse=True,
         )
 
