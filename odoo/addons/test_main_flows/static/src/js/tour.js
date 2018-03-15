@@ -57,6 +57,17 @@ tour.register('main_flow_tour', {
     content: _t('Uncheck  Make To Order'),
     position: 'right',
 }, {
+    trigger: '.o_notebook a:contains("Invoicing")',
+    content: _t('Go to invoicing tab'),
+    position: 'top',
+}, {
+    trigger: ".o_field_widget[name=taxes_id] input",
+    content: _t("Focus on customer taxes field."),
+    run: 'click',
+}, {
+    trigger: ".ui-menu-item.ui-state-focus",
+    content: _t("Select suggested customer tax"),
+}, {
     trigger: '.o_form_button_save',
     content: _t('Save this product and the modifications you\'ve made to it.'),
     position: 'bottom',
@@ -211,6 +222,13 @@ tour.register('main_flow_tour', {
     trigger: '.o_notebook a:contains("Invoicing")',
     content: _t('Go to invoicing tab'),
     position: 'bottom',
+}, {
+    trigger: ".o_field_widget[name=taxes_id] input",
+    content: _t("Focus on customer taxes field."),
+    run: 'click',
+}, {
+    trigger: ".ui-menu-item.ui-state-focus",
+    content: _t("Select suggested customer tax"),
 }, {
     trigger: '.o_field_widget[name=service_policy] .o_radio_input[data-value="delivered_timesheet"]',
     content: _t('Change service policy'),
