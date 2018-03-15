@@ -794,7 +794,10 @@ var PivotView = View.extend({
         this.display_table();
     },
     toggle_measure: function (field) {
-        this.field_digits = this.fields[field].digits;
+        if (this.fields.hasOwnProperty(field)){
+            this.field_digits = this.fields[field].digits;    
+        }
+        
         if (_.contains(this.active_measures, field)) {
             this.active_measures = _.without(this.active_measures, field);
             this.display_table();
