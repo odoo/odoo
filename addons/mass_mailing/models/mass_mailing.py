@@ -346,6 +346,7 @@ class MassMailing(models.Model):
     sent = fields.Integer(compute="_compute_statistics")
     delivered = fields.Integer(compute="_compute_statistics")
     opened = fields.Integer(compute="_compute_statistics")
+    clicked = fields.Integer(compute="_compute_statistics")
     replied = fields.Integer(compute="_compute_statistics")
     bounced = fields.Integer(compute="_compute_statistics")
     failed = fields.Integer(compute="_compute_statistics")
@@ -391,6 +392,7 @@ class MassMailing(models.Model):
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced,
+                COUNT(CASE WHEN s.clicked is not null THEN 1 ELSE null END) AS clicked,
                 COUNT(CASE WHEN s.exception is not null THEN 1 ELSE null END) AS failed
             FROM
                 mail_mail_statistics s
@@ -408,6 +410,7 @@ class MassMailing(models.Model):
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
+            row['clicks_ratio'] = 100.0 * row['clicked'] / total
             self.browse(row.pop('mailing_id')).update(row)
 
     @api.multi
