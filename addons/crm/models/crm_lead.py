@@ -50,7 +50,7 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
+    _inherit = ['mail.partner.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
 
     def _default_probability(self):
         stage_id = self._default_stage_id()
@@ -67,13 +67,11 @@ class Lead(models.Model):
         help="Linked partner (optional). Usually created when converting the lead.")
     active = fields.Boolean('Active', default=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    email_from = fields.Char('Email', help="Email address of the contact", index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales channel.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
-    email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     description = fields.Text('Notes')
     create_date = fields.Datetime('Create Date', readonly=True)
     write_date = fields.Datetime('Update Date', readonly=True)
@@ -1152,26 +1150,13 @@ class Lead(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
-        # remove default author when going through the mail gateway. Indeed we
-        # do not want to explicitly set user_id to False; however we do not
-        # want the gateway user to be responsible if no other responsible is
-        # found.
-        self = self.with_context(default_user_id=False)
-
         if custom_values is None:
             custom_values = {}
-        defaults = {
-            'name':  msg_dict.get('subject') or _("No Subject"),
-            'email_from': msg_dict.get('from'),
-            'email_cc': msg_dict.get('cc'),
-            'partner_id': msg_dict.get('author_id', False),
-        }
         if msg_dict.get('author_id'):
-            defaults.update(self._onchange_partner_id_values(msg_dict.get('author_id')))
+            custom_values.update(self._onchange_partner_id_values(msg_dict.get('author_id')))
         if msg_dict.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
-            defaults['priority'] = msg_dict.get('priority')
-        defaults.update(custom_values)
-        return super(Lead, self).message_new(msg_dict, custom_values=defaults)
+            custom_values['priority'] = msg_dict.get('priority')
+        return super(Lead, self).message_new(msg_dict, custom_values=custom_values)
 
     @api.multi
     def message_update(self, msg_dict, update_vals=None):
@@ -1195,18 +1180,8 @@ class Lead(models.Model):
                 update_vals[key] = res.group(2).lower()
         return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
 
-    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Lead, self)._message_post_after_hook(message, values, notif_layout, notif_values)
+    def _message_partner_update_condition(self):
+        return [('stage_id.fold', '=', False)]
 
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
