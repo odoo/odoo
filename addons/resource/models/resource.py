@@ -14,6 +14,18 @@ from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare
 
 
+# DO NOT FORWARD PORT IN SAAS-15 AND UPWARD
+def _from_tz_to_utc(object_datetime, record):
+        # take a datetime
+        # in this particular algorithm, it is a concrete time somewhere on the globe
+        # find its UTC translation
+        # make it timezone unaware to ensure compatibility
+        tz_name = record._context.get('tz') or record.env.user.tz
+        tz_info = pytz.timezone(tz_name)
+        localized_dt = tz_info.localize(object_datetime)
+        return localized_dt.astimezone(pytz.UTC).replace(tzinfo=None)
+
+
 class ResourceCalendar(models.Model):
     """ Calendar model for a resource. It has
 
@@ -297,28 +309,30 @@ class ResourceCalendar(models.Model):
         :return list intervals: a list of tuples (start_datetime, end_datetime)
                                 of work intervals """
 
+
         # Computes start_dt, end_dt (with default values if not set) + off-interval work limits
         work_limits = []
         if start_dt is None and end_dt is not None:
-            start_dt = end_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+            start_dt = _from_tz_to_utc(end_dt.replace(hour=0, minute=0, second=0, microsecond=0), self)
         elif start_dt is None:
-            start_dt = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            start_dt = _from_tz_to_utc(datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0), self)
         else:
             # FORWARD-PORT UP TO SAAS-14
             # Add a strict limit when searching for intervals
             force_start_dt = self.env.context.get('force_start_dt')
             if force_start_dt and force_start_dt < start_dt:
-                work_limits.append((force_start_dt.replace(hour=0, minute=0, second=0, microsecond=0), force_start_dt))
-            work_limits.append((start_dt.replace(hour=0, minute=0, second=0, microsecond=0), start_dt))
+                work_limits.append((_from_tz_to_utc(force_start_dt.replace(hour=0, minute=0, second=0, microsecond=0), self),
+                                    _from_tz_to_utc(force_start_dt, self)))
+            work_limits.append((_from_tz_to_utc(start_dt.replace(hour=0, minute=0, second=0, microsecond=0), self),
+                                _from_tz_to_utc(start_dt, self)))
         if end_dt is None:
             end_dt = start_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
         else:
-            work_limits.append((end_dt, end_dt.replace(hour=23, minute=59, second=59, microsecond=999999)))
+            work_limits.append((_from_tz_to_utc(end_dt, self), _from_tz_to_utc(end_dt.replace(hour=23, minute=59, second=59, microsecond=999999), self)))
         assert start_dt.date() == end_dt.date(), 'get_working_intervals_of_day is restricted to one day'
 
         intervals = []
         work_dt = start_dt.replace(hour=0, minute=0, second=0, microsecond=0)
-
         # no calendar: try to use the default_interval, then return directly
         if not self:
             working_interval = []
@@ -329,15 +343,14 @@ class ResourceCalendar(models.Model):
             return intervals
 
         working_intervals = []
-        tz_info = fields.Datetime.context_timestamp(self, work_dt).tzinfo
         for calendar_working_day in self.get_attendances_for_weekday(start_dt):
             dt_f = work_dt.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(seconds=(calendar_working_day.hour_from * 3600))
             dt_t = work_dt.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(seconds=(calendar_working_day.hour_to * 3600))
 
             # adapt tz
             working_interval = (
-                dt_f.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
-                dt_t.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
+                _from_tz_to_utc(dt_f, self),
+                _from_tz_to_utc(dt_t, self),
                 calendar_working_day.id
             )
 
