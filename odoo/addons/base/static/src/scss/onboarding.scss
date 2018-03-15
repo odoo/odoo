@@ -107,7 +107,8 @@ $o-onboarding-violet-ui-2: #FBEEC8;
 
         .o_onboarding_progress {
             @include o-position-absolute($o-onboarding-dot-size*0.5 - 2px, calc(50% + 10px));
-            @include size(calc(100% - 20px), 4px);
+            width: calc(100% - 20px);
+            height: 4px;
             background-color: $gray-lighter;
 
             .progress-bar {
@@ -117,7 +118,8 @@ $o-onboarding-violet-ui-2: #FBEEC8;
         }
 
         .o_onboarding_dot {
-            @include square($o-onboarding-dot-size);
+            width: $o-onboarding-dot-size;
+            height: $o-onboarding-dot-size;
             color: transparent;
             padding-top: 5px;
             font-size: 11px;
@@ -418,12 +420,14 @@ $o-onboarding-violet-ui-2: #FBEEC8;
                 }
 
                 &.ribbon {
-                    @include size(.3em, .7em);
+                    width: .3em;
+                    height: .7em;
                     border-radius: .1em;
                 }
 
                 &.flake {
-                    @include square(.3em);
+                    width: .3em;
+                    height: .3em;
                     border-radius: 50%;
                 }
 
