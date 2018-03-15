@@ -53,6 +53,9 @@ var PivotView = View.extend({
         this.initial_col_groupby = [];
         this.initial_row_groupby = [];
 
+        // set digits depend on digits of field
+        this.field_digits = null;
+
         this.active_measures = [];
         this.headers = {};
         this.cells = {};
@@ -660,7 +663,7 @@ var PivotView = View.extend({
             if (rows[i].indent > 0) $header.attr('title', groupby_labels[rows[i].indent - 1]);
             $header.appendTo($row);
             for (j = 0; j < length; j++) {
-                value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures], widget: widgets[j % nbr_measures]});
+                value = formats.format_value(rows[i].values[j], {type: measure_types[j % nbr_measures], widget: widgets[j % nbr_measures], digits: this.field_digits});
                 $cell = $('<td>')
                             .data('id', rows[i].id)
                             .data('col_id', rows[i].col_ids[Math.floor(j / nbr_measures)])
@@ -791,6 +794,7 @@ var PivotView = View.extend({
         this.display_table();
     },
     toggle_measure: function (field) {
+        this.field_digits = this.fields[field].digits;
         if (_.contains(this.active_measures, field)) {
             this.active_measures = _.without(this.active_measures, field);
             this.display_table();
