@@ -125,6 +125,19 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(invoice3.amount_total, 8 * self.product_map['serv_order'].list_price, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
 
+    def test_sale_access_right(self):
+        """ User can create SO of any customer """
+        self.partner.user_id = self.manager.id
+        so = self.env['sale.order'].sudo(self.user).create({
+                    'partner_id': self.partner.id,
+                    'partner_invoice_id': self.partner.id,
+                    'partner_shipping_id': self.partner.id,
+                    'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for (_, p) in self.products.iteritems()],
+                    'pricelist_id': self.env.ref('product.list0').id,
+                    'user_id': self.manager.id
+                })
+        self.assertTrue(so, 'Sale: SO should be created')
+
     def test_unlink_cancel(self):
         """ Test deleting and cancelling sales orders depending on their state and on the user's rights """
         # SO in state 'draft' can be deleted
