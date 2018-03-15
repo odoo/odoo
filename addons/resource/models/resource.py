@@ -746,14 +746,20 @@ class ResourceResource(models.Model):
             self.calendar_id = self.company_id.resource_calendar_id.id
 
 
-class ResourceCalendarLeaves(models.Model):
+class ResourceUnavailability(models.Model):
     _name = "resource.calendar.leaves"
-    _description = "Leave Detail"
+    _description = "Resource Unavailability"
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(
         'res.company', related='calendar_id.company_id', string="Company",
         readonly=True, store=True)
+    leave_type = fields.Selection([
+        ('leave', 'Leave'),
+        ('forecast', 'Forecast'),
+        ('timesheet', 'Timesheet')], string='Type',
+        default='leave', required=True)
+    resource_unavailable = fields.Boolean('Unavailable')
     calendar_id = fields.Many2one('resource.calendar', 'Working Hours')
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
@@ -771,6 +777,13 @@ class ResourceCalendarLeaves(models.Model):
     def check_dates(self):
         if self.filtered(lambda leave: leave.date_from > leave.date_to):
             raise ValidationError(_('Error! leave start-date must be lower then leave end-date.'))
+
+    @api.onchange('leave_type')
+    def _onchange_leave_type(self):
+        if self.leave_type == 'leave':
+            self.resource_unavailable = True
+        else:
+            self.resource_unavailable = False
 
     @api.onchange('resource_id')
     def onchange_resource(self):
