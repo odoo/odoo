@@ -37,7 +37,7 @@ class AccountChartTemplate(models.Model):
                         'type': 'model',
                         'res_id': out_ids[counter].id,
                         'lang': lang,
-                        'src': element.name,
+                        'src': element[in_field],
                         'value': value[element.id],
                     })
                 else:
