@@ -164,19 +164,19 @@ div.o_boolean_toggle {
     font-weight: $btn-font-weight;
 
     &.btn-secondary {
-        @include o-btn-link-variant($text-color, $headings-color);
+        @include o-btn-link-variant($body-color, $headings-color);
     }
     &.btn-success, &.text-success {
-        @include o-btn-link-variant($text-color, $brand-success);
+        @include o-btn-link-variant($body-color, $brand-success);
     }
     &.btn-warning, &.text-warning {
-        @include o-btn-link-variant($text-color, $brand-warning);
+        @include o-btn-link-variant($body-color, $brand-warning);
     }
     &.btn-danger, &.text-danger {
-        @include o-btn-link-variant($text-color, $brand-danger);
+        @include o-btn-link-variant($body-color, $brand-danger);
     }
     &.btn-info, &.text-info {
-        @include o-btn-link-variant($text-color, darken($brand-info, 20%));
+        @include o-btn-link-variant($body-color, darken($brand-info, 20%));
     }
 }
 
