@@ -3,23 +3,23 @@
 # * website_sale
 # 
 # Translators:
-# Eric Antones <eantones@users.noreply.github.com>, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Martin Trigaux, 2017
 # Carles Antoli <carlesantoli@hotmail.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
+# Antonio Trueba, 2017
+# Eric Antones <eantones@users.noreply.github.com>, 2017
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
 # Ana Juaristi <ajuaristio@gmail.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
+# Gustavo Valverde, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
 # Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
 # Rafael Blasco <rafabn@antiun.com>, 2017
@@ -30,16 +30,20 @@
 # Raquel Iciarte <ric@odoo.com>, 2017
 # Jose Manuel <admin@jaboweb.com>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Manuel Isaac <manuel.aih@hotmail.com>, 2018
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2018
+# ES R2 <e2fds74f5ds412@outlook.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Daniel Santibáñez Polanco <dansanti@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: e2f_EPV Translator <e2f_EPV@outlook.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,12 +59,12 @@ msgstr "&amp;nbsp;"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "/shop/cart"
-msgstr ""
+msgstr "/shop/cart"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "/shop/payment"
-msgstr ""
+msgstr "/shop/payment"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -69,7 +73,7 @@ msgid ""
 "                              Free Shipping in U.S.<br/>\n"
 "                              Buy now, get in 2 days"
 msgstr ""
-"Garantía de devolución 30 días<br/>\n"
+"Garantía de devolución de 30 días<br/>\n"
 "                              Envío gratuito en España<br/>\n"
 "                              Compre ahora, recíbalo en 2 días."
 
@@ -117,6 +121,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin:auto;width:100%;\">\n"
+"                    <img src=\"/web/image/res.company/${user.company_id.id}/logo\" style=\"height: auto; width: 80px; margin-top:30px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    <h1 style=\"color:#A9A9A9;\">SU CARRO NO ESTÁ VACÍO.</h1>\n"
+"                    <p>¿Desea completar su compra?</p><br/><br/>\n"
+"                    % if object.order_line:\n"
+"                    % for line in object.order_line:\n"
+"                    <hr/>\n"
+"                    <table width=\"100%\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding: 10px; width:150px;\">\n"
+"                                <img src=\"/web/image/product.product/${line.product_id.id}/image\" height=\"100px\" width=\"100px\"/>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                            </td>\n"
+"                            <td width=\"100px\" align=\"right\">\n"
+"                                ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % endfor\n"
+"                    <hr/>\n"
+"                    % endif\n"
+"                    <br/><br/>\n"
+"                    <center>\n"
+"                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Reanudar pedido</a><br/><br/><br/>\n"
+"                        <p><b>¡Gracias por comprar con ${user.company_id.name}!</b></p>\n"
+"                    </center>\n"
+"                </div>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -134,7 +169,7 @@ msgid ""
 "                                e.g. for computers:"
 msgstr ""
 "<br/>\n"
-"                                por ejemplo, para ordenadores:"
+"                                por ejemplo, para computadoras:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
@@ -167,6 +202,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
 "                    My Cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart\"/>\n"
+"                    Mi Carrito"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:58
@@ -177,6 +214,10 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Aquí puede encontrar todos los carros abandonados (p. ej., los carros generados por los visitantes de su sitio web hace más de una hora que aún no han sido confirmados).</p>\n"
+"                        <p>¡Le recomendamos que envíe un correo electrónico a los clientes para animarles a completar sus pedidos!</p>\n"
+"                    "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -237,7 +278,7 @@ msgid ""
 "                                Everything is editable in your Odoo website. Feel free to edit any page title, field or button label. Simply hit *Edit* in upper-right corner to start editing the page."
 msgstr ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                                Todo es editable en tu web d'Odoo. Siéntase libre de editar cualquier título de página, campo o etiqueta de botón. Simplemente pulse * Editar * en la esquina superior derecha para comenzar a editar la página."
+"                                Todo es editable en tu sitio web de Odoo. Siéntase libre de editar cualquier título de página, campo o etiqueta de botón. Simplemente pulse *Editar* en la esquina superior derecha para comenzar a editar la página."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -281,7 +322,7 @@ msgstr "<span class=\"fa fa-long-arrow-left\"/> Anterior"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
 msgid "<span class=\"fa fa-long-arrow-left\"/> Return to Cart"
-msgstr "<span class=\"fa fa-long-arrow-left\"/> Volver a la cesta"
+msgstr "<span class=\"fa fa-long-arrow-left\"/> Volver al Carrito"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -389,7 +430,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Upselling</strong>\n"
+"                                        <strong>Venta adicional</strong>\n"
 "                                    </span>"
 
 #. module: website_sale
@@ -414,7 +455,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                    <span class=\"fa fa-check-square-o\"/>\n"
-"                                    <strong>Personalice el catalogo de producto</strong><br/>\n"
+"                                    <strong>Personalice el catálogo de producto</strong><br/>\n"
 "                                        <span class=\"small\"/>\n"
 "                                </span>"
 
@@ -460,7 +501,7 @@ msgid ""
 "transfer</strong> (slow and inefficient)</span>"
 msgstr ""
 "<span class=\"panel-title\"><span class=\"fa fa-"
-"lock\"/><strong>Transferencia bancaria</strong> (lento y ineficiente)</span>"
+"lock\"/><strong>Transferencia bancaria</strong> (lento e ineficiente)</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -469,8 +510,8 @@ msgid ""
 "                            <span class=\"small\">Advised if your packs vary in size/weight and/or if you ship worldwide</span>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong> A precio de coste</strong> (el cliente paga lo que tu pagas)<br/>\n"
-"                            <span class=\"small\">Aconsejado si sus paquetes varían en tamaño / peso y / o si usted envía por todo el mundo</span>\n"
+"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong> A precio de costo</strong> (el cliente paga lo que usted paga)<br/>\n"
+"                            <span class=\"small\">Recomendado si sus paquetes varían en tamaño/peso y/o si usted envía por todo el mundo</span>\n"
 "                            </span>"
 
 #. module: website_sale
@@ -490,23 +531,23 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"panel-title\"><span class=\"fa fa-table\"/><strong> Tarifas planas</strong> (todos pagan lo mismo)<br/>\n"
-"                            <span class=\"small\">Se recomienda si segmenta un público local</span>\n"
+"                            <span class=\"small\">Recomendado si segmenta un público local</span>\n"
 "                            </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "<span> &amp; Shipping</span>"
-msgstr ""
+msgstr "<span> &amp; Envío</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "<span>Billing</span>"
-msgstr ""
+msgstr "<span>Facturación</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Confirmed</span>"
-msgstr ""
+msgstr "<span>Confirmado</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -535,7 +576,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "<strong>Add to Cart</strong>"
-msgstr "<strong>Añadir a la cesta</strong>"
+msgstr "<strong>Añadir al Carrito</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -548,7 +589,7 @@ msgid ""
 "<strong>Call-to-action</strong> short and clear: Add to Cart, Ask for quote,"
 " etc."
 msgstr ""
-"<strong>Llamada a la acción</strong> corto y claro: Añadir al carro, "
+"<strong>Llamada a la acción</strong> corto y claro: Añadir al carrito, "
 "solicitar presupuesto, etc."
 
 #. module: website_sale
@@ -682,6 +723,8 @@ msgid ""
 "<strong>Reassurance arguments</strong><br/>\n"
 "                            Anticipate your customers questions &amp; worries on practical details like shipping rates &amp; policies, return &amp; replacement policies, payment acquirers &amp; security and your"
 msgstr ""
+"<strong>Argumentos de tranquilidad</strong><br/>\n"
+"                            Adelántese a las preguntas y preocupaciones de sus clientes sobre detalles prácticos, como tarifas y políticas de envío, políticas de devolución y repuesto, métodos de pago y seguridad, y su"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -699,7 +742,7 @@ msgid ""
 "<strong>Technical information:</strong> what do you get and how does it "
 "work?"
 msgstr ""
-"<strong>Información técnica:</strong> qué obtiene usted y cómo funciona?"
+"<strong>Información técnica:</strong> ¿qué obtiene usted y cómo funciona?"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -708,6 +751,9 @@ msgid ""
 "payment acquirers (check, purchase order, etc.) by renaming 'Wire Transfer' "
 "or duplicating it."
 msgstr ""
+"<strong>Sugerencia para usuarios B2B:</strong> Puede crear nuevos métodos de"
+" pago procesados manualmente (cheques, órdenes de compra, etc.) cambiando el"
+" nombre de \"Transferencia bancaria\" o duplicándolo."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -720,8 +766,8 @@ msgid ""
 "<strong>Value proposition:</strong> what’s the end-benefit of this product "
 "and who is it for?"
 msgstr ""
-"strong>Propuesta de valor:</strong> cual es el beneficio final de este "
-"producto y para quien está hecho?"
+"<strong>Propuesta de valor:</strong> ¿cuál es el beneficio final de este "
+"producto y para quién está hecho?"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -747,8 +793,8 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
-"Una clausula <b>limite del que los usuarios pueden hacer</b>, puede informar"
-" a los usuarios que al aceptar los términos de servicio, también están de "
+"Una cláusula <b>límite de qué pueden hacer los usuarios</b>, puede informar "
+"a los usuarios que al aceptar los términos de servicio, también están de "
 "acuerdo en no hacer ciertas cosas. Esto puede ser parte de una lista muy "
 "larga y exhaustiva en sus contratos de Términos y Condiciones para abarcar "
 "la mayor cantidad de usos negativos."
@@ -784,7 +830,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "A document to provide"
-msgstr ""
+msgstr "Un documento que proporcionar"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -792,7 +838,7 @@ msgid ""
 "A few % discount can bring you twice more customers! Here are a few kinds of"
 " discounts to boost your sales:"
 msgstr ""
-"¡Un descuento de un % le puede traer dos veces más clientes! Aquí hay "
+"¡Un descuento de algún % le puede traer dos veces más clientes! Aquí hay "
 "algunos tipos de descuentos para aumentar sus ventas:"
 
 #. module: website_sale
@@ -820,12 +866,12 @@ msgstr "Una pantalla digna de un iPad."
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:65
 #, python-format
 msgid "AT A GLANCE"
-msgstr ""
+msgstr "A SIMPLE VISTA"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_is_abandoned_cart
 msgid "Abandoned Cart"
-msgstr ""
+msgstr "Carro abandonado"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:45
@@ -833,7 +879,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
 msgid "Abandoned Carts"
-msgstr ""
+msgstr "Carros abandonados"
 
 #. module: website_sale
 #. openerp-web
@@ -846,7 +892,7 @@ msgstr "Carritos abandonados a recuperar"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_abandoned_delay
 msgid "Abandoned Delay"
-msgstr ""
+msgstr "Retraso abandonado"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -856,8 +902,8 @@ msgid ""
 "                                    so you can see more of the music, photos, and videos you love."
 msgstr ""
 "Del tamaño de una tarjeta de crédito — solo 5.4 mm de espesor — iPod nano es el iPod más fino que se ha hecho.\n"
-"La pantalla del 2.5-inch Multi-Touch  es como dos veces más grande que la de su antecesor el iPod nano,\n"
-"así podrás ver más de la música,  las fotos y los videos que te gustan."
+"La pantalla de 2.5 pulgadas Multi-Touch  es como dos veces más grande que la de su antecesor el iPod nano,\n"
+"así podrá ver más de la música,  las fotos y los videos que le gustan."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_accessory_product_ids
@@ -867,21 +913,21 @@ msgid ""
 "sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
 "figures out a list of accessories based on all the products added to cart."
 msgstr ""
-"Los accesorios aparecen cuando el cliente revisa el carro antes de pagar "
+"Los accesorios aparecen cuando el cliente revisa el carrito antes de pagar "
 "(estrategia de venta cruzada, ej. para computadores: mouse, teclado, etc.). "
 "Un algoritmo resuelve una lista de accesorios basada en todos los productos "
-"agregados al carro."
+"agregados al carrito."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Accessories: screen, mouse"
-msgstr "Accesorios: pantalla, ratón"
+msgstr "Accesorios: pantalla, mouse"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
-msgstr "Productos accesorios"
+msgstr "Productos de accesorio"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -894,12 +940,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "Add to Cart"
-msgstr "Añadir a la cesta"
+msgstr "Añadir al carrito"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Add to Cart button"
-msgstr "Botón Añadir al Carrito"
+msgstr "Botón de Añadir al Carrito"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -916,11 +962,12 @@ msgstr "Todos los productos"
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
+"Permitir a los compradores comparar productos en función de sus atributos"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist_selectable
 msgid "Allow the end user to choose this price list"
-msgstr "Permitirle al usuario escoger esta lista de precios"
+msgstr "Permitir al usuario escoger esta lista de precios"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
@@ -941,7 +988,7 @@ msgstr "Productos alternativos:"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
-msgstr ""
+msgstr "Cantidad de carros abandonados"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -953,8 +1000,8 @@ msgid ""
 "And at the Apple Online Store, you can configure your iMac with an even more"
 " powerful Intel Core i7 processor, up to 3.5GHz."
 msgstr ""
-"Y en la Apple Online Store puedes configurar tu iMac con un procesador Intel"
-" Core i7, más potente aun y con más de 3.5GHz."
+"Y en la Apple Online Store puede configurar su iMac con un procesador Intel "
+"Core i7, más potente aún y con más de 3.5GHz."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_2
@@ -1009,7 +1056,7 @@ msgstr "Atributos"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "Factura automática"
 
 #. module: website_sale
 #. openerp-web
@@ -1017,12 +1064,12 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:93
 #, python-format
 msgid "Average Order"
-msgstr ""
+msgstr "Orden promedio"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
-msgstr ""
+msgstr "Benelux"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -1079,7 +1126,7 @@ msgstr ""
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_7
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_8
 msgid "Brilliance onscreen. And behind it."
-msgstr "Brillio en la pantalla. Y detrás ."
+msgstr "Brillio en la pantalla. Y detrás."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -1095,7 +1142,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_can_directly_mark_as_paid
 msgid "Can be directly marked as paid"
-msgstr ""
+msgstr "Se puede marcar directamente como pagada"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1107,17 +1154,17 @@ msgstr "Puede tomar varios días para recibir el dinero"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:12
 #, python-format
 msgid "Capture order payments when the delivery is completed."
-msgstr ""
+msgstr "Registrar pagos de pedidos al completarse la entrega."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_quantity
 msgid "Cart Quantity"
-msgstr "Cantidad en la cesta"
+msgstr "Cantidad en el carrito"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_recovery_mail_template
 msgid "Cart Recovery Email"
-msgstr ""
+msgstr "Correo electrónico de recuperación de carro"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1127,7 +1174,7 @@ msgstr "Carrito considerado abandonado después de"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr ""
+msgstr "Correo electrónico de recuperación de carro ya enviado"
 
 #. module: website_sale
 #. openerp-web
@@ -1135,7 +1182,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:84
 #, python-format
 msgid "Carts"
-msgstr ""
+msgstr "Carros"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1151,12 +1198,12 @@ msgstr "Catálogo"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: High to Low"
-msgstr ""
+msgstr "Precio de catálogo: Mayor a Menor"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: Low to High"
-msgstr ""
+msgstr "Precio de catálogo: Menor a Mayor"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1176,11 +1223,11 @@ msgid ""
 "Shop page, hit Customize and turn *Product Categories* on. A product can "
 "belong to several categories."
 msgstr ""
-"Las categorías se pueden publicar en la página Tienda (cuadrícula de "
+"Las categorías se pueden publicar en la página de la Tienda (cuadrícula de "
 "catálogo online) para ayudar a los clientes a encontrar los ítems dentro de "
-"una categoría. Para publicarlos, vaya a la página Tienda, haga click en "
-"Personalizar y active *Categorías de Producto*. Un producto puede pertenecer"
-" a varias categorías."
+"una categoría. Para publicarlos, vaya a la página de la Tienda, haga clic en"
+" Personalizar y active *Categorías de Producto*. Un producto puede "
+"pertenecer a varias categorías."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1193,6 +1240,8 @@ msgid ""
 "Checked if the sales order can directly be marked as paid, i.e. if the quotation\n"
 "                is sent or confirmed and if the payment acquire is of the type transfer or manual"
 msgstr ""
+"Señalado si es posible marcar la orden de venta directamente como pagada (p. ej., si el presupuesto\n"
+"                ha sido enviado o está confirmado, y si el método de pago es de tipo transferencia o manual)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -1220,7 +1269,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Click here"
-msgstr ""
+msgstr "Haga clic aquí"
 
 #. module: website_sale
 #. openerp-web
@@ -1232,7 +1281,7 @@ msgstr "Pulse aquí para establecer una imagen describiendo su producto."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Click here to unfold a Good Product Page"
-msgstr "Pulse aquí para desplegar una buena pagina de producto"
+msgstr "Pulse aquí para desplegar una buena página de producto"
 
 #. module: website_sale
 #. openerp-web
@@ -1266,7 +1315,7 @@ msgstr "Usuarios de Community y Enterprise:"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Company Details"
-msgstr ""
+msgstr "Detalles de la empresa"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -1311,17 +1360,17 @@ msgstr "Calcular los costos de envío en pedidos"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Computer_all_in_one
 msgid "Computer all-in-one"
-msgstr "Ordenador todo-en-uno"
+msgstr "Computadora todo-en-uno"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.sub_computers
 msgid "Computers"
-msgstr "Ordenadores"
+msgstr "Computadoras"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Configure your delivery methods (pricing, destinations)"
-msgstr "Configure los metodos de entrega (precios, destinos)"
+msgstr "Configure los métodos de entrega (precios, destinos)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1348,7 +1397,7 @@ msgstr "Confirmar Pedido <span class=\"fa fa-long-arrow-right\"/>"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:5
 #, python-format
 msgid "Confirm orders when you get paid."
-msgstr ""
+msgstr "Confirme pedidos cuando reciba el pago."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1376,7 +1425,7 @@ msgstr "Contacto"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:97
 #, python-format
 msgid "Conversion"
-msgstr ""
+msgstr "Conversión"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -1435,7 +1484,7 @@ msgstr "Monedas"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Customer Experience"
-msgstr ""
+msgstr "Experiencia del cliente"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1460,27 +1509,29 @@ msgstr "DHL"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_currency_id
 msgid "Default Currency"
-msgstr "Moneda por defecto"
+msgstr "Moneda predeterminada"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id
 msgid "Default Pricelist"
-msgstr "Tarifa por defecto"
+msgstr "Tarifa predeterminada"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default Sales Tax"
-msgstr "Impuesto ventas por defecto"
+msgstr "Impuesto de ventas predeterminado"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Default mode"
-msgstr "Modo por defecto"
+msgstr "Modo predeterminado"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default recovery email to send when a cart is abandoned"
-msgstr "Email que se envía por defecto al abandonar el carrito"
+msgstr ""
+"Correo electrónico de recuperación predeterminado para enviar cuando se "
+"abandona un carrito"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1498,8 +1549,8 @@ msgid ""
 "Delivery methods are only used internally: the customer doesn't pay for "
 "shipping costs"
 msgstr ""
-"Metodos de envío son solo usados internamente: el cliente no paga por costes"
-" de envío"
+"Los métodos de envío son solo usados internamente: el cliente no paga por "
+"costos de envío"
 
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
@@ -1508,7 +1559,7 @@ msgid ""
 "shipping costs"
 msgstr ""
 "Los metodos de envió son seleccionables al sitio web: el cliente paga los "
-"costes de envió"
+"costos de envío"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -1542,7 +1593,7 @@ msgstr "Nombre mostrado"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display an images carousel on product pages"
-msgstr ""
+msgstr "Mostrar un carrusel de imágenes en páginas de productos"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1640,9 +1691,9 @@ msgid ""
 "                                    But what really makes it stand out is its size. At 7.9 inches,\n"
 "                                    it’s perfectly sized to deliver an experience every bit as big as iPad."
 msgstr ""
-"Todo lo que te gusta de iPad - la fantástica\n"
-"pantalla,  los colores son vivos y el texto es nítido en la pantalla mini iPad.\n"
-"Pero lo que realmente lo hace destacar es su tamaño. Con 7,9 pulgadas,l\n"
+"Todo lo que le gusta de iPad - la fantástica\n"
+"pantalla, los colores son vivos y el texto es nítido en la pantalla mini iPad.\n"
+"Pero lo que realmente lo hace destacar es su tamaño. Con 7,9 pulgadas,\n"
 "tiene un tamaño perfecto para ofrecer una experiencia como la del iPad."
 
 #. module: website_sale
@@ -1656,11 +1707,11 @@ msgid ""
 "                                    battery life* — is everything you’ll love about\n"
 "                                    iPad mini, too. And you can hold it in one hand."
 msgstr ""
-"Todo lo que te gusta de iPad - la hermosa\n"
+"Todo lo que le gusta de iPad - la hermosa\n"
 "pantalla, rendimiento rápido y fluido, FaceTime y\n"
 "cámaras iSight, miles de aplicaciones increíbles, 10 horas\n"
-"de duración de la batería * - es todo lo que te encantará del\n"
-"IPad mini. Y puedes sostenerlo en una mano."
+"de duración de la batería * - es todo lo que le encantará del\n"
+"IPad mini. Y puede sostenerlo en una mano."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -1670,10 +1721,10 @@ msgid ""
 "                                        thousands of amazing apps, 10-hour battery life* — is everything\n"
 "                                        you’ll love about iPad mini, too. And you can hold it in one hand."
 msgstr ""
-"Todo lo que te gusta de iPad - la hermosa pantalla,\n"
+"Todo lo que le gusta de iPad - la hermosa pantalla,\n"
 "rendimiento rápido y fluido, FaceTime y cámaras iSight,\n"
 "miles de aplicaciones increíbles, 10 horas de duración de la batería *\n"
-"- es todo lo que te encantará delIPad mini. Y puedes sostenerlo en una mano."
+"- es todo lo que le encantará del iPad mini. Y puede sostenerlo en una mano."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.External_Hard_Drive
@@ -1711,6 +1762,8 @@ msgid ""
 "Find here all the abandoned carts, i.e. the carts generated by your "
 "website's visitors more than one hour ago and not confirmed."
 msgstr ""
+"Encuentre aquí todos los carros abandonados (p. ej., los carros generados "
+"por visitantes de su sitio web hace más de una hora y no confirmados aún)."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1720,7 +1773,7 @@ msgstr "Libre y sin configuración"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Free delivery (see Delivery Strategy section)"
-msgstr "Entrega gratuita (ver sección Estrategia de Entrega)"
+msgstr "Entrega gratuita (ver sección de Estrategia de Entrega)"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -1749,7 +1802,7 @@ msgstr "Genius. Su propio DJ personal."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Give us your feedback..."
-msgstr "Danos tu opinion..."
+msgstr "Denos su opinión..."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_sequence
@@ -1790,7 +1843,7 @@ msgstr "Que Genius llame a las melodías."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Have a promo code? Fill in this field and apply."
-msgstr ""
+msgstr "¿Tiene un código promocional? Rellene este campo y aplíquelo."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Headset
@@ -1836,8 +1889,8 @@ msgid ""
 msgstr ""
 "¿Cómo hemos hecho una pantalla panorámica aún mejor? Al hacer que el 75 por "
 "ciento sea menos reflexiva. Y rediseñando el LCD moviéndolo directamente "
-"contra el cristal de la cubierta. Así usted ve sus fotos, juegos, películas,"
-" y todo lo demás detalle, realista."
+"contra el cristal de la cubierta. Para que vea sus fotos, juegos, películas "
+"y todo lo demás con detalles vivos y realistas."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -1914,12 +1967,12 @@ msgstr ""
 "los usuarios deben otorgarle una licencia (el sitio web o desarrollador de "
 "aplicaciones para móviles) para que pueda compartir este contenido en su "
 "sitio web / aplicación móvil y ponerlo a disposición de otros "
-"usuarios.<br/>Debido a que el contenido Creada por los usuarios es pública "
+"usuarios.<br/>Debido a que el contenido creado por los usuarios es público "
 "para otros usuarios, una sección de notificación de DMCA (o infracción de "
 "derechos de autor) es útil para informar a los usuarios y autores de "
 "derechos de autor que, si se detecta que algún contenido es una infracción "
 "de derechos de autor, responderá a cualquier aviso de eliminación de DMCA "
-"recibido y eliminarás el contenido."
+"recibido y eliminará el contenido."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_image
@@ -1949,8 +2002,8 @@ msgid ""
 msgstr ""
 "Imagine que un nuevo cliente agrega un producto al carrito y sale de su "
 "sitio web debido a los costos de envío... Definir una buena estrategia de "
-"entrega es difícil. Usted no quiere cortar en sus márgenes, pero quiere "
-"seguir siendo competitivo de precios."
+"entrega es difícil. Usted no quiere recortar sus márgenes, pero quiere "
+"seguir siendo competitivo en precios."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -1964,7 +2017,7 @@ msgstr "Calibrado individualmente para un color realista."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Install Optional Products (cross-selling)"
-msgstr "Instale productos opcionales (venta cruzada)"
+msgstr "Instalar productos opcionales (venta cruzada)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1974,7 +2027,7 @@ msgstr "Instalar conectores de envío"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_module_website_sale_stock
 msgid "Installs *e-Commerce Inventory*"
-msgstr ""
+msgstr "Instala *Inventario de comercio electrónico*"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:502
@@ -2001,13 +2054,15 @@ msgstr "Facturación"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr "Forma de facturar a clientes"
+msgstr "Emitir facturas a los clientes"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:146
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr ""
+"Está prohibido modificar un pedido de venta que no se encuentra en estado de"
+" borrador"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2015,8 +2070,8 @@ msgid ""
 "It's difficult to recommend one over the others. So, simply pick the one "
 "that is more popular in your country!"
 msgstr ""
-"Es difícil recomendar uno sobre otros. Así que, simplemente escoja el que es"
-" más popular en su región!"
+"Es difícil recomendar uno sobre otros. Así que, ¡simplemente escoja el que "
+"es más popular en su región!"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -2035,7 +2090,7 @@ msgstr "Teclado / Ratón"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.laptops
 msgid "Laptops"
-msgstr "Portátiles"
+msgstr "Laptops"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image___last_update
@@ -2053,7 +2108,7 @@ msgstr "Último Mes"
 #: model:ir.model.fields,field_description:website_sale.field_res_partner_last_website_so_id
 #: model:ir.model.fields,field_description:website_sale.field_res_users_last_website_so_id
 msgid "Last Online Sales Order"
-msgstr ""
+msgstr "Último pedido de venta en línea"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_write_uid
@@ -2088,11 +2143,13 @@ msgstr "Nombre legal"
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let returning shoppers save products in a whishlist"
 msgstr ""
+"Permitir que los compradores frecuentes guarden productos en una lista de "
+"deseos"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer enter a shipping address"
-msgstr ""
+msgstr "Permitir que el cliente introduzca una dirección de envío"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2104,7 +2161,7 @@ msgstr "Déjelos comprar directamente del catálogo con:"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:15
 #, python-format
 msgid "Let's create your first product."
-msgstr ""
+msgstr "Vamos a crear su primer producto."
 
 #. module: website_sale
 #. openerp-web
@@ -2114,6 +2171,8 @@ msgid ""
 "Let's now take a look at your administration dashboard to get your eCommerce"
 " website ready in no time."
 msgstr ""
+"Echemos ahora un vistazo a su tablero de administración para dejar lista la "
+"tienda de su sitio web en un santiamén."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2123,7 +2182,7 @@ msgstr "Visualización de la lista"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Log In"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2142,14 +2201,14 @@ msgid ""
 " time, otherwise they will leave your website. Here are some actions to "
 "tailor the process to your business."
 msgstr ""
-"Este seguro que sus clientes pueden ir a través del proceso de compra en un "
-"tiempo corto, altamente ellos dejaran su sitio web. Aquí hay algunas "
-"acciones para adaptar el proceso a su negocio."
+"Esté seguro de que sus clientes pueden ir a través del proceso de compra en "
+"un tiempo corto, sin ellos dejarán su sitio web. Aquí hay algunas acciones "
+"para adaptar el proceso a su negocio."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage availability of products"
-msgstr ""
+msgstr "Gestionar disponibilidad de productos"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2159,7 +2218,7 @@ msgstr "Gestionar promociones y programas de cupones"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Mark as Paid"
-msgstr ""
+msgstr "Marcar como pagado"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
@@ -2173,8 +2232,8 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
-"Imagen mediana de la categoría. Se redimensiona automáticamente a 128x128 "
-"px, con el ratio de aspecto preservado. Use este campo en las vistas de "
+"Imagen mediana de la categoría. Se redimensiona automáticamente a 128x128px,"
+" con el ratio de aspecto preservado. Use este campo en las vistas de "
 "formulario o en algunas vistas kanban."
 
 #. module: website_sale
@@ -2194,7 +2253,7 @@ msgstr "Más eficiente energéticamente"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_group_website_multiimage
 msgid "Multi-Images"
-msgstr ""
+msgstr "Imágenes múltiples"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2215,7 +2274,7 @@ msgstr "Música. Es lo que late dentro."
 #: code:addons/website_sale/static/src/js/website_sale.js:15
 #, python-format
 msgid "My Cart"
-msgstr "Mi cesta"
+msgstr "Mi Carrito"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_name
@@ -2227,12 +2286,12 @@ msgstr "Nombre"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Name - A to Z"
-msgstr ""
+msgstr "Nombre: de la A a la Z"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Name - Z to A"
-msgstr ""
+msgstr "Nombre: de la Z a la A"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.network
@@ -2251,7 +2310,7 @@ msgstr "Nuevo producto"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Siguiente <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2271,17 +2330,17 @@ msgstr "No hay gestión de envío en el sitio web"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "None website"
-msgstr "Ninguno sitio web"
+msgstr "Ningún sitio web"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Now to Follow Your Order"
-msgstr ""
+msgstr "Ahora a \"Seguir su pedido\""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_count
 msgid "Number of Abandoned Carts"
-msgstr ""
+msgstr "Número de carros abandonados"
 
 #. module: website_sale
 #. openerp-web
@@ -2296,24 +2355,26 @@ msgid ""
 "Once activated, discounted prices can be applied from Pricelists setup form "
 "(Discount policy field)."
 msgstr ""
+"Una vez activados, los precios descontados pueden aplicarse desde el "
+"formulario de configuración \"Tarifas\" (campo \"Política de descuentos\")"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:55
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "Una vez haga clic en <b>Guardar</b>, su producto es actualizado."
+msgstr "Una vez que haga clic en <b>Guardar</b>, su producto es actualizado."
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:39
 #, python-format
 msgid "Online Sales"
-msgstr ""
+msgstr "Ventas en línea"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Online users: we do it for you!"
-msgstr "Usuarios en linea: lo hacemos por vosotros!"
+msgstr "Usuarios en linea: ¡lo hacemos por ustedes!"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_only_services
@@ -2325,7 +2386,7 @@ msgstr "Sólo Servicios"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:68
 #, python-format
 msgid "Open your website app here."
-msgstr ""
+msgstr "Abra aquí su aplicación de sitios web."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_options
@@ -2371,7 +2432,7 @@ msgstr "Pedidos"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr ""
+msgstr "Pedidos para facturar"
 
 #. module: website_sale
 #. openerp-web
@@ -2379,7 +2440,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:89
 #, python-format
 msgid "Orders/Day"
-msgstr ""
+msgstr "Pedidos/día"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -2393,6 +2454,7 @@ msgstr "Categoría padre"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "Pagar ahora"
@@ -2419,6 +2481,11 @@ msgid "Payment Information"
 msgstr "Información del pago"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transacción de pago"
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Payment must be reconciled manually"
 msgstr "El pago debe ser conciliado manualmente"
@@ -2432,7 +2499,7 @@ msgstr "Pago<span class=\"chevron\"/>"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.payment_transaction_action_payments_to_capture
 msgid "Payments To Capture"
-msgstr ""
+msgstr "Pagos para registrar"
 
 #. module: website_sale
 #. openerp-web
@@ -2464,7 +2531,7 @@ msgstr "Listas de reproducción. La mezcla perfecta para cada estado de ánimo."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
-msgstr ""
+msgstr "Continúe con su carro actual."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_14
@@ -2490,19 +2557,19 @@ msgstr "Preferido por algunos clientes"
 #: code:addons/website_sale/controllers/backend.py:109
 #, python-format
 msgid "Previous Month"
-msgstr ""
+msgstr "Mes anterior"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:107
 #, python-format
 msgid "Previous Week"
-msgstr ""
+msgstr "Semana anterior"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:111
 #, python-format
 msgid "Previous Year"
-msgstr ""
+msgstr "Año anterior"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2566,13 +2633,13 @@ msgstr "Catálogo del producto"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_comparison
 msgid "Product Comparison Tool"
-msgstr ""
+msgstr "Herramienta de comparación de productos"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Product Images"
-msgstr "Imagenes de producto"
+msgstr "Imágenes del producto"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -2582,22 +2649,22 @@ msgstr "Nombre del producto"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Product Pages"
-msgstr "Páginas de Producto"
+msgstr "Páginas del Producto"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Prices"
-msgstr ""
+msgstr "Precios de productos"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
-msgstr "Categorías publicas de productos"
+msgstr "Categorías publicas del producto"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 msgid "Product Template"
-msgstr "Plantilla de producto"
+msgstr "Plantilla del producto"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
@@ -2655,6 +2722,10 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
+"Proporcione a los clientes enlaces específicos de productos o contenidos "
+"descargables en la página de confirmación del proceso de compra si se "
+"efectúa el pago. Para hacerlo, adjunte algunos archivos a un producto "
+"mediante el nuevo botón \"Archivos\" y publíquelos."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -2669,17 +2740,17 @@ msgstr "Mover hacia abajo"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Push to bottom"
-msgstr "Empujar hacia abajo"
+msgstr "Mover hacia abajo"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Push to top"
-msgstr "Empujar hacia arriba"
+msgstr "Mover hacia arriba"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
 msgid "Push up"
-msgstr "Move hacia arriba"
+msgstr "Mover hacia arriba"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2687,8 +2758,8 @@ msgid ""
 "Put the practical details (shipping, payment acquirers, etc.) as links in the footer; That way, they will be accessible \n"
 "                            all your product pages."
 msgstr ""
-"Ponga los detalles prácticos (envio, medios de pago, ...) como enlaces al "
-"pie de página; de esta forma serán accesibles des de todas las paginas."
+"Ponga los detalles prácticos (envio, medios de pago, etc.) como enlaces al "
+"pie de página; de esta forma serán accesibles desde todas las páginas."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2733,12 +2804,12 @@ msgstr "Calificación"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Clasificación del último comentario"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Clasificación de la última imagen"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_value
@@ -2758,7 +2829,7 @@ msgstr "Causa de la calificación"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Recovery Email to Send"
-msgstr ""
+msgstr "Correo electrónico de recuperación para enviar"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_product_tmpl_id
@@ -2778,7 +2849,7 @@ msgstr "Volver a la lista de producto."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Review your catalog"
-msgstr "Revisar tu catalogo"
+msgstr "Revisar su catalogo"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -2789,7 +2860,7 @@ msgid ""
 "                                    you're always getting the best experience possible."
 msgstr ""
 "Desde el principio, las aplicaciones hechas para iPad también funcionan con iPad mini.\n"
-"Son inmersivas, de pantalla completa que te permiten hacer casi cualquier cosa\n"
+"Son inmersivas, de pantalla completa que le permiten hacer casi cualquier cosa\n"
 "que pueda imaginar. Y con actualizaciones automáticas,\n"
 "está consiguiendo siempre la mejor experiencia posible."
 
@@ -2834,7 +2905,7 @@ msgstr "Oferta"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Report"
-msgstr ""
+msgstr "Informe de venta"
 
 #. module: website_sale
 #. openerp-web
@@ -2859,7 +2930,7 @@ msgstr "Canal de ventas"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Report"
-msgstr ""
+msgstr "Informe de ventas"
 
 #. module: website_sale
 #. openerp-web
@@ -2867,13 +2938,13 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:47
 #, python-format
 msgid "Sales Since Last"
-msgstr ""
+msgstr "Ventas desde el último"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_salesperson_id
 #: model:ir.model.fields,field_description:website_sale.field_website_salesperson_id
 msgid "Salesperson"
-msgstr "Comercial"
+msgstr "Vendedor"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -2885,12 +2956,12 @@ msgid ""
 "                                        and sync the ones you like to iPod nano. Then tap Genius Mixes and\n"
 "                                        rediscover songs you haven’t heard in a while — or find music you forgot you even had."
 msgstr ""
-"Digamos que estás escuchando una canción que te gusta y quieres quedarte en el estado de ánimo.\n"
-"Sólo toque Genius. Encuentra otras canciones en el iPod nano que van genial juntas\n"
+"Digamos que está escuchando una canción que le gusta y quiere mantenerse con buen humor.\n"
+"Sólo toque Genius. Encuentre otras canciones en el iPod nano que van genial juntas\n"
 "y haga una lista de reproducción de Genius. Para más combinaciones de canciones\n"
-"no habría pensado en si mismo, crear Genius Mixes en iTunes\n"
+"no habría pensado en sí mismo, crear Genius Mixes en iTunes\n"
 "y sincronizar los que le gusta al iPod nano. Luego, toque Genius Mixes y\n"
-"redescubra canciones que no ha oído antes - o encuentre la música que olvidó que tenía."
+"redescubra canciones que no haya oído antes - o encuentre la música que olvidó que tenía."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Screen
@@ -2910,12 +2981,12 @@ msgstr "Vea como configurar medios de pago"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to configure pricing &amp; discounts"
-msgstr "Vea cómo configurar precios y descuentos"
+msgstr "Ver cómo configurar precios y descuentos"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "See how to customize your catalog page"
-msgstr "Mira como configurar tu pagina de catalogo"
+msgstr "Ver cómo configurar su pagina de catálogo"
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -2939,6 +3010,8 @@ msgid ""
 "Select optional products from the configuration form of your main products "
 "(in Sales tab)."
 msgstr ""
+"Seleccione productos opcionales desde el formulario de configuración de sus "
+"productos principales (en la pestaña \"Ventas\")."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
@@ -2949,7 +3022,7 @@ msgstr "Seleccionar esta dirección"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Select your pricing preference and allow discounts"
 msgstr ""
-"Selecciona tus preferencias de fijación de precio y permite descuentos"
+"Seleccionar sus preferencias de fijación de precio y permitir descuentos"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2974,7 +3047,7 @@ msgstr "Vender Más"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell content to download or URL links"
-msgstr ""
+msgstr "Vender contenidos para descargar o enlaces URL"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2984,17 +3057,18 @@ msgstr "Vender en monedas diferentes"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr ""
+msgstr "Enviar un correo electrónico de recuperación de carro"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr ""
+msgstr "Enviar un correo electrónico de recuperación"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send a recovery email to authenticated shoppers"
 msgstr ""
+"Enviar un correo electrónico de recuperación a compradores autenticados"
 
 #. module: website_sale
 #. openerp-web
@@ -3002,6 +3076,8 @@ msgstr ""
 #, python-format
 msgid "Send a recovery email to visitors who haven't completed their order."
 msgstr ""
+"Enviar un correo electrónico de recuperación a visitantes que no han "
+"completado su pedido."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
@@ -3086,7 +3162,7 @@ msgstr "Tienda - Seleccione el medio de pago"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Shopping Cart"
-msgstr "Cesta de la compra"
+msgstr "Carrito de la compra"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3101,7 +3177,7 @@ msgstr "Mostrar imágenes múltiples en eCommerce"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr ""
+msgstr "Registrarse"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -3132,7 +3208,7 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Imagen pequeña de la categoría. Se redimensiona automáticamente a 64x64 px, "
+"Imagen pequeña de la categoría. Se redimensiona automáticamente a 64x64px, "
 "con el ratio de aspecto preservado. Use este campo donde se requiera una "
 "imagen pequeña."
 
@@ -3156,7 +3232,7 @@ msgid ""
 "gateways with your own payment processor."
 msgstr ""
 "Algunos adquirentes como Authorize.net e Ingenico pueden ser utilizados como"
-" puertas de enlaze de pago con su propio procesador de pagos."
+" puertas de enlace de pago con su propio procesador de pagos."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:520
@@ -3177,17 +3253,17 @@ msgstr "Ordenar por precio"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Sorting by :"
-msgstr ""
+msgstr "Ordenado por:"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Speakers
 msgid "Speakers"
-msgstr "Ponentes"
+msgstr "Oradores"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Start your online shop by creating 3 products pages.<br/>"
-msgstr "Empieza tu tienda en línea creando 3 paginas de productos.<br/>"
+msgstr "Empiece su tienda en línea creando 3 páginas de productos.<br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -3202,7 +3278,7 @@ msgstr "Estado / Provincia..."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Street 2"
-msgstr ""
+msgstr "Calle 2"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -3244,7 +3320,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Suggest optional products when adding to cart"
-msgstr ""
+msgstr "Sugerir productos opcionales al añadir algo al carro"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3264,7 +3340,7 @@ msgstr "Accesorios sugeridos:"
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
 msgid "Sync to your heart’s content."
-msgstr "Sincroniza el contenido de tu corazón."
+msgstr "Sincronice el contenido de su corazón."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -3341,9 +3417,9 @@ msgid ""
 "several places: Contact us page, website header &amp; footer, printed "
 "business documents like orders and invoices, etc."
 msgstr ""
-"El primer paso es configurar la información de la compañía. Es el usado en "
-"muchos sitios: Pagina de contacto, cabecera y pie de la web, documentos de "
-"empresa impresos como ordenes y facturas, etc."
+"El primer paso es configurar la información de la compañía. Esto es usado en"
+" muchos sitios: Página de contacto, cabecera y pie de la web, documentos de "
+"empresa impresos como órdenes y facturas, etc."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
@@ -3375,6 +3451,8 @@ msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
 msgstr ""
+"El modo aquí seleccionado tiene validez como política de facturación de un "
+"nuevo producto creado, pero no de productos ya existentes."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:247
@@ -3383,6 +3461,8 @@ msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "
 "wire transfer"
 msgstr ""
+"El presupuesto debe ser enviado y el tipo de método de pago ha de ser manual"
+" o una transferencia bancaria"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3401,7 +3481,7 @@ msgstr "Hay menos de ello, pero no menos para ello."
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:53
 #, python-format
 msgid "There is no recent confirmed order."
-msgstr ""
+msgstr "No hay ningún pedido reciente confirmado."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -3418,18 +3498,18 @@ msgid ""
 msgstr ""
 "Hay otra manera de obtener una buena mezcla de música en el iPod: Deje que\n"
 "Genius haga el trabajo. Active Genius en iTunes en su computadora y automáticamente\n"
-"encontrará canciones que suenen bien juntas. Entonces cree Genius Mixes para sincronizar fácilmente con tu iPod. Es la manera perfecta de redescubrir canciones\n"
+"encontrará canciones que suenen bien juntas. Entonces cree Genius Mixes para sincronizar fácilmente con su iPod. Es la manera perfecta de redescubrir canciones\n"
 "que no había escuchado en toda la vida."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "This adds the choice of a currency on pricelists."
-msgstr ""
+msgstr "Esto añade la posibilidad de elegir una divisa en las tarifas."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Esta combinación no existe."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image
@@ -3438,12 +3518,12 @@ msgid ""
 "1024x1024px."
 msgstr ""
 "Este campo contiene la imagen usada como imagen para la categoría, limitada "
-"a 1024x1024 px."
+"a 1024x1024px."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
-msgstr ""
+msgstr "Este es su carro actual."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.coupon_form
@@ -3454,6 +3534,7 @@ msgstr "Este código promocional no está disponible"
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr ""
+"Este impuesto se aplica a todos los productos nuevos creados en el catálogo."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3530,26 +3611,26 @@ msgstr "Órdenes sin pagar"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:75
 #, python-format
 msgid "Untaxed Total Sold"
-msgstr ""
+msgstr "Venta total sin impuestos"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:42
 #, python-format
 msgid "Upload an image from your local library."
-msgstr ""
+msgstr "Suba una imagen de su biblioteca local."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Use our import templates to get your catalog ready in no time!"
 msgstr ""
-"Utilice nuestro importador de plantillas para tener listo su catalogo en un "
-"santiamén!"
+"¡Utilice nuestro importador de plantillas para tener listo su catálogo en un"
+" santiamén!"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
-msgstr "Ver cesta ("
+msgstr "Ver Carrito ("
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
@@ -3609,19 +3690,19 @@ msgstr "Meta título del sitio web"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
 msgid "Website price"
-msgstr "Precio Página Web"
+msgstr "Precio de Página Web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price_difference
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price_difference
 msgid "Website price difference"
-msgstr ""
+msgstr "Diferencia de precios en sitios web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_public_price
 msgid "Website public price"
-msgstr "Precio público Página Web"
+msgstr "Precio público de Página Web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_website_ids
@@ -3631,7 +3712,7 @@ msgstr "Sitios web"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_crm_team_website_ids
 msgid "Websites using this sales channel"
-msgstr ""
+msgstr "Sitios web que hacen uso de este canal de ventas"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -3644,12 +3725,12 @@ msgstr "Cuando una lista de reproducción no es suficiente."
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_3
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_5
 msgid "Why you'll love an iPad."
-msgstr "Por qué te encantará un iPad."
+msgstr "Por qué le encantará un iPad."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_wishlist
 msgid "Wishlists"
-msgstr ""
+msgstr "Listas de deseos"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_1
@@ -3661,7 +3742,7 @@ msgid ""
 "                                   and browse the web at amazing speeds."
 msgstr ""
 "Con Wi-Fi avanzado que es hasta dos veces tan rápido como\n"
-"Cualquier iPad de última generación y acceso a fast\n"
+"cualquier iPad de última generación y acceso a fast\n"
 "cellular data networks en todo el mundo, iPad mini\n"
 "le permite descargar contenido, transmitir vídeos,\n"
 "y navegar por la web a velocidades sorprendentes."
@@ -3673,6 +3754,10 @@ msgid ""
 "(from Sales tab). With the second one, you set prices and computation rules "
 "from Pricelists."
 msgstr ""
+"Con el primer modo, puede fijar varios precios en el formulario de "
+"configuración de productos (desde la pestaña \"Ventas\"). Por otro lado, con"
+" el segundo, fija los precios y las reglas de cómputo a partir de listas de "
+"precios."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3682,29 +3767,29 @@ msgstr "Puede configurar 3 tipos de <strong>medios de pago en Odoo:</strong>"
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "You don't have any confirmed order from the website."
-msgstr "No tienes ningún pedido confirmado en el sitio web."
+msgstr "No tiene ningún pedido confirmado en el sitio web."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 #: model:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website."
-msgstr ""
+msgstr "No tiene ningún pedido del sitio web."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.payment_transaction_action_payments_to_capture
 msgid "You don't have any payments to capture from the website."
-msgstr ""
+msgstr "No tiene ningún pago que registrar del sitio web."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 msgid "You don't have any unpaid order from the website."
-msgstr "No tienes ningún pedido sin pagar en el sitio web."
+msgstr "No tiene ningún pedido sin pagar en el sitio web."
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart."
-msgstr ""
+msgstr "Ha dejado artículos en su carro."
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -3724,7 +3809,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 msgid "You should send an email to revive them!"
-msgstr ""
+msgstr "¡Debería enviar un correo electrónico para reanimarlos!"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -3737,7 +3822,7 @@ msgid ""
 "Your Address\n"
 "                                        <small> or </small>"
 msgstr ""
-"Tu dirección\n"
+"Su dirección\n"
 "                                        <small> o </small>"
 
 #. module: website_sale
@@ -3749,12 +3834,17 @@ msgstr "Su referencia"
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
-msgstr "¡Su cesta está vacía!"
+msgstr "¡Su carrito está vacío!"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Se ha autorizado su pago."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
-msgstr ""
+msgstr "Su carro anterior ya se ha completado."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -3812,7 +3902,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
-msgstr ""
+msgstr "si desea combinar su carro anterior con el actual."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -3820,6 +3910,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
+"si desea recuperar su carro anterior. Su carro actual será sustituido por el"
+" anterior."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -3830,6 +3922,8 @@ msgstr "elementos)"
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_cart_abandoned_delay
 msgid "number of hours after which the cart is considered abandoned"
 msgstr ""
+"número de horas que han de transcurrir para que el carro sea considerado "
+"abandonado"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3869,7 +3963,7 @@ msgstr "términos y condiciones"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "use Odoo API to import through scripts"
-msgstr "utiliza l'API de Odoo para importar a través de scripts"
+msgstr "utilice la API de Odoo para importar a través de scripts"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
@@ -3879,4 +3973,4 @@ msgstr "sitio web"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "what do the customers think of the product"
-msgstr "que piensan los clientes del producto"
+msgstr "qué piensan los clientes del producto"

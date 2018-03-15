@@ -5,13 +5,15 @@
 # Translators:
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +25,7 @@ msgstr ""
 #: code:addons/account_payment/models/payment.py:61
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr "<%s>  transacción (%s) confirmación de factura falló : <%s>"
+msgstr "<%s>  transacción (%s) la confirmación de factura falló : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
@@ -85,7 +87,13 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Transacciones</strong>"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: code:addons/account_payment/models/payment.py:80
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr "Cantidad no coincidente (%s)"
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:52
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -99,11 +107,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
 msgid "Invoice"
 msgstr "Factura"
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
-msgstr "Factura totalmente pagada."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
@@ -155,11 +158,18 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: account_payment
+#: code:addons/account_payment/models/payment.py:81
+#, python-format
+msgid ""
+"The invoice was not confirmed despite response from the acquirer (%s): "
+"invoice amount is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: impossible to validate invoice."
-msgstr ""
-"Hubo un error al procesar su pago: imposibilidad de validar la factura."
+msgstr "Hubo un error al procesar su pago: imposible validar la factura."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -210,3 +220,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
 msgstr "Transacciones"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Se ha autorizado su pago."

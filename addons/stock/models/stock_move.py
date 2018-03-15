@@ -158,6 +158,7 @@ class StockMove(models.Model):
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
+    has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
@@ -217,6 +218,8 @@ class StockMove(models.Model):
                 move.is_quantity_done_editable = False
             elif move.show_details_visible:
                 move.is_quantity_done_editable = False
+            elif move.show_operations:
+                move.is_quantity_done_editable = False
             else:
                 move.is_quantity_done_editable = True
 
@@ -224,6 +227,11 @@ class StockMove(models.Model):
     def _compute_reference(self):
         for move in self:
             move.reference = move.picking_id.name if move.picking_id else move.name
+
+    @api.depends('move_line_ids')
+    def _compute_has_move_lines(self):
+        for move in self:
+            move.has_move_lines = bool(move.move_line_ids)
 
     @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -816,7 +824,8 @@ class StockMove(models.Model):
 
         # Find a candidate move line to update or create a new one.
         for reserved_quant, quantity in quants:
-            to_update = self.move_line_ids.filtered(lambda m: m.location_id.id == reserved_quant.location_id.id and m.lot_id.id == reserved_quant.lot_id.id and m.package_id.id == reserved_quant.package_id.id and m.owner_id.id == reserved_quant.owner_id.id)
+            to_update = self.move_line_ids.filtered(lambda m: m.product_id.tracking != 'serial' and
+                                                    m.location_id.id == reserved_quant.location_id.id and m.lot_id.id == reserved_quant.lot_id.id and m.package_id.id == reserved_quant.package_id.id and m.owner_id.id == reserved_quant.owner_id.id)
             if to_update:
                 to_update[0].with_context(bypass_reservation_update=True).product_uom_qty += self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')
             else:
@@ -951,7 +960,8 @@ class StockMove(models.Model):
     def _prepare_extra_move_vals(self, qty):
         vals = {
             'product_uom_qty': qty,
-            'picking_id': self.picking_id.id
+            'picking_id': self.picking_id.id,
+            'price_unit': self.price_unit,
         }
         return vals
 
@@ -1079,6 +1089,7 @@ class StockMove(models.Model):
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
             'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
             'origin_returned_move_id': self.origin_returned_move_id.id,
+            'price_unit': self.price_unit,
         }
         return vals
 

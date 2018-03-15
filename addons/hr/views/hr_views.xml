@@ -87,8 +87,9 @@
                                         <field name="address_home_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="is_address_home_a_company" invisible="1" />
-                                        <div class="text-warning" attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
+                                        <field name="is_address_home_a_company" invisible="1"/>
+                                        <div class="text-warning" groups="hr.group_hr_user"
+                                             attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
                                             Use here the home address of the employee.
                                             This private address is used in the expense report reimbursement document.
                                             It should be different from the work address.
@@ -289,12 +290,14 @@
             </field>
         </record>
 
+        <!-- TODO remove me in master -->
         <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
             <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
+            <field name="domain">['|', ('id','in',active_ids), ('parent_id', 'in', active_ids)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_partner_tree2"/>
             <field name="binding_model_id" ref="hr.model_hr_employee"/>
         </record>

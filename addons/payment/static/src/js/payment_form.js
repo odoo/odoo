@@ -105,6 +105,7 @@ odoo.define('payment.payment_form', function (require) {
                             else {
                                 checked_radio.value = data.id; // set the radio value to the new card id
                                 form.submit();
+                                return;
                             }
                         }
                         // if the server has returned false, we display an error

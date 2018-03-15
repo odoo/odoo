@@ -128,6 +128,8 @@ class ResourceCalendar(models.Model):
         )
 
     def _interval_and(self, interval, interval_dst):
+        if interval.start_datetime > interval_dst.end_datetime or interval.end_datetime < interval_dst.start_datetime:
+            return None
         return self._interval_obj(
             interval.start_datetime > interval_dst.start_datetime and interval.start_datetime or interval_dst.start_datetime,
             interval.end_datetime < interval_dst.end_datetime and interval.end_datetime or interval_dst.end_datetime,
@@ -295,7 +297,7 @@ class ResourceCalendar(models.Model):
             domain += [('date_to', '>', fields.Datetime.to_string(start_datetime + timedelta(days=-1)))]
         if end_datetime:
             # domain += [('date_from', '<', fields.Datetime.to_string(to_naive_utc(end_datetime, self.env.user)))]
-            domain += [('date_from', '<', fields.Datetime.to_string(start_datetime + timedelta(days=1)))]
+            domain += [('date_from', '<', fields.Datetime.to_string(end_datetime + timedelta(days=1)))]
         leaves = self.env['resource.calendar.leaves'].search(domain + [('calendar_id', '=', self.id)])
 
         filtered_leaves = self.env['resource.calendar.leaves']
@@ -392,10 +394,10 @@ class ResourceCalendar(models.Model):
             start_datetime=datetime.datetime.combine(day_date, start_time),
             end_datetime=datetime.datetime.combine(day_date, end_time))
 
-        final_intervals = [
-            self._interval_and(leave_interval, work_interval)
-            for leave_interval in leaves_intervals
-            for work_interval in working_intervals]
+        final_intervals = [i for i in
+                           [self._interval_and(leave_interval, work_interval)
+                            for leave_interval in leaves_intervals
+                            for work_interval in working_intervals] if i]
 
         # adapt tz
         return [self._interval_new(
@@ -721,7 +723,7 @@ class ResourceCalendarLeaves(models.Model):
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     tz = fields.Selection(
-        _tz_get, string='Timezone', default=lambda self: self._context.get('tz', self.env.user.tz or 'UTC'),
+        _tz_get, string='Timezone', default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="Timezone used when encoding the leave. It is used to correctly "
              "localize leave hours when computing time intervals.")
     resource_id = fields.Many2one(

@@ -251,7 +251,7 @@
                         <group>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" string="Bill Date"/>
-                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state','=','paid')]}" force_save="1"/>
+                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state', 'in', ['open', 'paid'])]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
@@ -297,7 +297,7 @@
                                                 <field name="amount"/>
                                                 <field name="amount_rounding" invisible="1"/>
                                                 <field name="amount_total" invisible="1"/>
-                                                <field name="currency_id" invisible="1"/>
+                                                <field name="currency_id" invisible="1" force_save="1"/>
                                             </tree>
                                         </field>
                                     </div>
@@ -395,7 +395,7 @@
                         </group>
                         <group>
                             <field name="date_invoice"/>
-                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state','=','paid')]}" force_save="1"/>
+                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state', 'in', ['open', 'paid'])]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
                             <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
@@ -497,7 +497,7 @@
                                     <field name="amount" invisible="1"/>
                                     <field name="amount_rounding" invisible="1"/>
                                     <field name="amount_total"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1" force_save="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -528,10 +528,8 @@
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" />
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
-                    <filter name="invoices" string="Invoices" domain="['&amp;', ('state','in',['draft','open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
-                    <filter name="refunds" string="Credit Notes" domain="['&amp;', ('state','in',['draft','open','paid']),('type','in',('out_refund','in_refund'))]"/>
-                    <separator/>
-                    <filter name="unpaid" string="Not Paid" domain="[('state','=','open')]"/>
+                    <filter name="unpaid" string="Open" domain="[('state', '=', 'open')]"/>
+                    <filter name="paid" string="Paid" domain="[('state', '=', 'paid')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
@@ -563,33 +561,25 @@
             </field>
         </record>
 
+        <!-- TODO: remove in master -->
         <record id="view_account_invoice_filter_inherit_invoices" model="ir.ui.view">
             <field name="name">account.invoice.select.invoices</field>
             <field name="model">account.invoice</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="view_account_invoice_filter"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="filter[@name='invoices']" position="attributes">
-                        <attribute name="string">Not Draft</attribute>
-                    </xpath>
-                    <filter name="refunds" position="replace"/>
-                </data>
+                <data/>
             </field>
         </record>
 
+        <!-- TODO: remove in master -->
         <record id="view_account_invoice_filter_inherit_credit_notes" model="ir.ui.view">
             <field name="name">account.invoice.select.credit.notes</field>
             <field name="model">account.invoice</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="view_account_invoice_filter"/>
             <field name="arch" type="xml">
-                <data>
-                    <xpath expr="filter[@name='refunds']" position="attributes">
-                        <attribute name="string">Not Draft</attribute>
-                    </xpath>
-                    <filter name="invoices" position="replace"/>
-                </data>
+                <data/>
             </field>
         </record>
 
@@ -660,7 +650,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_invoices"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a customer invoice.
@@ -701,7 +691,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type': 'out_refund', 'type': 'out_refund', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_credit_notes"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a credit note.
@@ -739,7 +729,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_invoices"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to record a new vendor bill.
@@ -775,7 +765,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_credit_notes"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to record a new vendor credit note.

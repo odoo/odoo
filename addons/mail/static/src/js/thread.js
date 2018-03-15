@@ -210,6 +210,10 @@ var Thread = Widget.extend({
         }
     },
     on_click_redirect: function (event) {
+        // ignore inherited branding
+        if ($(event.target).data('oe-field') !== undefined) {
+            return;
+        }
         var id = $(event.target).data('oe-id');
         if (id) {
             event.preventDefault();
@@ -225,7 +229,7 @@ var Thread = Widget.extend({
         } else {
             this.trigger('redirect', options.model, options.id);
         }
-    }, 200, true),
+    }, 500, true),
 
     on_click_show_more: function () {
         this.trigger('load_more_messages');

@@ -740,6 +740,9 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 res.setdefault('domain', {})
                 res['domain']['sale_tax_id'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax_id'] = repr(purchase_tax_domain)
+            else:
+                self.sale_tax_id = False
+                self.purchase_tax_id = False
             if self.chart_template_id.transfer_account_id:
                 self.transfer_account_id = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.code_digits:
@@ -770,7 +773,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             if company_id:
                 company = self.env['res.company'].browse(company_id)
                 currency_id = company.on_change_country(company.country_id.id)['value']['currency_id']
-                res.update({'currency_id': currency_id.id})
+                res.update({'currency_id': currency_id})
 
         chart_templates = account_chart_template.search([('visible', '=', True)])
         if chart_templates:

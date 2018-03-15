@@ -35,6 +35,16 @@ def test_parser():
             types.Literal('null'),
         ])])
     ])
+    assert types.parse('Function<Array<Object[]>>') == types.Alt([
+        types.Type('Function', [types.Alt([
+            types.Type('Array', [types.Alt([
+                types.Type('Array', [
+                    types.Type('Object', [])
+                ])
+            ])])
+        ])])
+    ])
+
 
 def test_tokens():
     toks = list(types.tokenize('A'))
@@ -61,6 +71,19 @@ def test_tokens():
         (types.NAME, 'String'),
         (types.OP, ','),
         (types.NAME, 'Object'),
+        (types.OP, '>')
+    ]
+
+    toks = list(types.tokenize('Function<Array<Object[]>>'))
+    assert toks == [
+        (types.NAME, 'Function'),
+        (types.OP, '<'),
+        (types.NAME, 'Array'),
+        (types.OP, '<'),
+        (types.NAME, 'Object'),
+        (types.OP, '['),
+        (types.OP, ']'),
+        (types.OP, '>'),
         (types.OP, '>')
     ]
 

@@ -10,6 +10,7 @@ from odoo.addons.base.ir.ir_qweb.fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
+from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
 
 _logger = logging.getLogger(__name__)
@@ -116,7 +117,19 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({'id': order.id})
 
 
+class Website(Website):
+    @http.route()
+    def get_switchable_related_views(self, key):
+        views = super(Website, self).get_switchable_related_views(key)
+        if key == 'website_sale.product':
+            if not request.env.user.has_group('product.group_product_variant'):
+                view_product_variants = request.env.ref('website_sale.product_variants')
+                views[:] = [v for v in views if v['id'] != view_product_variants.id]
+        return views
+
+
 class WebsiteSale(http.Controller):
+
     def _get_compute_currency_and_context(self):
         pricelist_context = dict(request.env.context)
         pricelist = False
@@ -151,7 +164,7 @@ class WebsiteSale(http.Controller):
             else:
                 price = variant.website_public_price / quantity
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
-            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price, price])
+            attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price / quantity, price])
         return attribute_value_ids
 
     def _get_search_order(self, post):

@@ -71,7 +71,7 @@ def keep_query(*keep_params, **additional_params):
     if not keep_params and not additional_params:
         keep_params = ('*',)
     params = additional_params.copy()
-    qs_keys = list(request.httprequest.args)
+    qs_keys = list(request.httprequest.args) if request else []
     for keep_param in keep_params:
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
@@ -115,33 +115,31 @@ def _hasclass(context, *cls):
 
 def get_view_arch_from_file(filename, xmlid):
     doc = etree.parse(filename)
-    node = None
-    for n in doc.xpath('//*[@id="%s"]' % (xmlid)):
-        if n.tag in ('template', 'record'):
-            node = n
-            break
-    if node is None:
-        # fallback search on template with implicit module name
-        for n in doc.xpath('//*[@id="%s"]' % (xmlid.split('.')[1])):
-            if n.tag in ('template', 'record'):
-                node = n
-                break
-    if node is not None:
-        if node.tag == 'record':
-            field = node.find('field[@name="arch"]')
-            _fix_multiple_roots(field)
-            inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
-            return field.text + inner
-        elif node.tag == 'template':
-            # The following dom operations has been copied from convert.py's _tag_template()
-            if not node.get('inherit_id'):
-                node.set('t-name', xmlid)
-                node.tag = 't'
-            else:
-                node.tag = 'data'
-            node.attrib.pop('id', None)
-            return etree.tostring(node, encoding='unicode')
-    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid)
+
+    xmlid_search = (xmlid, xmlid.split('.')[1])
+
+    # when view is created from model with inheritS of ir_ui_view, the xml id has been suffixed by '_ir_ui_view'
+    suffix = '_ir_ui_view'
+    if xmlid.endswith(suffix):
+        xmlid_search += (xmlid.rsplit(suffix, 1)[0], xmlid.split('.')[1].rsplit(suffix, 1)[0])
+
+    for node in doc.xpath('//*[%s]' % ' or '.join(["@id='%s'" % _id for _id in xmlid_search])):
+        if node.tag in ('template', 'record'):
+            if node.tag == 'record':
+                field = node.find('field[@name="arch"]')
+                _fix_multiple_roots(field)
+                inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
+                return field.text + inner
+            elif node.tag == 'template':
+                # The following dom operations has been copied from convert.py's _tag_template()
+                if not node.get('inherit_id'):
+                    node.set('t-name', xmlid)
+                    node.tag = 't'
+                else:
+                    node.tag = 'data'
+                node.attrib.pop('id', None)
+                return etree.tostring(node, encoding='unicode')
+    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid_search)
     return None
 
 def add_text_before(node, text):
@@ -174,6 +172,7 @@ xpath_utils['hasclass'] = _hasclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
+READONLY = re.compile(r"\breadonly\b")
 
 
 class View(models.Model):
@@ -258,14 +257,12 @@ actual arch.
             data = dict(arch_db=view.arch)
             if 'install_mode_data' in self._context:
                 imd = self._context['install_mode_data']
-                if '.' not in imd['xml_id']:
-                    imd['xml_id'] = '%s.%s' % (imd['module'], imd['xml_id'])
-                if self._name == imd['model'] and (not view.xml_id or view.xml_id == imd['xml_id']):
-                    # we store the relative path to the resource instead of the absolute path, if found
-                    # (it will be missing e.g. when importing data-only modules using base_import_module)
-                    path_info = get_resource_from_path(imd['xml_file'])
-                    if path_info:
-                        data['arch_fs'] = '/'.join(path_info[0:2])
+
+                # we store the relative path to the resource instead of the absolute path, if found
+                # (it will be missing e.g. when importing data-only modules using base_import_module)
+                path_info = get_resource_from_path(imd['xml_file'])
+                if path_info:
+                    data['arch_fs'] = '/'.join(path_info[0:2])
             view.write(data)
 
     @api.depends('arch')
@@ -790,12 +787,16 @@ actual arch.
                 attrs = {}
                 field = Model._fields.get(node.get('name'))
                 if field:
+                    editable = self.env.context.get('view_is_editable', True) and self._field_is_editable(field, node)
                     children = False
                     views = {}
                     for f in node:
                         if f.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                             node.remove(f)
-                            xarch, xfields = self.with_context(base_model_name=model).postprocess_and_fields(field.comodel_name, f, view_id)
+                            xarch, xfields = self.with_context(
+                                base_model_name=model,
+                                view_is_editable=editable,
+                            ).postprocess_and_fields(field.comodel_name, f, view_id)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields,
@@ -870,6 +871,17 @@ actual arch.
 
         return arch
 
+    def _view_is_editable(self, node):
+        """ Return whether the node is an editable view. """
+        return node.tag == 'form' or node.tag == 'tree' and node.get('editable')
+
+    def _field_is_editable(self, field, node):
+        """ Return whether a field is editable (not always readonly). """
+        return (
+            (not field.readonly or READONLY.search(str(field.states or ""))) and
+            (node.get('readonly') != "1" or READONLY.search(node.get('attrs') or ""))
+        )
+
     def get_attrs_symbols(self):
         """ Return a set of predefined symbols for evaluating attrs. """
         return {
@@ -889,10 +901,11 @@ actual arch.
             'current_date',
         }
 
-    def get_attrs_field_names(self, arch):
+    def get_attrs_field_names(self, arch, model, editable):
         """ Retrieve the field names appearing in context, domain and attrs, and
             return a list of triples ``(field_name, attr_name, attr_value)``.
         """
+        VIEW_TYPES = {item[0] for item in type(self).type.selection}
         symbols = self.get_attrs_symbols() | {None}
         result = []
 
@@ -922,8 +935,17 @@ actual arch.
                     if isinstance(arg, (tuple, list)):
                         process_expr(str(arg[0]), get, key, expr)
 
-        def process(node, get=get_name):
+        def process(node, model, editable, get=get_name):
             """ traverse `node` and collect triples """
+            if node.tag in VIEW_TYPES:
+                # determine whether this view is editable
+                editable = editable and self._view_is_editable(node)
+            elif node.tag == 'field':
+                # determine whether the field is editable
+                field = model._fields.get(node.get('name'))
+                if field:
+                    editable = editable and self._field_is_editable(field, node)
+
             for key, val in node.items():
                 if not val:
                     continue
@@ -931,13 +953,21 @@ actual arch.
                     process_expr(val, get, key, val)
                 elif key == 'attrs':
                     process_attrs(val, get, key, val)
-            if node.tag == 'field':
-                # retrieve subfields of 'parent'
-                get = partial(get_subname, get)
-            for child in node:
-                process(child, get)
 
-        process(arch)
+            if node.tag == 'field' and field and field.relational:
+                if editable and not node.get('domain'):
+                    domain = field._description_domain(self.env)
+                    # process the field's domain as if it was in the view
+                    if isinstance(domain, pycompat.string_types):
+                        process_expr(domain, get, 'domain', domain)
+                # retrieve subfields of 'parent'
+                model = self.env[field.comodel_name]
+                get = partial(get_subname, get)
+
+            for child in node:
+                process(child, model, editable, get)
+
+        process(arch, model, editable)
         return result
 
     @api.model
@@ -978,7 +1008,8 @@ actual arch.
 
         attrs_fields = []
         if self.env.context.get('check_field_names'):
-            attrs_fields = self.get_attrs_field_names(node)
+            editable = self.env.context.get('view_is_editable', True)
+            attrs_fields = self.get_attrs_field_names(node, Model, editable)
 
         fields_def = self.postprocess(model, node, view_id, False, fields)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):

@@ -3,10 +3,10 @@
 # * website_crm_partner_assign
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # Michael Chong <michaelchong2005@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Eddie Lim <bhweelim@yahoo.com>, 2017
@@ -16,18 +16,20 @@
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Talway <9010446@qq.com>, 2017
-# fausthuang <faust_huang@hotmail.com>, 2017
+# fausthuang, 2017
 # 秋颜 杨 <1394933305@qq.com>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
 # 木头 <mynameisshiy@gmail.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Si Ling Lau <happy8645@hotmail.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +71,36 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"<p>您好：</p>\n"
+"\n"
+"\n"
+"<p>贵地区有一些潜在客户联系了我们。因此，已将以下线索分配给了 ${ctx['partner_id'].name}：</p>\n"
+"\n"
+"<ol>\n"
+"% -  ctx['partner_leads'] 上的线索：\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>、${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}、${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }、${lead.lead_id.email_from or 'Email Undefined'}、${lead.lead_id.phone or ''} </li><br/>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal')：\n"
+"<p>请连接<a href=\"${object.get_portal_url()}\">合作伙伴门户</a> 获取详细信息。每个线索在左上角有两个按钮，您在联系完线索后应按这两个按钮之一：“感兴趣”和“不感兴趣”。</p>\n"
+"% else:\n"
+"<p>\n"
+"    您不具有我们数据库的门户访问权限。请联系\n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email 和您的客户经理 %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}。\n"
+"</p>\n"
+"% endif\n"
+"<p>r如果未在 20 天前联系该线索，该线索将发送给其他合作伙伴。</p>\n"
+"\n"
+"<p>谢谢，</p>\n"
+"\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
+"\n"
+"% if not ctx['partner_id'].user_id:\n"
+"附：似乎您没有分配到客户经理，请联系我们。\n"
+"% endif\n"
+"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
@@ -132,6 +164,8 @@ msgid ""
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
 msgstr ""
+"<span class=\"text-danger error_partner_assign_desinterested\" "
+"style=\"display:none;\">您需要先完成下一操作并联系客户，然后再接受线索</span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -140,6 +174,8 @@ msgid ""
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
 msgstr ""
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">您需要先完成下一操作并联系客户，然后再接受线索</span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -191,7 +227,7 @@ msgstr "所有国家"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:262
 #, python-format
 msgid "All fields are required !"
-msgstr ""
+msgstr "所有字段必填！"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
@@ -313,7 +349,7 @@ msgstr "联系经销商"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Contact name"
-msgstr ""
+msgstr "联系人"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
@@ -348,7 +384,7 @@ msgstr "创建人"
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_own_opp
 msgid "Created by Partner"
-msgstr ""
+msgstr "合作伙伴创建"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_date
@@ -361,7 +397,7 @@ msgstr "创建时间"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Current stage of the opp"
-msgstr ""
+msgstr "此应用的当前阶段"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_id
@@ -559,13 +595,13 @@ msgstr "高"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:201
 #, python-format
 msgid "I am not interested by this lead. I contacted the lead."
-msgstr ""
+msgstr "对此线索不感兴趣。已联系此线索。"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:203
 #, python-format
 msgid "I am not interested by this lead. I have not contacted the lead."
-msgstr ""
+msgstr "对此线索不感兴趣。尚未联系此线索"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
@@ -587,7 +623,7 @@ msgstr "实现参照"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_count
 msgid "Implemented Count"
-msgstr ""
+msgstr "已实施数"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
@@ -668,7 +704,7 @@ msgstr "线索位置"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_link
 msgid "Lead Single Links"
-msgstr ""
+msgstr "线索链接"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -791,7 +827,7 @@ msgstr "下一次合作伙伴审查"
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
 msgid "No more partner available"
-msgstr ""
+msgstr "无可用合作伙伴"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -953,7 +989,7 @@ msgstr "计划收入"
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
 msgid "Platinum"
-msgstr ""
+msgstr "铂金级"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_priority
@@ -963,7 +999,7 @@ msgstr "优先级"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Priority:"
-msgstr ""
+msgstr "优先级："
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:113
@@ -1060,7 +1096,7 @@ msgstr "银色"
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
 msgid "Spam"
-msgstr ""
+msgstr "垃圾邮件"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:114
@@ -1115,7 +1151,7 @@ msgstr "这一周的活动"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "This lead is a spam"
-msgstr ""
+msgstr "此线索为垃圾邮件"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1183,7 +1219,7 @@ msgstr "地界地图"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "YYYY-MM-DD"
-msgstr ""
+msgstr "年月日"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity

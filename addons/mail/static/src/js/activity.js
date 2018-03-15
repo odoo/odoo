@@ -2,7 +2,7 @@ odoo.define('mail.Activity', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
-var concurrency = require('web.concurrency');
+var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var time = require('web.time');
@@ -10,6 +10,63 @@ var utils = require('mail.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
+
+/**
+ * Fetches activities and postprocesses them.
+ *
+ * This standalone function performs an RPC, but to do so, it needs an instance
+ * of a widget that implements the _rpc() function.
+ *
+ * @todo i'm not very proud of the widget instance given in arguments, we should
+ *   probably try to do it a better way in the future.
+ *
+ * @param {Widget} self a widget instance that can perform RPCs
+ * @param {Array} ids the ids of activities to read
+ * @return {Deferred<Array>} resolved with the activities
+ */
+function _readActivities(self, ids) {
+    if (!ids.length) {
+        return $.when([]);
+    }
+    return self._rpc({
+        model: 'mail.activity',
+        method: 'read',
+        args: [ids],
+    }).then(function (activities) {
+        // convert create_date and date_deadline to moments
+        _.each(activities, function (activity) {
+            activity.create_date = moment(time.auto_str_to_date(activity.create_date));
+            activity.date_deadline = moment(time.auto_str_to_date(activity.date_deadline));
+        });
+
+        // sort activities by due date
+        activities = _.sortBy(activities, 'date_deadline');
+
+        return activities;
+    });
+}
+
+BasicModel.include({
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Fetches the activities displayed by the activity field widget in form
+     * views.
+     *
+     * @private
+     * @param {Object} record - an element from the localData
+     * @param {string} fieldName
+     * @return {Deferred<Array>} resolved with the activities
+     */
+    _fetchSpecialActivity: function (record, fieldName) {
+        var localID = (record._changes && fieldName in record._changes) ?
+                        record._changes[fieldName] :
+                        record.data[fieldName];
+        return _readActivities(this, this.localData[localID].res_ids);
+    },
+});
 
 /**
  * Set the 'label_delay' entry in activity data according to the deadline date
@@ -44,12 +101,6 @@ var setDelayLabel = function(activities){
 };
 
 var AbstractActivityField = AbstractField.extend({
-    // inherited
-    init: function () {
-        this._super.apply(this, arguments);
-        this.activities = [];
-    },
-
     // private
     _markActivityDone: function (id, feedback) {
         return this._rpc({
@@ -58,33 +109,6 @@ var AbstractActivityField = AbstractField.extend({
                 args: [[id]],
                 kwargs: {feedback: feedback},
             });
-    },
-    _readActivities: function () {
-        var self = this;
-        var missing_ids = _.difference(this.value.res_ids, _.pluck(this.activities, 'id'));
-        var fetch_def;
-        if (missing_ids.length) {
-            fetch_def = this._rpc({
-                    model: 'mail.activity',
-                    method: 'read',
-                    args: [missing_ids],
-                });
-        }
-        return $.when(fetch_def).then(function (results) {
-            // convert create_date and date_deadline to moments
-            _.each(results, function (activity) {
-                activity.create_date = moment(time.auto_str_to_date(activity.create_date));
-                activity.date_deadline = moment(time.auto_str_to_date(activity.date_deadline));
-            });
-
-            // filter out activities that are no longer linked to this record
-            self.activities = _.filter(self.activities.concat(results || []), function (activity) {
-                return _.contains(self.value.res_ids, activity.id);
-            });
-
-            // sort activities by due date
-            self.activities = _.sortBy(self.activities, 'date_deadline');
-        });
     },
     _scheduleActivity: function (id, previous_activity_type_id, callback) {
         var action = {
@@ -115,40 +139,37 @@ var Activity = AbstractActivityField.extend({
         'click .o_activity_unlink': '_onUnlinkActivity',
         'click .o_activity_done': '_onMarkActivityDone',
     },
+    specialData: '_fetchSpecialActivity',
 
     // inherited
     init: function () {
         this._super.apply(this, arguments);
-        this.dp = new concurrency.DropPrevious();
+        this.activities = this.record.specialData[this.name];
     },
     _render: function () {
-        // note: the rendering of this widget is asynchronous as it needs to
-        // fetch the details of the linked activities
-        var self = this;
-        var fetch_def = this.dp.add(this._readActivities());
-        return fetch_def.then(function () {
-            _.each(self.activities, function (activity) {
-                if (activity.note) {
-                    activity.note = utils.parse_and_transform(activity.note, utils.add_link);
-                }
-            });
-            var activities = setDelayLabel(self.activities);
-            if (activities.length) {
-                var nbActivities = _.countBy(activities, 'state');
-                self.$el.html(QWeb.render('mail.activity_items', {
-                    activities: activities,
-                    nbPlannedActivities: nbActivities.planned,
-                    nbTodayActivities: nbActivities.today,
-                    nbOverdueActivities: nbActivities.overdue,
-                    date_format: time.getLangDatetimeFormat(),
-                }));
-            } else {
-                self.$el.empty();
+        _.each(this.activities, function (activity) {
+            if (activity.note) {
+                activity.note = utils.parse_and_transform(activity.note, utils.add_link);
             }
         });
+        var activities = setDelayLabel(this.activities);
+        if (activities.length) {
+            var nbActivities = _.countBy(activities, 'state');
+            this.$el.html(QWeb.render('mail.activity_items', {
+                activities: activities,
+                nbPlannedActivities: nbActivities.planned,
+                nbTodayActivities: nbActivities.today,
+                nbOverdueActivities: nbActivities.overdue,
+                date_format: time.getLangDateFormat(),
+                datetime_format: time.getLangDatetimeFormat(),
+            }));
+        } else {
+            this.$el.empty();
+        }
     },
     _reset: function (record) {
         this._super.apply(this, arguments);
+        this.activities = this.record.specialData[this.name];
         // the mail widgets being persistent, one need to update the res_id on reset
         this.res_id = record.res_id;
     },
@@ -183,9 +204,6 @@ var Activity = AbstractActivityField.extend({
         });
         return this.do_action(action, {
             on_close: function () {
-                // remove the edited activity from the array of fetched activities to
-                // force a reload of that activity
-                self.activities = _.reject(self.activities, {id: activity_id});
                 self._reload({activity: true, thread: true});
             },
         });
@@ -299,10 +317,10 @@ var KanbanActivity = AbstractActivityField.extend({
     _renderDropdown: function () {
         var self = this;
         this.$('.o_activity').html(QWeb.render("mail.KanbanActivityLoading"));
-        return this._readActivities().then(function () {
+        return _readActivities(this, this.value.res_ids).then(function (activities) {
             self.$('.o_activity').html(QWeb.render("mail.KanbanActivityDropdown", {
                 selection: self.selection,
-                records: _.groupBy(setDelayLabel(self.activities), 'state'),
+                records: _.groupBy(setDelayLabel(activities), 'state'),
                 uid: self.getSession().uid,
             }));
         });
@@ -315,7 +333,9 @@ var KanbanActivity = AbstractActivityField.extend({
     // handlers
     _onButtonClicked: function (event) {
         event.preventDefault();
-        this._renderDropdown();
+        if (!this.$el.hasClass('open')) {
+            this._renderDropdown();
+        }
     },
     _onMarkActivityDone: function (event) {
         event.stopPropagation();

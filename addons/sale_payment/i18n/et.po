@@ -3,7 +3,7 @@
 # * sale_payment
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Hedi Hunt <Hedi.Hunt@gmail.com>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-07 15:45+0000\n"
-"PO-Revision-Date: 2017-11-07 15:45+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -22,19 +22,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:111
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:124
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:118
+#: code:addons/sale_payment/models/payment.py:131
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:126
+#: code:addons/sale_payment/models/payment.py:139
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr ""
@@ -73,6 +78,12 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Tehingud</strong>"
 
 #. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:54
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr ""
+
+#. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
 msgid "Amount of pending transactions"
 msgstr ""
@@ -104,8 +115,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
-"Kui me salvestame teie makseandmed oma serveris, siis tehakse tellimuste "
-"makseid automaatselt."
+"Kui me salvestame teie makseandmed oma serverisse, siis tehakse tellimuste "
+"maksed automaatselt."
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
@@ -128,18 +139,13 @@ msgid "Number of transactions to capture"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_success
-msgid "Order successfully paid."
-msgstr ""
-
-#. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:50
+#: code:addons/sale_payment/controllers/payment.py:49
 #, python-format
 msgid "Pay"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:187
+#: code:addons/sale_payment/models/payment.py:200
 #, python-format
 msgid "Pay Now"
 msgstr "Maksa kohe"
@@ -180,14 +186,27 @@ msgid "Quotation"
 msgstr "Pakkumine"
 
 #. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
+msgid "Sale Order State"
+msgstr ""
+
+#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
-msgstr ""
+msgstr "Müügikanal"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
 msgid "Sales Order"
 msgstr "Müügitellimus"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:55
+#, python-format
+msgid ""
+"The sale order was not confirmed despite response from the acquirer (%s): SO"
+" amount is %r but acquirer replied with %r."
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -239,3 +258,8 @@ msgstr "Teie makse töötlemisel tekkis viga: kehtetu krediitkaardi ID."
 #: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
 msgid "Transactions"
 msgstr "Tehingud"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""

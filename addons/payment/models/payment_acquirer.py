@@ -77,8 +77,8 @@ class PaymentAcquirer(models.Model):
         help="Capture the amount from Odoo, when the delivery is completed.")
     # Formerly associated to `generate_and_pay_invoice` option from auto_confirm
     journal_id = fields.Many2one(
-        'account.journal', 'Payment Journal', domain=[('type', '=', 'bank')],
-        default=lambda self: self.env['account.journal'].search([('type', '=', 'bank')], limit=1),
+        'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
+        default=lambda self: self.env['account.journal'].search([('type', 'in', ['bank', 'cash'])], limit=1),
         help="""Payments will be registered into this journal. If you get paid straight on your bank account,
                 select your bank account. If you get paid in batch for several transactions, create a specific
                 payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
@@ -199,21 +199,12 @@ class PaymentAcquirer(models.Model):
     @api.model
     def create(self, vals):
         image_resize_images(vals)
-        vals = self._check_journal_id(vals)
         return super(PaymentAcquirer, self).create(vals)
 
     @api.multi
     def write(self, vals):
         image_resize_images(vals)
-        vals = self._check_journal_id(vals)
         return super(PaymentAcquirer, self).write(vals)
-
-    def _check_journal_id(self, vals):
-        if not vals.get('journal_id', False):
-            default_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
-            if default_journal:
-                vals.update({'journal_id': default_journal.id})
-        return vals
 
     @api.multi
     def toggle_website_published(self):
@@ -321,6 +312,7 @@ class PaymentAcquirer(models.Model):
                 'billing_partner': billing_partner,
                 'billing_partner_id': billing_partner_id,
                 'billing_partner_name': billing_partner.name,
+                'billing_partner_commercial_company_name': billing_partner.commercial_company_name,
                 'billing_partner_lang': billing_partner.lang,
                 'billing_partner_email': billing_partner.email,
                 'billing_partner_zip': billing_partner.zip,

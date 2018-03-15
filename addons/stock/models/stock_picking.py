@@ -8,7 +8,7 @@ import time
 from itertools import groupby
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from operator import itemgetter
@@ -378,9 +378,9 @@ class Picking(models.Model):
     @api.depends('move_lines.date_expected')
     def _compute_scheduled_date(self):
         if self.move_type == 'direct':
-            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [False])
+            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
         else:
-            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [False])
+            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
 
     @api.one
     def _set_scheduled_date(self):
@@ -443,7 +443,7 @@ class Picking(models.Model):
         for picking in self:
             if self._context.get('planned_picking') and picking.state == 'draft':
                 picking.show_validate = False
-            elif picking.state not in ('draft', 'confirmed', 'assigned') or not picking.is_locked:
+            elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned') or not picking.is_locked:
                 picking.show_validate = False
             else:
                 picking.show_validate = True
@@ -514,7 +514,18 @@ class Picking(models.Model):
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
         if vals.get('move_lines'):
-            self._autoconfirm_picking()
+            # Do not run autoconfirm if any of the moves has an initial demand. If an initial demand
+            # is present in any of the moves, it means the picking was created through the "planned
+            # transfer" mechanism.
+            pickings_to_not_autoconfirm = self.env['stock.picking']
+            for picking in self:
+                if picking.state != 'draft':
+                    continue
+                for move in picking.move_lines:
+                    if not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                        pickings_to_not_autoconfirm |= picking
+                        break
+            (self - pickings_to_not_autoconfirm)._autoconfirm_picking()
         return res
 
     @api.multi
@@ -594,8 +605,7 @@ class Picking(models.Model):
         @return: True
         """
         # TDE FIXME: remove decorator when migration the remaining
-        # TDE FIXME: draft -> automatically done, if waiting ?? CLEAR ME
-        todo_moves = self.mapped('move_lines').filtered(lambda self: self.state in ['draft', 'partially_available', 'assigned', 'confirmed'])
+        todo_moves = self.mapped('move_lines').filtered(lambda self: self.state in ['draft', 'waiting', 'partially_available', 'assigned', 'confirmed'])
         # Check if there are ops not linked to moves yet
         for pick in self:
             # # Explode manually added packages
@@ -684,10 +694,10 @@ class Picking(models.Model):
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
-        no_quantities_done = all(line.qty_done == 0.0 for line in self.move_line_ids)
-        no_initial_demand = all(move.product_uom_qty == 0.0 for move in self.move_lines)
-        if no_initial_demand and no_quantities_done:
-            raise UserError(_('You cannot validate a transfer if you have not processed any quantity.'))
+        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
+        no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
+        if no_reserved_quantities and no_quantities_done:
+            raise UserError(_('You cannot validate a transfer if you have not processed any quantity. You should rather cancel the transfer.'))
 
         if picking_type.use_create_lots or picking_type.use_existing_lots:
             lines_to_check = self.move_line_ids
@@ -832,7 +842,7 @@ class Picking(models.Model):
 
     def _put_in_pack(self):
         package = False
-        for pick in self:
+        for pick in self.filtered(lambda p: p.state not in ('done', 'cancel')):
             operations = pick.move_line_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
             operation_ids = self.env['stock.move.line']
             if operations:

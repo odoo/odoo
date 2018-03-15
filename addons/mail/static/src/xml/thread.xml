@@ -51,6 +51,11 @@
             <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar">
                 <ul class="list-inline">
                     <li>
+                        <a class="o_rotate" href="#">
+                            <i class="fa fa-2x fa-repeat"></i>
+                        </a>
+                    </li>
+                    <li>
                         <a class="o_zoom_out" href="#">
                             <i class="fa fa-2x fa-search-minus"></i>
                         </a>
@@ -262,7 +267,7 @@
     </t>
 
     <t t-name="mail.Attachment">
-        <t t-set="type" t-value="attachment.mimetype.split('/').shift()"/>
+        <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <t t-if="type == 'image'">
                 <div class="o_image_box">

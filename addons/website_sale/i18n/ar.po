@@ -6,7 +6,7 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2017
 # hoxhe Aits <hoxhe0@gmail.com>, 2017
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # Akram Alfusayal <akram_ma@hotmail.com>, 2017
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2017
@@ -16,14 +16,15 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2017
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2017
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2017
-# nle_odoo <nle@odoo.com>, 2017
+# nle_odoo, 2017
+# Husam Migdadi <samwatson18@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: nle_odoo <nle@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Husam Migdadi <samwatson18@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1076,7 +1077,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid "Click to define a new category."
-msgstr ""
+msgstr "اضغط لتعريف تصنيف جديد."
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -2147,6 +2148,7 @@ msgstr "الفئة الأم"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "ادفع الآن"
@@ -2171,6 +2173,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
 msgstr "معلومات الدفع"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة السداد"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3433,6 +3440,11 @@ msgstr "رقم إشارتك"
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
 msgstr "عربة التسوق الخاصة بك فارغة!"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

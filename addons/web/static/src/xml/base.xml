@@ -125,7 +125,6 @@
     </div>
 </t>
 <t t-name="Warning" t-extend="Notification">
-    <t t-jquery=".o_notification">$(this).addClass('o_error');</t>
     <t t-jquery=".o_icon" t-operation="replace">
         <span class="o_icon fa fa-3x fa-exclamation"/>
     </t>
@@ -1273,7 +1272,7 @@
 </t>
 <t t-name="toggle_button">
     <button type="button" class="o_icon_button" t-att-title="widget.string">
-        <i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
+        <i class="fa fa-circle" t-att-title="widget.string"/>
     </button>
 </t>
 

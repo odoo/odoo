@@ -694,10 +694,16 @@ dom.isRemovableEmptyNode = function (node) {
 dom.isForbiddenNode = function (node) {
     return node.tagName === "BR" || $(node).is(".fa, img");
 };
-dom.listBetween = function (sc, ec) {
+/**
+ * @todo 'so' and 'eo' were added as a bugfix and are not given everytime. They
+ * however should be as the function may be wrong without them (for example,
+ * when asking the list between an element and its parent, as there is no path
+ * from the beginning of the former to the beginning of the later).
+ */
+dom.listBetween = function (sc, ec, so, eo) {
     var nodes = [];
     var ancestor = dom.commonAncestor(sc, ec);
-    dom.walkPoint({'node': sc, 'offset': 0}, {'node': ec, 'offset': 0}, function (point) {
+    dom.walkPoint({'node': sc, 'offset': so || 0}, {'node': ec, 'offset': eo || 0}, function (point) {
         if (ancestor !== point.node || ancestor === sc || ancestor === ec) {
             nodes.push(point.node);
         }
@@ -907,15 +913,21 @@ range.WrappedRange.prototype.deleteContents = function (towrite) {
         return this;
     }
 
-    var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    var r;
+    var image = this.isOnImg();
+    if (image) {
+        // If the range matches/is in an image, then the image is to be removed
+        // and the cursor moved to its previous position
+        var parentNode = image.parentNode;
+        var index = _.indexOf(parentNode.childNodes, image);
+        parentNode.removeChild(image);
+        r = new range.WrappedRange(parentNode, index, parentNode, index);
+    } else {
+        r = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    }
 
-    $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
-    return new range.WrappedRange(
-      prevBP.sc,
-      prevBP.so,
-      prevBP.ec,
-      prevBP.eo
-    );
+    $(dom.node(r.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
+    return new range.WrappedRange(r.sc, r.so, r.ec, r.eo);
 };
 range.WrappedRange.prototype.clean = function (mergeFilter, all) {
     var node = dom.node(this.sc === this.ec ? this.sc : this.commonAncestor());
@@ -1252,7 +1264,7 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
 };
 
 function remove_table_content(r) {
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     if (dom.isText(r.sc)) {
         r.sc.textContent = r.sc.textContent.slice(0, r.so);
     }
@@ -1869,7 +1881,7 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     }
 
     // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     for (var i=0; i<nodes.length; i++) {
         if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
@@ -1983,6 +1995,14 @@ eventHandler.modules.editor.currentStyle = function (target) {
         var r = range.create();
         if (r)
             styleInfo.image = r.isOnImg();
+    }
+    // Fix when the target is a link: the text-align buttons state should
+    // indicate the alignment of the link in the parent, not the text inside
+    // the link (which is not possible to customize with summernote). Summernote fixed
+    // this in their newest version... by just not showing the active button
+    // for alignments.
+    if (styleInfo.anchor) {
+        styleInfo['text-align'] = $(styleInfo.anchor).parent().css('text-align');
     }
     return styleInfo;
 };
@@ -2156,7 +2176,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     }
 
     // remove node without attributes (move content), and merge the same nodes
-    if (!dom.isImgFont(node)) {
      var className2, style, style2;
      for (i=0; i<nodes.length; i++) {
       node = nodes[i];
@@ -2197,7 +2216,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
         }
       }
      }
-    }
 
     range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset).select();
 };

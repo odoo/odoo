@@ -4,6 +4,9 @@ odoo.define('web.view_dialogs_tests', function (require) {
 var testUtils = require('web.test_utils');
 var dialogs = require('web.view_dialogs');
 var Widget = require('web.Widget');
+var FormView = require('web.FormView');
+
+var createView = testUtils.createView;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -13,6 +16,7 @@ QUnit.module('Views', {
                     display_name: { string: "Displayed name", type: "char" },
                     foo: {string: "Foo", type: 'char'},
                     bar: {string: "Bar", type: "boolean"},
+                    instrument: {string: 'Instruments', type: 'many2one', relation: 'instrument'},
                 },
                 records: [
                     {id: 1, foo: 'blip', display_name: 'blipblip', bar: true},
@@ -20,9 +24,35 @@ QUnit.module('Views', {
                     {id: 3, foo: 'piou piou', display_name: "Jack O'Neill", bar: true},
                 ],
             },
-        };
 
+            instrument: {
+                fields: {
+                    name: {string: "name", type: "char"},
+                    badassery: {string: 'level', type: 'many2many', relation: 'badassery', domain: [['level', '=', 'Awsome']]},
+                },
+            },
+
+            badassery: {
+                fields: {
+                    level: {string: 'level', type: "char"},
+                },
+                records: [
+                    {id: 1, level: 'Awsome'},
+                ],
+            },
+
+            product: {
+                fields : {
+                    name: {string: "name", type: "char" },
+                    partner : {string: 'Doors', type: 'one2many', relation: 'partner'},
+                },
+                records: [
+                    {id: 1, name: 'The end'},
+                ],
+            },
+        };
     },
+
 }, function () {
 
     QUnit.module('view_dialogs');
@@ -64,6 +94,41 @@ QUnit.module('Views', {
             "should not have any button in body");
         assert.strictEqual($('div.modal .modal-footer button').length, 1,
             "should have only one button in footer");
+        parent.destroy();
+    });
+
+    QUnit.test('formviewdialog buttons in footer are not duplicated', function (assert) {
+        assert.expect(2);
+        this.data.partner.fields.poney_ids = {string: "Poneys", type: "one2many", relation: 'partner'};
+        this.data.partner.records[0].poney_ids = [];
+
+        var parent = createParent({
+            data: this.data,
+            archs: {
+                'partner,false,form':
+                    '<form string="Partner">' +
+                            '<field name="poney_ids"><tree editable="top"><field name="display_name"/></tree></field>' +
+                            '<footer><button string="Custom Button" type="object" class="btn-primary"/></footer>' +
+                    '</form>',
+            },
+        });
+
+        new dialogs.FormViewDialog(parent, {
+            res_model: 'partner',
+            res_id: 1,
+        }).open();
+
+        assert.strictEqual($('div.modal button.btn-primary').length, 1,
+            "should have 1 buttons in modal");
+
+        $('.o_field_x2many_list_row_add a').click();
+        $('input.o_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+            keyCode: $.ui.keyCode.ESCAPE,
+        }));
+
+        assert.strictEqual($('div.modal button.btn-primary').length, 1,
+            "should still have 1 buttons in modal");
         parent.destroy();
     });
 
@@ -206,6 +271,98 @@ QUnit.module('Views', {
             "list view should not be editable in a SelectCreateDialog");
 
         parent.destroy();
+    });
+
+    QUnit.test('SelectCreateDialog cascade x2many in create mode', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'product',
+            data: this.data,
+            arch: '<form>' +
+                     '<field name="name"/>' +
+                     '<field name="partner" widget="one2many_list" >' +
+                        '<tree editable="top">' +
+                            '<field name="display_name"/>' +
+                            '<field name="instrument"/>' +
+                        '</tree>' +
+                    '</field>' +
+                  '</form>',
+            res_id: 1,
+            archs: {
+                'partner,false,form': '<form>' +
+                                           '<field name="name"/>' +
+                                           '<field name="instrument" widget="one2many_list" mode="tree"/>' +
+                                        '</form>',
+
+                'instrument,false,form': '<form>'+
+                                            '<field name="name"/>'+
+                                            '<field name="badassery">' +
+                                                '<tree>'+
+                                                    '<field name="level"/>'+
+                                                '</tree>' +
+                                            '</field>' +
+                                        '</form>',
+
+                'badassery,false,list': '<tree>'+
+                                                '<field name="level"/>'+
+                                            '</tree>',
+
+                'badassery,false,search': '<search>'+
+                                                '<field name="level"/>'+
+                                            '</search>',
+            },
+
+            mockRPC: function(route, args) {
+                if (route === '/web/dataset/call_kw/partner/get_formview_id') {
+                    return $.when(false);
+                }
+                if (route === '/web/dataset/call_kw/instrument/get_formview_id') {
+                    return $.when(false);
+                }
+                if (route === '/web/dataset/call_kw/instrument/create') {
+                    assert.deepEqual(args.args, [{badassery: [[6, false, [1]]], name: false}], 
+                        'The method create should have been called with the right arguments');
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_widget .o_field_many2one[name=instrument] input').click();
+        $('ul.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content li.o_m2o_dropdown_option').first().click();
+
+        var $modal = $('.modal-dialog.modal-lg');
+
+        assert.equal($modal.length, 1,
+            'There should be one modal');
+
+        $modal.find('.o_field_x2many_list_row_add a').click();
+
+        var $modals = $('.modal-dialog.modal-lg');
+
+        assert.equal($modals.length, 2,
+            'There should be two modals');
+
+        var $second_modal = $modals.not($modal);
+        $second_modal.find('.o_list_view.table.table-condensed.table-striped.o_list_view_ungrouped .o_data_row input[type=checkbox]').click();
+
+        $second_modal.find('.o_select_button').click();
+
+        $modal = $('.modal-dialog.modal-lg');
+
+        assert.equal($modal.length, 1,
+            'There should be one modal');
+
+        assert.equal($modal.find('.o_data_cell').text(), 'Awsome',
+            'There should be one item in the list of the modal');
+
+        $modal.find('.btn.btn-sm.btn-primary').click();
+
+        form.destroy();
     });
 
 });

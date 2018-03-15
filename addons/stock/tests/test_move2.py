@@ -185,6 +185,51 @@ class TestPickShip(TestStockCommon):
         # the client picking should not be assigned anymore, as we returned partially what we took
         self.assertEqual(picking_client.state, 'confirmed')
 
+    def test_mto_resupply_cancel_ship(self):
+        """ This test simulates a pick pack ship with a resupply route
+        set. Pick and pack are validated, ship is cancelled. This test
+        ensure that new picking are not created from the cancelled
+        ship after the scheduler task. The supply route is only set in
+        order to make the scheduler run without mistakes (no next
+        activity).
+        """
+        picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Small Warehouse',
+            'code': 'SWH'
+        })
+        warehouse_1.write({
+            'default_resupply_wh_id': warehouse_2.id,
+            'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
+        })
+        resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
+        self.assertTrue(resupply_route)
+        self.productA.write({'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)]})
+
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0)
+
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pick.action_done()
+
+        picking_pack.action_assign()
+        picking_pack.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pack.action_done()
+
+        picking_ship.action_cancel()
+        picking_ship.move_lines.write({'procure_method': 'make_to_order'})
+
+        self.env['procurement.group'].run_scheduler()
+        next_activity = self.env['mail.activity'].search([('res_model', '=', 'product.template'), ('res_id', '=', self.productA.product_tmpl_id.id)])
+        self.assertEqual(picking_ship.state, 'cancel')
+        self.assertFalse(next_activity, 'If a next activity has been created if means that scheduler failed\
+        and the end of this test do not have sense.')
+        self.assertEqual(len(picking_ship.move_lines.mapped('move_orig_ids')), 0,
+        'Scheduler should not create picking pack and pick since ship has been manually cancelled.')
+
     def test_no_backorder_1(self):
         """ Check the behavior of doing less than asked in the picking pick and chosing not to
         create a backorder. In this behavior, the second picking should obviously only be able to
@@ -1646,19 +1691,15 @@ class TestSinglePicking(TestStockCommon):
 
 class TestStockUOM(TestStockCommon):
     def setUp(self):
-        with registry().cursor() as cr:
-            env = api.Environment(cr, 1, {})
-            dp = env.ref('product.decimal_product_uom')
-            self.old_digits = dp.digits
-            dp.digits = 7
         super(TestStockUOM, self).setUp()
+        dp = self.env.ref('product.decimal_product_uom')
+        dp.digits = 7
 
-    def tearDown(self):
-        super(TestStockUOM, self).tearDown()
-        with self.registry.cursor() as cr:
-            env = api.Environment(cr, 1, {})
-            dp = env.ref('product.decimal_product_uom')
-            dp.digits = self.old_digits
+        # Trick: invoke the method 'precision_get' with the current environment.
+        # This fills in the cache of the method with the right value. If we
+        # don't do that, the registry will access the corresponding precision
+        # with a new cursor (LazyCursor), and get a different value!
+        self.assertEqual(dp.precision_get(dp.name), 7)
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """

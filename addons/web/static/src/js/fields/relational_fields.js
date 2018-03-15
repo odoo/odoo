@@ -876,10 +876,15 @@ var FieldX2Many = AbstractField.extend({
         this.pager = new Pager(this, this.value.count, this.value.offset + 1, this.value.limit, {
             single_page_hidden: true,
             withAccessKey: false,
+            validate: function () {
+                var isList = self.view.arch.tag === 'tree';
+                // TODO: we should have some common method in the basic renderer...
+                return isList ? self.renderer.unselectRow() : $.when();
+            },
         });
         this.pager.on('pager_changed', this, function (new_state) {
-            this.trigger_up('load', {
-                id: this.value.id,
+            self.trigger_up('load', {
+                id: self.value.id,
                 limit: new_state.limit,
                 offset: new_state.current_min - 1,
                 on_success: function (value) {
@@ -928,6 +933,7 @@ var FieldX2Many = AbstractField.extend({
      *                     did not agree to discard.
      */
     _saveLine: function (recordID) {
+        var self = this;
         var def = $.Deferred();
         var fieldNames = this.renderer.canBeSaved(recordID);
         if (fieldNames.length) {
@@ -939,7 +945,9 @@ var FieldX2Many = AbstractField.extend({
         } else {
             this.renderer.setRowMode(recordID, 'readonly').done(def.resolve.bind(def));
         }
-        return def;
+        return def.then(function () {
+            self.pager.updateState({ size: self.value.count });
+        });
     },
     /**
      * Parses the 'columnInvisibleFields' attribute to search for the domains
@@ -1007,7 +1015,10 @@ var FieldX2Many = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onDiscardChanges: function (ev) {
-        ev.data.fieldName = this.name;
+        if (ev.target !== this) {
+            ev.stopPropagation();
+            this.trigger_up('discard_changes', _.extend({}, ev.data, {fieldName: this.name}));
+        }
     },
     /**
      * Called when the renderer asks to edit a line, in that case simply tells
@@ -1104,6 +1115,7 @@ var FieldX2Many = AbstractField.extend({
      * @param {OdooEvent} event
      */
     _onResequence: function (event) {
+        event.stopPropagation();
         var self = this;
         this.trigger_up('freeze_order', {id: this.value.id});
         var rowIDs = event.data.rowIDs.slice();
@@ -1173,7 +1185,20 @@ var FieldOne2Many = FieldX2Many.extend({
         return this._super.apply(this, arguments).then(function () {
             if (ev && ev.target === self && ev.data.changes && self.view.arch.tag === 'tree') {
                 if (ev.data.changes[self.name].operation === 'CREATE') {
-                    var index = self.editable === 'top' ? 0 : self.value.data.length - 1;
+                    var index = 0;
+                    if (self.editable !== 'top') {
+                        index = self.value.data.length - 1;
+                        // we consider that a new record, created in the bottom,
+                        // does not count as a record worth mentioning in the
+                        // pager, at least not until the line has been saved.
+                        // We prevent the pager from increasing its size, which
+                        // means that the pager is not displayed when we just
+                        // reach the limit.  For example, if limit is 3, if we
+                        // have 3 records, and we click on add, we will see the
+                        // 4 records on the same page, but we do not want a
+                        // pager.
+                        self.pager.updateState({ size: self.value.count - 1});
+                    }
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
                 }

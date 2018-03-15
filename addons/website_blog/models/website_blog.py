@@ -209,7 +209,7 @@ class BlogPost(models.Model):
     def write(self, vals):
         result = True
         for post in self:
-            copy_vals = vals
+            copy_vals = dict(vals)
             if 'website_published' in vals and 'published_date' not in vals and (post.published_date or '') <= fields.Datetime.now():
                 copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
             result &= super(BlogPost, self).write(copy_vals)

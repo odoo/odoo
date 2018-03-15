@@ -228,7 +228,7 @@ var utils = {
      * @returns {boolean}
      */
     is_bin_size: function (v) {
-        return (/^\d+(\.\d*)? \w+$/).test(v);
+        return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
      * @param {any} node
@@ -392,6 +392,23 @@ var utils = {
         array[i2] = elem1;
         array[i1] = elem2;
     },
+
+    /**
+     * @param {string} value
+     * @param {boolean} allow_mailto
+     * @returns boolean
+     */
+    is_email: function (value, allow_mailto) {
+        // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+        var re;
+        if (allow_mailto) {
+            re = /^(mailto:)?(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        } else {
+            re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        }
+        return re.test(value);
+    },
+
     /**
      * @param {any} str
      * @param {any} elseValues

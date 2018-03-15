@@ -31,7 +31,7 @@
         <field name="name">sale.report.view.pivot.website</field>
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
-            <pivot string="Sales Report">
+            <pivot string="Sales Report" disable_linking="True">
                 <field name="date" type="row"/>
                 <field name="state" type="col"/>
                 <field name="price_subtotal" type="measure"/>

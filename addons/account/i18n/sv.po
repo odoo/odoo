@@ -5,7 +5,7 @@
 # Translators:
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
 # lasch a <bmail440@gmail.com>, 2017
 # lynnliuying <lynn.liu1971@gmail.com>, 2017
@@ -21,15 +21,15 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
 # Zou Haojun <haojunzou84@gmail.com>, 2017
-# Frida E <frida.eddestal@gmail.com>, 2017
-# Lord Cobol <mattias@invaliddesign.com>, 2017
+# Frida E, 2017
+# Lord Cobol, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
-"Last-Translator: Lord Cobol <mattias@invaliddesign.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"Last-Translator: Lord Cobol, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,12 +113,6 @@ msgstr "%s (Kopia)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;"
-msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1134,6 +1128,11 @@ msgstr ""
 #, python-format
 msgid "Account"
 msgstr "Konto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
+msgid "Account Accountant"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -6852,14 +6851,6 @@ msgid "No detail"
 msgstr "Inga detaljer"
 
 #. module: account
-#: code:addons/account/models/company.py:274
-#, python-format
-msgid ""
-"No miscellaneous journal could be found. Please create one before "
-"proceeding."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account.py:116
 #, python-format
 msgid "No opening move defined !"
@@ -7779,6 +7770,14 @@ msgid "Please define sequence on the journal related to this invoice."
 msgstr "Vänligen definiera ordningen på journalen knuten till fakturan."
 
 #. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
 msgstr "Plus kassa/bank"
@@ -7901,6 +7900,7 @@ msgid "Print checks to pay your vendors"
 msgstr ""
 
 #. module: account
+#: model:ir.model,name:account.model_product_product
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id
@@ -11179,6 +11179,13 @@ msgstr ""
 #: code:addons/account/models/account.py:508
 #, python-format
 msgid "You cannot empty the bank account once set."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:522
+#, python-format
+msgid ""
+"The partners of the journal's company and the related bank account mismatch."
 msgstr ""
 
 #. module: account

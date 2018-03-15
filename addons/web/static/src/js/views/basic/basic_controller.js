@@ -271,6 +271,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Deferred}
      */
     _confirmChange: function (id, fields, e) {
+        if (e.name === 'discard_changes' && e.target.reset) {
+            // the target of the discard event is a field widget.  In that
+            // case, we simply want to reset the specific field widget,
+            // not the full view
+            return  e.target.reset(this.model.get(e.target.dataPointID), e, true);
+        }
+
         var state = this.model.get(this.handle);
         return this.renderer.confirmChange(state, id, fields, e);
     },
@@ -332,7 +339,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 }
                 self.model.discardChanges(recordID);
                 if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
+                    if (self.model.canBeAbandoned(recordID)) {
+                        self._abandonRecord(recordID);
+                    }
                     return;
                 }
                 return self._confirmSave(recordID);
@@ -511,7 +520,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 // TODO this will tell the renderer to rerender the widget that
                 // asked for the discard but will unfortunately lose the click
                 // made on another row if any
-                self._confirmChange(self.handle, [ev.data.fieldName], ev)
+                self._confirmChange(recordID, [ev.data.fieldName], ev)
                     .always(ev.data.onSuccess);
             })
             .fail(ev.data.onFailure);

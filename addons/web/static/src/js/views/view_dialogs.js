@@ -254,6 +254,7 @@ var SelectCreateDialog = ViewDialog.extend({
             }
         },
         selection_changed: function (event) {
+            event.stopPropagation();
             this.$footer.find(".o_select_button").prop('disabled', !event.data.selection.length);
         },
         search: function (event) {
@@ -262,6 +263,7 @@ var SelectCreateDialog = ViewDialog.extend({
             var searchData = this._process_search_data(d.domains, d.contexts, d.groupbys);
             this.list_controller.reload(searchData);
         },
+        get_controller_context: '_onGetControllerContext',
     }),
 
     /**
@@ -417,6 +419,24 @@ var SelectCreateDialog = ViewDialog.extend({
         })).open();
         dialog.on('closed', this, this.close);
         return dialog;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles a context request: provides to the caller the context of the
+     * list controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested context
+     */
+    _onGetControllerContext: function (ev) {
+        ev.stopPropagation();
+        var context = this.list_controller.getContext();
+        ev.data.callback(context);
     },
 });
 

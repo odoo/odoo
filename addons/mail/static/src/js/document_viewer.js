@@ -17,6 +17,7 @@ var DocumentViewer = Widget.extend({
         'click .o_viewer_video': '_onVideoClicked',
         'click .move_next': '_onNext',
         'click .move_previous': '_onPrevious',
+        'click .o_rotate': '_onRotate',
         'click .o_zoom_in': '_onZoomIn',
         'click .o_zoom_out': '_onZoomOut',
         'click .o_close_btn, .o_viewer_img_wrapper': '_onClose',
@@ -104,6 +105,30 @@ var DocumentViewer = Widget.extend({
         this._reset();
     },
     /**
+     * Get CSS transform property based on scale and angle
+     *
+     * @private
+     * @param {float} scale
+     * @param {float} angle
+     */
+    _getTransform: function(scale, angle) {
+        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)'
+    },
+    /**
+     * Rotate image clockwise by provided angle
+     *
+     * @private
+     * @param {float} angle
+     */
+    _rotate: function (angle) {
+        this._reset();
+        var new_angle = (this.angle || 0) + angle;
+        this.$('.o_viewer_img').css('transform', this._getTransform(this.scale, new_angle));
+        this.$('.o_viewer_img').css('max-width', new_angle % 180 !== 0 ? $(document).height() : '100%');
+        this.$('.o_viewer_img').css('max-height', new_angle % 180 !== 0 ? $(document).width() : '100%');
+        this.angle = new_angle;
+    },
+    /**
      * Zoom in/out image by provided scale
      *
      * @private
@@ -111,7 +136,7 @@ var DocumentViewer = Widget.extend({
      */
     _zoom: function (scale) {
         if (scale > 0.5) {
-            this.$('.o_viewer_img').css('transform', 'scale3d(' + scale + ', ' + scale + ', 1)');
+            this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
         }
     },
@@ -279,6 +304,14 @@ var DocumentViewer = Widget.extend({
         } else {
             videoElement.pause();
         }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onRotate: function (e) {
+        e.preventDefault();
+        this._rotate(90);
     },
     /**
      * @private

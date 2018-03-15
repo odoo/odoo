@@ -85,11 +85,11 @@ options.registry["width-x"] = options.Class.extend({
 });
 
 options.registry.table_item = options.Class.extend({
-    onClone: function () {
+    onClone: function (options) {
         this._super.apply(this, arguments);
 
         // If we cloned a td or th element...
-        if (this.$target.is("td, th")) {
+        if (options.isCurrent && this.$target.is("td, th")) {
             // ... and that the td or th element was alone on its row ...
             if (this.$target.siblings().length === 1) {
                 var $tr = this.$target.parent();
@@ -323,20 +323,20 @@ snippets_editor.Class.include({
             $body.removeClass(all_classes).addClass(theme_params.className);
 
             var $old_layout = $editable_area.find(".o_layout");
-            // This wrapper structure is the only way to have a responsive and
-            // centered fixed-width content column on all mail clients
             var $new_wrapper, $new_wrapper_content;
 
             if (theme_params.nowrap) {
                 $new_wrapper = $new_wrapper_content = $("<div/>", {"class": "oe_structure"});
             }
             else {
+                // This wrapper structure is the only way to have a responsive and
+                // centered fixed-width content column on all mail clients
                 $new_wrapper = $('<table/>', {class: 'o_mail_wrapper'});
-                $new_wrapper_content = $("<td/>", {class: 'o_mail_no_resize o_mail_wrapper_td oe_structure'});
+                $new_wrapper_content = $("<td/>", {class: 'o_mail_no_resize o_mail_no_colorpicker o_mail_wrapper_td oe_structure'});
                 $new_wrapper.append($('<tr/>').append(
-                    $("<td/>", {class: 'o_mail_no_resize'}),
+                    $("<td/>", {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'}),
                     $new_wrapper_content,
-                    $("<td/>", {class: 'o_mail_no_resize'})
+                    $("<td/>", {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'})
                 ));
             }
             var $new_layout = $("<div/>", {"class": "o_layout " + theme_params.className}).append($new_wrapper);

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Eloïse Stilmant <est@odoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Quentin THEURET <odoo@kerpeo.com>, 2017
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
@@ -13,14 +13,16 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Clo <clo@odoo.com>, 2017
 # fr rev <e2ffr04@hotmail.com>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Florian Hatat, 2017
+# e2f <projects@e2f.com>, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2017\n"
+"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +120,34 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"\n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+"\n"
+"\n"
+"Cher/chère ${object.name},\n"
+" \n"
+" Vous avez été invité(e) à vous connecter à « ${object.company_id.name} » pour accéder à vos documents sur Odoo.\n"
+" \n"
+" \n"
+" Pour accepter l'invitation, cliquez sur le lien suivant :\n"
+" \n"
+" \n"
+" Accepter l'invitation pour « ${object.company_id.name} »\n"
+" \n"
+" Cordialement,\n"
+"\n"
+"\n"
+" ${user.signature | safe}\n"
+" \n"
+" Envoyé par ${user.company_id.name} à l'aide d'Odoo\\<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td></tr></tbody></table></div>n \n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\"><p></p><p></p><p></p><div style=\"text-align: center; margin-top: 16px;\"><a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\"></a></div><p></p></div><div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\"><p style=\"font-size: 11px; margin-top: 10px;\"><strong><a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"></a></strong></p></div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -161,6 +191,39 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+" <table cellpadding=\"0\" cellspacing=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+" <tbody><tr>\n"
+" <td style=\"padding:10px 10px 10px 5px;font-size: 12px\" valign=\"center\" width=\"200\">\n"
+" <img alt=\"${user.company_id.name}\" src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\"/>\n"
+"</td> \n"
+"</tr></tbody> \n"
+"</table> \n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+" <p>Cher/chère ${object.name},</p><p>\n"
+" \n"
+" Votre compte a été créé ! \n"
+"</p> \n"
+" <p>\n"
+" Votre identifiant : ${object.email}\n"
+" <br/>\n"
+" Votre mot de passe : ${ctx['password']}\n"
+"</p> <p>\n"
+" \n"
+" Pour accéder à votre compte, vous pouvez utiliser le lien suivant :\n"
+"</p> <div style=\"text-align: center; margin-top: 16px;\">\n"
+" \n"
+" <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Accéder à Mon compte</a>\n"
+"</div> \n"
+" <p>Cordialement,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+" ${user.signature | safe}\n"
+" <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+" <strong>Envoyé par ${user.company_id.name} à l'aide d'<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"</p> \n"
+"</div>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -183,7 +246,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "Vous avez déjà un compte ?"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:78
@@ -240,7 +303,7 @@ msgstr "Contact"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Copy access rights from"
-msgstr ""
+msgstr "Copier les droits d'accès de"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:55
@@ -257,7 +320,7 @@ msgstr "Impossible de réinitialiser votre mot de passe"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Compte client"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -267,7 +330,7 @@ msgstr "Droits d'accès par défaut"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Vous n'avez pas de compte ?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
@@ -314,7 +377,7 @@ msgstr "Jamais connecté"
 #: code:addons/auth_signup/controllers/main.py:73
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "Aucun identifiant fourni."
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -340,7 +403,7 @@ msgstr "Réinitialisation du mot de passe"
 #: code:addons/auth_signup/controllers/main.py:121
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "Les mots de passe ne correspondent pas, saisissez-les de nouveau."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -404,19 +467,19 @@ msgstr "Url d'authentification"
 #: code:addons/auth_signup/models/res_users.py:88
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "Les utilisateurs non invités ne sont pas autorisés à s'inscrire"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:146
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "Le jeton d'inscription « %s » n'est plus valide"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:142
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "Le jeton d'inscription « %s » n'est pas valide"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -433,7 +496,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:119
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "Le formulaire n'est pas correctement rempli."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -443,7 +506,7 @@ msgstr "Utilisateurs"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "Bienvenue sur ${object.company_id.name} !"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

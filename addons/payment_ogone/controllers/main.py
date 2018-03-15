@@ -2,6 +2,7 @@
 import logging
 import pprint
 import werkzeug
+from werkzeug.urls import url_unquote_plus
 
 from odoo import http
 from odoo.http import request
@@ -26,7 +27,7 @@ class OgoneController(http.Controller):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
-        return werkzeug.utils.redirect(post.pop('return_url', '/'))
+        return werkzeug.utils.redirect(url_unquote_plus(post.pop('return_url', '/')))
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json(self, **kwargs):

@@ -5,9 +5,9 @@
 # Translators:
 # Morten Schou <ms@msteknik.dk>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
+# Martin Trigaux, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Jarnhold Nattestad <nattestads@gmail.com>, 2017
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
 # Jesper Carstensen <info@danodoo.dk>, 2017
@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: JonathanStein <jstein@image.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
@@ -110,12 +110,6 @@ msgstr "%s (Kopi)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopi)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1253,6 +1247,11 @@ msgstr "Der kan indstilles en advarsel på en partner (konto)"
 #, python-format
 msgid "Account"
 msgstr "Konto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
+msgid "Account Accountant"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -4045,11 +4044,11 @@ msgid ""
 msgstr ""
 "Kære Kunde\n"
 "\n"
-"Vores registreringer viser, at nogle betalinger på din konto stadig er ubetalte. Find venligst detaljer nedenfor.\n"
+"Ifølge vores bogholderi kan vi se, at der er en forfaldne saldo på din konto. Find venligst detaljer nedenfor.\n"
 "Hvis beløbet allerede er betalt, bedes du se bort fra denne meddelelse. Ellers kan du sende os det samlede beløb angivet nedenfor.\n"
 "Hvis du har spørgsmål vedrørende din konto, bedes du kontakte os\n"
 "\n"
-"Tak på forhånd for dit samarbejde\n"
+"På forhånd tak\n"
 "Med venlig hilsen"
 
 #. module: account
@@ -4987,7 +4986,7 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Fra denne rapport kan du få et overblik over det beløb, der faktureres fra "
+"Fra denne rapport kan du få en oversigt over det beløb, der faktureres fra "
 "dine leverandører. Søgeværktøjet kan også bruges til at tilpasse dine "
 "faktura-rapporter og så matche denne analyse til dine behov."
 
@@ -4998,7 +4997,7 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Fra denne rapport kan du få et overblik over det beløb, der faktureres til "
+"Fra denne rapport kan du få en oversigt over det beløb, der faktureres til "
 "dine kunder. Søgeværktøjet kan også bruges til at tilpasse dine faktura-"
 "rapporter og så matche denne analyse til dine behov."
 
@@ -7094,14 +7093,6 @@ msgid "No detail"
 msgstr "Ingen detaljer"
 
 #. module: account
-#: code:addons/account/models/company.py:274
-#, python-format
-msgid ""
-"No miscellaneous journal could be found. Please create one before "
-"proceeding."
-msgstr "Ingen diverse journal fundet. Opret venligst en før du fortsætter."
-
-#. module: account
 #: code:addons/account/models/account.py:116
 #, python-format
 msgid "No opening move defined !"
@@ -8055,6 +8046,14 @@ msgid "Please define sequence on the journal related to this invoice."
 msgstr "Angiv rækkefølge på journalen i forbindelse med denne faktura."
 
 #. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
 msgstr "Plus bank"
@@ -8181,6 +8180,7 @@ msgid "Print checks to pay your vendors"
 msgstr "Print checks til betaling af dine leverandører"
 
 #. module: account
+#: model:ir.model,name:account.model_product_product
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id
@@ -11594,6 +11594,13 @@ msgstr ""
 #: code:addons/account/models/account.py:508
 #, python-format
 msgid "You cannot empty the bank account once set."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:522
+#, python-format
+msgid ""
+"The partners of the journal's company and the related bank account mismatch."
 msgstr ""
 
 #. module: account

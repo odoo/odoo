@@ -58,10 +58,14 @@ class StockQuant(models.Model):
         action = self.env.ref('stock.stock_move_line_action').read()[0]
         action['domain'] = [
             ('product_id', '=', self.product_id.id),
-            '|', ('location_id', '=', self.location_id.id),
-            ('location_dest_id', '=', self.location_id.id),
+            '|',
+                ('location_id', '=', self.location_id.id),
+                ('location_dest_id', '=', self.location_id.id),
             ('lot_id', '=', self.lot_id.id),
-            ('package_id', '=', self.package_id.id)]
+            '|',
+                ('package_id', '=', self.package_id.id),
+                ('result_package_id', '=', self.package_id.id),
+        ]
         return action
 
     @api.constrains('product_id')
@@ -440,7 +444,7 @@ class QuantPackage(models.Model):
 
     def unpack(self):
         for package in self:
-            move_lines_to_remove = self.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
+            move_lines_to_remove = package.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
             if move_lines_to_remove:
                 move_lines_to_remove.write({'result_package_id': False})
             else:
