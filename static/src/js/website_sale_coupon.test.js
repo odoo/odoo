@@ -45,6 +45,10 @@ tour.register('shop_sale_coupon', {
             trigger: "#customize-menu a:contains(Promo Code)",
         },
         {
+            content: "click on 'I have a promo code'",
+            trigger: 'a.show_coupon',
+        },
+        {
             content: "insert promo code '10pc'",
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
