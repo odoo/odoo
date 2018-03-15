@@ -167,7 +167,7 @@ class TestAdvMailPerformance(TransactionCase):
                 'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
             })
 
-        with self.assertQueryCount(admin=60, emp=88):  # test_mail only: 59 - 87
+        with self.assertQueryCount(admin=60, emp=89):  # test_mail only: 59 - 87
             activity.action_feedback(feedback='Zizisse Done !')
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
