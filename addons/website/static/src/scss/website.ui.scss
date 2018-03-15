@@ -71,7 +71,8 @@ body.o_connected_user {
     position: relative;
     display: inline-block;
     opacity: $opacity;
-    @include square($size);
+    width: $size;
+    height: $size;
 
     &:hover, &:focus {
         outline: none;
