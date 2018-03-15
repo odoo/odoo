@@ -820,6 +820,8 @@ class AccountMoveLine(models.Model):
                     account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
             rec_move_ids += account_move_line.matched_debit_ids
             rec_move_ids += account_move_line.matched_credit_ids
+        # Reset related bank statement to `open` while unreconciling move lines
+        self.mapped('move_id').mapped('line_ids').mapped('statement_id').filtered(lambda st: st.state != 'open').write({'state': 'open'})
         return rec_move_ids.unlink()
 
     ####################################################
