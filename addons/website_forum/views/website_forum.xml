@@ -145,52 +145,42 @@
                             </div>
                         </t>
                     </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Keep Informed</h3>
-                        </div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <h3 class="card-header">Keep Informed</h3>
+                        <div class="card-body">
                             <t t-call="website_mail.follow">
                                 <t t-set="email" t-value="user.email"/>
                                 <t t-set="object" t-value="forum"/>
                             </t>
                         </div>
                     </div>
-                    <div class="panel panel-default" id="about_forum">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">About This Community</h3>
-                        </div>
-                        <div class="panel-body">
+                    <div class="card" id="about_forum">
+                        <h3 class="card-header">About This Community</h3>
+                        <div class="card-body">
                             <span t-field="forum.description"/>
                             <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
                             <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="fa fa-arrow-right"> Back to <span t-field="forum.name"/></a>
                         </div>
                     </div>
-                    <div class="panel panel-default" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Moderation Tools</h3>
-                        </div>
-                        <div class="panel-body text-center">
+                    <div class="card" id="moderation_tools" t-if="user.karma>=forum.karma_moderate">
+                        <h3 class="card-header">Moderation Tools</h3>
+                        <div class="card-body text-center">
                             <a t-attf-href="/forum/#{slug(forum)}/validation_queue"><strong><t t-esc="forum.count_posts_waiting_validation"/></strong> waiting for validation</a>
                             <hr style="margin-top:4px;margin-bottom:0;padding-bottom:4px;" />
                             <a t-attf-href="/forum/#{slug(forum)}/flagged_queue"><strong id="count_flagged_posts"><t t-esc="forum.count_flagged_posts"/></strong> post<t t-if="forum.count_flagged_posts&gt;1">s</t> flagged</a>
                         </div>
                     </div>
                     <div t-if="header.get('question_data')">
-                        <div class="panel panel-default">
-                            <div class="panel-heading text-center">
-                                <h3 class="panel-title">Question tools</h3>
-                            </div>
-                            <div class="panel-body text-center">
+                        <div class="card">
+                            <h3 class="card-header text-center">Question tools</h3>
+                            <div class="card-body text-center">
                                 <t t-call="website_mail.follow"><t t-set="object" t-value="question"/></t>
                                 <div class="mt8">
                                     <strong><t t-raw="len(question.message_follower_ids)"/></strong> follower(s)
                                 </div>
                             </div>
-                            <div class="panel-heading text-center">
-                                <h3 class="panel-title ">Stats</h3>
-                            </div>
-                            <div class="panel-body">
+                            <h3 class="card-header text-center">Stats</h3>
+                            <div class="card-body">
                                 <table class="table">
                                     <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-options='{"format":"short"}'/></strong></td></tr></thead>
                                     <tr><td> Seen: <strong><t t-raw="question.views"/></strong>
@@ -384,7 +374,7 @@
         <div class="container">
             <h1 class="mb32">Our forums</h1>
             <div class="row">
-                <div t-if="not forums" class="well">No forum post yet.</div>
+                <div t-if="not forums" class="alert alert-info">No forum post yet.</div>
                 <div t-foreach="forums" t-as="forum" class="col-md-3 text-center mb32">
                     <a t-attf-href="/forum/#{ slug(forum) }">
                         <div class="fa fa-5x fa-comment mb16" role="img" aria-label="Forum" title="Forum"/>
@@ -1054,19 +1044,21 @@
 
 <!-- Template for user tooltip  -->
 <template id="forum_user_tooltip">
-    <div class="o_forum_user_bio text-left panel panel-body">
-        <a t-att-href="user_profile_url">
-            <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
-        </a>
-        <div class="o_forum_tooltip_header">
-            <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
-                t-field="answer.create_uid"
-                t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
-                style="display: inline-block;"/>
-            </h4>
-            <span t-field="answer.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
+    <div class="o_forum_user_bio text-left card">
+        <div class="card-body">
+            <a t-att-href="user_profile_url">
+                <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
+            </a>
+            <div class="o_forum_tooltip_header">
+                <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
+                    t-field="answer.create_uid"
+                    t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
+                    style="display: inline-block;"/>
+                </h4>
+                <span t-field="answer.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
+            </div>
+            <div t-field="answer.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
         </div>
-        <div t-field="answer.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
     </div>
 </template>
 
@@ -1144,7 +1136,7 @@
                         t-attf-class="label #{'label-primary' if tag.message_is_follower else 'label-default'}">
                     <span t-field="tag.name"/>
                 </a>
-                <div t-attf-class="well o_forum_tag_follow_box">
+                <div t-attf-class="o_forum_tag_follow_box">
                     <div class="row input-group">
                         <span>
                             <t t-call="website_mail.follow">
@@ -1214,7 +1206,7 @@
         </div>
         <div t-foreach="posts_ids" t-as="question" class="mb16 row post_to_validate" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
             <div class="col-md-2 o_js_validation_queue">
-                <div class="panel panel-default text-center" style="background-color:#eee;margin:0;padding:5px 12px 5px 12px;">
+                <div class="card text-center" style="background-color:#eee;margin:0;padding:5px 12px 5px 12px;">
                     <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" style="padding-right:8px;" title="Validate" aria-label="Validate"><i class="fa fa-check fa-2x"/></a>
                     <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" title="Refuse" aria-label="Refuse"><i class="fa fa-times fa-2x"/></a>
                     <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive"><i class="fa fa-times fa-2x"/></a>
@@ -1414,7 +1406,7 @@
                     </td>
                 </tr>
                 </table>
-                <div class="well well-sm">
+                <div>
                     <div><span t-field="user.partner_id.website_description" class="oe_no_empty"/></div>
                 </div>
                 <t t-if="uid == user.id">

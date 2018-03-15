@@ -38,7 +38,7 @@
         <t t-if="not quotations">
             <p>There are currently no quotations for your account.</p>
         </t>
-        <div t-if="quotations" class="panel panel-default">
+        <div t-if="quotations" class="card">
             <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
                 <thead>
                   <tr class="active">
@@ -84,7 +84,7 @@
         <t t-if="not orders">
             <p>There are currently no orders for your account.</p>
         </t>
-        <div t-if="orders" class="panel panel-default">
+        <div t-if="orders" class="card">
             <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
                 <thead>
                   <tr class="active">
@@ -129,8 +129,8 @@
         <t t-set="invoices_amount" t-value="sum(i.amount_total for i in invoices)"/>
         <div id="optional_placeholder"></div>
         <div class="container">
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="card">
+            <div class="card-header">
               <div class="row">
                 <div class="col-lg-6 col-9 col-md-9">
                     <h4>
@@ -163,7 +163,7 @@
                 </div>
               </div>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
               <t t-if="error or warning" t-call="sale.portal_order_error"/>
               <t t-if="success and (not error and not warning)" t-call="sale.portal_order_success"/>
               <div class="mb8">
@@ -357,7 +357,7 @@
                 </div>
               </div>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <div class="row" t-if="order.state == 'sent' and portal_confirmation == 'sign'" id="portal_sign">
                     <div class="offset-lg-3 col-lg-6">
                         <h4>Accept &amp; Sign</h4>

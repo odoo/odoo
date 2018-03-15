@@ -52,7 +52,7 @@
             <div t-if="deliveries" class="col-lg-12" id="delivery_carrier">
                 <t t-set="delivery_nb" t-value="len(deliveries)"/>
                 <h3 t-if="delivery_nb &gt; 1" class="mb24">Choose a delivery method</h3>
-                <div t-if="delivery_nb &gt; 1" class="panel panel-default" id="delivery_method">
+                <div t-if="delivery_nb &gt; 1" class="card" id="delivery_method">
                     <ul class="list-group">
                     <t t-foreach="deliveries" t-as="delivery">
                         <li class="list-group-item">

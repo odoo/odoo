@@ -177,7 +177,7 @@ odoo.define('website_forum.website_forum', function (require) {
         $(this).parents('.post_to_validate').hide();
         $.get($link.attr('href'))
             .fail(function() {
-                self.parents('.o_js_validation_queue > div').addClass('panel-danger').css('background-color', '#FAA');
+                self.parents('.o_js_validation_queue > div').addClass('bg-danger text-white').css('background-color', '#FAA');
                 self.parents('.post_to_validate').show();
             })
             .done(function() {

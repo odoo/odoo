@@ -758,7 +758,7 @@ options.registry.collapse = options.Class.extend({
      */
     onClone: function () {
         this.$target.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
-        this.$target.find('.panel-collapse').removeAttr('id');
+        this.$target.find('.collapse').removeAttr('id');
         this._createIDs();
     },
     /**
@@ -766,9 +766,9 @@ options.registry.collapse = options.Class.extend({
      */
     onMove: function () {
         this._createIDs();
-        var $panel = this.$target.find('.panel-collapse').removeData('bs.collapse');
+        var $panel = this.$target.find('.collapse').removeData('bs.collapse');
         if ($panel.attr('aria-expanded') === 'true') {
-            $panel.closest('.panel-group').find('.panel-collapse[aria-expanded="true"]')
+            $panel.closest('.accordion').find('.collapse[aria-expanded="true"]')
                 .filter(function () {return this !== $panel[0];})
                 .collapse('hide')
                 .one('hidden.bs.collapse', function () {
@@ -791,7 +791,7 @@ options.registry.collapse = options.Class.extend({
         var $tab = this.$target.find('[data-toggle="collapse"]');
 
         // link to the parent group
-        var $tablist = this.$target.closest('.panel-group');
+        var $tablist = this.$target.closest('.accordion');
         var tablist_id = $tablist.attr('id');
         if (!tablist_id) {
             tablist_id = 'myCollapse' + time;

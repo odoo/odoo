@@ -235,7 +235,7 @@
                             </div>
                         </div>
                     </section>
-                    <div t-if="track.partner_id" class="well mt32">
+                    <div t-if="track.partner_id" class="mt32">
                         <div class="row">
                             <div class="col-md-2">
                                 <span t-field="track.partner_id.sudo().image_medium"
@@ -251,11 +251,9 @@
                     </div>
                 </div>
                 <div class="col-lg-4" id="right_column">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4>Practical Info</h4>
-                        </div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <h4 class="card-header">Practical Info</h4>
+                        <div class="card-body">
                             <b>Date</b><br/>
                             <span t-field="track.date" t-options='{"hide_seconds":"True"}'/>
                             <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
@@ -267,11 +265,9 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default" t-if="False">
-                        <div class="panel-heading">
-                            <h4>Documents</h4>
-                        </div>
-                        <div class="panel-body">
+                    <div class="card" t-if="False">
+                        <h4 class="card-header">Documents</h4>
+                        <div class="card-body">
                             Put here the list of documents, like slides of
                             the presentations. Remove the above t-if when
                             it's implemented.
@@ -285,11 +281,9 @@
 
 <template id="event_track_social" name="Social Widgets" inherit_id="website_event_track.track_view" active="False" customize_show="True">
     <xpath expr="//div[@id='right_column']" position="inside">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Social Stream</h4>
-            </div>
-            <div class="panel-body">
+        <div class="card">
+            <h4 class="card-header">Social Stream</h4>
+            <div class="card-body">
                 <t t-call="website_mail.follow"><t t-set="object" t-value="event"/></t>
                 <div t-if="event.twitter_hashtag" class="mt16">
                     <p><strong>Participate on Twitter</strong></p>
@@ -404,11 +398,9 @@
                     </section>
                     <div class="oe_structure"/>
                 </div><div class="col-lg-3 offset-lg-1">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4>Talks Types</h4>
-                        </div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <h4 class="card-header">Talks Types</h4>
+                        <div class="card-body">
                             <ul class="list-unstyled">
                                 <li>
                                     <strong>Regular Talks</strong>. These are standard talks with slides,
@@ -422,11 +414,9 @@
                     </div>
 
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4>Submission Agreement</h4>
-                        </div>
-                        <div class="panel-body">
+                    <div class="card">
+                        <h4 class="card-header">Submission Agreement</h4>
+                        <div class="card-body">
                             <p>
                             We require speakers to accept an agreement in which they commit to:
                             </p>

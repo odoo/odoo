@@ -527,7 +527,7 @@
                 <h3>Alternative Products:</h3>
                 <div class="row mt16" style="">
                     <t t-foreach="product.alternative_product_ids" t-as="alt_product">
-                        <div class="col-lg-2 thumbnail" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
+                        <div class="col-lg-2" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
                             <div class="mt16 text-center" style="height: 100%;">
                                 <div t-field="alt_product.image_small" t-options="{'widget': 'image', 'class': 'img-rounded shadow o_alternative_product' }" />
                                 <h5>
@@ -808,7 +808,7 @@
     </template>
 
     <template id="cart_lines" name="Shopping Cart Lines">
-        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines well well-lg">
+        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
           Your cart is empty!
         </div>
         <table class="mb16 table table-striped table-condensed js_cart_lines" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
@@ -930,7 +930,7 @@
     </template>
 
     <template id="cart_popover" name="Cart Popover">
-        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
+        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
           Your cart is empty!
         </div>
         <t t-if="website_sale_order and website_sale_order.website_order_line">
@@ -1097,12 +1097,12 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a role="button" t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
-            <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
-                <div class='panel-body' style='min-height: 130px;'>
+            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+            <div t-attf-class="card #{selected and 'border_primary' or 'js_change_shipping'}">
+                <div class='card-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
-                <div class='panel-footer' t-if='not readonly'>
+                <div class='card-footer' t-if='not readonly'>
                     <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
                         <a role="button" class="btn btn-block btn-primary">
                             <i class='fa fa-check'></i> Ship to this address
@@ -1231,7 +1231,7 @@
                                     <div class="clearfix" />
                                     <t t-if="mode == ('new', 'billing') and not only_services">
                                         <div class="col-lg-12">
-                                            <div class="well checkbox">
+                                            <div class="checkbox">
                                               <label>
                                                 <input type="checkbox" id='shipping_use_same'  name='use_same' value="1" checked='checked'/>Ship to the same address
                                                 <span class='ship_to_other text-muted' style="display: none">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>
@@ -1295,10 +1295,10 @@
                         <div class="col-xl-8 order-xl-1 col-md-12 col-12 oe_cart">
                          <div class="row">
                             <div class='col-lg-12' id="shipping_and_billing">
-                                <div class="panel panel-default">
-                                  <div class="panel-headisng"></div>
-                                  <div class="panel-body">
-                                      <a class='pull-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
+                                <div class="card">
+                                  <div class="card-header"></div>
+                                  <div class="card-body">
+                                    <a class='pull-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
                                     <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
@@ -1357,8 +1357,8 @@
 
 
     <template id="short_cart_summary" name="Short Cart right column">
-        <div class="panel panel-default js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
-            <div class="panel-body row">
+        <div class="card js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
+            <div class="card-body row">
                 <h4 class='col-lg-12 d-none d-xl-block'>Order Total</h4>
                 <hr class='d-none d-xl-block mt4 mb4'/>
                 <div class='col-lg-12'>
@@ -1374,14 +1374,14 @@
     </template>
 
     <template id="cart_summary" name="Cart right column">
-        <div class="panel panel-default">
-            <div class="panel-body row">
+        <div class="card">
+            <div class="card-body row">
                 <div class='toggle_summary col-lg-12 d-xl-none'>
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                     <span class='fa fa-chevron-down fa-border pull-right' role="img" aria-label="Details" title="Details"></span>
                 </div>
 
-                <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
+                <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
                   Your cart is empty!
                 </div>
                 <div class='toggle_summary_div d-none d-xl-block'>
@@ -1481,9 +1481,9 @@
                                     </tbody>
                                 </table>
                                 <t t-call="website_sale.payment_confirmation_status" />
-                                <div class="panel panel-default">
-                                  <div class="panel-headisng"></div>
-                                  <div class="panel-body">
+                                <div class="card">
+                                  <div class="card-header"></div>
+                                  <div class="card-body">
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
                                     <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
@@ -1559,16 +1559,16 @@
     <template id="payment_confirmation_status">
         <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
-            <div t-att-class="'panel %s' % (
-                    (payment_tx_id.state == 'pending' and 'panel-info') or
-                    (payment_tx_id.state == 'done' and 'panel-success') or
-                    (payment_tx_id.state == 'authorized' and 'panel-success') or
-                    'panel-danger')">
+            <div t-att-class="'card %s' % (
+                    (payment_tx_id.state == 'pending' and 'bg-info text-white') or
+                    (payment_tx_id.state == 'done' and 'bg-success text-white') or
+                    (payment_tx_id.state == 'authorized' and 'bg-success text-white') or
+                    'bg-danger text-white')">
                 <a role="button" groups="base.group_system" class="btn pull-right" target="_blank" aria-label="Edit" title="Edit"
                         t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
                     <i class="fa fa-pencil"></i>
                 </a>
-                <div class="panel-heading">
+                <div class="card-header">
                     <t t-if="payment_tx_id.state == 'pending'">
                         <t t-raw="payment_tx_id.acquirer_id.pending_msg"/>
                     </t>
@@ -1582,7 +1582,7 @@
                         Your payment has been authorized.
                     </t>
                 </div>
-                <div class="panel-body" t-if="payment_tx_id.acquirer_id.post_msg">
+                <div class="card-body" t-if="payment_tx_id.acquirer_id.post_msg">
                     <t t-raw="payment_tx_id.acquirer_id.post_msg" />
                 </div>
             </div>
@@ -1630,16 +1630,18 @@
                     <div class="row">
                       <div class="col-lg-12">
                         <h1 class="text-center">Terms &amp;amp; Conditions</h1>
-                        <div class="well s_well clearfix">
-                            <ul>
-                                <li>The <b>Intellectual Property</b> disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws.</li>
-                                <li>A <b>Termination</b> clause will inform that users’ accounts on your website and mobile app or users’ access to your website and mobile (if users can’t have an account with you) can be terminated in case of abuses or at your sole discretion.</li>
-                                <li>A <b>Governing Law</b> will inform users which laws govern the agreement. This should the country in which your company is headquartered or the country from which you operate your web site and mobile app.</li>
-                                <li>A <b>Links To Other Web Sites</b> clause will inform users that you are not responsible for any third party web sites that you link to. This kind of clause will generally inform users that they are responsible for reading and agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies of these third parties.</li>
-                                <li>If your website or mobile apps allows users to create content and make that content public to other users, a <b>Content</b> section will inform users that they own the rights to the content they have created.<br/>The “Content” clause usually mentions that users must give you (the website or mobile app developer) a license so that you can share this content on your website/mobile app and to make it available to other users.<br/>Because the content created by users is public to other users, a DMCA notice clause (or Copyright Infringement ) section is helpful to inform users and copyright authors that, if any content is found to be a copyright infringement, you will respond to any DMCA take down notices received and you will take down the content.</li>
-                                <li>A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to use your service, they’re also agreeing to not do certain things. This can be part of a very long and thorough list in your Terms and Conditions agreements so as to encompass the most amount of negative uses.</li>
-                           </ul>
-                           <small class="text-muted pull-right">Source: https://termsfeed.com/blog/sample-terms-and-conditions-template</small>
+                        <div class="card s_well clearfix">
+                            <div class="card-body">
+                                <ul>
+                                    <li>The <b>Intellectual Property</b> disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws.</li>
+                                    <li>A <b>Termination</b> clause will inform that users’ accounts on your website and mobile app or users’ access to your website and mobile (if users can’t have an account with you) can be terminated in case of abuses or at your sole discretion.</li>
+                                    <li>A <b>Governing Law</b> will inform users which laws govern the agreement. This should the country in which your company is headquartered or the country from which you operate your web site and mobile app.</li>
+                                    <li>A <b>Links To Other Web Sites</b> clause will inform users that you are not responsible for any third party web sites that you link to. This kind of clause will generally inform users that they are responsible for reading and agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies of these third parties.</li>
+                                    <li>If your website or mobile apps allows users to create content and make that content public to other users, a <b>Content</b> section will inform users that they own the rights to the content they have created.<br/>The “Content” clause usually mentions that users must give you (the website or mobile app developer) a license so that you can share this content on your website/mobile app and to make it available to other users.<br/>Because the content created by users is public to other users, a DMCA notice clause (or Copyright Infringement ) section is helpful to inform users and copyright authors that, if any content is found to be a copyright infringement, you will respond to any DMCA take down notices received and you will take down the content.</li>
+                                    <li>A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to use your service, they’re also agreeing to not do certain things. This can be part of a very long and thorough list in your Terms and Conditions agreements so as to encompass the most amount of negative uses.</li>
+                               </ul>
+                               <small class="text-muted pull-right">Source: https://termsfeed.com/blog/sample-terms-and-conditions-template</small>
+                           </div>
                         </div>
                       </div>
                     </div>
