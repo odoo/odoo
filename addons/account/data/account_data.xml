@@ -150,6 +150,16 @@
             <field eval="False" name="company_id"/>
             <field name="padding">4</field>
         </record>
+        <record id="sequence_account_bank_statement" model="ir.sequence">
+            <field name="name">Account bank statement sequence</field>
+            <field name="code">account.bank.statement</field>
+            <field name="prefix">SMT/%(range_year)s/</field>
+            <field name="number_next" eval="1"/>
+            <field name="number_increment" eval="1"/>
+            <field name="use_date_range" eval="True"/>
+            <field name="company_id" eval="False"/>
+            <field name="padding">4</field>
+        </record>
 
         <!-- Account Tax Group -->
         <record id="tax_group_taxes" model="account.tax.group">

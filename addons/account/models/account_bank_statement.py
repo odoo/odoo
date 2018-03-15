@@ -159,6 +159,23 @@ class AccountBankStatement(models.Model):
     cashbox_end_id = fields.Many2one('account.bank.statement.cashbox', string="Ending Cashbox")
     is_difference_zero = fields.Boolean(compute='_is_difference_zero', string='Is zero', help="Check if difference is zero.")
 
+    @api.model
+    def create(self, vals):
+        if vals.get('journal_type') == 'bank' and not vals.get('name'):
+            vals['name'] = self._get_sequence(vals.get('date'))
+        return super(AccountBankStatement, self).create(vals)
+
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        res = super(AccountBankStatement, self).copy(default=default)
+        if res.journal_type == 'bank' and not res.name:
+            res.name = self._get_sequence(res.date)
+        return res
+
+    def _get_sequence(self, date):
+        return self.env['ir.sequence'].with_context(ir_sequence_date=date).next_by_code('account.bank.statement')
+
     @api.onchange('journal_id')
     def onchange_journal_id(self):
         self._set_opening_balance(self.journal_id.id)
