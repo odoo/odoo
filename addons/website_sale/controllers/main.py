@@ -810,7 +810,7 @@ class WebsiteSale(http.Controller):
             order = request.website.sale_get_order()
 
         # Ensure there is something to proceed
-        if order and not order.order_line:
+        if not order or (order and not order.order_line):
             return False
 
         assert order.partner_id.id != request.website.partner_id.id

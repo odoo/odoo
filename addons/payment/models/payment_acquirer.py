@@ -760,20 +760,26 @@ class PaymentTransaction(models.Model):
             many_list = self.resolve_2many_commands(many_field, vals[many_field], fields=[ref_field])
             return ','.join(dic[ref_field] for dic in many_list)
 
-        separator = '-'
         reference = ''
         if vals and vals.get('invoice_ids'):
             reference = as_reference('invoice_ids', 'number')
         elif vals and vals.get('sale_order_ids'):
             reference = as_reference('sale_order_ids', 'name')
-        reference += separator
-        last_reference = self.search([('reference', 'ilike', reference + '%')], order='reference DESC', limit=1)
-        if last_reference:
-            suffix = int(last_reference.reference.split(separator)[-1])
-            suffix += 1
+
+        # Fetch the last reference
+        # E.g. If the last reference is SO42-5, this query will return '-5'
+        self._cr.execute('''
+            SELECT CAST(SUBSTRING(reference FROM '-\d+') AS INTEGER) AS suffix
+            FROM payment_transaction WHERE reference LIKE %s ORDER BY suffix
+        ''', [reference + '%'])
+        query_res = self._cr.fetchone()
+
+        if query_res:
+            # Increment the last reference by one
+            reference += '-%s' % (-query_res[0] + 1)
         else:
-            suffix = 1
-        reference += str(suffix)
+            # Start a new indexing from 1
+            reference += '-1'
         return reference
 
     @api.model

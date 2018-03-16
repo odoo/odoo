@@ -219,8 +219,6 @@
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
                     <field name="authorize_implemented" invisible="1"/>
-                    <field name="capture" invisible="1"/>
-                    <field name="pending" invisible="1"/>
                     <sheet>
                         <div class="oe_title">
                             <h1><field name="reference"/></h1>
@@ -272,6 +270,8 @@
                                 <field name="payment_token_id" options="{'no_create': True}"
                                        attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                 <field name="acquirer_reference" readonly="1"/>
+                                <field name="capture"/>
+                                <field name="pending"/>
                                 <field name="payment_date"
                                        attrs="{'readonly': [('pending', '=', True)]}"/>
                             </group>

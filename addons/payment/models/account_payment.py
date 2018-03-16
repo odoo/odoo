@@ -38,3 +38,9 @@ class AccountPayment(models.Model):
         if any(not t.capture for t in payment_transaction_ids):
             raise ValidationError(_('Only transactions having the capture status can be voided.'))
         payment_transaction_ids.s2s_void_transaction()
+
+    @api.multi
+    def cancel(self):
+        for rec in self:
+            if rec.payment_transaction_capture:
+                raise ValidationError('The payment %s can\'t be cancelled because the transaction amount can be captured.')
