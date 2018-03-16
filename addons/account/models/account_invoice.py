@@ -412,9 +412,6 @@ class AccountInvoice(models.Model):
             'analytic_tag_ids': line.analytic_tag_ids.ids,
             'invoice_line_tax_ids': invoice_line_tax_ids.ids
         }
-        # account = invoice_line.get_invoice_line_account('in_invoice', line.product_id, line.vendor_line_id.fiscal_position_id, self.env.user.company_id)
-        if line.account_id:
-            data['account_id'] = line.account_id.id
         return data
 
     def _onchange_product_id(self):

@@ -238,7 +238,11 @@
                         <label string="Bill " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}"/>
                         <label string="Credit Note " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}"/>
                         <h1 class="mt0">
-                            <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <div attrs="{'invisible': [('state', '=', 'draft')]}">
+                                <field name="number" class="oe_inline"/>
+                                <span>:</span>
+                                <field name="amount_total" class="oe_inline"/>
+                            </div>
                             <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                                 <field name="sequence_number_next_prefix" class="oe_inline"/>
                                 <field name="sequence_number_next" class="oe_inline"/>
