@@ -243,7 +243,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 12.0)
         self.assertEqual(move1.price_unit, 10.0)
         self.assertEqual(move1.remaining_qty, 9.0)
-        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.value, 120.0)  # move 1 is now 10@10 + 2@10
         self.assertEqual(move1.remaining_value, 90.0)
 
         # account values for move1
@@ -326,7 +326,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.price_unit, 10.0)
         self.assertEqual(move1.remaining_qty, 0)
-        self.assertEqual(move1.value, 100)
+        self.assertEqual(move1.value, 120)
         self.assertEqual(move1.remaining_value, 0)
         self.assertEqual(move2.product_uom_qty, 10.0)
         self.assertEqual(move2.price_unit, 8.0)
@@ -388,7 +388,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.price_unit, 10.0)
         self.assertEqual(move1.remaining_qty, 0)
-        self.assertEqual(move1.value, 100)
+        self.assertEqual(move1.value, 120)
         self.assertEqual(move1.remaining_value, 0)
         self.assertEqual(move2.product_uom_qty, 10.0)
         self.assertEqual(move2.price_unit, 8.0)
@@ -457,7 +457,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.price_unit, 10.0)
         self.assertEqual(move1.remaining_qty, 0)
-        self.assertEqual(move1.value, 100)
+        self.assertEqual(move1.value, 120)
         self.assertEqual(move1.remaining_value, 0)
         self.assertEqual(move2.product_uom_qty, 10.0)
         self.assertEqual(move2.price_unit, 8.0)
@@ -505,7 +505,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.price_unit, 10.0)
         self.assertEqual(move1.remaining_qty, 0)
-        self.assertEqual(move1.value, 100)
+        self.assertEqual(move1.value, 120)
         self.assertEqual(move1.remaining_value, 0)
         self.assertEqual(move2.product_uom_qty, 10.0)
         self.assertEqual(move2.price_unit, 8.0)
@@ -522,7 +522,11 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move4.remaining_value, 0)
         self.assertEqual(move5.product_uom_qty, 20.0)
         self.assertEqual(move5.remaining_qty, 0.0)
-        self.assertEqual(move5.value, -160.0)
+
+        # move5 sent 10@8 and 10@estimated price of 8
+        # the vacuum compensated the 10@8 by 12@10
+        # -(10*8 + 10@12) = -200
+        self.assertEqual(move5.value, -200.0)
         self.assertEqual(move5.remaining_value, 0.0)
         self.assertEqual(move6.product_uom_qty, 10)
         self.assertEqual(move6.price_unit, 12.0)
@@ -553,7 +557,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move6.product_uom_qty, 8)
         self.assertEqual(move6.price_unit, 12)
         self.assertEqual(move6.remaining_qty, -2)
-        self.assertEqual(move6.value, 120)
+        self.assertEqual(move6.value, 96)  # move6 is now 8@12
         self.assertEqual(move6.remaining_value, -24)
 
         # account values for move1
@@ -634,7 +638,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.product_uom_qty, 12)
         self.assertEqual(move1.price_unit, 10.0)
         self.assertEqual(move1.remaining_qty, 0)
-        self.assertEqual(move1.value, 100)
+        self.assertEqual(move1.value, 120)
         self.assertEqual(move1.remaining_value, 0)
         self.assertEqual(move2.product_uom_qty, 10.0)
         self.assertEqual(move2.price_unit, 8.0)
@@ -651,12 +655,12 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move4.remaining_value, 0)
         self.assertEqual(move5.product_uom_qty, 20.0)
         self.assertEqual(move5.remaining_qty, 0.0)
-        self.assertEqual(move5.value, -160.0)
+        self.assertEqual(move5.value, -200.0)
         self.assertEqual(move5.remaining_value, 0.0)
         self.assertEqual(move6.product_uom_qty, 8)
         self.assertEqual(move6.price_unit, 12.0)
         self.assertEqual(move6.remaining_qty, 0.0)
-        self.assertEqual(move6.value, 120)
+        self.assertEqual(move6.value, 90)
         self.assertEqual(move6.remaining_value, 0)
         self.assertEqual(move7.product_uom_qty, 4.0)
         self.assertEqual(move7.price_unit, 15.0)
@@ -681,14 +685,28 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Ending
         # ---------------------------------------------------------------------
+        # check on remaining_qty
         self.assertEqual(self.product1.qty_available, 2)
+        # check on remaining_value
         self.assertEqual(self.product1.stock_value, 30)
+        # check on accounting entries
         self.assertEqual(sum(self._get_stock_input_move_lines().mapped('debit')), 30)
         self.assertEqual(sum(self._get_stock_input_move_lines().mapped('credit')), 380)
         self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 380)
         self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 350)
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('debit')), 320)
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
+        moves = move1 + move2 + move3 + move4 + move5 + move6 + move7
+        # check on value
+        self.assertEqual(sum(moves.mapped('value')), 30)
+        # check on product_qty
+        qty = 0
+        for move in moves:
+            if move._is_in():
+                qty += move.product_qty
+            else:
+                qty -= move.product_qty
+        self.assertEqual(qty, 2)
 
     def test_fifo_perpetual_2(self):
         # http://accountingexplained.com/financial/inventories/fifo-method
@@ -1224,8 +1242,8 @@ class TestStockValuation(TransactionCase):
         self.env['stock.move']._run_fifo_vacuum()
 
         # stock values for move1 and move2
-        self.assertEqual(move1.value, -400.0)
-        self.assertEqual(move1.remaining_value, 200.0)
+        self.assertEqual(move1.value, -680.0)  # 40@15 + 10@8
+        self.assertEqual(move1.remaining_value, -80.0)
         self.assertEqual(move1.remaining_qty, -10.0)
         self.assertEqual(move2.value, 600.0)
         self.assertEqual(move2.remaining_value, 0.0)
@@ -1235,14 +1253,13 @@ class TestStockValuation(TransactionCase):
         valuation_aml = self._get_stock_valuation_move_lines()
         vacuum1_valuation_aml = valuation_aml[-1]
         self.assertEqual(vacuum1_valuation_aml.debit, 0)
-        # 200 was credited more in valuation (we initially credited 400 but the vacuum realized
-        # that 600 was the right value)
-        self.assertEqual(vacuum1_valuation_aml.credit, 200)
+        # 280 was credited more in valuation (we compensated 40 items here, so initially 40 were
+        # valued at 8 -> 320 in credit but now we actually sent 40@15 = 600, so the difference is
+        # 280 more credited)
+        self.assertEqual(vacuum1_valuation_aml.credit, 280)
         output_aml = self._get_stock_output_move_lines()
         vacuum1_output_aml = output_aml[-1]
-        # 200 was debited more in output (we initially debited 400 but the vacuum realized
-        # that 600 was the right value)
-        self.assertEqual(vacuum1_output_aml.debit, 200)
+        self.assertEqual(vacuum1_output_aml.debit, 280)
         self.assertEqual(vacuum1_output_aml.credit, 0)
 
         self.assertTrue(set(move1.mapped('account_move_ids.line_ids').ids) == {move1_valuation_aml.id, move1_output_aml.id, vacuum1_valuation_aml.id, vacuum1_output_aml.id})
@@ -1290,7 +1307,7 @@ class TestStockValuation(TransactionCase):
         self.env['stock.move']._run_fifo_vacuum()
 
         # stock values for move1-3
-        self.assertEqual(move1.value, -400.0)
+        self.assertEqual(move1.value, -850.0)  # 40@15 + 10@25
         self.assertEqual(move1.remaining_value, 0.0)
         self.assertEqual(move1.remaining_qty, 0.0)
         self.assertEqual(move2.value, 600.0)
@@ -1304,14 +1321,11 @@ class TestStockValuation(TransactionCase):
         valuation_aml = self._get_stock_valuation_move_lines()
         vacuum2_valuation_aml = valuation_aml[-1]
         self.assertEqual(vacuum2_valuation_aml.debit, 0)
-        # 250 was credited more in valuation (we initially credited 400+200 but the vacuum realized
-        # that 850 was the right value)
-        self.assertEqual(vacuum2_valuation_aml.credit, 250)
+        # there is still 10@8 to compensate with 10@25 -> 170 to credit more in the valuation account
+        self.assertEqual(vacuum2_valuation_aml.credit, 170)
         output_aml = self._get_stock_output_move_lines()
         vacuum2_output_aml = output_aml[-1]
-        # 250 was debited more in output (we initially debited 400+200 but the vacuum realized
-        # that 850 was the right value)
-        self.assertEqual(vacuum2_output_aml.debit, 250)
+        self.assertEqual(vacuum2_output_aml.debit, 170)
         self.assertEqual(vacuum2_output_aml.credit, 0)
 
         self.assertTrue(set(move1.mapped('account_move_ids.line_ids').ids) == {move1_valuation_aml.id, move1_output_aml.id, vacuum1_valuation_aml.id, vacuum1_output_aml.id, vacuum2_valuation_aml.id, vacuum2_output_aml.id})
@@ -1655,6 +1669,18 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
 
     def test_fifo_add_move_in_done_picking_1(self):
+        """ The flow is:
+
+        product2 std price = 20
+        IN01 10@10 product1
+        IN01 10@20 product2
+        IN01 correction 10@20 -> 11@20 (product2)
+        DO01 11 product2
+        DO02 1 product2
+        DO02 correction 1 -> 2 (negative stock)
+        IN03 2@30 product2
+        vacuum
+        """
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
         # ---------------------------------------------------------------------
@@ -1725,16 +1751,21 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product2.qty_available, 10)
         self.assertEqual(self.product2.stock_value, 200)
 
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 300)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 0)
+
         # ---------------------------------------------------------------------
         # Edit the previous stock move, receive 11
         # ---------------------------------------------------------------------
         move2.quantity_done = 11
 
-        self.assertEqual(move2.value, 200.0)
+        self.assertEqual(move2.value, 220.0)  # after correction, the move should be valued at 11@20
         self.assertEqual(move2.remaining_qty, 11.0)
         self.assertEqual(move2.price_unit, 20.0)
         self.assertEqual(move2.remaining_value, 220.0)
 
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 320)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 0)
         # ---------------------------------------------------------------------
         # Send 11 product 2
         # ---------------------------------------------------------------------
@@ -1768,9 +1799,13 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(move3.price_unit, -20.0)
         self.assertEqual(move3.remaining_value, 0.0)
+        self.assertEqual(self.product2.qty_available, 0)
+
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 320)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 220)
 
         # ---------------------------------------------------------------------
-        # Add one move of product 2
+        # Add one move of product 2, this'll make some negative stock.
         # ---------------------------------------------------------------------
         move4 = self.env['stock.move'].create({
             'picking_id': delivery.id,
@@ -1794,12 +1829,18 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move4.price_unit, -20.0)
         self.assertEqual(move4.remaining_value, -20.0)
 
+        self.assertEqual(self.product2.qty_available, -1)
+
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 320)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 240)
+
         # ---------------------------------------------------------------------
         # edit the created move, add 1
         # ---------------------------------------------------------------------
         move4.quantity_done = 2
 
-        self.assertEqual(move4.value, -20.0)
+        self.assertEqual(self.product2.qty_available, -2)
+        self.assertEqual(move4.value, -40.0)
         self.assertEqual(move4.remaining_qty, -2.0)
         self.assertEqual(move4.price_unit, -20.0)
         self.assertEqual(move4.remaining_value, -40.0)
@@ -1823,7 +1864,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # receive 2 products 2 @ 30
         # ---------------------------------------------------------------------
-        move1 = self.env['stock.move'].create({
+        move5 = self.env['stock.move'].create({
             'picking_id': receipt.id,
             'name': '10 in',
             'location_id': self.supplier_location.id,
@@ -1840,8 +1881,11 @@ class TestStockValuation(TransactionCase):
                 'qty_done': 2.0,
             })]
         })
-        move1._action_confirm()
-        move1._action_done()
+        move5._action_confirm()
+        move5._action_done()
+
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 380)
+        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 260)
 
         # ---------------------------------------------------------------------
         # run vacuum
@@ -1858,6 +1902,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product2.qty_available, 0)
         self.assertEqual(self.product2.stock_value, 0)
         self.assertEqual(move4.remaining_value, 0)
+        self.assertEqual(move4.value, -60)  # after correction, the move is valued -(2*30)
 
     def test_fifo_add_moveline_in_done_move_1(self):
         self.product1.product_tmpl_id.cost_method = 'fifo'
@@ -1921,7 +1966,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
 
     def test_fifo_edit_done_move1(self):
-        """ Check that incrementing the done quantity will correctly re-run a fifo lookup.
+        """ Increase OUT done move while quantities are available.
         """
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
@@ -2059,6 +2104,9 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         move3.quantity_done = 14
         self.assertEqual(move3.product_qty, 14)
+        # old value: -80 -(8@10)
+        # new value: -148 => -(10@10 + 4@12)
+        self.assertEqual(move3.value, -148)
 
         # older move
         self.assertEqual(move1.remaining_value, 0)  # before, 20
@@ -2090,6 +2138,8 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(sum(self._get_stock_output_move_lines().mapped('credit')), 0)
 
     def test_fifo_edit_done_move2(self):
+        """ Decrease, then increase OUT done move while quantities are available.
+        """
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
         # ---------------------------------------------------------------------
@@ -2152,7 +2202,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         move2.quantity_done = 8
 
-        self.assertEqual(move2.value, -100.0)
+        self.assertEqual(move2.value, -80.0)  # the move actually sent 8@10
         self.assertEqual(move2.remaining_qty, 0.0)
         self.assertEqual(move2.remaining_value, 0.0)
 
@@ -2167,7 +2217,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         move2.with_context(debug=True).quantity_done = 10
 
-        self.assertEqual(move2.value, -100.0)
+        self.assertEqual(move2.value, -100.0)  # the move actually sent 10@10
         self.assertEqual(move2.remaining_qty, 0.0)
         self.assertEqual(move2.remaining_value, 0.0)
 
