@@ -132,17 +132,19 @@
                         <button string="Schedule" name="action_close_dialog" type="object" class="btn-primary"
                             attrs="{'invisible': [('id', '!=', False)]}"/>
                         <button string="Save" name="action_close_dialog" type="object" class="btn-primary"
+                            invisible="context.get('invisible_buttons', False)"
                             attrs="{'invisible': [('id', '=', False)]}"/>
                         <button attrs="{'invisible': [('force_next', '=', True)]}" string="Mark as Done" name="action_done"
+                            invisible="context.get('invisible_buttons', False)"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
-                        <button attrs="{'invisible': [('force_next', '=', True)]}" string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                        <button invisible="context.get('invisible_buttons', False)"  attrs="{'invisible': [('force_next', '=', True)]}" string="Done &amp; Schedule Next" name="action_done_schedule_next"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
-                        <button attrs="{'invisible': [('force_next', '=', False)]}" string="Done &amp; Launch Next" name="action_done_schedule_next"
+                        <button invisible="context.get('invisible_buttons', False)"  attrs="{'invisible': [('force_next', '=', False)]}" string="Done &amp; Launch Next" name="action_done_schedule_next"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" />
+                        <button invisible="context.get('invisible_buttons', False)" string="Discard" class="btn-secondary" special="cancel" />
                     </footer>
                 </sheet>
             </form>

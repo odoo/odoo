@@ -446,7 +446,8 @@ var FormController = BasicController.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} ev
+     * @param {OdooEvent} event
+     * @returns {Deferred}
      */
     _onButtonClicked: function (ev) {
         // stop the event's propagation as a form controller might have other
@@ -484,7 +485,7 @@ var FormController = BasicController.extend({
             def = saveAndExecuteAction();
         }
 
-        def.always(this._enableButtons.bind(this));
+        return def.always(this._enableButtons.bind(this));
     },
     /**
      * Called when the user wants to create a new record -> @see createRecord

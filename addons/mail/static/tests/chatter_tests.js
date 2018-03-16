@@ -1942,7 +1942,7 @@ QUnit.test('form activity widget: clic mail template', function (assert) {
 });
 
 QUnit.test('form activity widget: schedule activity does not discard changes', function (assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     var form = createView({
         View: FormView,
@@ -1958,17 +1958,18 @@ QUnit.test('form activity widget: schedule activity does not discard changes', f
                 '</div>' +
             '</form>',
         res_id: 2,
+        archs: {
+            'mail.activity,mail.mail_activity_view_form_popup,form': '<form></form>',
+        },
         mockRPC: function (route, args) {
             if (args.method === 'write') {
                 assert.deepEqual(args.args[1], {foo: 'new value'},
                     "should correctly save the change");
             }
+            if (args.method === 'load_views') {
+                assert.ok("should call load_views");
+            }
             return this._super.apply(this, arguments);
-        },
-        intercepts: {
-            do_action: function (event) {
-                event.data.options.on_close();
-            },
         },
         viewOptions: {
             mode: 'edit',
@@ -1978,11 +1979,81 @@ QUnit.test('form activity widget: schedule activity does not discard changes', f
     // update value of foo field
     testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'new value');
 
-    // schedule an activity (this triggers a do_action)
+    // schedule an activity (this triggers a load_views)
     testUtils.dom.click(form.$('.o_chatter_button_schedule_activity'));
 
     // save the record
     testUtils.form.clickSave(form);
+
+    form.destroy();
+});
+
+QUnit.test('form activity widget: schedule activity inline form view', function (assert) {
+    assert.expect(6);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        archs: {
+            'mail.activity,mail.mail_activity_view_form_popup,form': '<form>' +
+                '<group>' +
+                    '<field name="display_name"/>' +
+                    '<field name="activity_type_id" required="1"/>' +
+                    '<field name="date_deadline"/>' +
+                    '<field name="user_id"/>' +
+                '</group>' +
+                '<footer>' +
+                    '<button string="Schedule" name="action_close_dialog" type="object" class="btn-primary schedule"/>' +
+                    '<button string="Mark as Done" name="action_done" type="object" class="btn-default"/>' +
+                    '<button invisible="context.get(\'invisible_buttons\', False)" string="Done &amp; Schedule Next" type="object" class="btn-default schedule_next"/>' +
+                    '<button invisible="context.get(\'invisible_buttons\', False)" string="Discard" class="btn-default" special="cancel" />' +
+                '</footer>' +
+            '</form>',
+        },
+        mockRPC: function (route, args) {
+            if (args.method === 'load_views') {
+                assert.ok("should call load_views");
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            execute_action: function (event) {
+                assert.ok("execute action should trigger");
+                event.data.on_success();
+            },
+            reload_mail_fields: function () {
+                assert.ok("button click should trigger reload_mail_fields");
+            },
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    // schedule an activity (this call load_views)
+    form.$('.o_chatter_button_schedule_activity').click();
+
+    assert.strictEqual(form.$('.o_activity_inline_form').length, 1, "should have inline activity form");
+    assert.ok(form.$('button.schedule').length, "schedule button should be in footer");
+    assert.ok(!form.$('button.schedule_next').is(":visible"), "schedule next button should be invisible by context invisible_buttons");
+
+    form.$('.oe_chatter .o_activity_inline_form input[name="display_name"]').val("An Activity").trigger('input');
+    form.$('.oe_chatter .o_activity_inline_form div[name="activity_type_id"] input').click();
+    var $dropdown = form.$('.oe_chatter .o_activity_inline_form div[name="activity_type_id"] input').autocomplete('widget');
+        $dropdown.find('li:first()').click();
+
+    form.$('button.schedule').click();
 
     form.destroy();
 });
