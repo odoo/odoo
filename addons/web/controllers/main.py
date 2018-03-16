@@ -1562,7 +1562,10 @@ class ReportController(http.Controller):
         report = request.env['ir.actions.report']._get_report_from_name(reportname)
         context = dict(request.env.context)
 
-        if docids:
+        if data.get('active_domain'):
+            active_domain = json.loads(data['active_domain'])
+            docids = request.env[report.model].with_context({'active_domain': active_domain,'active_model': report.model}).get_active_records().ids
+        elif docids:
             docids = [int(i) for i in docids.split(',')]
         if data.get('options'):
             data.update(json.loads(data.pop('options')))

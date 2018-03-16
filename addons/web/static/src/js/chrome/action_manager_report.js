@@ -182,7 +182,12 @@ ActionManager.include({
         // their options.
         if (_.isUndefined(action.data) || _.isNull(action.data) ||
             (_.isObject(action.data) && _.isEmpty(action.data))) {
-            if (action.context.active_ids) {
+            if (action.context.active_domain) {
+                var activeDomain = '?active_domain=' + encodeURIComponent(JSON.stringify(action.context.active_domain));
+                reportUrls = _.mapObject(reportUrls, function (value) {
+                    return value += activeDomain;
+                });
+            } else if (action.context.active_ids) {
                 var activeIDsPath = '/' + action.context.active_ids.join(',');
                 reportUrls = _.mapObject(reportUrls, function (value) {
                     return value += activeIDsPath;
