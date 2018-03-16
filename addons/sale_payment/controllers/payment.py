@@ -23,7 +23,8 @@ class PaymentPortal(http.Controller):
             return False
 
         # Check if the current user has access to this order
-        if order_sudo.partner_id.id not in [request.env.user.partner_id.id, request.env.user.partner_id.commercial_partner_id.id]:
+        commercial_partner_id = request.env.user.partner_id.commercial_partner_id.id
+        if request.env['sale.order'].sudo().search_count([('id', '=', order_id), ('message_partner_ids', 'child_of', commercial_partner_id)]) == 0:
             return False
 
         try:
@@ -67,7 +68,8 @@ class PaymentPortal(http.Controller):
             return request.redirect(_build_url_w_params(error_url, params))
 
         # Check if the current user has access to this order
-        if order_sudo.partner_id.id not in [request.env.user.partner_id.id, request.env.user.partner_id.commercial_partner_id.id]:
+        commercial_partner_id = request.env.user.partner_id.commercial_partner_id.id
+        if request.env['sale.order'].sudo().search_count([('id', '=', order_id), ('message_partner_ids', 'child_of', commercial_partner_id)]) == 0:
             return False
 
         try:
