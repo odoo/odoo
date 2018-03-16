@@ -28,6 +28,7 @@ Notes:
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
         # basic accounting data
