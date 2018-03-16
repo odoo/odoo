@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import ir_config_parameter
 from . import mail_message_subtype
 from . import mail_tracking_value
 from . import mail_alias
