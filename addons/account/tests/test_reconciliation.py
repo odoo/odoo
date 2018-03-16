@@ -103,6 +103,7 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(move_line.currency_id.id, aml_dict[move_line.account_id.id]['currency_id'])
             if 'currency_diff' in aml_dict[move_line.account_id.id]:
                 currency_diff_move = move_line.full_reconcile_id.exchange_move_id
+                self.assertTrue(currency_diff_move, 'The full reconciliation should have created an exchange rate journal entry')
                 for currency_diff_line in currency_diff_move.line_ids:
                     if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
@@ -196,11 +197,11 @@ class TestReconciliation(AccountingTestCase):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 0.0, False)
         self.check_results(customer_move_lines, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -61.16, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
         })
         self.check_results(supplier_move_lines, {
             self.account_euro.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 61.16, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         })
 
     def test_statement_euro_invoice_usd_transaction_chf(self):
@@ -238,7 +239,7 @@ class TestReconciliation(AccountingTestCase):
               'move_line': line_id,
               'debit': 0.0,
               'credit': 32.7,
-              'name': line_id.name,
+              'name': 'test_statement_euro_invoice_usd_transaction_euro_full',
             }], new_aml_dicts=[{
               'debit': 0.0,
               'credit': 7.3,
@@ -247,8 +248,8 @@ class TestReconciliation(AccountingTestCase):
             }])
         self.check_results(bank_stmt.move_line_ids, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': -41.97, 'currency_id': self.currency_usd_id, 'currency_diff': 0, 'amount_currency_diff': -8.03},
-            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': -9.37, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': 0, 'currency_id': False, 'currency_diff': 0, 'amount_currency_diff': -8.03},
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': 0, 'currency_id': False},
         })
 
         # The invoice should be paid, as the payments totally cover its total
@@ -480,7 +481,7 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(round(aml.amount_currency, 2), line['amount_currency'])
             self.assertEquals(aml.currency_id.id, line['currency_id'])
 
-    def test_partial_reconcile_currencies(self):
+    def test_partial_reconcile_currencies_01(self):
         #                client Account (payable, rsa)
         #        Debit                      Credit
         # --------------------------------------------------------
@@ -624,8 +625,7 @@ class TestReconciliation(AccountingTestCase):
         full_rec_payable = full_rec_move.line_ids.filtered(lambda l: l.account_id == self.account_rsa)
         self.assertEqual(full_rec_payable.balance, 18.75)
 
-    def test_partial_reconcile_currencies_01(self):
-        """ Implements the failing scenario """
+    def test_partial_reconcile_currencies_02(self):
         ####
         # Day 1: Invoice Cust/001 to customer (expressed in USD)
         # Market value of USD (day 1): 1 USD = 0.5 EUR
