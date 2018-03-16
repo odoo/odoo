@@ -6,6 +6,7 @@ from openerp import models, fields, api, _
 from openerp.tools import amount_to_text_en, float_round
 from openerp.exceptions import UserError, ValidationError
 
+
 class account_register_payments(models.TransientModel):
     _inherit = "account.register.payments"
 
@@ -30,9 +31,10 @@ class account_register_payments(models.TransientModel):
         # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
         check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(self.amount), lang='en', currency='')
         check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
-        decimals = self.amount % 1
-        if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
+        decimals = round(self.amount % 1, 2)
+        if decimals >= 10 ** -2:
+            check_amount_in_words += _(' and %s/100') % str(
+                int(round(float_round(decimals * 100, precision_rounding=1))))
         self.check_amount_in_words = check_amount_in_words
 
     def get_payment_vals(self):
@@ -67,9 +69,10 @@ class account_payment(models.Model):
             super(account_payment, self)._onchange_amount()
         check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(self.amount), lang='en', currency='')
         check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
-        decimals = self.amount % 1
-        if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
+        decimals = round(self.amount % 1, 2)
+        if decimals >= 10 ** -2:
+            check_amount_in_words += _(' and %s/100') % str(
+                int(round(float_round(decimals * 100, precision_rounding=1))))
         self.check_amount_in_words = check_amount_in_words
 
     def _check_communication(self, payment_method_id, communication):
