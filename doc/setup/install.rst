@@ -366,6 +366,8 @@ Source installation requires manually installing dependencies:
 
 * PostgreSQL, to use a local database
 
+  .. note:: Version 9.4 or later is recommended.
+
   After installation you will need to create a postgres user: by default the
   only user is ``postgres``, and Odoo forbids connecting as ``postgres``.
 
