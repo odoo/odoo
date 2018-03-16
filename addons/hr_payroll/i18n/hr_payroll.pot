@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-03-16 15:45+0000\n"
+"PO-Revision-Date: 2018-03-16 15:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -152,6 +152,11 @@ msgid "All Children Rules"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.ALW
+msgid "Allowance"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
@@ -188,6 +193,16 @@ msgstr ""
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_python
 msgid "Applied this rule for calculation if condition is true. You can specify condition like basic > 1000."
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.BASIC
+msgid "Basic"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
+msgid "Basic Salary"
 msgstr ""
 
 #. module: hr_payroll
@@ -307,6 +322,7 @@ msgid "Company"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.COMP
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
 msgstr ""
@@ -383,6 +399,16 @@ msgid "Contribution Registers"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
@@ -434,6 +460,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
 msgid "Date To"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.DED
+msgid "Deduction"
 msgstr ""
 
 #. module: hr_payroll
@@ -627,10 +658,26 @@ msgid "Generate payslips for all selected employees"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
+#: model:hr.salary.rule.category,name:hr_payroll.GROSS
+msgid "Gross"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
 msgstr ""
 
 #. module: hr_payroll
@@ -791,6 +838,11 @@ msgid "Maximum Range"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
 msgid "Minimum Range"
@@ -821,7 +873,17 @@ msgid "Name"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:197
+#: model:hr.salary.rule.category,name:hr_payroll.NET
+msgid "Net"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_net
+msgid "Net Salary"
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:199
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr ""
@@ -953,8 +1015,8 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
 msgstr ""
@@ -1060,6 +1122,16 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
 msgstr ""
 
 #. module: hr_payroll
