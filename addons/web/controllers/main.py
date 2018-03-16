@@ -1391,10 +1391,7 @@ class ExportFormat(object):
         field_names = [f['name'] for f in fields]
         import_data = records.export_data(field_names, self.raw_data).get('datas',[])
 
-        if import_compat:
-            columns_headers = field_names
-        else:
-            columns_headers = [val['label'].strip() for val in fields]
+        columns_headers = [val['label'].strip() for val in fields]
 
         return request.make_response(self.from_data(columns_headers, import_data),
             headers=[('Content-Disposition',
