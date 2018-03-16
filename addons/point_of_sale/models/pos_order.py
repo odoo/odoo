@@ -752,15 +752,18 @@ class PosOrder(models.Model):
                 qty_done = 0
                 pack_lots = []
                 pos_pack_lots = PosPackOperationLot.search([('order_id', '=', order.id), ('product_id', '=', pack_operation.product_id.id)])
-                pack_lot_names = [pos_pack.lot_name for pos_pack in pos_pack_lots]
-
+                pack_lot_names = {}
+                for pos_pack in pos_pack_lots:
+                    if pos_pack.lot_name in pack_lot_names:
+                        pack_lot_names[pos_pack.lot_name] += pos_pack.pos_order_line_id.qty
+                    else:
+                        pack_lot_names[pos_pack.lot_name] = pos_pack.pos_order_line_id.qty
                 if pack_lot_names:
-                    for lot_name in list(set(pack_lot_names)):
+                    for lot_name in pack_lot_names:
                         stock_production_lot = StockProductionLot.search([('name', '=', lot_name), ('product_id', '=', pack_operation.product_id.id)])
                         if stock_production_lot:
                             if stock_production_lot.product_id.tracking == 'lot':
-                                # if a lot nr is set through the frontend it will refer to the full quantity
-                                qty = pack_operation.product_qty
+                                qty = pack_lot_names[lot_name]
                             else:
                                 qty = 1.0
                             qty_done += qty
