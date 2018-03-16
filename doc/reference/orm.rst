@@ -476,6 +476,11 @@ added.
     ``onchange`` methods work on virtual records assignment on these records
     is not written to the database, just used to know which value to send back
     to the client
+    
+.. warning::
+
+    It is not possible for a ``one2many`` or ``many2many`` field to modify 
+    itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
 
 Low-level SQL
 -------------
