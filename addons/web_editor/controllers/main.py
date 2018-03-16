@@ -147,7 +147,10 @@ class Web_Editor(http.Controller):
         Attachments = request.env['ir.attachment']  # registry for the attachment table
 
         res_model = kwargs.get('res_model', 'ir.ui.view')
-        res_id = res_model != 'ir.ui.view' and kwargs.get('res_id') or None
+        if res_model != 'ir.ui.view' and kwargs.get('res_id'):
+            res_id = int(kwargs['res_id'])
+        else:
+            None
 
         uploads = []
         message = None
