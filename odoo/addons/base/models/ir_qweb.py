@@ -162,7 +162,7 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         if ('t-%s-options' % directive_type) in el.attrib:
             if tools.config['dev_mode']:
-                _logger.warning("Use new syntax t-options instead of t-%s-options" % directive_type)
+                _logger.warning("Use new syntax t-options instead of t-%s-options for '%s'" % (directive_type, etree.tostring(el)))
             if not field_options:
                 field_options = el.attrib.pop('t-%s-options' % directive_type)
 
