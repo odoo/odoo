@@ -28,7 +28,7 @@
                 width: @o-switch-size - 0.2;
                 height: @o-switch-size - 0.2;
                 margin-top: 0.1ex;
-                margin-left: 0.3ex;
+                margin-left: 0.1ex;
                 border-radius: 100rem;
                 .transition(all 0.3s @o-we-md-ease);
                 box-shadow: 0 1px 1px darken(@o-switch-inactive-color,35%), inset 0 0 0 1px lighten(@o-switch-inactive-color,10%);
@@ -41,6 +41,14 @@
 
             &:after {
                 margin-left: (@o-switch-size*1.8 - @o-switch-size) + 0.1;
+            }
+        }
+    }
+    &.o_switch_danger {
+        > input {
+            &:not(:checked) + span {
+                box-shadow: none;
+                .o-linear-gradient(0deg, lighten(@brand-danger, 5%), darken(@brand-danger, 5%));
             }
         }
     }
