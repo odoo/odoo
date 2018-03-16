@@ -139,6 +139,7 @@ class TestPayment(AccountingTestCase):
             {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
             {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 300.0, 'amount_currency': 00, 'currency_id': False},
         ])
+        self.assertTrue(payment.move_line_ids.filtered(lambda l: l.account_id == inv_1.account_id)[0].full_reconcile_id)
 
         liquidity_aml = payment.move_line_ids.filtered(lambda r: r.account_id == self.account_eur)
         bank_statement = self.reconcile(liquidity_aml, 200, 0, False)

@@ -1822,7 +1822,7 @@ class AccountPartialReconcile(models.Model):
         total_amount_currency = 0
         #make sure that all partial reconciliations share the same secondary currency otherwise it's not
         #possible to compute the exchange difference entry and it has to be done manually.
-        currency = self[0].debit_move_id.currency_id or self[0].credit_move_id.currency_id
+        currency = self[0].debit_move_id.currency_id or self[0].credit_move_id.currency_id or None
         more_than_1_currency = False
         maxdate = '0000-00-00'
 
@@ -1838,7 +1838,7 @@ class AccountPartialReconcile(models.Model):
                 more_than_1_currency = True
             if partial_rec.currency_id != currency:
                 #no exchange rate entry will be created
-                currency = None
+                currency = False
             for aml in [partial_rec.debit_move_id, partial_rec.credit_move_id]:
                 if aml not in aml_set:
                     if aml.amount_residual or aml.amount_residual_currency:
@@ -1863,7 +1863,8 @@ class AccountPartialReconcile(models.Model):
         aml_ids = aml_set.ids
         #if the total debit and credit are equal, or the total amount in currency is 0, the reconciliation is full
         digits_rounding_precision = aml_set[0].company_id.currency_id.rounding
-        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or (more_than_1_currency and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0):
+        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or \
+           ((currency is None or more_than_1_currency) and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0):
             exchange_move_id = False
             if aml_to_balance:
                 exchange_move = self.env['account.move'].create(
