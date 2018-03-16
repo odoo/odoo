@@ -101,12 +101,6 @@ class MailChannel(models.Model):
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 
-    @api.model
-    def get_empty_list_help(self, help):
-        if help:
-            help
-        return super(MailChannel, self).get_empty_list_help(help)
-
     def _define_command_history(self):
         return {
             'channel_types': ['livechat'],
