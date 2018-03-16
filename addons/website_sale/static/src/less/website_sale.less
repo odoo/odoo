@@ -29,6 +29,30 @@
 }
 
 .oe_website_sale {
+
+    .show_coupon {
+        white-space: nowrap;
+    }
+    .o_payment_form .panel {
+        border-radius: 4px !important;
+    }
+    .address-inline address {
+        display: inline-block;
+    }
+    table#cart_products tr td, table#suggested_products tr td {
+        vertical-align: middle;
+    }
+
+    table#cart_products {
+        margin-bottom: 0;
+
+        td, th {
+            &:first-child {
+                padding-left: @grid-gutter-width*0.5;
+            }
+        }
+    }
+
     ul ul {
         margin-left: 1.5em;
     }
@@ -49,6 +73,13 @@
 
     .td-qty {
         width: 130px;
+        a.input-group-addon {
+            background-color: transparent;
+            border: 0px;
+        }
+    }
+    .td-action {
+        width: 30px;
     }
 
     .td-price,
@@ -68,11 +99,6 @@
 
         .td-price {
             width: 80px;
-        }
-    }
-    @media (min-width: 768px) {
-        .o_website_sale_rightfit {
-            padding-right: 0;
         }
     }
 
@@ -743,7 +769,7 @@ td.noborder {
 }
 
 .border_primary {
-    border: 1px solid #337ab7;
+    border: 1px solid @odoo-brand-primary;
 }
 
 .js_change_shipping {

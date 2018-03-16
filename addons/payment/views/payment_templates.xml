@@ -138,11 +138,18 @@
                     </div>
                 </t>
             </div>
+            <div t-if='back_button_txt' class="pull-left">
+                <a t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-default'">
+                    <i t-if="back_button_icon_class" t-attf-class="fa {{back_button_icon_class}}"/>
+                    <t t-esc="back_button_txt"/>
+                </a>
+            </div>
             <div class="pull-right">
                 <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
                     <t t-if="submit_txt">
-                        <i t-if="icon_class" t-attf-class="fa {{icon_class}}"/>
+                        <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>
                         <t t-esc="submit_txt"/>
+                        <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
                     </t>
                     <t t-else="">
                         <i class="fa fa-lock"> Pay</i>

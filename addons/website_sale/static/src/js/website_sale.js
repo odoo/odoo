@@ -161,8 +161,7 @@ odoo.define('website_sale.website_sale', function (require) {
                     $q.parents('li:first').removeClass("hidden");
                 }
                 else {
-                    $q.parents('li:first').addClass("hidden");
-                    $('a[href*="/shop/checkout"]').addClass("hidden");
+                    window.location = '/shop/cart';
                 }
 
                 $q.html(data.cart_quantity).hide().fadeIn(600);
@@ -170,6 +169,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
 
                 $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
+                $(".js_cart_summary").first().before(data['website_sale.short_cart_summary']).end().remove();
 
                 if (data.warning) {
                     var cart_alert = $('.oe_cart').parent().find('#data_warning');
@@ -369,6 +369,10 @@ odoo.define('website_sale.website_sale', function (require) {
             $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
         });
 
+        $('.oe_website_sale').on('click', '.show_coupon', function(e) {
+            $(e.currentTarget).hide();
+            $('.coupon_form').removeClass('hidden');
+        });
         $('.oe_cart').on('click', '.js_change_shipping', function() {
           if (!$('body.editor_enable').length) { //allow to edit button text with editor
             var $old = $('.all_shipping').find('.panel.border_primary');
@@ -459,6 +463,23 @@ odoo.define('website_sale.website_sale', function (require) {
             });
         }
         $("select[name='country_id']").change();
+    });
+    if ($('#checkbox_cgv').length) {
+        $('#checkbox_cgv').trigger('change');
+    }
+    $('#shipping_use_same').on('change', function(e) {
+        $('.ship_to_other').toggle(!$(e.currentTarget).prop('checked'));
+    });
+
+    $('.toggle_summary').on('click', function(e) {
+        $('.toggle_summary_div').toggleClass('hidden');
+        $('.toggle_summary_div').removeClass('visible-lg');
+    });
+
+    core.bus.on('resize', this, function() {
+        if (config.device.size_class === config.device.SIZES.LG) {
+            $('.toggle_summary_div').addClass('visible-lg');
+        }
     });
 
     // Deactivate image zoom for mobile devices, since it might prevent users to scroll
