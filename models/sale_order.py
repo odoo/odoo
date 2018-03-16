@@ -44,7 +44,6 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
-        self.recompute_coupon_lines()
         self.generated_coupon_ids.write({'state': 'new'})
         return super(SaleOrder, self).action_confirm()
 
