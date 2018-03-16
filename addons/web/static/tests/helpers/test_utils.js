@@ -431,6 +431,7 @@ function addMockEnvironment(widget, params) {
         if (index !== -1) {
             var Service = params.services.splice(index, 1)[0];
             services[Service.prototype.name] = new Service(widget);
+            services[Service.prototype.name].start();
         } else {
             done = true;
         }

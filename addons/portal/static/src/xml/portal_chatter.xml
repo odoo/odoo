@@ -51,7 +51,7 @@
     <t t-name="portal.chatter_messages">
         <div class="o_portal_chatter_messages">
             <t t-foreach="widget.get('messages')" t-as="message">
-                <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
+                <div class="media o_portal_chatter_message" t-att-id="'message-' + message.getID()">
                     <div class="media-left">
                         <img class="media-object o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
                     </div>
@@ -59,7 +59,7 @@
 
                         <div class="o_portal_chatter_message_title">
                             <h5 class="media-heading">
-                                <t t-esc="message.author_id[1]"/>
+                                <t t-esc="message.authorID[1]"/>
                             </h5>
                             <p class="o_portal_chatter_puslished_date"><t t-esc="message.published_date_str"/></p>
                         </div>

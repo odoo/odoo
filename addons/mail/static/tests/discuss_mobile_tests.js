@@ -1,7 +1,7 @@
 odoo.define('mail.discuss_mobile_tests', function (require) {
 "use strict";
 
-var ChatManager = require('mail.ChatManager');
+var ChatService = require('mail.ChatService');
 var mailTestUtils = require('mail.testUtils');
 
 var createBusService = mailTestUtils.createBusService;
@@ -11,7 +11,7 @@ QUnit.module('mail', {}, function () {
 
 QUnit.module('Discuss client action in mobile', {
     beforeEach: function () {
-        this.services = [ChatManager, createBusService()];
+        this.services = [ChatService, createBusService()];
         this.data = {
             'mail.message': {
                 fields: {},
@@ -37,24 +37,24 @@ QUnit.test('mobile basic rendering', function (assert) {
         services: this.services,
     }).then(function (discuss) {
         // test basic rendering in mobile
-        assert.strictEqual(discuss.$('.o_mail_chat_content .o_mail_no_content').length, 1,
+        assert.strictEqual(discuss.$('.o_mail_conversation_content .o_mail_no_content').length, 1,
             "should display the no content message");
         assert.strictEqual(discuss.$('.o_mail_mobile_tabs').length, 1,
             "should have rendered the tabs");
-        assert.ok(discuss.$('.o_mail_mobile_tab[data-type=channel_inbox]').hasClass('active'),
+        assert.ok(discuss.$('.o_mail_mobile_tab[data-type=mailbox_inbox]').hasClass('active'),
             "should be in inbox tab");
-        assert.strictEqual(discuss.$('.o_mail_chat_mobile_inbox_buttons:visible').length, 1,
+        assert.strictEqual(discuss.$('.o_mail_chat_mobile_mailboxes_buttons:visible').length, 1,
             "inbox/starred buttons should be visible");
-        assert.ok(discuss.$('.o_mail_chat_mobile_inbox_buttons .o_channel_inbox_item[data-type=channel_inbox]').hasClass('btn-primary'),
+        assert.ok(discuss.$('.o_mail_chat_mobile_mailboxes_buttons .o_mailbox_inbox_item[data-type=mailbox_inbox]').hasClass('btn-primary'),
             "should be in inbox");
 
         // move to DMs tab
         discuss.$('.o_mail_mobile_tab[data-type=dm]').click();
         assert.ok(discuss.$('.o_mail_mobile_tab[data-type=dm]').hasClass('active'),
             "should be in DMs tab");
-        assert.strictEqual(discuss.$('.o_mail_chat_content .o_mail_no_content').length, 0,
+        assert.strictEqual(discuss.$('.o_mail_conversation_content .o_mail_no_content').length, 0,
             "should display the no content message");
-        $('.o_mail_chat_button_dm').click(); // click to add a channel
+        $('.o_mail_conversation_button_dm').click(); // click to add a channel
         assert.strictEqual(discuss.$('.o_mail_add_channel input:visible').length, 1,
             "should display the input to add a channel");
 

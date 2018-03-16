@@ -143,9 +143,12 @@
             <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
             <!-- Bus, Mail, Livechat -->
+                <!-- conversation windows -->
+                <script type="text/javascript" src="/mail/static/src/js/conversation_windows/abstract_conversation_window.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/conversation_windows/livechat_window.js"></script> <!-- should be defined in im_livechat package ? -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
-            <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+            <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
             <t t-call="web._assets_helpers"/>

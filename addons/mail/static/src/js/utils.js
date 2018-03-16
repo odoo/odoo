@@ -1,6 +1,10 @@
 odoo.define('mail.utils', function (require) {
 "use strict";
 
+var core = require('web.core');
+
+var _t = core._t;
+
 function parse_and_transform(html_string, transform_function) {
     var open_token = "OPEN" + Date.now();
     var string = html_string.replace(/&lt;/g, open_token);
@@ -99,6 +103,13 @@ function unaccent (str) {
     return str;
 }
 
+function timeFromNow(date) {
+    if (moment().diff(date, 'seconds') < 45) {
+        return _t("now");
+    }
+    return date.fromNow();
+}
+
 return {
     parse_and_transform: parse_and_transform,
     add_link: add_link,
@@ -108,6 +119,7 @@ return {
     parse_email: parse_email,
     get_text2html: get_text2html,
     unaccent: unaccent,
+    timeFromNow: timeFromNow,
 };
 
 });

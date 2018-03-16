@@ -1,8 +1,8 @@
 odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
-var Discuss = require('mail.chat_discuss');
-var ChatManager = require('mail.ChatManager');
+var ChatService = require('mail.ChatService');
+var Discuss = require('mail.Discuss');
 var mailTestUtils = require('mail.testUtils');
 
 var Bus = require('web.Bus');
@@ -47,15 +47,15 @@ QUnit.module('Discuss client action', {
                     needaction: {
                       string: "Need Action",
                       type: 'boolean',
-                  },
-                  starred_partner_ids: {
+                    },
+                    starred_partner_ids: {
                       string: "partner ids",
                       type: 'integer',
-                  }
+                    }
                 },
             },
         };
-        this.services = [ChatManager, createBusService()];
+        this.services = [ChatService, createBusService()];
     },
     afterEach: function () {
         // unpatch _.debounce and _.throttle
@@ -77,22 +77,22 @@ QUnit.test('basic rendering', function (assert) {
     })
     .then(function (discuss) {
         // test basic rendering
-        var $sidebar = discuss.$('.o_mail_chat_sidebar');
+        var $sidebar = discuss.$('.o_mail_conversation_sidebar');
         assert.strictEqual($sidebar.length, 1,
             "should have rendered a sidebar");
 
-        assert.strictEqual(discuss.$('.o_mail_chat_content').length, 1,
+        assert.strictEqual(discuss.$('.o_mail_conversation_content').length, 1,
             "should have rendered the content");
         assert.strictEqual(discuss.$('.o_mail_no_content').length, 1,
             "should display no content message");
 
-        var $inbox = $sidebar.find('.o_mail_chat_channel_item[data-channel-id=channel_inbox]');
+        var $inbox = $sidebar.find('.o_mail_conversation_item[data-conversation-id=mailbox_inbox]');
         assert.strictEqual($inbox.length, 1,
-            "should have the channel item 'channel_inbox' in the sidebar");
+            "should have the channel item 'mailbox_inbox' in the sidebar");
 
-        var $starred = $sidebar.find('.o_mail_chat_channel_item[data-channel-id=channel_starred]');
+        var $starred = $sidebar.find('.o_mail_conversation_item[data-conversation-id=mailbox_starred]');
         assert.strictEqual($starred.length, 1,
-            "should have the channel item 'channel_starred' in the sidebar");
+            "should have the channel item 'mailbox_starred' in the sidebar");
         discuss.destroy();
         done();
     });
@@ -122,7 +122,7 @@ QUnit.test('@ mention in channel', function (assert) {
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: [ChatService, BusService],
         mockRPC: function (route, args) {
             if (args.method === 'channel_fetch_listeners') {
                 fetchListenersDef.resolve();
@@ -147,8 +147,8 @@ QUnit.test('@ mention in channel', function (assert) {
         },
     })
     .then(function (discuss) {
-        var $general = discuss.$('.o_mail_chat_sidebar')
-                        .find('.o_mail_chat_channel_item[data-channel-id=1]');
+        var $general = discuss.$('.o_mail_conversation_sidebar')
+                        .find('.o_mail_conversation_item[data-conversation-id=1]');
         assert.strictEqual($general.length, 1,
             "should have the channel item with id 1");
         assert.strictEqual($general.attr('title'), 'general',
@@ -296,8 +296,8 @@ QUnit.test('no crash focusout emoji button', function (assert) {
         services: this.services,
     })
     .then(function (discuss) {
-        var $general = discuss.$('.o_mail_chat_sidebar')
-            .find('.o_mail_chat_channel_item[data-channel-id=1]');
+        var $general = discuss.$('.o_mail_conversation_sidebar')
+            .find('.o_mail_conversation_item[data-conversation-id=1]');
         assert.strictEqual($general.length, 1,
             "should have the channel item with id 1");
         assert.strictEqual($general.attr('title'), 'general',
@@ -348,7 +348,7 @@ QUnit.test('older messages are loaded on scroll', function (assert) {
         context: {},
         data: this.data,
         params: {},
-        services: [ChatManager, createBusService()],
+        services: [ChatService, createBusService()],
         mockRPC: function (route, args) {
             if (args.method === 'message_fetch') {
                 fetchCount++;
@@ -362,7 +362,7 @@ QUnit.test('older messages are loaded on scroll', function (assert) {
             return this._super.apply(this, arguments);
         },
     }).then(function (discuss) {
-        var $general = discuss.$('.o_mail_chat_channel_item[data-channel-id=1]');
+        var $general = discuss.$('.o_mail_conversation_item[data-conversation-id=1]');
         assert.strictEqual($general.length, 1,
             "should have a channel item with id 1");
 
@@ -423,7 +423,7 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: [ChatService, BusService],
         mockRPC: function (route, args) {
             if (args.method === 'unstar_all') {
                 var data = {
@@ -440,8 +440,8 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
         session: {partner_id: 1},
     })
     .then(function (discuss) {
-        var $starred = discuss.$('.o_mail_chat_sidebar').find('.o_mail_chat_title_starred');
-        var $starredCounter = $('.o_mail_chat_title_starred > .o_mail_sidebar_needaction');
+        var $starred = discuss.$('.o_mail_conversation_sidebar').find('.o_mail_mailbox_title_starred');
+        var $starredCounter = $('.o_mail_mailbox_title_starred > .o_mail_sidebar_needaction');
 
         // Go to Starred channel
         $starred.click();
@@ -449,8 +449,8 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
         assert.strictEqual($starredCounter.text().trim(), "40", "40 messages should be starred");
 
         // Unstar all and wait 'update_starred'
-        $('.o_control_panel .o_mail_chat_button_unstar_all').click();
-        $starredCounter = $('.o_mail_chat_title_starred > .o_mail_sidebar_needaction');
+        $('.o_control_panel .o_mail_conversation_button_unstar_all').click();
+        $starredCounter = $('.o_mail_mailbox_title_starred > .o_mail_sidebar_needaction');
         assert.strictEqual($starredCounter.text().trim(), "0",
             "All messages should be unstarred");
 
