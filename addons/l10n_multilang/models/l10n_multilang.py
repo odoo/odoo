@@ -41,7 +41,7 @@ class AccountChartTemplate(models.Model):
                         'value': value[element.id],
                     })
                 else:
-                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang, element.name))
+                    _logger.info('Language: %s. Translation from template: there is no translation available for %s!' % (lang, element[in_field]))
                 counter += 1
         return True
 
