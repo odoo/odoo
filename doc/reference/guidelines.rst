@@ -958,8 +958,8 @@ description. Try to follow the preferred structure for your commit messages
   End the message with references, such as task or bug numbers, PR numbers, and
   OPW tickets, following the suggested format:
   Related to task #taskId
-  #Fixes #12345  (link and close issue on Github)
-  #Closes #7865  (link and close PR on Github)
+  Fixes #12345  (link and close issue on Github)
+  Closes #7865  (link and close PR on Github)
   OPW-112233
 
 Tag and module name
@@ -984,6 +984,7 @@ Tags are used to prefix your commit. They should be one of the following
 - **[MERGE]** for merge commits: used in forward port of bug fixes but also as
   main commit for feature involving several separated commits;
 - **[CLA]** for signing the Odoo Individual Contributor License;
+- **[I18N]** for changes in translation files;
 
 After tag comes the modified module name. Use the technical name as functional
 name may change with time. If several modules are modified, list them or use
