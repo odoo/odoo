@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Form View Of Send Newsletter -->
+
+        <record id="wiz_send_newsletter_form_view" model="ir.ui.view">
+            <field name="name">wiz.newsletter.form</field>
+            <field name="model">wiz.newsletter</field>
+            <field name="arch" type="xml">
+                <form string="Send Newsletter">
+                    <field name="news_letter_id"/>
+                    <field name="audience"/>
+                    <field name="parent_ids" attrs="{'invisible': ['|',('audience','=','parents'),('audience','=','others')]}"/>
+                    <field name="emails" placeholder="Enter comma separated emails. eg. fb@byteltd.com,eg@byteltd.com,demo@byteltd.com" attrs="{'invisible': ['|',('audience','=','parents'),('audience','=','selected')]}"/>
+                    <newline/>
+                    <footer>
+                        <button name="send_newsletter" string="Send Newsletter" class="btn btn-sm btn-default fa fa-envelope" type="object"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Send Newsletter -->
+        <record id="action_exam_result_mapper" model="ir.actions.act_window">
+            <field name="name">Send Newsletter</field>
+            <field name="res_model">wiz.newsletter</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+        <!-- Menu Item Of Send Newsletter -->
+
+        <menuitem id="menu_send_news_letter" name="Send Newsletter" parent="menu_school_tools" action="action_exam_result_mapper" sequence="9"/>
+</odoo>

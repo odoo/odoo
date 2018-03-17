@@ -1,0 +1,50 @@
+.well2 {
+    padding-top: 158px;
+    padding-bottom: 81px;
+    h3, .h3 {
+        font-size: 42px;
+        line-height: 1.19047619;
+        text-transform: capitalize;
+        font-weight: 300;
+        margin: 0;
+        text-align: center;
+        color: @color-warning;
+    }
+}
+.parallax_cnt {
+    position: relative;
+}
+.parallax_image {
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+.parallax_image, .parallax_pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-position: center center;
+    will-change: transform;
+}
+.parallax .h5 {
+    color: #ffffff;
+    font-size: 28px;
+    line-height: 1.07142857;
+    text-align:center;
+}
+@media(max-width: @screen-sm){
+    .parallax_cnt{
+        h3, .h3 {
+            font-size: 35px;
+        }
+    }
+}
+@media(max-width: @screen-xs){
+    .parallax_cnt{
+        h3, .h3 {
+            font-size: 35px;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+/* Snippet drag and drop offset */
+#html_field_placeholder {
+margin-top:20px;
+}
+
+/* Snippet drag and drop offset counter balance */
+#html_field_placeholder .hff{
+margin-top:-20px;
+}
+
+/* Add required red star */
+.hff label.required:after {
+  content:" *";
+  color:red;
+}
+
+/* Counter balance Odoo's all bold labels */
+.hff .radio-inline label {
+  font-weight:normal;
+}
+
+/* Don't know where the weird margin comes from... */
+.hff .radio:nth-of-type(1) {
+  margin-top: 0px;
+}
+
+/* Remove the first checkbox in the groups top margin so there is roughly 5px between label and checkbox */
+.hff.hff_checkbox_group .checkbox:nth-of-type(1) {
+  margin-top:0px;
+}

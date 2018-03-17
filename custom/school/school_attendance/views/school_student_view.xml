@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_student_form_inherit_school_attendance" model="ir.ui.view">
+        <field name="name">school.student</field>
+        <field name="model">school.student</field>
+        <field name="inherit_id" ref="school.view_school_student_form_1"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="attendance_state" widget="school_attendance_form_presence_indicator"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- student kanban view specifically for school_attendance (to check in/out) -->
+    <record id="school_student_view_kanban" model="ir.ui.view">
+        <field name="name">school.student.kanban</field>
+        <field name="model">school.student</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <kanban class="o_school_student_attendance_kanban" create="false">
+                <templates>
+                    <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_kanban_image">
+                            <img t-att-src="kanban_image('school.student', 'photo', record.id.value)"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div id="textbox">
+                                <div class="col-xs-11" style="padding:0px">
+                                    <strong>
+                                        <field name="name"/>
+                                    </strong>
+                                </div><div class="col-xs-1" style="padding:0px">
+                                    <field name="attendance_state" widget="school_attendance_kanban_presence_indicator"/>
+                                </div>
+                            </div>
+                            <ul>
+                                <li t-if="record.form_id.raw_value"><field name="form_id"/></li>
+                                <li t-if="record.classroom_id.raw_value"><field name="classroom_id"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_student_kanban_inherit_school_attendance" model="ir.ui.view">
+        <field name="name">school.student.kanban.inherit</field>
+        <field name="model">school.student</field>
+        <field name="inherit_id" ref="school.student_student_kanban_view"/>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//td[@class='oe_kanban_title1']" position="replace">
+                    <td class="oe_kanban_title1" align="left" valign="middle" style="padding-left:10px;">
+                        <h4>
+                            <a type="open">
+                                <div class="col-xs-11" style="padding:0px">
+                                    <strong>
+                                        <field name="name"/>
+                                        <field name="gender" invisible="1"/>
+                                        <field name="state" invisible="1"/>
+                                    </strong>
+                                </div>
+                                <div class="col-xs-1" style="padding:0px">
+                                    <field name="attendance_state" widget="school_attendance_kanban_presence_indicator"/>
+                                </div>
+                            </a>
+                        </h4>
+                    </td>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="school_student_attendance_action_kanban" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">school.student</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="school_student_view_kanban"/>
+        <field name="help" type="html">
+            <p>
+                Create a few students to be able to select a student here and perform his check in / check out.
+            </p>
+            <p>
+                To create students go to the School menu.
+            </p>
+        </field>
+    </record>
+
+</odoo>

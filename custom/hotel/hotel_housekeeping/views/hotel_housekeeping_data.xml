@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+    <data noupdate="1">
+
+        <!--Demo data for hotel housekeeping activity type -->
+        <record id="hotel_housekeeping_activity_type_0" model="hotel.housekeeping.activity.type">
+            <field name="name">All Activities</field>
+        </record>
+
+        <record id="hotel_housekeeping_activity_type_1" model="hotel.housekeeping.activity.type">
+            <field name="activity_id" search="[('name', '=', 'All Activities')]" />
+            <field name="name">Room Activity</field>
+        </record>
+
+        <record id="hotel_housekeeping_activity_type_2" model="hotel.housekeeping.activity.type">
+            <field name="activity_id" search="[('name', '=', 'All Activities')]" />
+            <field name="name">Bed Activity</field>
+        </record>
+
+        <!--Demo data for hotel housekeeping activities -->
+        <record id="hotel_room_activities_1" model="hotel.activity">
+            <field name="name">Room Cleaning</field>
+            <field name="categ_id" search="[('name', '=', 'Room Activity')]" />
+        </record>
+
+        <record id="hotel_room_activities_2" model="hotel.activity">
+            <field name="name">Food Delivery</field>
+            <field name="categ_id" search="[('name', '=', 'All Activities')]" />
+        </record>
+
+        <record id="hotel_room_activities_3" model="hotel.activity">
+            <field name="name">Vacuuming</field>
+            <field name="categ_id" search="[('name', '=', 'All Activities')]" />
+        </record>
+
+        <record id="hotel_room_activities_4" model="hotel.activity">
+            <field name="name">Finishing Touches</field>
+            <field name="categ_id" search="[('name', '=', 'All Activities')]" />
+        </record>
+
+        <record id="hotel_room_activities_5" model="hotel.activity">
+            <field name="name">Stripping the Room</field>
+            <field name="categ_id" search="[('name', '=', 'Room Activity')]" />
+        </record>
+
+        <record id="hotel_room_activities_6" model="hotel.activity">
+            <field name="name">Making the Beds</field>
+            <field name="categ_id" search="[('name', '=', 'Bed Activity')]" />
+        </record>
+
+    </data>
+</odoo>

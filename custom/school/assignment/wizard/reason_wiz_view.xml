@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <record id="assignment_reject_homework_wiz" model="ir.ui.view">
+        <field name="name">Reject Homework Wizard</field>
+        <field name="model">reject.reason</field>
+        <field name="arch" type="xml">
+            <form string="Assigment Rejection Reason">
+                <field name="reasons" required="1"/>
+                <footer>
+                    <button name="save_reason" string="Save" type="object"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!-- Action -->
+    <record id="student_homework_reject" model="ir.actions.act_window">
+        <field name="name">Assigment Rejection Reason</field>
+        <field name="res_model">reject.reason</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+     </record>
+</odoo>

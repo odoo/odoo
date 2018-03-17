@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+    <!-- Scheduler For Hotel Room -->
+    <record model="ir.cron" id="room_analytic_cron">
+        <field name="name">Room Analysis</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model" eval="'hotel.room'" />
+        <field name="function" eval="'cron_room_line'" />
+        <field name="args" eval="'()'" />
+    </record>
+
+    <!-- Scheduler For To Inform Guest About Booking Before 24 Hours -->
+    <record model="ir.cron" id="Guest_reservation_reminder_24hrs">
+        <field name="name">Inform Guest About Booking Before 24 Hours
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="model" eval="'hotel.reservation'" />
+        <field name="function" eval="'reservation_reminder_24hrs'" />
+        <field name="args" eval="'()'" />
+    </record>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <report menu="False"
+                id="add_exam_result_id_qweb" 
+                string="Exam Result"
+                model="exam.result" 
+                report_type="qweb-pdf"
+                file="exam.exam_result_report"
+                name="exam.exam_result_report"/>
+
+        <report id="additional_exam_result_id_qweb" 
+                string="Additional Exam Result"
+                model="additional.exam.result" 
+                report_type="qweb-pdf"
+                file="exam.additional_exam_result_report" 
+                name="exam.additional_exam_result_report" />
+
+        <report id="result_info_id_qweb" 
+                string="Result Transcript"
+                model="student.student" 
+                report_type="qweb-pdf" 
+                file="exam.result_information_report" 
+                name="exam.result_information_report"
+                groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+
+        <report id="batch_result_qweb"
+                string="BatchWise Result"
+                model="exam.batchwise.result"
+                report_type="qweb-pdf"
+                file="exam_result_batch"
+                name="exam.exam_result_batch"/>
+
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Form View Of Send notice -->
+
+        <record id="wiz_send_notice_form_view" model="ir.ui.view">
+            <field name="name">wiz.notice.form</field>
+            <field name="model">wiz.notice</field>
+            <field name="arch" type="xml">
+                <form string="Send Notice">
+                    <group colspan="3">
+                        <field name="notice_type" string="Notice Type"/>
+                        <field name="notice_id" string="Notice" attrs="{'invisible': [('notice_type','=','quick')]}"/>
+                        <field name="notice" placeholder="Type notice content" attrs="{'invisible': [('notice_type','=','existing')]}"/>
+                        <field name="send_via" string="Send Via"/>
+                        <field name="audience" string="Audience"/>
+                        <field name="phone_numbers" placeholder="Enter comma separated Phone numbers. eg. 23288977876,23276553344" attrs="{'invisible': ['|',('audience','=','parents'),('audience','=','teachers'),('audience','=','selected'),('send_via','=','email')]}"/>
+                        <field name="parent_ids" attrs="{'invisible': ['|',('audience','=','parents'),('audience','=','others')]}"/>
+                        <field name="emails" placeholder="Enter comma separated emails. eg. fb@byteltd.com,eg@byteltd.com,demo@byteltd.com" attrs="{'invisible': ['|',('audience','=','parents'),('audience','=','teachers'),('audience','=','selected'),('send_via','=','sms')]}"/>
+                    <newline/>
+                    </group>
+                    <footer>
+                        <button name="send_notice" string="Send Notice" class="btn btn-sm btn-default fa fa-envelope" type="object"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Send Notice -->
+        <record id="action_send_notice" model="ir.actions.act_window">
+            <field name="name">Send Notice</field>
+            <field name="res_model">wiz.notice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+        <!-- Menu Item Of Send Notice -->
+
+        <menuitem id="menu_send_notice" name="Send Notice" parent="menu_school_tools" action="action_send_notice" sequence="10"/>
+</odoo>

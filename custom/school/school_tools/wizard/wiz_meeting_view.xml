@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+        <!-- Form View Of School Meeting Wizard  -->
+
+        <record id="view_school_meeting_form" model="ir.ui.view">
+            <field name="name">school.meeting.form</field>
+            <field name="model">school.meeting</field>
+            <field name="arch" type="xml">
+                <form string="School Meeting">
+                    <header>
+                        <button name="set_meeting" string="Set Meeting" type="object"/>
+                        <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    </header>
+                     <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Enter Name"/>
+                        </h1>
+                        <group col="4" colspan="4">
+                            <field name="meeting_with" placeholder="Hold Meeting with"/>
+                            <field name="meeting_date" placeholder="Enter Meeting Start Time"/>
+                            <field name="deadline" />
+                            <field name="description" colspan="4" placeholder="Description"/>
+                        </group>
+                    </sheet>
+               </form>
+            </field>
+        </record>
+
+
+        <record id="action_school_meeting" model="ir.actions.act_window">
+            <field name="name">School Meeting</field>
+            <field name="res_model">school.meeting</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+        <!-- Menu Item Of Result -->
+
+        <menuitem id="menu_school_tools" name="Tools" parent="school.menu_school"/>
+        <menuitem id="menu_school_meeting" name="School Meeting" parent="menu_school_tools" action="action_school_meeting" sequence="1"/>
+
+        <!-- Action Of Form View Of Student Meeting Wizard -->
+
+        <act_window id="action_student_meeting_form"
+            key2="client_action_multi"
+            name="Student Meeting"
+            res_model="school.meeting"
+            src_model="school.meeting"
+            view_mode="form"
+            target="new"
+            view_type="form"/>
+
+</odoo>

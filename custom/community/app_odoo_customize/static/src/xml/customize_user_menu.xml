@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="UserMenu">
+        <t t-jquery=".dropdown-menu" t-operation="prepend">
+            <switch-lang/>
+            <li t-if="widget.session.debug != true">
+                <a href="#" data-menu="debug">Activate the developer mode</a>
+            </li>
+            <li t-if="widget.session.debug != 'assets'">
+                <a href="#" data-menu="debugassets">Activate the developer mode (with assets)</a>
+            </li>
+            <li t-if="widget.session.debug != false">
+                <a href="#" data-menu="quitdebug">Deactivate the developer mode</a>
+            </li>
+            <li>
+                <a href="#" data-menu="documentation_dev">Developer Manual</a>
+            </li>
+            <li class="divider"/>
+        </t>
+    </t>
+</templates>

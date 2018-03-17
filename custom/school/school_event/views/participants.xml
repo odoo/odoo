@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <template id="participants">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="event">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <div class="row">
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <span align="center">
+                                    <h1>Event information</h1>
+                                </span>
+                                <table width="100%">
+                                    <tr>
+                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Event Name</b>
+                                        </td>
+                                        <td width="5%">
+                                            <b>:</b>
+                                        </td>
+                                        <td width="65%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <span t-field="event.name" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Contact person</b>
+                                        </td>
+                                        <td width="5%">
+                                            <b>:</b>
+                                        </td>
+                                        <td width="65%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <span t-field="event.contact_per_id.name" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Supervisor</b>
+                                        </td>
+                                        <td width="5%">
+                                            <b>:</b>
+                                        </td>
+                                        <td width="65%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <span t-field="event.supervisor_id.name" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Start date</b>
+                                        </td>
+                                        <td width="5%">
+                                            <b>:</b>
+                                        </td>
+                                        <td width="65%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <span t-field="event.start_date" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>End Date</b>
+                                        </td>
+                                        <td width="5%">
+                                            <b>:</b>
+                                        </td>
+                                        <td width="65%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <span t-field="event.end_date" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Parameter</b>
+                                        </td>
+                                        <td width="5%">
+                                            <b>:</b>
+                                        </td>
+                                        <td width="65%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <span t-field="event.parameter_id.name" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Maximum Participants</b>
+                                        </td>
+                                        <td width="5%">
+                                            <b>:</b>
+                                        </td>
+                                        <td width="65%" style="font-family: 'Helvetica';font-size: 16px;">
+                                            <span t-field="event.maximum_participants" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <div style="font-family: 'Helvetica';font-size: 18px;">
+                                    <b>1. Participated Standards information.</b>
+                                </div>
+                                <br />
+                                <table width="100%" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <td align="center" width="35%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                <b>Standard</b>
+                                            </td>
+                                            <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                <b>Medium</b>
+                                            </td>
+                                            <td width="35%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                <b>Class Teacher</b>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="event.part_standard_ids" t-as="part_standard_ids">
+                                            <tr>
+                                                <td align="center" width="35%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                    <span t-field="part_standard_ids.standard_id.name" />
+                                                    <span> ( </span>
+                                                    <span t-field="part_standard_ids.division_id.name" />
+                                                    <span> )</span>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                    <span t-field="part_standard_ids.medium_id.name" />
+                                                </td>
+                                                <td width="35%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                    <span t-field="part_standard_ids.user_id.name" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <br />
+                                <div style="font-family: 'Helvetica';font-size: 18px;">
+                                    <b>2. Participated Students information.</b>
+                                </div>
+                                <br />
+                                <table width="100%" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                <b>Name</b>
+                                            </td>
+                                            <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                <b>Standard</b>
+                                            </td>
+                                            <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                <b>Score</b>
+                                            </td>
+                                            <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                <b>Rank</b>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="event.part_ids" t-as="part_ids">
+                                            <tr>
+                                                <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                    <span t-field="part_ids.name.name" />
+                                                    <span t-field="part_ids.name.last" />
+                                                </td>
+                                                <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                    <span t-field="part_ids.name.standard_id"/>
+                                                    <span> (</span>
+                                                    <span t-field="part_ids.name.medium_id.code" />
+                                                    <span> - </span>
+                                                    <span t-field="part_ids.name.division_id.code" />
+                                                    <span>)</span>
+                                                </td>
+                                                <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                    <span t-field="part_ids.score" />
+                                                </td>
+                                                <td align="center" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                    <span t-field="part_ids.sequence" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+</odoo>

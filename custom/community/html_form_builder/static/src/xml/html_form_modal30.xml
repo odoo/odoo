@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="html_form_builder_snippets.textbox_config">
+  <div class="modal fade" id="htmlTextboxModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="html_form_config_label" class="control-label">Format Validation</label>
+                <select id="html_form_field_format_validation" class="form-control" required="required">
+                    <option value="">None</option>
+                    <option value="email">Email</option>
+                    <option value="lettersonly">Letters Only</option>
+                    <option value="integer">Integer</option>
+                    <option value="number">Number</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="html_form_config_name" class="control-label">Character Limit</label>
+                <input type="number" id="html_form_field_character_limit" class="form-control"/>
+            </div>
+
+            <div class="checkbox">
+                <label><input type="checkbox" id="html_form_field_required"/>Required</label>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_textbox_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.textarea_config">
+  <div class="modal fade" id="htmlTextareaModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+            
+            <div class="checkbox">
+                <label><input type="checkbox" id="html_form_field_required"/>Required</label>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_textarea_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.dropbox_config">
+  <div class="modal fade" id="htmlDropboxModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+            
+            <div class="checkbox">
+                <label><input type="checkbox" id="html_form_field_required"/>Required</label>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_dropbox_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.radio_group_config">
+  <div class="modal fade" id="htmlRadioGroupModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="layout_type" class="control-label">Layout Type</label>
+                <select id="layout_type" class="form-control">
+                    <option value="multi">Multi Line</option>
+                    <option value="single">Single Line</option>
+                </select>
+            </div>
+            
+            <div class="checkbox">
+                <label><input type="checkbox" id="html_form_field_required"/>Required</label>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_radio_group_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.date_picker_config">
+  <div class="modal fade" id="htmlDatePickerModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="date_format" class="control-label">Date Format</label>
+                <select id="date_format" class="form-control">
+                    <option value="days">Years, Months and Days</option>
+                    <option value="months">Years and Months Only</option>
+                    <option value="years">Years Only</option>
+                </select>
+            </div>
+            
+            <div class="checkbox">
+                <label><input type="checkbox" id="html_form_field_required"/>Required</label>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_date_picker_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.datetime_picker_config">
+  <div class="modal fade" id="htmlDateTimePickerModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+            
+            <div class="checkbox">
+                <label><input type="checkbox" id="html_form_field_required"/>Required</label>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_datetime_picker_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.checkbox_config">
+  <div class="modal fade" id="htmlCheckboxModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+           
+            <div class="checkbox">
+                <label><input type="checkbox" id="html_form_field_required"/>Required</label>
+            </div>
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_checkbox_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.checkbox_group_config">
+  <div class="modal fade" id="htmlCheckboxGroupModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="field_size" class="control-label">Field Size</label>
+                <select id="field_size" class="form-control">
+
+                </select>
+            </div>
+           
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_checkbox_group_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.input_group_config">
+  <div class="modal fade" id="htmlInputGroupModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="sub_fields" class="control-label">Sub Fields</label>
+                <div id="sub_fields_div">
+                
+                </div>
+            </div>
+           
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_input_group_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+<t t-name="html_form_builder_snippets.binary_config">
+  <div class="modal fade" id="htmlBinaryModal" contenteditable="False" contentEditable="false" backdrop="false" tabindex="1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:2001">
+  
+    <div class="modal-dialog">
+      <div class="modal-content gard_modal">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">×</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title">Customize your field</h4>
+        </div>
+          
+        <div class="modal-body" contenteditable="false">
+
+            <div class="form-group">
+                <label for="field_id" class="control-label">ORM Field</label>
+                <select id="field_config_id" class="form-control">
+                
+                </select>
+            </div>           
+
+        </div> <!-- modal-body -->
+
+        <div class="modal-footer">
+          <button id="cancel" data-dismiss="modal" class="btn btn-primary">Cancel</button>
+          <button id="save_binary_field"  class="btn btn-danger">Save</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- / .modal -->
+</t>
+
+</templates>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+
+        <record id="school_teacher_assignment_firstexercise0" model="school.teacher.assignment">
+            <!-- <field name="division_id" ref="school.demo_standard_division_1"/> -->
+            <field name="teacher_id" ref="hr.employee_chs"/>
+            <field name="subject_id" ref="school.demo_subject_subject_1"/>
+            <field name="name">First Exercise</field>
+            <!-- <field name="medium_id" ref="school.demo_standard_medium_1"/> -->
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="standard_id" ref="school.demo_standard_standard_1"/>
+        </record>
+
+        <record id="school_teacher_assignment_secondpractice0" model="school.teacher.assignment">
+            <!-- <field name="division_id" ref="school.demo_standard_division_1"/> -->
+            <field name="teacher_id" ref="hr.employee_qdp"/>
+            <field name="subject_id" ref="school.demo_subject_subject_3"/>
+            <field name="name">Second practice</field>
+            <!-- <field name="medium_id" ref="school.demo_standard_medium_1"/> -->
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="standard_id" ref="school.demo_standard_standard_1"/>
+        </record>
+
+        <record id="school_teacher_assignment_firstexercise1" model="school.teacher.assignment">
+            <!-- <field name="division_id" ref="school.demo_standard_division_1"/> -->
+            <field name="teacher_id" ref="hr.employee_al"/>
+            <field name="subject_id" ref="school.demo_subject_subject_5"/>
+            <field name="name">First Exercise</field>
+            <!-- <field name="medium_id" ref="school.demo_standard_medium_1"/> -->
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="standard_id" ref="school.demo_standard_standard_1"/>
+        </record>
+
+        <record id="school_teacher_assignment_secondexercise0" model="school.teacher.assignment">
+            <!-- <field name="division_id" ref="school.demo_standard_division_2"/> -->
+            <field name="teacher_id" ref="hr.employee_mit"/>
+            <field name="subject_id" ref="school.demo_subject_subject_4"/>
+            <field name="name">Second Exercise</field>
+            <!-- <field name="medium_id" ref="school.demo_standard_medium_1"/> -->
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="standard_id" ref="school.demo_standard_standard_3"/>
+        </record>
+
+        <record id="school_teacher_assignment_thirdexercise0" model="school.teacher.assignment">
+            <!-- <field name="division_id" ref="school.demo_standard_division_1"/> -->
+            <field name="teacher_id" ref="hr.employee_stw"/>
+            <field name="subject_id" ref="school.demo_subject_subject_1"/>
+            <field name="name">Third Exercise</field>
+            <!-- <field name="medium_id" ref="school.demo_standard_medium_3"/> -->
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="standard_id" ref="school.demo_standard_standard_2"/>
+        </record>
+
+        <!--Student assignment -->
+
+        <record id="school_Student_assignment_firstxercise0" model="school.student.assignment">
+            <field name="student_id" ref="school.demo_student_student_1"/>
+            <field name="teacher_id" ref="hr.employee_al"/>
+            <field name="name">First Exercise</field>
+            <field name="subject_id" ref="school.demo_subject_subject_2"/>
+            <field name="standard_id" ref= "school.demo_school_standard_1"/>
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+        </record>
+
+        <record id="school_Student_assignment_secondexercise0" model="school.student.assignment">
+            <field name="student_id" ref="school.demo_student_student_2"/>
+            <field name="teacher_id" ref="hr.employee_fpi"/>
+            <field name="name">Second Exercise</field>
+            <field name="subject_id" ref="school.demo_subject_subject_3"/>
+            <field name="standard_id" ref= "school.demo_school_standard_2" />
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+        </record>
+
+        <record id="school_Student_assignment_thirdexercise0" model="school.student.assignment">
+            <field name="student_id" ref="school.demo_student_student_3"/>
+            <field name="teacher_id" ref="hr.employee_al"/>
+            <field name="name">Third Exercise</field>
+            <field name="subject_id" ref="school.demo_subject_subject_6"/>
+            <field name="standard_id" ref= "school.demo_school_standard_3" />
+            <field name="assign_date" eval= "time.strftime('%Y-%m-%d')" />
+            <field name="due_date" eval= "time.strftime('%Y-%m-%d')" />
+        </record>
+    </data>
+</odoo>

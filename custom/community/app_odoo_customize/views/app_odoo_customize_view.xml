@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="switch_language" name="switch_language assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/app_odoo_customize/static/src/css/app.css"/>
+                <script type="text/javascript" src="/app_odoo_customize/static/src/js/switch_language.js"></script>
+                <script type="text/javascript" src="/app_odoo_customize/static/src/js/customize_user_menu.js"></script>
+                <script type="text/javascript" src="/app_odoo_customize/static/src/js/app_window_title.js"/>
+            </xpath>
+        </template>
+
+        <template id="replace_login" name="replace_login" inherit_id="web.login_layout">
+            <xpath expr="//a[@href='https://www.odoo.com']" position="replace">
+                <a href="https://www.sunpop.cn" target="_blank">Powered by <span>odooApp</span></a>
+            </xpath>
+        </template>
+    </data>
+</odoo>

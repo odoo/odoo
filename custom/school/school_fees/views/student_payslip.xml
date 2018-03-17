@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <template id="student_payslip">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <div class="row" align="center">
+                                <span>
+                                    <h1>Student PaySlip</h1>
+                                </span>
+                            </div>
+                            <div class="row" align="center" style="font-family: 'Helvetica';font-size: 20px;">
+                                <span>
+                                    <b t-field="o.name"></b>
+                                </span>
+                            </div>
+                            <div class="row" align="center" style="font-family: 'Helvetica';font-size: 20px;">
+                                <span>For the month of </span>
+                                <span t-esc="get_month(o.date)"></span>
+                            </div>
+                            <br />
+                            <br />
+                            <table width="100%">
+                                <tr>
+                                    <td width="15%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Number</b>
+                                    </td>
+                                    <td width="5%">
+                                        <b>:</b>
+                                    </td>
+                                    <td width="80%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="o.number"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="15%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Date</b>
+                                    </td>
+                                    <td width="5%">
+                                        <b>:</b>
+                                    </td>
+                                    <td width="80%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-esc="time.strftime('%Y-%m-%d')"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="row" align="center" style="font-family: 'Helvetica';font-size: 18px;">
+                                <span>
+                                    <b>PaySlip of </b>
+                                    <b t-field="o.sudo().student_id.name"></b>
+                                </span>
+                            </div>
+                            <br />
+                            <table width="100%" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <td width="5%" style="font-family: 'Helvetica';font-size: 18px;" align="center">
+                                            <b>#</b>
+                                        </td>
+                                        <td width="50%" align="left" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Fees Structure</b>
+                                        </td>
+                                        <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Total</b>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="counter" t-value="0"/>
+                                    <t t-foreach="o.line_ids" t-as="l">
+                                        <t t-set="counter" t-value="counter+1"/>
+                                        <tr>
+                                            <td>
+                                                <span><t t-esc="counter"></t></span>
+                                            </td>
+                                            <td width="5%" align="center" style="font-family: 'Helvetica';font-size: 16px;">
+<!--                                                 <span t-esc="get_no()"></span> -->
+                                            </td>
+                                            <td width="50%" align="left" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-field="l.name"></span>
+                                            </td>
+                                            <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-esc="l.amount"></span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <table width="100%">
+                                <tr>
+                                    <td width="5%"></td>
+                                    <td width="50%" align="left" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <b>Total Fees</b>
+                                    </td>
+                                    <td align="right" width="45%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <b t-esc="o.total"></b>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%">
+                                <tr>
+                                    <td width="50%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <b>Principal</b>
+                                        <br />
+                                        <span>Authorized Signature</span>
+                                    </td>
+                                    <td width="50%">
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+</odoo>

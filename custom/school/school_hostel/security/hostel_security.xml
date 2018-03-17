@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="0">
+
+        <record id="module_category_school" model="ir.module.category">
+            <field name="name">Hostel Management</field>
+            <field name="sequence">31</field>
+        </record>
+
+        <record id="group_hostel_manager" model="res.groups">
+            <field name="name">Hostel Manager</field>
+            <field name="category_id" ref="module_category_school"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_hostel_user" model="res.groups">
+            <field name="name">Hostel User</field>
+            <field name="category_id" ref="module_category_school"/>
+        </record>
+
+        <!-- Record Rule Of Personal HOSTEL Student Record -->
+        <record id="student_hostel_student_record" model="ir.rule">
+            <field name="name">Personal HOSTEL Student Record</field>
+            <field ref="school_hostel.model_hostel_student" name="model_id"/>
+            <field eval="1" name="global"/>
+            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+
+        <!-- Record Rule Parent can see hostel record of own children -->
+        <record id="student_hostel_parent_record" model="ir.rule">
+            <field name="name">Parent Student Hostel Record</field>
+            <field ref="school_hostel.model_hostel_student" name="model_id"/>
+            <field eval="1" name="global"/>
+            <field name="domain_force">[('student_id','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+            <!-- views -->
+
+    <record id="view_attendance_tree" model="ir.ui.view">
+        <field name="name">school.attendance.tree</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Student attendances">
+                <field name="student_id"/>
+                <field name="date"/>
+                <field name="attendance_code"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="school_attendance_view_form" model="ir.ui.view">
+        <field name="name">school.attendance.form</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Student attendances">
+                 <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                    <group>
+                        <field name="student_id"/>
+                        <field name="date"/>
+                        <field name="check_in"/>
+                        <field name="check_out"/>
+                        <field name="attendance_code"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="school_attendance_view_filter" model="ir.ui.view">
+        <field name="name">school_attendance_view_filter</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <search string="School Attendance Search">
+                <field name="student_id"/>
+                <field name="form_id" groups="school.group_school_secondary"/>
+                <field name="class_id" groups="school.group_school_primary"/>
+                <filter name="today" string="Today" domain="[('check_in', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('check_in', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
+                <filter string="Current Month" domain="[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <separator/>
+                <filter string="No Check Out" domain="[('check_out', '=', False)]" />
+                <filter string="Late Attendance" domain="[('late', '=', True)]" />
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="student" string="Student" context="{'group_by':'student_id'}"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Month" context="{'group_by':'check_in'}"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Form" context="{'group_by':'form_id'}" groups="school.group_school_secondary"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Class" context="{'group_by':'class_id'}" groups="school.group_school_primary"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Classroom" context="{'group_by':'classroom_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="school_attendance_view_pivot" model="ir.ui.view">
+        <field name="name">school.attendance.pivot</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <pivot string="Attendance">
+                <field name="student_id" type="row"/>
+                <field name="check_in" type="col"/>
+                <field name="time_spent" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="school_attendance_view_graph" model="ir.ui.view">
+        <field name="name">school.attendance.graph</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <graph string="Attendance">
+                <field name="student_id"/>
+                <field name="check_in"/>
+                <field name="time_spent" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- actions -->
+
+    <record id="school_attendance_action" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">school.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{"search_default_today":1}</field>
+        <field name="search_view_id" ref="school_attendance_view_filter" />
+        <field name="help" type="html">
+            <p>The attendance records of your students will be displayed here.</p>
+            <p>Please make sure you're using the correct filter if you expected to see any.</p>
+        </field>
+    </record>
+
+    <record id="school_attendance_action_graph" model="ir.actions.act_window">
+        <field name="name">Attendance Analysis</field>
+        <field name="res_model">school.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="view_id"></field>  <!-- force empty -->
+    </record>
+
+    <record id="school_attendance_action_graph_filtered" model="ir.actions.act_window">
+        <field name="name">Attendance Analysis</field>
+        <field name="res_model">school.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="context">{
+            'search_default_form_id': [active_id],
+            'default_form_id': active_id}
+        </field>
+        <field name="view_id"></field>  <!-- force empty -->
+    </record>
+
+    <record id="school_attendance_action_kiosk_mode" model="ir.actions.client">
+        <field name="name">Attendances</field>
+        <field name="tag">school_attendance_kiosk_mode</field>
+        <field name="target">fullscreen</field>
+    </record>
+
+    <record id="school_attendance_action_my_attendances" model="ir.actions.act_window">
+        <field name="name">Attendance for This Month</field>
+        <field name="res_model">school.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="domain">[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]</field>
+        <field name="search_view_id" ref="school_attendance_view_filter"/>
+        <field name="context">{'search_default_student_id': active_id}</field>
+
+    </record>
+
+            <!-- Inherited Form View Of Student -->
+    <record id="view_school_student_form2" model="ir.ui.view">
+        <field name="name">school.student.form.inherit</field>
+        <field name="model">school.student</field>
+        <field name="inherit_id" ref="school.view_school_student_form_1"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
+                        <button name="%(school_attendance_action_my_attendances)d" type="action" class="oe_inline oe_stat_button">
+                        <img src="/school_attendance/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
+                        <lable style="">Attendance</lable>
+                    </button>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+
+    <record id="school_attendance_action_greeting_message" model="ir.actions.client">
+        <field name="name">Message</field>
+        <field name="tag">school_attendance_greeting_message</field>
+    </record>
+
+    <!-- Menus -->
+
+    <menuitem id="menu_school_attendance_root" name="Attendances" sequence="3" parent="school.menu_school" groups="school_attendance.group_school_attendance_manager,school.group_school_administration,school.group_school_teacher" web_icon="school_attendance,static/description/icon.png"/>
+
+    <menuitem id="menu_school_attendance_manage_attendances" name="Manage Attendances" parent="menu_school_attendance_root" sequence="20" groups="school_attendance.group_school_attendance_manager,school.group_school_administration,school.group_school_teacher"/>
+
+    <menuitem id="menu_school_attendance_view_attendances" name="Attendances" parent="menu_school_attendance_manage_attendances" sequence="10" groups="school_attendance.group_school_attendance_manager,school.group_school_administration,school.group_school_teacher" action="school_attendance_action"/>
+
+    <menuitem id="menu_school_attendance_kiosk_mode" name="Attendance Mode" parent="menu_school_attendance_root" sequence="1" groups="school_attendance.group_school_attendance_manager,school.group_school_administration" action="school_attendance_action_kiosk_mode"/>
+
+    <menuitem id="menu_school_attendance_report" name="Reports" parent="menu_school_attendance_root" sequence="30" groups="school_attendance.group_school_attendance_manager,school.group_school_administration" action="school_attendance_action_graph"/>
+</odoo>

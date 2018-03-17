@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Food Item Category -->
+
+        <record id="punjabi_1" model="pos.category">
+            <field name="parent_id" ref="point_of_sale.fruits_vegetables" />
+            <field name="name">Punjabi</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/food-image.jpg" />
+        </record>
+        <record id="south_indian_1" model="pos.category">
+            <field name="parent_id" ref="point_of_sale.fruits_vegetables" />
+            <field name="name">South Indian</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/food-image.jpg" />
+        </record>
+        <record id="gujarati_1" model="pos.category">
+            <field name="parent_id" ref="point_of_sale.fruits_vegetables" />
+            <field name="name">Gujarati</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/food-image.jpg" />
+        </record>
+
+        <!-- Punjabi -->
+        <record id="pun1" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">110.00</field>
+            <field name="name">Paneer Tikaa</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/paneer_tikka.png" />
+        </record>
+
+        <record id="pun2" model="product.product">
+            <field name="available_in_pos">True</field>
+            <field name="list_price">15.00</field>
+            <field name="name">Tanduri Roti</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/tandoori-roti.jpg" />
+        </record>
+
+        <record id="pun3" model="product.product">
+            <field name="list_price">150.00</field>
+            <field name="name">Paneer Butter Masala</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/paneer_butter_masala.jpg" />
+        </record>
+
+        <record id="pun4" model="product.product">
+            <field name="name">Cheese Masala</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">110.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/chees_masala.jpg" />
+        </record>
+
+        <record id="pun5" model="product.product">
+            <field name="name">Paneer Bhurji</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">80.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/paneer_bhurji.jpg" />
+        </record>
+
+        <record id="pun6" model="product.product">
+            <field name="name">Mutter Paneer</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">70.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/muttter_paneer.png" />
+        </record>
+
+        <record id="pun7" model="product.product">
+            <field name="name">Malai Kofta</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/malai_kofta.jpg" />
+        </record>
+
+        <record id="pun8" model="product.product">
+            <field name="name">Masala kulcha</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">30</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/masala_kulcha.jpg" />
+        </record>
+
+        <record id="pun9" model="product.product">
+            <field name="name">Paneer Makhani</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="punjabi_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">90.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/paneer_makhani.jpg" />
+        </record>
+
+        <!-- Gujarati -->
+
+        <record id="hotel_fooditem_21" model="product.product">
+            <field name="name">Chole-Bhature</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="gujarati_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/chole.png" />
+        </record>
+
+        <record id="hotel_fooditem_12" model="product.product">
+            <field name="name">Bahji Pav</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="gujarati_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/bhaji_paw.jpg" />
+        </record>
+
+        <record id="hotel_fooditem_13" model="product.product">
+            <field name="name">Khandvi</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="gujarati_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/khandvi.jpg" />
+        </record>
+
+        <record id="hotel_fooditem_14" model="product.product">
+            <field name="name">Halva</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="gujarati_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/Halva.jpg" />
+        </record>
+
+        <!-- South Indian -->
+        <record id="hotel_fooditem_2" model="product.product">
+            <field name="name">Dosa</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="south_indian_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/dosa.png" />
+        </record>
+
+        <record id="hotel_fooditem_15" model="product.product">
+            <field name="name">Idli-Sambar</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="south_indian_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/Idli_sambar.jpg" />
+        </record>
+
+        <record id="hotel_fooditem_16" model="product.product">
+            <field name="name">Upma</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="south_indian_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/upma.jpg" />
+        </record>
+
+        <record id="hotel_fooditem_17" model="product.product">
+            <field name="name">Vada-Sambar</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="south_indian_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/vada_sambhar.jpg" />
+        </record>
+
+        <record id="hotel_fooditem_18" model="product.product">
+            <field name="name">Uttapam</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="south_indian_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/uttapam.jpg" />
+        </record>
+
+        <record id="hotel_fooditem_19" model="product.product">
+            <field name="name">Appam </field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="south_indian_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/appam1.jpg" />
+        </record>
+
+        <record id="hotel_fooditem_20" model="product.product">
+            <field name="name">Pongal</field>
+            <field name="available_in_pos">True</field>
+            <field name="to_weight">True</field>
+            <field name="pos_categ_id" ref="south_indian_1" />
+            <field name="uom_id" ref="product.product_uom_kgm" />
+            <field name="uom_po_id" ref="product.product_uom_kgm" />
+            <field name="list_price">85.00</field>
+            <field name="image" type="base64"
+                file="hotel_pos_restaurant/static/img/pongal.jpg" />
+        </record>
+
+
+        <record id="hotel.hotel_room_6" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_61" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_1" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_2" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_3" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_4" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_5" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_0" model="hotel.room">
+            <field name="available_in_pos" eval="False" />
+        </record>
+
+        <record id="hotel.hotel_service_6" model="hotel.services">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_service_0" model="hotel.services">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_service_1" model="hotel.services">
+            <field name="available_in_pos" eval="False" />
+        </record>
+
+        <record id="hotel.hotel_room_amenities_1" model="hotel.room.amenities">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_amenities_2" model="hotel.room.amenities">
+            <field name="available_in_pos" eval="False" />
+        </record>
+        <record id="hotel.hotel_room_amenities_3" model="hotel.room.amenities">
+            <field name="available_in_pos" eval="False" />
+        </record>
+
+    </data>
+</odoo>

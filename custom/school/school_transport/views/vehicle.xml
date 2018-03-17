@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+        <template id="vehicle">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="vehicle">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <div class="row" align="center">
+                                <h1>Vehicle Information</h1>
+                            </div>
+                            <br />
+                            <table width="100%">
+                                <tr>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <b>Vehicle no</b>
+                                    </td>
+                                    <td width="5%">
+                                        <b>:</b>
+                                    </td>
+                                    <td width="70%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="vehicle.vehicle"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <b>Driver Name</b>
+                                    </td>
+                                    <td width="5%">
+                                        <b>:</b>
+                                    </td>
+                                    <td width="70%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="vehicle.driver_id.name"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <b>Capacity</b>
+                                    </td>
+                                    <td width="5%">
+                                        <b>:</b>
+                                    </td>
+                                    <td width="70%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="vehicle.capacity"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <b>Total Participants</b>
+                                    </td>
+                                    <td width="5%">
+                                        <b>:</b>
+                                    </td>
+                                    <td width="70%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="vehicle.participant"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <br />
+                            <div class="row" align="left" style="font-family: 'Helvetica';font-size: 18px;">
+                                <b>1. Vehicle participant detail.</b>
+                            </div>
+                            <br />
+                            <table width="100%" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Name</b>
+                                        </td>
+                                        <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Standard</b>
+                                        </td>
+                                        <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Point</b>
+                                        </td>
+                                        <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Registration date</b>
+                                        </td>
+                                        <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Registration End date</b>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="vehicle.vehi_participants_ids" t-as="vehi_participants_ids">
+                                        <tr>
+                                            <td width="20%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-field="vehi_participants_ids.name.name"></span>
+                                                <span t-field="vehi_participants_ids.name.last"></span>
+                                            </td>
+                                            <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-field="vehi_participants_ids.name.standard_id"></span>
+                                                <span>(</span>
+                                                <span t-field="vehi_participants_ids.name.medium_id.code"></span>
+                                                <span t-field="vehi_participants_ids.name.division_id.name"></span>
+                                                <span>)</span>
+                                            </td>
+                                            <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-field="vehi_participants_ids.point_id.name"></span>
+                                            </td>
+                                            <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-field="vehi_participants_ids.tr_reg_date"></span>
+                                            </td>
+                                            <td align="center" width="20%" style="font-family: 'Helvetica';font-size: 16px;">
+                                                <span t-field="vehi_participants_ids.tr_end_date"></span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+</odoo>

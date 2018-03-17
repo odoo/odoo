@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data>
+        <!-- Record Rule Parents can see own child Fee Register -->
+        <record id="fees_register_rule_parents" model="ir.rule">
+            <field name="name">Parents Fees Register Rule</field>
+            <field name="model_id" ref="model_school_fees_register"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('student_id','in',[student.id for student in user.related_parent_id.student_ids])]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+        </record>
+        
+         <!-- Record Rule Student can see own Fee Register -->
+        <record id="fees_register_rule_student" model="ir.rule">
+            <field name="name">Student Fees Register Rule</field>
+            <field name="model_id" ref="model_school_fees_register"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+        
+    </data>
+</odoo>

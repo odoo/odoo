@@ -1,0 +1,140 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+
+        <!-- library.card -->
+
+        <record id="demo_library_card_1" model="library.card">
+            <field name="code">A1</field>
+            <field name="user">student</field>
+            <field name="book_limit">02</field>
+        </record>
+
+        <record id="demo_library_card_2" model="library.card">
+            <field name="code">F1</field>
+            <field name="user">teacher</field>
+            <field name="book_limit">04</field>
+        </record>
+
+        <record id="demo_library_card_3" model="library.card">
+            <field name="code">A2</field>
+            <field name="user">student</field>
+            <field name="book_limit">02</field>
+        </record>
+
+        <record id="demo_library_card_4" model="library.card">
+            <field name="code">F2</field>
+            <field name="user">teacher</field>
+            <field name="book_limit">04</field>
+        </record>
+
+        <record id="demo_library_card_5" model="library.card">
+            <field name="code">F3</field>
+            <field name="user">teacher</field>
+            <field name="book_limit">04</field>
+        </record>
+
+        <!-- Product -->
+
+        <record id="library_product_b1" model="product.product">
+            <field name="name">DBMS</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_1"/>
+        </record>
+
+        <record id="library_product_b2" model="product.product">
+            <field name="name">C</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_2"/>
+        </record>
+
+        <!-- library.book.issue -->
+
+        <record id="demo_library_book_1" model="library.book.issue">
+            <field name="issue_code">101</field>
+            <field name="name"  ref="product_product_b1"/>
+            <field name="card_id" ref="demo_library_card_1"/>
+            <field name="user">Teacher</field>
+        </record>
+
+        <record id="demo_library_book_2" model="library.book.issue">
+            <field name="issue_code">201</field>
+            <field name="name"  ref="library_product_b2"/>
+            <field name="card_id" ref="demo_library_card_2"/>
+            <field name="user">Student</field>
+        </record>
+
+        <!-- library.book.request -->
+
+        <record id="demo_library_book_request_1" model="library.book.request">
+            <field name="card_id" ref="demo_library_card_1"/>
+            <field name="type">existing</field>
+        </record>
+
+        <record id="demo_library_book_request_2" model="library.book.request">
+            <field name="card_id" ref="demo_library_card_2"/>
+            <field name="type">existing</field>
+        </record>
+
+        <record id="demo_library_book_request_3" model="library.book.request">
+            <field name="card_id" ref="demo_library_card_3"/>
+            <field name="type">existing</field>
+        </record>
+
+        <record id="demo_library_book_request_4" model="library.book.request">
+            <field name="card_id" ref="demo_library_card_4"/>
+            <field name="type">existing</field>
+        </record>
+
+        <record id="demo_library_book_request_5" model="library.book.request">
+            <field name="card_id" ref="demo_library_card_5"/>
+            <field name="type">existing</field>
+        </record>
+
+        <!-- library.rack -->
+
+        <record id="demo_library_rack_1" model="library.rack">
+            <field name="name" >Book1</field>
+            <field name="code">PCB0001</field>
+        </record>
+
+        <record id="demo_library_rack_2" model="library.rack">
+            <field name="name" >Book2</field>
+            <field name="code">PCB0002</field>
+        </record>
+
+        <!-- Language -->
+
+        <record id="library_language_1" model="product.lang">
+            <field name="code">LG1</field>
+            <field name="name">English</field>
+        </record>
+
+        <record id="library_language_2" model="product.lang">
+            <field name="code">LG2</field>
+            <field name="name">French</field>
+        </record>
+
+        <record id="library_language_3" model="product.lang">
+            <field name="code">LG3</field>
+            <field name="name">Urdu</field>
+        </record>
+
+        <!-- library.author -->
+
+        <record id="library_author_1" model="library.author">
+            <field name="name">BalaGuruSwami</field>
+        </record>
+
+        <record id="library_author_2" model="library.author">
+            <field name="name">S.G.Gupta</field>
+        </record>
+
+        <record id="library_author_3" model="library.author">
+            <field name="name">THOMAS A.D</field>
+        </record>
+
+    </data>
+</odoo>

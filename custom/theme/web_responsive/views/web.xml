@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Copyright 2016 LasLabs Inc.
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+
+<odoo>
+
+    <template id="webclient_bootstrap"
+              inherit_id="web.webclient_bootstrap"
+              name="App Drawer - Web Client"
+              >
+
+        <xpath expr="//div[@class='o_sub_menu']" position="replace" />
+
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <meta charset="utf-8" />
+            <meta http-equiv="cleartype" content="on" />
+            <meta name="MobileOptimized" content="320" />
+            <meta name="HandheldFriendly" content="True" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        </xpath>
+
+        <xpath expr="//nav[@id='oe_main_menu_navbar']" position="replace">
+
+            <t t-set="body_classname" t-value="'drawer drawer--left o_web_client'" />
+
+            <header role="banner">
+                <nav id="odooAppDrawer" class="app-drawer-nav drawer-nav" role="navigation">
+                    <t t-call="web.menu" />
+                </nav>
+
+                <nav class="navbar navbar-default main-nav"
+                     role="navigation"
+                     groups="base.group_user,base.group_portal"
+                     >
+                    <div class="container-fluid">
+
+                        <div class="navbar-header">
+
+                            <a class="drawer-toggle navbar-collapse collapse btn btn-default app-drawer-toggle"
+                               accesskey="A"
+                               >
+                                <span class="sr-only">Toggle App Drawer</span>
+                                <i class="fa fa-th fa-lg app-drawer-icon-open"
+                                   t-translation="off"
+                                   aria-hidden="true"
+                                   />
+                            </a>
+
+                            <button type="button"
+                                    class="app-drawer-toggle drawer-toggle pull-left navbar-toggle collapsed"
+                                    >
+                                <span class="sr-only">Toggle App Drawer</span>
+                                <div class="fa fa-th fa-lg app-drawer-icon-open" />
+                            </button>
+
+                            <button type="button"
+                                    id="odooMenuBarToggle"
+                                    class="navbar-toggle collapsed pull-right"
+                                    data-toggle="collapse"
+                                    data-target="#odooMenuBarNav"
+                                    >
+                                <span class="sr-only">Toggle Navigation</span>
+                                <i class="fa fa-bars fa-lg"
+                                   t-translation="off"
+                                   aria-hidden="true"
+                                   />
+                            </button>
+
+                        </div>
+
+                        <div class="collapse navbar-collapse"
+                             id="odooMenuBarNav"
+                             data-parent="#odooMenuBarToggle"
+                             aria-expanded="false"
+                             >
+                            <div class="o_sub_menu"
+                                 groups="base.group_user,base.group_portal"
+                                 >
+                                <t t-call="web.menu_secondary" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav navbar-nav navbar-right navbar-systray o_menu_systray">
+                        <ul class="nav navbar-nav navbar-right navbar-systray-item oe_user_menu_placeholder"/>
+                        <ul class="nav navbar-nav navbar-right navbar-systray-item oe_systray"/>
+                    </div>
+                </nav>
+
+            </header>
+
+        </xpath>
+
+    </template>
+
+    <template id="menu_secondary"
+              inherit_id="web.menu_secondary"
+              name="App Drawer - Secondary Menu"
+              >
+
+        <xpath expr="//div[@class='o_sub_menu_content']/t" position="replace">
+
+            <t t-foreach="menu_data['children']" t-as="menu">
+                <ul style="display: none"
+                    class="oe_secondary_menu nav navbar-nav"
+                    t-att-data-menu-parent="menu['id']">
+                    <li class="app-name">
+                        <span class="oe_menu_text">
+                            <t t-esc="menu['name']"/>
+                        </span>
+                    </li>
+                    <li>
+                        <t t-call="web.menu_secondary_submenu" />
+                    </li>
+                </ul>
+            </t>
+
+        </xpath>
+
+    </template>
+
+    <template id="menu_secondary_submenu"
+              inherit_id="web.menu_secondary_submenu"
+              name="App Drawer - Secondary Submenu"
+              >
+
+        <xpath expr="//ul" position="replace">
+
+            <t t-foreach="menu['children']" t-as="menu">
+                <t t-if="menu['children']">
+                    <li t-attf-class="{{ 'dropdown-header' if submenu else '' }}">
+                        <t t-if="submenu">
+                            <t t-esc="menu['name']" />
+                            <t t-call="web.menu_secondary_submenu">
+                                <t t-set="submenu" t-value="True" />
+                            </t>
+                        </t>
+                        <t t-if="not submenu">
+                            <a class="dropdown-toggle"
+                               data-toggle="dropdown"
+                               role="button"
+                               aria-haspopup="true"
+                               aria-expanded="false"
+                               >
+                                <t t-esc="menu['name']" />
+                                <span class="caret" />
+                             </a>
+                            <ul t-if="menu['children']"
+                                t-attf-class="dropdown-menu oe_secondary_submenu dropdown-scrollable"
+                                >
+                                <t t-call="web.menu_secondary_submenu">
+                                    <t t-set="submenu" t-value="True" />
+                                </t>
+                            </ul>
+                        </t>
+                    </li>
+                </t>
+                <t t-if="not menu['children']">
+                    <li>
+                        <t t-call="web.menu_link" />
+                    </li>
+                </t>
+            </t>
+
+        </xpath>
+
+    </template>
+
+    <template id="menu_link"
+              inherit_id="web.menu_link"
+              name="App Drawer - Menu Link"
+              >
+
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-att-data-menu-name">menu['name']</attribute>
+        </xpath>
+
+        <xpath expr="//span[@class='oe_menu_text']" position="replace">
+            <t t-if="display_images">
+                <img t-attf-src="/web/image/ir.ui.menu/{{ menu['id'] }}/web_icon_data"
+                     class="app-drawer-icon-app img-rounded"
+                     t-att-alt="menu['name']"
+                     t-att-title="menu['name']"
+                     />
+                <p class="app-drawer-title text-center">
+                    <t t-esc="menu['name']" />
+                </p>
+            </t>
+            <t t-if="not display_images">
+                <span class="oe_menu_text">
+                    <t t-esc="menu['name']" />
+                </span>
+            </t>
+        </xpath>
+
+    </template>
+
+    <template id="menu"
+              inherit_id="web.menu"
+              name="App Drawer - Menu"
+              >
+
+        <xpath expr="//ul[contains(@class, 'oe_systray')]" position="replace" />
+
+        <xpath expr="//ul[contains(@class, 'oe_user_menu_placeholder')]" position="replace" />
+
+        <xpath expr="//ul[contains(@class, 'oe_application_menu_placeholder')]" position="replace">
+
+            <div class="panel-default app-drawer-app-panel" id="appDrawerAppMenu">
+                <div class="panel-heading" id="appDrawerAppPanelHead">
+                    <div class="col-xs-6">
+                        <h4 class="app-drawer-panel-title pull-left">
+                            <a class="app-drawer-icon-close drawer-toggle">
+                                <i class="fa fa-lg fa-chevron-left"
+                                   t-translation="off"
+                                   aria-hidden="true"
+                                   />
+                                Apps
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="col-xs-6">
+                        <a class="oe_logo pull-right" t-attf-href="/web?{{ keep_query() }}">
+                            <i class="fa fa-pencil-square-o oe_logo_edit"
+                               aria-hidden="true"
+                               t-translation="off"
+                               />
+                            <img src='/web/binary/company_logo'/>
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body" id="appDrawerAppPanelBody">
+                    <ul class="row list-unstyled oe_application_menu_placeholder"
+                        style="display: none;">
+                        <li t-foreach="menu_data['children']" t-as="menu"
+                            class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center mt16">
+                            <t t-call="web.menu_link">
+                                <t t-set="display_images" t-value="1" />
+                            </t>
+                        </li>
+                        <li id="menu_more_container" class="dropdown" style="display: none;">
+                            <a class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+                            <ul id="menu_more" class="dropdown-menu"></ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

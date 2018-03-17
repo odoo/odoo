@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+
+<templates id="form_view" xml:space="preserve">
+
+    <t t-extend="FormView.buttons">
+        <t t-jquery="button[accesskey='a']" t-operation="attributes">
+            <attribute name="accesskey">e</attribute>
+        </t>
+    </t>
+
+</templates>

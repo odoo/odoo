@@ -1,0 +1,165 @@
+.testimonial-bg{
+	background-color: #5f5f62;
+}
+.title-container.sm {
+    margin-bottom: 20px;
+}
+.pad60{
+	padding: 60px;
+}
+.quote > blockquote {
+    background: #252525 none repeat scroll 0 0;
+    margin-bottom: 0;
+    padding: 50px;
+    border: medium none;
+    font-size: 16px;
+    font-style: italic;
+    position: relative;
+}
+
+.author-info img {
+    border: 6px solid #f1f1f1;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    float: left;
+    margin-right: 20px;
+    margin-top: -32px;
+    position: relative;
+}
+.quote-author .name {
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 15px;
+    
+}
+
+.quote-author h5 {
+    font-size: 24px;
+    line-height: 27px;
+    font-weight: 300;
+ }
+#testimonial_carousel.carousel .carousel-indicators .active {
+    background-color: @color-primary;
+    border: 1px solid @color-primary;
+}
+#testimonial_carousel.carousel .carousel-indicators li{
+    background-color: @font-white;
+    border: 1px solid @font-white;
+}
+
+.quote-author span {
+    color: @color-primary;
+}
+
+.post-detail h3 {
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: none;
+    margin: 0;
+    margin-bottom: 3px;
+    line-height: 36px;
+}
+.post-detail{
+    float: left;
+    color: #999;
+    padding: 0 0 0 50px;
+    position: relative;
+}
+.post-location li{
+	margin : 0 0 5px;
+}
+.post-location{
+list-style: none;
+}
+.date-event{
+	font-size: 72px;
+    line-height: 73px;
+    font-weight: 700;
+    margin-top: 0;
+    color: @color-danger;
+	
+}
+.post-detail:before {
+    content: '';
+    height: 52px;
+    width: 1px;
+    background: #eee;
+    top: 28px;
+    left: 0;
+    position: absolute;
+}
+.date-event span{
+	font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 700;
+    line-height: 25px;
+}
+.post-detail .meta{
+	text-transform: uppercase;
+    font-weight: 700;
+    font-size: 13px;
+    color: #999;
+    line-height: 25px;
+}
+.post-detail .meta div{
+	display: inline-block;
+	line-height: 25px;
+    margin-right: 19px;
+}
+.post-detail p{
+	font-size: 13px;
+}
+.item-event {
+    overflow: hidden;
+    border-top: 1px solid #eee;
+    padding: 30px 15px;
+    
+}
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 568px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+  
+  /*.col-md-6{
+	padding: 0 !important;
+	}*/
+  .carousel{
+		height:auto !important;
+	}
+ 
+}
+
+@media (max-width: 767px)
+{
+	.author-info img{
+		margin: 0;
+	}
+	.quote > blockquote{
+		padding: 0;
+	}
+	.carousel{
+		height:auto !important;
+	}
+	#myCarousel .carousel-indicators {
+		bottom:-8px !important;
+	}
+	.populer-courses-area-v2 .course-thumb{
+		padding-right: 0;
+		width: 100%;	
+	}
+	.populer-courses-area-v2 .course-thumb img{
+		width: 100%;	
+	}
+	.populer-courses-area-v2 .course-info {
+		padding: 0 15px;
+		width: 100%;
+		}
+	.navbar.navbar-static-top ul.nav > li.divider {
+	    display: none;
+}
+}
+

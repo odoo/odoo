@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <template id="result_label">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <div class="row">
+                                <div class="col-xs-3 mt1">
+                                    <t t-foreach="get_student_info(o.standard_id.id, o.standard_id.division_id.id, o.standard_id.medium_id.id, o.year_id.id)"
+                                   t-as="student">
+                                        <table border="1" width="100%">
+                                            <tr width="100%">
+                                                <td width="50%">
+                                                    <span t-esc="student"></span>
+                                                </td>
+                                                <td width="50%">
+                                                    <img t-if="o.name" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', str(student), 500, 100)" style="width:250px;height:50px"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+</odoo>

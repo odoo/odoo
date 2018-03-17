@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_school_attendance_manager" model="res.groups">
+        <field name="name">Attendance Manager</field>
+        <field name="category_id" ref="school.module_category_school"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        <field name="users" eval="[(4, ref('base.default_user'))]"/>
+    </record>
+
+
+    <record id="school.group_school_attendance" model="res.groups">
+        <field name="name">Manual Attendance</field>
+        <field name="category_id" ref="school.module_category_school"/>
+        <field name="comment">The user will gain access to the school attendance menu, enabling him to manage his own attendance.</field>
+    </record>
+
+    <record id="group_school_attendance_use_pin" model="res.groups">
+        <field name="name">Enable PIN use</field>
+        <field name="category_id" ref="school.module_category_school"/>
+        <field name="comment">The user will have to enter his PIN to check in and out manually at the company screen.</field>
+    </record>
+
+    <data noupdate="1">
+
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('group_school_attendance_manager'))]"/>
+        </record>
+
+        <record id="school_attendance_rule_attendance_manager" model="ir.rule">
+            <field name="name">attendance officer: full access</field>
+            <field name="model_id" ref="model_school_attendance"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4,ref('school_attendance.group_school_attendance_manager'))]"/>
+        </record>
+
+        <record id="school_attendance_rule_attendance_student" model="ir.rule">
+            <field name="name">user: modify own attendance only</field>
+            <field name="model_id" ref="model_school_attendance"/>
+            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+            <field name="perm_read" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Rule For Student attendance Record As A Parent -->
+
+        <!-- Record Rule Parents can see own child Fee Register -->
+        <record id="student_attendance_rule_parents" model="ir.rule">
+            <field name="name">Rule Student Attendance Record As A Parent</field>
+            <field name="model_id" ref="model_school_attendance"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('student_id','in',[student.id for student in user.related_parent_id.student_ids])]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+        </record>
+
+    </data>
+</odoo>

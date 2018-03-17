@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+        Form View Of Subject Result
+
+        <record id="view_subject_result_form11" model="ir.ui.view">
+            <field name="name">subject.result.form</field>
+            <field name="model">subject.result.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Result Report">
+                    <field name="result_ids">
+                        <form string="Subjects">
+                            <field name="subject_id"/>
+                            <field name="maximum_marks"/>
+                            <field name="minimum_marks"/>
+                            <field name="obtain_marks"/>
+                        </form>
+                    </field>
+                    <footer>
+                        <button class="btn btn-sm btn-default fa fa-book" name='result_report' type='object' string='Result'/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Subject Result-->
+
+        <record id="action_subject_result_wiz" model="ir.actions.act_window">
+            <field name="name">Subject Results</field>
+            <field name="res_model">subject.result.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Act Window For Action Of Subject Result-->
+
+        <act_window id="action_subject_result_wiz"
+            name="Subject Result"
+            key2="client_action_multi"
+            res_model="subject.result.wiz" 
+            src_model="exam.result"
+            view_mode="form" 
+            target="new" 
+            view_type="form"/>
+</odoo>

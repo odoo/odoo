@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+        <record id="view_school_notice_form" model="ir.ui.view">
+            <field name="name">school.notice.form</field>
+            <field name="model">school.notice</field>
+            <field name="arch" type="xml">
+                <form string="School quick notice">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="content"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_school_notice_tree" model="ir.ui.view">
+            <field name="name">school.notice.tree</field>
+            <field name="model">school.notice</field>
+            <field name="arch" type="xml">
+                <tree string="News Notices">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_school_notice" model="ir.actions.act_window">
+            <field name="name">School Notice</field>
+            <field name="res_model">school.notice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Newsletter -->
+
+        <menuitem id="menu_school_notice" name="Quick Notices" parent="school.menu_announce" action="action_school_notice"/>
+
+</odoo>

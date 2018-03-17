@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="school_setting_view" model="ir.ui.view">
+        <field name="name">school.setting.form</field>
+        <field name="model">school.settings</field>
+        <field name="arch" type="xml">
+            <form string="School Settings" class="oe_form_configuration">
+                <header>
+                    <button string="Save" type="object"
+                        name="execute" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" type="object"
+                        name="cancel" class="oe_link"/>
+                </header>
+                <group string="School Settings" col="4">
+                    <group>
+                    <div>
+                        <label string="Note: Use 24HRS Time Only"/>
+                        <br/>
+                        <br/>
+                        <div>
+                            <b><label for="school_type"/></b>
+                            <field name="school_type"/>
+                        </div>
+                        <div>
+                            <b><label for="current_academic_year"/></b>
+                            <field name="current_academic_year"/>
+                        </div>
+                        <div>
+                            <b><label for="school_starts"/></b>
+                            <field name="school_starts" widget="float_time"/>
+                        </div>
+                        <div>
+                            <b><label for="school_ends"/></b>
+                            <field name="school_ends" widget="float_time"/>
+                        </div>
+                        <div>
+                            <b><label for="late_time"/></b>
+                            <field name="late_time" widget="float_time"/>
+                        </div>
+                        <div>
+                            <b><label for="minimum_age"/></b>
+                            <field name="minimum_age"/>
+                        </div>
+                        <div>
+                            <b><label for="maximum_age"/></b>
+                            <field name="maximum_age"/>
+                        </div>
+                    </div>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="school_setting_action" model="ir.actions.act_window">
+        <field name="name">School Settings</field>
+        <field name="res_model">school.settings</field>
+        <field name="view_id" ref="school_setting_view"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <menuitem id="school_settings_menu" name="School Settings"
+    parent="school.menu_configuration"/>
+
+    <menuitem id="school_settings_menu_sub" name="School Settings"
+    parent="school_settings_menu" action="school_setting_action"/>
+</odoo>

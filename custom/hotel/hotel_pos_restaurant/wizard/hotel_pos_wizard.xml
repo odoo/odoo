@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Form view for folio report wizard -->
+    <record id="view_hotel_order_wizard" model="ir.ui.view">
+        <field name="name">order.report.wizard</field>
+        <field name="model">order.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Order Report">
+                <group col="4">
+                    <field name="date_start" required="1" />
+                    <field name="date_end" required="1" />
+                    <group col="4">
+                        <field name="check" />
+                    </group>
+                </group>
+                <footer>
+                    <button name="print_pos_report" string="Print Pos Order"
+                        type="object" class="oe_highlight" />
+                    <button string="Cancel" icon="fa-close" class="btn btn-primary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--Action for folio report wizard -->
+    <record id="hotel_order_wizard" model="ir.actions.act_window">
+        <field name="name">Pos Order Report</field>
+        <field name="res_model">order.report.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="wizard_order_menu" name="Pos Order Report" action="hotel_order_wizard"
+         parent="hotel.hotel_report_menu" sequence="32" />
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Form View Of Update Book Wizard -->
+
+        <record id="view_update_books_form" model="ir.ui.view">
+            <field name="name">update.books.form</field>
+            <field name="model">update.books</field>
+            <field name="arch" type="xml">
+                <form string="Books">
+                    <group>
+                        <field name="name" widget="selection"/>
+                    </group>
+                    <footer>
+                    <group col="2">
+                        <button type='object' class="fa fa-check" name='action_update_books' string='Books'/>
+                        <button special='cancel' class="fa fa-ban" string='Cancel'/>
+                   </group>
+                   </footer>
+               </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Update Book Wizard -->
+
+        <act_window id="action_update_books"
+            name="Update Books"
+            res_model="update.books"
+            src_model="library.book.issue"
+            view_mode="form"
+            target="new"
+            view_type="form"/>
+
+</odoo>

@@ -1,0 +1,71 @@
+/* Copyright 2016 LasLabs Inc.
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+body {
+    width: 100%;
+    height: 100%;
+
+    // Do not fix the search part, it's too big for small screens
+    @media (max-width: @screen-sm-max) {
+        overflow: inherit;
+        .odoo {
+            .oe-view-manager {
+                overflow: inherit;
+            }
+        }
+    }
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.navbar {
+    z-index: 10;
+}
+
+.o_cp_switch_buttons {
+    .active {
+        z-index: 10;
+    }
+}
+
+.o_sub_menu {
+    .o_sub_menu_logo {
+        display: none;
+    }
+    .o_sub_menu_footer {
+        display: none;
+    }
+}
+
+.o_tooltip.active {
+    z-index: 1051;
+}
+
+.o_web_client {
+    >.o_main {
+        overflow: auto;
+        > .o_main_content {
+            overflow: initial;
+            @media (max-width: @screen-xs-max) {
+                > .o_content {
+                    overflow: initial;
+                }
+            }
+        }
+    }
+}
+
+// Remove z-index from CP buttons so it doesn't overlap the menu
+.o_control_panel {
+     .btn-group > .btn.active {
+        z-index: initial;
+    }
+}
+
+.o_chat_window {
+    z-index: 1000;
+}

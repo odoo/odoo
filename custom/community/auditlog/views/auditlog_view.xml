@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_audit" name="Audit"
+        parent="base.menu_custom" sequence="50"
+        groups="base.group_system"/>
+
+
+    <!-- auditlog.rule -->
+
+    <record model="ir.ui.view" id="view_auditlog_rule_form">
+        <field name="name">auditlog.rule.form</field>
+        <field name="model">auditlog.rule</field>
+        <field name="arch" type="xml">
+            <form string="Rule">
+                <header>
+                    <button string="Subscribe" name="subscribe"
+                        type="object" states="draft" class="oe_highlight"/>
+                    <button string="Unsubscribe" name="unsubscribe"
+                        type="object" states="subscribed"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group string="Rule">
+                        <group colspan="1">
+                            <field name="name" required="1"/>
+                            <field name="model_id"/>
+                            <field name="log_type"/>
+                            <field name="action_id" readonly="1" groups="base.group_no_one"/>
+                        </group>
+                        <group colspan="1">
+                            <field name="log_read"/>
+                            <field name="log_write"/>
+                            <field name="log_unlink"/>
+                            <field name="log_create"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_auditlog_rule_tree">
+        <field name="name">auditlog.rule.tree</field>
+        <field name="model">auditlog.rule</field>
+        <field name="arch" type="xml">
+            <tree colors="blue:state == 'draft';black:state == 'subscribed'" string="Rules">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="log_type"/>
+                <field name="log_read"/>
+                <field name="log_write"/>
+                <field name="log_unlink"/>
+                <field name="log_create"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_auditlog_rule_search" model="ir.ui.view">
+        <field name="name">auditlog.rule.search</field>
+        <field name="model">auditlog.rule</field>
+        <field name="arch" type="xml">
+            <search string="Rules">
+                <field name="name"/>
+                <filter name="state_draft"
+                    domain="[('state','=','draft')]" string="Draft"/>
+                <filter name="state_subscribed"
+                    domain="[('state','=','subscribed')]" string="Subscribed"/>
+                <field name="model_id"/>
+                <group expand="0" string="Group By...">
+                    <filter name="group_by_state" string="State"
+                        domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_auditlog_rule_tree">
+        <field name="name">Rules</field>
+        <field name="res_model">auditlog.rule</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_auditlog_rule_search"/>
+    </record>
+
+    <menuitem id="menu_action_auditlog_rule_tree" parent="menu_audit" action="action_auditlog_rule_tree"/>
+
+
+    <!-- auditlog.log -->
+
+    <record model="ir.ui.view" id="view_auditlog_log_form">
+        <field name="name">auditlog.log.form</field>
+        <field name="model">auditlog.log</field>
+        <field name="arch" type="xml">
+            <form string="Log">
+                <sheet>
+                    <group string="Log">
+                        <group colspan="1">
+                            <field name="create_date" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="method" readonly="1"/>
+                            <field name="log_type" readonly="1"/>
+                        </group>
+                        <group colspan="1">
+                            <field name="model_id" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="HTTP Context">
+                        <field name="http_session_id"/>
+                        <field name="http_request_id"/>
+                    </group>
+                    <group string="Fields updated">
+                        <field name="line_ids" readonly="1" nolabel="1">
+                            <form string="Log - Field updated">
+                                <group>
+                                    <field name="field_id" readonly="1"/>
+                                </group>
+                                <group string="Values" col="4">
+                                    <field name="old_value" readonly="1"/>
+                                    <field name="new_value" readonly="1"/>
+                                    <field name="old_value_text" readonly="1"/>
+                                    <field name="new_value_text" readonly="1"/>
+                                </group>
+                            </form>
+                            <tree>
+                                <field name="field_description"/>
+                                <field name="field_name"/>
+                                <!--<field name="old_value"/>-->
+                                <field name="old_value_text"/>
+                                <!--<field name="new_value"/>-->
+                                <field name="new_value_text"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_auditlog_log_tree">
+        <field name="name">auditlog.log.tree</field>
+        <field name="model">auditlog.log</field>
+        <field name="arch" type="xml">
+            <tree string="Logs" create="false">
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="res_id"/>
+                <field name="method"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+   <record id="view_auditlog_log_search" model="ir.ui.view">
+        <field name="name">auditlog.log.search</field>
+        <field name="model">auditlog.log</field>
+        <field name="arch" type="xml">
+            <search string="Logs">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="res_id"/>
+                <field name="user_id"/>
+                <group expand="0" string="Group By...">
+                    <filter name="group_by_user_id"
+                        string="User"
+                        domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter name="group_by_model_id"
+                        string="Model"
+                        domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter name="group_by_res_id"
+                        string="Resource ID"
+                        domain="[]" context="{'group_by':'res_id'}"/>
+                    <filter name="group_by_create_date"
+                        string="Date"
+                        domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter name="group_by_http_session"
+                        string="User session"
+                        domain="[]" context="{'group_by':'http_session_id'}"/>
+                    <filter name="group_by_http_request"
+                        string="HTTP Request"
+                        domain="[]" context="{'group_by':'http_request_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_auditlog_log_tree">
+        <field name="name">Logs</field>
+        <field name="res_model">auditlog.log</field>
+        <field name="view_type">form</field>
+        <field name="search_view_id" ref="view_auditlog_log_search"/>
+    </record>
+
+    <menuitem id="menu_audit_logs" name="Logs"
+        parent="menu_audit" action="action_auditlog_log_tree"/>
+</odoo>

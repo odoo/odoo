@@ -1,0 +1,28 @@
+{
+    'name': 'School Tools',
+    'version': '10.0.1.0.13',
+    'author': '''Francis Bangura. <francisbnagura@gmail.com>''',
+    'website': 'https://www.byteltd.com/',
+    'images': ['static/description/school.png'],
+    'category': 'School Management',
+    'license': "AGPL-3",
+    'complexity': 'easy',
+    'Summary': 'A Module For School Management Tools',
+    'depends': ['school'],
+    'data': ['security/ir.model.access.csv',
+             'wizard/wiz_send_email_view.xml',
+             'wizard/wiz_meeting_view.xml',
+             'wizard/wiz_send_newsletter_view.xml',
+             'wizard/wiz_send_notice_view.xml',
+             'views/school_newsletter_view.xml',
+             'views/school_tools_view.xml',
+             'views/school_notice_view.xml',
+             #'wizard/assign_roll_no_wizard.xml',
+             #'wizard/move_standards_view.xml',
+             #'views/report_view.xml',
+             #'views/identity_card.xml'
+             ],
+    'demo': [],
+    'installable': True,
+    'application': True
+}

@@ -1,0 +1,96 @@
+.bg-white-2 {
+    background: #f8f8f8;
+}
+.pad48 {
+    padding: 48px 0;
+}
+
+
+.service-list .col-md-4:nth-child(1) .single-service {
+    background: @color-primary none repeat scroll 0 0;
+}
+.single-service {
+    background: #ededed none repeat scroll 0 0;
+    border-radius: 4px;
+    text-align: center;
+}
+.single-service-inner {
+    padding: 57px 0;
+    position: relative;
+}
+
+.ser-front-heading {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 30px 0 0;
+    text-transform: uppercase;
+}
+.service-list .col-md-4:nth-child(odd) .single-service .service-box-back {
+    transform: rotateY(45deg);
+}
+.service-box-back {
+    background: #fff none repeat scroll 0 0;
+    border-bottom: 4px solid #69d2e7;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px 0 #bdc3ca;
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    padding: 0 26px;
+    position: absolute;
+    top: 0;
+    transform: rotateX(45deg);
+    transition: all 0.4s ease-in-out 0s;
+    visibility: hidden;
+    width: 100%;
+}
+.single-service:hover .service-box-back {
+    top: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: rotateX(0deg);
+}
+.ser-back-heading {
+    font-size: 20px;
+    margin: 0;
+    padding-top: 50px;
+    text-transform: uppercase;
+}
+.ser-back-content {
+    line-height: 24px;
+    margin-bottom: 21px;
+    margin-top: 27px;
+}
+
+.ser-link {
+    color: @color-primary;
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 5px;
+    text-decoration: underline;
+}
+.service-list .col-md-4:nth-child(2) .single-service {
+    background: @color-success none repeat scroll 0 0;
+}
+.service-list .col-md-4:nth-child(3) .single-service {
+    background: @color-info none repeat scroll 0 0;
+}
+.service-list .col-md-4:nth-child(odd) .single-service:hover .service-box-back {
+    transform: rotateY(0deg);
+}
+.service-list1 .col-md-4:nth-child(1) .single-service {
+    background: @color-warning none repeat scroll 0 0;
+}
+.service-list1 .col-md-4:nth-child(odd) .single-service:hover .service-box-back {
+    transform: rotateY(0deg);
+}
+.service-list1 .col-md-4:nth-child(2) .single-service {
+    background: @color-danger none repeat scroll 0 0;
+}
+.service-list1 .col-md-4:nth-child(3) .single-service {
+    background: @color-success none repeat scroll 0 0;
+}
+
+

@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_student_hostel_type_admin,hostel.type,school_hostel.model_hostel_type,school.group_school_administration,1,1,1,1
+access_student_hostel_room_admin,hostel.room,school_hostel.model_hostel_room,school.group_school_administration,1,1,1,1
+access_student_hostel_studnet_admin,hostel.student,school_hostel.model_hostel_student,school.group_school_administration,1,1,1,1
+access_student_hostel_type_hostel_manager,hostel.type,school_hostel.model_hostel_type,school_hostel.group_hostel_manager,1,1,1,1
+access_student_hostel_room_manager,hostel.room,school_hostel.model_hostel_room,school_hostel.group_hostel_manager,1,1,1,1
+access_student_hostel_studnet_manager,hostel.student,school_hostel.model_hostel_student,school_hostel.group_hostel_manager,1,1,1,1
+access_student_hostel_type_hostel_user,hostel.type,school_hostel.model_hostel_type,school_hostel.group_hostel_user,1,0,0,0
+access_student_hostel_room_hostel_user,hostel.room,school_hostel.model_hostel_room,school_hostel.group_hostel_user,1,0,0,0
+access_student_hostel_studnet_user,hostel.student,school_hostel.model_hostel_student,school_hostel.group_hostel_user,1,1,1,0
+access_student_bed_type,bed.type,school_hostel.model_bed_type,school_hostel.group_hostel_user,1,0,0,0
+access_account_invoice_hostel_user,account.invoice,account.model_account_invoice,school_hostel.group_hostel_user,1,0,0,0
+access_student_hostel_room_student,hostel.room,school_hostel.model_hostel_room,school.group_school_student,1,0,0,0
+access_student_hostel_studnet_stu,hostel.student,school_hostel.model_hostel_student,school.group_school_student,1,1,1,0

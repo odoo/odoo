@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Form View Of Card Number Wizard -->
+
+        <record id="view_card_number_form" model="ir.ui.view">
+            <field name="name">card.number.form</field>
+            <field name="model">card.number</field>
+            <field name="arch" type="xml">
+                <form string="Card Number">
+                    <group>
+                       <field name="card_id"/>
+                   </group>
+                   <footer>
+                       <group col="2">
+                            <button type='object' class="fa fa-id-card-o" name='card_number_ok' string='Card No'/>
+                            <button class="fa fa-ban" special='cancel' string='Cancel'/>
+                       </group>
+                   </footer>
+               </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Card Number Wizard -->
+
+         <act_window id="card_number_ok"
+            name="Card Number"
+            res_model="card.number"
+            src_model="library.book.issue"
+            view_mode="form"
+            target="new"
+            view_type="form"/>
+
+</odoo>

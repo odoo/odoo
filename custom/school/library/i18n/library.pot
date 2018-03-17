@@ -1,0 +1,515 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* library
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-06-03 13:53:10+0000\n"
+"PO-Revision-Date: 2009-06-03 13:53:10+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: library
+#: model:ir.module.module,description:library.module_meta_information
+msgid "Module to manage library.\n"
+"    Books Information,\n"
+"    Publisher and Author Information,\n"
+"    Book Rack Tracking etc..."
+msgstr ""
+
+#. module: library
+#: field:author.book.rel,author_id:0
+#: model:ir.model,name:library.model_library_author
+msgid "Author"
+msgstr ""
+
+#. module: library
+#: view:library.author:0
+#: field:library.author,editor_ids:0
+msgid "Editors"
+msgstr ""
+
+#. module: library
+#: view:library.author:0
+msgid "More info"
+msgstr ""
+
+#. module: library
+#: model:ir.model,name:library.model_library_collection
+msgid "Library Collection"
+msgstr ""
+
+#. module: library
+#: field:library.editor.supplier,supplier_id:0
+msgid "Supplier"
+msgstr ""
+
+#. module: library
+#: field:library.editor.supplier,junk:0
+msgid " "
+msgstr ""
+
+#. module: library
+#: wizard_view:purchase.order.merge.library,init:0
+msgid "Please note that orders will only be merged if they are to the same partner and going to the same location, and lines will only be merged if they are exactly the same except for the quantity and unit."
+msgstr ""
+
+#. module: library
+#: model:ir.ui.menu,name:library.sale_order_day
+msgid "Orders of the day"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_author_form
+#: model:ir.ui.menu,name:library.author_menu
+#: view:library.author:0
+#: view:library.rack:0
+#: view:product.product:0
+#: field:product.product,author_ids:0
+#: field:product.product,author_om_ids:0
+msgid "Authors"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_price_category
+msgid "library.price.category"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_author_new_form
+#: model:ir.ui.menu,name:library.menu_action_book_form_new
+msgid "New Author"
+msgstr ""
+
+#. module: library
+#: view:library.author:0
+#: field:library.author,note:0
+msgid "Notes"
+msgstr ""
+
+#. module: library
+#: selection:product.product,back:0
+msgid "Paperback"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.act_sale_picking
+msgid "Packing list"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Products"
+msgstr ""
+
+#. module: library
+#: field:product.product,date_retour:0
+msgid "Return date"
+msgstr ""
+
+#. module: library
+#: field:product.product,tome:0
+msgid "Tome"
+msgstr ""
+
+#. module: library
+#: field:purchase.order.line,origin:0
+msgid "Origin"
+msgstr ""
+
+#. module: library
+#: model:ir.model,name:library.model_library_editor_supplier
+msgid "many2many view for editor relations"
+msgstr ""
+
+#. module: library
+#: field:author.book.rel,product_id:0
+msgid "Book"
+msgstr ""
+
+#. module: library
+#: model:ir.model,name:library.model_library_rack
+msgid "Library Rack"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_editor_supplier
+msgid "Partner relations"
+msgstr ""
+
+#. module: library
+#: model:ir.model,name:library.model_author_book_rel
+msgid "author.book.rel"
+msgstr ""
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Sold Out"
+msgstr ""
+
+#. module: library
+#: field:product.product,state:0
+msgid "State"
+msgstr ""
+
+#. module: library
+#: field:library.editor.supplier,name:0
+#: field:product.product,editor:0
+msgid "Editor"
+msgstr ""
+
+#. module: library
+#: view:stock.picking:0
+msgid "Picking List"
+msgstr ""
+
+#. module: library
+#: field:product.product,date_parution:0
+msgid "Release date"
+msgstr ""
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Available"
+msgstr ""
+
+#. module: library
+#: field:product.product,pocket:0
+msgid "Pocket"
+msgstr ""
+
+#. module: library
+#: model:ir.model,name:library.model_view_books_without_authors
+msgid "view.books.without.authors"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.wizard,name:library.purchase_order_merge
+msgid "Merge purchases"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_book_rack
+msgid "Racks"
+msgstr ""
+
+#. module: library
+#: view:library.author:0
+msgid "General Informations"
+msgstr ""
+
+#. module: library
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: library
+#: model:ir.ui.menu,name:library.boock_return_menu
+msgid "Books to return before 30 days"
+msgstr ""
+
+#. module: library
+#: model:ir.ui.menu,name:library.menu_price_category
+#: view:library.price.category:0
+msgid "Price Categories"
+msgstr ""
+
+#. module: library
+#: field:account.invoice.line,customer_ref:0
+#: field:mrp.procurement,customer_ref:0
+#: field:purchase.order.line,customer_ref:0
+#: field:sale.order.line,customer_ref:0
+#: field:stock.move,customer_ref:0
+msgid "Customer reference"
+msgstr ""
+
+#. module: library
+#: selection:product.product,back:0
+msgid "Hardback"
+msgstr ""
+
+#. module: library
+#: field:product.product,num_edition:0
+msgid "Num. edition"
+msgstr ""
+
+#. module: library
+#: field:product.product,rack:0
+msgid "Rack"
+msgstr ""
+
+#. module: library
+#: field:product.product,online:0
+msgid "Visible on website"
+msgstr ""
+
+#. module: library
+#: view:library.author:0
+#: field:library.author,biography:0
+msgid "Biography"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_order_today_tree
+#: model:ir.actions.act_window,name:library.action_order_today_user_tree
+msgid "sale.order"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Descriptions"
+msgstr ""
+
+#. module: library
+#: field:library.price.category,name:0
+msgid "Category"
+msgstr ""
+
+#. module: library
+#: model:ir.model,name:library.model_library_price_category
+msgid "Book Price Category"
+msgstr ""
+
+#. module: library
+#: model:ir.ui.menu,name:library.order_today_user_Menuitem
+msgid "My orders of the day"
+msgstr ""
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Not yet published"
+msgstr ""
+
+#. module: library
+#: field:product.product,collection:0
+msgid "Collection"
+msgstr ""
+
+#. module: library
+#: view:sale.order:0
+msgid "Sales Orders"
+msgstr ""
+
+#. module: library
+#: field:library.rack,active:0
+msgid "Active"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Purchase Description"
+msgstr ""
+
+#. module: library
+#: field:product.product,lang:0
+msgid "Language"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Sale Description"
+msgstr ""
+
+#. module: library
+#: field:product.product,creation_date:0
+msgid "Creation date"
+msgstr ""
+
+#. module: library
+#: field:product.product,catalog_num:0
+msgid "Catalog number"
+msgstr ""
+
+#. module: library
+#: field:account.invoice.line,production_lot_id:0
+#: field:mrp.procurement,production_lot_id:0
+#: field:purchase.order.line,production_lot_id:0
+#: field:sale.order.line,production_lot_id:0
+msgid "Production Lot"
+msgstr ""
+
+#. module: library
+#: field:library.collection,code:0
+#: field:library.rack,code:0
+msgid "Code"
+msgstr ""
+
+#. module: library
+#: field:library.author,death_date:0
+msgid "Date of death"
+msgstr ""
+
+#. module: library
+#: field:product.product,back:0
+msgid "Reliure"
+msgstr ""
+
+#. module: library
+#: model:ir.module.module,shortdesc:library.module_meta_information
+msgid "Library"
+msgstr ""
+
+#. module: library
+#: field:stock.move,procurement_ids:0
+msgid "Procurements"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_product_book_form
+#: model:ir.ui.menu,name:library.menu_action_book_form
+#: view:library.author:0
+#: field:library.author,book_ids:0
+#: field:library.price.category,product_ids:0
+#: view:product.product:0
+msgid "Books"
+msgstr ""
+
+#. module: library
+#: view:account.invoice:0
+msgid "Invoice"
+msgstr ""
+
+#. module: library
+#: wizard_button:purchase.order.merge.library,init,end:0
+msgid "Cancel"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Procurement (days)"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_product_book_30days
+msgid "product.book.form.view"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Information"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.wizard,name:library.library_update_prices
+msgid "Update prices"
+msgstr ""
+
+#. module: library
+#: wizard_view:purchase.order.merge.library,init:0
+#: wizard_button:purchase.order.merge.library,init,merge:0
+msgid "Merge orders"
+msgstr ""
+
+#. module: library
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: library
+#: field:product.product,num_pocket:0
+msgid "Collection Num."
+msgstr ""
+
+#. module: library
+#: field:library.author,born_date:0
+msgid "Date of birth"
+msgstr ""
+
+#. module: library
+#: field:product.product,isbn:0
+msgid "Isbn code"
+msgstr ""
+
+#. module: library
+#: field:library.author,first_name:0
+msgid "First Name"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Other"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Details"
+msgstr ""
+
+#. module: library
+#: field:product.product,nbpage:0
+msgid "Number of pages"
+msgstr ""
+
+#. module: library
+#: view:product.product:0
+msgid "Description"
+msgstr ""
+
+#. module: library
+#: field:product.product,format:0
+msgid "Format"
+msgstr ""
+
+#. module: library
+#: field:library.price.category,price:0
+msgid "Price"
+msgstr ""
+
+#. module: library
+#: field:product.product,price_cat:0
+msgid "Price category"
+msgstr ""
+
+#. module: library
+#: view:library.editor.supplier:0
+msgid "Editor and suppliers relations"
+msgstr ""
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_product_book_new_form
+msgid "New Book"
+msgstr ""
+
+#. module: library
+#: field:library.author,name:0
+#: field:library.collection,name:0
+#: field:library.rack,name:0
+msgid "Name"
+msgstr ""
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Printing w/o Date"
+msgstr ""
+
+#. module: library
+#: model:ir.ui.menu,name:library.menu_editor_supplier
+msgid "Editor - Suppliers Relations"
+msgstr ""
+
+#. module: library
+#: field:library.editor.supplier,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: library
+#: wizard_view:purchase.order.merge.library,init:0
+msgid "Are you sure you want to merge these orders ?"
+msgstr ""
+
+#. module: library
+#: view:library.price.category:0
+msgid "Price Category"
+msgstr ""
+
+#. module: library
+#: field:product.product,link_ids:0
+msgid "Related Books"
+msgstr ""
+

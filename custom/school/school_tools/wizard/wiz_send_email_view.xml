@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Form View Of Send Mail -->
+
+        <record id="wiz_send_email_form_view" model="ir.ui.view">
+            <field name="name">send.email.form</field>
+            <field name="model">send.email</field>
+            <field name="arch" type="xml">
+                <form string="Send Email">
+                    <field name='note' nolabel="0" height="350" width="350" placeholder="Notes"/>
+                    <newline/>
+                    <footer>
+                        <button name="send_email" string="Send Email" class="btn btn-sm btn-default fa fa-envelope" type="object"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form View Of Send Mail -->
+
+        <act_window id="act_send_email"
+            name="Send Email"
+            res_model="send.email"
+            src_model="school.student"
+            view_mode="form"
+            target="new"
+            view_type="form" groups="school.group_school_administration,school.group_school_teacher"
+            />
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_category_1" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Books</field>
+        </record>
+
+        <record id="product_product_b1" model="product.product" >
+            <field name="name">C++</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_1"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+        <record id="view_school_newsletter_form" model="ir.ui.view">
+            <field name="name">school.newsletter.form</field>
+            <field name="model">school.newsletter</field>
+            <field name="arch" type="xml">
+                <form string="News Letter">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="content"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_school_newsletter_tree" model="ir.ui.view">
+            <field name="name">school.newsletter.tree</field>
+            <field name="model">school.newsletter</field>
+            <field name="arch" type="xml">
+                <tree string="News Letter">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_school_newsletter" model="ir.actions.act_window">
+            <field name="name">School News Letter</field>
+            <field name="res_model">school.newsletter</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item Of Newsletter -->
+
+        <menuitem id="menu_news_letter" name="News Letter" parent="school.menu_announce" action="action_school_newsletter"/>
+
+</odoo>

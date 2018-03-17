@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<odoo>
+           <record id="wizard_batch_report" model="ir.ui.view">
+            <field name="name">exam.batch.result.form.wizard</field>
+            <field name="model">exam.batchwise.result</field>
+            <field name="arch" type="xml">
+                <form string="Grade wise Results">
+                    <group col="4" colspan="4">
+                        <field name="year" widget="selection" required="1"/>
+                        <field name="standard_id" widget="selection" required="1"/>
+                    </group>
+                    <footer>
+                        <button name="print_batch_report" string="Batch Report" type="object"/>
+                        <button special="cancel" string="Cancel"/> 
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="wizard_action_batchwise_exam_result_form" model="ir.actions.act_window">
+            <field name="name">Batchwise Result</field>
+            <field name="res_model">exam.batchwise.result</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_exam_batch_result" name="Batchwise Exam Results" parent="exam.menu_exam"
+                  action="wizard_action_batchwise_exam_result_form" groups="school.group_school_administration,school.group_school_teacher" sequence="10"/>
+</odoo>

@@ -1,0 +1,104 @@
+/* Copyright 2016 Ponto Suprimentos Ltda.
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+.o_form_view {
+    // Form must fill 100% width in any size
+    .o_form_sheet_bg {
+        padding: @sheet-padding;
+
+        .o_form_sheet {
+            min-width: auto;
+            max-width: 80%;
+        }
+
+        @media (max-width: @screen-sm-max) {
+            padding: 0;
+
+            .o_form_sheet {
+                border: none;
+            }
+        }
+    }
+
+    // No overflowing buttons or titles
+    .oe_button_box, .oe_title {
+        max-width: 100%;
+    }
+
+    @media (max-width: @screen-xs) {
+        .o_form_field > .o_form_input_dropdown {
+            width: 80%;
+        }
+    }
+    .o_group {
+        &.o_inner_group > tbody > tr > td {
+            .note-editor > .note-toolbar {
+                // prevent wysiwyg editor buttons from expanding the screen
+                white-space: initial;
+            }
+        }
+        // reduce form maximum columns for smaller screens
+        @media (max-width: @screen-xs-max) {
+            .o-generate-groups(12);
+            .o-generate-groups(@n, @i: 1) when (@i =< @n) {
+                .o_group_col_@{i} {
+                    width: 100%;
+                }
+                .o-generate-groups(@n, @i + 1);
+            }
+        }
+        // break field label into a separate line from field on small screens
+        @media (max-width: @screen-xs) {
+            &.o_inner_group {
+                display: block;
+                > tbody {
+                    display: block;
+                    > tr {
+                        margin-top: 8px;
+                        .o-flex-display();
+                        .o-flex-flow(row, wrap);
+                        > td {
+                            .o-flex(1, 0, auto);
+                            padding: 0;
+                            display: block;
+                            padding: 0;
+                            // odoo adds a `style="width: 100%"` by javascript
+                            // directly on the tag so we need `!important` here:
+                            width: auto!important;
+                            max-width: 100%;
+                            &.o_td_label {
+                                border-right: 0;
+                                // keep 6% space on line to fit checkboxes
+                                // see above about `!important`
+                                width: 94%!important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Make image editing controls always available, instead of depending on resolution or hover
+    .o_form_field_image > .o_form_image_controls {
+        position: initial;
+        opacity: 1;
+        > .fa {
+            width: 50%;
+            padding: 6px;
+            margin: 0px;
+            text-align: center;
+        }
+        > .fa.o_select_file_button {
+            background: @odoo-brand-primary;
+        }
+        > .fa.o_clear_file_button {
+            background: @brand-danger;
+        }
+    }
+
+    // Adapt chatter widget to small viewports
+    .oe_chatter {
+        min-width: inherit;
+    }
+}

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <template id="additional_exam_result_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="result">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <br/>
+                            <br/>
+                            <br />
+                            <br/>
+                            <br/>
+                            <table width="100%">
+                                <center>
+                                    <h3 t-field="result.a_exam_id.name"></h3>
+                                </center>
+                                <br/>
+                                <tr>
+                                    <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Student Name</b>
+                                    </td>
+                                    <td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>:-</b>
+                                    </td>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <span t-field="result.student_id.name"></span>
+                                    </td>
+                                    <td width="20%"></td>
+                                    <td width="5%"></td>
+                                    <td width="25%"></td>
+                                </tr>
+                                <tr>
+                                    <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Roll No</b>
+                                    </td>
+                                    <td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>:-</b>
+                                    </td>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <span t-field="result.student_id.roll_no"></span>
+                                    </td>
+                                    <td align="left" width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Standard</b>
+                                    </td>
+                                    <td align="left" width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>:-</b>
+                                    </td>
+                                    <td align="left" width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="result.standard_id"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Medium</b>
+                                    </td>
+                                    <td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>:-</b>
+                                    </td>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="result.student_id.medium_id.name"></span>
+                                    </td>
+                                    <td width="20%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Division</b>
+                                    </td>
+                                    <td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>:-</b>
+                                    </td>
+                                    <td width="25%" style="font-family: 'Helvetica';font-size: 16px;">
+                                        <span t-field="result.student_id.division_id.name"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <table width="100%">
+                                <thead>
+                                    <tr>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b>Subject Name</b>
+                                        </td>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b>Maximum marks</b>
+                                        </td>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b>Minimum Marks</b>
+                                        </td>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                            <b>Obtain Mark</b>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                            <span t-field="result.a_exam_id.subject_id.name"></span>
+                                        </td>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                            <span t-field="result.a_exam_id.subject_id.maximum_marks"></span>
+                                        </td>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                            <span t-field="result.a_exam_id.subject_id.minimum_marks"></span>
+                                        </td>
+                                        <td align="center" style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                            <span t-field="result.obtain_marks"></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br />
+                            <br />
+                            <table width="100%">
+                                <tr>
+                                    <td width="10%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>Result</b>
+                                    </td>
+                                    <td width="5%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <b>:-</b>
+                                    </td>
+                                    <td width="85%" style="font-family: 'Helvetica';font-size: 18px;">
+                                        <span t-field="result.result"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+</odoo>

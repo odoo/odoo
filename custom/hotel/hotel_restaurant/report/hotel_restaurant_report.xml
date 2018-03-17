@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+
+    <report id="report_hotel_res_order_kot" string="Kitchen Order Tickets"
+        model="hotel.restaurant.order" report_type="qweb-pdf"
+        file="hotel_restaurant.report_hotel_order_kot" name="hotel_restaurant.report_hotel_order_kot"
+        menu="True" />
+
+    <report id="report_hotel_res_order_bill" string="Customer Bill"
+        model="hotel.restaurant.order" report_type="qweb-pdf"
+        file="hotel_restaurant.report_order_bill" name="hotel_restaurant.report_order_bill"
+        menu="True" multi="True" />
+
+    <report id="report_hotel_reservation_order_bill" string="Customer Bill"
+        model="hotel.reservation.order" report_type="qweb-pdf"
+        file="hotel_restaurant.report_res_order_bill" name="hotel_restaurant.report_res_order_bill"
+        menu="True" multi="True" />
+
+    <report id="report_hotel_table_res" string="Table Booking List"
+        model="hotel.restaurant.reservation" report_type="qweb-pdf"
+        file="hotel_restaurant.report_res_table" name="hotel_restaurant.report_res_table"
+        menu="False" />
+
+    <report id="report_hotel_res_folio" string="Restaurants Reports"
+        model="hotel.reservation.order" report_type="qweb-pdf"
+        file="hotel_restaurant.report_rest_order" name="hotel_restaurant.report_rest_order"
+        menu="False" />
+
+    <report id="report_hotel_res_folio1" string="Restaurants Reports"
+        model="hotel.restaurant.order" report_type="qweb-pdf"
+        file="hotel_restaurant.report_reserv_order" name="hotel_restaurant.report_reserv_order"
+        menu="False" />
+
+</odoo>

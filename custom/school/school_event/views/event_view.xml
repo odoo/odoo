@@ -1,0 +1,504 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Inherited Form View Of Student Information -->
+
+        <record id="school_standard_form_view" model="ir.ui.view">
+            <field name="name">school.standard.form</field>
+            <field name="model">school.standard</field>
+            <field name="inherit_id" ref="school.view_school_standard_form" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[1]" position="after">
+                        <page string="Events">
+                            <field name="event_ids" readonly="1" nolabel= '1' />
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Inherited Form View Of Student Standard -->
+
+        <record id="student_standard_form_view" model="ir.ui.view">
+            <field name="name">student.student.form</field>
+            <field name="model">student.student</field>
+            <field name="inherit_id" ref="school.view_student_student_form_1" />
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[1]" position="after">
+                        <page string="Events">
+                            <field name="event_ids" readonly="1" nolabel= '1' />
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Form View Of Event Participation -->
+
+        <record id="participant_event_form_view" model="ir.ui.view">
+            <field name="name">participant.form.2</field>
+            <field name="model">school.event.participant</field>
+            <field name="arch" type="xml">
+                <form string="Event Participant Information" create="false">
+                     <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                        <separator string="Event Participant" />
+                        <group col="4" colspan="4">
+                            <field name="stu_pid" />
+                            <field name="name" />
+                            <field name="event_id" />
+                            <field name="win_parameter_id" />
+                            <field name="score" />
+                            <field name="sequence" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Event Participation -->
+
+        <record id="participant_event_tree_view" model="ir.ui.view">
+            <field name="name">participant.tree.2</field>
+            <field name="model">school.event.participant</field>
+            <field name="arch" type="xml">
+                <tree string="Event Participant Information" create="false">
+                    <field name="stu_pid" />
+                    <field name="name" />
+                    <field name="event_id" />
+                    <field name="win_parameter_id" />
+                    <field name="score" />
+                    <field name="sequence" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View OF Event Participation -->
+
+        <record id="participant_event_search_view" model="ir.ui.view">
+            <field name="name">participant.search.2</field>
+            <field name="model">school.event.participant</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group col="10" colspan="4">
+                        <field name="name" select="1" />
+                        <field name="event_id" select="1" />
+                        <field name="score" select="1" />
+                        <field name="sequence" select="1" />
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter icon="terp-personal" string="Name" 
+                            help="By Name" context="{'group_by':'name'}" />
+                        <separator orientation="vertical" />
+                        <filter icon="terp-stock_symbol-selection" 
+                            string="Event" help="By Event Name" context="{'group_by':'event_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Form View Event parameter -->
+
+        <record id="parameter_event_form_view" model="ir.ui.view">
+            <field name="name">event.parameter.form</field>
+            <field name="model">school.event.parameter</field>
+            <field name="arch" type="xml">
+                <form string="Event Parameter">
+                     <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                        <group>
+                            <field name="name" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Event parameter -->
+
+        <record id="parameter_event_tree_view" model="ir.ui.view">
+            <field name="name">event.parameter.tree</field>
+            <field name="model">school.event.parameter</field>
+            <field name="arch" type="xml">
+                <tree string="Event Parameter">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Event parameter -->
+
+        <record id="parameter_event_search_view" model="ir.ui.view">
+            <field name="name">event.parameter.search</field>
+            <field name="model">school.event.parameter</field>
+            <field name="arch" type="xml">
+                <search string="Event Parameter">
+                    <field name="name" />
+                </search>
+            </field>
+        </record>
+
+        <!-- Form View Of Event Information -->
+
+        <record id="school_event_form_view" model="ir.ui.view">
+            <field name="name">event.form.1</field>
+            <field name="model">school.event</field>
+            <field name="arch" type="xml">
+                <form string="Event Information">
+                    <header>
+                        <button name="event_open" type="object"
+                            string="Open" class="fa fa-folder-open-o" states="draft" groups="school.group_school_administration,school.group_school_teacher" />
+                        <button name="event_draft" class="fa fa-file-text" icon="terp-gtk-go-back-ltr" type="object"
+                            string="Draft" states="cancel" groups="school.group_school_administration,school.group_school_teacher" />
+                        <button name="event_close" type="object" class="fa fa-ban" string="Close" states="open" groups="school.group_school_administration,school.group_school_teacher"/>
+                        <field name="state" nolabel="1" widget="statusbar" />
+                    </header>
+                     <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                        <separator string="Event Information" />
+                        <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
+                            <field name="name" placeholder="Enter Event Name" attrs="{'readonly':[('state','not in','draft')]}"/>
+                            <field name="code" string="Organiser school" placeholder="Select Or Create School" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            <group colspan="4" col="4">
+                                <field name="start_reg_date" placeholder="Enter Start Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="last_reg_date" placeholder="Enter Last Date Of Registration" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="start_date" placeholder="Start Date Of Event" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="end_date" placeholder="End Date Of Event" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="contact_per_id" placeholder="Select Organiser Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('is_school_teacher','=',True)]"/>
+                                <field name="supervisor_id" placeholder="Select Supervisor Name" attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}" domain="[('is_school_teacher','=',True)]"/>
+                                <field name="maximum_participants" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="parameter_id" widget="selection" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="is_holiday" attrs="{'readonly':[('state','not in','draft')]}"/>
+                                <field name="participants" readonly="1" />
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Participated Standards"
+                            attrs="{'readonly':[('state','!=','draft')]}">
+                                <field name="part_standard_ids" nolabel='1' attrs="{'readonly':[('state','not in','draft')]}" options="{&quot;no_create&quot;: True}"/>
+                            </page>
+                            <page string="Participants">
+                                <field name="part_ids">
+                                    <tree string="Participant Information">
+                                        <field name="stu_pid" />
+                                        <field name="name" />
+                                        <field name="score" />
+                                        <field name="sequence" />
+                                    </tree>
+                                    <form string="Participant Information">
+                                        <group col="6" colspan="4">
+                                            <field name="stu_pid" />
+                                            <field name="name" />
+                                            <field name="event_id" />
+                                            <field name="win_parameter_id" />
+                                            <field name="score" />
+                                            <field name="sequence" />
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Event Information -->
+
+        <record id="school_event_tree_view" model="ir.ui.view">
+            <field name="name">event.tree.1</field>
+            <field name="model">school.event</field>
+            <field name="arch" type="xml">
+                <tree string="Event Information" colors="blue:state=='open';red:state in ('close')">
+                    <field name="name" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name="state" />
+                    <field name="contact_per_id" />
+                    <field name="part_ids" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Event Information -->
+
+        <record id="school_event_search_view" model="ir.ui.view">
+            <field name="name">event.search.1</field>
+            <field name="model">school.event</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group string="Filter" col="10" colspan="4">
+                        <filter string="Open" domain="[('state','=','open')]" icon="terp-camera_test" />
+                        <filter string="Close" domain="[('state','=','close')]" class="fa fa-ban"/>
+                        <filter string="Cancel" domain="[('state','=','cancel')]" class="fa fa-ban" />
+                        <field name="name" select="1" />
+                        <separator orientation="vertical" />
+                        <field name="contact_per_id" select="1" />
+                        <separator orientation="vertical" />
+                        <field name="supervisor_id" select="1" />
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter string="This Month" icon="terp-go-month" name="this_month"
+                            domain="[('start_date','&lt;=',(context_today()+relativedelta
+                            (day=31)).strftime('%%Y-%%m-%%d')),('start_date','&gt;=',(context_today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                            help="Events in current month" />
+                        <separator orientation="vertical" />
+                        <filter icon="terp-personal" string="Contact Person" help="By Contact Person" context="{'group_by':'contact_per_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter icon="terp-personal" string="Supervisor" help="By Supervisor" context="{'group_by':'supervisor_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter icon="terp-stock_symbol-selection" string="Start Date" help="By Start Date" context="{'group_by':'start_date'}"/>
+                        <separator orientation="vertical" />
+                        <filter icon="terp-stock_symbol-selection" string="State"
+                            help="By State" context="{'group_by':'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Calendar View Of Event Information -->
+
+        <record id="school_event_calander_view" model="ir.ui.view">
+            <field name="name">event.calendar</field>
+            <field name="model">school.event</field>
+            <field name="arch" type="xml">
+                <calendar color="name" date_start="start_date" string="Events">
+                    <field name="name" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                </calendar>
+            </field>
+        </record>
+
+        <!-- KanBan View Of DashBoard Event -->
+
+        <record id="student_event_kanban_view" model="ir.ui.view">
+            <field name="name">STUDENT EVENT KANBAN</field>
+            <field name="model">school.event</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="start_date">
+                    <field name="name" />
+                    <field name="start_date" />
+                    <field name="color" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <ul class="oe_dropdown_menu">
+                                        <li>
+                                            <a type="edit" >Edit...</a>
+                                        </li>
+                                        <li>
+                                            <a type="delete">Delete</a>
+                                        </li>
+                                        <li>
+                                            <ul class="oe_kanban_colorpicker" data-field="color" />
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle" style="padding-left:10px;">
+                                                <h4>
+                                                    <a type="open">
+                                                        <field name="start_date" />
+                                                        <field name="name" />
+                                                    </a>
+                                                </h4>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                </div>
+                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                    <table class="oe_kanban_table" >
+                                        <tr width="300">
+                                            <td valign="top" align="left" style="padding-left:10px;">
+                                                <table>
+                                                    <tr>
+                                                        <td>Name :</td>
+                                                        <td style="padding-left:10px;">
+                                                            <b>
+                                                                <field name="name"/>
+                                                            </b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Start Date : </td>
+                                                        <td style="padding-left:10px;">
+                                                            <b>
+                                                                <field name="start_date"/>
+                                                            </b>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Contact Faculty : </td>
+                                                        <td style="padding-left:10px;">
+                                                            <b>
+                                                                <field name="contact_per_id"/>
+                                                            </b>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <br />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                    <div class="oe_kanban_left" style="padding-left:10px;">
+                                        <a string="Edit" class="btn btn-sm btn-default fa fa-pencil" type="edit" groups="school.group_school_administration"/>
+                                        <a string="Change Color" icon="color-picker" type="color" name="color" />
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action Of Form, Tree, Calendar & KanBan Views Of Event Information -->
+
+        <record id="action_school_event_form_1" model="ir.actions.act_window">
+            <field name="name">Event Information</field>
+            <field name="res_model">school.event</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form,calendar</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Event.
+                </p>
+                <p>
+                 This structure is used to create and manage all Events
+              </p>
+            </field>
+        </record>
+
+        <!--Form View Of School Event Registration -->
+
+        <record id="event_registration_form" model="ir.ui.view">
+            <field name="name">event.registration.form</field>
+            <field name="model">school.event.registration</field>
+            <field name="arch" type="xml">
+                <form string="Event Registration">
+                    <header>
+                        <button name="regi_confirm" class="btn btn-sm btn-default fa fa-check" string="Confirm" 
+                                states="draft" type='object' groups="school.group_school_administration,school.group_school_teacher,school.group_school_student" />
+                        <button name="regi_cancel" string="Cancel" class="btn btn-sm btn-default fa fa-ban" 
+                                states="draft,confirm" type='object' groups="school.group_school_administration,school.group_school_teacher,school.group_school_student" />
+                        <field name="state" widget="statusbar" nolabel="1" />
+                    </header>
+                     <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                        <separator string="Event Registration" />
+                        <group colspan="4" col="4" attrs="{'readonly':[('state','!=','draft')]}">
+                            <field name="part_name_id" placeholder="Select Participant Name" domain="[('state','=','done')]" options="{&quot;no_create&quot;: True}" context="{'name':name}"/>
+                            <field name="name" context="{'part_name_id':part_name_id}" placeholder="Select Or Create Event Name" options="{&quot;no_create&quot;: True}"/>
+                            <field name="reg_date" />
+                            <field name="is_holiday" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Event Registration -->
+
+        <record id="school_event_registration_tree_view" model="ir.ui.view">
+            <field name="name">event.registration.tree</field>
+            <field name="model">school.event.registration</field>
+            <field name="arch" type="xml">
+                <tree string="Event Registration">
+                    <field name="part_name_id" />
+                    <field name="name" />
+                    <field name="reg_date" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Event Registration -->
+
+        <record id="school_event_registration_search_view" model="ir.ui.view">
+            <field name="name">event.registration.search</field>
+            <field name="model">school.event.registration</field>
+            <field name="arch" type="xml">
+                <search string ="Search Registrations">
+                    <group string="Filter" col="10" colspan="4">
+                        <filter name="draft" string="Draft" domain="[('state','=','draft')]" icon="terp-camera_test" />
+                        <filter name="confirm" string="Confirm" domain="[('state','=','confirm')]" icon="gtk-close" />
+                        <filter name="cancle" string="Cancel" domain="[('state','=','cancel')]" icon="gtk-cancel" />
+                        <field name="name" select="1" />
+                        <separator orientation="vertical" />
+                        <field name="part_name_id" select="1" />
+                    </group>
+                    <newline />
+                    <group expand="0" string="Group By" colspan="12" col="10">
+                        <filter string="Today" icon="terp-go-month" name="today"
+                             domain="[('reg_date','=',context_today().strftime('%%Y-%%m-%%d'))]"
+                            help="Event Registration in today" />
+                        <separator orientation="vertical" />
+                        <filter icon="terp-personal" string="Event Name" help="By Event name" context="{'group_by':'name'}" />
+                        <separator orientation="vertical" />
+                        <filter icon="terp-personal" string="Participater" help="By Participater" context="{'group_by':'part_name_id'}" />
+                        <separator orientation="vertical" />
+                        <filter icon="terp-stock_symbol-selection" string="Registration Date" help="By Start Date" context="{'group_by':'reg_date'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Event Parameter -->
+
+        <record id="action_event_parameter" model="ir.actions.act_window">
+            <field name="name"> Event Perameter</field>
+            <field name="res_model">school.event.parameter</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Event Participant -->
+
+        <record id="action_school_event_Participant_tree" model="ir.actions.act_window">
+            <field name="name">Event Participant</field>
+            <field name="res_model">school.event.participant</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Event Registration -->
+
+        <record id="action_school_event_registration_form" model="ir.actions.act_window">
+            <field name="name">Event Registration</field>
+            <field name="res_model">school.event.registration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,search</field>
+            <field name="context">{'search_default_confirm':True}</field> 
+        </record>
+
+        <!-- Menu Items for Event -->
+
+        <menuitem id="menu_event_form_1" name="Events" parent="school.menu_ems" sequence="4" />
+
+        <menuitem id="menu_event_sub_form_1" name="Event Informations" parent="menu_event_form_1"
+                  action="action_school_event_form_1"/>
+
+        <menuitem id="menu_event_registration_form" name="Event Registration" parent="menu_event_form_1"
+                  action="action_school_event_registration_form" />
+
+        <menuitem id="menu_event_Participation" name="Event Participation" parent="menu_event_form_1"
+                  action="action_school_event_Participant_tree" />
+
+        <!-- MenuItem Of Event In Configurations -->
+
+        <menuitem id="menu_event_parameter" name="Event" parent="school.menu_configuration"/>
+
+        <menuitem id="menu_event_sub_parameter" name="Event Parameter" parent="menu_event_parameter"
+                  action="action_event_parameter"/>
+
+</odoo>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!-- State By Booking -->
+    <record id="view_hotel_reservation_status_tree" model="ir.ui.view">
+        <field name="name">report.hotel.reservation.status.tree</field>
+        <field name="model">report.hotel.reservation.status</field>
+        <field name="arch" type="xml">
+            <tree string="States By Booking">
+                <field name="reservation_no" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view of report hotel reservation status -->
+    <record id="view_hotel_reservation_status_form" model="ir.ui.view">
+        <field name="name">report.hotel.reservation.status.form</field>
+        <field name="model">report.hotel.reservation.status</field>
+        <field name="arch" type="xml">
+            <form string="States By Booking">
+                <field name="reservation_no" />
+                <field name="state" />
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view of report hotel reservation status -->
+    <record id="report_hotel_reservation_status_search" model="ir.ui.view">
+        <field name="name">report.hotel.reservation.status.search</field>
+        <field name="model">report.hotel.reservation.status</field>
+        <field name="arch" type="xml">
+            <search string="Hotel Booking Status">
+                <filter string="Draft" domain="[('state','=', 'draft')]"
+                    help="Rooms in draft state" />
+                <filter string="Confirm" domain="[('state','=', 'confirm')]"
+                    help="Rooms in confirm state" />
+                <filter string="Done" domain="[('state','=', 'done')]" help="Rooms in done state" />
+            </search>
+        </field>
+    </record>
+
+    <!-- Graph view (pie) of report hotel reservation status -->
+    <record id="view_hotel_reservation_status_graph" model="ir.ui.view">
+        <field name="name">report.hotel.reservation.status.graph</field>
+        <field name="model">report.hotel.reservation.status</field>
+        <field name="arch" type="xml">
+            <graph string="States By Booking" type="pie">
+                <field name="state" />
+                <field name="nbr" operator="+" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Graph view (bar) of report hotel reservation status -->
+    <record id="view_hotel_reservation_status_graph_bar" model="ir.ui.view">
+        <field name="name">report.hotel.reservation.status.graph</field>
+        <field name="model">report.hotel.reservation.status</field>
+        <field name="arch" type="xml">
+            <graph string="States By Booking" type="bar" orientation="verticle">
+                <field name="state" />
+                <field name="nbr" operator="+" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action of report hotel reservation status -->
+    <record id="action_report_hotel_reservation_status_tree_graph" model="ir.actions.act_window">
+        <field name="name">States By Booking</field>
+        <field name="res_model">report.hotel.reservation.status</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+    </record>
+
+</odoo>

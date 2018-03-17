@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <template id="qrcode_label">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <table>
+                                <tr>
+                                    <td style="font-family: 'Helvetica';font-size: 18px;border:1px solid black;">
+                                        <div class="col-md-2">
+                                            <span t-field="o.name"></span>
+                                          </div>
+                                    </td>
+                                    <td style="border:1px solid black;" height="100px">
+                                        <div class="col-md-2">
+                                            <t t-set="name" t-value="o.name"/>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.name, 90, 90)"/>
+                                        </div>
+                                   </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+</odoo>

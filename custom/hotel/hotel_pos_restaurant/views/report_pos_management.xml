@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Template for hotel folio pos order -->
+    <template id="report_folio_pos">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <t t-name="report.external_layout_header">
+                            <div class="header">
+
+                                <div class="row zero_min_height">
+                                    <div class="col-xs-12">
+                                        <div style="border-bottom: 1px solid black;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <h2>
+                                <span>
+                                    <center>Pos Order Details</center>
+                                </span>
+                            </h2>
+                        </div>
+                        <div class="row mt32 mb32">
+                            <div class="text-center">
+                                <strong>From:</strong>
+                                <span t-esc="data['date_start']" />
+                                <strong>To:</strong>
+                                <span t-esc="data['date_end']" />
+                            </div>
+                        </div>
+                        <t t-if="data['check'] == True">
+                            <div t-foreach="get_pos" t-as="info">
+                                <table t-foreach="info[0]" t-as="j" width="100%">
+                                    <tr>
+                                        <td width="40%">
+                                            <strong>Folio Number :</strong>
+                                            <span t-field="j.folio_id.name" />
+                                        </td>
+                                        <td width="30%">&#160;</td>
+                                        <td width="30%">&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td width="40%">
+                                            <strong>Customer Name :</strong>
+                                            <span t-field="j.partner_id.name" />
+                                        </td>
+                                        <td width="30%">&#160;</td>
+                                        <td width="30%">
+                                            <strong>Room No :</strong>
+                                            <span t-field="j.room_no" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td>
+                                            <strong>Order Number</strong>
+                                        </td>
+                                        <td>
+                                            <strong>Order Date</strong>
+                                        </td>
+                                        <td>
+                                            <strong>Items</strong>
+                                        </td>
+                                        <td>
+                                            <strong>State</strong>
+                                        </td>
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                    </tr>
+                                    <tr t-foreach="info" t-as="i">
+                                        <td>
+                                            <span t-field="i.name" />
+                                        </td>
+                                        <td>
+                                            <span t-field="i.date_order" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="len(i.lines)" />
+                                        </td>
+                                        <td>
+                                            <span t-field="i.state" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="gettotal(i)" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <span>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                </span>
+                                <br />
+                            </div>
+                        </t>
+                        <t t-if="data['check'] == False">
+                            <table class="table table-condensed">
+                                <tr>
+                                    <td>
+                                        <strong>Folio No.</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Customer Name</strong>
+                                    </td>
+                                    <td>
+                                        <strong>CheckIN</strong>
+                                    </td>
+                                    <td>
+                                        <strong>CheckOut</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Total Orders</strong>
+                                    </td>
+                                    <td>
+                                        <strong>Total</strong>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="get_data" t-as="info">
+                                    <td>
+                                        <span t-field="info.name" />
+                                    </td>
+                                    <td>
+                                        <span t-field="info.partner_id.name" />
+                                    </td>
+                                    <td>
+                                        <span t-field="info.checkin_date" />
+                                    </td>
+                                    <td>
+                                        <span t-field="info.checkout_date" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="len(info.folio_pos_order_ids)" />
+                                    </td>
+                                    <td>
+                                        <table t-foreach="info.folio_pos_order_ids" t-as="line">
+                                            <tr>
+                                                <td>
+                                                    <span t-field="info.gettotal" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <strong>Net Total:</strong>
+                                    </td>
+                                    <!-- <td><span t-esc="getTotal()"/></td> -->
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
