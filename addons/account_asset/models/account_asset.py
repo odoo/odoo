@@ -406,7 +406,10 @@ class AccountAssetAsset(models.Model):
             ('move_check', '=', False)])
         if group_entries:
             return depreciation_ids.create_grouped_move()
-        return depreciation_ids.create_move()
+        created_moves = []
+        for depreciation in depreciation_ids:
+            created_moves += depreciation.create_move()
+        return created_moves
 
     @api.model
     def create(self, vals):
