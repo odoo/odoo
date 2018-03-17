@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+    <!-- Form view of currency exchange -->
+    <record id="view_currency_exchange_form_inherit" model="ir.ui.view">
+        <field name="name">currency.exchange.form.inherit</field>
+        <field name="model">currency.exchange</field>
+        <field name="inherit_id" ref="hotel.view_currency_exchange_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[3]" position="replace">
+                    <group colspan="2" col="4">
+                        <field name="rate_source" required="1" />
+                        <field name="input_curr" required="1" />
+                        <field name="in_amount" widget="monetary"
+                            options="{'currency_field': 'input_curr'}" />
+                        <field name="out_curr" required="1" />
+                        <field name="rates" attrs="{'readonly': [('rate_source','=','online')]}"/>
+                    </group>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

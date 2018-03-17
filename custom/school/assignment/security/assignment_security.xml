@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+        <!-- Record rule login user can see only his assignment -->
+        <record id="rule_assignment" model="ir.rule">
+            <field name="name">Record Rule of student assignment</field>
+            <field name="model_id" ref="model_school_student_assignment"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('student_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+
+        <!--Record rule for teacher can see only his record -->
+        <record id="teacher_rule_assignment" model="ir.rule">
+            <field name="name">Teacher Record Rule</field>
+            <field name="model_id" ref="model_school_teacher_assignment"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('teacher_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
+        </record>
+
+        <!-- Record Rule for teacher can see record of assigned student -->
+        <record id="student_teacher_assign_rule" model="ir.rule">
+            <field name="name">Teacher Student Assign</field>
+            <field name="model_id" ref="model_school_student_assignment"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('teacher_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
+        </record>
+        
+        <!-- Record Rule parents can see reminder of own child -->
+        <record id="parents_child_asssignment_rule" model="ir.rule">
+            <field name="name">Parents View Child Assignment Rule</field>
+            <field name="model_id" ref="model_school_student_assignment"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force"> [('student_id','in',[student.id for student in user.related_parent_id.student_ids])]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE xml>
+
+<templates id="hotel_template" xml:space="preserve">
+
+    <t t-name="summaryDetails">
+        <div style="overflow:auto;">
+            <table border="1">
+                <t t-foreach="widget.summary_header" t-as="header_detail">
+                <tr>
+                    <t t-foreach="header_detail.header" t-as="date">
+                        <th class="table_header" style="text-align:center;"><t t-esc="date"/></th>  
+                    </t>
+                </tr>   
+                </t>
+                <t t-foreach="widget.room_summary" t-as="detail">
+                    <tr>
+                        <td style="text-align:center;"><t t-esc="detail.name"/></td>
+                        <t t-foreach="detail.value" t-as="status">
+                            <t t-if="status.state == 'Free'">
+                                <td class="table_free"  t-att-data = "status.room_id" t-att-date = "status.date" style="text-align:center;"><t t-esc="status.state"/></td>
+                            </t>
+                            <t t-if="status.state != 'Free' and status.is_draft == 'No'">
+                                <td class="table_reserved" t-att-data-model="status.data_model" t-att-data-id="status.data_id" style="text-align:center;" ><t t-esc="status.state"/></td>
+                            </t>
+                            <t t-if="status.is_draft == 'Yes'">
+                                <td class="table_reserved1" t-att-data-model="status.data_model" t-att-data-id="status.data_id" style="text-align:center;" ><t t-esc="status.state"/></td>
+                            </t>
+                        </t>
+                    </tr>
+                </t>
+            </table>
+        </div>
+    </t>
+</templates>

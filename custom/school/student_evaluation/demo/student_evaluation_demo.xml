@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+        <!-- student.evaluation -->
+        <record id="student_evaluation_1" model="student.evaluation">
+            <field name="student_id" ref="school.demo_student_student_1"/>
+            <field name="type">faculty</field>
+            <field name="date" eval="str(int(time.strftime('2015'))) +'-05-25'"/>
+            <field name="evaluator_id" ref="hr.employee_fpi"/>
+        </record>
+        <record id="student_evaluation_2" model="student.evaluation">
+            <field name="student_id" ref="school.demo_student_student_2"/>
+            <field name="type">student</field>
+            <field name="date" eval="str(int(time.strftime('2016'))) +'-06-25'"/>
+            <field name="evaluator_id" ref="hr.employee_al"/>
+        </record>
+        <record id="student_evaluation_3" model="student.evaluation">
+            <field name="student_id" ref="school.demo_student_student_3"/>
+            <field name="type">faculty</field>
+            <field name="date" eval="str(int(time.strftime('2017'))) +'-04-15'"/>
+            <field name="evaluator_id" ref="hr.employee_mit"/>
+        </record>
+        <record id="student_evaluation_4" model="student.evaluation">
+            <field name="student_id" ref="school.demo_student_student_4"/>
+            <field name="type">student</field>
+            <field name="date" eval="str(int(time.strftime('2017'))) +'-06-15'"/>
+            <field name="evaluator_id" ref="hr.employee_niv"/>
+        </record>
+        <record id="student_evaluation_5" model="student.evaluation">
+            <field name="student_id" ref="school.demo_student_student_5"/>
+            <field name="type">student</field>
+            <field name="date" eval="str(int(time.strftime('2017'))) +'-02-19'"/>
+            <field name="evaluator_id" ref="hr.employee_stw"/>
+        </record>
+        <!-- student.evaluation.template -->
+        <record id="student_evaluation_template_1" model="student.evaluation.template">
+            <field name="desc">Student Evaluation</field>
+            <field name="type">student</field>
+        </record>
+        <record id="student_evaluation_template_2" model="student.evaluation.template">
+            <field name="desc">Faculty Evaluation</field>
+            <field name="type">faculty</field>
+        </record>
+     </data>
+</odoo>

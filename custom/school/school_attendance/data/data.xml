@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record model="ir.cron" id="ir_cron_send_attendance_notification">
+            <field name="name">Attendance Sms Gateway</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'school.attendance'"/>
+            <field name="function" eval="'cron_send_attendance_notification'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+
+        <record model="ir.cron" id="ir_cron_no_sign_out">
+            <field name="name">Attendance without sign out</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'school.attendance'"/>
+            <field name="function" eval="'cron_no_sign_out'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+    </data>
+</odoo>

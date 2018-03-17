@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+
+        <record id="module_category_school_transortation" model="ir.module.category">
+            <field name="name">School Transportation</field>
+            <field name="sequence">25</field>
+        </record>
+
+         <record id="group_transportation_manager" model="res.groups">
+            <field name="name">Transport Manager</field>
+            <field name="category_id" ref="module_category_school_transortation"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_transportation_user" model="res.groups">
+            <field name="name">Transport User</field>
+            <field name="category_id" ref="module_category_school_transortation"/>
+        </record>
+
+        <!-- Record Rule parents can see transport details of own child -->
+        <record id="parent_transport_record_rule" model="ir.rule">
+            <field name="name">Parent Transport Record Rule</field>
+            <field name="model_id" ref="model_transport_participant"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('name','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+        </record>
+
+        <!-- Record Rule Student can see own Registration -->
+        <record id="transport_registration_student" model="ir.rule">
+            <field name="name">Student Registration Record Rule</field>
+            <field name="model_id" ref="model_transport_registration"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('part_name.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+        </record>
+    </data>
+</odoo>

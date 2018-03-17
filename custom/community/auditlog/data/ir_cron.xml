@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <record id="ir_cron_auditlog_autovacuum" model="ir.cron">
+            <field name='name'>Auto-vacuum audit logs</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="False"/>
+            <field name="doall" eval="False"/>
+            <field name="model">auditlog.autovacuum</field>
+            <field name="function">autovacuum</field>
+            <field name="args">(180,)</field>
+        </record>
+
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+    <data noupdate="1">
+
+        <!--Sequences for hotel food order -->
+        <record id="seq_hotel_rest_order" model="ir.sequence">
+            <field name="name">Hotel Order</field>
+            <field name="code">hotel.restaurant.order</field>
+            <field name="prefix">0R/</field>
+            <field name="padding">5</field>
+        </record>
+
+        <record id="seq_hotel_table" model="ir.sequence">
+            <field name="name">Hotel Booking</field>
+            <field name="code">hotel.restaurant.reservation</field>
+            <field name="prefix">R0/</field>
+            <field name="padding">5</field>
+        </record>
+
+        <record id="seq_hotel_resorder" model="ir.sequence">
+            <field name="name">Hotel Booking</field>
+            <field name="code">hotel.reservation.order</field>
+            <field name="prefix">0RR/</field>
+            <field name="padding">5</field>
+        </record>
+
+    </data>
+</odoo>

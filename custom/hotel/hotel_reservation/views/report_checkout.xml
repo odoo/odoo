@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Template for Hotel Booking -->
+    <template id="report_checkout_qweb">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <h2>
+                                <span>
+                                    <center>Check-Out Guest List</center>
+                                </span>
+                            </h2>
+                        </div>
+                        <div class="row mt32 mb32">
+                            <div class="text-center">
+                                <strong>From:</strong>
+                                <span t-esc="data['date_start']" />
+                                <strong>To:</strong>
+                                <span t-esc="data['date_end']" />
+                            </div>
+                        </div>
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>
+                                    <strong>#No</strong>
+                                </td>
+                                <td>
+                                    <strong>Guest Name</strong>
+                                </td>
+                                <td>
+                                    <strong>Check-Out Date</strong>
+                                </td>
+                                <td>
+                                    <strong>Room Type</strong>
+                                </td>
+                                <td>
+                                    <strong>Room No</strong>
+                                </td>
+                            </tr>
+                            <tr t-foreach="get_checkout" t-as="info">
+                                <td>
+                                    <span t-field="info.reservation_no" />
+                                </td>
+                                <td>
+                                    <span t-field="info.partner_id.name" />
+                                </td>
+                                <td>
+                                    <span t-field="info.checkin" />
+                                </td>
+                                <td>
+                                    <table t-foreach="info.reservation_line" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <span t-field="line.categ_id.name" />
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+                                <td>
+                                    <table t-foreach="info.reservation_line" t-as="line">
+                                        <tr t-foreach="line.reserve" t-as="o">
+                                            <td>
+                                                <span t-field="o.name" />
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

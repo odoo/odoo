@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="sequence_html_field_seq" model="ir.sequence">
+            <field name="name">html.form.field sequence</field>
+            <field name="code">html.form.field</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+
+        <record id="html_form_action_view_form" model="ir.ui.view">
+            <field name="name">html.form.action.view.form</field>
+            <field name="model">html.form.action</field>
+            <field name="arch" type="xml">
+                <form string="HTML Form">
+                    <sheet>
+                        <group>
+                            <field name="action_type_id"/>
+                            <field invisible="1" name="setting_name"/>
+                            <field invisible="1" name="settings_description"/>
+                        </group>
+                        <h2 id="formactionhook">Action Settings</h2>
+                        <div attrs="{'invisible': [('setting_name', '!=', 'custom_server_action')]}">
+                            <group>
+                                <field name="custom_server_action"/>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="html_form_view_form" model="ir.ui.view">
+            <field name="name">html.form.view.form</field>
+            <field name="model">html.form</field>
+            <field name="arch" type="xml">
+                <form string="HTML Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="return_url" placeholder="http://www.vuente.com"/>
+                            <field name="model_id"/>
+                            <field context="{'html_id': active_id,'default_model_id':model_id}" name="fields_ids">
+                                <tree editable="true">
+                                    <field name="sequence" widget="handle"/>
+                                    <field invisible="1" name="model_id"/>
+                                    <field invisible="1" name="model"/>
+                                    <field domain="[('name','!=','create_date'),('name','!=','create_uid'),('name','!=','id'),('name','!=','write_date'),('name','!=','write_uid'),('model_id','=',model_id),('name','!=','display_name')]" name="field_id"/>
+                                    <field name="field_type"/>
+                                    <field name="html_name"/>
+                                    <field name="field_label"/>
+                                </tree>
+                            </field>
+                            <field context="{'html_id': active_id,'default_model_id':model_id}" name="defaults_values">
+                                <tree editable="bottom">
+                                    <field invisible="1" name="model_id"/>
+                                    <field invisible="1" name="model"/>
+                                    <field domain="[('name','!=','create_date'),('name','!=','create_uid'),('name','!=','id'),('name','!=','write_date'),('name','!=','write_uid'),('model_id','=',model_id)]" name="field_id"/>
+                                    <field name="default_value"/>
+                                </tree>
+                            </field>
+                            <field name="submit_action">
+                                <tree>
+                                    <field name="action_type_id"/>
+                                    <field name="settings_description"/>
+                                </tree>
+                            </field>
+                            <field name="captcha"/>
+                            <field name="captcha_client_key"/>
+                            <field name="captcha_secret_key"/>
+                            <field name="output_html"/>
+                        </group>
+                        <footer>
+                            <button name="generate_form" string="Generate External Website Embed Code" type="object"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="html_form_history_view_form" model="ir.ui.view">
+            <field name="name">html.form.history.view.form</field>
+            <field name="model">html.form.history</field>
+            <field name="arch" type="xml">
+                <form string="HTML Form History">
+                    <sheet>
+                        <group>
+                            <field name="html_id"/>
+                            <field name="ref_url"/>
+                            <field name="record_id"/>
+                            <field name="insert_data">
+                                <tree>
+                                    <field name="field_id"/>
+                                    <field name="insert_value"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="html_form_field_view_form" model="ir.ui.view">
+            <field name="name">html.form.field.view.form</field>
+            <field name="model">html.form.field</field>
+            <field name="arch" type="xml">
+                <form string="HTML Form Field">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sequence" readonly="1"/>
+                                <field name="html_id" readonly="1"/>
+                                <field name="model_id" readonly="1"/>
+                                <field name="model" readonly="1"/>
+                                <field name="field_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="field_type"/>
+                                <field name="field_label"/>
+                                <field name="validation_format"/>
+                                <field name="setting_general_required"/>
+                                <field name="setting_radio_group_layout_type"/>
+                                <field name="setting_date_format"/>
+                                <field name="setting_datetime_format"/>
+                                <field name="setting_binary_file_type_filter"/>
+                                <field name="character_limit"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="html_form_history_view_tree" model="ir.ui.view">
+            <field name="name">html.form.history.view.tree</field>
+            <field name="model">html.form.history</field>
+            <field name="arch" type="xml">
+                <tree string="HTML Embed Form History Tree">
+                    <field name="form_name"/>
+                    <field name="ref_url"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="html_form_field_view_tree" model="ir.ui.view">
+            <field name="name">html.form.field.view.tree</field>
+            <field name="model">html.form.field</field>
+            <field name="arch" type="xml">
+                <tree string="HTML Embed Form Field Tree" create="0">
+                    <field name="field_label"/>
+                    <field name="html_id"/>
+                    <field name="model_id"/>
+                    <field name="field_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="html_form_action" model="ir.actions.act_window">
+            <field name="name">HTML Forms</field>
+            <field name="res_model">html.form</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first HTML Embed form</p>
+            </field>
+        </record>
+
+        <record id="html_form_history_action" model="ir.actions.act_window">
+            <field name="name">HTML Form Submissions</field>
+            <field name="res_model">html.form.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the first HTML Embed form</p>
+            </field>
+        </record>
+
+        <menuitem id="html_form_parent_menu" name="HTML Embed Forms" parent="base.menu_administration" sequence="160"/>
+        <menuitem action="html_form_action" id="html_form_menu" name="Create Forms" parent="html_form_parent_menu" sequence="10"/>
+        <menuitem action="html_form_history_action" id="html_form_history_menu" name="Inserted Form Data" parent="html_form_parent_menu" sequence="180"/>
+
+        <record id="html_form_field_action" model="ir.actions.act_window">
+            <field name="name">HTML Forms Fields</field>
+            <field name="res_model">html.form.field</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">List all Html Fields</p>
+            </field>
+        </record>
+        <menuitem id="html_form_parent_menu" name="HTML Embed Forms" parent="base.menu_administration" sequence="160"/>
+        <menuitem action="html_form_action" id="html_form_menu" name="Create Forms" parent="html_form_parent_menu" sequence="10"/>
+        <menuitem action="html_form_history_action" id="html_form_history_menu" name="Inserted Form Data" parent="html_form_parent_menu" sequence="180"/>
+        <menuitem action="html_form_field_action" id="html_form_field_menu" name="Form Fields" parent="html_form_parent_menu" sequence="200"/>
+
+    </data>
+</openerp>

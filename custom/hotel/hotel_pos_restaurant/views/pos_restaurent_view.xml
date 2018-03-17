@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+
+    <record id="view_hotelfolio2_form2_inherited" model="ir.ui.view">
+        <field name="name">hotel.folio2.form2.inherited</field>
+        <field name="model">hotel.folio</field>
+        <field name="inherit_id" ref="hotel.view_hotel_folio1_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[@name='foreign exchange']"
+                position="after">
+                <page string="POS Restaurant">
+                    <separator string="POS Orders Details" colspan="4" />
+                    <field name="folio_pos_order_ids" colspan="4" nolabel="1">
+                        <tree
+                            colors="blue:state == 'draft';gray:state in ('done','cancel');black:state not in('done','cancel')">
+                            <field name="date_order" />
+                            <field name="name" />
+                            <field name="session_id" />
+                            <field name="invoice_id" />
+                            <field name="user_id" />
+                            <field name="state" />
+                            <field name="amount_total" sum="Amount total" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

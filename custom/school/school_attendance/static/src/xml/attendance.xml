@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xml:space="preserve">
+    <t t-name="PresenceIndicator">
+        <div class="oe_school_attendance_status fa fa-user">
+        </div>
+    </t>
+
+    <t t-name="SchoolAttendanceKioskMode">
+        <div class="o_school_attendance_kiosk_mode_container">
+            <div class="o_school_attendance_kiosk_mode">
+                <h1>Welcome to <t t-esc="widget.company_name"/></h1>
+                <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo"/>
+                <br/>
+                <h2>Attendance Register</h2>
+                <button class="o_student_attendance_button_students btn btn-primary btn-lg">Select Student</button>
+            </div>
+            <div class="o_school_attendance_clock"></div>
+        </div>
+    </t>
+
+    <t t-name="SchoolAttendanceMyMainMenu">
+        <div class="o_school_attendance_kiosk_mode_container">
+            <div class="o_school_attendance_kiosk_mode">
+                <t t-if="widget.student">
+                    <h1>Welcome <t t-esc="widget.student.name"/></h1>
+                    <t t-if="widget.student.attendance_state=='checked_out'">
+                        <h1>Click to check in</h1>
+                        <i class="fa fa-sign-in btn-primary o_school_attendance_sign_in_out_icon"/>
+                    </t>
+                    <t t-if="widget.student.attendance_state=='checked_in'">
+                        <h1>Click to check out</h1>
+                        <i class="fa fa-sign-out btn-primary o_school_attendance_sign_in_out_icon"/>
+                    </t>
+                </t>
+                <t t-if="!widget.student">
+                    Error : Could not find Student linked to user.
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="SchoolAttendanceKioskConfirm">
+        <div class="o_school_attendance_kiosk_mode_container">
+            <div class="o_school_attendance_kiosk_mode">
+                <t t-if="widget.student_id">
+                    <h1>Welcome <t t-esc="widget.student_id.name"/></h1>
+                    <t t-if="!widget.use_pin">
+                        <t t-if="widget.student_state=='checked_in'">
+                            <h1>Check out</h1>
+                            <a class="fa btn-primary o_school_attendance_sign_in_out_icon fa-sign-out fa-sign-in"/>
+                        </t>
+                        <t t-if="widget.student_state=='waiting'">
+                            <h1>Pending Check out action</h1>
+                            <h1>Check out</h1>
+                            <a class="fa btn-primary o_school_attendance_sign_in_out_icon fa-sign-out fa-sign-in"/>
+                        </t>
+                        <t t-if="widget.student_state=='checked_out'">
+                            <h1>Check in</h1>
+                            <a class="fa btn-primary o_school_attendance_sign_in_out_icon fa-sign-out fa-sign-out"/>
+                        </t>
+                    </t>
+                    <t t-if="widget.use_pin">
+                        <t t-if="widget.student_state=='checked_in'">
+                            <h2>Please enter your PIN to check out</h2>
+                        </t>
+                        <t t-if="widget.student_state=='checked_out'">
+                            <h2>Please enter your PIN to check in</h2>
+                        </t>
+                        <div class="row">
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <div class="row" >
+                                    <div class="col-xs-4 col-xs-offset-4"><input class="o_school_attendance_PINbox" type="password" disabled="true"/></div>
+                                </div>
+                                <div class="row o_school_attendance_pin_pad">
+                                    <t t-foreach="['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'ok']" t-as="btn_name">
+                                        <div class="col-xs-4 o_school_attendance_pin_pad_border">
+                                            <a t-attf-class="btn btn-primary btn-block btn-lg o_school_attendance_btn-round-corners {{ 'o_school_attendance_pin_pad_button_' + btn_name }}"><t t-esc="btn_name"/></a>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                    </t>
+                </t>
+                <t t-if="!widget.student_id">
+                    Error: could not find corresponding student.<br/>Please return to the main menu.
+                </t>
+                <div class="oe_attendance_sign_in_out">
+                </div>
+                <div class="o_school_attendance_back_button btn btn-danger fa fa-times"/>
+            </div>
+            <div class="o_school_attendance_clock"></div>
+        </div>
+    </t>
+
+    <t t-name="SchoolAttendanceGreetingMessage">
+        <div class="o_school_attendance_message_container">
+            <div class="o_school_attendance_message">
+                <t t-if="widget.attendance">
+                    <t t-if="widget.attendance.check_out">
+                        <h1 class="o_school_attendance_validation">
+                            Checked out at <t t-esc="widget.attendance.check_out_time"/>
+                        </h1>
+                        <h2 class="o_school_attendance_message_message">
+                            Goodbye <t t-esc="widget.student_name"/>
+                            <br/>
+                        </h2>
+                        <h3 class="o_school_attendance_random_message"></h3>
+                        <h2 class="o_school_attendance_warning_message"></h2>
+
+                    </t>
+                    <t t-if="!widget.attendance.check_out">
+                        <h1 class="o_school_attendance_validation">
+                            Checked in at <t t-esc="widget.attendance.check_in_time"/>
+                        </h1>
+                        <h2 class="o_school_attendance_message_message">
+                            Welcome <t t-esc="widget.student_name"/>
+                            <br/>
+                        </h2>
+                        <h3 class="o_school_attendance_random_message"></h3>
+                        <h2 class="o_school_attendance_warning_message"></h2>
+                    </t>
+                </t>
+                <t t-if="!widget.attendance">
+                    Invalid request, please return to the main menu.<br/>
+                </t>
+                <button class="o_school_attendance_button_dismiss btn btn-primary btn-sm">ok</button>
+            </div>
+        </div>
+    </t>
+</template>

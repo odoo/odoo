@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Template for hotel restaurant -->
+    <template id="report_hotel_order_kot">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <t t-name="report.external_layout_header">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                                            style="max-height: 45px;" />
+                                    </div>
+                                    <div class="col-xs-9 text-right" style="margin-top:20px;"
+                                        t-field="company.rml_header1" />
+                                </div>
+                                <div class="row zero_min_height">
+                                    <div class="col-xs-12">
+                                        <div style="border-bottom: 1px solid black;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <h2>
+                                <span>
+                                    <strong>
+                                        <center>Kitchen Order Ticket</center>
+                                    </strong>
+                                </span>
+                            </h2>
+                        </div>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Date</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Order Number</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Served By</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Room Number</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <td style="white-space: nowrap;">
+                                    <span t-esc="formatLang(o.o_date, date=True)" />
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <span t-att-style="style" t-esc="o.order_no" />
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <span t-att-style="style" t-esc="o.waiter_name.name" />
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <span t-att-style="style" t-esc="o.room_no.name" />
+                                </td>
+                            </tbody>
+                        </table>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Table Number</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.table_no" t-as="rec2">
+                                    <td>
+                                        <span t-esc="rec2.name" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <h2>
+                                <span>Food Item List</span>
+                            </h2>
+                        </div>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Food Item</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Quantity</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.order_list" t-as="rec">
+                                    <td>
+                                        <span t-esc="rec.name.name" />
+                                    </td>
+                                    <td>
+                                        <span t-esc="rec.item_qty" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_import_wiz_form" model="ir.ui.view">
+            <field name="name">wiz.grade.importer.form</field>
+            <field name="model">wiz.grade.importer</field>
+            <field name="arch" type="xml">
+                <form string="Map Imported Grades">
+                    <div>
+                        <h4><b>Note: Use This wizard to automatically map imported grades to students in the system</b></h4>
+                        <group col="2">
+                            <group>
+                                <field name="exam_id" domain="[('state','=','finished')]"/>
+                            </group>
+                        </group>
+                    </div>
+                    <h4><b>Run Mapper</b></h4>
+                    <notebook>
+                        <page string="By Students">
+                            <field name="student_ids"/>
+                        </page>
+                        <page string="By Form">
+                            <field name="form_ids"/>
+                        </page>
+                        <page string="By Classroom">
+                            <field name="classroom_ids"/>
+                        </page>
+                        <page string="By Subjects">
+                            <field name="subject_ids"/>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="import_grades" string="Signal Mapper" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_exam_result_mapper" model="ir.actions.act_window">
+            <field name="name">Result Mapper Wizard</field>
+            <field name="res_model">wiz.grade.importer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+        </record>
+
+        <!-- Menu Item Of Result -->
+
+        <menuitem id="menu_exam_result_mapper" name="Result Mapper Wizard" parent="menu_exam" action="action_exam_result_mapper" sequence="9"/>
+
+        <act_window id="action_student_grades_import"
+                    name="Map Imported Grades"
+                    res_model="wiz.grade.importer"
+                    src_model="exam.result.import"
+                    view_mode="form"
+                    key2="client_action_multi"
+                    target="new"
+        />
+
+    </data>
+</odoo>

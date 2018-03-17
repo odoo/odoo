@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <data noupdate="1">
+
+        <!--school.event.parameter-->
+
+        <record id="event_parameter_1" model="school.event.parameter">
+            <field name="name"> Goal(Demo-1)</field>
+        </record>
+
+        <record id="event_parameter_2" model="school.event.parameter">
+            <field name="name"> Point(Demo-1)</field>
+        </record>
+
+         <!--School.event-->
+
+        <record id="school_event_1" model="school.event">
+            <field name="name"> Hockey(Demo-1)</field>
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="start_reg_date" />
+            <field eval="(DateTime.today() + timedelta(days=2)).strftime('%Y-%m-%d')" name="last_reg_date" />
+            <field eval="(DateTime.today() + timedelta(days=4)).strftime('%Y-%m-%d')" name="start_date" />
+            <field eval="(DateTime.today() + timedelta(days=6)).strftime('%Y-%m-%d')" name="end_date" />
+            <field name="parameter_id" ref="event_parameter_1" />
+            <field name="maximum_participants">56</field>
+            <field name="participants">3</field>
+            <field name="contact_per_id" ref="school.demo_student_student_6" />
+            <field name="supervisor_id" ref="school.demo_student_student_6" />
+            <field name="state">open</field>
+        </record>
+
+        <record id="school_event_2" model="school.event">
+            <field name="name"> Badminton(Demo-1)</field>
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="start_reg_date" />
+            <field eval="(DateTime.today() + timedelta(days=1)).strftime('%Y-%m-%d')" name="last_reg_date" />
+            <field eval="(DateTime.today() + timedelta(days=3)).strftime('%Y-%m-%d')" name="start_date" />
+            <field eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d')" name="end_date" />
+            <field name="parameter_id" ref="event_parameter_2" />
+            <field name="maximum_participants">56</field>
+            <field name="participants">3</field>
+            <field name="contact_per_id" ref="school.demo_student_student_5" />
+            <field name="supervisor_id" ref="school.demo_student_student_6" />
+            <field name="state">open</field>
+        </record>
+
+        <!--school.event.registration-->
+
+        <record id="event_registration_1" model="school.event.registration">
+            <field name="name" ref="school_event_1" />
+            <field name="part_name_id" ref="school.demo_student_student_1" />
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field name="state">confirm</field>
+        </record>
+
+        <record id="event_registration_2" model="school.event.registration">
+            <field name="name" ref="school_event_1" />
+            <field name="part_name_id" ref="school.demo_student_student_2" />
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field name="state">confirm</field>
+        </record>
+
+        <record id="event_registration_3" model="school.event.registration">
+            <field name="name" ref="school_event_1" />
+            <field name="part_name_id" ref="school.demo_student_student_3" />
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field name="state">confirm</field>
+        </record>
+
+        <record id="event_registration_4" model="school.event.registration">
+            <field name="name" ref="school_event_2" />
+            <field name="part_name_id" ref="school.demo_student_student_1" />
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field name="state">confirm</field>
+        </record>
+
+        <record id="event_registration_5" model="school.event.registration">
+            <field name="name" ref="school_event_2" />
+            <field name="part_name_id" ref="school.demo_student_student_2" />
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field name="state">confirm</field>
+        </record>
+
+        <record id="event_registration_6" model="school.event.registration">
+            <field name="name" ref="school_event_2" />
+            <field name="part_name_id" ref="school.demo_student_student_3" />
+            <field eval="time.strftime('%Y %m %d %H:%M:%S')" name="reg_date" />
+            <field name="state">confirm</field>
+        </record>
+
+         <!--school.event.participant-->
+
+         <record id="event_participant_1" model="school.event.participant">
+            <field name="stu_pid">101</field>
+            <field name="name" ref="school.demo_student_student_1" />
+            <field name="event_id" ref="school_event_1" />
+            <field name="win_parameter_id" ref="event_parameter_1" />
+            <field name="score">101</field>
+            <field name="sequence">19</field>
+         </record>
+
+        <record id="event_participant_2" model="school.event.participant">
+            <field name="stu_pid">102</field>
+            <field name="name" ref="school.demo_student_student_2" />
+            <field name="event_id" ref="school_event_2" />
+            <field name="win_parameter_id" ref="event_parameter_2" />
+            <field name="score">106</field>
+            <field name="sequence">25</field>
+         </record>
+
+        <record id="event_participant_3" model="school.event.participant">
+            <field name="stu_pid">103</field>
+            <field name="name" ref="school.demo_student_student_3" />
+            <field name="event_id" ref="school_event_1" />
+            <field name="win_parameter_id" ref="event_parameter_1" />
+            <field name="score">151</field>
+            <field name="sequence">10</field>
+         </record>
+
+    </data>
+</odoo>

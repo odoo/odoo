@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Table Data -->
+    <record id="hotel_restaurant_tables_table0" model="hotel.restaurant.tables">
+        <field eval="2" name="capacity" />
+        <field eval="&quot;Table-1&quot;" name="name" />
+    </record>
+    <record id="hotel_restaurant_tables_table1" model="hotel.restaurant.tables">
+        <field eval="4" name="capacity" />
+        <field eval="&quot;Table-2&quot;" name="name" />
+    </record>
+    <record id="hotel_restaurant_tables_table2" model="hotel.restaurant.tables">
+        <field eval="8" name="capacity" />
+        <field eval="&quot;Table-3&quot;" name="name" />
+    </record>
+    <record id="hotel_restaurant_tables_table3" model="hotel.restaurant.tables">
+        <field eval="5" name="capacity" />
+        <field eval="&quot;Table-4&quot;" name="name" />
+    </record>
+
+    <!-- Food Item Category -->
+    <record id="hotel_menucard_type_0" model="hotel.menucard.type">
+        <field name="name">All FoodItems</field>
+        <field name="ismenutype">1</field>
+    </record>
+    <record id="hotel_menucard_type_1" model="hotel.menucard.type">
+        <field name="parent_id"
+            search="[('ismenutype','=',True), ('name', '=', 'All FoodItems')]" />
+        <field name="name">Punjabi</field>
+        <field name="ismenutype">1</field>
+    </record>
+    <record id="hotel_menucard_type_2" model="hotel.menucard.type">
+        <field name="parent_id"
+            search="[('ismenutype','=',True), ('name', '=', 'All FoodItems')]" />
+        <field name="name">South Indian</field>
+        <field name="ismenutype">1</field>
+    </record>
+    <record id="hotel_menucard_type_3" model="hotel.menucard.type">
+        <field name="parent_id"
+            search="[('ismenutype','=',True), ('name', '=', 'All FoodItems')]" />
+        <field name="name">Gujarati</field>
+        <field name="ismenutype">1</field>
+    </record>
+
+    <!-- Food Item List -->
+    <record id="hotel_fooditem_0" model="hotel.menucard">
+        <field name="name">Paneer Tikaa</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">50.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/paneer_tikka.png" />
+    </record>
+    <record id="hotel_fooditem_1" model="hotel.menucard">
+        <field name="name">Tanduri Roti</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">10</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/tandoori-roti.jpg" />
+    </record>
+    <record id="hotel_fooditem_4" model="hotel.menucard">
+        <field name="name">Paneer Butter Masala</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">60.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/paneer_butter_masala.jpg" />
+    </record>
+    <record id="hotel_fooditem_5" model="hotel.menucard">
+        <field name="name">Cheese Masala</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">110.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/chees_masala.jpg" />
+    </record>
+    <record id="hotel_fooditem_6" model="hotel.menucard">
+        <field name="name">Paneer Bhurji</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">80.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/paneer_bhurji.jpg" />
+    </record>
+    <record id="hotel_fooditem_7" model="hotel.menucard">
+        <field name="name">Mutter Paneer</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">70.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/muttter_paneer.png" />
+    </record>
+    <record id="hotel_fooditem_8" model="hotel.menucard">
+        <field name="name">Malai Kofta</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">85.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/malai_kofta.jpg" />
+    </record>
+    <record id="hotel_fooditem_22" model="hotel.menucard">
+        <field name="name">Masala kulcha</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">30</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/masala_kulcha.jpg" />
+    </record>
+    <record id="hotel_fooditem_10" model="hotel.menucard">
+        <field name="name">Paneer Makhani</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Punjabi')]" />
+        <field name="list_price">90.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/paneer_makhani.jpg" />
+    </record>
+
+    <!-- Gujarati -->
+    <record id="hotel_fooditem_21" model="hotel.menucard">
+        <field name="name">Chole-Bhature</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Gujarati')]" />
+        <field name="list_price">60.00</field>
+        <field name="image" type="base64" file="hotel_restaurant/static/img/chole.png" />
+    </record>
+    <record id="hotel_fooditem_12" model="hotel.menucard">
+        <field name="name">Bahji Pav</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Gujarati')]" />
+        <field name="list_price">60</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/bhaji_paw.jpg" />
+    </record>
+    <record id="hotel_fooditem_13" model="hotel.menucard">
+        <field name="name">Khandvi</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Gujarati')]" />
+        <field name="list_price">40</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/khandvi.jpg" />
+    </record>
+    <record id="hotel_fooditem_14" model="hotel.menucard">
+        <field name="name">Halva</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'Gujarati')]" />
+        <field name="list_price">80</field>
+        <field name="image" type="base64" file="hotel_restaurant/static/img/Halva.jpg" />
+    </record>
+
+    <!-- South Indian -->
+    <record id="hotel_fooditem_2" model="hotel.menucard">
+        <field name="name">Dosa</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'South Indian')]" />
+        <field name="list_price">30.00</field>
+        <field name="image" type="base64" file="hotel_restaurant/static/img/dosa.png" />
+    </record>
+    <record id="hotel_fooditem_15" model="hotel.menucard">
+        <field name="name">Idli-Sambar</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'South Indian')]" />
+        <field name="list_price">40.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/Idli_sambar.jpg" />
+    </record>
+    <record id="hotel_fooditem_16" model="hotel.menucard">
+        <field name="name">Upma</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'South Indian')]" />
+        <field name="list_price">30.00</field>
+        <field name="image" type="base64" file="hotel_restaurant/static/img/upma.jpg" />
+    </record>
+    <record id="hotel_fooditem_17" model="hotel.menucard">
+        <field name="name">Vada-Sambar</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'South Indian')]" />
+        <field name="list_price">50.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/vada_sambhar.jpg" />
+    </record>
+    <record id="hotel_fooditem_18" model="hotel.menucard">
+        <field name="name">Uttapam</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'South Indian')]" />
+        <field name="list_price">70.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/uttapam.jpg" />
+    </record>
+    <record id="hotel_fooditem_19" model="hotel.menucard">
+        <field name="name">Appam </field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'South Indian')]" />
+        <field name="list_price">60.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/appam1.jpg" />
+    </record>
+    <record id="hotel_fooditem_20" model="hotel.menucard">
+        <field name="name">Pongal</field>
+        <field name="categ_id"
+            search="[('ismenutype','=',True), ('name', '=', 'South Indian')]" />
+        <field name="list_price">50.00</field>
+        <field name="image" type="base64"
+            file="hotel_restaurant/static/img/pongal.jpg" />
+    </record>
+
+    <record id="hotel_restaurant_reservation_0" model="hotel.restaurant.reservation">
+        <field name="tableno"
+            eval="[(6,0,[ref('hotel_restaurant.hotel_restaurant_tables_table1'),ref('hotel_restaurant.hotel_restaurant_tables_table0')])]" />
+        <field name="room_no" ref="point_of_sale.partner_product_3" />
+        <field eval="&quot;2013-04-25 03:09:00&quot;" name="end_date" />
+        <field name="partner_address_id" ref="base.res_partner_4" />
+        <field eval="&quot;draft&quot;" name="state" />
+        <field name="cname" ref="base.res_partner_4" />
+        <field eval="&quot;R0/00001&quot;" name="reservation_id" />
+        <field eval="&quot;2013-04-25 01:09:00&quot;" name="start_date" />
+    </record>
+    <record id="hotel_restaurant_reservation_1" model="hotel.restaurant.reservation">
+        <field name="tableno"
+            eval="[(6,0,[ref('hotel_restaurant.hotel_restaurant_tables_table2'),ref('hotel_restaurant.hotel_restaurant_tables_table3')])]" />
+        <field name="room_no" ref="point_of_sale.partner_product_4" />
+        <field eval="&quot;2013-04-23 15:09:00&quot;" name="end_date" />
+        <field name="partner_address_id" ref="base.res_partner_3" />
+        <field eval="&quot;draft&quot;" name="state" />
+        <field name="cname" ref="base.res_partner_3" />
+        <field eval="&quot;R0/00002&quot;" name="reservation_id" />
+        <field eval="&quot;2013-04-23 11:09:00&quot;" name="start_date" />
+    </record>
+
+    <record id="hotel_reservation_order_0" model="hotel.reservation.order">
+        <field name="table_no"
+            eval="[(6,0,[ref('hotel_restaurant.hotel_restaurant_tables_table1'),ref('hotel_restaurant.hotel_restaurant_tables_table0')])]" />
+        <field eval="&quot;2013-04-25 01:09:00&quot;" name="date1" />
+        <field eval="&quot;ORR/00001&quot;" name="order_number" />
+        <field ref="hotel_restaurant_reservation_0" name="reservationno" />
+    </record>
+    <record id="hotel_reservation_order_line_0" model="hotel.restaurant.order.list">
+        <field name="o_l" ref="hotel_reservation_order_0" />
+        <field name="name" ref="hotel_fooditem_0" />
+        <field name="item_qty">2</field>
+        <field name="item_rate">50.00</field>
+    </record>
+    <record id="hotel_reservation_order_1" model="hotel.reservation.order">
+        <field name="table_no"
+            eval="[(6,0,[ref('hotel_restaurant.hotel_restaurant_tables_table2'),ref('hotel_restaurant.hotel_restaurant_tables_table3')])]" />
+        <field eval="&quot;04/23/2013 16:39:00&quot;" name="date1" />
+        <field eval="&quot;ORR/00002&quot;" name="order_number" />
+        <field ref="hotel_restaurant_reservation_1" name="reservationno" />
+    </record>
+    
+    <record id="hotel_reservation_order_line_1" model="hotel.restaurant.order.list">
+        <field name="o_l" ref="hotel_reservation_order_1" />
+        <field name="name" ref="hotel_fooditem_1" />
+        <field name="item_qty">3</field>
+        <field name="item_rate">30.00</field>
+    </record>
+
+    <!-- Table Order -->
+    <record id="hotel_restaurant_order_0" model="hotel.restaurant.order">
+        <field name="table_no"
+            eval="[(6,0,[ref('hotel_restaurant.hotel_restaurant_tables_table1'),ref('hotel_restaurant.hotel_restaurant_tables_table0')])]" />
+        <field eval="&quot;2013-04-25 15:09:00&quot;" name="o_date" />
+        <field name="cname" ref="base.res_partner_3" />
+        <field eval="&quot;OR/00001&quot;" name="order_no" />
+        <field name="room_no" ref="point_of_sale.partner_product_3" />
+    </record>
+    
+    <record id="hotel_restaurant_order_list_0" model="hotel.restaurant.order.list">
+        <field name="o_list" ref="hotel_restaurant_order_0" />
+        <field name="name" ref="hotel_fooditem_1" />
+        <field name="item_qty">3</field>
+        <field name="item_rate">30.00</field>
+    </record>
+
+    <record id="hotel_restaurant_order_1" model="hotel.restaurant.order">
+        <field name="table_no" eval="[(6,0,[ref('hotel_restaurant.hotel_restaurant_tables_table2')])]" />
+        <field eval="&quot;2013-04-22 12:09:00&quot;" name="o_date" />
+        <field name="cname" ref="base.res_partner_4" />
+        <field eval="&quot;OR/00002&quot;" name="order_no" />
+        <field name="room_no" ref="point_of_sale.partner_product_4" />
+    </record>
+
+    <record id="hotel_restaurant_order_list_1" model="hotel.restaurant.order.list">
+        <field name="o_list" ref="hotel_restaurant_order_1" />
+        <field name="name" ref="hotel_fooditem_0" />
+        <field name="item_qty">3</field>
+        <field name="item_rate">50.00</field>
+    </record>
+
+</odoo>

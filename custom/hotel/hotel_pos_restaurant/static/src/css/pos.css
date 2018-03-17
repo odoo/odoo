@@ -1,0 +1,245 @@
+/*  ********* Generic Layout Constructs  ********* */
+
+.pos .window{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: table;
+    border: none;
+    overflow: hidden;
+}
+.pos .window .subwindow{
+    display: table-row;
+    width: 100%;
+    height: 100%;
+}
+.pos .window .subwindow.collapsed{
+    height: 0px;
+}
+.pos .window .subwindow-container .collapsed{
+    height: 0px;
+}
+.pos .subwindow .subwindow-container{
+    display: table-cell;
+    position: relative;
+}
+/* firefox seems to ignore the relative positionning of the subwindow-container
+ * putting this inside subwindow-container fixes it.
+ */ 
+.pos .subwindow .subwindow-container-fix{
+    height: 100%;
+    position: relative;
+}
+
+
+.pos .foliolist-screen .window,
+.pos .foliolist-screen .full-content .subwindow{
+    display: block;
+}
+.pos .foliolist-screen .full-content .subwindow-container{
+    display: block;
+    height: 100%;
+}
+.pos .foliolist-screen .full-content .subwindow.collapsed,
+.pos .foliolist-screen .full-content .subwindow-container.collapsed{
+    height: auto;
+}
+
+.screen .top-content .button.next{
+    right: 0px;
+    margin-right: 16px;
+}
+
+/* The search box */
+
+.pos .searchbox {
+    position: absolute;
+    right: 2px;
+}
+.pos .searchbox input {
+    width: 100px;
+    border: 1px solid #cecbcb;
+    padding: 10px 20px;
+    padding-left: 38px;
+    margin: 6px;
+    background: url("../img/search.png") no-repeat 15px;
+    background-color: white;
+    border-radius: 20px;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    font-size: 13px;
+}
+.pos .searchbox input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+.pos .search-clear {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 11px;
+    left: 11px;
+    cursor: pointer;
+}
+
+
+/* Generic Screen Layout Constructs */
+
+.screen .screen-content{
+    margin: 0px auto;
+    max-width: 1024px;
+    text-align: left;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+@media screen and (min-width: 1024px) {
+    .screen .screen-content{
+        border-left:  dashed 1px rgb(215,215,215);
+        border-right: dashed 1px rgb(215,215,215);
+    }
+}
+
+/* The Folio List Screen */
+
+.pos .foliolist-screen .folio-list{
+    font-size: 16px;
+    width: 100%;
+    line-height: 40px;
+}
+.pos .foliolist-screen .folio-list th,
+.pos .foliolist-screen .folio-list td {
+    padding: 0px 8px;
+}
+.pos .foliolist-screen .folio-list tr{
+    transition: all 150ms linear;
+    background: rgb(230,230,230);
+}
+.pos .foliolist-screen .folio-list thead > tr,
+.pos .foliolist-screen .folio-list tr:nth-child(even) {
+    background: rgb(247,247,247);
+}
+.pos .foliolist-screen .folio-list tr.highlight{
+    transition: all 150ms linear;
+    background: rgb(110,200,155) !important;
+    color: white;
+}
+.pos .foliolist-screen .folio-list tr.lowlight{
+    transition: all 150ms linear;
+    background: rgb(216, 238, 227);
+}
+.pos .foliolist-screen .folio-list tr.lowlight:nth-child(even){
+    transition: all 150ms linear;
+    background: rgb(227, 246, 237);
+}
+.pos .foliolist-screen .folio-details{
+    padding: 16px;
+    border-bottom: solid 5px rgb(110,200,155);
+}
+.pos .foliolist-screen .folio-picture{
+    height: 64px;
+    width: 64px;
+    border-radius: 32px;
+    overflow: hidden;
+    text-align: center;
+    float: left;
+    margin-right: 16px;
+    background: white;
+    position: relative;
+}
+.pos .foliolist-screen .folio-picture > img {
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    right: -9999px;
+    left: -9999px;
+    max-height: 64px;
+    margin: auto;
+}
+.pos .foliolist-screen .folio-picture > .fa {
+    line-height: 64px;
+    font-size: 32px;
+}
+.pos .foliolist-screen .folio-picture .image-uploader {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.pos .foliolist-screen .folio-name {
+    font-size: 32px;
+    line-height: 64px;
+    margin-bottom:16px;
+}
+.pos .foliolist-screen .edit-buttons .button{
+    display: inline-block;
+    margin-left: 16px;
+    color: rgb(128,128,128);
+    cursor: pointer;
+    font-size: 36px;
+}
+.pos .foliolist-screen .folio-details-box{
+    position: relative;
+    font-size: 16px;
+}
+.pos .foliolist-screen .folio-details-left{
+    width: 50%;
+    float: left;
+}
+.pos .foliolist-screen .folio-details-right{
+    width: 50%;
+    float: right;
+}
+.pos .foliolist-screen .folio-detail{
+    line-height: 24px;
+}
+.pos .foliolist-screen .folio-detail > .label{
+    font-weight: bold;
+    display: inline-block;
+    width: 75px;
+    text-align: right;
+    margin-right: 8px;
+}
+.pos .foliolist-screen .folio-details input,
+.pos .foliolist-screen .folio-details select
+{
+    padding: 4px;
+    border-radius: 3px;
+    border: solid 1px #cecbcb;
+    margin-bottom: 4px;
+    background: white;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: #555555;
+    width: 340px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.pos .foliolist-screen .folio-details input.folio-name {
+    font-size: 24px;
+    line-height: 24px;
+    margin: 18px 6px;
+    width: 340px;
+}
+.pos .foliolist-screen .folio-detail > .empty{
+    opacity: 0.3;
+}
+.pos .foliolist-screen .searchbox{
+    right: auto;
+    margin-left: -90px;
+    margin-top:8px;
+    left: 50%;
+}
+.pos .foliolist-screen .searchbox input{
+    width: 120px;
+}
+.pos .foliolist-screen .button.new-folio {
+    left: 50%;
+    margin-left: 120px;
+}

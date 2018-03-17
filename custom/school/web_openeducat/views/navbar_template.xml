@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <template id="website.layout_logo_show" inherit_id="website.layout"
+        customize_show="True" name="Show Logo">
+        <xpath expr="//header//a[@class='navbar-brand']" position="replace">
+
+        </xpath>
+    </template>
+
+    <template id="navbar_mega" inherit_id="website.layout">
+
+        <xpath expr="//div[@class='navbar-header']" position="inside">
+            <a href="/">
+                <img src="/web_openeducat/static/src/img/logo.png"
+                    class="img img-responsive" alt="Logo of OpenEduCat"
+                    title="OpenEduCat" />
+            </a>
+        </xpath>
+
+
+        <xpath expr="//div[@id='wrapwrap']/header/div[1]"
+            position="before">
+            <div class="oe_structure">
+                <div id="custom-pre-header">
+                    <div class="container">
+                        <nav class="header-nav-top pull-right">
+
+                            <div id="social">
+                                <a href="https://www.facebook.com/OpenEduCat"
+                                    target="_blank">
+                                    <i class="fa fa-facebook fa-1x img-circle"></i>
+                                </a>
+                                <a href="https://twitter.com/openeducat"
+                                    target="_blank">
+                                    <i class="fa fa-twitter fa-1x img-circle"></i>
+                                </a>
+                                <a
+                                    href="https://plus.google.com/u/0/+OpenEduCat/posts"
+                                    target="_blank">
+                                    <i
+                                        class="fa fa-google-plus fa-1x img-circle"></i>
+                                </a>
+                                <a href="https://github.com/openeducat"
+                                    target="_blank">
+                                    <i class="fa fa-github fa-1x img-circle"></i>
+                                </a>
+                            </div>
+                        </nav>
+                        <div id="company_details">
+                            <i class="fa fa-phone pr8" />
+                            <span class="company-info pr8">+1 555 123 8069</span>
+                            <i class="fa fa-envelope pr8" />
+                            <span class="company-info">info@example.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

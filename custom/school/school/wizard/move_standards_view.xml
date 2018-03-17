@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <!-- Assign Roll Number Wizard Form View  -->
+        <record id="view_move_standards_form" model="ir.ui.view">
+            <field name="name">move_standards.form</field>
+            <field name="model">move.standards</field>
+            <field name="arch" type="xml">
+                <form string="Move Standards">
+                        <group>
+                            <field name="academic_year_id" placeholder="Enter Academic Year" widget="selection"/>
+                        </group>
+                        <footer>
+                            <button class="btn btn-sm btn-default fa fa-ban" special="cancel" string="Close"/>
+                            <button class="btn btn-sm btn-default fa fa-plus" name="move_start" string="Move" type="object"/>
+                        </footer>
+               </form>
+            </field>
+        </record>
+        
+        <!-- Action Of Form & Tree Views Of Move Standards -->
+        <record id="action_move_standards_form" model="ir.actions.act_window">
+            <field name="name">Move Standards</field>
+            <field name="res_model">move.standards</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_move_standards_form" />
+            <field name="target">new</field>
+        </record>
+
+        <!-- MenuItem For Configurations->Move Standards -->
+        <menuitem id="menu_move_standards_form" name="Move Standards" parent="menu_configuration" action="action_move_standards_form" />
+
+</odoo>

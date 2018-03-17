@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <!-- Record Rule Of TimeTable For All Users -->
+    <record id="student_rule_timetable_record" model="ir.rule">
+        <field name="name">TimeTable Record rule as a student</field>
+        <field ref="model_time_table" name="model_id"/>
+        <field eval="1" name="global"/>
+        <field name="domain_force">[('standard_id.student_ids.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_student'))]"/>
+    </record>
+    
+    <!-- Record Rule Of TimeTable For Parents -->
+    <record id="parent_rule_timetable_record" model="ir.rule">
+        <field name="name">TimeTable Record rule as a parents</field>
+        <field ref="model_time_table" name="model_id"/>
+        <field eval="1" name="global"/>
+        <field name="domain_force">[('standard_id.student_ids','in',[stud.id for stud in user.partner_id.student_ids])]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_parent'))]"/>
+    </record>
+    
+    <!-- REcord Rule time table line -->
+    <record id="timetableline_teacher_record_rule" model="ir.rule">
+        <field name="name">Teacher TimetableLine Record Rule</field>
+        <field name="model_id" ref="model_time_table_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('teacher_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('school.group_school_teacher'))]"/>
+    </record>
+</odoo>

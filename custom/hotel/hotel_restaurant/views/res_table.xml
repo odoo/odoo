@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Template for hotel restaurant -->
+    <template id="report_res_table">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <t t-name="report.external_layout_header">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo"
+                                            style="max-height: 45px;" />
+                                    </div>
+                                    <div class="col-xs-9 text-right" style="margin-top:20px;"
+                                        t-field="res_company.rml_header1" />
+                                </div>
+                                <div class="row zero_min_height">
+                                    <div class="col-xs-12">
+                                        <div style="border-bottom: 1px solid black;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="row">
+                            <h2>
+                                <span>
+                                    <strong>
+                                        <center>Table Booking List</center>
+                                    </strong>
+                                </span>
+                            </h2>
+                        </div>
+                        <div class="row mt32 mb32">
+                            <div class="text-center">
+                                <strong>From:</strong>
+                                <span t-esc="data['date_start']" />
+                                <strong>To:</strong>
+                                <span t-esc="data['date_end']" />
+                            </div>
+                        </div>
+                        <table class="table table-condensed container">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Booking No</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Customer Name</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Start Date</strong>
+                                    </th>
+                                    <th>
+                                        <strong>End Date</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="Reservations" t-as="reservations">
+                                    <td style="white-space: nowrap;">
+                                        <span t-esc="reservations.get('reservation', '')" />
+                                    </td>
+                                    <td style="white-space: nowrap;">
+                                        <span t-esc="reservations.get('name', '')" />
+                                    </td>
+                                    <td style="white-space: nowrap;">
+                                        <span t-esc="reservations.get('start_date', '')" />
+                                    </td>
+                                    <td style="white-space: nowrap;">
+                                        <span t-esc="reservations.get('end_date', '')" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

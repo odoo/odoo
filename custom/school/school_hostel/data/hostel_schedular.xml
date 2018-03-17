@@ -1,0 +1,14 @@
+
+<odoo>
+      <record id="ir_cron_student_hostel_schedule" model="ir.cron">
+            <field name="name">Student Hostel</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field eval="'hostel.student'" name="model" />
+            <field eval="'student_expire'" name="function" />
+            <field name="active" eval="True"/>
+            <field eval="'()'" name="args"/>
+        </record>
+</odoo>

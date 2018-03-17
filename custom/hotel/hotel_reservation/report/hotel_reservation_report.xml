@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Report for hotel check-in details -->
+    <report id="hotel_checkin_details" string="CheckIn Detail"
+        model="hotel.reservation" report_type="qweb-pdf"
+        file="hotel_reservation.report_checkin_qweb" name="hotel_reservation.report_checkin_qweb"
+        menu="False" />
+
+    <!--Report for hotel room reservation details -->
+    <report id="hotel_roomres_details" string="Room Booking Detail"
+        model="hotel.reservation" report_type="qweb-pdf"
+        file="hotel_reservation.report_roomres_qweb" name="hotel_reservation.report_roomres_qweb"
+        menu="False" />
+
+    <!--Report for hotel check-out details -->
+    <report id="hotel_checkout_details" string="CheckOut Detail"
+        model="hotel.reservation" report_type="qweb-pdf"
+        file="hotel_reservation.report_checkout_qweb" name="hotel_reservation.report_checkout_qweb"
+        menu="False" />
+
+    <!--Report for hotel Maximum used room details -->
+    <report id="hotel_maxroom_details" string="MaxRoom Detail"
+        model="hotel.reservation" report_type="qweb-pdf"
+        file="hotel_reservation.report_maxroom_qweb" name="hotel_reservation.report_maxroom_qweb"
+        menu="False" />
+
+</odoo>

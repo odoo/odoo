@@ -1,0 +1,146 @@
+<openerp>
+  <data>
+      <record id="debrand_config" model="ir.ui.view">
+        <field name="name">Debranding Configuration</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website.view_website_config_settings"/>
+        <field name="arch" type="xml">
+        <xpath expr="//group[@name='social']" position="after">
+                <group name="debrand_config" string="Debranding Configurations">
+                    <label for="company_logo" string="Company Logo"/>
+                        <div>
+                            <div id="company_logo" class="oe_inline">
+                                <field name="company_logo"
+                                       widget="image"
+                                       class="oe_avatar"
+                                       options="{'preview_image': 'image_medium', 'size': [130, 130]}"
+                                />
+                            </div>
+                        </div>
+                    <label for="company_favicon" string="Company Favicon"/>
+                        <div>
+                            <div id="company_favicon" class="oe_inline">
+                                <field name="company_favicon"
+                                       widget="image"
+                                       class="oe_avatar"
+                                       options="{'preview_image': 'image_small', 'size': [30, 30]}"/>
+                            </div>
+                        </div>
+                    <label for="company_name" string="Company Name"/>
+                    <div>
+                        <div id="company_name" class="oe_inline">
+                            <field name="company_name"/>
+                        </div>
+                    </div>
+                    <label for="company_website" string="Company Website"/>
+                    <div>
+                        <div id="company_website" class="oe_inline">
+                            <field name="company_website"/>
+                        </div>
+                    </div>
+                </group>
+        </xpath>
+        </field>
+      </record>
+
+    <template id="login_layout" inherit_id="web.login_layout">
+       <xpath expr="//div[@class='text-center']" position="replace">
+           <div class="text-center" t-if="not disable_footer">
+            <t t-if="not disable_database_manager">
+                <a class="" href="/web/database/manager">Manage Databases</a> |
+            </t>
+            <a t-att-href="request.env['website'].sudo().search([])[0].company_name or ''" target="_blank">
+           <span t-esc="request.env['website'].sudo().search([])[0].company_name or ''"/></a>
+        </div>
+
+       </xpath>
+    </template>
+    <template id="login_layout_secondary" inherit_id="web.menu_secondary">
+       <xpath expr="//div[@class='o_sub_menu_footer']" position="replace">
+       <div class="o_sub_menu_footer">
+            Powered by <a t-att-href="request.env['website'].sudo().search([])[0].company_website or ''" target="_blank">
+           <span t-esc="request.env['website'].sudo().search([])[0].company_name or ''"/></a>
+        </div>
+       </xpath>
+    </template>
+    <template id="login_layout_im_livechat" inherit_id="im_livechat.support_page">
+       <xpath expr="//body" position="replace">
+         <body>
+             <div class="main" style="opacity: 1;">
+                <h1 class="channel_name"><t t-esc="channel.name"/></h1>
+                <div>Website Live Chat Powered by <strong><t t-esc="request.env['website'].sudo().search([])[0].company_name or '"/></strong></div>
+            </div>
+         </body>
+       </xpath>
+    </template>
+    <template id="login_layout" inherit_id="mail.message_user_assigned">
+        <xpath expr="//p[last()]" position="replace">
+            <p style="color:#9E588B;">Powered by <a t-att-href="request.env['website'].sudo().search([])[0].company_website or ''">
+                <t t-esc="request.env['website'].sudo().search([])[0].company_name or ''"/></a>.</p>
+        </xpath>
+    </template>
+    <template id="website.layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
+      <xpath expr="//footer" position="inside">
+          <div class="container mt16 mb8">
+              <div class="pull-right" t-if="not editable">
+                Powered by <a class="label label-danger" t-att-href="request.env['website'].sudo().search([])[0].company_website">
+                  <t t-esc="request.env['website'].sudo().search([])[0].company_name"/> </a>.
+              </div>
+              <div class="pull-left text-muted">
+                  Copyright &amp;copy; <span t-esc="request.env['website'].sudo().search([])[0].company_name"/>
+              </div>
+          </div>
+      </xpath>
+    </template>
+    <template id="footer_extend" inherit_id="website.footer_custom">
+        <xpath position="replace" expr="//h2"/>
+    </template>
+      <!--put teh company logo or the fav icons path here in href-->
+    <template id="web_layout_extend" inherit_id="web.layout">
+        <xpath expr="//title" position="replace">
+            <title><t t-esc="request.env['website'].sudo().search([])[0].company_name or ''"/></title>
+        </xpath>
+        <xpath position="replace" expr="//link[@rel='shortcut icon']"><t>
+            <link type="image/x-icon" rel="shortcut icon" t-att-href="request.env['website'].sudo().search([])[0].favicon_url or ''"/></t>
+        </xpath>
+    </template>
+
+    <template id="debranding_title" name="Debranding title JS"
+              inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/odoo-debrand/static/src/js/title.js"/>
+        </xpath>
+    </template>
+      <!--Code for Enterprise Edition-->
+    <!--<template id="remove_bbotstrap_fav" inherit_id="web_enterprise.webclient_bootstrap">-->
+        <!--<xpath expr="//link[@rel='icon']" position="replace">-->
+            <!--<link rel="icon" sizes="192x192" href=""/>-->
+        <!--</xpath>-->
+        <!--<xpath expr="//link[@rel='apple-touch-icon']" position="replace">-->
+            <!--<link rel="apple-touch-icon" sizes="152x152" href=""/>-->
+        <!--</xpath>-->
+    <!--</template>-->
+    <template inherit_id="web.login_layout" id="login_layout_extend">
+        <xpath position="replace" expr="//div[@class='row']">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 o_database_list">
+                    <div class="text-center">
+                        <img t-attf-src="request.env['website'].sudo().search([])[0].favicon_url or ''"/>
+                    </div>
+                    <t t-raw="0"/>
+                    <div class="text-center" t-if="not disable_footer">
+                        <t t-if="not disable_database_manager">
+                            <a class="" href="/web/database/manager">Manage Databases</a> |
+                        </t>
+                        <t>
+                            <a t-att-href="request.env['website'].sudo().search([])[0].company_website" target="_blank">Powered by
+                                <span t-esc="request.env['website'].sudo().search([])[0].company_name"/></a>
+                        </t>
+
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+  </data>
+</openerp>

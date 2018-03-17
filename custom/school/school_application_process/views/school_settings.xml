@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="school_setting_view_inherit" model="ir.ui.view">
+        <field name="name">school.setting.form</field>
+        <field name="model">school.settings</field>
+        <field name="inherit_id" ref="school.school_setting_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group/div" position="inside">
+                    <div>
+                        <b><label for="send_application_sms"/></b>
+                        <field name="send_application_sms"/>
+                        </div>
+                 </xpath>
+        </field>
+    </record>
+</odoo>

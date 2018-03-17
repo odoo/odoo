@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Form view for wizard hotel restaurant -->
+    <record id="wizard_hotel_restaurant_form_view" model="ir.ui.view">
+        <field name="name">wizard.hotel.restaurant.form</field>
+        <field name="model">wizard.hotel.restaurant</field>
+        <field name="arch" type="xml">
+            <form string="Booking List">
+                <group col="4">
+                    <field name="date_start" />
+                    <field name="date_end" />
+                </group>
+                <footer>
+                    <button name="print_report" string="Table Booking List"
+                        type="object" icon="fa-print" class="oe_highlight" />
+                    <button string="Cancel" icon="fa-close" class="btn btn-primary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--Action for wizard hotel restaurant -->
+    <record id="action_wizard_hotel_restaurant" model="ir.actions.act_window">
+        <field name="name">Table Booking List</field>
+        <field name="res_model">wizard.hotel.restaurant</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="wizard_list_menu" name="Table Booking List"
+        action="action_wizard_hotel_restaurant"
+        parent="hotel.hotel_report_menu" sequence="30" />
+
+    <!--Form view for folio report wizard -->
+    <record id="view_folio_rest_reservation" model="ir.ui.view">
+        <field name="name">view.folio.rest.reservation</field>
+        <field name="model">folio.rest.reservation</field>
+        <field name="arch" type="xml">
+            <form string="Order Report">
+                <group col="4">
+                    <field name="date_start" required="1" />
+                    <field name="date_end" required="1" />
+                    <group col="4">
+                        <field name="check" />
+                    </group>
+                </group>
+                <footer>
+                    <button name="print_rest_report" string="Restaurant Reserved Order"
+                        type="object" class="oe_highlight" icon="fa-print"/>
+                    <button name="print_reserv_report" string="Restaurant Orders"
+                        type="object" class="oe_highlight" icon="fa-print"/>
+                    <button string="Cancel" class="btn btn-primary" icon="fa-close" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--Action for folio report wizard -->
+    <record id="action_folio_rest_reservation" model="ir.actions.act_window">
+        <field name="name">Restaurant Reports</field>
+        <field name="res_model">folio.rest.reservation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="folio_rest_reservation_menu"
+         name="Restaurant Reports" action="action_folio_rest_reservation"
+         parent="hotel.hotel_report_menu"
+         sequence="32" />
+
+</odoo>

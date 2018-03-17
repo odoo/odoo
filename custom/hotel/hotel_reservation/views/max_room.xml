@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Template for Hotel Booking -->
+    <template id="report_maxroom_qweb">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <div class="row">
+                            <h2>
+                                <span>
+                                    <center>Max Room Used List</center>
+                                </span>
+                            </h2>
+                        </div>
+                        <div class="row mt32 mb32">
+                            <div class="text-center">
+                                <strong>From:</strong>
+                                <span t-esc="data['date_start']" />
+                                <strong>To:</strong>
+                                <span t-esc="data['date_end']" />
+                            </div>
+                        </div>
+                        <table class="table table-condensed">
+                            <tr>
+                                <td>
+                                    <strong>Room No</strong>
+                                </td>
+                                <td>
+                                    <strong>No of Times used</strong>
+                                </td>
+                            </tr>
+
+                            <tr t-foreach="get_room_used_detail" t-as="line"
+                                class="table table-condensed">
+                                <td>
+                                    <span t-esc="line.get('name','')" />
+                                </td>
+                                <td>
+                                    <span t-esc="line.get('no_of_times_used','')" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

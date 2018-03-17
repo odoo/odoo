@@ -1,0 +1,530 @@
+# Russian translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-06-03 13:53+0000\n"
+"PO-Revision-Date: 2011-02-15 15:13+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-06-15 05:52+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
+
+#. module: library
+#: model:ir.module.module,description:library.module_meta_information
+msgid ""
+"Module to manage library.\n"
+"    Books Information,\n"
+"    Publisher and Author Information,\n"
+"    Book Rack Tracking etc..."
+msgstr ""
+"Модуль управления библиотекой.\n"
+"    Информация о книге.\n"
+"    Информация об авторах и издателе.\n"
+"    Привязка к стеллажу и.т.д."
+
+#. module: library
+#: field:author.book.rel,author_id:0
+#: model:ir.model,name:library.model_library_author
+msgid "Author"
+msgstr "Автор"
+
+#. module: library
+#: view:library.author:0
+#: field:library.author,editor_ids:0
+msgid "Editors"
+msgstr "Редакторы"
+
+#. module: library
+#: view:library.author:0
+msgid "More info"
+msgstr "Дополнительно"
+
+#. module: library
+#: model:ir.model,name:library.model_library_collection
+msgid "Library Collection"
+msgstr "Коллекция библиотеки"
+
+#. module: library
+#: field:library.editor.supplier,supplier_id:0
+msgid "Supplier"
+msgstr "Поставщик"
+
+#. module: library
+#: field:library.editor.supplier,junk:0
+msgid " "
+msgstr " "
+
+#. module: library
+#: wizard_view:purchase.order.merge.library,init:0
+msgid ""
+"Please note that orders will only be merged if they are to the same partner "
+"and going to the same location, and lines will only be merged if they are "
+"exactly the same except for the quantity and unit."
+msgstr ""
+"Учтите, что заказы могут быть объединены, только если они относятся к одному "
+"партнеру и местоположению, а позиции могут быть объединены, только если они "
+"абсолютно одинаковы, кроме количества."
+
+#. module: library
+#: model:ir.ui.menu,name:library.sale_order_day
+msgid "Orders of the day"
+msgstr "Заказы дня"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_author_form
+#: model:ir.ui.menu,name:library.author_menu
+#: view:library.author:0
+#: view:library.rack:0
+#: view:product.product:0
+#: field:product.product,author_ids:0
+#: field:product.product,author_om_ids:0
+msgid "Authors"
+msgstr "Авторы"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_price_category
+msgid "library.price.category"
+msgstr "library.price.category"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_author_new_form
+#: model:ir.ui.menu,name:library.menu_action_book_form_new
+msgid "New Author"
+msgstr "Новый автор"
+
+#. module: library
+#: view:library.author:0
+#: field:library.author,note:0
+msgid "Notes"
+msgstr "Примечания"
+
+#. module: library
+#: selection:product.product,back:0
+msgid "Paperback"
+msgstr "Мягкая обложка"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.act_sale_picking
+msgid "Packing list"
+msgstr "Перечень"
+
+#. module: library
+#: view:product.product:0
+msgid "Products"
+msgstr "Продукция"
+
+#. module: library
+#: field:product.product,date_retour:0
+msgid "Return date"
+msgstr "Дата возврата"
+
+#. module: library
+#: field:product.product,tome:0
+msgid "Tome"
+msgstr "Том"
+
+#. module: library
+#: field:purchase.order.line,origin:0
+msgid "Origin"
+msgstr "Источник"
+
+#. module: library
+#: model:ir.model,name:library.model_library_editor_supplier
+msgid "many2many view for editor relations"
+msgstr "many2many вид для связей редакторов"
+
+#. module: library
+#: field:author.book.rel,product_id:0
+msgid "Book"
+msgstr "Книга"
+
+#. module: library
+#: model:ir.model,name:library.model_library_rack
+msgid "Library Rack"
+msgstr "Библиотечный стеллаж"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_editor_supplier
+msgid "Partner relations"
+msgstr "Отношения партнеров"
+
+#. module: library
+#: model:ir.model,name:library.model_author_book_rel
+msgid "author.book.rel"
+msgstr "author.book.rel"
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Sold Out"
+msgstr "Продано"
+
+#. module: library
+#: field:product.product,state:0
+msgid "State"
+msgstr "Область"
+
+#. module: library
+#: field:library.editor.supplier,name:0
+#: field:product.product,editor:0
+msgid "Editor"
+msgstr "Редактор"
+
+#. module: library
+#: view:stock.picking:0
+msgid "Picking List"
+msgstr "Отборочный лист"
+
+#. module: library
+#: field:product.product,date_parution:0
+msgid "Release date"
+msgstr "Дата выпуска"
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Available"
+msgstr "Доступно"
+
+#. module: library
+#: field:product.product,pocket:0
+msgid "Pocket"
+msgstr "Карманная"
+
+#. module: library
+#: model:ir.model,name:library.model_view_books_without_authors
+msgid "view.books.without.authors"
+msgstr "view.books.without.authors"
+
+#. module: library
+#: model:ir.actions.wizard,name:library.purchase_order_merge
+msgid "Merge purchases"
+msgstr "Объединить закупки"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_book_rack
+msgid "Racks"
+msgstr "Стеллажи"
+
+#. module: library
+#: view:library.author:0
+msgid "General Informations"
+msgstr "Общая информация"
+
+#. module: library
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Некорректный формат XML для структуры вида!"
+
+#. module: library
+#: model:ir.ui.menu,name:library.boock_return_menu
+msgid "Books to return before 30 days"
+msgstr "Книги к возврату в течение 30 дней."
+
+#. module: library
+#: model:ir.ui.menu,name:library.menu_price_category
+#: view:library.price.category:0
+msgid "Price Categories"
+msgstr "Категории цен"
+
+#. module: library
+#: field:account.invoice.line,customer_ref:0
+#: field:mrp.procurement,customer_ref:0
+#: field:purchase.order.line,customer_ref:0
+#: field:sale.order.line,customer_ref:0
+#: field:stock.move,customer_ref:0
+msgid "Customer reference"
+msgstr "Ссылка на клиента"
+
+#. module: library
+#: selection:product.product,back:0
+msgid "Hardback"
+msgstr "Твердая обложка"
+
+#. module: library
+#: field:product.product,num_edition:0
+msgid "Num. edition"
+msgstr "числ. версия"
+
+#. module: library
+#: field:product.product,rack:0
+msgid "Rack"
+msgstr "Стеллаж"
+
+#. module: library
+#: field:product.product,online:0
+msgid "Visible on website"
+msgstr "Видна на вебсайте"
+
+#. module: library
+#: view:library.author:0
+#: field:library.author,biography:0
+msgid "Biography"
+msgstr "Биография"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_order_today_tree
+#: model:ir.actions.act_window,name:library.action_order_today_user_tree
+msgid "sale.order"
+msgstr "sale.order"
+
+#. module: library
+#: view:product.product:0
+msgid "Descriptions"
+msgstr "Описания"
+
+#. module: library
+#: field:library.price.category,name:0
+msgid "Category"
+msgstr "Категория"
+
+#. module: library
+#: model:ir.model,name:library.model_library_price_category
+msgid "Book Price Category"
+msgstr "Категория цен на книги"
+
+#. module: library
+#: model:ir.ui.menu,name:library.order_today_user_Menuitem
+msgid "My orders of the day"
+msgstr "Мои заказы за день"
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Not yet published"
+msgstr "Еще не издана"
+
+#. module: library
+#: field:product.product,collection:0
+msgid "Collection"
+msgstr "Коллекция"
+
+#. module: library
+#: view:sale.order:0
+msgid "Sales Orders"
+msgstr "Заказы"
+
+#. module: library
+#: field:library.rack,active:0
+msgid "Active"
+msgstr "Активен"
+
+#. module: library
+#: view:product.product:0
+msgid "Purchase Description"
+msgstr "Описание закупки"
+
+#. module: library
+#: field:product.product,lang:0
+msgid "Language"
+msgstr "Язык"
+
+#. module: library
+#: view:product.product:0
+msgid "Sale Description"
+msgstr "Описание продажи"
+
+#. module: library
+#: field:product.product,creation_date:0
+msgid "Creation date"
+msgstr "Дата создания"
+
+#. module: library
+#: field:product.product,catalog_num:0
+msgid "Catalog number"
+msgstr "Номер в каталоге"
+
+#. module: library
+#: field:account.invoice.line,production_lot_id:0
+#: field:mrp.procurement,production_lot_id:0
+#: field:purchase.order.line,production_lot_id:0
+#: field:sale.order.line,production_lot_id:0
+msgid "Production Lot"
+msgstr "Партия"
+
+#. module: library
+#: field:library.collection,code:0
+#: field:library.rack,code:0
+msgid "Code"
+msgstr "Код"
+
+#. module: library
+#: field:library.author,death_date:0
+msgid "Date of death"
+msgstr "Дата смерти"
+
+#. module: library
+#: field:product.product,back:0
+msgid "Reliure"
+msgstr "Переплет"
+
+#. module: library
+#: model:ir.module.module,shortdesc:library.module_meta_information
+msgid "Library"
+msgstr "Библиотека"
+
+#. module: library
+#: field:stock.move,procurement_ids:0
+msgid "Procurements"
+msgstr "Снабжение"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_product_book_form
+#: model:ir.ui.menu,name:library.menu_action_book_form
+#: view:library.author:0
+#: field:library.author,book_ids:0
+#: field:library.price.category,product_ids:0
+#: view:product.product:0
+msgid "Books"
+msgstr "Книги"
+
+#. module: library
+#: view:account.invoice:0
+msgid "Invoice"
+msgstr "Счет"
+
+#. module: library
+#: wizard_button:purchase.order.merge.library,init,end:0
+msgid "Cancel"
+msgstr "Отмена"
+
+#. module: library
+#: view:product.product:0
+msgid "Procurement (days)"
+msgstr "Снабжение (дней)"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_product_book_30days
+msgid "product.book.form.view"
+msgstr "product.book.form.view"
+
+#. module: library
+#: view:product.product:0
+msgid "Information"
+msgstr "Информация"
+
+#. module: library
+#: model:ir.actions.wizard,name:library.library_update_prices
+msgid "Update prices"
+msgstr "Обновить цены"
+
+#. module: library
+#: wizard_view:purchase.order.merge.library,init:0
+#: wizard_button:purchase.order.merge.library,init,merge:0
+msgid "Merge orders"
+msgstr "Объединить заказы"
+
+#. module: library
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Название объекта должно начинаться с x_  и не должно содержать специальных "
+"символов !"
+
+#. module: library
+#: field:product.product,num_pocket:0
+msgid "Collection Num."
+msgstr "Номер коллекции"
+
+#. module: library
+#: field:library.author,born_date:0
+msgid "Date of birth"
+msgstr "Дата рождения"
+
+#. module: library
+#: field:product.product,isbn:0
+msgid "Isbn code"
+msgstr "Код ISBN"
+
+#. module: library
+#: field:library.author,first_name:0
+msgid "First Name"
+msgstr "Имя"
+
+#. module: library
+#: view:product.product:0
+msgid "Other"
+msgstr "Прочее"
+
+#. module: library
+#: view:product.product:0
+msgid "Details"
+msgstr "Подробности"
+
+#. module: library
+#: field:product.product,nbpage:0
+msgid "Number of pages"
+msgstr "Число страниц"
+
+#. module: library
+#: view:product.product:0
+msgid "Description"
+msgstr "Описание"
+
+#. module: library
+#: field:product.product,format:0
+msgid "Format"
+msgstr "Формат"
+
+#. module: library
+#: field:library.price.category,price:0
+msgid "Price"
+msgstr "Цена"
+
+#. module: library
+#: field:product.product,price_cat:0
+msgid "Price category"
+msgstr "Категория цены"
+
+#. module: library
+#: view:library.editor.supplier:0
+msgid "Editor and suppliers relations"
+msgstr "Отношения редактор-поставщик"
+
+#. module: library
+#: model:ir.actions.act_window,name:library.action_product_book_new_form
+msgid "New Book"
+msgstr "Новая книга"
+
+#. module: library
+#: field:library.author,name:0
+#: field:library.collection,name:0
+#: field:library.rack,name:0
+msgid "Name"
+msgstr "Имя"
+
+#. module: library
+#: selection:product.product,state:0
+msgid "Printing w/o Date"
+msgstr "Печать без даты"
+
+#. module: library
+#: model:ir.ui.menu,name:library.menu_editor_supplier
+msgid "Editor - Suppliers Relations"
+msgstr "Отношение редактор-поставщики"
+
+#. module: library
+#: field:library.editor.supplier,sequence:0
+msgid "Sequence"
+msgstr "Последовательность"
+
+#. module: library
+#: wizard_view:purchase.order.merge.library,init:0
+msgid "Are you sure you want to merge these orders ?"
+msgstr "Вы уверены, что хотите объединить эти заказы?"
+
+#. module: library
+#: view:library.price.category:0
+msgid "Price Category"
+msgstr "Категория цены"
+
+#. module: library
+#: field:product.product,link_ids:0
+msgid "Related Books"
+msgstr "Похожие книги"

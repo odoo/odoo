@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+        <!-- Tree View Of Teacher Assignment Information -->
+        <record id="view_school_teacher_assignment_tree" model="ir.ui.view">
+            <field name="name">school.teacher.assignment.tree</field>
+            <field name="model">school.teacher.assignment</field>
+            <field name="arch" type="xml">
+                <tree string="Assignment Information">
+                    <field name="name" />
+                    <field name="teacher_id" select="1"/>
+                    <field name="classroom_id"/>
+                    <field name="subject_id" />
+                    <field name="assign_date" />
+                    <field name="due_date"/>
+                    <field name="state" select="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Teacher Assignment Information -->
+        <record id="view_school_teacher_assignment_search" model="ir.ui.view">
+            <field name="name">school.teacher.assignment.search</field>
+            <field name="model">school.teacher.assignment</field>
+            <field name="arch" type="xml">
+                <search string="Assignment Information">
+                    <filter string="Active" name="active_assign" domain="[('state','=','active')]" icon="terp-camera_test"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="teacher_id"/>
+                    <field name="classroom_id"/>
+                    <field name="subject_id"/>
+                    <field name="assign_date"/>
+                    <field name="due_date"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Teacher" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'teacher_id'}"/>
+                        <filter string="Subject" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'subject_id'}"/>
+                        <filter string="Class" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'classroom_id'}"/>
+                        <filter string="Assign Date" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'assign_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- From View Of Teacher Assignment Information -->
+        <record id="view_school_teacher_assignment_form" model="ir.ui.view">
+            <field name="name">school.teacher.assignment.form</field>
+            <field name="model">school.teacher.assignment</field>
+            <field name="arch" type="xml">
+                <form string="Assignment Information" >
+                    <header>
+                        <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active Assignment" type="object"/>
+                        <button name="done_assignments" states="active" string="Done" type="object"/>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+                    <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                    <separator string="Teacher Assignment" colspan="4"/>
+
+                    <group col="4" colspan="4">
+                        <field name="assign_type"/>
+                        <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="teacher_id" attrs="{'readonly':[('state','=','done')]}" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                    </group>
+                    <group col="4" string="Subject and Dates">
+                        <field name="classroom_id" select="1" placeholder="Class" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="subject_id" select="1" placeholder="Subject" attrs="{'readonly':[('state','=','done')]}" />
+                        <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','=','done')]}"/>
+                    </group>
+                    <separator string="Attachements" colspan="4"/>
+                    <group col="2">
+                        <field name="attached_homework" placeholder="Attachement File" attrs="{'readonly':[('state','=','done')]}"/>
+                    </group>
+                    <notebook>
+                        <page string="Student Assignment Details">
+                            <field name="student_assign_ids" readonly="1">
+                                <tree>
+                                    <field name="student_id"/>
+                                    <field name="state"/>
+                                    <button name="done_assignment" type="object" icon="fa-check text-success" help="done assigment" states="active,reject"/>
+                                    <button name="reassign_assignment" type="object" icon="fa-recycle" help="Re-assign assigment" states="reject"/>
+                                    <button name="%(assignment.student_homework_reject)d" icon="fa-times-circle text-danger" help="reject assignment" type="action" states="active"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Assignment Information -->
+        <record id="action_school_teacher_assignment_form" model="ir.actions.act_window">
+            <field name="name">Teacher Assignment</field>
+            <field name="res_model">school.teacher.assignment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active_assign':1}</field>
+        </record>
+
+        <!-- From View Of Student Assignment Information -->
+        <record id="view_school_student_assignment_form" model="ir.ui.view">
+            <field name="name">school.student.assignment.form</field>
+            <field name="model">school.student.assignment</field>
+            <field name="arch" type="xml">
+                <form string="Assignment Information">
+                    <header>
+                        <button name="active_assignment" class="oe_stat_button fa fa-check" states="draft" string="Active" 
+                                type="object" groups="school.group_school_teacher,school.group_school_administration"/>
+                        <button name="done_assignment" class="oe_stat_button fa fa-check" states="active,reject" string="Done" 
+                                type="object" groups="school.group_school_teacher,school.group_school_administration"/>
+                        <button name="%(assignment.student_homework_reject)d" string="Reject" type="action" states="active"
+                                groups="school.group_school_teacher,school.group_school_administration"/>
+                        <button name="reassign_assignment" states="reject" string="Re-Assign" type="object"
+                                groups="school.group_school_teacher, school.group_school_administration"/>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+                    <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                    <separator colspan="4"/>
+                    <group col="4" string="Assignment Information">
+                        <field name="student_id" placeholder="Student" attrs="{'readonly':[('state','=','done')]}" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}" domain="[('state','=','done')]"/>
+                        <field name="name" placeholder="Assignment Name" attrs="{'readonly':[('state','=','done')]}"/>
+                        <newline />
+                        <field name="teacher_id" placeholder="Teacher" attrs="{'readonly':[('state','=','done')]}" domain="[('is_school_teacher','=',True)]" options="{&quot;no_create&quot;: True, &quot;no_search&quot;: True}"/>
+                    </group>
+                    <group col="4" string="Class and Subject">
+                        <field name="subject_id"   attrs="{'readonly':[('state','=','done')]}" />
+                        <field name="classroom_id"  attrs="{'readonly':[('state','=','done')]}"/>
+                    </group>
+                    <group col="4" string="Dates">
+                        <field name="assign_date" placeholder="Assign Date" attrs="{'readonly':[('state','=','done')]}"/>
+                        <field name="due_date" placeholder="Due Date" attrs="{'readonly':[('state','=','done')]}"/>
+                    </group>
+                        <group string="Attachements">
+                            <field name="attached_homework" placeholder="Attachment File" attrs="{'readonly':[('state','=','done')]}"/>
+                        </group>
+                        <group string="Reject Assignment" attrs="{'invisible':[('state','in',['draft','active','done'])]}">
+                            <field name="rejection_reason" attrs="{'invisible':[('state','in',['draft','active','done'])]}"/>
+                        </group>
+                        <field name="teacher_assignment_id" invisible="1"/>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Student Assignment Information -->
+        <record id="view_school_student_assignment_tree" model="ir.ui.view">
+            <field name="name">school.student.assignment.tree</field>
+            <field name="model">school.student.assignment</field>
+            <field name="arch" type="xml">
+                <tree string="Assignment Information">
+                    <field name="student_id"/>
+                    <field name="name"/>
+                    <field name="teacher_id"/>
+                    <field name="subject_id"/>
+                    <field name="classroom_id"/>
+                    <field name="assign_date"/>
+                    <field name="due_date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Student Assignment Information -->
+        <record id="view_school_student_assignment_search" model="ir.ui.view">
+            <field name="name">school.student.assignment.search</field>
+            <field name="model">school.student.assignment</field>
+            <field name="arch" type="xml">
+                <search string="Assignment Information">
+<!--                     <filter string="Active" domain="[('state','=','active')]" icon="terp-camera_test"/> -->
+                    <separator orientation="vertical"/>
+                    <field name="name" />
+                    <field name="student_id"/>
+                    <field name="teacher_id"/>
+                    <field name="classroom_id"/>
+                    <field name="subject_id" />
+                    <field name="assign_date"/>
+                    <field name="due_date"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Student" name="student_id" icon="terp-folder-orange" domain="" context="{'group_by':'student_id'}"/>
+                        <filter string="Teacher" name="teacher_id" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'teacher_id'}"/>
+                        <filter string="Subject" name="subject_id" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'subject_id'}"/>
+                        <filter string="Class" name="classroom_id" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'classroom_id'}"/>
+                        <filter string="Assign Date" name="assign_date" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'assign_date'}"/>
+                    </group>
+                    <group string="Filter By">
+                        <filter string="Active" name="active_assigns" domain="[('state','=','active')]"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Of Form & Tree Views Of Assignment Information -->
+        <record id="action_school_student_assignment_form_btn" model="ir.actions.act_window">
+            <field name="name">Student Assignment</field>
+            <field name="res_model">school.student.assignment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_student_id': active_id}</field>
+        </record>
+
+        <!-- Inherited Form View Of Student -->
+        <record id="view_school_student_form2" model="ir.ui.view">
+            <field name="name">school.student.form.inherit</field>
+            <field name="model">school.student</field>
+            <field name="inherit_id" ref="school.view_school_student_form_1"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@class='oe_button_box']" position="inside">
+                            <button name="%(action_school_student_assignment_form_btn)d" type="action" class="oe_inline oe_stat_button">
+                            <img src="/assignment/static/description/icon.png" style="height:25px;width:50px;float:left;"/>
+                            <lable style="">Assignment</lable>
+                        </button>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+         <!-- Action Of Form & Tree Views Of Assignment Information -->
+        <record id="action_school_student_assignment_form" model="ir.actions.act_window">
+            <field name="name">Student Assignment</field>
+            <field name="res_model">school.student.assignment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active_assigns':1}</field>
+        </record>
+
+        <!-- Menu items for Assignment-->
+        <menuitem id="menu_assignment" name="Assignment" parent="school.menu_school" sequence="5"/>
+        <menuitem id="menu_student_assignment_sub_form" name="View Student Assignment"
+                parent="menu_assignment"
+                action="action_school_student_assignment_form" sequence="2"
+                groups="school.group_school_administration,school.group_school_teacher,school.group_school_student,school.group_school_parent"/>
+         <menuitem id="menu_teacher_assignment_sub_form" name="Create Assignment"
+                parent="menu_assignment"
+                sequence="1"
+                action="action_school_teacher_assignment_form"
+                groups="school.group_school_administration,school.group_school_teacher"/>
+</odoo>

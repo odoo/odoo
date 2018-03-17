@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xml>
+<odoo>
+
+    <template id="assets_backend" name="point_of_sale assets"
+        inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript"
+                src="/hotel_reservation/static/src/js/hotel_room_summary.js"></script>
+            <link rel="stylesheet" href="/hotel_reservation/static/src/css/room_summary.css" />
+        </xpath>
+    </template>
+
+</odoo>

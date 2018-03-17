@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <!-- Form View Of Student's Application -->
+
+        <record id="view_school_school_application" model="ir.ui.view">
+            <field name="name">school.application.form</field>
+            <field name="model">school.application</field>
+            <field name="arch" type="xml">
+                <form string="Student Information">
+                    <header>
+                       <button name="set_to_draft" string="Set to Draft" type="object"
+                               states="confirm,reject" icon="fa-times-circle" class="oe_highlight"
+                               groups="school.group_school_administration,school.group_school_officer"/>
+                       <button name="set_confirm" string="Confirm Application" type="object"
+                               states="draft" icon="fa-certificate" class="oe_highlight"
+                               groups="school.group_school_administration,school.group_school_officer"/>
+                       <button name="set_accepted" string="Accept Application" type="object"
+                               icon="fa-check" states="confirm"
+                               groups="school.group_school_administration,school.group_school_teacher"/>
+                       <button name="set_rejected" type="object" string="Reject Application"
+                               states="confirm" icon="fa-times-circle"/>
+                       <field name="state" widget="statusbar" nolabel="1"/>
+                   </header>
+                    <sheet style="margin-left: auto; margin-right: auto; width: 1000px; ">
+                        <separator string="Personal Information"/>
+                        <field name="school_type" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+
+                        </div>
+                            <div class="col-md-2">
+                                <field name="photo" widget='image' class="oe_avatar oe_left" options='{"size": [150, 150]}'/>
+                            </div>
+                            <div class="oe_title col-md-10">
+                                <group>
+                                    <field name="name" placeholder="Full Name" required="1" />
+                                    <field name="gender" />
+                                    <field name="nationality" />
+                                    <field name="date_of_birth"/>
+                                    <field name="age"/>
+                                </group>
+                            </div>
+                        <group col="2" >
+                           <group string="School Information">
+                                <field name="school_type" invisible="1"/>
+                                <field name="school_level" attrs="{'invisible': [('school_type','=','primary')]}"/>
+                                <field name="p_school_level" attrs="{'invisible': [('school_type','=','secondary')]}"/>
+                                <field name="stream_id" attrs="{'invisible': [('school_level','=','jss')], 'invisible': [('school_type','=','primary')]}"/>
+                                <field name="form_id" placeholder="Form" attrs="{'invisible': [('school_type','=','primary')]}" domain="[('school_level','=',school_level)]"/>
+                                <field name="class_id" placeholder="Class" attrs="{'invisible': [('school_type','=','secondary')]}" domain="[('school_level','=',p_school_level)]"/>
+                            </group>
+                            <group string="Contact Information">
+                                <field name="street" placeholder="No and Street..." required="1"/>
+                                <field name="city" placeholder="City" required="1"/>
+                                <field name="district" placeholder="District"/>
+                                <field name="province" placeholder="District"/>
+                                <field name="student_mobile" placeholder="Mobile Number"/>
+                                <field name="student_email" placeholder="Email Address" String="Email"/>
+                            </group>
+                        </group>
+                       <separator string="Other Information" colspan="4" />
+                       <notebook colspan="4">
+                           <page string="General">
+                               <group col="2" colspan="4">
+                                    <group string="Emergency Contact Details">
+                                        <field name="emergency_contact" String="Emergency Contact #"/>
+                                    </group>
+                               </group>
+                           </page>
+                            <page string="Previous School">
+                                <group>
+                                    <field name="p_school_name"/>
+                                    <field name="p_school_admit_date"/>
+                                    <field name="p_school_exit_date"/>
+                                </group>
+
+                            </page>
+                            <page string="Family Info">
+                                <group string="Parent">
+                                    <field name="parent_name" placeholder="Parent/Guardian Name"/>
+                                    <field name="parent_phone" placeholder="Parent/Guardian Phone #"/>
+                                    <field name="parent_email" placeholder="Parent/Guardian Email"/>
+                                    <field name="parent_address" placeholder="Parent/Guardian Address"/>
+                                </group>
+
+                            </page>
+                            <page string="Medical">
+                                <group col="2">
+                                    <group string="Doctor Information">
+                                        <field name="doctor" placeholder="Doctor's Name" />
+                                        <field name="doctor_phone" placeholder="Doctor's Contact No"/>
+                                    </group>
+                                    <group string="Physical Information">
+                                            <field name="blood_group" placeholder="e.g.B+,Ab+" colspan="1"/>
+                                            <field name="height"/>
+                                            <field name="weight"/>
+                                    </group>
+                                </group>
+                                <separator string="Does the student have any Disabilities?" colspan="4" />
+                                <group col="6" colspan="4">
+                                    <field name="eye"/>
+                                    <field name="ear"/>
+                                    <field name="nose_throat"/>
+                                    <field name="respiratory"/>
+                                    <field name="cardiovascular"/>
+                                    <field name="neurological"/>
+                                    <field name="muskoskeletal"/>
+                                    <field name="dermatological"/>
+                                    <field name="blood_pressure"/>
+                                </group>
+                                <separator string="Notes" colspan="4"/>
+                                <group col="6" colspan="4">
+                                    <field name="medical_note" placeholder="Notes About Medical.." nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Note/Comment">
+                                <group>
+                                    <field name="note" placeholder="Notes/Comment"/>
+                                </group>
+                            </page>
+                        </notebook>
+                        <field name="state" invisible="1"/>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View Of Student's Administration -->
+
+        <record id="view_school_application_tree" model="ir.ui.view">
+            <field name="name">school.application.tree</field>
+            <field name="model">school.application</field>
+            <field name="arch" type="xml">
+                <tree string="Student Application">
+                    <field name="school_type" invisible="1"/>
+                    <field name="name"/>
+                    <field name="school_level" groups="school.group_school_secondary"/>
+                    <field name="p_school_level" groups="school.group_school_primary"/>
+                    <field name="form_id" groups="school.group_school_secondary"/>
+                    <field name="class_id" groups="school.group_school_primary"/>
+                    <field name="gender"/>
+                    <field name="application_ref"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search View Of Student's Application -->
+
+        <record id="view_school_application_search" model="ir.ui.view">
+            <field name="name">school.application.search</field>
+            <field name="model">school.application</field>
+            <field name="arch" type="xml">
+                <search string="Student Information">
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="form_id"/>
+                        <field name="gender"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter icon="terp-project" string="Form" help="By Form" context="{'group_by':'form_id'}" groups="school.group_school_secondary"/>
+                        <filter icon="terp-project" string="Class" help="By Class" context="{'group_by':'class_id'}" groups="school.group_school_primary"/>
+                        <filter icon="terp-project" string="Level" help="By Level" context="{'group_by':'p_school_level'}" groups="school.group_school_primary"/>
+                        <filter icon="terp-project" string="Stream" help="By Stream" context="{'group_by':'stream_id'}" groups="school.group_school_secondary"/>
+                        <filter icon="terp-project" string="Gender" help="By Gender" context="{'group_by':'gender'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kanban View Of Student's Profiles
+
+        <record id="student_student_kanban_view" model="ir.ui.view">
+            <field name="name">Student KANBAN</field>
+            <field name="model">school.student</field>
+            <field name="arch" type="xml">
+                <kanban create="0" edit="0">
+                    <field name="color"/>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)" />
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td class="oe_kanban_title1" align="left" valign="middle" style="padding-left:10px;">
+                                                    <h4>
+                                                        <a type="open">
+                                                            <field name="name"/>
+                                                            <field name="gender" invisible="1"/>
+                                                            <field name="state" invisible="1"/>
+                                                        </a>
+                                                    </h4>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <table class="oe_kanban_table">
+                                            <tr width="300">
+                                                <td valign="top" width="64" align="left">
+                                                    <a type="open">
+                                                        <img heigh="120" width="110" t-att-src="kanban_image('school.student', 'photo', record.id.value)"/>
+                                                    </a>
+                                                </td>
+                                                <td valign="top" align="left" style="padding-left:10px;">
+                                                    <table>
+                                                        <tr>
+                                                            <td>Student ID :</td>
+                                                            <td style="padding-left:10px;">
+                                                                <b>
+                                                                    <field name="pid"/>
+                                                                </b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr groups="school.group_school_secondary" >
+                                                            <td>Form : </td>
+                                                            <td style="padding-left:10px;">
+                                                                <b>
+                                                                    <field name="form_id"/>
+                                                                </b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr groups="school.group_school_primary">
+                                                            <td>Class : </td>
+                                                            <td style="padding-left:10px;">
+                                                                <b>
+                                                                    <field name="class_id"/>
+                                                                </b>
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr groups="school.group_school_secondary">
+                                                            <td>Level : </td>
+                                                            <td style="padding-left:10px;">
+                                                                <b>
+                                                                    <field name="school_level"/>
+                                                                </b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Admission Date : </td>
+                                                            <td style="padding-left:10px;">
+                                                                <b>
+                                                                    <field name="admission_date"/>
+                                                                </b>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Age : </td>
+                                                            <td style="padding-left:10px;">
+                                                                <b>
+                                                                    <field name="age"/>
+                                                                </b>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <center>
+                                                        <b>
+                                                            <field name="gender"/>
+                                                        </b>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        Form View Of Admission Register Information -->
+
+        <!-- Tree View Of Admission Register Information -->
+
+        <record id="action_school_application_form" model="ir.actions.act_window">
+            <field name="name">School Applications</field>
+            <field name="res_model">school.application</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_school_application_search"/>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem id="school_application_root" name="School Applications" parent="school.menu_school" sequence="0"
+                  groups="school.group_school_administration"/>
+
+        <menuitem id="school_application" name="School Applications" parent="school_application_root" sequence="1"
+                  action="action_school_application_form"
+                  groups="school.group_school_administration"/>
+    </data>
+</odoo>

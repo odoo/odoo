@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="UserMenu">
+        <t t-jquery="ul.dropdown-menu" t-operation="replace">
+            <ul class="dropdown-menu" role="menu">
+                <li class="divider"/>
+                <li><a href="#" data-menu="settings">Preferences</a></li>
+                <li><a href="#" data-menu="logout">Log out</a></li>
+            </ul>
+        </t>
+    </t>
+    <!--<t t-extend="AppSwitcher.Content">-->
+        <!--<t t-jquery="div.o_application_switcher_footer" t-operation="replace">-->
+            <!--<img src="" width="96px" />-->
+        <!--</t>-->
+    <!--</t>-->
+    <t t-extend="DashboardMain">
+        <t t-jquery=".o_web_settings_dashboard" t-operation="replace">
+            <div class="container-fluid o_web_settings_dashboard">
+                <div class="row">
+                    <div class="o_web_settings_dashboard_enterprise"/>
+                    <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                        <div class="text-center o_web_settings_dashboard_invitations"></div>
+                    <div class="col-md-12">
+                        <a t-if="debug != true" class="oe_activate_debug_mode pull-right" href="?debug" >Activate the developer mode</a>
+                        <br t-if="debug != true"/>
+                        <a t-if="debug != 'assets'" class="oe_activate_debug_mode pull-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
+                        <br t-if="debug != 'assets'"/>
+                        <a t-if="debug != false" class="oe_activate_debug_mode pull-right" href="/web" >Deactivate the developer mode</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </t>
+    </t>
+    <t t-extend="mail.client_action">
+      <t t-jquery=".o_mail_request_permission" t-operation="inner">
+        Your permission is required to <a href="#"> enable desktop notifications</a>.
+      </t>
+    </t>
+</templates>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <report id="reportqrcode_label_qweb"
+            string="QR Code Report"
+            model="product.product"
+            report_type = "qweb-pdf"
+            file="library.qrcode_label"
+            name="library.qrcode_label"
+            groups="library.group_librarian"/>
+
+</odoo>

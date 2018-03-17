@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+    <template id="exam_result_batch">
+        <t t-call="report.html_container">
+           <t t-foreach="docs" t-as="o">
+               <t t-call="report.external_layout">
+                 <div class="page">
+                     <div class="oe_structure" />
+                     <br/><br/><br/><br/>
+                     <table width="100%">
+                         <center>
+                             <h2>
+                                 BatchWise Result
+                             </h2>
+                         </center>
+                      </table>
+                      <table width="100%">
+                          <tr>
+                              <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                  <b>Academic Year</b>
+                              </td>
+                              <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                  <b>Standard</b>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td align="center" width="14.16%"
+                                                     style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                      <span t-field="o.year.name"/>
+                               </td>
+                               <td align="center" width="14.16%"
+                                                     style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                      <span t-field="o.standard_id.standard_id.name"/>
+                                </td>
+                          </tr>
+                      </table>
+                      <br/>
+                      <table width="100%">
+                              <tr>
+                                  <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                      <b>Number of students Appeared</b>
+                                  </td>
+                                  <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                      <b>Number of students Passed</b>
+                                  </td>
+                                  <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                      <b>Number of Students Failed</b>
+                                  </td>
+                                  <td align="center" style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                      <b>Percentage of Students Passed</b>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <t t-foreach="pass_student_count(o.year,o.standard_id)" t-as="t">
+                                      <td align="center" width="14.16%"
+                                                         style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                          <span t-esc="t.get('student_appear')"/>
+                                      </td>
+                                      <td align="center" width="14.16%"
+                                          style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                               <span t-esc="t.get('studnets')"/>
+                                      </td>
+                                      <td align="center" width="14.16%"
+                                          style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                          <span t-esc="t.get('fail_student')"/>
+                                      </td>
+                                      <td align="center" width="14.16%"
+                                          style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                               <span t-esc="t.get('pass_std')"/>%
+                                      </td>
+                                  </t>
+                              </tr>
+                      </table>
+                 </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

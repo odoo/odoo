@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <template id="hostel_fee_reciept1">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="hostel">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <div class="row" align="center">
+                                <h1>HOSTEL Fee Receipt</h1>
+                            </div>
+                            <table width="100%" style="background: #e6e6e6;">
+                                <tr>
+                                    <td>
+                                        <br />
+                                        <table width="100%">
+                                            <tr>
+                                                <td align="left" width="19%"
+                                                    style="font-family: 'Helvetica';font-size: 18px;padding-left:15px;">
+                                                    <b>HOSTEL Name</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.hostel_info_id.name" />
+                                                </td>
+                                                <td align="left" width="19%"
+                                                    style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <b>Room No.</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.room_id.room_no" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table width="100%">
+                                            <tr>
+                                                <td align="left" width="19%"
+                                                    style="font-family: 'Helvetica';font-size: 18px;padding-left:15px;">
+                                                    <b>Student Name</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.student_id.name" />
+                                                </td>
+                                                <td width="50%">
+                                                    <span></span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table width="100%">
+                                            <tr>
+                                                <td align="left" width="19%"
+                                                    style="font-family: 'Helvetica';font-size: 18px;padding-left:15px;">
+                                                    <b>School Name</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.student_id.school_id.name" />
+                                                </td>
+                                                <td width="50%">
+                                                    <span></span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table width="100%">
+                                            <tr>
+                                                <td align="left" width="19%"
+                                                    style="font-family: 'Helvetica';font-size: 18px;padding-left:15px;">
+                                                    <b>Admission Date</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.admission_date" />
+                                                </td>
+                                                <td align="left" width="19%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <b>Discharge Date</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.discharge_date" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table width="100%">
+                                            <tr>
+                                                <td align="left" width="19%"
+                                                    style="font-family: 'Helvetica';font-size: 18px;padding-left:15px;">
+                                                    <b>Total Room Rent</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.room_rent" />
+                                                </td>
+                                                <td width="50%">
+                                                    <span></span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table width="100%">
+                                            <tr>
+                                                <td align="left" width="19%"
+                                                    style="font-family: 'Helvetica';font-size: 18px;padding-left:15px;">
+                                                    <b>Paid Fee</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.paid_amount" />
+                                                </td>
+                                                <td align="left" width="19%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <b>Remaining Fee</b>
+                                                </td>
+                                                <td width="1%">
+                                                    <b>:</b>
+                                                </td>
+                                                <td width="30%" style="font-family: 'Helvetica';font-size: 18px;">
+                                                    <span t-field="hostel.remaining_amount" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+</odoo>

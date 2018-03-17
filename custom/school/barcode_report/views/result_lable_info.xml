@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+        <template id="result_label_info">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <table width="100%" style="border: 2px solid black;">
+                                <tr>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>Exam Name</b>
+                                    </td>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>Exam Year</b>
+                                    </td>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>Exam Start Date</b>
+                                    </td>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>Exam End Date</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <span t-field="o.exam_id.name"></span>
+                                    </td>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <span t-field="o.year_id.name"></span>
+                                    </td>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <span t-field="o.exam_id.start_date"></span>
+                                    </td>
+                                    <td align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <span t-field="o.exam_id.end_date"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <br />
+                            <table width="100%" style="border: 2px solid black;">
+                                <tr>
+                                    <td width="15%" align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>ID</b>
+                                    </td>
+                                    <td width="25%" align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>Student Name</b>
+                                    </td>
+                                    <td width="10%" align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>Roll No</b>
+                                    </td>
+                                    <td width="30%" align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>BarCode</b>
+                                    </td>
+                                    <td width="20%" align="center"
+                                        style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                        <b>Signature</b>
+                                    </td>
+                                </tr>
+                                <t t-foreach="get_student_all_info(o.standard_id.id, o.standard_id.division_id.id, o.standard_id.medium_id.id, o.year_id.id)"
+                                   t-as="student">
+                                    <tr>
+                                        <td width="15%" align="center"
+                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                            <span t-esc="student['pid']"></span>
+                                        </td>
+                                        <td width="25%" align="center"
+                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                            <span t-esc="student['name']"></span>
+                                        </td>
+                                        <td width="10%" align="center"
+                                            style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                            <span t-esc="student['roll_no']"></span>
+                                        </td>
+                                        <td width="30%" style="border: 2px solid black;margin-top: 100px;margin-bottom: 10px;">
+                                            <center>
+                                                <img t-if="o.name" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', str(student), 400, 30)" style="width:150px;height:30px"/>
+                                            </center>
+                                        </td>
+                                        <td width="20%" style="border: 2px solid black;">
+                                            <span></span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+</odoo>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<odoo>
+
+        <template id="exam_result_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <div class="oe_structure" />
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <t t-foreach="o" t-as="result">
+                                <table width="100%">
+                                    <center>
+                                        <h2 t-field="o and o[0].s_exam_ids.name"></h2>
+                                    </center>
+                                    <tr>
+                                        <td width="19%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <b>Student Name</b>
+                                        </td>
+                                        <td width="1%">
+                                            <span>:</span>
+                                        </td>
+                                        <td width="80%" style="font-family: 'Helvetica';font-size: 18px;">
+                                            <span t-field="result.student_id.name"></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br />
+                                <table width="100%">
+                                    <thead>
+                                        <tr>
+                                            <td align="center"
+                                                style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                                <b>Subject Name</b>
+                                            </td>
+                                            <td align="center"
+                                                style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                                <b>Maximum marks</b>
+                                            </td>
+                                            <td align="center"
+                                                style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                                <b>Minimum Marks</b>
+                                            </td>
+                                            <td align="center"
+                                                style="font-family: 'Helvetica';font-size: 18px;border: 2px solid black;">
+                                                <b>Obtain Mark</b>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="get_result_detail(result.result_ids,result)" t-as="sub_res_info">
+                                            <tr>
+                                                <td align="center"
+                                                    style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                    <span t-esc="sub_res_info.get('subject')"></span>
+                                                </td>
+                                                <td align="center"
+                                                    style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                    <span t-esc="sub_res_info.get('max_mark')"></span>
+                                                </td>
+                                                <td align="center"
+                                                    style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                    <span t-esc="sub_res_info.get('mini_marks')"></span>
+                                                </td>
+                                                <td align="center"
+                                                    style="font-family: 'Helvetica';font-size: 16px;border: 2px solid black;">
+                                                    <span t-esc="sub_res_info.get('obt_marks')"></span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+</odoo>

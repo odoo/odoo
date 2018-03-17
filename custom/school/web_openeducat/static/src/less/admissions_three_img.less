@@ -1,0 +1,147 @@
+/*@media (min-width: 1024px){
+    .well1 {
+        padding-bottom: 80px;
+        padding-top: 70px;
+    }
+}*/
+.well1 {
+    padding-top: 80px;
+    padding-bottom: 70px;
+}
+
+.bg-variant-1 {
+    background: #dee7eb;
+    h3, .h3 {
+        font-size: 42px;
+        line-height: 1.19047619;
+        text-transform: capitalize;
+        font-weight: 300;
+        margin: 0;
+        text-align: center;
+    }
+    .thumbnail-wrap-1 {
+        min-height: 188.233px;
+    }
+    .thumbnail {
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        padding: 0px;
+    }
+    .text-sec-2{
+        color: #cbeeff;
+        margin-top: 10px;
+        font-size: 20px;
+        line-height: 1.5;
+    }
+}
+@media (min-width: 992px){
+    .thumbnail span.thumbnail_overlay {
+        background: rgba(201, 74, 83, 0.3);
+    }
+}
+.thumbnail span.thumbnail_overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: .7s;
+}
+
+@media (min-width: 768px){
+    .left-sm * {
+        text-align: left;
+    }
+}
+
+.thumbnail:hover span.thumbnail_overlay {
+    opacity: 1;
+}
+.thumbnail:hover:after {
+  height: 100%;
+}
+
+.thumbnail:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: .5s;
+}
+@media (min-width: 992px) {
+  .thumbnail:after {
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.04) 35%, rgba(111, 121, 126, 0.44) 56%, rgba(82, 93, 98, 0.8) 76%, #303c42 100%);
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.04) 35%, rgba(111, 121, 126, 0.44) 56%, rgba(82, 93, 98, 0.8) 76%, #303c42 100%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.04) 35%, rgba(111, 121, 126, 0.44) 56%, rgba(82, 93, 98, 0.8) 76%, #303c42 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#303c42', GradientType=0);
+  }
+}
+@media (min-width: 992px){
+    .thumbnail h5 {
+        a{
+            color: #ffffff;
+        }
+    }
+}
+.fw-b {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.07142857;
+}
+.txt-sec-2 {
+    margin-top: 10px;
+    font-size: 20px;
+    line-height: 1.5;
+    color: #8eb6c9;
+}
+.thumbnail span.thumbnail_overlay {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: .7s;
+}
+@media (min-width: 992px) {
+  .thumbnail span.thumbnail_overlay {
+    background: rgba(201, 74, 83, 0.3);
+  }
+}
+.thumbnail:hover span.thumbnail_overlay {
+  opacity: 1;
+}
+.thumbnail:hover:after {
+  height: 100%;
+}
+.thumbnail-wrap-1 {
+  min-height: 188.233px;
+}
+.thumbnail .caption {
+  margin-top: 15px;
+  position: relative;
+  z-index: 4;
+}
+.thumbnail .caption a:hover {
+  color: @color-warning;
+}
+@media (min-width: 992px) {
+  .thumbnail .caption {
+    margin-top: 0;
+    position: absolute;
+    bottom: 10%;
+    left: 38px;
+  }
+}
+a{
+    &:hover {
+        text-decoration: none;
+   }
+}

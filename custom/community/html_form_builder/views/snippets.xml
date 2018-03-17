@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="html_builder_editor" inherit_id="website.assets_editor" name="HTML Builder Resources">
+            <xpath expr="/t" position="inside">
+                <script type="text/javascript" src="/html_form_builder/static/src/js/html.form.builder.snippets.editor.js" />
+            </xpath>
+        </template>
+
+        <template id="html_builder_front_assert" inherit_id="website.assets_frontend" name="HTML Builder Front Asserts">
+            <xpath expr="/t" position="inside">
+                <script src="https://www.google.com/recaptcha/api.js" async="async" defer="defer"/>
+                <link rel="stylesheet" href="/html_form_builder/static/src/css/form.css"/>
+                <script type="text/javascript" src="/html_form_builder/static/src/js/html.form.builder.js" />
+            </xpath>
+        </template>
+
+        <template id="website_form_builder_options" name="Form Builder Options" inherit_id="website.snippet_options">
+            <xpath expr="//div" position="after">
+                <div data-js='html_form_builder'
+                    data-selector=".html_form"
+                    data-drop-in=".oe_structure, [data-oe-type=html]">
+                </div>
+                <div data-js='html_form_builder_new'
+                    data-selector=".html_form_new"
+                    data-drop-in=".oe_structure, [data-oe-type=html]">
+                </div>
+                <div data-js='html_form_builder_field_textbox'
+		    data-selector=".hff_textbox"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_textarea'
+		    data-selector=".hff_textarea"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_dropbox'
+		    data-selector=".hff_dropbox"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_radio_group'
+		    data-selector=".hff_radio_group"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_date_picker'
+		    data-selector=".hff_date_picker"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_datetime_picker'
+		    data-selector=".hff_datetime_picker"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_checkbox'
+		    data-selector=".hff_checkbox"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_input_group'
+		    data-selector=".hff_input_group"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_checkbox_group'
+		    data-selector=".hff_checkbox_group"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field_binary'
+		    data-selector=".hff_binary"
+		    data-drop-in="#html_field_placeholder, #html_fields">
+                </div>
+                <div data-js='html_form_builder_field'
+		    data-selector=".html_form_field"
+		    data-drop-in="#html_fields">
+                </div>
+                <div data-js='html_form_builder_captcha'
+		    data-selector=".html_form_captcha"
+		    data-drop-in="#html_fields">
+                </div>
+            </xpath>
+        </template>
+
+        <template id="html_navbar" inherit_id="website.snippets" name="HTML Forms Navbar">
+    
+            <xpath expr="//div[@id='o_scroll']" position="inside">
+            
+                <div id="snippet_form" class="o_panel">
+                    <div class="o_panel_header">
+                        <span class="fa-stack">
+                            <i class="fa fa-align-justify fa-stack-1x"></i>
+                        </span> Form Builder
+                    </div>
+                    <div class="o_panel_body">
+                        <t t-snippet="html_form_builder.s_form" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_form.jpg"/>
+                        <t t-snippet="html_form_builder.s_form_new" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_form_new.jpg"/>                        
+                        <t t-snippet="html_form_builder.s_textbox" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_textbox.jpg"/>
+                        <t t-snippet="html_form_builder.s_textarea" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_textarea.jpg"/>
+                        <t t-snippet="html_form_builder.s_date_picker" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_date_picker.jpg"/>
+                        <t t-snippet="html_form_builder.s_datetime_picker" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_datetime_picker.jpg"/>
+                        <t t-snippet="html_form_builder.s_radio_group_selection" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_radio_group.jpg"/>
+                        <t t-snippet="html_form_builder.s_checkbox_group" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_checkbox_group.jpg"/>
+                        <t t-snippet="html_form_builder.s_dropbox" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_dropbox.jpg"/>
+                        <t t-snippet="html_form_builder.s_checkbox_boolean" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_checkbox.jpg"/>
+                        <t t-snippet="html_form_builder.s_binary" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_binary.jpg"/>
+                        <t t-snippet="html_form_builder.s_input_group" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_input_group.jpg"/>
+                        <t t-snippet="html_form_builder.s_captcha" t-thumbnail="/html_form_builder/static/src/img/ui/snippet_thumb_field_captcha.jpg"/>
+                    </div>
+
+                </div>            
+
+            </xpath>    
+    
+        </template>
+
+        <template id="s_form" name="Existing HTML Form">
+            <section class="html_form">
+                <div class="container">
+                    <h2>My Form</h2>
+                    <div  class="oe_structure" id="html_fields">
+		                                 
+		    </div>
+                    <button class="btn btn-primary btn-lg">Submit</button>
+                </div>
+            </section>
+        </template>
+
+        <template id="s_form_new" name="New HTML Form">
+            <section class="html_form_new">
+                <div class="container">
+                    <h2>My Form</h2>
+                    <div class="oe_structure" id="html_fields">
+		                                 
+		    </div>
+                    <button class="btn btn-primary btn-lg">Submit</button>
+                </div>
+            </section>
+        </template>
+        
+        <template id="s_textbox" name="Textbox">
+            <div class="hff hff_textbox form-group" data-form-type="textbox" data-field-id="0">
+                <label for="field1">Field 1</label>
+                <input type="text" name="field1" class="form-control"/>
+            </div>
+        </template>   
+
+        <template id="s_date_picker" name="Date Picker">
+            <div class="hff hff_date_picker form-group" data-form-type="date_picker" data-field-id="0">
+                <label for="field1">Field 1</label>
+                <input type="text" name="field1" class="form-control"/>
+            </div>
+        </template>   
+
+        <template id="s_datetime_picker" name="Datetime Picker">
+            <div class="hff hff_datetime_picker form-group" data-form-type="datetime_picker" data-field-id="0">
+                <label for="field1">Field 1</label>
+                <input type="text" name="field1" class="form-control"/>
+            </div>
+        </template>   
+
+        <template id="s_binary" name="Binary">
+            <div class="hff hff_binary form-group" data-form-type="file_select" data-field-id="0">
+                <label for="field1">Field 1</label>
+                <div class="input-group">
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            Browse… <input type="file" style="display: none;"/>
+                        </span>
+                    </label>
+                    <input type="text" class="form-control" readonly=""/>
+                </div>
+            </div>
+        </template>  
+        
+        <template id="s_radio_group_selection" name="Radio Group">
+            <div class="hff hff_radio_group form-group" data-form-type="radio_group_selection" data-field-id="0">
+                <label for="field1">Field 1</label><br/>
+                <input type="radio" name="field1"/>Option 1<br/>
+                <input type="radio" name="field1"/>Option 2<br/>
+                <input type="radio" name="field1"/>Option 3<br/>
+            </div>
+        </template>
+
+        <template id="s_checkbox_boolean" name="Checkbox">
+            <div class="hff hff_checkbox checkbox" data-form-type="checkbox_boolean" data-field-id="0">
+                <label><input type="checkbox" name="field1"/>I Agree</label>
+            </div>
+        </template>
+
+        <template id="s_checkbox_group" name="Checkbox Group">
+            <div class="hff hff_checkbox_group" data-form-type="checkbox_group" data-field-id="0">
+                <label for="field1">Field 1</label>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="field1"/>Option 1</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="field1"/>Option 2</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" name="field1"/>Option 3</label>
+                </div>
+            </div>
+        </template>
+
+        <template id="s_textarea" name="Textarea">
+            <div class="hff hff_textarea form-group" data-form-type="textarea" data-field-id="0">
+                <label for="field1">Field 1</label>
+                <textarea class="form-control" name="field1"/>
+            </div>
+        </template>
+
+        <template id="s_input_group" name="Input Group">
+            <div class="hff hff_input_group form-group" data-form-type="input_group" data-field-id="0">
+                <label for="field1" class="o_default_snippet_text">Field 1</label><br/>
+                <div class="row form-group">
+                    <div class="col-md-6"><input type="text" class="form-control" name="field1" placeholder="Sub Field 1"/></div>
+                    <div class="col-md-6"><input type="text" class="form-control" name="field1" placeholder="Sub Field 2"/></div>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-primary btn-md row pull-right">Add (+)</button>
+                </div>
+            </div>
+        </template>
+
+        <template id="s_dropbox" name="Dropbox">
+            <div class="hff hff_dropbox form-group" data-form-type="dropbox" data-field-id="0">
+                <label for="field1">Field 1</label>
+                <select class="form-control" name="field1">
+                    <option value="">Select an option</option>
+                </select>
+            </div>
+        </template>
+        
+        <template id="s_captcha" name="Captcha">
+            <div class="hff html_form_captcha form-group">
+                Placeholder Captcha String
+            </div>
+        </template>
+
+    </data>
+</openerp>

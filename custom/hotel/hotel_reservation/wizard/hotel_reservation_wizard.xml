@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xml>
+<odoo>
+
+    <!--Form view for hotel reservation wizard -->
+    <record id="hotel_reservation_wizard_form_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.wizard.form</field>
+        <field name="model">hotel.reservation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Booking List" version='7.0'>
+                <group col="4">
+                    <field name="date_start" />
+                    <field name="date_end" />
+                </group>
+                <footer>
+                    <button name='report_checkin_detail' string="CheckIn List"
+                        type="object" icon="fa-level-down" class="btn btn-primary"/>
+                    <button name='report_checkout_detail' string="CheckOut List"
+                        type="object" icon="fa-level-up" class="btn btn-primary"/>
+                    <button name='report_reservation_detail' type='object'
+                        string='Booking List' icon="fa-bars" class="btn btn-primary"/>
+                    <button name='report_maxroom_detail' string="Room Used Maximum"
+                        type="object" icon="fa-minus-square-o" class="btn btn-primary"/>
+                    <button special="cancel" string="Cancel" icon="fa-close" class="btn btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--Action for hotel reservation wizard -->
+    <record id="action_hotel_reservation_wizard" model="ir.actions.act_window">
+        <field name="name">Hotel Booking Report</field>
+        <field name="res_model">hotel.reservation.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!--Form view for wizard make folio -->
+    <record id="make_folio_wizard_form_view" model="ir.ui.view">
+        <field name="name">make.folio.wizard.form</field>
+        <field name="model">wizard.make.folio</field>
+        <field name="arch" type="xml">
+            <form string="Create Folio" version='8.0'>
+                <separator colspan="4"
+                    string="Do you really want to create the Folio ?" />
+                <!-- <field name="grouped" /> -->
+                <newline />
+                <footer>
+                    <button name="makeFolios" string="Create Folio" type="object"
+                        icon="fa-files-o" class="oe_highlight" />
+                    <button string="Cancel" icon="fa-close" class="btn btn-primary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="act_make_folio" name="Make Folios" key2="client_action_multi"
+        res_model="wizard.make.folio" src_model="hotel.reservation"
+        view_mode="form" target="new" view_type="form" />
+
+    <menuitem id="wizard_res_menu" name="Hotel Booking Report" action="action_hotel_reservation_wizard"
+        parent="hotel.hotel_report_menu" sequence="28" />
+
+</odoo>

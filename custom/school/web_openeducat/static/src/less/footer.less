@@ -1,0 +1,109 @@
+.footer-text {
+    font-size: 13px;
+    line-height: 20px;
+}
+.footer-section
+{
+	background-color: #333;
+}
+.footer-title{
+	text-transform: capitalize;
+	font-weight: 700;
+    font-size: 18px;
+}
+.footer-text .btn {
+    margin-top: 25px;
+    background: transparent;
+    border: 2px solid #fff;
+    border-radius: 0;
+    
+}
+.footer-section .btn-default {
+    display: inline-block;
+    min-width: 135px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    padding: 12.5px 15px;
+    color: #fff;
+    border: 2px solid #48a7d4;
+    border: 0;
+    background-color: #48a7d4;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    outline: none !important;
+}
+.style_1, .footer-contact{
+	padding: 0;
+}
+.style_1 li a {
+    position: relative;
+    display: block;
+    padding: 5px 0;
+    padding-left: 18px;
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 0.7px;
+    border-bottom: 1px solid #5b6366;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    font-weight: 600;
+}
+.style_1 li a:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 5px;
+    height: 7px;
+    z-index: 10;
+    top: 50%;
+    left: 5px;
+    margin-top: -4px;
+    background-image: url('/web_openeducat/static/src/img/arrow.png');
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    background-size: 5px 7px;
+}
+.footer-contact .icon{
+	color: #aaa;
+    font-size: 16px;
+    display: inline;
+}
+.footer-contact .text {
+    font-size: 13px;
+    display: inline;
+}
+.footer-contact li{
+	line-height: 42px;
+}
+.table_working_hours{
+	width: 100%;
+}
+.footer-section .table_working_hours tr {
+    border: 0;
+    border-bottom: 1px dashed #67757b;
+}
+.footer-section .table_working_hours tr td{
+    padding: 8px 0;
+}
+.footer-section .table_working_hours tr td.day_value
+{
+	text-align: right;
+}
+.footer-section .table_working_hours tr td.day_value.closed span {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: @color-danger;
+    border-radius: 3px;
+}

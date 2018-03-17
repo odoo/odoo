@@ -1,0 +1,116 @@
+/* Copyright 2016 LasLabs Inc.
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+.app-drawer-nav {
+    border-color: @dropdown-border;
+    background-color: @dropdown-bg;
+    border: 1px solid @dropdown-fallback-border; // IE8 fallback
+    border: 1px solid @dropdown-border;
+    -webkit-border-radius: @border-radius-base;
+    -moz-border-radius: @border-radius-base;
+    border-radius: @border-radius-base;
+    .box-shadow(0 6px 12px rgba(0, 0, 0, .175));
+    background-clip: padding-box;
+    z-index: 10000;
+    
+    .o_tooltip {
+        z-index: 1051;
+    }
+    
+    .oe_logo {
+        margin-top: -11px;
+        position: relative;
+        img {
+            height: @app-drawer-title-height;
+        }
+        .oe_logo_edit {
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            padding: 4px;
+            display: none;
+            color: @odoo-list-footer-bg-color;
+            background: rgba(37,37,37,0.9);
+        }
+        &:hover .oe_logo_edit_admin {
+            display: block;
+        }
+    }
+    
+    .navbar-left {
+        width: 100%;
+
+        li {
+            padding: 0;
+        }
+    }
+
+    .app-drawer-title {
+        float: none;
+        font-weight: bold; // Bold titles for apps in the app-drawer
+    }
+
+    .app-drawer-panel-title {
+        line-height: 16px;
+        > .drawer-toggle {
+            padding-top: 17px;
+            padding-bottom: 17px;
+            cursor: pointer;
+        }
+    }
+
+    .app-drawer-icon-app {
+        height: 100%;
+        width: 100%;
+        max-width: @app-drawer-icon-size;
+        max-height: @app-drawer-icon-size;
+        object-fit: contain;
+        object-position: center;
+    }
+
+    .panel-body {
+        padding-top: @app-drawer-title-height;
+    }
+
+    #appDrawerAppPanelHead {
+        position: absolute;
+        height: @app-drawer-title-height;
+        width: 100%;
+    }
+
+}
+
+.drawer-nav {
+    width: @app-drawer-width;
+    background-color: rgba(33, 30, 30, 0.95);
+}
+
+.drawer--left .drawer-nav {
+    left: -@app-drawer-width;
+}
+
+.drawer--left.drawer-open .drawer-hamburger {
+    left: @app-drawer-width;
+}
+
+.drawer--right .drawer-nav {
+    right: -@app-drawer-width;
+}
+
+.drawer-open .oe-right-toolbar {
+    display: none;
+}
+
+.drawer-closed .oe-right-toolbar {
+    display: block;
+}
+
+/* App Drawer Toggle */
+
+.app-drawer-toggle {
+    background-color: transparent;
+}
+
+.app-drawer-toggle.navbar-toggle {
+    margin-left: 1em;
+}
