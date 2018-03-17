@@ -3,18 +3,19 @@
 # * product_margin
 # 
 # Translators:
-# kalatchev <kalatchev@gmail.com>, 2016
+# kalatchev, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # preslav <hackerz99999@gmail.com>, 2016
-# Anton Vassilev <anton.vasilev@gmail.com>, 2016
+# Anton Vassilev, 2016
+# Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Anton Vassilev <anton.vasilev@gmail.com>, 2016\n"
+"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "# Фактуриран в Продажби"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "# Purchased"
-msgstr ""
+msgstr "# Закупен"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -45,12 +46,12 @@ msgstr "Критерии за анализ"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Ср. Цената в клиентските фактури."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Ср. Цена в сметките на доставчиците"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
@@ -107,7 +108,7 @@ msgstr "Име за показване"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
-msgstr ""
+msgstr "Чернова,Отворена и Платена"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
@@ -193,7 +194,7 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_to
 msgid "Margin Date To"
-msgstr ""
+msgstr "Маржин Дата до"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -271,7 +272,7 @@ msgstr "Продуктови маржове"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Properties categories"
-msgstr ""
+msgstr "Свойства на категориите"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_gap
@@ -309,11 +310,15 @@ msgstr ""
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr ""
+"Сума на унмножението на цена от фактурите и количество на клиентските "
+"фактури"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
 msgstr ""
+"Сума на умножението на цена от фактурите и количество от сметките на "
+"доставчика"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
@@ -321,6 +326,8 @@ msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
 msgstr ""
+"Сума от умножаването на продажната каталожна цена и количество от "
+"клиентските фактури"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
@@ -330,7 +337,7 @@ msgstr "Сумата на количеството по клиентски фа�
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Сума от количеството в сметките на доставчиците"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
@@ -395,3 +402,6 @@ msgid ""
 "this template. The customer will receive an email for each product linked to"
 " an email template."
 msgstr ""
+"При потвърждаване на фактура ще бъде изпратен имейл на клиента въз основа на"
+" този шаблон. Клиентът ще получи имейл за всеки продукт, свързан с шаблон за"
+" имейл."

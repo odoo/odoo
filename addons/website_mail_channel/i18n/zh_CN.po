@@ -5,6 +5,7 @@
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # Bo Cao, 2017
+# liAnGjiA <liangjia@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
@@ -32,9 +33,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong></p><p></p><p><strong><a "
-"href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
+"<?xml version=\"1.0\"?>\n"
+"<data><p>您好，</p>\n"
+"<p>您已请求订阅邮件列表 <strong>${object.name}</strong></p>\n"
+"<p>要进行确认，请访问以下链接：</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>如果这是一个错误，或者您未请求执行此操作，请忽略此消息。</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
@@ -47,9 +52,6 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<?xml "
-"version=\"1.0\"?><data><p></p><p><strong></strong></p><p></p><p><strong><a "
-"href=\"${ctx['token_url']}\"></a></strong></p><p></p></data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
