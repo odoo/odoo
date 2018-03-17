@@ -3,14 +3,15 @@
 # * pos_discount
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
+# Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:55+0000\n"
 "PO-Revision-Date: 2016-09-07 08:55+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +23,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_discount.field_pos_config_iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
 msgstr ""
+"Позволи на касиера да дава отстъпка върху цялата стойност на продажбата."
 
 #. module: pos_discount
 #. openerp-web
@@ -31,14 +33,17 @@ msgid "Discount"
 msgstr "Отстъпка"
 
 #. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:14
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#, python-format
 msgid "Discount Percentage"
 msgstr "Процент отстъпка"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
 msgid "Discount Product"
-msgstr ""
+msgstr "Отстъпка на продукт"
 
 #. module: pos_discount
 #: model:ir.ui.view,arch_db:pos_discount.view_pos_config_form
@@ -48,12 +53,12 @@ msgstr "Отстъпки"
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
 msgid "Order Discounts"
-msgstr ""
+msgstr "Отстъпка на продажба"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
 msgid "The default discount percentage"
-msgstr ""
+msgstr "Процент отстъпка по подразбиране"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
@@ -63,4 +68,4 @@ msgstr ""
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "pos.config"
-msgstr ""
+msgstr "pos.config"

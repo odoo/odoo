@@ -7,13 +7,14 @@
 # Martin Trigaux, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
+# Marek Pontus, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2017\n"
+"Last-Translator: Marek Pontus, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +90,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} kutse et ühenduda Odoo-s"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -97,6 +98,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"<strong>Parooli tühistamist soovitakse sellele kasutajale. Saadeti järgmist "
+"linki sisaldav e-mail:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -104,6 +107,8 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
+"<strong>Saadeti e-maili teel kutse mis sisaldab linki järgmisele liitumisele"
+" :</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -120,13 +125,13 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Teine kasutaja on juba registreerunud selle e-posti aadressiga."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Audentimine ebaõnnestus."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -138,7 +143,7 @@ msgstr "Tagasi sisenemiskuvale"
 #: code:addons/auth_signup/models/res_users.py:135
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Ei saa saata e-kirja: kasutajal %s ei ole e-posti aadressi."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -148,7 +153,7 @@ msgstr "Kinnita"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "Kinnita parool"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -159,34 +164,34 @@ msgstr "Kinnitatud"
 #: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "Ei saa luua uut kontot."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:63
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Ei saanud lähtestada teie parooli"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Võimalda parooli lähtestamine sisselogimise lehelt"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "Kui on märkimata, siis ainult kutsega kasutajad saavad siseneda. "
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:91
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Vigane sisselogimise tähis"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Pole olnud ühendatud"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -201,7 +206,7 @@ msgstr "Salasõna"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Salasõna lähtestamine"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -217,12 +222,12 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Saada salasõna lähtestamise juhised"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Saada kutse e-kirjana"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -240,13 +245,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "Sisselogimise märgis on kehtiv"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "Registreerimise veebileht"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
@@ -268,7 +273,7 @@ msgstr "Olek"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "Kasutaja mall uutele kasutajatele mis luuakse registreerimisel"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
