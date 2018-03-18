@@ -262,12 +262,12 @@ msgid ""
 "</p><p>Thank you!</p>\n"
 msgstr ""
 "\n"
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
+"<p>您好 ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>商机 <strong>${object.name}</strong> 已经5天没有任何跟进记录了。</p>\n"
 "%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
+"<p>这是关于商机的说明： </p><p><i>${object.description}</i>\n"
 "%endif\n"
-"</p><p>Thank you!</p>\n"
+"</p><p>谢谢!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count

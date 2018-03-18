@@ -157,10 +157,10 @@ msgstr ""
 "* Vue : emplacement virtuel utilisé pour créer des structures hiérarchiques pour votre entrepôt, en agrégeant ses emplacements enfants ; ne peut pas directement contenir de produits.\n"
 "* Emplacement interne : l'emplacement physique dans votre entrepôt.\n"
 "* Emplacement client : un emplacement virtuel qui correspond à l'emplacement de destination des produits envoyés à vos clients.\n"
-"* Perte de stock : emplacement virtuel servant de contrepartie aux opérations d'inventaire utilisées pour corriger les niveaux de stock (inventaires physiques).\n"
-"* Approvisionnement : emplacement virtuel servant de contrepartie temporaire pour les opérations d'approvisionnement lorsque la source (fournisseur ou fabrication) n'est pas encore connue. Normalement, cet emplacement est vide une fois que le planificateur d'approvisionnement a fini de s'exécuter.\n"
-"* Fabrication : emplacement de contrepartie virtuel pour les opérations de fabrication. Cet emplacement consomme des matières premières et fabrique des produits finis.\n"
-"* Emplacement de transit : emplacement de contrepartie à utiliser pour les opérations inter-entreprises et inter-entrepôts."
+"* Perte de stock : emplacement virtuel servant de contre-valeur aux opérations d'inventaire utilisées pour corriger les niveaux de stock (inventaires physiques).\n"
+"* Approvisionnement : emplacement virtuel servant de contre-valeur temporaire pour les opérations d'approvisionnement lorsque la source (fournisseur ou fabrication) n'est pas encore connue. Normalement, cet emplacement est vide une fois que le planificateur d'approvisionnement a fini de s'exécuter.\n"
+"* Fabrication : emplacement de contre-valeur virtuel pour les opérations de fabrication. Cet emplacement consomme des matières premières et fabrique des produits finis.\n"
+"* Emplacement de transit : emplacement de contre-valeur à utiliser pour les opérations inter-entreprises et inter-entrepôts."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1561,7 +1561,7 @@ msgstr "Consignation"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
 msgid "Consume Line"
-msgstr "Utiliser la ligne"
+msgstr "Ligne traitée"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
