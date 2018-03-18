@@ -372,7 +372,7 @@ class AccountMoveLine(models.Model):
     def _compute_tax_base_amount(self):
         for move_line in self:
             if move_line.tax_line_id:
-                base_lines = move_line.move_id.line_ids.filtered(lambda line: move_line.tax_line_id in line.tax_ids)
+                base_lines = move_line.move_id.line_ids.filtered(lambda line: move_line.tax_line_id in line.tax_ids + line.tax_ids.mapped('children_tax_ids'))
                 move_line.tax_base_amount = abs(sum(base_lines.mapped('balance')))
             else:
                 move_line.tax_base_amount = 0
