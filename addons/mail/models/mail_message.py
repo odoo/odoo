@@ -776,7 +776,7 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, record, layout=False, force_send=False, send_after_commit=True, values=None):
+    def _notify(self, msg_values, record, layout=False, force_send=False, send_after_commit=True, values=None):
         """ Compute recipients to notify based on specified recipients and document
         followers. Delegate notification to partners to send emails and bus notifications
         and to channels to broadcast messages on channels """
@@ -784,10 +784,12 @@ class Message(models.Model):
         email_cids, inbox_cids = list(), list()
         recipient_data = list()
 
-        res = self.env['mail.followers']._get_follower_info(record, self_sudo.subtype_id.id, self_sudo.partner_ids.ids, self_sudo.channel_ids.ids)
+        # res = self.env['mail.followers']._get_follower_info(record, self_sudo.subtype_id.id, self_sudo.partner_ids.ids, self_sudo.channel_ids.ids)
+        res = self.env['mail.followers']._get_follower_info(record, msg_values['subtype_id'], [x[1] for x in msg_values['partner_ids']], [x[1] for x in msg_values['partner_ids']])
 
         for cid, pid, share, notif, groups in res:
-            if pid and pid == self_sudo.author_id.id:  # do not notify the author of its own messages
+            # if pid and pid == self_sudo.author_id.id:  # do not notify the author of its own messages
+            if pid and pid == msg_values['author_id']:  # do not notify the author of its own messages
                 continue
 
             if pid and notif == 'inbox':
@@ -809,7 +811,8 @@ class Message(models.Model):
         if email_cids:
             channel_member_ids = self.env['res.partner'].sudo().search([
                 ('channel_ids', 'in', email_cids),
-                ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
+                # ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
+                ('email', '!=', msg_values['email_from']),
             ]).ids
             for pid in channel_member_ids:
                 recipient_data.append((pid, 'email', 'customer', []))
@@ -822,7 +825,8 @@ class Message(models.Model):
 
         cids = email_cids + inbox_cids
         if cids:
-            self_sudo.write({'channel_ids': [(6, 0, cids)]})
+            # self_sudo.write({'channel_ids': [(6, 0, cids)]})
+            self.sudo().write({'channel_ids': [(6, 0, cids)]})
             self.env['mail.channel'].sudo().browse(cids)._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore

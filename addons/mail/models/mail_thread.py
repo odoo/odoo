@@ -1928,6 +1928,7 @@ class MailThread(models.AbstractModel):
         using already-computed values instead of having to rebrowse things. """
         # Notify recipients of the newly-created message (Inbox / Email + channels)
         message._notify(
+            values,
             self if values.get('res_id') else False,
             layout=notif_layout,
             force_send=self.env.context.get('mail_notify_force_send', True),
