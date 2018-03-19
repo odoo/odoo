@@ -77,7 +77,7 @@ class FleetVehicle(models.Model):
     @api.depends('model_id', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
-            record.name = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + record.license_plate
+            record.name = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + (record.license_plate or _('No Plate'))
 
     def _get_odometer(self):
         FleetVehicalOdometer = self.env['fleet.vehicle.odometer']
