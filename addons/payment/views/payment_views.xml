@@ -215,7 +215,7 @@
             <field name="name">payment.transaction.form</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <form string="Payment Transactions">
+                <form string="Payment Transactions" create="false">
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
                     <field name="authorize_implemented" invisible="1"/>
@@ -288,7 +288,7 @@
             <field name="name">payment.transaction.list</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <tree string="Payment Transactions">
+                <tree string="Payment Transactions" create="false">
                     <field name="reference"/>
                     <field name="create_date"/>
                     <field name="acquirer_id"/>
@@ -296,7 +296,6 @@
                     <field name="partner_name"/>
                     <field name="amount"/>
                     <field name="fees"/>
-                    <field name="state"/>
                 </tree>
             </field>
         </record>

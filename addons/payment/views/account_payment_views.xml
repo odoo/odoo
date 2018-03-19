@@ -23,17 +23,17 @@
                     <field name="payment_transaction_pending" invisible="1"/>
                     <label for="payment_transaction_id"/>
                     <div class="o_row">
-                        <field name="payment_transaction_id"/>
+                        <field name="payment_transaction_id" readonly="1"/>
                         <div class="o_field_many2manytags"
                              attrs="{'invisible':['|', ('state', '!=', 'draft'), ('payment_transaction_capture','=', False)]}">
                             <span class="badge dropdown o_tag_color_1">
-                                <span class="o_badge_text">Capture allowed from <field name="payment_transaction_acquirer_name"/></span>
+                                <span class="o_badge_text">Capture allowed from <field name="payment_transaction_acquirer_name" readonly="1"/></span>
                             </span>
                         </div>
                         <div class="o_field_many2manytags"
                              attrs="{'invisible':['|', '|', ('state', '!=', 'draft'), ('payment_transaction_capture','=', True), ('payment_transaction_pending','=', False)]}">
                             <span class="badge dropdown o_tag_color_1">
-                                <span class="o_badge_text">Pending from <field name="payment_transaction_acquirer_name"/></span>
+                                <span class="o_badge_text">Pending from <field name="payment_transaction_acquirer_name" readonly="1"/></span>
                             </span>
                         </div>
                     </div>
