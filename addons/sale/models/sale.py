@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import float_is_zero, float_compare, float_round, DEFAULT_SERVER_DATETIME_FORMAT
 
 from odoo.tools.misc import formatLang
 
@@ -414,7 +414,7 @@ class SaleOrder(models.Model):
         return action
 
     @api.multi
-    def action_invoice_create(self, grouped=False, final=False):
+    def action_invoice_create(self, grouped=False, final=False, unbilled=False):
         """
         Create the invoice associated to the SO.
         :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
@@ -429,7 +429,7 @@ class SaleOrder(models.Model):
         for order in self:
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
-                if float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                if float_is_zero(line.qty_to_invoice, precision_digits=precision) and not unbilled:
                     continue
                 if group_key not in invoices:
                     inv_data = order._prepare_invoice()
@@ -443,10 +443,16 @@ class SaleOrder(models.Model):
                     if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', ') and order.client_order_ref != invoices[group_key].name:
                         vals['name'] = invoices[group_key].name + ', ' + order.client_order_ref
                     invoices[group_key].write(vals)
-                if line.qty_to_invoice > 0:
+                if line.qty_to_invoice > 0 and not unbilled:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
-                elif line.qty_to_invoice < 0 and final:
+                elif line.qty_to_invoice < 0 and final and not unbilled:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+                elif unbilled:
+                    if float_compare(line.product_uom_qty, line.qty_invoiced, precision_digits=precision) > 0:
+                        line.is_unbilled = True
+                        line.invoice_line_create(invoices[group_key].id, float_round((line.product_uom_qty - line.qty_invoiced), precision))
+                    elif line.qty_to_invoice < 0:
+                        line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
@@ -683,6 +689,34 @@ class SaleOrder(models.Model):
 
         return groups
 
+    @api.multi
+    def action_view_sale_advance_payment_inv(self):
+        options = ['percentage', 'fixed']
+        invoiceable_lines = self.order_line.filtered(lambda line: line.invoice_status == 'to invoice' and not line.is_downpayment)
+        is_downpayment = self.order_line.filtered(lambda line: line.is_downpayment)
+
+        if invoiceable_lines and not is_downpayment:
+            options.append('delivered')
+        if invoiceable_lines and is_downpayment:
+            options.append('all')
+        if self.order_line.filtered(lambda line: line.invoice_status == 'no'):
+            options.append('unbilled')
+        ctx = self.env.context.copy()
+        ctx.update({
+            'visibility': options,
+        })
+        return {
+            'name': _('Create Invoice'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'sale.advance.payment.inv',
+            'view_id': self.env.ref('sale.view_sale_advance_payment_inv').id,
+            'target': 'new',
+            'groups_id': [(4, self.env.ref('sales_team.group_sale_salesman'))],
+            'context': ctx,
+        }
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
@@ -750,6 +784,8 @@ class SaleOrderLine(models.Model):
             if line.order_id.state in ['sale', 'done']:
                 if line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+                elif line.is_unbilled:
+                    line.qty_to_invoice = 0
                 else:
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
             else:
@@ -921,6 +957,7 @@ class SaleOrderLine(models.Model):
     is_downpayment = fields.Boolean(
         string="Is a down payment", help="Down payments are made when creating invoices from a sales order."
         " They are not copied when duplicating a sales order.")
+    is_unbilled = fields.Boolean(string= "Is unbilled total", help="Is true if payment is done with unbilled total option when product invoice policy is delivery.", copy=False)
 
     state = fields.Selection([
         ('draft', 'Quotation'),

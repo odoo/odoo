@@ -64,6 +64,21 @@ class SaleOrder(models.Model):
         return res
 
     @api.multi
+    def action_view_sale_advance_payment_inv(self):
+        res = super(SaleOrder, self).action_view_sale_advance_payment_inv()
+        visible_options = res['context']['visibility']
+        order_line = self.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment)
+        if 'unbilled' in visible_options and not order_line.filtered(lambda line: line.invoice_status == 'no'):
+            visible_options.remove('unbilled')
+        if all(line.invoice_status == 'no' for line in order_line):
+            if 'delivered' in visible_options:
+                visible_options.remove('delivered')
+            elif 'all' in visible_options:
+                visible_options.remove('all')
+        res['context']['visibility'] = visible_options
+        return res
+
+    @api.multi
     def _remove_delivery_line(self):
         self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)]).unlink()
 
