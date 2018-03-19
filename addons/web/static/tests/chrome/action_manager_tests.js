@@ -4,9 +4,11 @@ odoo.define('web.action_manager_tests', function (require) {
 var ReportClientAction = require('report.client_action');
 
 var AbstractAction = require('web.AbstractAction');
+var AbstractStorageService = require('web.AbstractStorageService');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var ListController = require('web.ListController');
+var RamStorage = require('web.RamStorage');
 var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -1028,6 +1030,64 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
         delete core.action_registry.map.ClientAction;
+    });
+
+    QUnit.test('load a window action without id (in a multi-record view)', function (assert) {
+        assert.expect(14);
+
+        var RamStorageService = AbstractStorageService.extend({
+            name: 'session_storage',
+            storage: new RamStorage(),
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: [RamStorageService],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        testUtils.intercept(actionManager, 'call_service', function (ev) {
+            if (ev.data.service === 'session_storage') {
+                assert.step(ev.data.method);
+            }
+        }, true);
+
+        actionManager.doAction(4);
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should display a kanban view");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
+            "breadcrumbs should display the display_name of the action");
+
+        actionManager.loadState({
+            model: 'partner',
+            view_type: 'list',
+        });
+
+        assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
+            "should still be in the same action");
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 0,
+            "should no longer display a kanban view");
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "should display a list view");
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // action 3
+            '/web/dataset/search_read', // action 3
+            'setItem', // action 3
+            'getItem', // loadState
+            'load_views', // loaded action
+            '/web/dataset/search_read', // loaded action
+            'setItem', // loaded action
+        ]);
+
+        actionManager.destroy();
     });
 
     QUnit.module('Concurrency management');
