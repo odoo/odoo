@@ -139,7 +139,7 @@ return AbstractWebClient.extend({
                     self.action_manager.do_load_state(state, !!self._current_state).then(function () {
                         var action = self.action_manager.get_inner_action();
                         if (action) {
-                            self.menu.open_action(action.action_descr.id);
+                            self.menu.open_action(action.action_descr.id, state.menu_id);
                         }
                     });
                 }
@@ -160,7 +160,7 @@ return AbstractWebClient.extend({
                     var completed = $.Deferred();
                     $.when(self.action_manager.do_action(result, {
                         clear_breadcrumbs: true,
-                        action_menu_id: self.menu.current_menu,
+                        action_menu_id: options.id,
                     })).fail(function() {
                         self.menu.open_menu(options.previous_menu_id);
                     }).always(function() {
