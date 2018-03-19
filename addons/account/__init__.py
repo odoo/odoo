@@ -5,7 +5,26 @@ import models
 
 import wizard
 import report
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, _
+from openerp.exceptions import RedirectWarning
+from openerp.modules.registry import RegistryManager
+
+
+def _pre_install_check(cr):
+    registry = RegistryManager.get(cr.dbname)
+    # Done with SQL to avoid registry loading issues during an install
+    cr.execute("""
+        SELECT p.country_id
+        FROM res_company c
+        JOIN res_users u ON (c.id = u.company_id)
+        JOIN res_partner p ON (p.id = c.partner_id)
+        WHERE u.id = %s
+    """, (SUPERUSER_ID,))
+    country = cr.fetchone()[0]
+    if not country:
+        action = registry['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.action_res_company_form')
+        warning = _('The country on your company is not yet set. Please set it in order to configure your accounting according to your country.')
+        raise RedirectWarning(warning, action.id, _('Configure your company data'))
 
 def _auto_install_l10n(cr, registry):
     #check the country of the main company (only) and eventually load some module needed in that country
