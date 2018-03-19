@@ -448,7 +448,7 @@ class MailComposer(models.TransientModel):
         emails_from = self.render_template(self.email_from, self.model, res_ids)
         replies_to = self.render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
-        if not self.partner_ids:
+        if not self.with_context(active_test=False).partner_ids:
             default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
 
         results = dict.fromkeys(res_ids, False)
