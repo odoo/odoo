@@ -611,6 +611,8 @@ class MassMailing(models.Model):
     def _process_mass_mailing_queue(self):
         mass_mailings = self.search([('state', 'in', ('in_queue', 'sending')), '|', ('schedule_date', '<', fields.Datetime.now()), ('schedule_date', '=', False)])
         for mass_mailing in mass_mailings:
+            user = mass_mailing.write_uid or self.env.user
+            mass_mailing = mass_mailing.with_context(**user.sudo(user=user).context_get())
             if len(mass_mailing.get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
                 mass_mailing.send_mail()
