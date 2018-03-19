@@ -614,7 +614,7 @@ var StatementModel = BasicModel.extend({
             handles = [handle];
         } else {
             _.each(this.lines, function (line, handle) {
-                if (!line.reconciled && !line.balance.amount && line.reconciliation_proposition.length) {
+                if (!line.reconciled && line.balance && !line.balance.amount && line.reconciliation_proposition.length) {
                     handles.push(handle);
                 }
             });
