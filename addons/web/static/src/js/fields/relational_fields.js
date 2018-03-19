@@ -578,8 +578,8 @@ var FieldMany2One = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onInputKeyup: function (ev) {
-        if (ev.which === $.ui.keyCode.ENTER) {
-            // If we pressed enter, we want to prevent _onInputFocusout from
+        if (ev.which === $.ui.keyCode.ENTER || ev.which === $.ui.keyCode.TAB) {
+            // If we pressed enter OR tab, we want to prevent _onInputFocusout from
             // executing since it would open a M2O dialog to request
             // confirmation that the many2one is not properly set.
             return;
