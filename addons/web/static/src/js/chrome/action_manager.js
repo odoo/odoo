@@ -358,6 +358,10 @@ var ActionManager = Widget.extend({
                 // toggle the fullscreen mode for actions in target='fullscreen'
                 self._toggleFullscreen();
 
+                // store the action into the sessionStorage so that it can be
+                // fully restored on F5
+                self.call('session_storage', 'setItem', 'current_action', action._originalAction);
+
                 return action;
             })
             .fail(function () {
@@ -763,6 +767,8 @@ var ActionManager = Widget.extend({
      * @param {Object} options see @doAction options
      */
     _preprocessAction: function (action, options) {
+        action._originalAction = JSON.stringify(action);
+
         action.jsID = _.uniqueId('action_');
         action.pushState = options.pushState;
 

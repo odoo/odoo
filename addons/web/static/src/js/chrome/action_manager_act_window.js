@@ -91,6 +91,15 @@ ActionManager.include({
                 type: 'ir.actions.act_window',
                 views: [[state.view_id || false, 'form']],
             };
+        } else if (state.model && state.view_type) {
+            // this is a window action on a multi-record view, so restore it
+            // from the session storage
+            var storedAction = this.call('session_storage', 'getItem', 'current_action');
+            var lastAction = JSON.parse(storedAction || '{}');
+            if (lastAction.res_model === state.model) {
+                action = lastAction;
+                options.viewType = state.view_type;
+            }
         }
         if (action) {
             return this.doAction(action, options);
