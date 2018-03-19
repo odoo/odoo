@@ -57,7 +57,10 @@
                     <t t-raw="0"/>
                 </main>
                 <footer >
-                    <div id="footer">
+                    <div class="container mt16 mb16" id="footer">
+                        <div class="pull-right" t-ignore="true" t-if="not editable">
+                            Powered by <a target="_blank" href="http://www.odoo.com">Odoo</a>
+                        </div>
                     </div>
                 </footer>
             </div>
@@ -411,5 +414,14 @@
             t-att-data-call-url="callUrl"
             t-att-data-sign-label="signLabel"
             t-att-data-access-token="accessToken"/>
+    </template>
+
+    <template id="portal_sidebar" name="Sidebar">
+        <t t-call="portal.portal_layout">
+            <body data-spy="scroll" data-target=".navspy" data-offset="50">
+                <div class="container o_portal_sidebar"></div>
+                <div class="oe_structure mb32"/>
+            </body>
+        </t>
     </template>
 </odoo>
