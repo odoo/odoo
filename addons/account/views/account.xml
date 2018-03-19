@@ -18,6 +18,12 @@
         </xpath>
     </template>
 
+    <template id="assets_frontend" name="account assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/account/static/src/js/account_portal_sidebar.js"></script>
+        </xpath>
+    </template>
+
     <template id="qunit_suite" name="account_reconciliation tests" inherit_id="web.qunit_suite">
         <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
             <script type="text/javascript" src="/account/static/tests/reconciliation_tests.js"></script>
