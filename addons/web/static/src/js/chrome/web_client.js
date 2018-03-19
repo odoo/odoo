@@ -160,7 +160,7 @@ return AbstractWebClient.extend({
                     var completed = $.Deferred();
                     $.when(self.action_manager.do_action(result, {
                         clear_breadcrumbs: true,
-                        action_menu_id: self.menu.current_menu,
+                        action_menu_id: options.id,
                     })).fail(function() {
                         self.menu.open_menu(options.previous_menu_id);
                     }).always(function() {
