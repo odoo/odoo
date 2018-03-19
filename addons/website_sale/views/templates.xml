@@ -1321,7 +1321,8 @@
                                             <div t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                         </td>
                                         <td class="text-center">
-                                            <span t-field="line.price_unit" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_subtotal" />
+                                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
                                         </td>
                                     </tr>
                                 </tbody>
