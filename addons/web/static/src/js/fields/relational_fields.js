@@ -24,6 +24,7 @@ var Dialog = require('web.Dialog');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
+var pyeval = require('web.pyeval');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -2232,7 +2233,18 @@ var FieldRadio = FieldSelection.extend({
      * @private
      */
     _setValues: function () {
-        if (this.field.type === 'selection') {
+        var selection = this.field.selection;
+        if (this.field.type === 'selection' && this.attrs.visibility) {
+            var pyevalContext = py.dict.fromJSON(this.record.context || {});
+            // Fixme, Should work for visibility with static value
+            var visibility = pyeval.py_eval(this.attrs.visibility,  {'context': pyevalContext})
+            this.values = _.filter(selection, function (val) {
+                if (!visibility) {
+                    return true
+                }
+                return visibility && _.contains(visibility, val[0]) || val[0] === self.value;
+            });
+        } else if (this.field.type === 'selection') {
             this.values = this.field.selection || [];
         } else if (this.field.type === 'many2one') {
             this.values = _.map(this.record.specialData[this.name], function (val) {
