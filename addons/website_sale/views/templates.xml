@@ -84,6 +84,7 @@
 
     <!-- Product item used by /shop and /shop/cart -->
     <template id="products_item" name="Products item">
+        <t t-set="product_href" t-value="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
         <form action="/shop/cart/update" method="post">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product">
@@ -91,7 +92,7 @@
                     <div class="ribbon btn btn-danger">Sale</div>
                 </div>
                 <div class="oe_product_image">
-                    <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
+                    <a itemprop="url" t-att-href="product_href">
                         <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
                     </a>
                 </div>
@@ -107,8 +108,9 @@
                 <section>
                     <h5>
                         <strong>
-                            <a itemprop="name" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" t-att-content="product.name" t-field="product.name" />
+                            <a itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         </strong>
+                        <a t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-default btn-xs btn-danger" title="This product is unpublished.">Unpublished</a>
                     </h5>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
