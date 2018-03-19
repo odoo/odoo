@@ -8,8 +8,9 @@
             <field name="arch" type="xml">
                 <form string="Import Translation">
                     <group>
-                        <field name="name" placeholder="e.g. English"/>
-                        <field name="code" string="Code" placeholder="e.g. en_US"/>
+                        <field name="lang_id" options="{'no_create': 1}"/>
+                        <field name="name" placeholder="e.g. English" invisible="1"/>
+                        <field name="code" string="Code" placeholder="e.g. en_US" invisible="1"/>
                         <field name="data" filename="filename"/>
                         <field name="filename" invisible="1"/>
                         <field name="overwrite"/>
