@@ -5,6 +5,7 @@ require('web.dom_ready');
 var ajax = require('web.ajax');
 var config = require('web.config');
 var Widget = require('web.Widget');
+var website = require('website.website');
 
 if(!$('.o_website_quote').length) {
     return $.Deferred().reject("DOM doesn't contain '.o_website_quote'");
