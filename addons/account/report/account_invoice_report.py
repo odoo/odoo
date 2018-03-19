@@ -171,3 +171,17 @@ class AccountInvoiceReport(models.Model):
         )""" % (
                     self._table, self.env['res.currency']._select_companies_rates(),
                     self._select(), self._sub_select(), self._from(), self._group_by()))
+
+
+class ReportInvoiceWithPayment(models.AbstractModel):
+    _name = 'report.account.report_invoice_with_payments'
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        report = self.env['ir.actions.report']._get_report_from_name('account.report_invoice_with_payments')
+        return {
+            'doc_ids': docids,
+            'doc_model': report.model,
+            'docs': self.env[report.model].browse(docids),
+            'type_html': data and data.get('report_type') == 'html',
+        }

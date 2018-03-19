@@ -4,7 +4,7 @@
     <template id="gst_report_invoice_layouted_inherit" inherit_id="sale.report_invoice_layouted">
         <xpath expr="//t[@name='lines_layouted']" position="replace">
             <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page" name="lines_layouted">
-                <table class="table table-condensed">
+                <table t-attf-class="table table-condensed #{'' if not type_html else 'hidden-xs'}">
                     <thead>
                         <th>Description</th>
                         <th class="text-right">Quantity</th>

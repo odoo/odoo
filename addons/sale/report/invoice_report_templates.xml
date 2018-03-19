@@ -9,12 +9,75 @@
             <span t-field="l.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
         </td>
     </xpath>
-    <xpath expr="//table" position="attributes">
+    <xpath expr="//table[@name='invoice_line_table']" position="attributes">
         <attribute name="groups">!sale.group_sale_layout</attribute>
     </xpath>
-    <xpath expr="//table" position="after">
+    <xpath expr="//div[@id='invoice_line']/table" position="attributes">
+        <attribute name="groups">!sale.group_sale_layout</attribute>
+    </xpath>
+    <xpath expr="//div[@id='invoice_line']/table" position="after">
+        <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page" name="mobile_lines_layouted">
+            <!-- HTML Preview with order line section for mobile responsive -->
+            <div t-if="type_html" class="row mr0 ml0 visible-xs hidden-print">
+                <table class='table table-condensed'>
+                    <colgroup>
+                        <col width='50%' />
+                        <col width='25%' />
+                        <col width='25%' />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Price</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="page" t-as="layout_sections">
+                        <t t-if="layout_sections_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                            <tr class="active">
+                                <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                    <t t-esc="layout_sections['name']"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <!-- Lines associated -->
+                        <t t-foreach="layout_sections['lines']" t-as="line">
+                            <tr>
+                                <td>
+                                    <span t-field="line.name"/>
+                                    <t t-if="display_discount">
+                                        <div>
+                                            With a <span t-field="l.discount"/>% discount
+                                        </div>
+                                    </t>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.quantity"/>
+                                    <span t-field="line.uom_id"  groups="product.group_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.price_subtotal"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                            <t t-if="(layout_sections_size > 1 or page_size > 1) and layout_sections['subtotal']" groups="sale.group_sale_layout">
+                                <tr class="text-right">
+                                    <td colspan="3">
+                                        <strong>Subtotal: </strong>
+                                        <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_sections['lines'])"/>
+                                        <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                </table>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//table[@name='invoice_line_table']" position="after">
         <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page" name="lines_layouted">
-            <table class="table table-condensed">
+            <table t-attf-class="table table-condensed #{'' if not type_html else 'hidden-xs'}">
                 <thead>
                     <tr>
                         <th>Description</th>
