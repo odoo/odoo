@@ -7,15 +7,15 @@
             <field name="inherit_id" ref="account.view_account_payment_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='post']" position="replace">
-                    <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"
-                            attrs="{'invisible': [('payment_transaction_capture', '=', True)]}"/>
+                    <button name="post" class="oe_highlight" string="Confirm" type="object"
+                            attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('payment_transaction_capture', '=', True)]}"/>
                 </xpath>
                 <xpath expr="//header" position="inside">
                     <button type="object" name="action_capture"
-                            attrs="{'invisible':['|', '|', ('payment_transaction_id','=',False), ('payment_transaction_capture', '=', False), ('state', '!=', 'draft')]}"
+                            attrs="{'invisible':['|', '|', ('payment_transaction_id','=', False), ('payment_transaction_capture', '=', False), ('state', '!=', 'draft')]}"
                             string="Capture Transaction" class="oe_highlight"/>
                     <button type="object" name="action_void"
-                            attrs="{'invisible':['|', '|', ('payment_transaction_id','=',False), ('payment_transaction_capture', '=', False), ('state', '!=', 'draft')]}"
+                            attrs="{'invisible':['|', '|', ('payment_transaction_id','=', False), ('payment_transaction_capture', '=', False), ('state', '!=', 'draft')]}"
                             string="Void Transaction"/>
                 </xpath>
                 <xpath expr='//group[2]' position="inside">

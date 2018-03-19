@@ -9,7 +9,7 @@ class AccountPayment(models.Model):
 
     # Field making the one2one relation with the payment.transaction. Mirror of the payment_id field.
     # This field is assigned during the payment.transaction create method.
-    payment_transaction_id = fields.Many2one('payment.transaction', string='Transaction')
+    payment_transaction_id = fields.Many2one('payment.transaction', string='Transaction', copy=False)
 
     payment_transaction_acquirer_name = fields.Char(related='payment_transaction_id.acquirer_id.name',
                                                     string='Transaction Acquirer Name')
