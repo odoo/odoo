@@ -727,6 +727,7 @@ class PosOrder(models.Model):
                     'product_uom': line.product_id.uom_id.id,
                     'picking_id': order_picking.id if line.qty >= 0 else return_picking.id,
                     'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
+                    'company_id': order.company_id.id,
                     'product_id': line.product_id.id,
                     'product_uom_qty': abs(line.qty),
                     'state': 'draft',
