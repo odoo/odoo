@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Andreas Perhab bigbear.ap@gmail.com https://github.com/bigbear3001
+Andreas Perhab bigbear.ap@gmx.at https://github.com/bigbear3001
