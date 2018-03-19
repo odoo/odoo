@@ -1417,7 +1417,14 @@ class AccountInvoiceTax(models.Model):
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
     base = fields.Monetary(string='Base', compute='_compute_base_amount', store=True)
 
-
+    # DO NOT FORWARD-PORT!!! ONLY FOR v10
+    def create(self, vals):
+        inv_tax = super(AccountInvoiceTax, self).create(vals)
+        # Workaround to make sure the tax amount is rounded to the currency precision since the ORM
+        # won't round it automatically at creation.
+        if inv_tax.company_id.tax_calculation_rounding_method == 'round_globally':
+            inv_tax.amount = inv_tax.currency_id.round(inv_tax.amount)
+        return inv_tax
 
 
 class AccountPaymentTerm(models.Model):
