@@ -1036,7 +1036,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.db = db
         self.uid = uid
         self.login = login
-        self.password = password
+        self.session_token = uid and security.compute_session_token(self)
         request.uid = uid
         request.disable_db = False
 
@@ -1051,7 +1051,16 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
         if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
-        security.check(self.db, self.uid, self.password)
+
+        #  == BACKWARD COMPATIBILITY TO CONVERT OLD SESSION TYPE TO THE NEW ONES ! REMOVE ME AFTER 11.0 ==
+        if self.get('password'):
+            security.check(self.db, self.uid, self.password)
+            self.session_token = security.compute_session_token(self)
+            self.pop('password')
+        # =================================================================================================
+        # here we check if the session is still valid
+        if not security.check_session(self):
+            raise SessionExpiredException("Session expired")
 
     def logout(self, keep_db=False):
         for k in list(self):
@@ -1064,7 +1073,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("db", None)
         self.setdefault("uid", None)
         self.setdefault("login", None)
-        self.setdefault("password", None)
+        self.setdefault("session_token", None)
         self.setdefault("context", {})
 
     def get_context(self):
