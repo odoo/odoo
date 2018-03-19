@@ -227,9 +227,8 @@ class Survey(models.Model):
 
         # Calculate and return statistics for choice
         if question.type in ['simple_choice', 'multiple_choice']:
-            answers = {}
             comments = []
-            [answers.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id}) for label in question.labels_ids)
             for input_line in question.user_input_line_ids:
                 if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     answers[input_line.value_suggested.id]['count'] += 1
