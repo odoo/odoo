@@ -2658,6 +2658,31 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test("search menus are still available when switching between actions", function (assert) {
+        assert.expect(3);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+        assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+            "the search options should be available");
+
+        actionManager.doAction(3);
+        assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+            "the search options should be available");
+
+        // go back using the breadcrumbs
+        $('.o_control_panel .breadcrumb a:first').click();
+        assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+            "the search options should be available");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Actions in target="new"');
 
     QUnit.test('can execute act_window actions in target="new"', function (assert) {
@@ -2839,7 +2864,6 @@ QUnit.module('ActionManager', {
 
     QUnit.test('doAction resolved with an action', function (assert) {
         assert.expect(4);
-        var done = assert.async();
 
         this.actions.push({
             id: 21,
@@ -2862,7 +2886,6 @@ QUnit.module('ActionManager', {
             assert.strictEqual(action.type, 'ir.actions.act_window_close',
                 "should be resolved with correct action type");
             actionManager.destroy();
-            done();
         });
     });
 });

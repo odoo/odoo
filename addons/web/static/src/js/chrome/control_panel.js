@@ -252,9 +252,6 @@ var ControlPanel = Widget.extend({
      */
     _update_search_view: function (searchview, isHidden, groupable) {
         if (searchview) {
-            // Set the $buttons div (in the DOM) of the searchview as the $buttons
-            // have been appended to a jQuery node not in the DOM at SearchView initialization
-            searchview.$buttons = this.nodes.$searchview_buttons;
             searchview.toggle_visibility(!isHidden);
             if (groupable !== undefined){
                 searchview.groupby_menu.do_toggle(groupable);

@@ -320,7 +320,7 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
         if (this.searchView) {
             _.extend(cpContent, {
                 $searchview: this.searchView.$el,
-                $searchview_buttons: this.searchView.$buttons.contents(),
+                $searchview_buttons: this.searchView.$buttons,
             });
         }
         this.update_control_panel({
