@@ -392,3 +392,30 @@ img.o_we_custom_image {
 .label-optional {
     font-weight: normal;
 }
+
+.o_portal_sidebar {
+    .bs-sidebar {
+        position: relative;
+        width: 100%;
+        border-radius: 5px;
+        background-color: $navbar-default-bg;
+    }
+    .o_print_btn {
+        width: 52%;
+    }
+    .o_portal_contact_img {
+        width: 3.7em;
+        height: 3.7em;
+    }
+    .o_portal_html_view {
+        border: 1px solid $gray-lighter-dark;
+        border-radius: 5px;
+        padding-right: 1px;
+    }
+    // full width of download button for better usability in mobile device
+    @media (max-width: $screen-xs-max), (max-width: $screen-sm-max) {
+        .o_download_btn {
+            width: 100%;
+        }
+    }
+}
