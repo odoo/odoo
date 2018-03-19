@@ -4,7 +4,7 @@
 import math
 
 from odoo import models, fields, api, _
-from odoo.tools import amount_to_text_en, float_round
+from odoo.tools import amount_to_text_en, float_round, float_is_zero
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -55,7 +55,7 @@ class AccountPayment(models.Model):
         check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(amount), lang='en', currency='')
         check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
         decimals = amount % 1
-        if decimals >= 10**-2:
+        if not float_is_zero(decimals, precision_digits=2):
             check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
         return check_amount_in_words
 
