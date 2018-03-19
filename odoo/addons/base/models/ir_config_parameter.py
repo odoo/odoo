@@ -58,13 +58,12 @@ class IrConfigParameter(models.Model):
         :return: The value of the parameter, or ``default`` if it does not exist.
         :rtype: string
         """
-        return self._get_param(key) or default
+        return self._get_params().get(key, default)
 
-    @api.model
-    @ormcache('self._uid', 'key')
-    def _get_param(self, key):
-        params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
-        return params[0]['value'] if params else None
+    @ormcache('self._uid')
+    def _get_params(self):
+        # read all parameters at once, as there are only a few dozens of them
+        return {param.key: param.value for param in self.search([])}
 
     @api.model
     def set_param(self, key, value):
