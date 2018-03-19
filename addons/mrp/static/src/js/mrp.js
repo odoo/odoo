@@ -42,7 +42,7 @@ var SetBulletStatus = AbstractField.extend({
         }
     }
 });
-
+console.log('flag');
 var TimeCounter = AbstractField.extend({
     supportedFieldTypes: [],
     /**
