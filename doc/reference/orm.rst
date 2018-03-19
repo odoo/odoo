@@ -630,6 +630,9 @@ Model Reference
 
         If set to ``False``, override :meth:`.init` to create the database
         table
+        
+     .. tip:: To create a model without any table, inherit
+              from ``odoo.models.AbstractModel``
 
     .. attribute:: _table
 

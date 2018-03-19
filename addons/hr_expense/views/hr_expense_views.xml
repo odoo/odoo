@@ -164,7 +164,7 @@
                     <filter domain="[('state', '=', 'draft')]" string="To Submit" name="to_report" help="New Expense"/>
                     <filter domain="[('state', '=', 'reported')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
-                    <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
+                    <filter domain="[('state', '!=', 'refused')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
                     <separator />
                     <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" domain="[('employee_id.user_id', '=', uid)]"/>
