@@ -749,7 +749,7 @@ class expression(object):
                     return [(left, 'in', left_model.search(doms).ids)]
                 return doms
             else:
-                parent_name = parent or left_model._parent_name
+                parent_name = left_model._parent_name
                 parent_ids = set()
                 for record in left_model.browse(ids):
                     while record:
