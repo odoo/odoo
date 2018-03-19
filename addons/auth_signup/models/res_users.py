@@ -87,7 +87,7 @@ class ResUsers(models.Model):
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
         template_user = self.browse(template_user_id)
-        if template_user.exists():
+        if not template_user.exists():
             raise ValueError(_('Signup: invalid template user'))
 
         if not values.get('login'):
