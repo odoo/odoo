@@ -307,6 +307,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             }
             isSelecting = false;
         });
+        this.setupFocus(this.$input);
         this.setupFocus(this.$follow_button);
     },
     render_value: function(no_recurse) {
@@ -1445,6 +1446,7 @@ var FieldMany2ManyTags = AbstractManyField.extend(common.CompletionFieldMixin, c
             this.many2one.get_search_blacklist = function () {
                 return self.get('value');
             };
+            this.setupFocus(this.many2one.$('input'));
         }
     },
     destroy_content: function() {
