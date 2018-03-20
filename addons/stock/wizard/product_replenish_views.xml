@@ -18,12 +18,11 @@
                         attrs="{'readonly': [('product_has_variants', '=', False)]}"/>
                     <field name="product_uom_category_id" invisible="1"/>
                     <label for="quantity"/>
-                    <div>
-                        <field name="quantity" class="oe_inline"/>
+                    <div class="o_row">
+                        <field name="quantity" />
                         <field name="product_uom_id"
                             domain="[('category_id', '=', product_uom_category_id)]"
-                            groups="uom.group_uom"
-                            class="oe_inline"/>
+                            groups="uom.group_uom"/>
                     </div>      
                     <field name="date_planned"/>              
                     <field name="warehouse_id"
