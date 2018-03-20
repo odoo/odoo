@@ -57,16 +57,21 @@ tour.register('main_flow_tour', {
     content: _t('Uncheck  Make To Order'),
     position: 'right',
 }, {
-    trigger: '.o_notebook a:contains("Invoicing")',
-    content: _t('Go to invoicing tab'),
+    trigger: '.o_notebook a:contains("General Information")',
+    content: _t('Go to main tab'),
     position: 'top',
 }, {
     trigger: ".o_field_widget[name=taxes_id] input",
     content: _t("Focus on customer taxes field."),
-    run: 'click',
-}, {
-    trigger: ".ui-menu-item.ui-state-focus",
-    content: _t("Select suggested customer tax"),
+    run: function(actions) {
+        actions.click();
+        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        if ($e.length) {
+            actions.click($e);
+        } else {
+            actions.click();    // close dropdown
+        }
+    },
 }, {
     trigger: '.o_form_button_save',
     content: _t('Save this product and the modifications you\'ve made to it.'),
@@ -219,16 +224,21 @@ tour.register('main_flow_tour', {
     position: 'left',
     run: 'text "service"',
 }, {
+    trigger: ".o_field_widget[name=taxes_id] input",
+    content: _t("Focus on customer taxes field."),
+    run: function(actions) {
+        actions.click();
+        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        if ($e.length) {
+            actions.click($e);
+        } else {
+            actions.click();    // close dropdown
+        }
+    },
+}, {
     trigger: '.o_notebook a:contains("Sales")',
     content: _t('Go to sales tab'),
     position: 'bottom',
-}, {
-    trigger: ".o_field_widget[name=taxes_id] input",
-    content: _t("Focus on customer taxes field."),
-    run: 'click',
-}, {
-    trigger: ".ui-menu-item.ui-state-focus",
-    content: _t("Select suggested customer tax"),
 }, {
     trigger: '.o_field_widget[name=service_policy] .o_radio_input[data-value="delivered_timesheet"]',
     content: _t('Change service policy'),
