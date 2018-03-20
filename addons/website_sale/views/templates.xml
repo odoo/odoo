@@ -1553,7 +1553,7 @@
                     <i class="fa fa-pencil"></i>
                 </a>
                 <div class="panel-heading">
-                    <t t-if="order.payment_tx_id.state == 'pending'">
+                    <t t-if="order.payment_tx_id.state == 'pending' or order.payment_tx_id.state == 'draft'">
                         <t t-raw="order.payment_acquirer_id.pending_msg"/>
                     </t>
                     <t t-if="order.payment_tx_id.state == 'done'">
