@@ -313,7 +313,15 @@ class WebRequest(object):
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
-                self.env.clear()
+                # With the session patch, we now clear the environment only if it exists
+                # We do so by checking if the environment is stored in request.__dict__
+                # Which is how lazy_property works.
+                # We do this, to avoid creating the environment before it is needed.
+                # For example some auth='none' controllers do "request.uid = request.session.uid" then
+                # "request.env.user ..." which is broken if we create the environment by doing self.env.clear()
+                # since it will not be linked to a user.
+                if self.__dict__.get('env'):
+                    self.env.clear()
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
@@ -1123,7 +1131,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.db = db
         self.uid = uid
         self.login = login
-        self.password = password
+        self.session_token = uid and security.compute_session_token(self, request.env)
         request.uid = uid
         request.disable_db = False
 
@@ -1138,7 +1146,20 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
         if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
-        security.check(self.db, self.uid, self.password)
+        # We create our own environment instead of the request's one.
+        # This is due to the fact that the member "uid" on the request object isn't set yet.
+        # If we try to use the request's environment, the session checking will never succeed since
+        # the environment isn't bound to any user and it needs to be.
+        env = openerp.api.Environment(request.cr, self.uid, self.context)
+        #  == BACKWARD COMPATIBILITY TO CONVERT OLD SESSION TYPE TO THE NEW ONES ! REMOVE ME AFTER 11.0 ==
+        if self.get('password'):
+            security.check(self.db, self.uid, self.password)
+            self.session_token = security.compute_session_token(self, env)
+            self.pop('password')
+        # =================================================================================================
+        # here we check if the session is still valid
+        if not security.check_session(self, env):
+            raise SessionExpiredException("Session expired")
 
     def logout(self, keep_db=False):
         for k in self.keys():
@@ -1151,7 +1172,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("db", None)
         self.setdefault("uid", None)
         self.setdefault("login", None)
-        self.setdefault("password", None)
+        self.setdefault("session_token", None)
         self.setdefault("context", {})
 
     def get_context(self):
@@ -1211,12 +1232,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     @_login.setter
     def _login(self, value):
         self.login = value
-    @property
-    def _password(self):
-        return self.password
-    @_password.setter
-    def _password(self, value):
-        self.password = value
 
     def send(self, service_name, method, *args):
         """
@@ -1239,11 +1254,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         Ensures this session is valid (logged into the openerp server)
         """
-        if self.uid and not force:
+        if self.uid and self.session_token and not force:
             return
-        # TODO use authenticate instead of login
-        self.uid = self.proxy("common").login(self.db, self.login, self.password)
-        if not self.uid:
+
+        if not self.uid or not security.check_session(self, request.env):
             raise AuthenticationError("Authentication failure")
 
     def ensure_valid(self):
@@ -1272,7 +1286,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             Use the registry and cursor in :data:`request` instead.
         """
         self.assert_valid()
-        r = self.proxy('object').exec_workflow(self.db, self.uid, self.password, model, signal, id)
+        r = service_model.exec_workflow(self.db, self.uid, model, signal, id)
         return r
 
     def model(self, model):
