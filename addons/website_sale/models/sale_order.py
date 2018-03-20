@@ -134,6 +134,13 @@ class SaleOrder(models.Model):
 
         return name
 
+    @api.model
+    def _get_website_data(self, order):
+        return {
+            'partner': order.partner_id.id,
+            'order': order
+        }
+
     @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, attributes=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
