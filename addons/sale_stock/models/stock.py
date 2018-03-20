@@ -28,7 +28,7 @@ class StockMove(models.Model):
 
     def _action_done(self):
         result = super(StockMove, self)._action_done()
-        for line in self.mapped('sale_line_id'):
+        for line in result.mapped('sale_line_id'):
             line.qty_delivered = line._get_delivered_qty()
         return result
 
