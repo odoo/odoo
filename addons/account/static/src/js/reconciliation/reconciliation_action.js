@@ -46,7 +46,6 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         // number of moves lines displayed in 'match' mode
         limitMoveLines: 5,
     },
-
     /**
      * @override
      * @param {Object} params
@@ -128,6 +127,9 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 active_id: this.params.res_id,
             });
         }
+    },
+    on_attach_callback: function(){
+        this.renderer.activate();
     },
 
     //--------------------------------------------------------------------------

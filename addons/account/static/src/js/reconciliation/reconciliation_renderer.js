@@ -19,8 +19,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     template: 'reconciliation.statement',
     events: {
         'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
-        'click div:first h1.statement_name': '_onClickStatementName',
-        'click div:first h1.statement_name_edition button': '_onValidateName',
+        'change div:first .statement_name_edition input': '_onChangeStatementName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
     },
@@ -42,7 +41,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         var defs = [this._super.apply(this, arguments)];
         this.time = Date.now();
         this.$progress = this.$('.progress');
-
         if (this._initialState.bank_statement_id) {
             var def = this.model.makeRecord("account.bank.statement", [{
                 type: 'char',
@@ -51,20 +49,19 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 value: this._initialState.bank_statement_id.display_name
             }]).then(function (recordID) {
                 self.handleNameRecord = recordID;
-                self.name = new basic_fields.FieldChar(self,
+                self.name_field = new basic_fields.FieldChar(self,
                     'name', self.model.get(self.handleNameRecord),
                     {mode: 'edit'});
 
-                self.name.appendTo(self.$('.statement_name_edition')).then(function () {
-                    self.name.$el.addClass('o_required_modifier');
+                self.name_field.appendTo(self.$('.statement_name_edition')).then(function () {
+                    self.name_field.$el.addClass('o_required_modifier').addClass('statement_name');
                 });
-                self.$('.statement_name').text(self._initialState.bank_statement_id.display_name);
+                self.name_field.$el.unbind('keydown');
             });
             defs.push(def);
+        }else{
+            this.$('h1.statement_name_edition').text(this._initialState.title);
         }
-
-        this.$('h1.statement_name').text(this._initialState.title);
-
         delete this._initialState;
 
         this.enterHandler = function (e) {
@@ -75,6 +72,11 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         $('body').on('keyup', this.enterHandler);
 
         return $.when.apply($, defs);
+    },
+    activate: function(){
+        if (this.name_field) {
+            this.name_field.activate({'noselect': false});
+        }
     },
     /**
      * @override
@@ -133,8 +135,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         if (state.notifications) {
             this._renderNotifications(state.notifications);
         }
-
-        this.$('h1.statement_name').text(state.title);
     },
 
     //--------------------------------------------------------------------------
@@ -170,8 +170,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
-    _onClickStatementName: function () {
-        this.$('.statement_name, .statement_name_edition').toggle();
+    _onChangeStatementName: function (event) {
+        this.trigger_up('change_name', {'data': $(event.target).val()});
     },
     /**
      * @private
@@ -237,8 +237,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         this.trigger_up('change_name', {'data': name});
         this.$('.statement_name, .statement_name_edition').toggle();
     },
-});
 
+});
 
 /**
  * rendering of the bank statement line, contains line data, proposition and
@@ -762,14 +762,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
  */
 var ManualRenderer = StatementRenderer.extend({
     template: "reconciliation.manual.statement",
-
-    /**
-     * avoid statement name edition
-     *
-     * @override
-     * @private
-     */
-    _onClickStatementName: function () {}
 });
 
 
