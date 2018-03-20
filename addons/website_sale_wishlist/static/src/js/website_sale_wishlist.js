@@ -20,7 +20,7 @@ var ProductWishlist = Widget.extend({
     init: function(){
         var self = this;
         this.wishlist_product_ids = [];
-        $.get('/shop/wishlist', {'count': 1}).then(function(res) {
+        var wish_loading = $.get('/shop/wishlist', {'count': 1}).then(function(res) {
             self.wishlist_product_ids = JSON.parse(res);
             self.update_wishlist_view();
         });
@@ -44,12 +44,37 @@ var ProductWishlist = Widget.extend({
             else {
                 $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
             }
+            $el.data('product-product-id', parseInt($product_id.val(), 10));
+
         });
+
+        // manage "List View of variants"
+        $('.oe_website_sale').on('change', 'input.js_product_change', function(ev) {
+            var product_id = ev.currentTarget.value;
+            var $el = $(ev.target).closest('.js_add_cart_variants').find("[data-action='o_wishlist']");
+
+            if (!_.contains(self.wishlist_product_ids, parseInt(product_id, 10))) {
+                $el.prop("disabled", false).removeClass('disabled').removeAttr('disabled');
+            }
+            else {
+                $el.prop("disabled", true).addClass('disabled').attr('disabled', 'disabled');
+            }
+            $el.data('product-product-id', product_id);
+        });
+        wish_loading.then(function() {
+            if ($('input.js_product_change').length) { // manage "List View of variants"
+                $('input.js_product_change:checked').first().trigger('change');
+            }
+            else {
+                $('input.js_variant_change').trigger('change');
+            }
+        });
+
     },
     add_new_products:function($el, e){
         var self = this;
-        var product_id = $el.data('product-product-id');
-        if (e.currentTarget.classList.contains('o_add_wishlist_dyn')) {
+        var product_id = parseInt($el.data('product-product-id'), 10);
+        if (!product_id && e.currentTarget.classList.contains('o_add_wishlist_dyn')) {
             product_id = parseInt($el.parent().find('.product_id').val());
         }
         if (!_.contains(self.wishlist_product_ids, product_id)) {
