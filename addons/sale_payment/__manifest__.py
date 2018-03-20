@@ -20,6 +20,7 @@ Provide tools for sale-related payment
         'views/crm_team_views.xml',
         'views/sale_order_views.xml',
         'views/sale_portal_templates.xml',
+        'views/settings.xml',
     ],
     'installable': True,
     'auto_install': False,

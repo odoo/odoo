@@ -169,9 +169,6 @@
                                         <field name="portal_confirmation_options" class="o_light_label" widget="radio"
                                             attrs="{'required': [('portal_confirmation', '=', True)]}"/>
                                     </div>
-                                <div attrs="{'invisible': [('portal_confirmation_options', '!=', 'pay')]}">
-                                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
-                                </div>
                                 </div>
                             </div>
                         </div>
