@@ -5,84 +5,84 @@
 }
 
 .o_searchview {
-    .o-flex-display();
-    .o-flex-flow(row, wrap);
     .o-align-items(flex-end);
     position: relative;
     padding: 0 20px 1px 0;
-
-    .o_searchview_facet {
-        @o-searchview-facet-remove-width: 18px;
-
-        .o-flex(0, 0, auto);
-        max-width: 100%;
-        .o-flex-display();
-        position: relative;
-        margin: 1px 3px 0 0;
-
-        .o_searchview_facet_label {
-            .o-flex(0, 0, auto);
-            .o-text-overflow();
-            padding: 0 3px;
-            color: white;
-
-            .o-flex-display();
-            .o-align-items(center);
-        }
-            
-        .o_facet_values {
-            padding: 0 @o-searchview-facet-remove-width 0 5px;
-            .o_facet_values_sep {
-                font-style: italic;
-            }
-        }
-        .o_facet_remove {
-            .o-flex(0, 0, auto);
-            .o-flex-display();
-            .o-justify-content(center);
-            .o-align-items(center);
-            .o-position-absolute(0, 0, 0);
-            width: @o-searchview-facet-remove-width;
-            cursor: pointer;
-        }
-    }
-
-    .o_searchview_input {
-        width: 100px;
-        .o-flex(1, 0, auto);
-    }
 
     .o_searchview_more {
         font-size: 16px;
         cursor: pointer;
     }
+    .o_searchview_input_container {
+        .o-flex-display();
+        .o-flex-flow(row, wrap);
+        .o_searchview_facet {
+            @o-searchview-facet-remove-width: 18px;
 
-    .o_searchview_autocomplete {
-        .o-position-absolute(100%, @left: auto);
-        width: 100%;
-
-        li {
-            padding-left: 25px;
+            .o-flex(0, 0, auto);
+            max-width: 100%;
+            .o-flex-display();
             position: relative;
-            &.o-indent {
-                padding-left: 50px;
+            margin: 1px 3px 0 0;
+
+            .o_searchview_facet_label {
+                .o-flex(0, 0, auto);
+                .o-text-overflow();
+                padding: 0 3px;
+                color: white;
+
+                .o-flex-display();
+                .o-align-items(center);
             }
-            a {
-                display: inline-block;
-                padding-left: 0px;
-                padding-right: 0px;
-                &:hover {
-                    background-color: inherit;
+                
+            .o_facet_values {
+                padding: 0 @o-searchview-facet-remove-width 0 5px;
+                .o_facet_values_sep {
+                    font-style: italic;
                 }
-                &.o-expand, &.o-expanded { // caret
-                    .o-position-absolute(@left: 6px);
-                    padding: 3px;
+            }
+            .o_facet_remove {
+                .o-flex(0, 0, auto);
+                .o-flex-display();
+                .o-justify-content(center);
+                .o-align-items(center);
+                .o-position-absolute(0, 0, 0);
+                width: @o-searchview-facet-remove-width;
+                cursor: pointer;
+            }
+        }
+
+        .o_searchview_input {
+            width: 100px;
+            .o-flex(1, 0, auto);
+        }
+        .o_searchview_autocomplete {
+            .o-position-absolute(100%, @left: auto);
+            width: 100%;
+
+            li {
+                padding-left: 25px;
+                position: relative;
+                &.o-indent {
+                    padding-left: 50px;
                 }
-                &.o-expand:before {
-                    .o-caret-right;
-                }
-                &.o-expanded:before {
-                    .o-caret-down;
+                a {
+                    display: inline-block;
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    &:hover {
+                        background-color: inherit;
+                    }
+                    &.o-expand, &.o-expanded { // caret
+                        .o-position-absolute(@left: 6px);
+                        padding: 3px;
+                    }
+                    &.o-expand:before {
+                        .o-caret-right;
+                    }
+                    &.o-expanded:before {
+                        .o-caret-down;
+                    }
                 }
             }
         }

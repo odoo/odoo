@@ -61,7 +61,8 @@
     </div>
 
     <t t-name="website.DateRangeButtons">
-        <div class="btn-group btn-group-sm o_date_range_buttons pull-right">
+        <!-- TODO: Applied hidden-xs class as it is going to push in control panel and it breaks UI, maybe we will improve it in future -->
+        <div class="btn-group btn-group-sm o_date_range_buttons hidden-xs pull-right">
             <button class="btn btn-sm btn-default js_date_range active" data-date="week">Last Week</button>
             <button class="btn btn-sm btn-default js_date_range" data-date="month">Last Month</button>
             <button class="btn btn-sm btn-default js_date_range" data-date="year">Last Year</button>
