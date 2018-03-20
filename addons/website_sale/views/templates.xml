@@ -1528,7 +1528,7 @@
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
-                        <a class='show_coupon'>I have a promo code?</a>
+                        <a class='show_coupon'>I have a promo code</a>
                     </t>
                     <div t-attf-class='coupon_form #{not force_coupon and "hidden"}'>
                         <t t-call='website_sale.coupon_form'>
