@@ -368,8 +368,8 @@ class account_payment(models.Model):
         if self.partner_type:
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
 
-    @api.onchange('payment_type')
-    def _onchange_payment_type(self):
+    @api.onchange('payment_type', 'journal_id')
+    def _onchange_payment_type_journal(self):
         if not self.invoice_ids:
             # Set default partner type for the payment type
             if self.payment_type == 'inbound':
