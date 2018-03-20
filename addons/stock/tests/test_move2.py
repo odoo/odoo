@@ -963,6 +963,50 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 2.0)
         self.assertEqual(move1.state, 'done')
 
+    def test_extra_move_4(self):
+        """ Create a picking with similar moves (created after
+        confirmation). Action done should propagate all the extra
+        quantity and only merge extra moves in their original moves.
+        """
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 5)
+        delivery.action_confirm()
+        delivery.action_assign()
+
+        delivery.write({
+            'move_lines': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 0,
+                'quantity_done': 10,
+                'state': 'assigned',
+                'product_uom': self.productA.uom_id.id,
+                'picking_id': delivery.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })]
+        })
+        delivery.action_done()
+        self.assertEqual(len(delivery.move_lines), 2, 'Move should not be merged together')
+        for move in delivery.move_lines:
+            self.assertEqual(move.quantity_done, move.product_uom_qty, 'Initial demand should be equals to quantity done')
+
     def test_recheck_availability_1(self):
         """ Check the good behavior of check availability. I create a DO for 2 unit with
         only one in stock. After the first check availability, I should have 1 reserved
