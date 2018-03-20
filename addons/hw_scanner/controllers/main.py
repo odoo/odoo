@@ -4,7 +4,7 @@
 import logging
 import time
 from os import listdir
-from os.path import join
+from os.path import join, isdir
 try:
     from queue import Queue, Empty
 except ImportError:
@@ -124,7 +124,7 @@ class Scanner(Thread):
             if not evdev:
                 return []
 
-            if not os.path.isdir(self.input_dir):
+            if not isdir(self.input_dir):
                 return []
 
             new_devices = [device for device in listdir(self.input_dir)

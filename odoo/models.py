@@ -3055,6 +3055,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
                 self.modified(set(inverse_vals) - set(store_vals))
 
+
                 # check Python constraints for inversed fields
                 self._validate_fields(set(inverse_vals) - set(store_vals))
 
