@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="base.in" model="res.country">
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s %(state_code)s\n%(country_name)s'" name="address_format" />
+        </record>
+
+        <!-- Account tags -->
+
+        <record id="sgst_tag_account" model="account.account.tag">
+            <field name="name">SGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="cgst_tag_account" model="account.account.tag">
+            <field name="name">CGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="igst_tag_account" model="account.account.tag">
+            <field name="name">IGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <!-- Assets -->
+
+        <record model="account.account" id="p10051">
+            <field name="name">SGST Receivable</field>
+            <field name="code">10051</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_account'),])]"/>
+        </record>
+
+        <record model="account.account" id="p10052">
+            <field name="name">CGST Receivable</field>
+            <field name="code">10052</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_account'),])]"/>
+        </record>
+
+        <record model="account.account" id="p10053">
+            <field name="name">IGST Receivable</field>
+            <field name="code">10053</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0,[ref('igst_tag_account'),])]"/>
+        </record>
+        
+        <!-- Liabilities -->
+
+        <record model="account.account" id="p11232">
+            <field name="name">SGST Payable</field>
+            <field name="code">11232</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0,[ref('sgst_tag_account'),])]"/>
+        </record>
+
+        <record model="account.account" id="p11233">
+            <field name="name">CGST Payable</field>
+            <field name="code">11233</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0,[ref('cgst_tag_account'),])]"/>
+        </record>
+
+        <record model="account.account" id="p11234">
+            <field name="name">IGST Payable</field>
+            <field name="code">11234</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="tag_ids" eval="[(6,0,[ref('igst_tag_account'),])]"/>
+        </record>
+
+        <!-- Account Journal -->
+
+        <record id="tax_invoice_journal" model="account.journal">
+            <field name="name">Tax Invoice</field>
+            <field name="code">TAXINV</field>
+            <field name="type">sale</field>
+        </record>
+
+        <record id="retail_invoice_journal" model="account.journal">
+            <field name="name">Retail Invoice</field>
+            <field name="code">RETINV</field>
+            <field name="type">sale</field>
+        </record>
+
+        <record id="export_invoice_journal" model="account.journal">
+            <field name="name">Export Invoice</field>
+            <field name="code">EXPINV</field>
+            <field name="type">sale</field>
+        </record>
+
+</odoo>

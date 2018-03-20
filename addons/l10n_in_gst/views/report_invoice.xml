@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//tbody[contains(@class, 'invoice_tbody')]/tr/td[1]" position="replace">
+            <td><span t-field="l.name"/><t t-if="l.product_id.x_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.x_hsn_code"/></h6></t></td>
+        </xpath>
+        <xpath expr="//div[@name='invoice_address']//span[@t-if='o.partner_id.vat']" position="replace">
+            <span t-if="o.partner_id.x_gstin">GSTIN: <span t-field="o.partner_id.x_gstin"/></span>
+        </xpath>
+        <xpath expr="//table//thead/tr/th[6]" position="attributes">
+            <attribute name="t-if">len(o.tax_line_ids) > 0</attribute>
+        </xpath>
+        <xpath expr="//tbody[contains(@class, 'invoice_tbody')]/tr/td[6]" position="attributes">
+            <attribute name="t-if">len(o.tax_line_ids) > 0</attribute>
+        </xpath>
+        <xpath expr="//h2" position="replace">
+            <h2>
+                <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')"><span t-field="o.journal_id.name"/></span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft <span t-field="o.journal_id.name"/></span>
+                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled <span t-field="o.journal_id.name"/></span>
+                <span t-if="o.type == 'out_refund'">Refund</span>
+                <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                <span t-field="o.number"/>
+            </h2>
+        </xpath>
+    </template>
+
+    <template id="l10n_in_account_invoice_report_duplicate" inherit_id="account.account_invoice_report_duplicate">
+        <xpath expr="//h2" position="replace">
+            <h2>
+                <span>Duplicate</span>
+                <span t-if="o.type == 'out_refund'">credit note</span>
+                <span t-if="o.type == 'out_invoice'" t-field="o.journal_id.name"/>
+                <span t-field="o.number"/>
+            </h2>
+        </xpath>
+    </template>
+
+</odoo>

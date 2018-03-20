@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="ir.model.fields" id="hsn_code_field">
+        <field name="name">x_hsn_code</field>
+        <field name="field_description">HSN/SAC Code</field>
+        <field name="help">Harmonized System Nomenclature</field>
+        <field name="ttype">char</field>
+        <field name="state">manual</field>
+        <field name="model_id" ref="product.model_product_template"/>
+    </record>
+
+    <record model="ir.model.fields" id="gstin_field">
+        <field name="name">x_gstin</field>
+        <field name="field_description">GSTIN</field>
+        <field name="help">GST Identification Number</field>
+        <field name="ttype">char</field>
+        <field name="size">15</field>
+        <field name="state">manual</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+    </record>
+
+    <record model="ir.model.fields" id="company_gstin_field">
+        <field name="name">x_gstin</field>
+        <field name="field_description">GSTIN</field>
+        <field name="help">GST Identification Number</field>
+        <field name="ttype">char</field>
+        <field name="related">partner_id.x_gstin</field>
+        <field name="size">15</field>
+        <field name="state">manual</field>
+        <field name="model_id" ref="base.model_res_company"/>
+    </record>
+
+    <record model="ir.model.fields" id="country_state_tin_field">
+        <field name="name">x_tin</field>
+        <field name="field_description">TIN Number</field>
+        <field name="help">TIN number-first two digits</field>
+        <field name="ttype">char</field>
+        <field name="size">2</field>
+        <field name="state">manual</field>
+        <field name="model_id" ref="base.model_res_country_state"/>
+    </record>
+
+</odoo>
