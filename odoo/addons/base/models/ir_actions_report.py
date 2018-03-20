@@ -658,6 +658,7 @@ class IrActionsReport(models.Model):
                 'doc_ids': docids,
                 'doc_model': self.model,
                 'docs': docs,
+                'company_id': self.env['res.company'].browse([self.env.user.company_id.id]),
             }
         return self.render_template(self.report_name, data), 'html'
 
