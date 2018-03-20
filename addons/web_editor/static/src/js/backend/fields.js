@@ -101,7 +101,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
-            prettifyHtml: false,
+            prettifyHtml: true,
             styleWithSpan: false,
             inlinemedia: ['p'],
             lang: "odoo",

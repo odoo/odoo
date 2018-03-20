@@ -70,6 +70,10 @@
     position: relative;
     overflow: hidden;
 
+    a, button {
+      text-align: inherit;
+    }
+
     /* editable */
     .note-editable {
       background-color: #fff;
@@ -249,6 +253,7 @@
   /* dropdown-menu for toolbar and popover */
   .dropdown-menu {
     min-width: 90px;
+    z-index: 1101;
 
     /* dropdown-menu right position */
     /* http://forrst.com/posts/Bootstrap_right_positioned_dropdown-2KB */
@@ -284,7 +289,7 @@
         height: 20px;
         padding: 0;
         margin: 0;
-        border: 1px solid #fff;
+        border: 0.5px solid #C0C0C0;
       }
       .note-color-btn:hover {
         border: 1px solid #000;

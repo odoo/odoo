@@ -1378,6 +1378,7 @@ var LinkDialog = Dialog.extend({
                 var text = "";
                 this.data.images = [];
                 for (var i=0; i<nodes.length; i++) {
+                    var isAnchor = dom.isAnchor(nodes[i]);
                     if (dom.ancestor(nodes[i], dom.isImg)) {
                         this.data.images.push(dom.ancestor(nodes[i], dom.isImg));
                         text += '[IMG]';
@@ -1385,7 +1386,7 @@ var LinkDialog = Dialog.extend({
                         text += nodes[i].textContent.slice(so, Infinity);
                     } else if (!is_link && i===nodes.length-1) {
                         text += nodes[i].textContent.slice(0, eo);
-                    } else {
+                    } else if (!isAnchor) {
                         text += nodes[i].textContent;
                     }
                 }
