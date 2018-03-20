@@ -684,6 +684,10 @@ class PaymentTransaction(models.Model):
 
         return True
 
+    @api.multi
+    def _post_process_after_done(self, **kwargs):
+        return True
+
     # --------------------------------------------------
     # SERVER2SERVER RELATED METHODS
     # --------------------------------------------------
