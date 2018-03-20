@@ -1003,6 +1003,8 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
+        if not self.order_id.partner_id:
+            raise UserError(_('You must first select a partner!'))
         if not self.product_id:
             return {'domain': {'product_uom': []}}
 
