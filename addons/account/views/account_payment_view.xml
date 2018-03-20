@@ -280,7 +280,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_account_payment_invoice_form"/>
-            <field name="context">{'default_invoice_ids': [(4, active_id, None)]}</field>
+            <field name="context">{'default_company_id': company_id, 'default_invoice_ids': [(4, active_id, None)]}</field>
             <field name="target">new</field>
         </record>
 

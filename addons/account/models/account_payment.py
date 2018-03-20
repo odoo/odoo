@@ -339,9 +339,10 @@ class account_payment(models.Model):
 
         journal_domain = jrnl_filters['domain'] + domain_on_types
         default_journal_id = self.env.context.get('default_journal_id')
+        domain_company = [('company_id', '=', self.env.context.get('default_company_id', self.env.user.company_id.id))]
         if not default_journal_id:
             if self.journal_id.type not in journal_types:
-                self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
+                self.journal_id = self.env['account.journal'].search(domain_on_types + domain_company, limit=1)
         else:
             journal_domain = journal_domain.append(('id', '=', default_journal_id))
 
@@ -358,14 +359,14 @@ class account_payment(models.Model):
             self.destination_account_id = self.company_id.transfer_account_id.id
         elif self.partner_id:
             if self.partner_type == 'customer':
-                self.destination_account_id = self.partner_id.property_account_receivable_id.id
+                self.destination_account_id = self.partner_id.with_context(force_company=self.company_id.id).property_account_receivable_id.id
             else:
-                self.destination_account_id = self.partner_id.property_account_payable_id.id
+                self.destination_account_id = self.partner_id.with_context(force_company=self.company_id.id).property_account_payable_id.id
         elif self.partner_type == 'customer':
-            default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+            default_account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_receivable_id', 'res.partner')
             self.destination_account_id = default_account.id
         elif self.partner_type == 'supplier':
-            default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+            default_account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_payable_id', 'res.partner')
             self.destination_account_id = default_account.id
 
     @api.onchange('partner_type')
@@ -374,7 +375,7 @@ class account_payment(models.Model):
         if self.partner_type:
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
 
-    @api.onchange('payment_type')
+    @api.onchange('payment_type', 'company_id')
     def _onchange_payment_type(self):
         if not self.invoice_ids:
             # Set default partner type for the payment type
@@ -392,6 +393,10 @@ class account_payment(models.Model):
         journal_types = jrnl_filters['journal_types']
         journal_types.update(['bank', 'cash'])
         res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
+        if self.invoice_ids:
+            res['domain']['journal_id'].append(('company_id', 'in', self.invoice_ids.mapped('company_id').ids))
+        else:
+            res['domain']['journal_id'].append(('company_id', '=', self.company_id.id))
         return res
 
     @api.model
@@ -407,6 +412,14 @@ class account_payment(models.Model):
             rec['partner_id'] = invoice['partner_id'][0]
             rec['amount'] = invoice['residual']
         return rec
+
+    @api.model
+    def create(self, vals):
+        if 'company_id' not in vals and 'journal_id' in vals:
+            journal_id = vals.get('journal_id')
+            journal = self.env['account.journal'].browse(journal_id)
+            vals['company_id'] = journal.company_id.id
+        return super(account_payment, self).create(vals)
 
     @api.multi
     def button_journal_entries(self):

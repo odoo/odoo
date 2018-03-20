@@ -122,6 +122,8 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
+        if self._context.get('company_id'):
+            vals['company_id'] = self._context.get('company_id')
         move = super(AccountMove, self.with_context(check_move_validity=False, partner_id=vals.get('partner_id'))).create(vals)
         move.assert_balanced()
         return move

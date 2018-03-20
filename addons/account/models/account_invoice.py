@@ -73,6 +73,16 @@ class AccountInvoice(models.Model):
             if inv.amount_total < 0:
                 raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a credit note instead.'))
 
+    @api.onchange('company_id')
+    def onchange_company_id(self):
+        if self.journal_id.company_id != self.company_id:
+            self.journal_id = self.env['account.journal'].search(
+                [('company_id', '=', self.company_id.id),
+                 ('type', '=', self.journal_id.type)
+                 ], limit=1)
+        for line in self.invoice_line_ids:
+            line.change_company_id()
+
     @api.model
     def _default_journal(self):
         if self._context.get('default_journal_id', False):
@@ -648,7 +658,7 @@ class AccountInvoice(models.Model):
                 payment_term_id = p.property_supplier_payment_term_id.id
 
             delivery_partner_id = self.get_delivery_partner_id()
-            fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, delivery_id=delivery_partner_id)
+            fiscal_position = self.env['account.fiscal.position'].with_context(force_company=company_id).get_fiscal_position(self.partner_id.id, delivery_id=delivery_partner_id)
 
             # If partner has no warning, check its company
             if p.invoice_warn == 'no-message' and p.parent_id:
@@ -670,7 +680,7 @@ class AccountInvoice(models.Model):
         self.fiscal_position_id = fiscal_position
 
         if type in ('in_invoice', 'out_refund'):
-            bank_ids = p.commercial_partner_id.bank_ids
+            bank_ids = p.commercial_partner_id.bank_ids.filtered(lambda b: b.company_id.id == company_id)
             bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
             domain = {'partner_bank_id': [('id', 'in', bank_ids.ids)]}
@@ -1503,6 +1513,7 @@ class AccountInvoiceLine(models.Model):
 
     @api.v8
     def get_invoice_line_account(self, type, product, fpos, company):
+        product = product.with_context(force_company=company.id)
         accounts = product.product_tmpl_id.get_product_accounts(fpos)
         if type in ('out_invoice', 'out_refund'):
             return accounts['income']
@@ -1531,6 +1542,7 @@ class AccountInvoiceLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
+        self.company_id = self.invoice_id.company_id
         domain = {}
         if not self.invoice_id:
             return
@@ -1581,10 +1593,12 @@ class AccountInvoiceLine(models.Model):
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = product.uom_id._compute_price(self.price_unit, self.uom_id)
+        self.change_company_id()
         return {'domain': domain}
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
+        self = self.with_context(force_company=self.invoice_id.company_id.id)
         if not self.account_id:
             return
         if not self.product_id:
@@ -1609,6 +1623,27 @@ class AccountInvoiceLine(models.Model):
         if warning:
             result['warning'] = warning
         return result
+
+    @api.model
+    def change_company_id(self):
+        partner = self.invoice_id.partner_id
+        invoice_type = self.invoice_id.type
+        company_id = self.invoice_id.company_id.id
+        if partner.lang:
+            product = self.product_id.with_context(lang=partner.lang)
+        else:
+            product = self.product_id
+        account = self.get_invoice_line_account(
+            invoice_type,
+            product.with_context(force_company=company_id),
+            self.invoice_id.fiscal_position_id,
+            self.invoice_id.company_id
+        )
+        if account:
+            self.account_id = account.id
+        if self.account_analytic_id.company_id != self.company_id:
+            self.account_analytic_id = False
+        self.with_context(company_id=company_id)._set_taxes()
 
     def _set_additional_fields(self, invoice):
         """ Some modules, such as Purchase, provide a feature to add automatically pre-filled
