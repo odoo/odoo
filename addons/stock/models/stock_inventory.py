@@ -410,7 +410,7 @@ class InventoryLine(models.Model):
 
     def _get_move_values(self, qty, location_id, location_dest_id, out):
         self.ensure_one()
-        return {
+        vals = {
             'name': _('INV:') + (self.inventory_id.name or ''),
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
@@ -435,6 +435,9 @@ class InventoryLine(models.Model):
                 'owner_id': self.partner_id.id,
             })]
         }
+        if self.env.context.get('forced_price_unit'):
+            vals['price_unit'] = self.env.context['forced_price_unit']
+        return vals
 
     def _generate_moves(self):
         moves = self.env['stock.move']

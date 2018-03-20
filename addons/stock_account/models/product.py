@@ -176,13 +176,46 @@ class ProductProduct(models.Model):
         return sum(moves.mapped('remaining_value'))
 
     @api.multi
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'product_tmpl_id.cost_method')
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price')
     def _compute_stock_value(self):
         for product in self:
             if product.cost_method in ['standard', 'average']:
-                product.stock_value = product.standard_price * product.with_context(company_owned=True).qty_available
+                qty_available = product.with_context(company_owned=True).qty_available
+                if self.env.context.get('to_date'):
+                    history_price = product.get_history_price(
+                        self.env.user.company_id.id,
+                        date=self.env.context['to_date']
+                    )
+                    product.stock_value = history_price * qty_available
+                else:
+                    product.stock_value = product.standard_price * qty_available
             elif product.cost_method == 'fifo':
-                product.stock_value = product._sum_remaining_values()
+                if self.env.context.get('to_date'):
+                    domain = [('product_id', '=', product.id), ('date', '<=', self.env.context['to_date'])]
+                    domain += self.env['stock.move']._get_in_base_domain()
+                    candidates = self.env['stock.move'].search(domain, order='date DESC, id DESC')
+                    qty_to_take_on_candidates = product.with_context(company_owned=True).qty_available
+                    tmp_value = 0
+
+                   # we slice the recordset to limit the prefetching
+                    for candidates_sliced in (candidates[idx: idx+1000] for idx in range(0, len(candidates), 1000)):
+                        for candidate in candidates_sliced:
+                            if candidate.product_qty <= qty_to_take_on_candidates:
+                                qty_taken_on_candidate = candidate.product_qty
+                            else:
+                                qty_taken_on_candidate = qty_to_take_on_candidates
+
+                            value_taken_on_candidate = qty_taken_on_candidate * candidate.price_unit
+
+                            qty_to_take_on_candidates -= qty_taken_on_candidate
+                            tmp_value += value_taken_on_candidate
+                            if qty_to_take_on_candidates == 0:
+                                break
+                        candidates.invalidate_cache(ids=candidates_sliced.ids)
+
+                    product.stock_value = tmp_value
+                else:
+                    product.stock_value = product._sum_remaining_values()
 
     @api.multi
     def action_open_product_moves(self):

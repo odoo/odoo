@@ -31,7 +31,7 @@ class StockMove(models.Model):
     create_date = fields.Datetime('Creation Date', index=True, readonly=True)
     date = fields.Datetime(
         'Date', default=fields.Datetime.now, index=True, required=True,
-        states={'done': [('readonly', True)]},
+        # states={'done': [('readonly', True)]},
         help="Move date: scheduled date until move is done, then date of actual move processing")
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -628,10 +628,10 @@ class StockMove(models.Model):
         self.product_uom = product.uom_id.id
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
-    @api.onchange('date')
-    def onchange_date(self):
-        if self.date_expected:
-            self.date = self.date_expected
+#    @api.onchange('date')
+#    def onchange_date(self):
+#        if self.date_expected:
+#            self.date = self.date_expected
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):

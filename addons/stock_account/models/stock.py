@@ -62,6 +62,25 @@ class StockLocation(models.Model):
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
+    def _should_bypass_quants_update(self):
+        if (self.move_id._is_in() or self.move_id._is_out()) and self.product_id.cost_method == 'fifo':
+            return True
+        return False
+
+    def _create_correction_inventory_adjustment(self, product_id, location_id, qty_difference, price_unit=False):
+        if price_unit:
+            self = self.with_context(forced_price_unit=price_unit)
+        correction_inventory = self.env['stock.inventory'].create({
+            'name': 'Correction of move %s',
+            'filter': 'product',
+            'location_id': location_id.id,
+            'product_id': product_id.id,
+            'exhausted': True,
+        })
+        correction_inventory.action_start()
+        correction_inventory.line_ids.product_qty = correction_inventory.line_ids.theoretical_qty + qty_difference
+        correction_inventory.action_done()
+
     @api.model
     def create(self, vals):
         res = super(StockMoveLine, self).create(vals)
@@ -75,53 +94,38 @@ class StockMoveLine(models.Model):
     @api.multi
     def write(self, vals):
         if 'qty_done' in vals:
-            # We need to update the `value`, `remaining_value` and `remaining_qty` on the linked
-            # stock move.
             moves_to_update = {}
             for move_line in self.filtered(lambda ml: ml.state == 'done' and (ml.move_id._is_in() or ml.move_id._is_out())):
                 moves_to_update[move_line.move_id] = vals['qty_done'] - move_line.qty_done
 
             for move_id, qty_difference in moves_to_update.items():
-                # more/less units are available, update `remaining_value` and
-                # `remaining_qty` on the linked stock move.
-                move_vals = {'remaining_qty': move_id.remaining_qty + qty_difference}
-                new_remaining_value = 0
+                move_vals = {}
                 if move_id.product_id.cost_method in ['standard', 'average']:
                     correction_value = qty_difference * move_id.product_id.standard_price
-                    move_vals['value'] = move_id.value - correction_value
-                    move_vals.pop('remaining_qty')
+                    if move_id._is_in():
+                        move_vals['value'] = move_id.value + correction_value
+                    elif move_id._is_out():
+                        move_vals['value'] = move_id.value - correction_value
+                    move_id.write(move_vals)
+                    if move_id.product_id.valuation == 'real_time':
+                       move_id.with_context(force_valuation_amount=correction_value)._account_entry_move()
+                    if qty_difference > 0:
+                        move_id.product_price_update_before_done(forced_qty=qty_difference)
                 else:
                     # FIFO handling
-                    if move_id._is_in():
-                        correction_value = qty_difference * move_id.price_unit
-                        new_remaining_value = move_id.remaining_value + correction_value
+                    # increase in
+                    if move_id._is_in() and qty_difference > 0:
+                        self._create_correction_inventory_adjustment(move_id.product_id, move_id.location_dest_id, qty_difference, price_unit=move_id.price_unit)
+                    # decrease in
+                    elif move_id._is_in() and qty_difference < 0:
+                        self._create_correction_inventory_adjustment(move_id.product_id, move_id.location_id, abs(qty_difference))
+                    # inncrease out
                     elif move_id._is_out() and qty_difference > 0:
-                        # send more, run fifo again
-                        correction_value = self.env['stock.move']._run_fifo(move_id, quantity=qty_difference)
-                        new_remaining_value = move_id.remaining_value + correction_value
-                        move_vals.pop('remaining_qty')
+                        self._create_correction_inventory_adjustment(move_id.product_id, move_id.location_id, -qty_difference)
+                    # decrease out
                     elif move_id._is_out() and qty_difference < 0:
-                        # fake return, find the last receipt and augment its qties
-                        candidates_receipt = self.env['stock.move'].search(move_id._get_in_domain(), order='date, id desc', limit=1)
-                        if candidates_receipt:
-                            candidates_receipt.write({
-                                'remaining_qty': candidates_receipt.remaining_qty + -qty_difference,
-                                'remaining_value': candidates_receipt.remaining_value + (-qty_difference * candidates_receipt.price_unit),
-                            })
-                            correction_value = qty_difference * candidates_receipt.price_unit
-                        else:
-                            correction_value = qty_difference * move_id.product_id.standard_price
-                        move_vals.pop('remaining_qty')
-                if move_id._is_out():
-                    move_vals['remaining_value'] = new_remaining_value if new_remaining_value < 0 else 0
-                else:
-                    move_vals['remaining_value'] = new_remaining_value
-                move_id.write(move_vals)
+                        self._create_correction_inventory_adjustment(move_id.product_id, move_id.location_id, abs(qty_difference))
 
-                if move_id.product_id.valuation == 'real_time':
-                    move_id.with_context(force_valuation_amount=correction_value)._account_entry_move()
-                if qty_difference > 0:
-                    move_id.product_price_update_before_done(forced_qty=qty_difference)
         return super(StockMoveLine, self).write(vals)
 
 
