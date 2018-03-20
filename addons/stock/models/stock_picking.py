@@ -397,7 +397,7 @@ class Picking(models.Model):
 
     @api.one
     def _compute_has_packages(self):
-        self.has_packages = self.move_line_ids.filtered(lambda ml: ml.result_package_id)
+        self.has_packages = bool(self.env['stock.move.line'].search_count([('picking_id','=', self.id), ('result_package_id','!=',False)]))
 
     def _compute_entire_package_ids(self):
         """ This compute method populate the two one2Many containing all entire packages of the picking.
