@@ -2232,7 +2232,7 @@ QUnit.module('relational_fields', {
 
         // Secound round: remove one record
         form.$buttons.find('.btn.btn-primary.btn-sm.o_form_button_edit').click();
-        var trash_buttons = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_list_record_delete');
+        var trash_buttons = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_list_record_remove');
 
         trash_buttons.first().click();
 
