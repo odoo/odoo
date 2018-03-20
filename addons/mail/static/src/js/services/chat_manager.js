@@ -1509,7 +1509,7 @@ var ChatManager =  AbstractService.extend({
             show_notification: true,
         });
         this._invalidateCaches(message.channel_ids);
-        if (message.channel_ids.length !== 0) {
+        if (message.channel_ids.length !== 0 && !_.contains(message.channel_ids, 'channel_inbox') && !_.contains(message.channel_ids, 'channel_starred')) {
             this.needactionCounter++;
         }
         _.each(message.channel_ids, function (channelID) {
