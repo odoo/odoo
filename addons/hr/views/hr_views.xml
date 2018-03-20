@@ -373,7 +373,7 @@
             <field name="name">hr.job.tree</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <tree string="Job" decoration-bf="message_needaction==True">
+                <tree string="Job" decoration-bf="message_needaction==True" import="0">
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="no_of_employee"/>
@@ -390,7 +390,7 @@
             <field name="name">hr.job.kanban</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" import="0">
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">

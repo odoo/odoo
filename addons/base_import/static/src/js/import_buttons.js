@@ -13,7 +13,7 @@ var ImportViewMixin = {
      * @override
      */
     init: function (viewInfo, params) {
-        var importEnabled = 'import_enabled' in params ? params.import_enabled : true;
+        var importEnabled = this.arch.attrs.import ? JSON.parse(this.arch.attrs.import) : true;
         // if true, the 'Import' button will be visible
         this.controllerParams.importEnabled = importEnabled;
     },

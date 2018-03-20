@@ -50,10 +50,7 @@ QUnit.test('list without import button', function(assert) {
         View: ListView,
         model: 'foo',
         data: this.data,
-        arch: '<tree><field name="foo"/></tree>',
-        viewOptions: {
-            import_enabled: false,
-        }
+        arch: '<tree import="0"><field name="foo"/></tree>',
     });
 
     assert.ok(!list.$buttons.find('.o_button_import').length, "should not have an Import button");
@@ -92,14 +89,11 @@ QUnit.test('kanban without import button', function(assert) {
         View: KanbanView,
         model: 'foo',
         data: this.data,
-        arch: '<kanban><templates><t t-name="kanban-box">' +
+        arch: '<kanban import="0"><templates><t t-name="kanban-box">' +
                     '<div>' +
                     '<field name="foo"/>' +
                     '</div>' +
                 '</t></templates></kanban>',
-        viewOptions: {
-            import_enabled: false,
-        }
     });
 
     assert.ok(!kanban.$buttons.find('.o_button_import').length, "should not have an Import button");
