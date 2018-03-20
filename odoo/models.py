@@ -1957,7 +1957,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for field in many2onefields:
             ids_set = {d[field] for d in data if d[field]}
             if no_name_get:
-                data_dict = dict({(x,'') for x in ids_set)})
+                data_dict = dict({(x,'') for x in ids_set})
             else:
                 m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
                 data_dict = dict(m2o_records.name_get())
