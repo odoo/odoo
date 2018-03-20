@@ -45,8 +45,8 @@
                               <group string="Orders">
                                 <field name="default_order"/>
                                 <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one"/>
-                                <div groups="base.group_no_one">
-                                    (votes - 1) ** <field name="relevancy_post_vote" class="oe_inline"/> / (days + 2) ** <field name="relevancy_time_decay" class="oe_inline"/>
+                                <div groups="base.group_no_one" class="o_row">
+                                    (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
                                 </div>
                               </group>
                             </page>

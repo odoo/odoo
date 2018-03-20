@@ -150,16 +150,16 @@
                     </group>
                     <group string="Contract">
                         <label for="salary_expected"/>
-                        <div>
-                            <field name="salary_expected" class="oe_inline"/>
-                            <span class="oe_inline" attrs="{'invisible':[('salary_expected_extra','=',False)]}"> + </span>
-                            <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                        <div class="o_row">
+                            <field name="salary_expected"/>
+                            <span attrs="{'invisible':[('salary_expected_extra','=',False)]}"> + </span>
+                            <field name="salary_expected_extra" placeholder="Extra advantages..."/>
                         </div>
                         <label for="salary_proposed"/>
-                        <div>
-                            <field name="salary_proposed" class="oe_inline"/>
-                            <span class="oe_inline" attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
-                            <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                        <div class="o_row">
+                            <field name="salary_proposed"/>
+                            <span attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
+                            <field name="salary_proposed_extra" placeholder="Extra advantages..."/>
                         </div>
                         <field name="availability"/>
                         <field name="emp_id" invisible="1"/>
