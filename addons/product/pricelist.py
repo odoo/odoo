@@ -340,7 +340,7 @@ class product_pricelist_item(osv.osv):
 
     _defaults = {
         'base': 'list_price',
-        'min_quantity': 1,
+        'min_quantity': 0,
         'sequence': 5,
         'price_discount': 0,
         'applied_on': '3_global',
