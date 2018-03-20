@@ -3339,6 +3339,70 @@ QUnit.module('Views', {
         testUtils.unpatch(mixins.ParentedMixin);
     });
 
+    QUnit.test('keyboard navigation on kanban basic rendering', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                '<div>' +
+                '<t t-esc="record.foo.value"/>' +
+                '<field name="foo"/>' +
+                '</div>' +
+                '</t></templates></kanban>',
+        });
+
+        var $fisrtCard = kanban.$('.o_kanban_record:first');
+        var $secondCard = kanban.$('.o_kanban_record:eq(1)');
+
+        $fisrtCard.focus();
+        assert.strictEqual(document.activeElement, $fisrtCard[0], "the kanban cards are focussable");
+
+        $fisrtCard.trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT, }));
+        assert.strictEqual(document.activeElement, $secondCard[0], "the second card should be focussed");
+
+        $secondCard.trigger($.Event('keydown', { which: $.ui.keyCode.LEFT, keyCode: $.ui.keyCode.LEFT, }));
+        assert.strictEqual(document.activeElement, $fisrtCard[0], "the first card should be focussed");
+        kanban.destroy();
+    });
+
+    QUnit.test('keyboard navigation on kanban grouped rendering', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        var $firstColumnFisrtCard = kanban.$('.o_kanban_record:first');
+        var $secondColumnFirstCard = kanban.$('.o_kanban_group:eq(1) .o_kanban_record:first');
+        var $secondColumnSecondCard = kanban.$('.o_kanban_group:eq(1) .o_kanban_record:eq(1)');
+
+        $firstColumnFisrtCard.focus();
+
+        //RIGHT should select the next column
+        $firstColumnFisrtCard.trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT, }));
+        assert.strictEqual(document.activeElement, $secondColumnFirstCard[0], "RIGHT should select the first card of the next column");
+
+        //DOWN should move up one card
+        $secondColumnFirstCard.trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN, }));
+        assert.strictEqual(document.activeElement, $secondColumnSecondCard[0], "DOWN should select the second card of the current column");
+
+        //LEFT should go back to the first column
+        $secondColumnSecondCard.trigger($.Event('keydown', { which: $.ui.keyCode.LEFT, keyCode: $.ui.keyCode.LEFT, }));
+        assert.strictEqual(document.activeElement, $firstColumnFisrtCard[0], "LEFT should select the first card of the first column");
+
+        kanban.destroy();
+    });
 });
 
 });

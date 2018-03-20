@@ -43,6 +43,14 @@
             margin-bottom: 10px;
         }
 
+        &:focus, &:focus-within {
+            -webkit-box-shadow: 1px 1px 3px 0px rgba(0,0,0,1);
+            -moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,1);
+            box-shadow: 1px 1px 3px 0px rgba(0,0,0,1);
+            z-index: 1; // show the shadow on top of the previous & next cards in grouped mode
+            outline: none;
+        }
+
         // ------- Generic layout adaptations -------
         .container {
             width: 100%;
