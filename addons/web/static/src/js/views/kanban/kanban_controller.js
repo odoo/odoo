@@ -58,6 +58,7 @@ var KanbanController = BasicController.extend({
         if (this.hasButtons && this.is_action_enabled('create')) {
             this.$buttons = $(qweb.render('KanbanView.buttons', {widget: this}));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onButtonNew.bind(this));
+            this.$buttons.on('keydown',this._onButtonsKeyDown.bind(this));
             this._updateButtons();
             this.$buttons.appendTo($node);
         }
@@ -218,6 +219,18 @@ var KanbanController = BasicController.extend({
                 view_type: 'form',
                 res_id: undefined
             });
+        }
+    },
+    /**
+     * Moves the focus from the controller buttons to the first kanban record
+     * 
+     * @private
+     * @param {jQueryEvent} e
+     */
+    _onButtonsKeyDown: function (e) {
+        switch(e.keyCode) {
+            case $.ui.keyCode.DOWN:
+                this.$('.o_kanban_record:first').focus();
         }
     },
     /**

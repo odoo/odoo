@@ -88,6 +88,61 @@ var KanbanRenderer = BasicRenderer.extend({
         start_quick_create: '_onStartQuickCreate',
         quick_create_column_updated: '_onQuickCreateColumnUpdated',
     }),
+    events:_.extend({}, BasicRenderer.prototype.events || {}, {
+        'keydown .o_kanban_record' : '_onRecordKeyDown'
+    }),
+    _focusOnNextCard: function(currentCardElement) {
+        var nextCard = currentCardElement.nextElementSibling;
+        if (nextCard) {
+            nextCard.focus();
+        }
+    },
+    _focusOnPrevousCard: function(currentCardElement) {
+        var previousCard = currentCardElement.previousElementSibling;
+        if (previousCard && previousCard.classList.contains("o_kanban_record")) { //previous element might be column title
+            previousCard.focus();
+        }
+    },
+    _onRecordKeyDown: function(e) {
+        switch(e.which) {
+            case $.ui.keyCode.DOWN:
+                this._focusOnNextCard(e.currentTarget);
+                e.stopPropagation();
+                break;
+            case $.ui.keyCode.UP:
+                this._focusOnPrevousCard(e.currentTarget);
+                e.stopPropagation();
+                break;
+            case $.ui.keyCode.RIGHT:
+                var currentColumn = e.currentTarget.parentElement;
+                var nextColumn = currentColumn.nextElementSibling;
+                if (nextColumn) {
+                    var allCardsOfNextColumn = nextColumn.getElementsByClassName('o_kanban_record');
+                    if (allCardsOfNextColumn.length) {
+                        allCardsOfNextColumn[0].focus();
+                    }
+                }
+                else {
+                    this._focusOnNextCard(e.currentTarget);
+                }
+                e.stopPropagation();
+                break;
+            case $.ui.keyCode.LEFT:
+                var currentColumn = e.currentTarget.parentElement;
+                var previousColumn = currentColumn.previousElementSibling;
+                if (previousColumn) {
+                    var allCardsOfPreviousColumn = previousColumn.getElementsByClassName('o_kanban_record');
+                    if (allCardsOfPreviousColumn.length) {
+                        allCardsOfPreviousColumn[0].focus();
+                    }
+                }
+                else {
+                    this._focusOnPrevousCard(e.currentTarget);
+                }
+                e.stopPropagation();
+                break;
+        }
+    },
 
     /**
      * @override
@@ -131,6 +186,9 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     addQuickCreate: function () {
         return this.widgets[0].addQuickCreate();
+    },
+    giveFocus:function() {
+        this.$('.o_kanban_record:first').focus();
     },
     /**
      * Toggle fold/unfold the Column quick create widget
