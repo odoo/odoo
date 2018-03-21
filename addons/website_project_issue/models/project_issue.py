@@ -36,6 +36,7 @@ class Issue(models.Model):
         groups = super(Issue, self)._notification_recipients(message, groups)
 
         for group_name, group_method, group_data in groups:
-            group_data['has_button_access'] = True
+            if group_name != "customer":
+                group_data['has_button_access'] = True
 
         return groups
