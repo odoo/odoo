@@ -1237,6 +1237,7 @@
             <field file="base/static/img/country_flags/pa.png" name="image" type="base64" />
             <field name="currency_id" ref="PAB" />
             <field eval="507" name="phone_code" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" />
         </record>
         <record id="pe" model="res.country">
             <field name="name">Peru</field>

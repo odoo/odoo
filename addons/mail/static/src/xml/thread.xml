@@ -179,7 +179,7 @@
 
                     - <small class="o_mail_timestamp" t-att-title="message.date.format(date_format)"><t t-esc="message.hour"/></small>
                     <t t-if="message.model and (message.model != 'mail.channel') and options.display_document_link">
-                        <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" class="o_document_link">on <t t-esc="message.record_name"/></a>
+                        on <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" class="o_document_link"><t t-esc="message.record_name"/></a>
                     </t>
                     <t t-if="message.origin_id and (message.origin_id !== options.channel_id)">
                         (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)

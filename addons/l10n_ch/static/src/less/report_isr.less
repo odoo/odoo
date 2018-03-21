@@ -38,6 +38,7 @@ body.l10n_ch_isr #isr {
 
     overflow: hidden;
     font-family: "Work Sans", Verdana, Geneva, sans-serif;
+    line-height: 1;
     font-size: 13px;
 
     p, address {
@@ -58,25 +59,26 @@ body.l10n_ch_isr #isr {
     #voucher > * {
         position: absolute;
         /* default left margin for fields content */
-        left: 1/10in;
+        left: 3/20in;
 
         &#voucher-for-contact {
-            top: 3/10in;
+            top: 0.25in;
         }
 
         &#voucher-for-bank {
-            top: 3/20in;
+            top: 0.18in;
         }
 
         &#voucher-for-bank + #voucher-for-contact {
-            top: 4/6in;
+            top: 0.68in;
         }
 
         &#voucher-bank {
-            top: 9/6in;
+            top: 1.51in;
             left: 11/10in;
         }
 
+        /* TODO: remove in master */
         &#voucher-currency {
             top: 9/6 + 3/20in;
 
@@ -86,24 +88,22 @@ body.l10n_ch_isr #isr {
 
         &#voucher-amount_units {
             width: 15/10in;
-            top: 11/6in;
+            top: 1.84in;
 
             text-align: right;
-            line-height: 1/6in;
-            font-weight: 14px;
+            font-size: 14px;
         }
 
         &#voucher-amount_cents {
             width: 4/10in;
-            top: 11/6in;
-            left: 19/10in;
+            top: 1.84in;
+            left: 20/10in;
 
-            line-height: 1/6in;
-            font-weight: 14px;
+            font-size: 14px;
         }
 
         &#voucher-by {
-            top: 26/12in;
+            top: 2.18in;
         }
     }
 
@@ -121,25 +121,26 @@ body.l10n_ch_isr #isr {
     #slip > * {
         position: absolute;
         /* default left margin for fields content */
-        left: 1/10in;
+        left: 3/20in;
 
         &#slip-for-contact {
-            top: 3/10in;
+            top: 0.25in;
         }
 
         &#slip-for-bank {
-            top: 3/20in;
+            top: 0.18in;
         }
 
         &#slip-for-bank + #slip-for-contact {
-            top: 4/6in;
+            top: 0.68in;
         }
 
         &#slip-bank {
-            top: 9/6in;
+            top: 1.51in;
             left: 11/10in;
         }
 
+        /* TODO: remove in master */
         &#slip-currency {
             top: 9/6 + 3/20in;
 
@@ -149,34 +150,52 @@ body.l10n_ch_isr #isr {
 
         &#slip-amount_units {
             width: 15/10in;
-            top: 11/6in;
+            top: 1.84in;
 
             text-align: right;
-            line-height: 1/6in;
-            font-weight: 14px;
+            font-size: 14px;
         }
 
         &#slip-amount_cents {
             width: 4/10in;
-            top: 11/6in;
-            left: 19/10in;
+            top: 1.84in;
+            left: 20/10in;
 
-            line-height: 1/6in;
-            font-weight: 14px;
+            font-size: 14px;
         }
 
         &#slip-reference {
-            width: 3 + 3/10in;
-            top: 7/6in;
-            left: 2 + 5/10in;
+            width: 3.3in;
+            top: 1.17in;
+            left: 2.5in;
             text-align: center;
         }
 
         &#slip-by {
-            top: 11/6in;
-            left: 2 + 5/10in;
+            top: 1.85in;
+            left: 2.55in;
         }
 
+        &#slip-optical-line {
+            right: 3/10in;
+            bottom: 4/6in;
+
+            /* Positioning is set for OCRB of Tsukurimashou Font Family */
+            font-family: OCRB, Courier, monospace;
+            font-size: 10pt;
+            line-height: 0.1in;
+
+            > div {
+                position: relative;
+
+                > div {
+                    position: absolute;
+                    bottom: 0;
+                }
+            }
+        }
+
+        /* TODO: remove in master */
         &#slip-optical {
             right: 3/10in;
             bottom: 4/6in;

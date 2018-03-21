@@ -353,7 +353,7 @@ var Thread = Widget.extend({
         } else {
             this.trigger('redirect', options.model, options.id);
         }
-    }, 200, true),
+    }, 500, true),
 
     //--------------------------------------------------------------------------
     // Handlers

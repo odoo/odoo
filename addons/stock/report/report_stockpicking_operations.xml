@@ -127,13 +127,13 @@
                                                                     <span t-field="ml.lot_id"/>
                                                                     <span t-if="not ml.lot_id" t-field="ml.lot_name"/>
                                                                 </div>
-                                                                <div class="col-xs-8">
-                                                                    <span t-field="ml.qty_done"/>
-                                                                    <t t-if="o.state!='done'">
-                                                                        / <span t-field="ml.product_uom_qty"/>
-                                                                    </t>
-                                                                </div>
                                                             </t>
+                                                            <div class="col-xs-8">
+                                                                <span t-field="ml.qty_done"/>
+                                                                <t t-if="o.state!='done'">
+                                                                    / <span t-field="ml.product_uom_qty"/>
+                                                                </t>
+                                                            </div>
                                                         </td>
                                                         <td width="30%" align="right">
                                                             <div>

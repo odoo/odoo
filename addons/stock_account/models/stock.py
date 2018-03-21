@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, pycompat
+from odoo.tools import float_compare, float_round, float_is_zero, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -353,8 +353,11 @@ class StockMove(models.Model):
         std_price_update = {}
         for move in self.filtered(lambda move: move.location_id.usage in ('supplier', 'production') and move.product_id.cost_method == 'average'):
             product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
+            rounding = move.product_id.uom_id.rounding
 
-            if product_tot_qty_available == 0:
+            if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
+                new_std_price = move._get_price_unit()
+            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
             else:
                 # Get the standard price

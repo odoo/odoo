@@ -139,9 +139,16 @@ class AccountVoucher(models.Model):
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
+        pay_journal_domain = [('type', 'in', ['cash', 'bank'])]
         if self.partner_id:
             self.account_id = self.partner_id.property_account_receivable_id \
                 if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
+        else:
+            if self.voucher_type == 'purchase':
+                pay_journal_domain.append(('outbound_payment_method_ids', '!=', False))
+            else:
+                pay_journal_domain.append(('inbound_payment_method_ids', '!=', False))
+        return {'domain': {'payment_journal_id': pay_journal_domain}}
 
     @api.multi
     def proforma_voucher(self):

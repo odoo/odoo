@@ -3025,16 +3025,26 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 self.env[model_name].browse(parent_ids).write(parent_vals)
 
             if inverse_vals:
-                # put the values of inverse fields in cache, and inverse them
                 self.modified(set(inverse_vals) - set(store_vals))
-                for record in self:
-                    record._cache.update(record._convert_to_cache(inverse_vals, update=True))
 
                 # in case several fields use the same inverse method, call it once
                 for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
-                    fields[0].determine_inverse(self)
+                    # If a field is not stored, its inverse method will probably
+                    # write on its dependencies, which will invalidate the field
+                    # on all records. We therefore inverse the field one record
+                    # at a time.
+                    batches = [self] if all(f.store for f in fields) else list(self)
+                    # put the values of fields in cache, and inverse them
+                    inv_vals = {f.name: inverse_vals[f.name] for f in fields}
+                    for records in batches:
+                        for record in records:
+                            record._cache.update(
+                                record._convert_to_cache(inv_vals, update=True)
+                            )
+                        fields[0].determine_inverse(records)
 
                 self.modified(set(inverse_vals) - set(store_vals))
+
 
                 # check Python constraints for inversed fields
                 self._validate_fields(set(inverse_vals) - set(store_vals))
