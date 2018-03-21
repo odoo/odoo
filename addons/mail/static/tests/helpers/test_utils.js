@@ -5,6 +5,7 @@ var Discuss = require('mail.chat_discuss');
 
 var AbstractService = require('web.AbstractService');
 var Bus = require('web.Bus');
+var ControlPanel = require('web.ControlPanel');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -75,6 +76,8 @@ function createDiscuss(params) {
     var discuss = new Discuss(parent, params);
     discuss.set_cp_bus(new Widget());
     var selector = params.debug ? 'body' : '#qunit-fixture';
+    var controlPanel = new ControlPanel(parent);
+    controlPanel.appendTo($(selector));
     discuss.appendTo($(selector));
 
     // override 'destroy' of discuss so that it calls 'destroy' on the parent
@@ -85,6 +88,9 @@ function createDiscuss(params) {
         delete discuss.destroy;
         parent.destroy();
     };
+
+    // link the view to the control panel
+    discuss.set_cp_bus(controlPanel.get_bus());
 
     return discuss.call('chat_manager', 'isReady').then(function () {
         return discuss;
