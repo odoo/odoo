@@ -828,6 +828,8 @@ class AccountTax(models.Model):
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
+        if not self._check_m2m_recursion('children_tax_ids'):
+            raise ValidationError(_("Recursion found for tax '%s'.") % (self.name,))
         if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
             raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
