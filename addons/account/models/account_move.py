@@ -1173,6 +1173,11 @@ class AccountMoveLine(models.Model):
                     account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
             rec_move_ids += account_move_line.matched_debit_ids
             rec_move_ids += account_move_line.matched_credit_ids
+        if self.env.context.get('invoice_id'):
+            current_invoice = self.env['account.invoice'].browse(self.env.context['invoice_id'])
+            rec_move_ids = rec_move_ids.filtered(
+                lambda r: (r.debit_move_id + r.credit_move_id) & current_invoice.move_id.line_ids
+            )
         return rec_move_ids.unlink()
 
     ####################################################
