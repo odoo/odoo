@@ -1582,16 +1582,21 @@ var ChatManager =  AbstractService.extend({
                 message.is_starred = data.starred;
                 if (!message.is_starred) {
                     self._removeMessageFromChannel("channel_starred", message);
-                    self.starredCounter--;
                 } else {
                     self._addToCache(message, []);
                     var channelStarred = self.getChannel('channel_starred');
                     channelStarred.cache = _.pick(channelStarred.cache, "[]");
-                    self.starredCounter++;
                 }
                 self.chatBus.trigger('update_message', message);
             }
         });
+
+        if (data.starred) { // increase starred counter if message is marked as star
+            this.starredCounter += data.message_ids.length;
+        } else { // decrease starred counter if message is remove from star if unstar_all then it will set to 0.
+            this.starredCounter -= data.message_ids.length;
+        }
+
         this.chatBus.trigger('update_starred', this.starredCounter);
     },
     /**

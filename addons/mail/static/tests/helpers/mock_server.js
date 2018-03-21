@@ -39,6 +39,21 @@ MockServer.include({
             'menu_id': false,
         });
     },
+
+    /**
+     * Simulate the 'message_fetch' Python method
+     *
+     * @return {Object}
+     */
+    _mockMessageFetch: function (args) {
+        args.kwargs.offset = Math.max(this.data['mail.message'].records.length - args.kwargs.limit, 0);
+
+        return this._mockSearchRead('mail.message', [
+            args.args[0],
+            _.keys(this.data['mail.message'].fields),
+        ], args.kwargs);
+    },
+
     /**
      * @override
      */
@@ -47,7 +62,7 @@ MockServer.include({
             return $.when(this._mockInitMessaging(args));
         }
         if (args.method === 'message_fetch') {
-            return $.when([]);
+            return $.when(this._mockMessageFetch(args));
         }
         if (args.method === 'channel_fetch_listeners') {
             return $.when([]);

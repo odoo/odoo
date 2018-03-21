@@ -375,5 +375,109 @@ QUnit.test('older messages are loaded on scroll', function (assert) {
     });
 });
 
+QUnit.test('"Unstar all" button should reset the starred counter', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    var bus = new Bus();
+    var BusService = createBusService(bus);
+    var msgData = [];
+    _.each(_.range(1, 41), function (num) {
+        msgData.push({
+                id: num,
+                body: "<p>test" + num + "</p>",
+                author_id: ["1", "Me"],
+                channel_ids: [1],
+                starred: true,
+                starred_partner_ids: [1],
+            }
+        );
+    });
+
+    this.data = {
+        initMessaging: {
+            channel_slots: {
+                channel_channel: [{
+                    id: 1,
+                    channel_type: "channel",
+                    name: "general",
+                }],
+            },
+            starred_counter: msgData.length,
+        },
+        'mail.message': {
+            fields: {
+                body: {
+                    string: "Contents",
+                    type: 'html',
+                },
+                author_id: {
+                    string: "Author",
+                    relation: 'res.partner',
+                },
+                channel_ids: {
+                    string: "Channels",
+                    type: 'many2many',
+                    relation: 'mail.channel',
+                },
+                starred: {
+                    string: "Starred",
+                    type: 'boolean',
+                },
+                needaction: {
+                  string: "Need Action",
+                  type: 'boolean',
+              },
+              starred_partner_ids: {
+                  string: "partner ids",
+                  type: 'integer',
+              }
+            },
+            records: msgData,
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: [ChatManager, BusService],
+        mockRPC: function (route, args) {
+            if (args.method === 'unstar_all') {
+                var data = {
+                    message_ids: _.range(1, 41),
+                    starred: false,
+                    type: 'toggle_star',
+                };
+                var notification = [[false, 'res.partner'], data];
+                bus.trigger('notification', [notification]);
+                return $.when(42);
+            }
+            return this._super.apply(this, arguments);
+        },
+        session: {partner_id: 1},
+    })
+    .then(function (discuss) {
+        var $starred = discuss.$('.o_mail_chat_sidebar').find('.o_mail_chat_title_starred');
+        var $starredCounter = $('.o_mail_chat_title_starred > .o_mail_sidebar_needaction');
+
+        // Go to Starred channel
+        $starred.click();
+        // Test Initial Value
+        assert.strictEqual($starredCounter.text().trim(), "40", "40 messages should be starred");
+
+        // Unstar all and wait 'update_starred'
+        $('.o_control_panel .o_mail_chat_button_unstar_all').click();
+        $starredCounter = $('.o_mail_chat_title_starred > .o_mail_sidebar_needaction');
+        assert.strictEqual($starredCounter.text().trim(), "0",
+            "All messages should be unstarred");
+
+        discuss.destroy();
+        done();
+    });
+});
+
+
 });
 });
