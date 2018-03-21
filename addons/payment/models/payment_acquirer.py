@@ -222,6 +222,7 @@ class PaymentAcquirer(models.Model):
             'company_id': self.company_id.id,
             'default_debit_account_id': account.id,
             'default_credit_account_id': account.id,
+            'show_on_dashboard': self.website_published,
         }
 
     @api.model
@@ -263,7 +264,9 @@ class PaymentAcquirer(models.Model):
 
     @api.multi
     def toggle_website_published(self):
-        self.write({'website_published': not self.website_published})
+        self.website_published = not self.website_published
+        if self.journal_id:
+            self.journal_id.show_on_dashboard = self.website_published
         return True
 
     @api.multi
