@@ -36,7 +36,7 @@
                                         <span t-att-res-id="bom_line['product_id'].id" res-model="product.product" view-type="form" t-esc="bom_line['product_id'].name"/>
                                     </td>
                                     <td class="text-right">
-                                        <span t-esc="bom_line['product_uom_qty']"/> <span t-esc="bom_line['product_uom'].name" groups="product.group_uom"/>
+                                        <span t-esc="bom_line['product_uom_qty']"/> <span t-esc="bom_line['product_uom'].name" groups="uom.group_uom"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="bom_line['price_unit']" t-options='{"widget": "monetary", "display_currency": currency}'/>

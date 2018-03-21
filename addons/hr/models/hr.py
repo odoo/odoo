@@ -127,7 +127,8 @@ class Employee(models.Model):
     ], groups="hr.group_hr_user", default="male")
     marital = fields.Selection([
         ('single', 'Single'),
-        ('married', 'Married (or similar)'),
+        ('married', 'Married'),
+        ('cohabitant', 'Legal Cohabitant'),
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
     ], string='Marital Status', groups="hr.group_hr_user", default='single')
@@ -233,38 +234,6 @@ class Employee(models.Model):
         resources = self.mapped('resource_id')
         super(Employee, self).unlink()
         return resources.unlink()
-
-    @api.multi
-    def action_follow(self):
-        """ Wrapper because message_subscribe_users take a user_ids=None
-            that receive the context without the wrapper.
-        """
-        return self.message_subscribe_users()
-
-    @api.multi
-    def action_unfollow(self):
-        """ Wrapper because message_unsubscribe_users take a user_ids=None
-            that receive the context without the wrapper.
-        """
-        return self.message_unsubscribe_users()
-
-    @api.model
-    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
-        """ Overwrite of the original method to always follow user_id field,
-            even when not track_visibility so that a user will follow it's employee
-        """
-        if auto_follow_fields is None:
-            auto_follow_fields = ['user_id']
-        user_field_lst = []
-        for name, field in self._fields.items():
-            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
-                user_field_lst.append(name)
-        return user_field_lst
-
-    @api.multi
-    def _message_auto_subscribe_notify(self, partner_ids):
-        # Do not notify user it has been marked as follower of its employee.
-        return
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):

@@ -14,7 +14,7 @@ class Website(models.Model):
     _inherit = 'website'
 
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
+    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency')
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
@@ -158,6 +158,8 @@ class Website(models.Model):
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
         addr = partner.address_get(['delivery', 'invoice'])
+        if len(partner.sale_order_ids):  # first = me
+            addr['delivery'] = partner.sale_order_ids[0].partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
             'partner_id': partner.id,
@@ -228,7 +230,7 @@ class Website(models.Model):
 
             request.session['sale_order_id'] = sale_order.id
 
-            if request.website.partner_id.id != partner.id:
+            if request.website.partner_id.id != partner.id and partner.last_website_so_id.id != sale_order.id:
                 partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:

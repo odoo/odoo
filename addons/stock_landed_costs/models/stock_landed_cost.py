@@ -21,7 +21,7 @@ class LandedCost(models.Model):
     _inherit = 'mail.thread'
 
     name = fields.Char(
-        'Name', default=lambda self: self.env['ir.sequence'].next_by_code('stock.landed.cost'),
+        'Name', default=lambda self: _('New'),
         copy=False, readonly=True, track_visibility='always')
     date = fields.Date(
         'Date', default=fields.Date.context_today,
@@ -56,6 +56,12 @@ class LandedCost(models.Model):
     @api.depends('cost_lines.price_unit')
     def _compute_total_amount(self):
         self.amount_total = sum(line.price_unit for line in self.cost_lines)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
+        return super(LandedCost, self).create(vals)
 
     @api.multi
     def unlink(self):
@@ -117,7 +123,7 @@ class LandedCost(models.Model):
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also """
-        prec_digits = self.env['decimal.precision'].precision_get('Account')
+        prec_digits = self.env.user.company_id.currency_id.decimal_places
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
             if not tools.float_compare(total_amount, landed_cost.amount_total, precision_digits=prec_digits) == 0:

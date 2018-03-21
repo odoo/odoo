@@ -13,8 +13,8 @@ class TestWiseOperator(TransactionCase):
             'name': 'Wise Unit',
             'type': 'product',
             'categ_id': self.ref('product.product_category_1'),
-            'uom_id': self.ref('product.product_uom_unit'),
-            'uom_po_id': self.ref('product.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
+            'uom_po_id': self.ref('uom.product_uom_unit'),
         })
 
         picking_default_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
@@ -50,7 +50,7 @@ class TestWiseOperator(TransactionCase):
         })
         new_pack1 = self.env['stock.move.line'].create({
             'product_id': product_wise.id,
-            'product_uom_id': self.ref('product.product_uom_unit'),
+            'product_uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick1_wise.id,
             'qty_done': 6.0,
             'location_id': self.ref('stock.stock_location_suppliers'),

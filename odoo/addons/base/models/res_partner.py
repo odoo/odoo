@@ -67,17 +67,15 @@ class FormatAddressMixin(models.AbstractModel):
 class PartnerCategory(models.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.category'
-    _order = 'parent_left, name'
+    _order = 'name'
     _parent_store = True
-    _parent_order = 'name'
 
     name = fields.Char(string='Tag Name', required=True, translate=True)
     color = fields.Integer(string='Color Index')
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
-    parent_left = fields.Integer(string='Left parent', index=True)
-    parent_right = fields.Integer(string='Right parent', index=True)
+    parent_path = fields.Char(index=True)
     partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
 
     @api.constrains('parent_id')
@@ -206,7 +204,7 @@ class Partner(models.Model):
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
-        help="Either customer (no user), either shared user. Indicated the current partner is a customer without "
+        help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
@@ -503,7 +501,7 @@ class Partner(models.Model):
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
                         raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
-        tools.image_resize_images(vals)
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
@@ -527,7 +525,7 @@ class Partner(models.Model):
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
             vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-        tools.image_resize_images(vals)
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()
@@ -538,7 +536,7 @@ class Partner(models.Model):
         self.ensure_one()
         if self.company_name:
             # Create parent company
-            values = dict(name=self.company_name, is_company=True)
+            values = dict(name=self.company_name, is_company=True, vat=self.vat)
             values.update(self._update_fields_values(self._address_fields()))
             new_company = self.create(values)
             # Set new company as my parent

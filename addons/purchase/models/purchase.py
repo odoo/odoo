@@ -352,7 +352,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_approve(self, force=False):
-        self.write({'state': 'purchase'})
+        self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
         if self.company_id.po_lock == 'lock':
             self.write({'state': 'done'})
@@ -642,7 +642,7 @@ class PurchaseOrderLine(models.Model):
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
-    product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
+    product_uom = fields.Many2one('uom.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
     product_image = fields.Binary(
         'Product Image', related="product_id.image",
@@ -747,7 +747,7 @@ class PurchaseOrderLine(models.Model):
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
-            qty += move.product_qty
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         template = {
             'name': self.name or '',
             'product_id': self.product_id.id,
@@ -771,7 +771,14 @@ class PurchaseOrderLine(models.Model):
         }
         diff_quantity = self.product_qty - qty
         if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
-            template['product_uom_qty'] = diff_quantity
+            quant_uom = self.product_id.uom_id
+            get_param = self.env['ir.config_parameter'].sudo().get_param
+            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
+                product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
+                template['product_uom'] = quant_uom.id
+                template['product_uom_qty'] = product_qty
+            else:
+                template['product_uom_qty'] = diff_quantity
             res.append(template)
         return res
 
@@ -912,14 +919,6 @@ class PurchaseOrderLine(models.Model):
             self.product_qty = 1.0
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    @api.model
-    def _get_exceptions_domain(self):
-        return super(ProcurementGroup, self)._get_exceptions_domain() + [('created_purchase_line_id', '=', False)]
-
-
 class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
     action = fields.Selection(selection_add=[('buy', 'Buy')])
@@ -1017,7 +1016,7 @@ class ProcurementRule(models.Model):
 
         taxes = product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes) if fpos else taxes
+        taxes_id = fpos.map_tax(taxes, product_id, seller.name) if fpos else taxes
         if taxes_id:
             taxes_id = taxes_id.filtered(lambda x: x.company_id.id == values['company_id'].id)
 

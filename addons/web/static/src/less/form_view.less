@@ -165,13 +165,16 @@
             .o-flex-flow(row, wrap);
 
             > .btn {
-                margin-right: 3px;
+                @o-statusbar-buttons-vmargin: 4px;
+                min-height: @odoo-statusbar-height - 2 * @o-statusbar-buttons-vmargin;
+                margin: @o-statusbar-buttons-vmargin 3px @o-statusbar-buttons-vmargin 0;
                 padding-top: 2px;
                 padding-bottom: 2px;
             }
         }
 
         > .o_statusbar_status {
+            margin-left: auto;
             .o-flex-flow(row-reverse, wrap-reverse);
             .o-align-self(stretch);
             .o-align-items(stretch);

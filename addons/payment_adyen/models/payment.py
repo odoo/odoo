@@ -78,7 +78,7 @@ class AcquirerAdyen(models.Model):
             ]
 
         hmac_key = binascii.a2b_hex(self.adyen_skin_hmac_key.encode('ascii'))
-        raw_values = {k: values.get(k.encode('ascii'), '') for k in keys if k in values}
+        raw_values = {k: values.get(k, '') for k in keys if k in values}
         raw_values_ordered = OrderedDict(sorted(raw_values.items(), key=lambda t: t[0]))
 
         return signParams(raw_values_ordered)
@@ -151,8 +151,8 @@ class AcquirerAdyen(models.Model):
                 'sessionValidity': tmp_date,
                 'resURL': urls.url_join(base_url, AdyenController._return_url),
                 'merchantReturnData': json.dumps({'return_url': '%s' % values.pop('return_url')}) if values.get('return_url') else False,
-                'merchantSig': self._adyen_generate_merchant_sig('in', values),
             })
+            values['merchantSig'] = self._adyen_generate_merchant_sig('in', values)
 
         return values
 

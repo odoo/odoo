@@ -8,12 +8,12 @@ class TestUom(TransactionCase):
 
     def setUp(self):
         super(TestUom, self).setUp()
-        self.uom_gram = self.env.ref('product.product_uom_gram')
-        self.uom_kgm = self.env.ref('product.product_uom_kgm')
-        self.uom_ton = self.env.ref('product.product_uom_ton')
-        self.uom_unit = self.env.ref('product.product_uom_unit')
-        self.uom_dozen = self.env.ref('product.product_uom_dozen')
-        self.categ_unit_id = self.ref('product.product_uom_categ_unit')
+        self.uom_gram = self.env.ref('uom.product_uom_gram')
+        self.uom_kgm = self.env.ref('uom.product_uom_kgm')
+        self.uom_ton = self.env.ref('uom.product_uom_ton')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
+        self.categ_unit_id = self.ref('uom.product_uom_categ_unit')
 
     def test_10_conversion(self):
         qty = self.uom_gram._compute_quantity(1020000, self.uom_ton)
@@ -37,7 +37,7 @@ class TestUom(TransactionCase):
         self.assertEquals(qty, 1.234, "Converted quantity does not correspond.")
 
     def test_20_rounding(self):
-        product_uom = self.env['product.uom'].create({
+        product_uom = self.env['uom.uom'].create({
             'name': 'Score',
             'factor_inv': 20,
             'uom_type': 'bigger',

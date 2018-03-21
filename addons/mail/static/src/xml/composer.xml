@@ -76,4 +76,9 @@
         </t>
     </t>
 
+    <t t-name="FieldMany2ManyTagsEmail" t-extend="FieldMany2ManyTag">
+        <t t-jquery=".o_badge_text" t-operation="replace">
+            <span class="o_badge_text" t-attf-title="#{el.email}"><t t-esc="el.display_name"/></span>
+        </t>
+    </t>
 </templates>

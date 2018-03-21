@@ -139,12 +139,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.pager.on('pager_changed', this, function (newState) {
             var self = this;
             this.pager.disable();
+            data = this.model.get(this.handle, {raw: true});
             var limitChanged = (data.limit !== newState.limit);
             this.reload({limit: newState.limit, offset: newState.current_min - 1})
                 .then(function () {
                     // Reset the scroll position to the top on page changed only
                     if (!limitChanged) {
-                        self.trigger_up('scrollTo', {offset: 0});
+                        self.trigger_up('scrollTo', {top: 0});
                     }
                 })
                 .then(this.pager.enable.bind(this.pager));
@@ -254,9 +255,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 resIDs: record.res_ids,
             },
             on_success: def.resolve.bind(def),
-            on_fail: function () {
-                reload().always(def.reject.bind(def));
-            },
+            on_fail: def.reject.bind(def),
             on_closed: reload,
         });
         return this.alive(def);
@@ -274,6 +273,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Deferred}
      */
     _confirmChange: function (id, fields, e) {
+        if (e.name === 'discard_changes' && e.target.reset) {
+            // the target of the discard event is a field widget.  In that
+            // case, we simply want to reset the specific field widget,
+            // not the full view
+            return  e.target.reset(this.model.get(e.target.dataPointID), e, true);
+        }
+
         var state = this.model.get(this.handle);
         return this.renderer.confirmChange(state, id, fields, e);
     },
@@ -335,7 +341,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 }
                 self.model.discardChanges(recordID);
                 if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
+                    if (self.model.canBeAbandoned(recordID)) {
+                        self._abandonRecord(recordID);
+                    }
                     return;
                 }
                 return self._confirmSave(recordID);

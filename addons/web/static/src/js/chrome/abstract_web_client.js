@@ -68,6 +68,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
                 .load_filters(event.data.dataset, event.data.action_id)
                 .then(event.data.on_success);
         },
+        create_filter: '_onCreateFilter',
         push_state: '_onPushState',
         show_effect: '_onShowEffect',
         // session
@@ -87,6 +88,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
                 }
             });
         },
+        getScrollPosition: '_onGetScrollPosition',
+        scrollTo: '_onScrollTo',
     },
     init: function (parent) {
         this.client_options = {};
@@ -338,6 +341,18 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @param {OdooEvent} e
+     * @param {Object} e.data.filter the filter description
+     * @param {function} e.data.on_success called when the RPC succeeds with its
+     *   returned value as argument
+     */
+    _onCreateFilter: function (e) {
+        data_manager
+            .create_filter(e.data.filter)
+            .then(e.data.on_success);
+    },
+    /**
      * Displays a warning in a dialog of with the NotificationManager
      *
      * @private
@@ -361,6 +376,16 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         }
     },
     /**
+     * This function must be implemented to provide to the caller the current
+     * scroll position (left and top) of the webclient.
+     *
+     * @abstract
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback
+     */
+    _onGetScrollPosition: function (ev) {
+    },
+    /**
      * Loads an action from the database given its ID.
      *
      * @private
@@ -380,6 +405,20 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
      */
     _onPushState: function (e) {
         this.do_push_state(e.data.state);
+    },
+    /**
+     * This function must be implemented by actual webclient to scroll either to
+     * a given offset or to a target element (given a selector).
+     * It must be called with: trigger_up('scrollTo', options).
+     *
+     * @abstract
+     * @param {OdooEvent} ev
+     * @param {integer} [ev.data.top] the number of pixels to scroll from top
+     * @param {integer} [ev.data.left] the number of pixels to scroll from left
+     * @param {string} [ev.data.selector] the selector of the target element to
+     *   scroll to
+     */
+    _onScrollTo: function (ev) {
     },
     /**
      * Displays a visual effect (for example, a rainbowman0

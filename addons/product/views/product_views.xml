@@ -16,6 +16,7 @@
                 </header>
                 <sheet>
                     <field name='product_variant_count' invisible='1'/>
+                    <field name='is_product_variant' invisible='1'/>
                     <field name="id" invisible="True"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object"
@@ -48,14 +49,14 @@
                                 </group>
                                 <group name="group_standard_price">
                                     <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
-                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}">
+                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
+                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
                                         <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     </div>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
-                                    <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
-                                    <field name="uom_po_id" groups="product.group_uom" options="{'no_create': True}"/>
+                                    <field name="uom_id" groups="uom.group_uom" options="{'no_create': True}"/>
+                                    <field name="uom_po_id" groups="uom.group_uom" options="{'no_create': True}"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
@@ -293,7 +294,7 @@
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="barcode"/>
                     <field name="product_tmpl_id" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -343,7 +344,8 @@
                     </field>
                 </field>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                    <field name="attribute_value_ids" widget="many2many_tags" readonly="1"
+                        groups="product.group_product_variant"/>
                 </xpath>
             </field>
         </record>
@@ -528,7 +530,7 @@
                             <label for="min_qty"/>
                             <div>
                                 <field name="min_qty" class="oe_inline"/>
-                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                <field name="product_uom" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <label for="price"/>
                             <div>

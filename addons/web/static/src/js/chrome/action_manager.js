@@ -9,6 +9,7 @@ odoo.define('web.ActionManager', function (require) {
  * coordinated.
  */
 
+var AbstractAction = require('web.AbstractAction');
 var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
 var Context = require('web.Context');
@@ -61,7 +62,6 @@ var ActionManager = Widget.extend({
         // dialog (i.e. coming from an action with target='new')
         this.currentDialogController = null;
     },
-
     /**
      * @override
      */
@@ -79,7 +79,7 @@ var ActionManager = Widget.extend({
     on_attach_callback: function() {
         this.isInDOM = true;
         var currentController = this.getCurrentController();
-        if (currentController && currentController.widget.on_attach_callback) {
+        if (currentController) {
             currentController.widget.on_attach_callback();
         }
     },
@@ -89,7 +89,7 @@ var ActionManager = Widget.extend({
     on_detach_callback: function() {
         this.isInDOM = false;
         var currentController = this.getCurrentController();
-        if (currentController && currentController.widget.on_detach_callback) {
+        if (currentController) {
             currentController.widget.on_detach_callback();
         }
     },
@@ -109,13 +109,8 @@ var ActionManager = Widget.extend({
      */
     clearUncommittedChanges: function () {
         var currentController = this.getCurrentController();
-        // AAB: with AbstractAction, the second part of the condition won't be
-        // necessary anymore, as there will be such a function it its API
-        if (currentController && currentController.widget.discardChanges) {
-            return currentController.widget.discardChanges(undefined, {
-                // AAB: get rid of this option when on_hashchange mechanism is improved
-                readonlyIfRealDiscard: true,
-            });
+        if (currentController) {
+            return currentController.widget.canBeRemoved();
         }
         return $.when();
     },
@@ -140,10 +135,11 @@ var ActionManager = Widget.extend({
      *   is useful when we come from a loadState())
      * @param {boolean} [options.replace_last_action=false] set to true to
      *   replace last part of the breadcrumbs with the action
-     * @return {Deferred} resolved when the action is loaded and appended to the
-     *   DOM ; rejected if the action can't be executed (e.g. if doAction has
-     *   been called to execute another action before this one was complete).
-    */
+     * @return {$.Deferred<Object>} resolved with the action when the action is
+     *   loaded and appended to the DOM ; rejected if the action can't be
+     *   executed (e.g. if doAction has been called to execute another action
+     *   before this one was complete).
+     */
     doAction: function (action, options) {
         var self = this;
         options = _.defaults({}, options, {
@@ -179,7 +175,14 @@ var ActionManager = Widget.extend({
 
             self._preprocessAction(action, options);
 
-            return self._handleAction(action, options);
+            return self._handleAction(action, options).then(function () {
+                // now that the action has been executed, force its 'pushState'
+                // flag to 'true', as we don't want to prevent its controller
+                // from pushing its state if it changes in the future
+                action.pushState = true;
+
+                return action;
+            });
         });
     },
     /**
@@ -259,7 +262,9 @@ var ActionManager = Widget.extend({
             callbacks: [{widget: controller.widget}],
         });
 
-        this.trigger_up('scrollTo', {offset: controller.scrollTop || 0});
+        if (controller.scrollPosition) {
+            this.trigger_up('scrollTo', controller.scrollPosition);
+        }
 
         if (!controller.widget.need_control_panel) {
             this.controlPanel.do_hide();
@@ -295,7 +300,7 @@ var ActionManager = Widget.extend({
     _detachCurrentController: function () {
         var currentController = this.getCurrentController();
         if (currentController) {
-            currentController.scrollTop = this._getScrollTop();
+            currentController.scrollPosition = this._getScrollPosition();
             dom.detach([{widget: currentController.widget}]);
         }
     },
@@ -405,11 +410,7 @@ var ActionManager = Widget.extend({
                     in_DOM: true,
                     callbacks: [{widget: dialog}],
                 });
-                // AAB: renderButtons will be a function of AbstractAction, so this
-                // test won't be necessary anymore
-                if (widget.renderButtons) {
-                    widget.renderButtons(dialog.$footer);
-                }
+                widget.renderButtons(dialog.$footer);
 
                 self.currentDialogController = controller;
 
@@ -435,6 +436,9 @@ var ActionManager = Widget.extend({
             console.error("Could not find client action " + action.tag, action);
             return $.Deferred().reject();
         }
+        if (!(ClientAction.prototype instanceof AbstractAction)) {
+            console.warn('The client action ' + action.tag + ' should be an instance of AbstractAction!');
+        }
         if (!(ClientAction.prototype instanceof Widget)) {
             // the client action might be a function, which is executed and
             // whose returned value might be another action to execute
@@ -446,6 +450,7 @@ var ActionManager = Widget.extend({
         }
 
         var controllerID = _.uniqueId('controller_');
+        options.controllerID = controllerID;
         var controller = {
             actionID: action.jsID,
             jsID: controllerID,
@@ -510,6 +515,7 @@ var ActionManager = Widget.extend({
             },
         });
         return this.dp.add(runDef).then(function (action) {
+            action = action || { type: 'ir.actions.act_window_close' };
             return self.doAction(action, options);
         });
     },
@@ -609,19 +615,19 @@ var ActionManager = Widget.extend({
         return state;
     },
     /**
-     * Returns the current vertical scroll position.
+     * Returns the current horizontal and vertical scroll positions.
      *
      * @private
-     * @returns {integer}
+     * @returns {Object}
      */
-    _getScrollTop: function () {
-        var scrollTop;
-        this.trigger_up('getScrollTop', {
-            callback: function (value) {
-                scrollTop = value;
+    _getScrollPosition: function () {
+        var scrollPosition;
+        this.trigger_up('getScrollPosition', {
+            callback: function (_scrollPosition) {
+                scrollPosition = _scrollPosition;
             }
         });
-        return scrollTop;
+        return scrollPosition;
     },
     /**
      * Dispatches the given action to the corresponding handler to execute it,
@@ -897,13 +903,13 @@ var ActionManager = Widget.extend({
         }
     },
     /**
-    * Intercepts and triggers a redirection on a link
-    *
-    * @private
-    * @param {OdooEvent} ev
-    * @param {integer} ev.data.res_id
-    * @param {string} ev.data.res_model
-    */
+     * Intercepts and triggers a redirection on a link.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.res_id
+     * @param {string} ev.data.res_model
+     */
     _onRedirect: function (ev) {
         this.do_action({
             type:'ir.actions.act_window',

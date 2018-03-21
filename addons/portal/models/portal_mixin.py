@@ -53,7 +53,7 @@ class PortalMixin(models.AbstractModel):
         return '/mail/view?' + url_encode(params)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         access_token = self._get_access_token()
         customer = self._get_customer()
 
@@ -62,7 +62,7 @@ class PortalMixin(models.AbstractModel):
                 'access_token': self.access_token,
             }
             additional_params.update(customer.signup_get_auth_param()[customer.id])
-            access_link = self._notification_link_helper('view', **additional_params)
+            access_link = self._notify_get_action_link('view', **additional_params)
 
             new_group = [
                 ('portal_customer', lambda partner: partner.id == customer.id, {
@@ -75,4 +75,4 @@ class PortalMixin(models.AbstractModel):
             ]
         else:
             new_group = []
-        return super(PortalMixin, self)._notification_recipients(message, new_group + groups)
+        return super(PortalMixin, self)._notify_get_groups(message, new_group + groups)

@@ -34,7 +34,8 @@ var Notification = Widget.extend({
         this.title = params.title;
         this.text = params.text;
         this.sticky = !!params.sticky;
-        if (params.type === 'warning') {
+        this.type = params.type;
+        if (this.type === 'warning') {
             this.template = 'Warning';
         }
     },
@@ -43,6 +44,9 @@ var Notification = Widget.extend({
      */
     start: function () {
         var self = this;
+        if (this.type === 'warning') {
+            this.$el.addClass('o_error');
+        }
         return this._super.apply(this, arguments).then(function () {
             self.$el.animate({opacity: 1.0}, 400, "swing", function () {
                 if(!self.sticky) {

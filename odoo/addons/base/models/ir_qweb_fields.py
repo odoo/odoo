@@ -460,12 +460,13 @@ class Contact(models.AbstractModel):
             return False
 
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
+        opsep = options and options.get('separator') or "\n"
         value = value.sudo().with_context(show_address=True)
         name_get = value.name_get()[0][1]
 
         val = {
             'name': name_get.split("\n")[0],
-            'address': escape("\n".join(name_get.split("\n")[1:])).strip(),
+            'address': escape(opsep.join(name_get.split("\n")[1:])).strip(),
             'phone': value.phone,
             'mobile': value.mobile,
             'city': value.city,

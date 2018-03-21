@@ -42,7 +42,7 @@ class AccountInvoice(models.Model):
         if float_compare(qty, 0.0, precision_rounding=line.product_uom.rounding) <= 0:
             qty = 0.0
         taxes = line.taxes_id
-        invoice_line_tax_ids = line.order_id.fiscal_position_id.map_tax(taxes)
+        invoice_line_tax_ids = line.order_id.fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         invoice_line = self.env['account.invoice.line']
         data = {
             'purchase_line_id': line.id,
@@ -192,13 +192,13 @@ class AccountInvoice(models.Model):
                                     if child.type_tax_use != 'none':
                                         tax_ids.append((4, child.id, None))
                         price_before = line.get('price', 0.0)
-                        line.update({'price': company_currency.round(valuation_price_unit * line['quantity'])})
+                        line.update({'price': inv.currency_id.round(valuation_price_unit * line['quantity'])})
                         diff_res.append({
                             'type': 'src',
                             'name': i_line.name[:64],
-                            'price_unit': company_currency.round(price_unit - valuation_price_unit),
+                            'price_unit': inv.currency_id.round(price_unit - valuation_price_unit),
                             'quantity': line['quantity'],
-                            'price': company_currency.round(price_before - line.get('price', 0.0)),
+                            'price': inv.currency_id.round(price_before - line.get('price', 0.0)),
                             'account_id': acc,
                             'product_id': line['product_id'],
                             'uom_id': line['uom_id'],

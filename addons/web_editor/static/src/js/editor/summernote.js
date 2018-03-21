@@ -1969,15 +1969,6 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
     return false;
 };
 
-$(document).on('click keyup', function () {
-    var $popover = $((range.create()||{}).sc).closest('[contenteditable]');
-    var popover_history = ($popover.data()||{}).NoteHistory;
-    if (!popover_history || popover_history === history) return;
-    var editor = $popover.parent('.note-editor');
-    $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
-    $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
-});
-
 eventHandler.modules.editor.undo = function ($popover) {
     if (!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
 };
@@ -2176,7 +2167,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     }
 
     // remove node without attributes (move content), and merge the same nodes
-    if (!dom.isImgFont(node)) {
      var className2, style, style2;
      for (i=0; i<nodes.length; i++) {
       node = nodes[i];
@@ -2217,7 +2207,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
         }
       }
      }
-    }
 
     range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset).select();
 };

@@ -16,7 +16,7 @@ class MrpBom(models.Model):
     _order = "sequence"
 
     def _get_default_product_uom_id(self):
-        return self.env['product.uom'].search([], limit=1, order='id').id
+        return self.env['uom.uom'].search([], limit=1, order='id').id
 
     code = fields.Char('Reference')
     active = fields.Boolean(
@@ -38,7 +38,7 @@ class MrpBom(models.Model):
         'Quantity', default=1.0,
         digits=dp.get_precision('Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id, oldname='product_uom', required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
@@ -80,6 +80,11 @@ class MrpBom(models.Model):
     def onchange_product_tmpl_id(self):
         if self.product_tmpl_id:
             self.product_uom_id = self.product_tmpl_id.uom_id.id
+
+    @api.onchange('routing_id')
+    def onchange_routing_id(self):
+        for line in self.bom_line_ids:
+            line.operation_id = False
 
     @api.multi
     def name_get(self):
@@ -175,7 +180,7 @@ class MrpBomLine(models.Model):
     _rec_name = "product_id"
 
     def _get_default_product_uom_id(self):
-        return self.env['product.uom'].search([], limit=1, order='id').id
+        return self.env['uom.uom'].search([], limit=1, order='id').id
 
     product_id = fields.Many2one(
         'product.product', 'Product', required=True)
@@ -183,7 +188,7 @@ class MrpBomLine(models.Model):
         'Product Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
         oldname='product_uom', required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")

@@ -302,7 +302,8 @@ class Import(models.TransientModel):
         try:
             thousand_separator = decimal_separator = False
             for val in preview_values:
-                if val == '':
+                val = val.strip()
+                if not val:
                     continue
                 # value might have the currency symbol left or right from the value
                 val = self._remove_currency_symbol(val)
@@ -587,6 +588,7 @@ class Import(models.TransientModel):
         thousand_separator = options.get('float_thousand_separator', ' ')
         decimal_separator = options.get('float_decimal_separator', '.')
         for line in data:
+            line[index] = line[index].strip()
             if not line[index]:
                 continue
             line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')
@@ -677,10 +679,6 @@ class Import(models.TransientModel):
         _logger.info('importing %d rows...', len(data))
 
         model = self.env[self.res_model].with_context(import_file=True)
-        defer_parent_store = self.env.context.get('defer_parent_store_computation', True)
-        if defer_parent_store and model._parent_store:
-            model = model.with_context(defer_parent_store_computation=True)
-        
         import_result = model.load(import_fields, data)
         _logger.info('done')
 

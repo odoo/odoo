@@ -1,12 +1,12 @@
 /*!
- * QUnit 2.2.1
+ * QUnit 2.3.0
  * https://qunitjs.com/
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2017-03-20T00:27Z
+ * Date: 2017-03-29T15:13Z
  */
 
 /** Font Family and Sizes */
@@ -236,7 +236,7 @@
 }
 
 #qunit-tests.hidepass li.running,
-#qunit-tests.hidepass li.pass {
+#qunit-tests.hidepass li.pass:not(.todo) {
 	visibility: hidden;
 	position: absolute;
 	width:   0;

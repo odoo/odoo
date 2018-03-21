@@ -56,7 +56,7 @@ class Channel(models.Model):
         ('channel', 'Channel')],
         'Channel Type', default='channel')
     description = fields.Text('Description')
-    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: '%s' % uuid.uuid4())
+    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: '%s' % uuid.uuid4(), copy=False)
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
@@ -185,12 +185,12 @@ class Channel(models.Model):
         return result
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
         in the backend. Mailing lists should indeed send minimal emails to avoid
         the noise. """
-        groups = super(Channel, self)._notification_recipients(message, groups)
+        groups = super(Channel, self)._notify_get_groups(message, groups)
         for (index, (group_name, group_func, group_data)) in enumerate(groups):
             if group_name != 'customer':
                 groups[index] = (group_name, lambda partner: False, group_data)
@@ -209,7 +209,7 @@ class Channel(models.Model):
         # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
         headers['X-Auto-Response-Suppress'] = 'OOF'
         if self.alias_domain and self.alias_name:
-            headers['List-Id'] = '%s.%s' % (self.alias_name, self.alias_domain)
+            headers['List-Id'] = '<%s.%s>' % (self.alias_name, self.alias_domain)
             headers['List-Post'] = '<mailto:%s@%s>' % (self.alias_name, self.alias_domain)
             # Avoid users thinking it was a personal message
             # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
@@ -503,7 +503,15 @@ class Channel(models.Model):
             partners_to_add = partners - channel.channel_partner_ids
             channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
             for partner in partners_to_add:
-                notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
+                if partner.id != self.env.user.partner_id.id:
+                    notification = _('<div class="o_mail_notification">%(author)s invited %(new_partner)s to <a href="#" class="o_channel_redirect" data-oe-id="%(channel_id)s">#%(channel_name)s</a></div>') % {
+                        'author': self.env.user.display_name,
+                        'new_partner': partner.display_name,
+                        'channel_id': channel.id,
+                        'channel_name': channel.name,
+                    }
+                else:
+                    notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (channel.id, channel.name,)
                 self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
 
         # broadcast the channel header to the added partner

@@ -8,7 +8,6 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
-var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
@@ -973,72 +972,22 @@ var FieldPhone = FieldEmail.extend({
     className: 'o_field_phone',
     prefix: 'tel',
 
-    /**
-     * The phone widget is an extension of email, with the distinction that, in
-     * some cases, we do not want to show a clickable widget in readonly.
-     * In particular, we only want to make it clickable if the device can call
-     * this particular number. This is controlled by the _canCall function.
-     *
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        if (this.mode === 'readonly' && !this._canCall()) {
-            this.tagName = 'span';
-        }
-    },
-    /**
-     * Returns the associated link only if there is one.
-     *
-     * @override
-     */
-    getFocusableElement: function () {
-        if (this.mode !== 'readonly' || this._canCall()) {
-            return this._super.apply(this, arguments);
-        }
-        return $();
-    },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
-     * In readonly, we only make the widget clickable if the device can call it.
-     * Additionally, we obfuscate the phone number to prevent Skype from seeing it.
-     *
      * @override
      * @private
      */
     _renderReadonly: function () {
         this._super();
-        if (this._canCall()) {
-            // Split phone number into two to prevent Skype app from finding it
-            var text = this.$el.text();
-            var part1 = _.escape(text.substr(0, text.length/2));
-            var part2 = _.escape(text.substr(text.length/2));
-            this.$el.html(part1 + "&shy;" + part2);
-        } else {
-            this.$el.removeClass('o_form_uri');
-        }
+
         // This class should technically be there in case of a very very long
         // phone number, but it breaks the o_row mechanism, which is more
         // important right now.
         this.$el.removeClass('o_text_overflow');
     },
-
-    /**
-     * Phone fields are clickable in readonly on small screens ~= on phones.
-     * This can be overriden by call-capable modules to display a clickable
-     * link in different situations, like always regardless of screen size,
-     * or only allow national calls for example.
-     *
-     * @override
-     * @private
-     */
-    _canCall: function () {
-        return config.device.isMobile;
-    }
 });
 
 var UrlWidget = InputField.extend({
@@ -2113,8 +2062,9 @@ var FieldToggleBoolean = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var className = this.value ? 'o_toggle_button_success' : 'text-muted';
-        this.$('i').addClass('fa fa-circle ' + className);
+        this.$('i')
+            .toggleClass('o_toggle_button_success', !!this.value)
+            .toggleClass('text-muted', !this.value);
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
     },
@@ -2503,7 +2453,7 @@ var FieldDomain = AbstractField.extend({
 var AceEditor = DebouncedField.extend({
     template: "AceEditor",
     jsLibs: [
-        '/web/static/lib/ace/ace.odoo-custom.js',
+        '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-python.js',
             '/web/static/lib/ace/mode-xml.js'

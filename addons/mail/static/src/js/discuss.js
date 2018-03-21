@@ -4,6 +4,7 @@ odoo.define('mail.chat_discuss', function (require) {
 var ChatThread = require('mail.ChatThread');
 var composer = require('mail.composer');
 
+var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
@@ -13,7 +14,6 @@ var dom = require('web.dom');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var session = require('web.session');
-var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -99,14 +99,14 @@ var PartnerInviteDialog = Dialog.extend({
                     self.do_notify(_t('New people'), notification);
                     // Clear the membersDeferred to fetch again the partner
                     // when getMentionPartnerSuggestions from the chatManager is triggered
-                    var channel = this.call('chat_manager', 'getChannel', self.channelID);
+                    var channel = self.call('chat_manager', 'getChannel', self.channelID);
                     delete channel.membersDeferred;
                 });
         }
     },
 });
 
-var Discuss = Widget.extend(ControlPanelMixin, {
+var Discuss = AbstractAction.extend(ControlPanelMixin, {
     template: 'mail.discuss',
     custom_events: {
         search: '_onSearch',
@@ -507,7 +507,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      */
     _selectMessage: function (messageID) {
         this.$el.addClass('o_mail_selection_mode');
-        var message = this._getMessage(messageID);
+        var message = this.call('chat_manager', 'getMessage', messageID);;
         this.selected_message = message;
         var subject = "Re: " + message.record_name;
         this.extendedComposer.set_subject(subject);
@@ -898,10 +898,10 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         if (def) {
             def.then(function (value) {
                 if (value !== 'granted') {
-                    self._sendNotification(self, _t('Permission denied'),
+                    self.call('bus_service', 'sendNotification', self, _t('Permission denied'),
                         _t('Odoo will not have the permission to send native notifications on this device.'));
                 } else {
-                    self._sendNotification(self, _t('Permission granted'),
+                    self.call('bus_service', 'sendNotification', self, _t('Permission granted'),
                         _t('Odoo has now the permission to send you native notifications on this device.'));
                 }
             });

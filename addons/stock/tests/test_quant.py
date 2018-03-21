@@ -525,6 +525,7 @@ class StockQuant(TransactionCase):
     def test_action_done_1(self):
         stock_location = self.env.ref('stock.stock_location_stock')
         pack_location = self.env.ref('stock.location_pack_zone')
+        pack_location.active = True
         product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',

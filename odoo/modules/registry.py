@@ -95,16 +95,11 @@ class Registry(Mapping):
                 # load_modules() above can replace the registry by calling
                 # indirectly new() again (when modules have to be uninstalled).
                 # Yeah, crazy.
-                init_parent = registry._init_parent
                 registry = cls.registries[db_name]
-                registry._init_parent.update(init_parent)
 
-                with closing(registry.cursor()) as cr:
-                    registry.do_parent_store(cr)
-                    cr.commit()
-
-        registry.ready = True
-        registry.registry_invalidated = bool(update_module)
+            registry._init = False
+            registry.ready = True
+            registry.registry_invalidated = bool(update_module)
 
         return registry
 
@@ -112,7 +107,6 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_error = {}
         self._init = True
-        self._init_parent = set()
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
         self._post_init_queue = deque()
@@ -208,13 +202,6 @@ class Registry(Mapping):
             for num, field in enumerate(reversed(topological_sort(dependents)))
         }
         return mapping.get
-
-    def do_parent_store(self, cr):
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
-        for model_name in self._init_parent:
-            if model_name in env:
-                env[model_name]._parent_store_compute()
-        self._init = False
 
     def descendants(self, model_names, *kinds):
         """ Return the models corresponding to ``model_names`` and all those
@@ -316,8 +303,16 @@ class Registry(Mapping):
             models[0].recompute()
 
         # make sure all tables are present
+        self.check_tables_exist(cr)
+
+    def check_tables_exist(self, cr):
+        """
+        Verify that all tables are present and try to initialize those that are missing.
+        """
+        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         table2model = {model._table: name for name, model in env.items() if not model._abstract}
         missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+
         if missing_tables:
             missing = {table2model[table] for table in missing_tables}
             _logger.warning("Models have no table: %s.", ", ".join(missing))

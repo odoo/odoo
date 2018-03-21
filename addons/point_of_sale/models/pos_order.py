@@ -89,7 +89,7 @@ class PosOrder(models.Model):
         return new_session
 
     def _match_payment_to_invoice(self, order):
-        account_precision = self.env['decimal.precision'].precision_get('Account')
+        account_precision = order.pricelist_id.currency_id.decimal_places
 
         # ignore orders with an amount_paid of 0 because those are returns through the POS
         if not float_is_zero(order['amount_return'], account_precision) and not float_is_zero(order['amount_paid'], account_precision):
@@ -107,11 +107,11 @@ class PosOrder(models.Model):
 
     @api.model
     def _process_order(self, pos_order):
-        prec_acc = self.env['decimal.precision'].precision_get('Account')
         pos_session = self.env['pos.session'].browse(pos_order['pos_session_id'])
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             pos_order['pos_session_id'] = self._get_valid_session(pos_order).id
         order = self.create(self._order_fields(pos_order))
+        prec_acc = order.pricelist_id.currency_id.decimal_places
         journal_ids = set()
         for payments in pos_order['statement_ids']:
             if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
@@ -160,13 +160,14 @@ class PosOrder(models.Model):
         """
         Prepare the dict of values to create the new invoice for a pos order.
         """
+        invoice_type = 'out_invoice' if self.amount_total >= 0 else 'out_refund'
         return {
             'name': self.name,
             'origin': self.name,
             'account_id': self.partner_id.property_account_receivable_id.id,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'company_id': self.company_id.id,
-            'type': 'out_invoice',
+            'type': invoice_type,
             'reference': self.name,
             'partner_id': self.partner_id.id,
             'comment': self.note or '',
@@ -208,7 +209,7 @@ class PosOrder(models.Model):
         inv_line = {
             'invoice_id': invoice_id,
             'product_id': line.product_id.id,
-            'quantity': line.qty,
+            'quantity': line.qty if self.amount_total >= 0 else -line.qty,
             'account_analytic_id': self._prepare_analytic_account(line),
             'name': inv_name,
         }
@@ -227,10 +228,14 @@ class PosOrder(models.Model):
         return InvoiceLine.sudo().create(inv_line)
 
     def _create_account_move_line(self, session=None, move=None):
-        def _flatten_tax_and_children(taxes):
+        def _flatten_tax_and_children(taxes, group_done=None):
             children = self.env['account.tax']
-            for tax in taxes:
-                children |= _flatten_tax_and_children(tax.children_tax_ids)
+            if group_done is None:
+                group_done = set()
+            for tax in taxes.filtered(lambda t: t.amount_type == 'group'):
+                if tax.id not in group_done:
+                    group_done.add(tax.id)
+                    children |= _flatten_tax_and_children(tax.children_tax_ids, group_done)
             return taxes + children
 
         # Tricky, via the workflow, we only have one id in the ids variable
@@ -728,7 +733,7 @@ class PosOrder(models.Model):
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
                 moves._action_assign()
-                moves.filtered(lambda m: m.state in ['confirmed', 'waiting']).force_assign()
+                moves.filtered(lambda m: m.state in ['confirmed', 'waiting'])._force_assign()
                 moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
 
         return True
@@ -788,7 +793,7 @@ class PosOrder(models.Model):
                         'location_dest_id': move.location_dest_id.id,
                         'lot_id': lot_id,
                     })
-                if not pack_lots:
+                if not pack_lots and not float_is_zero(qty_done, precision_rounding=move.product_uom.rounding):
                     move.quantity_done = qty_done
         return has_wrong_lots
 

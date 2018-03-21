@@ -143,16 +143,19 @@ class ProductProduct(models.Model):
                     move_vals = {
                         'journal_id': product_accounts[product.id]['stock_journal'].id,
                         'company_id': location.company_id.id,
+                        'ref': product.default_code,
                         'line_ids': [(0, 0, {
                             'name': _('Standard Price changed  - %s') % (product.display_name),
                             'account_id': debit_account_id,
                             'debit': abs(diff * qty_available),
                             'credit': 0,
+                            'product_id': product.id,
                         }), (0, 0, {
                             'name': _('Standard Price changed  - %s') % (product.display_name),
                             'account_id': credit_account_id,
                             'debit': 0,
                             'credit': abs(diff * qty_available),
+                            'product_id': product.id,
                         })],
                     }
                     move = AccountMove.create(move_vals)
@@ -234,7 +237,7 @@ class ProductProduct(models.Model):
                         'product_id': product.id,
                         'uom_id': uom.id,
                         'account_analytic_id': account_analytic and account_analytic.id,
-                        'analytic_tag_ids': analytic_tags and analytic_tag.ids and [(6, 0, analytic_tag.ids)] or False,
+                        'analytic_tag_ids': analytic_tags and analytic_tags.ids and [(6, 0, analytic_tags.ids)] or False,
                     },
 
                     {
@@ -259,7 +262,7 @@ class ProductProduct(models.Model):
         price = self.standard_price
         if not uom or self.uom_id.id == uom.id:
             return price
-        return self.uom_id._compute_price(self.uom_id.id, price, to_uom_id=uom.id)
+        return self.uom_id._compute_price(price, uom)
 
 
 class ProductCategory(models.Model):

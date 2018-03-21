@@ -15,8 +15,8 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # Define undivisible units
-        product_uom_unit_round_1 = self.env['product.uom'].create({
-            'category_id': self.ref('product.product_uom_categ_unit'),
+        product_uom_unit_round_1 = self.env['uom.uom'].create({
+            'category_id': self.ref('uom.product_uom_categ_unit'),
             'name': 'Undivisible Unit(s)',
             'factor': 1.0,
             'rounding': 1.0,
@@ -69,7 +69,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
             'move_lines': [(0, 0, {
                 'product_id': product_landed_cost_4.id,
                 'product_uom_qty': 1,
-                'product_uom': self.ref('product.product_uom_dozen'),
+                'product_uom': self.ref('uom.product_uom_dozen'),
                 'location_id': self.ref('stock.stock_location_customers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
                 'price_unit': 17.00 / 12.00,

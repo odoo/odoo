@@ -2,7 +2,7 @@
 
 import re
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -42,6 +42,8 @@ def validate_iban(iban):
 
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
+
+    acc_type = fields.Selection(selection_add=[("iban", "IBAN")])
 
     @api.one
     @api.depends('acc_number')
@@ -89,6 +91,7 @@ _map_iban_template = {
     'bg': 'BGkk BBBB SSSS DDCC CCCC CC',  # Bulgaria
     'bh': 'BHkk BBBB CCCC CCCC CCCC CC',  # Bahrain
     'br': 'BRkk BBBB BBBB SSSS SCCC CCCC CCCT N',  # Brazil
+    'by': 'BYkk BBBB AAAA CCCC CCCC CCCC CCCC',  # Belarus
     'ch': 'CHkk BBBB BCCC CCCC CCCC C',  # Switzerland
     'cr': 'CRkk BBBC CCCC CCCC CCCC C',  # Costa Rica
     'cy': 'CYkk BBBS SSSS CCCC CCCC CCCC CCCC',  # Cyprus

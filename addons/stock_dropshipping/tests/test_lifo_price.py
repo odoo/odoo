@@ -17,9 +17,6 @@ class TestLifoPrice(common.TransactionCase):
         self._load('account', 'test', 'account_minimal_test.xml')
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
-        # Set the company currency as EURO for the sake of repeatibility
-        self.env.ref('base.main_company').write({'currency_id': self.env.ref('base.EUR').id})
-
         # Set product category removal strategy as LIFO
         product_category_001 = self.env['product.category'].create({
             'name': 'Lifo Category',
@@ -36,8 +33,8 @@ class TestLifoPrice(common.TransactionCase):
         product_form.categ_id = product_category_001
         product_form.lst_price = 100.0
         product_form.standard_price = 70.0
-        product_form.uom_id = self.env.ref('product.product_uom_kgm')
-        product_form.uom_po_id = self.env.ref('product.product_uom_kgm')
+        product_form.uom_id = self.env.ref('uom.product_uom_kgm')
+        product_form.uom_po_id = self.env.ref('uom.product_uom_kgm')
         # these are not available (visible) in either product or variant
         # for views, apparently from the UI you can only set the product
         # category (or hand-assign the property_* version which seems...)

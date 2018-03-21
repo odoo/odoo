@@ -327,15 +327,14 @@ class MailThread(models.AbstractModel):
         if alias:
             email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.name_get()[0][1]}
             if nothing_here:
-                return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>%(static_help)s" % {
-                    'static_help': help or '',
-                    'dyn_help': _("Add new %(document)s or send an email to %(email_link)s") % {
+                return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
+                    'dyn_help': _("Add a new %(document)s or send an email to %(email_link)s") % {
                         'document': document_name,
                         'email_link': email_link
                     }
                 }
             return "%(static_help)s<p>%(dyn_help)s</p>" % {
-                    'static_help': help or '',
+                    'static_help': help,
                     'dyn_help': _("Create a new %(document)s by sending an email to %(email_link)s") %  {
                         'document': document_name,
                         'email_link': email_link,
@@ -343,8 +342,7 @@ class MailThread(models.AbstractModel):
                 }
 
         if nothing_here:
-            return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>%(static_help)s" % {
-                'static_help': help or '',
+            return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
                 'dyn_help': _("Create a new %(document)s") % {
                     'document': document_name,
                 }
@@ -606,24 +604,19 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     @api.model
-    def _generate_notification_token(self, base_link, params):
+    def _notify_encode_link(self, base_link, params):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
         hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
 
     @api.multi
-    def _notification_link_helper(self, link_type, **kwargs):
+    def _notify_get_action_link(self, link_type, **kwargs):
         local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
-        if kwargs.get('message_id'):
-            base_params = {
-                'message_id': kwargs['message_id']
-            }
-        else:
-            base_params = {
-                'model': kwargs.get('model', self._name),
-                'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
-            }
+        base_params = {
+            'model': kwargs.get('model', self._name),
+            'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
+        }
 
         local_kwargs.pop('message_id', None)
         local_kwargs.pop('model', None)
@@ -641,14 +634,14 @@ class MailThread(models.AbstractModel):
             return ''
 
         if link_type not in ['view']:
-            token = self._generate_notification_token(base_link, params)
+            token = self._notify_encode_link(base_link, params)
             params['token'] = token
 
         link = '%s?%s' % (base_link, url_encode(params))
         return link
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         """ Return groups used to classify recipients of a notification email.
         Groups is a list of tuple containing of form (group_name, group_func,
         group_data) where
@@ -672,7 +665,7 @@ class MailThread(models.AbstractModel):
             Each action is a dict containing url and title of the button.
 
         Groups has a default value that you can find in mail_thread
-        _message_notification_recipients method.
+        _notify_classify_recipients method.
         """
         return groups
 
@@ -682,10 +675,7 @@ class MailThread(models.AbstractModel):
         # access rights checks and speedup the computation.
         result = {}
 
-        if self._context.get('auto_delete', False):
-            access_link = self._notification_link_helper('view')
-        else:
-            access_link = self._notification_link_helper('view', message_id=message.id)
+        access_link = self._notify_get_action_link('view')
 
         if message.model:
             model_name = self.env['ir.model']._get(message.model).display_name
@@ -703,7 +693,7 @@ class MailThread(models.AbstractModel):
             })
         ]
 
-        groups = self._notification_recipients(message, default_groups)
+        groups = self._notify_get_groups(message, default_groups)
 
         for group_name, group_func, group_data in groups:
             group_data.setdefault('has_button_access', True)
@@ -1783,7 +1773,7 @@ class MailThread(models.AbstractModel):
     @api.returns('self', lambda value: value.id)
     def message_post(self, body='', subject=None,
                      message_type='notification', subtype=None,
-                     parent_id=False, attachments=None, content_subtype='html',
+                     parent_id=False, attachments=None,
                      notif_layout=False, notif_values=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
@@ -1792,7 +1782,6 @@ class MailThread(models.AbstractModel):
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
             :param str type: see mail_message.type field
-            :param str content_subtype:: if plaintext: convert body into html
             :param int parent_id: handle reply to a previous message by adding the
                 parent partners to the message in case of private discussion
             :param tuple(str,str) attachments or list id: list of attachment tuples in the form
@@ -1819,16 +1808,12 @@ class MailThread(models.AbstractModel):
                 return RecordModel.browse(self.ids).message_post(
                     body=body, subject=subject, message_type=message_type,
                     subtype=subtype, parent_id=parent_id, attachments=attachments,
-                    content_subtype=content_subtype, **kwargs)
+                    notif_layout=notif_layout, notif_values=notif_values, **kwargs)
 
         # 0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
         if author_id is None:  # keep False values
             author_id = self.env['mail.message']._get_default_author().id
-
-        # 1: Handle content subtype: if plaintext, converto into HTML
-        if content_subtype == 'plaintext':
-            body = tools.plaintext2html(body)
 
         # 2: Private message: add recipients (recipients and author of parent message) - current author
         #   + legacy-code management (! we manage only 4 and 6 commands)
@@ -1869,10 +1854,8 @@ class MailThread(models.AbstractModel):
         # _mail_flat_thread: automatically set free messages to the first posted message
         MailMessage = self.env['mail.message']
         if self._mail_flat_thread and model and not parent_id and self.ids:
-            messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model), ('message_type', '=', 'email')], order="id ASC", limit=1)
-            if not messages:
-                messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model)], order="id ASC", limit=1)
-            parent_id = messages and messages[0].id or False
+            messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model)], order="id ASC", limit=1)
+            parent_id = messages.ids and messages.ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:
             messages = MailMessage.sudo().search([('id', '=', parent_id), ('parent_id', '!=', False)], limit=1)
@@ -1948,7 +1931,7 @@ class MailThread(models.AbstractModel):
             return
         for record in self:
             values['object'] = record
-            rendered_template = views.render(values, engine='ir.qweb')
+            rendered_template = views.render(values, engine='ir.qweb', minimal_qcontext=True)
             kwargs['body'] = rendered_template
             record.message_post_with_template(False, **kwargs)
 
@@ -2165,7 +2148,7 @@ class MailThread(models.AbstractModel):
             values = {
                 'object': record,
             }
-            assignation_msg = assignation_tpl.render(values, engine='ir.qweb')
+            assignation_msg = assignation_tpl.render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
             record.message_notify(
                 subject='You have been assigned to %s' % record.display_name,

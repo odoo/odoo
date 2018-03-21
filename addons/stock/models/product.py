@@ -195,26 +195,23 @@ class Product(models.Model):
         domain = company_id and ['&', ('company_id', '=', company_id)] or []
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + auto_join directly in expression
-        # The code has been modified because having one location with parent_left being
-        # 0 make the whole domain unusable
-        hierarchical_locations = locations.filtered(lambda location: location.parent_left != 0 and operator == "child_of")
-        other_locations = locations.filtered(lambda location: location not in hierarchical_locations)  # TDE: set - set ?
+        hierarchical_locations = locations if operator == 'child_of' else locations.browse()
+        other_locations = locations - hierarchical_locations
         loc_domain = []
         dest_loc_domain = []
+        # this optimizes [('location_id', 'child_of', hierarchical_locations.ids)]
+        # by avoiding the ORM to search for children locations and injecting a
+        # lot of location ids into the main query
         for location in hierarchical_locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain += ['&',
-                           ('location_id.parent_left', '>=', location.parent_left),
-                           ('location_id.parent_left', '<', location.parent_right)]
+            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain += ['&',
-                                ('location_dest_id.parent_left', '>=', location.parent_left),
-                                ('location_dest_id.parent_left', '<', location.parent_right)]
+            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
         if other_locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain = loc_domain + [('location_id', operator, [location.id for location in other_locations])]
+            loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, [location.id for location in other_locations])]
+            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
         return (
             domain + loc_domain,
             domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
@@ -365,8 +362,14 @@ class Product(models.Model):
 
     def write(self, values):
         res = super(Product, self).write(values)
-        if 'active' in values and not values['active'] and self.mapped('orderpoint_ids').filtered(lambda r: r.active):
-            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
+        if 'active' in values and not values['active']:
+            products = self.mapped('orderpoint_ids').filtered(lambda r: r.active).mapped('product_id')
+            if products:
+                msg = _('You still have some active reordering rules on this product. Please archive or delete them first.')
+                msg += '\n\n'
+                for product in products:
+                    msg += '- %s \n' % product.display_name
+                raise UserError(msg)
         return res
 
 class ProductTemplate(models.Model):
@@ -497,7 +500,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         if 'uom_id' in vals:
-            new_uom = self.env['product.uom'].browse(vals['uom_id'])
+            new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
             done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
             if done_moves:

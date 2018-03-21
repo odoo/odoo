@@ -11,8 +11,8 @@ var _t = core._t;
 
 
 /**
- * Model use to fetch, format and update 'account.bank.statement' and
- * 'account.bank.statement.line' datas allowing reconciliation
+ * Model use to fetch, format and update 'account.reconciliation.widget',
+ * datas allowing reconciliation
  *
  * The statement internal structure::
  *
@@ -133,8 +133,8 @@ var StatementModel = BasicModel.extend({
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
-     * send information 'account.bank.statement.line' model to reconciliate
-     * lines, call rpc to 'reconciliation_widget_auto_reconcile'
+     * send information 'account.reconciliation.widget' model to reconciliate
+     * lines, call rpc to 'auto_reconcile'
      * Update the number of validated line
      *
      * @returns {Deferred<Object>} resolved with an object who contains
@@ -144,8 +144,8 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var ids = _.pluck(_.filter(this.lines, {'reconciled': false}), 'id');
         return this._rpc({
-                model: 'account.bank.statement.line',
-                method: 'reconciliation_widget_auto_reconcile',
+                model: 'account.reconciliation.widget',
+                method: 'auto_reconcile',
                 args: [ids, self.valuenow],
             })
             .then(function (result) {
@@ -342,7 +342,7 @@ var StatementModel = BasicModel.extend({
      * - 'account.bank.statement' fetch the line id and bank_statement_id info
      * - 'account.reconcile.model'  fetch all reconcile model (for quick add)
      * - 'account.account' fetch all account code
-     * - 'account.bank.statement.line' fetch each line data
+     * - 'account.reconciliation.widget' fetch each line data
      *
      * @param {Object} context
      * @param {number[]} context.statement_ids
@@ -357,8 +357,8 @@ var StatementModel = BasicModel.extend({
         this.context = context;
 
         var def_statement = this._rpc({
-                model: 'account.bank.statement',
-                method: 'reconciliation_widget_preprocess',
+                model: 'account.reconciliation.widget',
+                method: 'get_bank_statement_data',
                 args: [statement_ids],
             })
             .then(function (statement) {
@@ -430,8 +430,8 @@ var StatementModel = BasicModel.extend({
     loadData: function(ids, excluded_ids) {
         var self = this;
         return self._rpc({
-            model: 'account.bank.statement.line',
-            method: 'get_data_for_reconciliation_widget',
+            model: 'account.reconciliation.widget',
+            method: 'get_bank_statement_line_data',
             args: [ids, excluded_ids],
         })
         .then(self._formatLine.bind(self));
@@ -619,7 +619,7 @@ var StatementModel = BasicModel.extend({
         return this._computeLine(line);
     },
     /**
-     * Format the value and send it to 'account.bank.statement.line' model
+     * Format the value and send it to 'account.reconciliation.widget' model
      * Update the number of validated lines
      *
      * @param {(string|string[])} handle
@@ -688,8 +688,8 @@ var StatementModel = BasicModel.extend({
         });
 
         return this._rpc({
-                model: 'account.bank.statement.line',
-                method: 'process_reconciliations',
+                model: 'account.reconciliation.widget',
+                method: 'process_bank_statement_line',
                 args: [ids, values],
             })
             .then(function () {
@@ -1062,7 +1062,7 @@ var StatementModel = BasicModel.extend({
         return !isNaN(prop.id) || prop.account_id && prop.amount && prop.label && !!prop.label.length;
     },
     /**
-     * Fetch 'account.bank.statement.line' propositions.
+     * Fetch 'account.reconciliation.widget' propositions.
      *
      * @see '_formatMoveLine'
      *
@@ -1081,8 +1081,8 @@ var StatementModel = BasicModel.extend({
         var offset = line.offset;
         var limit = this.limitMoveLines+1;
         return this._rpc({
-                model: 'account.bank.statement.line',
-                method: 'get_move_lines_for_reconciliation_widget',
+                model: 'account.reconciliation.widget',
+                method: 'get_move_lines_for_bank_statement_line',
                 args: [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit],
             })
             .then(this._formatMoveLine.bind(this, handle));
@@ -1141,7 +1141,7 @@ var ManualModel = StatementModel.extend({
 
     /**
      * load data from
-     * - 'account.move.line' fetch the lines to reconciliate
+     * - 'account.reconciliation.widget' fetch the lines to reconciliate
      * - 'account.account' fetch all account code
      *
      * @param {Object} context
@@ -1177,7 +1177,7 @@ var ManualModel = StatementModel.extend({
                     var mode = context.mode === 'customers' ? 'receivable' : 'payable';
                     var args = ['partner', context.partner_ids || null, mode];
                     return self._rpc({
-                            model: 'account.move.line',
+                            model: 'account.reconciliation.widget',
                             method: 'get_data_for_manual_reconciliation',
                             args: args,
                             context: context,
@@ -1190,7 +1190,7 @@ var ManualModel = StatementModel.extend({
                         });
                 case 'accounts':
                     return self._rpc({
-                            model: 'account.move.line',
+                            model: 'account.reconciliation.widget',
                             method: 'get_data_for_manual_reconciliation',
                             args: ['account', context.account_ids || self.account_ids],
                             context: context,
@@ -1209,8 +1209,8 @@ var ManualModel = StatementModel.extend({
                     account_ids = null; // TOFIX: REMOVE ME
                     partner_ids = null; // TOFIX: REMOVE ME
                     return self._rpc({
-                            model: 'account.move.line',
-                            method: 'get_data_for_manual_reconciliation_widget',
+                            model: 'account.reconciliation.widget',
+                            method: 'get_all_data_for_manual_reconciliation',
                             args: [partner_ids, account_ids],
                             context: context,
                         })
@@ -1278,8 +1278,8 @@ var ManualModel = StatementModel.extend({
 
         if (process_reconciliations.length) {
             def = self._rpc({
-                    model: 'account.move.line',
-                    method: 'process_reconciliations',
+                    model: 'account.reconciliation.widget',
+                    method: 'process_move_lines',
                     args: [process_reconciliations],
                 });
         }
@@ -1440,7 +1440,7 @@ var ManualModel = StatementModel.extend({
         var limit = this.limitMoveLines+1;
         var args = [line.account_id.id, line.partner_id, excluded_ids, filter, offset, limit];
         return this._rpc({
-                model: 'account.move.line',
+                model: 'account.reconciliation.widget',
                 method: 'get_move_lines_for_manual_reconciliation',
                 args: args,
             })

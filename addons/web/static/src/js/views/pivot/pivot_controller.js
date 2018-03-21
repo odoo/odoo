@@ -126,6 +126,7 @@ var PivotController = AbstractController.extend({
         var table = this.model.exportData();
         if(table.measure_row.length + 1 > 256) {
             crash_manager.show_message(_t("For Excel compatibility, data cannot be exported if there are more than 256 columns.\n\nTip: try to flip axis, filter further or reduce the number of measures."));
+            framework.unblockUI();
             return;
         }
         framework.blockUI();

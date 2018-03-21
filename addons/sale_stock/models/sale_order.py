@@ -87,7 +87,7 @@ class SaleOrder(models.Model):
     def action_cancel(self):
         documents = None
         for sale_order in self:
-            if sale_order.state == 'sale':
+            if sale_order.state == 'sale' and sale_order.order_line:
                 sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
                 documents = self.env['stock.picking']._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
         self.mapped('picking_ids').action_cancel()
@@ -306,7 +306,7 @@ class SaleOrderLine(models.Model):
                 continue
             qty = 0.0
             for move in line.move_ids.filtered(lambda r: r.state != 'cancel'):
-                qty += move.product_qty
+                qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
@@ -331,8 +331,16 @@ class SaleOrderLine(models.Model):
 
             values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.product_uom_qty - qty
+
+            procurement_uom = line.product_uom
+            quant_uom = line.product_id.uom_id
+            get_param = self.env['ir.config_parameter'].sudo().get_param
+            if procurement_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
+                product_qty = line.product_uom._compute_quantity(product_qty, quant_uom, rounding_method='HALF-UP')
+                procurement_uom = quant_uom
+
             try:
-                self.env['procurement.group'].run(line.product_id, product_qty, line.product_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
+                self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
             except UserError as error:
                 errors.append(error.name)
         if errors:

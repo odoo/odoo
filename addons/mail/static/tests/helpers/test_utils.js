@@ -55,24 +55,40 @@ function createBusService(bus) {
     return BusService;
 }
 
+/**
+ * Create asynchronously a discuss widget.
+ * This is async due to chat_manager service that needs to be ready.
+ *
+ * @param {Object} params
+ * @return {$.Promise} resolved with the discuss widget
+ */
 function createDiscuss(params) {
     var Parent = Widget.extend({
         do_push_state: function () {},
     });
     var parent = new Parent();
-    testUtils.addMockEnvironment(parent, {
-        data: params.data,
+    testUtils.addMockEnvironment(parent, _.extend(params, {
         archs: {
             'mail.message,false,search': '<search/>',
         },
-        mockRPC: params.mockRPC,
-        services: params.services,
-    });
+    }));
     var discuss = new Discuss(parent, params);
     discuss.set_cp_bus(new Widget());
-    discuss.appendTo($('#qunit-fixture'));
+    var selector = params.debug ? 'body' : '#qunit-fixture';
+    discuss.appendTo($(selector));
 
-    return discuss;
+    // override 'destroy' of discuss so that it calls 'destroy' on the parent
+    // instead, which is the parent of discuss and the mockServer.
+    discuss.destroy = function () {
+        // remove the override to properly destroy discuss and its children
+        // when it will be called the second time (by its parent)
+        delete discuss.destroy;
+        parent.destroy();
+    };
+
+    return discuss.call('chat_manager', 'isReady').then(function () {
+        return discuss;
+    });
 }
 
 return {
