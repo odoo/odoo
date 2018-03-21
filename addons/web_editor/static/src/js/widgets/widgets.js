@@ -111,7 +111,8 @@ var ImageDialog = Widget.extend({
         'change input.url': "change_input",
         'keyup input.url': "change_input",
         'click .existing-attachments [data-src]': 'select_existing',
-        'dblclick .existing-attachments [data-src]': function () {
+        'dblclick .existing-attachments [data-src]': function (e) {
+            this.select_existing(e);
             this.getParent().save();
         },
         'click .o_existing_attachment_remove': 'try_remove',
