@@ -73,6 +73,11 @@ class SaleCouponProgram(models.Model):
         if self.promo_code_usage == 'no_code_needed':
             self.promo_code = False
 
+    @api.onchange('reward_product_id')
+    def _onchange_reward_product_id(self):
+        if self.reward_product_id:
+            self.reward_product_uom_id = self.reward_product_id.uom_id
+
     @api.model
     def create(self, vals):
         program = super(SaleCouponProgram, self).create(vals)
