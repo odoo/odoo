@@ -163,11 +163,13 @@
             <t t-call-assets="web_editor.assets_editor" t-js="false" groups="website.group_website_publisher"/>
             <t t-call-assets="website.assets_editor" t-js="false" groups="website.group_website_publisher"/>
 
-            <t t-call-assets="web.assets_common" t-css="false"/>
-            <t t-call-assets="web.assets_frontend" t-css="false"/>
-            <t t-call-assets="web_editor.summernote" t-css="false" groups="website.group_website_publisher"/>
-            <t t-call-assets="web_editor.assets_editor" t-css="false" groups="website.group_website_publisher"/>
-            <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher"/>
+            <t groups="website.group_website_publisher">
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+                <t t-call-assets="web_editor.summernote" t-css="false"/>
+                <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+                <t t-call-assets="website.assets_editor" t-css="false"/>
+            </t>
         </t>
     </xpath>
     <xpath expr="//header//div[hasclass('navbar-header')]" position="replace">
@@ -202,6 +204,10 @@
             ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
             ga('send','pageview');
         </script>
+        <t groups="!website.group_website_publisher">
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="web.assets_frontend" t-css="false"/>
+        </t>
     </xpath>
 </template>
 
