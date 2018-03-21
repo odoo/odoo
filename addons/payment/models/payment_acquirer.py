@@ -217,6 +217,9 @@ class PaymentAcquirer(models.Model):
         account_vals['user_type_id'] = self.env.ref('account.data_account_type_current_assets').id
         account_vals['reconcile'] = True
         account = self.env['account.account'].create(account_vals)
+        inbound_payment_method_ids = []
+        if self.token_implemented:
+            inbound_payment_method_ids.append((4, self.env.ref('payment.account_payment_method_electronic_in').id))
         return {
             'name': self.name,
             'code': self.name.upper(),
@@ -227,7 +230,7 @@ class PaymentAcquirer(models.Model):
             # Show the journal on dashboard if the acquirer is published on the website.
             'show_on_dashboard': self.website_published,
             # Don't show payment methods in the backend.
-            'inbound_payment_method_ids': [],
+            'inbound_payment_method_ids': inbound_payment_method_ids,
             'outbound_payment_method_ids': [],
         }
 
