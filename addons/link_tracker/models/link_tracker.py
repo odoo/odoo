@@ -55,7 +55,9 @@ class link_tracker(models.Model):
 
             href = match[0]
             long_url = match[1]
-
+            # Trims UTM values if target is an attachment
+            if '/web/content/' in long_url:
+                vals = {}
             vals['url'] = unescape(long_url)
 
             if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
