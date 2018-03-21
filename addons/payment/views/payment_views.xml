@@ -270,8 +270,8 @@
                                 <field name="payment_token_id" options="{'no_create': True}"
                                        attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                 <field name="acquirer_reference" readonly="1"/>
-                                <field name="capture"/>
-                                <field name="pending"/>
+                                <field name="capture" invisible="1"/>
+                                <field name="pending" invisible="1"/>
                                 <field name="payment_date"
                                        attrs="{'readonly': [('pending', '=', True)]}"/>
                             </group>
