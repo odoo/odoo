@@ -57,11 +57,11 @@ class TestWebsitePriceList(TransactionCase):
         current_pl = False
 
         country_list = {
-            False: ['USD', 'EUR', 'Benelux', 'Canada'],
+            False: ['Public Pricelist', 'EUR', 'Benelux', 'Canada'],
             'BE': ['EUR', 'Benelux'],
             'IT': ['EUR'],
             'CA': ['Canada'],
-            'US': ['USD', 'EUR', 'Benelux', 'Canada']
+            'US': ['Public Pricelist', 'EUR', 'Benelux', 'Canada']
         }
         for country, result in country_list.items():
             pls = self.get_pl(show, current_pl, country)
@@ -73,10 +73,10 @@ class TestWebsitePriceList(TransactionCase):
         current_pl = False
 
         country_list = {
-            False: ['USD', 'EUR', 'Benelux', 'Christmas', 'Canada'],
+            False: ['Public Pricelist', 'EUR', 'Benelux', 'Christmas', 'Canada'],
             'BE': ['EUR', 'Benelux', 'Christmas'],
             'IT': ['EUR', 'Christmas'],
-            'US': ['USD', 'EUR', 'Benelux', 'Christmas', 'Canada'],
+            'US': ['Public Pricelist', 'EUR', 'Benelux', 'Christmas', 'Canada'],
             'CA': ['Canada']
         }
 
@@ -116,11 +116,11 @@ class TestWebsitePriceList(TransactionCase):
         current_pl = False
 
         country_list = {
-            False: ['USD', 'EUR', 'Benelux', 'Canada'],
+            False: ['Public Pricelist', 'EUR', 'Benelux', 'Canada'],
             'BE': ['EUR', 'Benelux'],
             'IT': ['EUR'],
             'CA': ['EUR', 'Canada'],
-            'US': ['USD', 'EUR', 'Benelux', 'Canada']
+            'US': ['Public Pricelist', 'EUR', 'Benelux', 'Canada']
         }
         for country, result in country_list.items():
             pls = self.get_pl(show, current_pl, country)

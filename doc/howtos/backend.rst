@@ -258,6 +258,13 @@ be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 
         .. patch::
 
+.. tip:: The content of the data files is only loaded when a module is
+    installed or updated.
+
+    After making some changes, do not forget to use
+    :ref:`odoo-bin -u openacademy <reference/cmdline>` to save the changes
+    to your database.
+
 Actions and Menus
 -----------------
 
@@ -1036,9 +1043,9 @@ their most common attributes are:
 ``date_start``
     record's field holding the start date/time for the event
 ``date_stop`` (optional)
-    record's field holding the end date/time for the event
-
-field (to define the label for each calendar event)
+    record's field holding the end date/time for the event
+``string``
+    record's field to define the label for each calendar event
 
 .. code-block:: xml
 

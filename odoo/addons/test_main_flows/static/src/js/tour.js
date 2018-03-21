@@ -57,6 +57,22 @@ tour.register('main_flow_tour', {
     content: _t('Uncheck  Make To Order'),
     position: 'right',
 }, {
+    trigger: '.o_notebook a:contains("General Information")',
+    content: _t('Go to main tab'),
+    position: 'top',
+}, {
+    trigger: ".o_field_widget[name=taxes_id] input",
+    content: _t("Focus on customer taxes field."),
+    run: function(actions) {
+        actions.click();
+        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        if ($e.length) {
+            actions.click($e);
+        } else {
+            actions.click();    // close dropdown
+        }
+    },
+}, {
     trigger: '.o_form_button_save',
     content: _t('Save this product and the modifications you\'ve made to it.'),
     position: 'bottom',
@@ -207,6 +223,18 @@ tour.register('main_flow_tour', {
     content: _t('Set to service'),
     position: 'left',
     run: 'text "service"',
+}, {
+    trigger: ".o_field_widget[name=taxes_id] input",
+    content: _t("Focus on customer taxes field."),
+    run: function(actions) {
+        actions.click();
+        var $e = $(".ui-menu-item.ui-state-focus:not(.o_m2o_dropdown_option)");
+        if ($e.length) {
+            actions.click($e);
+        } else {
+            actions.click();    // close dropdown
+        }
+    },
 }, {
     trigger: '.o_notebook a:contains("Sales")',
     content: _t('Go to sales tab'),

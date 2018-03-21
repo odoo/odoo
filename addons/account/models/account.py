@@ -521,11 +521,16 @@ class AccountJournal(models.Model):
     @api.multi
     def write(self, vals):
         for journal in self:
+            company = journal.company_id
             if ('company_id' in vals and journal.company_id.id != vals['company_id']):
                 if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its company.'))
-                if self.bank_account_id:
-                    self.bank_account_id.company_id = vals['company_id']
+                company = self.env['res.company'].browse(vals['company_id'])
+                if self.bank_account_id.company_id and self.bank_account_id.company_id != company:
+                    self.bank_account_id.write({
+                        'company_id': company.id,
+                        'partner_id': company.partner_id.id,
+                    })
             if ('code' in vals and journal.code != vals['code']):
                 if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
@@ -541,8 +546,14 @@ class AccountJournal(models.Model):
                     self.default_credit_account_id.currency_id = vals['currency_id']
                 if self.bank_account_id:
                     self.bank_account_id.currency_id = vals['currency_id']
-            if 'bank_account_id' in vals and not vals.get('bank_account_id'):
-                raise UserError(_('You cannot remove the bank account from the journal once set.'))
+            if 'bank_account_id' in vals:
+                if not vals.get('bank_account_id'):
+                    raise UserError(_('You cannot remove the bank account from the journal once set.'))
+                else:
+                    bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
+                    if bank_account.partner_id != company.partner_id:
+                        raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
+
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
