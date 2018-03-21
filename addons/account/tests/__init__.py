@@ -11,6 +11,7 @@ from . import test_bank_statement_reconciliation
 #from . import test_bank_stmt_reconciliation_widget_ui
 from . import test_fiscal_position
 from . import test_manual_reconciliation
+from . import test_multicompany_flow
 from . import test_payment
 from . import test_product_id_change
 from . import test_reconciliation
