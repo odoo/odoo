@@ -561,6 +561,8 @@ class AccountTax(models.Model):
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
+        if not self._check_m2m_recursion('children_tax_ids'):
+            raise ValidationError(_("Recursion found for tax '%s'." % (self.name,)))
         if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
             raise UserError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
@@ -706,6 +708,9 @@ class AccountTax(models.Model):
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
+                # An extra check here for recurrency in group taxes will prevent 'maximum recursion depth exceeded...' traceback if users
+                # already created group taxes with recursion in their production databases and when used them in invoice/SO lines.
+                tax._check_children_scope()
                 children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
                 ret = children.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
