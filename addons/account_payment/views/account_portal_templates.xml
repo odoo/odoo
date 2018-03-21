@@ -135,8 +135,8 @@
             inherit_id="account.portal_invoice_success">
         <xpath expr="//a[hasclass('close')]" position="after">
             <t t-if="success == 'pay_invoice'">
-                <span t-if='invoice.payment_acquirer_id.done_msg' t-raw="invoice.payment_acquirer_id.done_msg"/>
-                <span t-if='invoice.payment_acquirer_id.post_msg' t-raw="invoice.payment_acquirer_id.post_msg"/>
+                <span t-if='invoice.payment_tx_id.done_msg' t-raw="invoice.payment_tx_id.done_msg"/>
+                <span t-if='invoice.payment_tx_id.post_msg' t-raw="invoice.payment_tx_id.post_msg"/>
             </t>
         </xpath>
     </template>
