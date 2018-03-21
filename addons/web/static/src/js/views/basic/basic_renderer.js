@@ -256,7 +256,7 @@ var BasicRenderer = AbstractRenderer.extend({
             // If the view is in edit mode and that a widget have to switch
             // its "readonly" state, we have to re-render it completely
             if ('readonly' in modifiers && element.widget) {
-                var mode = modifiers.readonly ? 'readonly' : modifiersData.baseMode;
+                var mode = modifiers.readonly ? 'readonly' : modifiersData.baseModeByRecord[record.id];
                 if (mode !== element.widget.mode) {
                     self._rerenderFieldWidget(element.widget, record, {
                         keepBaseMode: true,
@@ -416,16 +416,17 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} [options.callback] the callback to call on registration
      *   and on modifiers updates
      * @param {boolean} [options.keepBaseMode=false] this function registers the
-     *   'baseMode' of the node; this is a field widget specific settings which
+     *   'baseMode' of the node on a per record basis;
+     *   this is a field widget specific settings which
      *   represents the generic mode of the widget, regardless of its modifiers
      *   (the interesting case is the list view: all widgets are supposed to be
      *   in the baseMode 'readonly', except the ones that are in the line that
      *   is currently being edited).
-     *   With option 'keepBaseMode' set to true, the current baseMode of the
+     *   With option 'keepBaseMode' set to true, the baseMode of the record's
      *   node isn't overridden (this is particularily useful when a field widget
      *   is re-rendered because its readonly modifier changed, as in this case,
      *   we don't want to change its base mode).
-     * @param {string} [options.mode] the 'baseMode' of the node is set to this
+     * @param {string} [options.mode] the 'baseMode' of the record's node is set to this
      *   value (if not given, it is set to this.mode, the mode of the renderer)
      * @returns {Object} for code efficiency, returns the last evaluated
      *   modifiers for the given node and record.
@@ -443,15 +444,16 @@ var BasicRenderer = AbstractRenderer.extend({
                 modifiers: modifiers,
                 evaluatedModifiers: {},
                 elementsByRecord: {},
+                baseModeByRecord : {},
             };
             if (!_.isEmpty(modifiers)) { // Register only if modifiers might change (TODO condition might be improved here)
                 this.allModifiersData.push(modifiersData);
             }
         }
 
-        // Compute node's base mode if necessary
-        if (!options.keepBaseMode) {
-            modifiersData.baseMode = options.mode || this.mode;
+        // Compute the record's base mode
+        if (!modifiersData.baseModeByRecord[record.id] || !options.keepBaseMode) {
+            modifiersData.baseModeByRecord[record.id] = options.mode || this.mode;
         }
 
         // Evaluate if necessary
