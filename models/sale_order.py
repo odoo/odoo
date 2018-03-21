@@ -167,7 +167,7 @@ class SaleOrder(models.Model):
         self.generated_coupon_ids |= coupon
         template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
-            self.message_post_with_template(template.id, composition_mode='comment')
+            coupon.message_post_with_template(template.id, composition_mode='comment', notif_layout='mail.mail_notification_light')
         return coupon
 
     def _get_applicable_programs(self):
