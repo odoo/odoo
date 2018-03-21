@@ -175,3 +175,10 @@ class PaymentTransaction(models.Model):
         })
 
         return tx
+
+    def _post_process_after_done(self, **kwargs):
+        # set invoice id in payment transaction when payment being done from sale order
+        res = super(PaymentTransaction, self)._post_process_after_done()
+        if kwargs.get('invoice_id'):
+            self.account_invoice_id = kwargs['invoice_id']
+        return res

@@ -623,8 +623,10 @@ class Import(models.TransientModel):
                     user_format = pycompat.to_native(options.get('%s_format' % field['type']))
                     for num, line in enumerate(data):
                         if line[index]:
+                            line[index] = line[index].strip()
+                        if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index].strip()), user_format), server_format)
+                                line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index]), user_format), server_format)
                             except ValueError as e:
                                 raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
                             except Exception as e:
