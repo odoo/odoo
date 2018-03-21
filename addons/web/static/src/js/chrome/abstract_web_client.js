@@ -164,7 +164,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         core.bus.on('click', this, function (ev) {
             $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
-                self.$('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
+                $(this.el.getElementsByClassName('oe_dropdown_menu oe_opened')).removeClass('oe_opened');
+                $(this.el.getElementsByClassName('oe_dropdown_toggle oe_opened')).removeClass('oe_opened');
             }
         });
         core.bus.on('connection_lost', this, this.on_connection_lost);
