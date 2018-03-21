@@ -2,7 +2,7 @@
 import hashlib
 import hmac
 import logging
-import datetime
+from datetime import datetime
 import pprint
 
 from odoo import api, exceptions, fields, models, _
@@ -10,6 +10,8 @@ from odoo.tools import consteq, float_round, image_resize_images, image_resize_i
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError, UserError
 from odoo import api, SUPERUSER_ID
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+
 
 _logger = logging.getLogger(__name__)
 
@@ -607,12 +609,12 @@ class PaymentTransaction(models.Model):
         '''Log the message saying the transaction has been sent to the remote server to be
         processed by the acquirer.
         '''
-        message = 'Transaction %s sent to the acquirer %s:'
+        message = 'Transaction %s sent to %s:'
         for trans in self:
             values = []
             if trans.payment_token_id:
                 values.append('%s: %s' % (_('Token'), trans.payment_token_id._get_oe_log_html()))
-            values.append('%s: %s' % (_('Date'), fields.datetime.now()))
+            values.append('%s: %s' % (_('Date'), datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)))
             post_message = message % (trans._get_oe_log_html(), trans.acquirer_id.name)
             post_message += '<ul><li>' + '</li><li>'.join(values) + '</li></ul>'
             trans.payment_id.message_post(body=post_message)
@@ -625,10 +627,10 @@ class PaymentTransaction(models.Model):
         :param old_state:       The state of the transaction before the response.
         :param add_messages:    Optional additional messages to log like the capture status.
         '''
-        message = _('Transaction %s updated by the acquirer %s:')
+        message = _('Transaction %s updated by %s:')
 
         for trans in self:
-            values = ['%s: %s' % (_('Date'), fields.datetime.now())]
+            values = ['%s: %s' % (_('Date'), datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
 
             if trans.state_message:
                 values = ['%s: %s' % (_('Response'), trans.state_message)] + values
@@ -1055,7 +1057,7 @@ class PaymentToken(models.Model):
             _logger.error("Error 'EUR' currency not found for payment method validation!")
             return False
 
-        reference = "VALIDATION-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
+        reference = "VALIDATION-%s-%s" % (self.id, datetime.now().strftime('%y%m%d_%H%M%S'))
         tx = self.env['payment.transaction'].sudo().create({
             'amount': amount,
             'acquirer_id': self.acquirer_id.id,

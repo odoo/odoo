@@ -44,7 +44,7 @@ class AccountPayment(models.Model):
     def action_view_sale_orders(self):
         action = {
             'type': 'ir.actions.act_window',
-            'name': _('Sales Orders'),
+            'name': _('Sales Order(s)'),
             'res_model': 'sale.order',
         }
         if self.sale_order_ids_nbr == 1:
