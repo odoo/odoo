@@ -135,8 +135,11 @@ class MailActivity(models.Model):
         if self.recommended_activity_type_id:
             self.activity_type_id = self.recommended_activity_type_id
         else:
-            domain = ['|', ('res_model_id', '=', False), ('res_model_id', '=', self.res_model_id.id)]
-            self.activity_type_id = self.env['mail.activity.type'].search(domain, order="sequence,id", limit=1)
+            activity = self.env['mail.activity.type'].search([('res_model_id', '=', self.res_model_id.id)],
+                                                             order="sequence", limit=1)
+            if not activity:
+                activity = self.env['mail.activity.type'].search([], order="sequence", limit=1)
+            self.activity_type_id = activity
 
     @api.multi
     def _check_access(self, operation):
