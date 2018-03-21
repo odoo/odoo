@@ -40,5 +40,9 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="account.action_account_payments" model="ir.actions.act_window">
+            <field name="domain" eval="[('partner_type', '=', 'customer'), ('payment_method_id', '!=', ref('payment.account_payment_method_electronic_in'))]"/>
+        </record>
     </data>
 </odoo>
