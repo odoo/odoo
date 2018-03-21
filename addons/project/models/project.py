@@ -855,8 +855,6 @@ class Task(models.Model):
             return 'project.mt_task_blocked'
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return 'project.mt_task_ready'
-        elif 'user_id' in init_values and self.user_id:  # assigned -> new
-            return 'project.mt_task_new'
         elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
             return 'project.mt_task_new'
         elif 'stage_id' in init_values:
@@ -935,23 +933,6 @@ class Task(models.Model):
     @api.multi
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
-        if update_vals is None:
-            update_vals = {}
-        maps = {
-            'cost': 'planned_hours',
-        }
-        for line in msg['body'].split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res:
-                match = res.group(1).lower()
-                field = maps.get(match)
-                if field:
-                    try:
-                        update_vals[field] = float(res.group(2).lower())
-                    except (ValueError, TypeError):
-                        pass
-
         email_list = self.email_split(msg)
         partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
         self.message_subscribe(partner_ids)

@@ -1946,6 +1946,11 @@ var FieldStatus = AbstractField.extend({
         this._super.apply(this, arguments);
         this._setState();
         this._onClickStage = _.debounce(this._onClickStage, 300, true); // TODO maybe not useful anymore ?
+
+        // Retro-compatibility: clickable used to be defined in the field attrs
+        // instead of options.
+        // If not set, the statusbar is not clickable.
+        this.isClickable = !!this.attrs.clickable || !!this.nodeOptions.clickable;
     },
 
     //--------------------------------------------------------------------------
@@ -1996,7 +2001,7 @@ var FieldStatus = AbstractField.extend({
         this.$el.html(qweb.render("FieldStatus.content", {
             selection_unfolded: selections[0],
             selection_folded: selections[1],
-            clickable: !!this.attrs.clickable,
+            clickable: this.isClickable,
         }));
     },
 

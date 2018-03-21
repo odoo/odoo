@@ -42,7 +42,8 @@ class Image(models.AbstractModel):
 
         sha = hashlib.sha1(getattr(record, '__last_update').encode('utf-8')).hexdigest()[0:7]
         max_size = '' if max_size is None else '/%s' % max_size
-        src = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field_name, max_size, sha)
+        avoid_if_small = '&avoid_if_small=true' if options.get('avoid_if_small') else ''
+        src = '/web/image/%s/%s/%s%s?unique=%s%s' % (record._name, record.id, field_name, max_size, sha, avoid_if_small)
 
         alt = None
         if options.get('alt-field') and getattr(record, options['alt-field'], None):

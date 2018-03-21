@@ -191,7 +191,7 @@ class Partner(models.Model):
                 template_ctx = {**base_template_ctx, **recipient_template_values, **values}  # fixme: set button_unfollow to none
                 fol_values = {
                     'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
-                    'body': base_template.render(template_ctx, engine='ir.qweb'),
+                    'body': base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True),
                 }
                 fol_values['body'] = self.env['mail.thread']._replace_local_links(fol_values['body'])
                 # send email

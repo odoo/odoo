@@ -154,7 +154,7 @@
         <field name="arch" type="xml">
             <form string="Note" class="oe_form_nomargin o_note_form_view">
                 <header>
-                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
+                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>

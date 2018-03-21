@@ -531,6 +531,7 @@
                                         <div>
                                             <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"/>
                                         </div>
+                                        <field name="mail_server_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
                                         <field name="schedule_date" />
                                         <field name="keep_archives" groups="base.group_no_one"/>
                                         <field name="create_date" readonly="1" attrs="{'invisible': [('create_date', '=', False)]}"/>
@@ -838,7 +839,7 @@
                     <header style="min-height:31px;">
                         <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mailing"/>
                         <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mailing"/>
-                        <span><field name="stage_id" widget="statusbar" clickable="True"/></span>
+                        <span><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></span>
                     </header>
                     <sheet>
                         <field name="total" invisible="1"/>

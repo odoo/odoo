@@ -53,11 +53,7 @@ class Users(models.Model):
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
             raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        user = super(Users, self).create(values)
-
-        # create a welcome message
-        user._create_welcome_message()
-        return user
+        return super(Users, self).create(values)
 
     @api.multi
     def write(self, vals):
@@ -71,15 +67,6 @@ class Users(models.Model):
         elif sel_groups:
             self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
         return write_res
-
-    def _create_welcome_message(self):
-        self.ensure_one()
-        if not self.has_group('base.group_user'):
-            return False
-        company_name = self.company_id.name if self.company_id else ''
-        body = _('%s has joined the %s network.') % (self.name, company_name)
-        # TODO change SUPERUSER_ID into user.id but catch errors
-        return self.partner_id.sudo().message_post(body=body)
 
     @api.model
     def activity_user_count(self):
