@@ -47,6 +47,7 @@ class Task(models.Model):
     delay_hours = fields.Float(compute='_hours_get', store=True, string='Delay Hours', help="Computed as difference between planned hours by the project manager and the total hours of the task.")
     children_hours = fields.Float(compute='_hours_get', store=True, string='Sub-tasks Hours', help="Sum of the planned hours of all sub-tasks (when a sub-task is closed or its spent hours exceed its planned hours, spent hours are counted instead)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
+    allow_timesheets = fields.Boolean(related='project_id.allow_timesheets')
 
     _constraints = [(models.BaseModel._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
 
