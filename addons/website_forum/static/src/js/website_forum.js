@@ -25,13 +25,14 @@ odoo.define('website_forum.website_forum', function (require) {
             if ($('a[href*="/login"]').length) {
                 msg = _t('Sorry you must be logged in to perform this action');
             }
-            var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="karma_alert">'+
+            var $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert mt8" id="karma_alert">'+
                 '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                 msg + '</div>');
-            var vote_alert = $(ev.currentTarget).parent().find("#vote_alert");
-            if (vote_alert.length === 0) {
-                $(ev.currentTarget).parent().append($warning);
+            var $voteAlert = $('#karma_alert');
+            if ($voteAlert.length) {
+                $voteAlert.remove();
             }
+            $(ev.currentTarget).after($warning);
         }
     });
 

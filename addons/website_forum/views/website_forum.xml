@@ -1090,27 +1090,31 @@
         <div class="col-sm-10 col-sm-offset-2">
             <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey">
                 <small class="text-muted">
-                    <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
-                    <t t-call="website_forum.link_button">
-                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
-                        <t t-set="label"> </t>
-                        <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
-                        <t t-set="classes" t-value="'close comment_delete fa-times'"/>
-                    </t>
+                    <div class="pull-right">
+                        <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
+                        <t t-call="website_forum.link_button">
+                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
+                            <t t-set="label"> </t>
+                            <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
+                            <t t-set="classes" t-value="'close comment_delete fa-times'"/>
+                        </t>
+                    </div>
 
                     <div><span t-field="message.body" class="oe_no_empty"/></div>
-                    <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
-                    <t t-if="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False) or (not object.parent_id and object.state != 'close' and object.active != False)">
-                        <t t-set="allow_post_comment" t-value="True" />
-                    </t>
-                    <t t-if="allow_post_comment">
-                        <t t-call="website_forum.link_button" >
-                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/convert_to_answer'"/>
-                            <t t-set="label">Convert as an answer</t>
-                            <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
-                            <t t-set="classes" t-value="'fa-magic pull-right'"/>
+                    <div class="pull-right">
+                        <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
+                        <t t-if="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False) or (not object.parent_id and object.state != 'close' and object.active != False)">
+                            <t t-set="allow_post_comment" t-value="True" />
                         </t>
-                    </t>
+                        <t t-if="allow_post_comment">
+                            <t t-call="website_forum.link_button" >
+                                <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/convert_to_answer'"/>
+                                <t t-set="label">Convert as an answer</t>
+                                <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
+                                <t t-set="classes" t-value="'fa-magic'"/>
+                            </t>
+                        </t>
+                    </div>
                     <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
                         t-field="message.author_id" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
