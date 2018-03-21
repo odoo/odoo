@@ -640,6 +640,34 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
+    trigger: 'div[name=bank_journal_default_cta] > a[id=configure_bank_journal_link], div[name=bank_journal_default_cta] > a[id=configure_bank_journal_btn]',
+    content: _t('Configure Bank Journal'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: 'button[name=configure_manually]',
+    content: _t('Enter manual data for bank account'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: '.o_field_widget[name=bank_statements_source] .o_radio_input[data-value="manual"]',
+    content: _t('Select manual import'),
+    position: 'bottom',
+}, {
+    trigger:  ".o_field_widget[name=bank_account_id] input",
+    extra_trigger: ".modal-dialog",
+    content: _t('Select an account'),
+    position: 'top',
+    run: "text the_flow.account",
+}, {
+    trigger: ".ui-menu-item > a:contains('the_flow.account')",
+    in_modal: false,
+}, {
+    trigger: ".modal-footer .oe_highlight",
+    content: _t('Save'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
     trigger: 'div[name=bank_journal_default_cta] > a[data-name=create_bank_statement], div[name=bank_journal_cta] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',
