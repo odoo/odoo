@@ -96,6 +96,3 @@ class ResUsers(models.Model):
         internally
         """
         return default_crypt_context
-
-    def _get_session_token_fields(self):
-        return super(ResUsers, self)._get_session_token_fields() | {'password_crypt'}
