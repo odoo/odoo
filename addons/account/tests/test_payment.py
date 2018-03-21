@@ -390,13 +390,16 @@ class TestPayment(AccountingTestCase):
             {'account_id': self.account_payable.id, 'debit': 8.65, 'credit': 0.0, 'amount_currency': 13.22, 'currency_id': self.currency_usd_id},
             {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 25.0, 'amount_currency': -38.22, 'currency_id': self.currency_usd_id},
         ])
+        self.assertTrue(payment.move_line_ids.filtered(lambda l: l.account_id == invoice.account_id)[0].full_reconcile_id)
+        self.assertEqual(invoice.state, 'paid')
+
         # Use case:
         # Company is in EUR, create a vendor bill for 25 EUR and register payment of 25 USD.
         # Mark invoice as fully paid with a write_off
         # Check that all the aml are correctly created.
         invoice = self.create_invoice(amount=25, type='in_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
         # register payment on invoice
-        payment = self.payment_model.create({'payment_type': 'inbound',
+        payment = self.payment_model.create({'payment_type': 'outbound',
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
             'partner_type': 'supplier',
             'partner_id': self.partner_agrolait.id,
@@ -410,10 +413,12 @@ class TestPayment(AccountingTestCase):
             })
         payment.post()
         self.check_journal_items(payment.move_line_ids, [
-            {'account_id': self.account_eur.id, 'debit': 16.35, 'credit': 0.0, 'amount_currency': 25.0, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_eur.id, 'debit': 0.0, 'credit': 16.35, 'amount_currency': -25.0, 'currency_id': self.currency_usd_id},
             {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 8.65, 'amount_currency': -13.22, 'currency_id': self.currency_usd_id},
-            {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 7.7, 'amount_currency': -11.78, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_receivable.id, 'debit': 25.0, 'credit': 0.0, 'amount_currency': 38.22, 'currency_id': self.currency_usd_id},
         ])
+        self.assertTrue(payment.move_line_ids.filtered(lambda l: l.account_id == invoice.account_id)[0].full_reconcile_id)
+        self.assertEqual(invoice.state, 'paid')
 
     def test_payment_and_writeoff_in_other_currency_2(self):
         # Use case:
