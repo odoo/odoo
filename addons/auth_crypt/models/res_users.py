@@ -51,13 +51,12 @@ class ResUsers(models.Model):
     @api.model
     def check_credentials(self, password):
         # convert to base_crypt if needed
-        self.env.cr.execute('SELECT password, password_crypt FROM res_users WHERE id=%s AND active', (self.env.uid,))
-        encrypted = None
-        user = self.env.user
-        if self.env.cr.rowcount:
-            stored, encrypted = self.env.cr.fetchone()
-            if stored and not encrypted:
-                user._set_password(stored)
+        user = self.sudo().search([('id', '=', self.env.uid)])
+        encrypted = False
+        if user:
+            encrypted = user.password_crypt
+            if user.password and not encrypted:
+                user._set_password(user.password)
                 self.invalidate_cache()
         try:
             return super(ResUsers, self).check_credentials(password)
