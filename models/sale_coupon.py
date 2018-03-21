@@ -93,6 +93,7 @@ class SaleCoupon(models.Model):
             default_use_template=bool(template),
             default_template_id=template.id,
             default_composition_mode='comment',
+            custom_layout='mail.mail_notification_light',
         )
         return {
             'name': _('Compose Email'),
