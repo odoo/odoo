@@ -6,7 +6,6 @@ var KanbanRecord = require('web_kanban.Record');
 var KanbanColumn = require('web_kanban.Column');
 var KanbanView = require('web_kanban.KanbanView');
 
-return;
 openerp = window.openerp || {};
 openerp.web_kanban = openerp.web_kanban || {};
 openerp.web_kanban.AbstractField = kanban_widgets.AbstractField;
