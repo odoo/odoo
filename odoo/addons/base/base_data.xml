@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+      <!-- khmer language has the wrong code in res.lang.csv
+      We put the good one here to have the noupdate tag and avoid
+      the error (this fix will be obsolete from SaaS 11.2) -->
+      <record id="lang_km" model="res.lang">
+        <field name="name">Khmer / ភាសាខ្មែរ</field>
+        <field name="code">km_KH</field>
+        <field name="iso_code">km</field>
+        <field name="direction">ltr</field>
+        <field name="translatable">1</field>
+        <field name="grouping">[3,0]</field>
+        <field name="date_format">%d %B %y</field>
+        <field name="time_format">%H:%M:%S</field>
+      </record>
+
         <record id="view_menu" model="ir.ui.view">
             <field name="name">ir.ui.menu.tree</field>
             <field name="model">ir.ui.menu</field>
