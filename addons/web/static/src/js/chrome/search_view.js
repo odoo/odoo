@@ -607,6 +607,46 @@ var SearchView = Widget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Updates the domain of the search view by adding and/or removing filters.
+     *
+     * @todo: the way it is done could be improved, but the actual state of the
+     * searchview doesn't allow to do much better.
+
+     * @param {Array[Object]} list of filters to add, described by objects with
+     *   keys domain (the domain as an Array), and help (the text to display in
+     *   the facet)
+     * @param {Array[Object]} list of filters to remove (previously added ones)
+     * @returns {Array[Object]} list of added filters (to pass as filtersToRemove
+     *   for a further call to this function)
+     */
+    updateFilters: function (newFilters, filtersToRemove) {
+        var self = this;
+        var addedFilters = _.map(newFilters, function (filter) {
+            filter = {
+                attrs: {domain: filter.domain, help: filter.help},
+            };
+            var filterWidget = new search_inputs.Filter(filter);
+            var filterGroup = new search_inputs.FilterGroup([filterWidget], self);
+            var facet = filterGroup.make_facet([filterGroup.make_value(filter)]);
+            self.query.add([facet], {silent: true});
+
+            return _.last(self.query.models);
+        })
+
+        _.each(filtersToRemove, function (filter) {
+            self.query.remove(filter, {silent: true});
+        });
+
+        this.query.trigger('reset');
+
+        return addedFilters
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
