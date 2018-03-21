@@ -28,7 +28,7 @@ class StockWarehouse(models.Model):
         self.ensure_one()
         if not self.wh_input_manu_loc_id:
             self.wh_input_manu_loc_id = self.env['stock.location'].create({
-                'name': _('PROD/IN'),
+                'name': _('Pre-production Zone'),
                 'active': self.manufacture_steps != 'manu_only',
                 'usage': 'internal',
                 'location_id': self.view_location_id.id,
@@ -108,7 +108,7 @@ class StockWarehouse(models.Model):
         names = super(StockWarehouse, self)._get_route_name()
         names.update({
                  'manu_only': _('Produce'),
-                 'pick_manu': _('Pick/Produce')
+                 'pick_manu': _('Pick components before manufacturing')
                })
         return names
 
