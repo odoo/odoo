@@ -222,7 +222,11 @@ class PaymentAcquirer(models.Model):
             'company_id': self.company_id.id,
             'default_debit_account_id': account.id,
             'default_credit_account_id': account.id,
+            # Show the journal on dashboard if the acquirer is published on the website.
             'show_on_dashboard': self.website_published,
+            # Don't show payment methods in the backend.
+            'inbound_payment_method_ids': [],
+            'outbound_payment_method_ids': [],
         }
 
     @api.model
