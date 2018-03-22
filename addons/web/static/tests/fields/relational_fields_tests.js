@@ -3890,12 +3890,12 @@ QUnit.module('relational_fields', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 2,
+        assert.strictEqual(form.$('td.o_list_record_delete button').length, 2,
             "should have 2 delete buttons");
 
-        form.$('td.o_list_record_delete span').first().click();
+        form.$('td.o_list_record_delete button').first().click();
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 1,
+        assert.strictEqual(form.$('td.o_list_record_delete button').length, 1,
             "should have 1 delete button (a record is supposed to have been unlinked)");
 
         // save and check that the correct command has been generated
@@ -3933,12 +3933,12 @@ QUnit.module('relational_fields', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 2,
+        assert.strictEqual(form.$('td.o_list_record_delete button').length, 2,
             "should have 2 delete buttons");
 
-        form.$('td.o_list_record_delete span').first().click();
+        form.$('td.o_list_record_delete button').first().click();
 
-        assert.strictEqual(form.$('td.o_list_record_delete span').length, 1,
+        assert.strictEqual(form.$('td.o_list_record_delete button').length, 1,
             "should have 1 delete button (a record is supposed to have been deleted)");
 
         // save and check that the correct command has been generated
@@ -6682,8 +6682,8 @@ QUnit.module('relational_fields', {
         form.$('input.o_field_integer[name="int_field"]').val('0').trigger('input');
 
         // delete and start over
-        form.$('.o_list_record_delete:first span').click();
-        form.$('.o_list_record_delete:first span').click();
+        form.$('.o_list_record_delete:first button').click();
+        form.$('.o_list_record_delete:first button').click();
 
         // enable the many2many onchange
         form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
@@ -8416,7 +8416,7 @@ QUnit.module('relational_fields', {
                 mode: 'edit',
             },
         });
-        form.$('span[name="delete"]').first().click();
+        form.$('button[name="delete"]').first().click();
         assert.strictEqual(form.$('.o_data_row').text(), 'from onchange',
             'onchange has been properly applied');
         form.destroy();
@@ -8456,7 +8456,7 @@ QUnit.module('relational_fields', {
                 mode: 'edit',
             },
         });
-        form.$('span[name="delete"]').first().click();
+        form.$('button[name="delete"]').first().click();
         assert.strictEqual(form.$('.o_data_row').text(), 'from onchange id2from onchange id3',
             'onchange has been properly applied');
         form.destroy();
