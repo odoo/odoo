@@ -647,7 +647,7 @@ class PurchaseOrderLine(models.Model):
     product_image = fields.Binary(
         'Product Image', related="product_id.image",
         help="Non-stored related field to allow portal user to see the image of the product he has ordered")
-    product_type = fields.Selection(related='product_id.type')
+    product_type = fields.Selection(related='product_id.type', readonly=True)
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
