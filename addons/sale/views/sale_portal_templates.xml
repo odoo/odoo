@@ -107,12 +107,6 @@
                           <span class='hidden-xs' t-field="order.date_order" t-options="{'time_only': True}"/>
                         </td>
                         <td>
-                            <t t-if="order.state == 'progress'">
-                                <span class="label label-info"><i class="fa fa-fw fa-clock-o"></i><span class="hidden-xs"> Invoiced</span></span>
-                            </t>
-                            <t t-if="order.state in ['shipping_except','invoice_except']">
-                                <span class="label label-danger"><i class="fa fa-fw fa-warning"></i><span class="hidden-xs"> Problem</span></span>
-                            </t>
                             <t t-if="order.state == 'done'">
                                 <span class="label label-success hidden-xs"><i class="fa fa-fw fa-check"></i><span class="hidden-xs"> Done</span></span>
                             </t>
