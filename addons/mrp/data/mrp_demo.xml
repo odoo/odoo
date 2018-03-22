@@ -330,6 +330,40 @@
             <field name="default_code">FURN005</field>
         </record>
 
+        <record id="product_product_rocket" model="product.product">
+            <field name="name">Space Rocket</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">10000</field>
+            <field name="list_price">2000</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Self built rocket (no warranty)</field>
+            <field name="default_code">BFR001</field>
+        </record>
+        <record id="product_product_rocket_launcher" model="product.product">
+            <field name="name">Space Launch System</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">3000</field>
+            <field name="list_price">1000</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Provide a way to launch your rocket into space</field>
+            <field name="default_code">BFR002</field>
+        </record>
+        <record id="product_product_rocket_engine" model="product.product">
+            <field name="name">Space Shuttle System</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">3000</field>
+            <field name="list_price">1000</field>
+            <field name="type">product</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description">Built by the best engineer</field>
+            <field name="default_code">BFR003</field>
+        </record>
+
         <record id="product_product_computer_desk_product_template" model="product.template">
             <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
         </record>
@@ -382,6 +416,62 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="product_qty">1</field>
             <field name="bom_id" ref="mrp_bom_desk"/>
+        </record>
+
+        <record id="mrp_bom_rocket" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_rocket_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="mrp_routing_0"/>
+        </record>
+        <record id="mrp_bom_line_rocket_launcher" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_rocket_launcher"/>
+            <field name="product_qty">2</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_rocket"/>
+        </record>
+        <record id="mrp_bom_line_rocket_engine" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_rocket_engine"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">2</field>
+            <field name="bom_id" ref="mrp_bom_rocket"/>
+        </record>
+
+        <record id="mrp_bom_rocket_engine" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_rocket_engine_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="mrp_routing_1"/>
+        </record>
+        <record id="mrp_bom_line_engine" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_screw"/>
+            <field name="product_qty">247</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_rocket_engine"/>
+        </record>
+
+        <record id="mrp_bom_rocket_launcher" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_product_rocket_launcher_product_template"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="type">phantom</field>
+        </record>
+        <record id="mrp_bom_line_launcher_bolt" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_bolt"/>
+            <field name="product_qty">300</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_rocket_launcher"/>
+        </record>
+        <record id="mrp_bom_line_launcher_screw" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_computer_desk_screw"/>
+            <field name="product_qty">142</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_rocket_launcher"/>
         </record>
 
         <!-- Manufacturing Order Demo With Lots-->
