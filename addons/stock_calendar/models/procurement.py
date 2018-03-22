@@ -47,12 +47,10 @@ class ProcurementOrder(models.Model):
     def _procurement_from_orderpoint_get_order(self):
         return 'location_id, purchase_calendar_id, calendar_id'
 
-    def _procurement_from_orderpoint_get_grouping_key(self, orderpoint_ids):
-        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_ids[0])
+    def _procurement_from_orderpoint_get_grouping_key(self, orderpoint):
         return (orderpoint.location_id.id, orderpoint.purchase_calendar_id.id, orderpoint.calendar_id.id)
 
-    def _procurement_from_orderpoint_get_groups(self, orderpoint_ids):
-        orderpoint = self.env['stock.warehouse.orderpoint'].browse(orderpoint_ids[0])
+    def _procurement_from_orderpoint_get_groups(self, orderpoint):
         res_groups = []
         date_groups = orderpoint._get_group()
         for date, group in date_groups:
@@ -63,7 +61,7 @@ class ProcurementOrder(models.Model):
                 res_groups += [{'to_date': False, 'procurement_values': {'group': group, 'date': date, 'purchase_date': date}}]
         return res_groups
 
-    def _procurement_from_orderpoint_post_process(self, orderpoint_ids):
-        self.env['stock.warehouse.orderpoint'].browse(orderpoint_ids).write({
+    def _procurement_from_orderpoint_post_process(self, orderpoint):
+        orderpoint.write({
             'last_execution_date': datetime.utcnow().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        return super(ProcurementOrder, self)._procurement_from_orderpoint_post_process(orderpoint_ids)
+        return super(ProcurementOrder, self)._procurement_from_orderpoint_post_process(orderpoint)
