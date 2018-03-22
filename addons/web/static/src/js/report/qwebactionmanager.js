@@ -135,7 +135,8 @@ ActionManager.include({
                 }
             });
         } else {
-            return self._super(action, options);
+            self.do_warn(_t('Error'), _t('Non qweb reports are not anymore supported.'), true);
+            return;
         }
     }
 });
