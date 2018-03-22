@@ -917,10 +917,12 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def _check(self):
+        """ Checking rules of type 'buy': satisfied only if all related moves
+        are done/cancel and if the requested quantity is moved. """
         if self.purchase_line_id:
             if not self.move_ids:
                 return False
-            return all(move.state in ('done', 'cancel') for move in self.move_ids) and any(move.state == 'done' for move in self.move_ids)
+            return all(move.state in ('done', 'cancel') for move in self.move_ids)
         return super(ProcurementOrder, self)._check()
 
     def _get_purchase_schedule_date(self):
