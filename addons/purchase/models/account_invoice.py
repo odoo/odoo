@@ -164,12 +164,11 @@ class AccountInvoice(models.Model):
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
                     valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
-                    interim_account_price = valuation_price_unit * line['quantity']
+                    line_quantity = line['quantity']
 
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                         valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
-                        interim_account_price = company_currency.round(valuation_price_unit * line['quantity'])
                         stock_move_obj = self.env['stock.move']
                         valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id), ('state', '=', 'done')])
 
@@ -181,15 +180,13 @@ class AccountInvoice(models.Model):
                                 valuation_total_qty += val_stock_move.product_qty
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
+                            line_quantity = valuation_total_qty
 
-                            # We compute the amount to be written into the interim account
-                            interim_account_price = valuation_price_unit_total + (i_line.quantity - valuation_total_qty) * valuation_price_unit
-                            # The second part of this addition can hence decrease the value, it is important in case more products were received than the quantity on the invoice
-
-                        elif i_line.product_id.cost_method == 'real': # In this condition, we have a real price-valuated product which has not yet been received
+                        elif i_line.product_id.cost_method == 'real':
+                            # In this condition, we have a real price-valuated product which has not yet been received
                             valuation_price_unit = i_line.purchase_line_id.price_unit
-                            interim_account_price = valuation_price_unit * i_line.quantity
 
+                    interim_account_price = valuation_price_unit * line_quantity
                     if inv.currency_id.id != company_currency.id:
                             # We express everyhting in the invoice currency
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
@@ -214,6 +211,7 @@ class AccountInvoice(models.Model):
 
                         price_before = line.get('price', 0.0)
                         price_unit_val_dif = price_unit - valuation_price_unit
+
                         price_val_dif = price_before - interim_account_price
                         if inv.currency_id.compare_amounts(i_line.price_unit, i_line.purchase_line_id.price_unit) != 0 and acc:
                             # If the unit prices have not changed and we have a
@@ -224,7 +222,7 @@ class AccountInvoice(models.Model):
                                 'type': 'src',
                                 'name': i_line.name[:64],
                                 'price_unit': inv.currency_id.round(price_unit_val_dif),
-                                'quantity': line['quantity'],
+                                'quantity': line_quantity,
                                 'price': inv.currency_id.round(price_val_dif),
                                 'account_id': acc,
                                 'product_id': line['product_id'],
