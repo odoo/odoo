@@ -80,19 +80,15 @@ class PurchaseOrder(models.Model):
                  'order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
-            pickings = self.env['stock.picking']
-            for line in order.order_line:
-                # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
-                # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                pickings |= moves.mapped('picking_id')
-            order.picking_ids = pickings
-            order.picking_count = len(pickings)
+            order.picking_ids = order.group_id.picking_ids
+            order.picking_count = len(order.group_id.picking_ids)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_is_shipped(self):
         for order in self:
-            if order.picking_ids and all([x.state == 'done' for x in order.picking_ids]):
+            if order.picking_ids and any([x.state not in ('done', 'cancel') and x.location_id.usage == 'supplier' for x in order.picking_ids]):
+                order.is_shipped = False
+            else:
                 order.is_shipped = True
 
     READONLY_STATES = {
@@ -442,7 +438,7 @@ class PurchaseOrder(models.Model):
         StockPicking = self.env['stock.picking']
         for order in self:
             if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done','cancel'))
+                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_id.usage == 'supplier')
                 if not pickings:
                     res = order._prepare_picking()
                     picking = StockPicking.create(res)
@@ -541,6 +537,26 @@ class PurchaseOrder(models.Model):
             res = self.env.ref('stock.view_picking_form', False)
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = pick_ids.id
+        return result
+
+    @api.multi
+    def action_view_incoming_picking(self):
+        '''
+        This function returns an action that display existing incoming picking orders of given purchase order ids.
+        When only one found, show the incoming picking immediately.
+        '''
+        action = self.env.ref('stock.action_picking_tree')
+        result = action.read()[0]
+
+        result['context'] = {}
+        pickings = self.picking_ids.filtered(lambda x: x.picking_type_id.code == 'incoming' and x.state not in ('done', 'cancel'))
+        # choose the view_mode accordingly
+        if len(pickings) == 1:
+            view = self.env.ref('stock.view_picking_form')
+            result['views'] = [(view and view.id, 'form')]
+            result['res_id'] = pickings.id
+        else:
+            result['domain'] = "[('id', 'in', %s)]" % (pickings.ids)
         return result
 
     @api.multi
@@ -707,7 +723,7 @@ class PurchaseOrderLine(models.Model):
                     activity._onchange_activity_type_id()
 
                 # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
+                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_id.usage == 'supplier' and x.location_dest_id.usage in ('internal', 'transit'))
                 picking = pickings and pickings[0] or False
                 if not picking:
                     res = line.order_id._prepare_picking()
