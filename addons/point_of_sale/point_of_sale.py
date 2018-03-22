@@ -1326,8 +1326,8 @@ class pos_order(osv.osv):
                 if product_key[0] == "product":
                     line = grouped_data[product_key][0]
                     product = Product.browse(cr, uid, line['product_id'], context=context)
-                    # In the SO part, the entries will be inverted by function compute_invoice_totals
-                    price_unit = - product._get_anglo_saxon_price_unit()
+                    pos_orders = self.browse(cr, uid, ids, context=context)
+                    price_unit = pos_orders._get_pos_anglo_saxon_price_unit(product, line['partner_id'], line['quantity'])
                     account_analytic = Analytic.browse(cr, uid, line.get('analytic_account_id'), context=context)
                     res = Product._anglo_saxon_sale_move_lines(cr, uid,
                         line['name'], product, product.uom_id, line['quantity'], price_unit,
@@ -1508,6 +1508,16 @@ class pos_order(osv.osv):
             self.pool.get("account.move").post(cr, SUPERUSER_ID, [move_id], context=context)
 
         return True
+
+    def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
+        # In the SO part, the entries will be inverted by function compute_invoice_totals
+        price_unit = - product._get_anglo_saxon_price_unit()
+        if product.invoice_policy == "delivery":
+            moves = self.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id.move_lines').filtered(lambda m: m.product_id.id == product.id)
+            moves.sorted(lambda x: x.date)
+            average_price_unit = product._compute_average_price(quantity, quantity, moves)
+            price_unit = average_price_unit or price_unit
+        return price_unit
 
     def action_payment(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'payment'}, context=context)
