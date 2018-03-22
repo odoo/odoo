@@ -60,6 +60,9 @@ class PaymentAcquirer(models.Model):
     _description = 'Payment Acquirer'
     _order = 'website_published desc, sequence, name'
 
+    def _get_default_view_template_id(self):
+        return self.env.ref('payment.default_acquirer_button', raise_if_not_found= False)
+
     name = fields.Char('Name', required=True, translate=True)
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
@@ -70,7 +73,7 @@ class PaymentAcquirer(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.user.company_id.id, required=True)
     view_template_id = fields.Many2one(
-        'ir.ui.view', 'Form Button Template', required=True)
+        'ir.ui.view', 'Form Button Template', default=_get_default_view_template_id, required=True)
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
