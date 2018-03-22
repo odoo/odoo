@@ -22,7 +22,13 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('project_id')
     def onchange_project_id(self):
+        # reset task when changing project
         self.task_id = False
+        # force domain on task when project is set
+        if self.project_id:
+            return {'domain': {
+                'task_id': [('project_id', '=', self.project_id.id)]
+            }}
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):

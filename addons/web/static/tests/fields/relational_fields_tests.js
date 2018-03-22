@@ -2261,6 +2261,65 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldOne2Many');
 
+    QUnit.test('one2many list editable with cell readonly modifier', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].turtles = [1,2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtles" invisible="1"/>' +
+                            '<field name="foo" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>' +
+                            '<field name="qux" attrs="{&quot;readonly&quot; : [(&quot;turtles&quot;, &quot;!=&quot;, [])] }"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.deepEqual(args.args[1].p[1][2], {foo: 'ff', qux: 99},
+                        'The right values should be written');
+                }
+                return this._super(route, args);
+            }
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        var $targetInput = $('.o_selected_row .o_input[name=foo]');
+        assert.equal($targetInput[0], document.activeElement,
+            'The first input of the line should have the focus');
+
+        // Simulating hitting the 'f' key twice
+        $targetInput.val('f').trigger('input');
+        $targetInput.val($targetInput.val() + 'f').trigger('input');
+
+        assert.equal($targetInput[0], document.activeElement,
+            'The first input of the line should still have the focus');
+
+        // Simulating a TAB key
+        $targetInput.trigger($.Event('keydown', {which: 9, keyCode:9}));
+
+        var $secondTarget = $('.o_selected_row .o_input[name=qux]');
+
+        assert.equal($secondTarget[0], document.activeElement,
+            'The second input of the line should have the focus after the TAB press');
+
+
+        $secondTarget.val(9).trigger('input');
+        $secondTarget.val($secondTarget.val() + 9).trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('one2many basic properties', function (assert) {
         assert.expect(6);
 
@@ -3891,13 +3950,13 @@ QUnit.module('relational_fields', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove i').length, 2,
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
             "should have 2 remove buttons");
 
-        assert.ok(form.$('td.o_list_record_remove i').first().hasClass('fa fa-times'),
+        assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-times'),
             "should have X icons to remove (unlink) records");
 
-        form.$('td.o_list_record_remove i').first().click();
+        form.$('td.o_list_record_remove button').first().click();
 
         assert.strictEqual(form.$('td.o_list_record_remove i').length, 1,
             "should have 1 remove button (a record is supposed to have been unlinked)");
@@ -3937,13 +3996,13 @@ QUnit.module('relational_fields', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove i').length, 2,
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
             "should have 2 remove buttons");
 
-        assert.ok(form.$('td.o_list_record_remove i').first().hasClass('fa fa-trash-o'),
+        assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-trash-o'),
             "should have trash bin icons to remove (delete) records");
 
-        form.$('td.o_list_record_remove i').first().click();
+        form.$('td.o_list_record_remove button').first().click();
 
         assert.strictEqual(form.$('td.o_list_record_remove i').length, 1,
             "should have 1 remove button (a record is supposed to have been deleted)");
@@ -6689,8 +6748,8 @@ QUnit.module('relational_fields', {
         form.$('input.o_field_integer[name="int_field"]').val('0').trigger('input');
 
         // remove and start over
-        form.$('.o_list_record_remove:first i').click();
-        form.$('.o_list_record_remove:first i').click();
+        form.$('.o_list_record_remove:first button').click();
+        form.$('.o_list_record_remove:first button').click();
 
         // enable the many2many onchange
         form.$('input.o_field_integer[name="int_field"]').val('10').trigger('input');
@@ -8423,7 +8482,7 @@ QUnit.module('relational_fields', {
                 mode: 'edit',
             },
         });
-        form.$('.o_list_record_remove:first i').click();
+        form.$('.o_list_record_remove:first button').click();
         assert.strictEqual(form.$('.o_data_row').text(), 'from onchange',
             'onchange has been properly applied');
         form.destroy();
@@ -8463,7 +8522,7 @@ QUnit.module('relational_fields', {
                 mode: 'edit',
             },
         });
-        form.$('.o_list_record_remove:first i').click();
+        form.$('.o_list_record_remove:first button').click();
         assert.strictEqual(form.$('.o_data_row').text(), 'from onchange id2from onchange id3',
             'onchange has been properly applied');
         form.destroy();

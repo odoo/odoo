@@ -11,6 +11,9 @@ $.extend($.expr[':'], {
     containsLike: function (element, index, matches){
         return element.innerHTML.toUpperCase().indexOf(matches[3].toUpperCase()) >= 0;
     },
+    containsTextLike: function (element, index, matches){
+        return element.innerText.toUpperCase().indexOf(matches[3].toUpperCase()) >= 0;
+    },
     containsExact: function (element, index, matches){
         return $.trim(element.innerHTML) === matches[3];
     },
