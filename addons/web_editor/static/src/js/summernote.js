@@ -1750,6 +1750,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     var r = range.create();
     if (!r) return;
 
+    var mergeNodes = true;
     var flag = false;
     function indentUL (UL, start, end) {
         var next;
@@ -1858,7 +1859,13 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     if (!dom.isList(ancestor)) {
         $dom = $(dom.node(ancestor)).children();
     }
-    if (!$dom.length) {
+    // if we select a whole node, indent that node
+    if (!$dom.length && dom.node(ancestor) === r.sc) {
+        $dom = $(ancestor);
+        flag = true;
+        mergeNodes = false;
+    }
+    else if (!$dom.length) {
         $dom = $(dom.ancestor(r.sc, dom.isList) || dom.ancestor(r.sc, dom.isCell));
         if (!$dom.length) {
             $dom = $(r.sc).closest(options.styleTags.join(','));
@@ -1882,7 +1889,7 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
         }
     });
 
-    if ($dom.length) {
+    if (mergeNodes && $dom.length) {
         var $parent = $dom.parent();
 
         // remove text nodes between lists
