@@ -129,7 +129,8 @@ class account_abstract_payment(models.AbstractModel):
     @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id')
     def _compute_payment_difference(self):
         for pay in self.filtered(lambda p: p.invoice_ids):
-            pay.payment_difference = pay.amount - abs(pay._compute_payment_amount())
+            payment_amount = -pay.amount if pay.payment_type == 'outbound' else pay.amount
+            pay.payment_difference = pay._compute_payment_amount() - payment_amount
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
