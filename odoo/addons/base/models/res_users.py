@@ -230,6 +230,13 @@ class Users(models.Model):
     name = fields.Char(related='partner_id.name', inherited=True)
     email = fields.Char(related='partner_id.email', inherited=True)
 
+    field_group_public_portal_employee = fields.Selection(lambda self:
+                                        self._compute_selection_groups('base.module_category_extra'),
+                                        default=False,
+                                        category_id='base.module_category_extra',
+                                        compute='_compute_groups', inverse='_compute_groups_inverse',
+                                        string="User type")
+
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
@@ -624,6 +631,154 @@ class Users(models.Model):
     def get_company_currency_id(self):
         return self.env.user.company_id.currency_id.id
 
+    def _get_group_fields(self):
+        return [field for field in self._field_computed.keys() if field.compute == '_compute_groups']
+
+    def _get_group_field_names(self):
+        return [field.name for field in self._field_computed.keys() if field.compute == '_compute_groups']
+
+    def _get_group_field_group(self, field, field_value=None):
+        if getattr(field, 'group_xml_id', None):
+            selected_group = self.env.ref(getattr(field, 'group_xml_id'))
+        if getattr(field, 'category_id', None) and field_value:
+            selected_group = self.env['res.groups'].search([('id', '=', field_value)])
+        return selected_group
+
+    def _get_group_field_impliedgroups(self, field, field_value=None):
+        if getattr(field, 'group_xml_id', None):
+            selected_group = self.env.ref(getattr(field, 'group_xml_id'))
+        if getattr(field, 'category_id', None) and field_value:
+            selected_group = self.env['res.groups'].search([('id', '=', field_value)])
+        return selected_group.trans_implied_ids
+
+    def _get_group_field_supergroups(self, field, field_value=None):
+        all_groups = self.env['res.groups'].search([])
+
+        if getattr(field, 'group_xml_id', None):
+            selected_group = self.env.ref(getattr(field, 'group_xml_id'))
+        if getattr(field, 'category_id', None) and field_value:
+            selected_group = all_groups.browse(field_value)
+        return all_groups.filtered(lambda group: selected_group in group.trans_implied_ids)
+
+    def _onchange_field_group(self):
+        """We should probably display the (supergroups and subgroups)
+        affected because  of the implications.\n'
+        E.g.: this groups has g1, g2, g3 as subgroups, and G1 as supergroup."""
+        all_fields = self._get_group_fields()
+        updated_fields = [updated_field for updated_field in all_fields
+                          if self[updated_field.name] != self._origin[updated_field.name]]
+
+        if updated_fields:
+            groups_to_add = self.env["res.groups"]
+            groups_to_remove = self.env["res.groups"]
+            for updated_field in updated_fields:
+                if isinstance(self[updated_field.name], type(0)):  # case of a selection field
+                    groups_to_add |= self._get_group_field_impliedgroups(updated_field,
+                                                                         field_value=self[updated_field.name])
+                    groups_to_remove |= self._get_group_field_supergroups(updated_field,
+                                                                          field_value=self[updated_field.name])
+                elif self[updated_field.name]:  # we are adding a boolean field group
+                    groups_to_add |= self._get_group_field_impliedgroups(updated_field)
+                else:  # we are removing a boolean field group
+                    groups_to_remove |= self._get_group_field_supergroups(updated_field)
+
+            updated_groups = [self._get_group_field_group(updated_field, field_value=self[updated_field.name]).name
+                              for updated_field in updated_fields]
+
+            message_modified = "You modified the group(s) %s.\n" % \
+                               ", ".join(updated_groups)  # map(str, updated_fields)
+            message_add = "This will also add the group(s) %s.\n" % \
+                          ", ".join(groups_to_add.mapped('name')) if groups_to_add else ""
+            message_remove = "This will also remove the group(s) %s.\n" % \
+                             ", ".join(groups_to_remove.mapped('name')) if groups_to_remove else ""
+
+            message = message_modified + message_remove + message_add
+
+            if message_add or message_remove:
+                return {
+                'warning': {
+                    'title': 'Groups change warning',
+                    'message': message}
+                }
+
+    def _compute_selection_groups(self, cat_xml_id):
+        """Used to find groups in a certain category to determine the different
+        options of a group selection field"""
+        # We have to try-catch this, because at first init the category does not exist
+        cat = self.env.ref(cat_xml_id, raise_if_not_found=False)
+        selections = []
+        if cat and cat.exists():
+            all_groups = self.env['res.groups'].search([('category_id', '=', cat.id)])
+            selections = [(group.id, group.name) for group in all_groups]
+            selections.sort()
+        return selections
+
+    @api.depends('groups_id')
+    def _compute_groups(self):
+        """Find what groups the user belongs to, and set its corresponding fields accordingly.
+        This function assumes the field is defined respecting the convention that
+        if it is a boolean field, it should have a group_xml_id attribute,
+        if it is a selection group it should have a category_id attribute."""
+
+        all_fields = [field for field in self._field_computed.keys() if field.compute == '_compute_groups']
+        all_groups = self.env['res.groups'].search([])
+
+        for user in self:
+            for field in all_fields:
+                if getattr(field, 'group_xml_id', None):  # we are in the case of a checkbox group
+                    group = self.env.ref(getattr(field, 'group_xml_id'))
+                    user[field.name] = group in user.groups_id
+                elif getattr(field, 'category_id', None):  # we are in the case of a selection group:
+                    category = self.env.ref(getattr(field, 'category_id'))
+                    groups_in_selection = all_groups.filtered(lambda group: group.category_id == category)
+                    order = {g: len(g.trans_implied_ids & groups_in_selection) for g in groups_in_selection}
+                    groups_in_selection = groups_in_selection.sorted(key=order.get, reverse=True)
+                    # we find the group the user belongs to that is maximal for the implication order
+                    top_pick = [g for g in groups_in_selection if g in user.groups_id]
+                    val = top_pick[0].id if top_pick else False
+                    user[field.name] = val
+                else:  # above conditions should always be met
+                    _logger.warning('Some group field has no group_xml_id or category_id,'
+                                    ' which should not happen.')
+
+    def _compute_groups_inverse(self):
+        """Update the groups according to the field values in cache.
+        It assumes the same conventions as its inverse method."""
+
+        assert len(self) == 1
+
+        all_fields = [field for field in self._field_computed.keys() if field.compute == '_compute_groups']
+        all_groups = self.env['res.groups'].search([])
+
+        # we need to read all values in cache before any prefetch
+        values = {field: self[field.name] for field in all_fields if field.name in self._cache}
+
+        commands = []
+
+        for field in values:
+            if getattr(field, 'group_xml_id', None):  # we are in the case of a checkbox group
+                selected_group = self.env.ref(getattr(field, 'group_xml_id'))
+                command = 4 if values[field] else 3
+                commands.append((command, selected_group.id))
+                for group in selected_group.trans_implied_ids:
+                    commands.append((4, group.id))
+                supergroups = all_groups.filtered(lambda group: selected_group in group.trans_implied_ids)
+                for group in supergroups:
+                    commands.append((3, group.id))
+            elif getattr(field, 'category_id', None):  # we are in the case of a selection group:
+                cat = self.env.ref(getattr(field, 'category_id'), raise_if_not_found=False)
+                if cat and cat.exists():
+                    groups_in_category = all_groups.filtered(lambda group: group.category_id == cat)
+                    selected_group = all_groups.filtered(lambda group: group.id == values[field])
+                    for group in groups_in_category:
+                        command = 4 if group in (selected_group.trans_implied_ids | selected_group) else 3
+                        commands.append((command, group.id))
+            else:  # above conditions should always be met
+                _logger.warning('Some group field has no group_xml_id or category_id,'
+                                ' which should not happen, unless at initialisation.')
+        self.write({'groups_id': commands})
+
+
 #
 # Implied groups
 #
@@ -659,12 +814,23 @@ class GroupsImplied(models.Model):
 
     @api.multi
     def write(self, values):
+        all_groups = self.env['res.groups'].search([])
+        old_users = {group: group.users.ids for group in self}
+        super_groups = {group: all_groups.filtered(lambda g: group in g.trans_implied_ids)
+                        for group in self}
+
         res = super(GroupsImplied, self).write(values)
+
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
                 vals = {'users': list(pycompat.izip(repeat(4), group.with_context(active_test=False).users.ids))}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
+                # if some user has been removed from group, it must also be removed from all its supergroups
+                if values.get('users') and super_groups[group] and old_users[group]:
+                    users_to_remove = [u for u in old_users[group] if u not in values['users'][0][2]]
+                    vals = {'users': list(pycompat.izip(repeat(3), users_to_remove))}
+                    super(GroupsImplied, super_groups[group]).write(vals)
         return res
 
 

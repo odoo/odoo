@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form.sale.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights_technical']" position="inside">
+                <group>
+                    <field name="field_group_sales_team" groups="base.group_no_one"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

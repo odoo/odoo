@@ -180,6 +180,11 @@
                             </group>
                         </div>
                         <notebook colspan="4">
+                            <page name="access_rights_technical" string="Access Rights (Technical)" groups="base.group_no_one">
+                                <group>
+                                    <field name="field_group_public_portal_employee"/>
+                                </group>
+                            </page>
                             <page name="access_rights" string="Access Rights">
                                 <group string="Multi Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
