@@ -298,12 +298,12 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} покана"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: Дата на обновяване"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:639
@@ -317,7 +317,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar.py:637
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s на (%s До %s) (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:191
@@ -441,6 +441,7 @@ msgstr "Календарна покана"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
 msgstr ""
+"Кликнете тук, за да актуализирате само този инстанция, а не всички рецидиви."
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -599,7 +600,7 @@ msgstr "Крайна дата"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "Крайна дата"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -621,7 +622,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar.py:819
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
-msgstr ""
+msgstr "Крайната дата не може да бъде преди стартовата."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -735,6 +736,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
+"Ако активното поле е настроено невярно, то ще ви позволи да скриете "
+"информацията за алармата за събитието, без да я премахвате."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -754,7 +757,7 @@ msgstr "Детайли за покана"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "Покана за"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -764,7 +767,7 @@ msgstr "Покани"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Съветник за покани"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -823,7 +826,7 @@ msgstr "Местонахождение на събитието"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_user_id
 msgid "Me"
-msgstr ""
+msgstr "Аз"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -833,12 +836,12 @@ msgstr "Среща"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "Дейтали на срещата"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_name
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Тема на срещата"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
@@ -850,12 +853,12 @@ msgstr "Тип на срещата"
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
-msgstr ""
+msgstr "Типове срещи"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_event_id
 msgid "Meeting linked"
-msgstr ""
+msgstr "Срещата е свързана"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
@@ -922,7 +925,7 @@ msgstr "Необходимо е действие"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
-msgstr ""
+msgstr "Не, няма да присъствам."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -969,7 +972,7 @@ msgstr "Собственик"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
 msgid "Participant"
-msgstr ""
+msgstr "Участник"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -1011,7 +1014,7 @@ msgstr "ID на Повторение"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id_date
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "ИД на повтарящия -дата"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_recurrency
@@ -1300,7 +1303,7 @@ msgstr "Не можете да дублирате участник в кален
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "calendar.alarm_manager"
-msgstr ""
+msgstr "calendar.alarm_manager"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
@@ -1310,7 +1313,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "например Бизнес обяд"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:1057
