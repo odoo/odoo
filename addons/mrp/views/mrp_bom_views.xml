@@ -192,38 +192,6 @@
             </field>
         </record>
 
-        <record id="mrp_bom_component_tree_view" model="ir.ui.view">
-            <field name="name">mrp.bom.component.tree</field>
-            <field name="model">mrp.bom.line</field>
-            <field name="arch" type="xml">
-                <tree string="Components" editable="top">
-                    <field name="sequence" widget="handle"/>
-                    <field name="bom_id"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
-                    <field name="routing_id"/>
-                    <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_mrp_bom_line_filter" model="ir.ui.view">
-            <field name="name">mrp.bom.line.select</field>
-            <field name="model">mrp.bom.line</field>
-            <field name="arch" type="xml">
-                <search string="Search Bill Of Material Components">
-                    <field name="bom_id"/>
-                    <field name="product_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Bill Of Material" name="bill_of_material" domain="[]" context="{'group_by':'bom_id'}"/>
-                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
-                        <filter string="Routings" name="routings" domain="[]" context="{'group_by':'routing_id'}"/>
-                   </group>
-                </search>
-            </field>
-        </record>
-
         <record id="template_open_bom" model="ir.actions.act_window">
             <field name="context">{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}</field>
             <field name="name">Bill of Materials</field>
