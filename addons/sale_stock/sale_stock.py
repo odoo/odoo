@@ -323,6 +323,7 @@ class AccountInvoiceLine(models.Model):
         # in case of anglo saxon with a product configured as invoiced based on delivery, with perpetual
         # valuation and real price costing method, we must find the real price for the cost of good sold
         uom_obj = self.env['product.uom']
+        Product = self.env['product.product']
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
@@ -332,14 +333,44 @@ class AccountInvoiceLine(models.Model):
                 moves = self.env['stock.move']
                 for procurement in s_line.procurement_ids:
                     moves |= procurement.move_ids
-                moves.sorted(lambda x: x.date)
-                # Go through all the moves and do nothing until you get to qty_done
-                # Beyond qty_done we need to calculate the average of the price_unit
-                # on the moves we encounter.
-                average_price_unit = self._compute_average_price(qty_done, quantity, moves)
-                price_unit = average_price_unit or price_unit
+                price_unit = Product._get_anglo_saxon_average_price_unit(price_unit, moves=moves, quantity=quantity, qty_done=qty_done)
                 price_unit = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price_unit, to_uom_id=self.uom_id.id)
         return price_unit
+
+    def _compute_average_price(self, qty_done, quantity, moves):
+        return self.env['product.product']._compute_average_price(qty_done, quantity, moves)
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _need_procurement(self):
+        for product in self:
+            if product.type not in ['service', 'digital']:
+                return True
+        return super(ProductProduct, self)._need_procurement()
+
+    def _get_anglo_saxon_average_price_unit(self, price_unit, moves=False, quantity=False, qty_done=False):
+        moves.sorted(lambda x: x.date)
+        # Go through all the moves and do nothing until you get to qty_done
+        # Beyond qty_done we need to calculate the average of the price_unit
+        # on the moves we encounter.
+        average_price_unit = self._compute_average_price(qty_done, quantity, moves)
+        price_unit = average_price_unit or price_unit
+        return price_unit
+
+    def get_pos_anglo_saxon_price_unit(self, partner_id, quantity, order_ids):
+        price_unit = super(ProductProduct, self).get_pos_anglo_saxon_price_unit(partner_id, quantity, order_ids)
+        if self.invoice_policy == "delivery":
+            moves = self.env['stock.move']
+            orders = self.env['pos.order'].browse(order_ids)
+            pickings = orders.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id')
+            for picking in pickings:
+                moves |= picking.move_lines.filtered(lambda m: m.product_id.id == self.id)
+            price_unit = self._get_anglo_saxon_average_price_unit(price_unit, moves=moves, quantity=quantity, qty_done=quantity)
+        return price_unit
+
 
     def _compute_average_price(self, qty_done, quantity, moves):
         average_price_unit = 0
@@ -360,14 +391,3 @@ class AccountInvoiceLine(models.Model):
             if qty_delivered == quantity:
                 break
         return average_price_unit
-
-
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    @api.multi
-    def _need_procurement(self):
-        for product in self:
-            if product.type not in ['service', 'digital']:
-                return True
-        return super(ProductProduct, self)._need_procurement()

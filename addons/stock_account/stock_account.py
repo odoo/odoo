@@ -89,6 +89,10 @@ class ProductProduct(models.Model):
             return price
         return self.uom_id._compute_price(self.uom_id.id, price, to_uom_id=uom.id)
 
+    def get_pos_anglo_saxon_price_unit(self, partner_id, quantity, order_ids):
+        # In the SO part, the entries will be inverted by function compute_invoice_totals
+        return - self._get_anglo_saxon_price_unit()
+
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"

@@ -1321,13 +1321,13 @@ class pos_order(osv.osv):
         rounding_method = session and session.config_id.company_id.tax_calculation_rounding_method
         def add_anglosaxon_lines(grouped_data):
             Product = self.pool['product.product']
+            Picking = self.pool['stock.picking']
             Analytic = self.pool['account.analytic.account']
             for product_key in list(grouped_data.keys()):
                 if product_key[0] == "product":
                     line = grouped_data[product_key][0]
                     product = Product.browse(cr, uid, line['product_id'], context=context)
-                    # In the SO part, the entries will be inverted by function compute_invoice_totals
-                    price_unit = - product._get_anglo_saxon_price_unit()
+                    price_unit = product.get_pos_anglo_saxon_price_unit(line['partner_id'], line['quantity'], ids)
                     account_analytic = Analytic.browse(cr, uid, line.get('analytic_account_id'), context=context)
                     res = Product._anglo_saxon_sale_move_lines(cr, uid,
                         line['name'], product, product.uom_id, line['quantity'], price_unit,
