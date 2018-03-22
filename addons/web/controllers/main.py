@@ -40,6 +40,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
 from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 from odoo.service import db
+from odoo.service.report import exp_report, exp_report_get
 
 _logger = logging.getLogger(__name__)
 
@@ -1476,14 +1477,11 @@ class Reports(http.Controller):
                 report_ids = action['datas'].pop('ids')
             report_data.update(action['datas'])
 
-        report_id = dispatch_rpc('report', 'report', [
-            request.session.db, request.session.uid, request.session.password,
-            action["report_name"], report_ids, report_data, context])
+        report_id = exp_report(request.session.db, request.session.uid, action["report_name"], report_ids, report_data, context)
 
         report_struct = None
         while True:
-            report_struct = dispatch_rpc('report', 'report_get', [
-                request.session.db, request.session.uid, request.session.password, report_id])
+            report_struct = exp_report_get(request.session.db, request.session.uid, report_id)
             if report_struct["state"]:
                 break
 
