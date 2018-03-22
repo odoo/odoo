@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
@@ -11,7 +10,17 @@ class ValuationReconciliationTestCase(AccountingTestCase):
     extended in both sale_stock and purchase modules to run the 'true' tests.
     """
 
-    def _create_product_category(self): #Done in a separate function to allow override in purchase module
+    def check_reconciliation(self, invoice, picking, full_reconcile=True):
+        invoice_line = self.env['account.move.line'].search([('move_id','=', invoice.move_id.id), ('account_id','=',self.input_account.id)])
+        valuation_line = picking.move_lines.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id == self.input_account)
+        self.assertEqual(len(invoice_line), 1, "Only one line should have been written by invoice in stock input account")
+        self.assertEqual(len(valuation_line), 1, "Only one line should have been written for stock valuation in stock input account")
+        self.assertTrue(valuation_line.reconciled or invoice_line.reconciled, "The valuation and invoice line should have been reconciled together.")
+
+        if full_reconcile:
+            self.assertTrue(valuation_line.full_reconcile_id, "The reconciliation should be total at that point.")
+
+    def _create_product_category(self):
         return self.env['product.category'].create({
             'name': 'Test category',
             'property_valuation': 'real_time',
@@ -25,18 +34,14 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         super(ValuationReconciliationTestCase, self).setUp()
 
         self.company = self.env['res.company']._company_default_get()
-
         self.company.anglo_saxon_accounting = True
-
         self.currency_one = self.company.currency_id
-
         currency_two_name = 'USD' if self.currency_one.name != 'USD' else 'EUR'
         self.currency_two = self.env['res.currency'].search([('name', '=', currency_two_name)])
-
         self.currency_rate = self.env['res.currency.rate'].create({
             'currency_id': self.currency_one.id,
             'company_id': self.company.id,
-            'rate': 1.234343354, #Totally arbitratry value
+            'rate': 1.234343354,  # Totally arbitratry value
         })
 
         self.input_account = self.env['account.account'].create({
@@ -63,13 +68,13 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'company_id': self.company.id,
         })
 
-        test_product_category = self._create_product_category()
+        self.test_product_category = self._create_product_category()
 
         uom = self.env['uom.uom'].search([], limit=1)
         test_product_delivery_inv_template = self.env['product.template'].create({
             'name': 'Test product template invoiced on delivery',
             'type': 'product',
-            'categ_id': test_product_category.id,
+            'categ_id': self.test_product_category.id,
             'uom_id': uom.id,
             'uom_po_id': uom.id,
             'invoice_policy': 'delivery',
@@ -77,7 +82,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         test_product_order_inv_template = self.env['product.template'].create({
             'name': 'Test product template invoiced on order',
             'type': 'product',
-            'categ_id': test_product_category.id,
+            'categ_id': self.test_product_category.id,
             'uom_id': uom.id,
             'uom_po_id': uom.id,
             'invoice_policy': 'delivery',
