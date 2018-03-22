@@ -1118,6 +1118,11 @@ var One2ManyListView = X2ManyListView.extend({
                     self.x2m.reload_current_view();
                 });
             },
+            create_function: function(data, options) {
+                return self.x2m.data_create(data, options).done(function() {
+                    self.x2m.reload_current_view();
+                });
+            },
             alternative_form_view: self.x2m.field.views ? self.x2m.field.views.form : undefined,
             parent_view: self.x2m.view,
             child_name: self.x2m.name,
