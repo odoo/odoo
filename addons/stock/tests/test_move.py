@@ -2985,6 +2985,7 @@ class StockMove(TransactionCase):
             ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
+            ('quantity', '!=', 0.0),
         ])
         self.assertEqual(quant_lot1.location_id, self.stock_location)
         self.assertEqual(quant_lot1.in_date, Datetime.to_string(initial_in_date_lot1))
@@ -2994,6 +2995,7 @@ class StockMove(TransactionCase):
             ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot2.id),
+            ('quantity', '!=', 0.0),
         ])
         self.assertEqual(quant_lot2.location_id, self.pack_location)
         self.assertEqual(quant_lot2.in_date, initial_in_date_lot2)
@@ -3046,6 +3048,7 @@ class StockMove(TransactionCase):
             ('location_id', '=', self.stock_location.id),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot2.id),
+            ('quantity', '!=', 0),
         ]).in_date
 
         # Edit lot1's incoming date.
@@ -3053,6 +3056,7 @@ class StockMove(TransactionCase):
             ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
+            ('quantity', '!=', 0),
         ])
         from datetime import datetime, timedelta
         initial_in_date_lot1 = datetime.now() - timedelta(days=5)
@@ -3086,6 +3090,7 @@ class StockMove(TransactionCase):
         quants = self.env['stock.quant'].search([
             ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
+            ('quantity', '!=', 0),
         ])
         self.assertEqual(len(quants), 2)
         from odoo.fields import Datetime

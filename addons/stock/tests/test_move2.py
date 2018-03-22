@@ -627,7 +627,7 @@ class TestPickShip(TestStockCommon):
         for move_line in picking_ship.move_line_ids:
             move_line.qty_done = move_line.product_uom_qty
         picking_ship.button_validate()
-        quants_of_products_ab = self.env['stock.quant'].search([('product_id', 'in', (self.productA.id, self.productB.id))])
+        quants_of_products_ab = self.env['stock.quant'].search([('product_id', 'in', (self.productA.id, self.productB.id)), ('quantity', '!=', 0.0)])
         quants_of_product_a = quants_of_products_ab.filtered(lambda q: q.product_id == self.productA)
         quants_of_product_b = quants_of_products_ab.filtered(lambda q: q.product_id == self.productB)
         self.assertEqual(quants_of_products_ab.mapped('location_id.id'), [self.customer_location])

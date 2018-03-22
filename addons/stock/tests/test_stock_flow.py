@@ -10,6 +10,7 @@ class TestStockFlow(TestStockCommon):
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.production.lot']
+        stock_location = self.env['stock.location'].browse(self.stock_location)
         # ----------------------------------------------------------------------
         # Create incoming shipment of product A, B, C, D
         # ----------------------------------------------------------------------
@@ -277,22 +278,22 @@ class TestStockFlow(TestStockCommon):
         # -----------------------------------------------------------------------
 
         # Check quants and available quantity for product A
-        quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productA, stock_location)
         total_qty = [quant.quantity for quant in quants]
 
         self.assertEqual(sum(total_qty), 2.0, 'Expecting 2.0 Unit , got %.4f Unit on location stock!' % (sum(total_qty)))
         self.assertEqual(self.productA.qty_available, 2.0, 'Wrong quantity available (%s found instead of 2.0)' % (self.productA.qty_available))
         # Check quants and available quantity for product B
-        quants = self.StockQuantObj.search([('product_id', '=', self.productB.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productB, stock_location)
         self.assertFalse(quants, 'No quant should found as outgoing shipment took everything out of stock.')
         self.assertEqual(self.productB.qty_available, 0.0, 'Product B should have zero quantity available.')
         # Check quants and available quantity for product C
-        quants = self.StockQuantObj.search([('product_id', '=', self.productC.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productC, stock_location)
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 2.0, 'Expecting 2.0 Unit, got %.4f Unit on location stock!' % (sum(total_qty)))
         self.assertEqual(self.productC.qty_available, 2.0, 'Wrong quantity available (%s found instead of 2.0)' % (self.productC.qty_available))
         # Check quants and available quantity for product D
-        quant = self.StockQuantObj.search([('product_id', '=', self.productD.id), ('location_id', '=', self.stock_location)], limit=1)
+        quant = self.StockQuantObj._gather(self.productD, stock_location)
         self.assertEqual(quant.quantity, 1.0, 'Expecting 1.0 Unit , got %.4f Unit on location stock!' % (quant.quantity))
         self.assertEqual(self.productD.qty_available, 1.0, 'Wrong quantity available (%s found instead of 1.0)' % (self.productD.qty_available))
 
@@ -395,21 +396,21 @@ class TestStockFlow(TestStockCommon):
         # -----------------------------------------------------------------------
 
         # Check quants and available quantity for product A.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productA, stock_location)
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 12.0, 'Wrong total stock location quantity (%s found instead of 12)' % (sum(total_qty)))
         self.assertEqual(self.productA.qty_available, 12.0, 'Wrong quantity available (%s found instead of 12)' % (self.productA.qty_available))
         # Check quants and available quantity for product B.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productB.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productB, stock_location)
         self.assertFalse(quants, 'No quant should found as outgoing shipment took everything out of stock')
         self.assertEqual(self.productB.qty_available, 0.0, 'Total quantity in stock should be 0 as the backorder took everything out of stock')
         # Check quants and available quantity for product C.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productC.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productC, stock_location)
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 8.0, 'Wrong total stock location quantity (%s found instead of 8)' % (sum(total_qty)))
         self.assertEqual(self.productC.qty_available, 8.0, 'Wrong quantity available (%s found instead of 8)' % (self.productC.qty_available))
         # Check quants and available quantity for product D.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productD.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productD, stock_location)
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 9.0, 'Wrong total stock location quantity (%s found instead of 9)' % (sum(total_qty)))
         self.assertEqual(self.productD.qty_available, 9.0, 'Wrong quantity available (%s found instead of 9)' % (self.productD.qty_available))
@@ -421,7 +422,7 @@ class TestStockFlow(TestStockCommon):
         back_order_out.do_transfer()
 
         # Check stock location quants and available quantity for product A.
-        quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location)])
+        quants = self.StockQuantObj._gather(self.productA, stock_location)
         total_qty = [quant.quantity for quant in quants]
         self.assertGreaterEqual(float_round(sum(total_qty), precision_rounding=0.0001), 1, 'Total stock location quantity for product A should not be nagative.')
 
