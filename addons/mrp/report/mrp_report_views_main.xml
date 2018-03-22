@@ -10,6 +10,14 @@
             report_type="qweb-pdf"
             print_report_name="'Production Order - %s' % object.name"
         />
+        <report 
+            string="BoM Structure" 
+            id="action_report_bom_structure" 
+            model="mrp.bom" 
+            name="mrp.report_bom_structure"
+            file="mrp.report_bom_structure"
+            report_type="qweb-pdf"
+            print_report_name="'Bom Structure - %s' % object.display_name"
         />
     </data>
 </odoo>
