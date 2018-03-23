@@ -77,302 +77,830 @@
             <field name="name">Company Contact</field>
             <field name="color" eval="3"/>
         </record>
+    </data>
 
-       <!--
-        Resource: res.partner
-        -->
+    <data noupdate="0">
+        <!-- FIRST COMPANY: WOOD/TREE SUPPLIERS, UK -->
+        <record id="res_partner_company_0" model="res.partner">
+            <field name="name">Gimli Axe LTD</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer" eval="False"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/logo_axe.jpg"/>
+            <field name="street">Castle Esplanade</field>
+            <field name="zip">FK8 1EJ</field>
+            <field name="city">Stirling</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 1234 567 890</field>
+            <field name="mobile">+44 0987 654 321</field>
+            <field name="email">axe@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_0_0" model="res.partner">
+            <field name="name">Brett Starkaxe</field>
+            <field name="title" ref="base.res_partner_title_prof"/>
+            <field name="parent_id" eval="ref('res_partner_company_0')"/>
+            <field name="customer" eval="False"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_hipster_0.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">Mail Bearer</field>
+            <field name="street">Castle Esplanade</field>
+            <field name="zip">FK8 1EJ</field>
+            <field name="city">Stirling</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 1234 567 890</field>
+            <field name="mobile">+44 0987 654 321</field>
+            <field name="email">axe+brett@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_0_1" model="res.partner">
+            <field name="name">Georges McStucky</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_0')"/>
+            <field name="customer" eval="False"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_viking_0.jpg"/>
+            <field name="type">delivery</field>
+            <field name="function">Truck Driver</field>
+            <field name="street">Castle Esplanade</field>
+            <field name="zip">FK8 1EJ</field>
+            <field name="city">Stirling</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 1234 567 890</field>
+            <field name="mobile">+44 0987 654 321</field>
+            <field name="email">axe+georges@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_0_2" model="res.partner">
+            <field name="name">Ailean Whitetree</field>
+            <field name="title" ref="base.res_partner_title_madam"/>
+            <field name="parent_id" eval="ref('res_partner_company_0')"/>
+            <field name="customer" eval="False"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_viking_0.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">Chest Keeper</field>
+            <field name="street">Castle Esplanade</field>
+            <field name="zip">FK8 1EJ</field>
+            <field name="city">Stirling</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 1234 567 890</field>
+            <field name="mobile">+44 0987 654 321</field>
+            <field name="email">axe+ailean@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_0_3" model="res.partner">
+            <field name="name">Kennocha Solerunner</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_0')"/>
+            <field name="customer" eval="False"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_0.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Phone Crasher</field>
+            <field name="street">Castle Esplanade</field>
+            <field name="zip">FK8 1EJ</field>
+            <field name="city">Stirling</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 1234 567 890</field>
+            <field name="mobile">+44 0987 654 321</field>
+            <field name="email">axe+kennocha@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
 
+        <!-- SECOND COMPANY: WOOD CUSTOMERS/SUPPLIERS, US -->
+        <record id="res_partner_company_1" model="res.partner">
+            <field name="name">Morning Wood Inc</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer" eval="True"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/logo_morning_wood.jpg"/>
+            <field name="street">1305 SE 8th Ave</field>
+            <field name="zip">OR 97214</field>
+            <field name="city">Portland</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="phone">+1 555 11 22 33 44</field>
+            <field name="mobile">+1 555 44 33 22 11</field>
+            <field name="email">wood@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_1_0" model="res.partner">
+            <field name="name">Emma Farsight</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_1')"/>
+            <field name="customer" eval="True"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_10.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">News Inquirer</field>
+            <field name="street">1305 SE 8th Ave</field>
+            <field name="zip">OR 97214</field>
+            <field name="city">Portland</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="phone">+1 555 11 22 33 44</field>
+            <field name="mobile">+1 555 44 33 22 11</field>
+            <field name="email">wood+emma@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_1_1" model="res.partner">
+            <field name="name">John Harsh</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_1')"/>
+            <field name="customer" eval="True"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_lumber_0.jpg"/>
+            <field name="type">delivery</field>
+            <field name="function">Jeep Master</field>
+            <field name="street">1305 SE 8th Ave</field>
+            <field name="zip">OR 97214</field>
+            <field name="city">Portland</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="phone">+1 555 11 22 33 44</field>
+            <field name="mobile">+1 555 44 33 22 11</field>
+            <field name="email">wood+john@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_1_2" model="res.partner">
+            <field name="name">Robert Wooding</field>
+            <field name="title" ref="base.res_partner_title_doctor"/>
+            <field name="parent_id" eval="ref('res_partner_company_1')"/>
+            <field name="customer" eval="True"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_hipster_10.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">Golden Boy</field>
+            <field name="street">1305 SE 8th Ave</field>
+            <field name="zip">OR 97214</field>
+            <field name="city">Portland</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="phone">+1 555 11 22 33 44</field>
+            <field name="mobile">+1 555 44 33 22 11</field>
+            <field name="email">wood+robert@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_1_3" model="res.partner">
+            <field name="name">Beverly Sequoia</field>
+            <field name="title" ref="base.res_partner_title_doctor"/>
+            <field name="parent_id" eval="ref('res_partner_company_1')"/>
+            <field name="customer" eval="True"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_viking_1.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Heavy Root</field>
+            <field name="street">1305 SE 8th Ave</field>
+            <field name="zip">OR 97214</field>
+            <field name="city">Portland</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="phone">+1 555 11 22 33 44</field>
+            <field name="mobile">+1 555 44 33 22 11</field>
+            <field name="email">wood+beverly@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_1_4" model="res.partner">
+            <field name="name">Daliah Gloin</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_1')"/>
+            <field name="customer" eval="True"/>
+            <field name="supplier" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_lumber_0.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Lumber</field>
+            <field name="street">1305 SE 8th Ave</field>
+            <field name="zip">OR 97214</field>
+            <field name="city">Portland</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="phone">+1 555 11 22 33 44</field>
+            <field name="mobile">+1 555 44 33 22 11</field>
+            <field name="email">wood+daliah@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+
+        <!-- THIRD COMPANY: TREE BUYERS, CA -->
+        <record id="res_partner_company_2" model="res.partner">
+            <field name="name">Tree Dealers SP</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/logo_tree.jpg"/>
+            <field name="street">Place d'Youville, 995</field>
+            <field name="zip">QC G1R 3P1</field>
+            <field name="city">Ville de Quebec</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="phone">+1 418 123 4567</field>
+            <field name="mobile">+1 418 765 4321</field>
+            <field name="email">tree@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_2_0" model="res.partner">
+            <field name="name">Laura Tremblay</field>
+            <field name="title" ref="base.res_partner_title_madam"/>
+            <field name="parent_id" eval="ref('res_partner_company_2')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_1.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">Tree Lover</field>
+            <field name="street">Place d'Youville, 995</field>
+            <field name="zip">QC G1R 3P1</field>
+            <field name="city">Ville de Quebec</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="phone">+1 418 123 4567</field>
+            <field name="mobile">+1 418 765 4321</field>
+            <field name="email">tree+laura@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_2_1" model="res.partner">
+            <field name="name">Yannick Vitesse</field>
+            <field name="title" ref="base.res_partner_title_prof"/>
+            <field name="parent_id" eval="ref('res_partner_company_2')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_hipster_1.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">Mandator</field>
+            <field name="street">Place d'Youville, 995</field>
+            <field name="zip">QC G1R 3P1</field>
+            <field name="city">Ville de Quebec</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="phone">+1 418 123 4567</field>
+            <field name="mobile">+1 418 765 4321</field>
+            <field name="email">tree+yannick@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_2_2" model="res.partner">
+            <field name="name">Jérôme Tétreault</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_2')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_0.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Happy Guy</field>
+            <field name="street">Place d'Youville, 995</field>
+            <field name="zip">QC G1R 3P1</field>
+            <field name="city">Ville de Quebec</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="phone">+1 418 123 4567</field>
+            <field name="mobile">+1 418 765 4321</field>
+            <field name="email">tree+jerome@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_2_3" model="res.partner">
+            <field name="name">Eloïse St-Pierre</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_2')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_lumber_1.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Lumber</field>
+            <field name="street">Place d'Youville, 995</field>
+            <field name="zip">QC G1R 3P1</field>
+            <field name="city">Ville de Quebec</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="phone">+1 418 123 4567</field>
+            <field name="mobile">+1 418 765 4321</field>
+            <field name="email">tree+eloise@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+
+        <!-- FOURTH COMPANY: FLOWERS BUYERS, DE -->
+        <record id="res_partner_company_3" model="res.partner">
+            <field name="name">Bloem GmbH</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/logo_flower.jpg"/>
+            <field name="street">Behrenstraße 55</field>
+            <field name="zip">10117</field>
+            <field name="city">Berlin</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="phone">+49 30 12345678</field>
+            <field name="mobile">+49 30 87654321</field>
+            <field name="email">flower@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_3_0" model="res.partner">
+            <field name="name">Hans Krüger</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_3')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_flower_0.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">Gardener</field>
+            <field name="street">Behrenstraße 55</field>
+            <field name="zip">10117</field>
+            <field name="city">Berlin</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="phone">+49 30 12345678</field>
+            <field name="mobile">+49 30 87654321</field>
+            <field name="email">flower+hans@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_3_1" model="res.partner">
+            <field name="name">Constanze Weber</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_3')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_flower_10.jpg"/>
+            <field name="type">delivery</field>
+            <field name="function">Car Driver</field>
+            <field name="street">Behrenstraße 55</field>
+            <field name="zip">10117</field>
+            <field name="city">Berlin</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="phone">+49 30 12345678</field>
+            <field name="mobile">+49 30 87654321</field>
+            <field name="email">flower+constanze@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_3_2" model="res.partner">
+            <field name="name">Erik Weiß</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_3')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_flower_1.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">Accountant</field>
+            <field name="street">Behrenstraße 55</field>
+            <field name="zip">10117</field>
+            <field name="city">Berlin</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="phone">+49 30 12345678</field>
+            <field name="mobile">+49 30 87654321</field>
+            <field name="email">flower+erik@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_3_3" model="res.partner">
+            <field name="name">Valentina Müller</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_3')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_50.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Gardener</field>
+            <field name="street">Behrenstraße 55</field>
+            <field name="zip">10117</field>
+            <field name="city">Berlin</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="phone">+49 30 12345678</field>
+            <field name="mobile">+49 30 87654321</field>
+            <field name="email">flower+valentina@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_3_4" model="res.partner">
+            <field name="name">Friedericke Schneider</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_3')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_hipster_0.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Office Manager</field>
+            <field name="street">Behrenstraße 55</field>
+            <field name="zip">10117</field>
+            <field name="city">Berlin</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="phone">+49 30 12345678</field>
+            <field name="mobile">+49 30 87654321</field>
+            <field name="email">flower+friedericke@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+
+        <!-- FIFTH COMPANY: FURNITURE BUYERS, CN -->
+        <record id="res_partner_company_4" model="res.partner">
+            <field name="name">Shangai Pterocarpus Furniture Co., Ltd.</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/logo_furniture.jpg"/>
+            <field name="street">68 Taicang Rd, Shi Men Er Lu Jie Dao, Huangpu Qu</field>
+            <field name="zip">200000</field>
+            <field name="city">Shanghai Shi</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">ptero@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_4_0" model="res.partner">
+            <field name="name">Zhāng Lu</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_4')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_20.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">Contact</field>
+            <field name="street">68 Taicang Rd, Shi Men Er Lu Jie Dao, Huangpu Qu</field>
+            <field name="zip">200000</field>
+            <field name="city">Shanghai Shi</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">ptero+lu@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_4_1" model="res.partner">
+            <field name="name">Luó Bei</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_4')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_flower_20.jpg"/>
+            <field name="type">delivery</field>
+            <field name="function">Truck Driver</field>
+            <field name="street">68 Taicang Rd, Shi Men Er Lu Jie Dao, Huangpu Qu</field>
+            <field name="zip">200000</field>
+            <field name="city">Shanghai Shi</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">ptero+bei@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_4_2" model="res.partner">
+            <field name="name">Dòng Li</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_4')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_20.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">Accountant</field>
+            <field name="street">68 Taicang Rd, Shi Men Er Lu Jie Dao, Huangpu Qu</field>
+            <field name="zip">200000</field>
+            <field name="city">Shanghai Shi</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">ptero+li@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_4_3" model="res.partner">
+            <field name="name">Tián Wong Kar</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_4')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_21.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Carpenter</field>
+            <field name="street">68 Taicang Rd, Shi Men Er Lu Jie Dao, Huangpu Qu</field>
+            <field name="zip">200000</field>
+            <field name="city">Shanghai Shi</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">ptero+wong@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_4_4" model="res.partner">
+            <field name="name">Wāng Chao</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_4')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_carpenter_20.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Architect</field>
+            <field name="street">68 Taicang Rd, Shi Men Er Lu Jie Dao, Huangpu Qu</field>
+            <field name="zip">200000</field>
+            <field name="city">Shanghai Shi</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">ptero+chao@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+
+        <!-- SIXTH COMPANY: FURNITURE BUYERS, IN -->
+        <record id="res_partner_company_5" model="res.partner">
+            <field name="name">Delicious Food Pvt. Ltd.</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/logo_food.jpg"/>
+            <field name="street">Koba, Gandhinagar Highway, Koba Patia, Sector 8</field>
+            <field name="zip">382007</field>
+            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="phone">+91 79 1234 5678</field>
+            <field name="mobile">+91 79 8765 4321</field>
+            <field name="email">food@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_5_0" model="res.partner">
+            <field name="name">Niraja Modi</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_5')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_30.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">CEO</field>
+            <field name="street">Koba, Gandhinagar Highway, Koba Patia, Sector 8</field>
+            <field name="zip">382007</field>
+            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">food+niraja@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_5_1" model="res.partner">
+            <field name="name">Vihaan Patel</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_5')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_30.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">CFO</field>
+            <field name="street">Koba, Gandhinagar Highway, Koba Patia, Sector 8</field>
+            <field name="zip">382007</field>
+            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">food+vihaan@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_5_2" model="res.partner">
+            <field name="name">Aadhira Rathod</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_5')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_cook_30.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Cook</field>
+            <field name="street">Koba, Gandhinagar Highway, Koba Patia, Sector 8</field>
+            <field name="zip">382007</field>
+            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="phone">+91 79 1234 5678</field>
+            <field name="mobile">+91 79 8765 4321</field>
+            <field name="email">food+aadhira@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_5_3" model="res.partner">
+            <field name="name">Reyansh Jani</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_5')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_31.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Taste Architect</field>
+            <field name="street">Koba, Gandhinagar Highway, Koba Patia, Sector 8</field>
+            <field name="zip">382007</field>
+            <field name="city">Gandhinagar</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="phone">+86 21 1234 5678</field>
+            <field name="mobile">+86 21 8765 4321</field>
+            <field name="email">food+reyansh@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+
+        <!-- SEVENTH COMPANY: AGROLAIT, GENERIC BUYERS, BE -->
+        <record id="res_partner_company_6" model="res.partner">
+            <field name="name">Agrolait SA</field>
+            <field name="is_company" eval="True"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/logo_chair.jpg"/>
+            <field name="street">Rue Montagne aux Herbes Potagères 7</field>
+            <field name="zip">1000</field>
+            <field name="city">Bruxelles</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="phone">+32 02 513 11 22</field>
+            <field name="mobile">+32 02 513 22 11</field>
+            <field name="email">agrolait@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_6_0" model="res.partner">
+            <field name="name">Mevanwi de Vannes</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_6')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_carpenter_0.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">CEO</field>
+            <field name="street">Rue Montagne aux Herbes Potagères 7</field>
+            <field name="zip">1000</field>
+            <field name="city">Bruxelles</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="phone">+32 02 513 11 22</field>
+            <field name="mobile">+32 02 513 22 11</field>
+            <field name="email">agrolait+mevanwi@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_6_1" model="res.partner">
+            <field name="name">Karadoc de Vannes</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_6')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_viking_1.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">Accountant</field>
+            <field name="street">Rue Montagne aux Herbes Potagères 7</field>
+            <field name="zip">1000</field>
+            <field name="city">Bruxelles</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="phone">+32 02 513 11 22</field>
+            <field name="mobile">+32 02 513 22 11</field>
+            <field name="email">agrolait+karadoc@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_6_2" model="res.partner">
+            <field name="name">Provencal de Gaules</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="parent_id" eval="ref('res_partner_company_6')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_lumber_1.jpg"/>
+            <field name="type">other</field>
+            <field name="function">CTO</field>
+            <field name="street">Rue Montagne aux Herbes Potagères 7</field>
+            <field name="zip">1000</field>
+            <field name="city">Bruxelles</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="phone">+32 02 513 11 22</field>
+            <field name="mobile">+32 02 513 22 11</field>
+            <field name="email">agrolait+provencal@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+    </data>
+
+    <data noupdate="0">
+        <!-- Europe -->
+        <record id="res_partner_0" model="res.partner">
+            <field name="name">Jean-Claude Poilvache</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_lumber_2.jpg"/>
+            <field name="function">That guy</field>
+            <field name="street">24 Rue Paul Bert</field>
+            <field name="zip">75011</field>
+            <field name="city">Paris</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="phone">+33 1 55 44 33 22 11</field>
+            <field name="phone">+33 1 11 22 33 44 55</field>
+            <field name="email">poilvache@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
         <record id="res_partner_1" model="res.partner">
-            <field name="name">ASUSTeK</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field name="city">Taipei</field>
-            <field name="zip">106</field>
-            <field name="country_id" ref="base.tw"/>
-            <field name="street">31 Hong Kong street</field>
-            <field name="email">asusteK@yourcompany.example.com</field>
-            <field name="phone">(+886) (02) 4162 2023</field>
-            <field name="website">http://www.asustek.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_1-image.jpg"/>
+            <field name="name">Hugo Kandeukan</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_11.jpg"/>
+            <field name="function">Diver</field>
+            <field name="street">EPFL Innovation Park, Building A</field>
+            <field name="zip">1015</field>
+            <field name="city">Lausanne</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="phone">+41 21 123 45 67</field>
+            <field name="phone">+41 21 765 43 21</field>
+            <field name="email">hugo@camptocamp.example.com</field>
+            <field name="website">www.example.com</field>
         </record>
         <record id="res_partner_2" model="res.partner">
-            <field name="name">Agrolait</field>
-            <field eval="[(6, 0, [ref('base.res_partner_category_7'), ref('base.res_partner_category_9')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Wavre</field>
-            <field name="zip">1300</field>
-            <field name="country_id" ref="base.be"/>
-            <field name="street">69 rue de Namur</field>
-            <field name="email">agrolait@yourcompany.example.com</field>
-            <field name="phone">+32 10 588 558</field>
-            <field name="website">http://www.agrolait.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_2-image.jpg"/>
+            <field name="name">Olivia Gonzalez</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_hipster_1.jpg"/>
+            <field name="function">Happy for Life</field>
+            <field name="street">Rambla Catalunya 100, 4a</field>
+            <field name="zip">08008</field>
+            <field name="city">Barcelona</field>
+            <field name="country_id" ref="base.es"/>
+            <field name="phone">+34 93 461 59 75</field>
+            <field name="mobile">+34 93 461 75 59</field>
+            <field name="email">olivia@eficent.example.com</field>
+            <field name="website">www.example.com</field>
         </record>
         <record id="res_partner_3" model="res.partner">
-            <field name="name">China Export</field>
-            <field name="supplier">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Shanghai</field>
-            <field name="zip">200000</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="country_id" ref="base.cn"/>
-            <field name="street">52 Chop Suey street</field>
-            <field name="email">chinaexport@yourcompany.example.com</field>
-            <field name="phone">+86 21 6484 5671</field>
-            <field name="website">http://www.chinaexport.com/</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_3-image.png"/>
+            <field name="name">Giuseppe Bianchi</field>
+            <field name="title" ref="base.res_partner_title_doctor"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_1.jpg"/>
+            <field name="function">Food Solution Advisor</field>
+            <field name="street">Piazza di Porta Ravegnana</field>
+            <field name="zip">40126</field>
+            <field name="city">Bologna BO</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="phone">+39 051 11 22 33</field>
+            <field name="phone">+39 051 33 22 11</field>
+            <field name="email">giuseppe@example.com</field>
+            <field name="website">www.example.com</field>
         </record>
-        
+
+        <!-- America -->
         <record id="res_partner_4" model="res.partner">
-            <field name="name">Delta PC</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
-            <field eval="0" name="customer"/>
-            <field eval="1" name="supplier"/>
-            <field name="is_company">1</field>
-            <field name="city">Fremont</field>
-            <field name="zip">94538</field>
-            <field name="country_id" ref="base.us"/>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
-            <field name="street">3661 Station Street</field>
-            <field name="email">deltapc@yourcompany.example.com</field>
-            <field name="phone">+1 510 340 2385</field>
-            <field name="website">http://www.distribpc.com/</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_4-image.png"/>
+            <field name="name">José Rafael Hermanos</field>
+            <field name="title" ref="base.res_partner_title_prof"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_flower_50.jpg"/>
+            <field name="function">Angry Gardener</field>
+            <field name="street">Avenida Bolívar, Torre Camoruco,</field>
+            <field name="zip">2001</field>
+            <field name="city">Valencia</field>
+            <field name="country_id" ref="base.ve"/>
+            <field name="phone">+58 424 434 89 08</field>
+            <field name="mobile">+58 424 434 08 89</field>
+            <field name="email">jose@example.vauxoo.com</field>
+            <field name="website">www.example.com</field>
         </record>
 
-        <record id="res_partner_10" model="res.partner">
-            <field name="name">The Jackson Group</field>
-            <field eval="[(6, 0, [ref('res_partner_category_4'), ref('res_partner_category_7')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Miami</field>
-            <field name="zip">33169</field>
-            <field name="country_id" ref="base.us"/>
-            <field model="res.country.state" name="state_id" search="[('code','=','FL')]"/>
-            <field name="email">jackson@yourcompany.example.com</field>
-            <field name="phone">+1 786 525 0724</field>
-            <field name="street">3203 Lamberts Branch Road</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_10-image.jpg"/>
+        <!-- Asia -->
+        <record id="res_partner_5" model="res.partner">
+            <field name="name">Himari Kobayashi</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_21.jpg"/>
+            <field name="function">Tree Dealer</field>
+            <field name="street">1 Chome-9-1 Marunouchi, Chiyoda-ku</field>
+            <field name="zip">100-6701</field>
+            <field name="city">Tōkyō-to</field>
+            <field name="country_id" ref="base.jp"/>
+            <field name="phone">+81 3 1234 5678</field>
+            <field name="mobile">+81 3 8765 4321</field>
+            <field name="email">himari@example.com</field>
+            <field name="website">www.example.com</field>
         </record>
-  
-        <record id="res_partner_12" model="res.partner">
-            <field name="name">Camptocamp</field>
-            <field eval="[(6, 0, [ref('res_partner_category_11'), ref('res_partner_category_4')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field name="customer">1</field>
-            <field name="is_company">1</field>
-            <field name="city">Le Bourget du Lac</field>
-            <field name="zip">73377</field>
-            <field name="phone">+33 4 49 23 44 54</field>
-            <field name="country_id" ref="base.fr"/>
-            <field name="street">93, Press Avenue</field>
-            <field name="email">camptocamp@yourcompany.example.com</field>
-            <field name="website">http://www.camptocamp.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_12-image.jpg"/>
-        </record>
-
-        <record id="res_partner_18" model="res.partner">
-            <field name="name">Think Big Systems</field>
-            <field name="is_company">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
-            <field name="city">London</field>
-            <field name="email">thinkbig@yourcompany.example.com</field>
-            <field name="phone">+1 857 349 3049</field>
-            <field name="country_id" ref="base.uk"/>
-            <field name="street">89 Lingfield Tower</field>
-            <field name="website">http://www.think-big.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_18-image.png"/>
+        <record id="res_partner_6" model="res.partner">
+            <field name="name">Hoang Anh Dung</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_gen_22.jpg"/>
+            <field name="function">Tasty Food Buyer</field>
+            <field name="street">25 Hàng Cá, Hàng Bô, Hoàn Kiêm</field>
+            <field name="zip"></field>
+            <field name="city">Hà Nội</field>
+            <field name="country_id" ref="base.vn"/>
+            <field name="phone">+84 97 123 45 67</field>
+            <field name="mobile">+84 97 765 43 21</field>
+            <field name="email">anh@example.com</field>
+            <field name="website">www.example.com</field>
         </record>
 
-        <record id="res_partner_address_1" model="res.partner">
-            <field name="name">Tang Tsui</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Service Manager</field>
-            <field name="email">tang@asustek.com</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
+        <!-- Oceania -->
+        <record id="res_partner_7" model="res.partner">
+            <field name="name">Angus Daly James</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_man_carpenter_0.jpg"/>
+            <field name="function">Carpenter</field>
+            <field name="street">122 Alinga St</field>
+            <field name="zip">ACT 2601</field>
+            <field name="city">Canberra</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="phone">+61 2 11 22 33 44</field>
+            <field name="phone">+61 2 44 33 22 11</field>
+            <field name="email">angus@example.com</field>
+            <field name="website">www.example.com</field>
         </record>
-        <record id="res_partner_address_2" model="res.partner">
-            <field name="name">Joseph Walters</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Store Manager</field>
-            <field name="email">joseph.walters@asustek.com</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
+
+        <!-- Africa -->
+        <record id="res_partner_8" model="res.partner">
+            <field name="name">Bokamoso Govender</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_11.jpg"/>
+            <field name="function">Architect</field>
+            <field name="street">22 Gerhard MoerdykStreet, Sunnyside</field>
+            <field name="zip">0002</field>
+            <field name="city">Pretoria</field>
+            <field name="country_id" ref="base.za"/>
+            <field name="phone">+27 12 345 6789</field>
+            <field name="mobile">+27 98 765 4321</field>
+            <field name="email">bokamoso@example.com</field>
+            <field name="website">www.example.com</field>
         </record>
-        <record id="res_partner_address_3" model="res.partner">
-            <field name="function">Functional Consultant</field>
-            <field name="parent_id" eval="ref('res_partner_2')"/>
-            <field name="name">Thomas Passot</field>
-            <field name="email">thomas.passot@agrolait.example.com</field>
+        <record id="res_partner_9" model="res.partner">
+            <field name="name">Dojyna Khan</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_gen_40.jpg"/>
+            <field name="function">Furniture Manager</field>
+            <field name="street">Hoda Shaarawy, Bab Al Louq, Abdeen</field>
+            <field name="zip"></field>
+            <field name="city">Cairo Governorate</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="phone">+20 2 11 22 33 44</field>
+            <field name="mobile">+20 2 44 33 22 11</field>
+            <field name="email">dojyna@example.com</field>
+            <field name="website">www.example.com</field>
         </record>
-        <record id="res_partner_address_4" model="res.partner">
-            <field name="function">Analyst</field>
-            <field name="parent_id" eval="ref('res_partner_2')"/>
-            <field name="name">Michel Fletcher</field>
-            <field name="email">michel.fletcher@agrolait.example.com</field>
+    </data>
+
+    <data noupdate="0">
+        <record id="res_partner_user_3" model="res.partner">
+            <field name="name">Eliane PortalUser</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+            <field name="parent_id" eval="ref('res_partner_company_6')"/>
+            <field name="customer" eval="True"/>
+            <field name="image" type="base64" file="base/static/img/people_woman_user_2.jpg"/>
+            <field name="type">other</field>
+            <field name="function">Customer Portal User</field>
+            <field name="street">Rue Montagne aux Herbes Potagères 7</field>
+            <field name="zip">1000</field>
+            <field name="city">Bruxelles</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="phone">+32 02 513 11 22</field>
+            <field name="mobile">+32 02 513 22 11</field>
+            <field name="email">agrolait+portal@example.com</field>
+            <field name="website">www.example.com</field>
         </record>
-        <record id="res_partner_address_5" model="res.partner">
-            <field name="function">Marketing Manager</field>
-            <field name="parent_id" eval="ref('res_partner_3')"/>
-            <field name="name">Chao Wang</field>
-            <field name="email">chao.wang@chinaexport.example.com</field>
-        </record>
-        <record id="res_partner_address_7" model="res.partner">
-            <field name="name">Richard Ellis</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="function">Production Supervisor</field>
-            <field name="email">richard.ellis@deltapc.example.com</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_10" model="res.partner">
-            <field name="function">Senior Consultant</field>
-            <field name="parent_id" eval="ref('res_partner_3')"/>
-            <field name="name">David Simpson</field>
-            <field name="email">david.simpson@epic.example.com</field>
-        </record>
-        <record id="res_partner_address_11" model="res.partner">
-            <field name="function">Director</field>
-            <field name="parent_id" eval="ref('res_partner_3')"/>
-            <field name="name">John M. Brown</field>
-            <field name="email">john.brown@epic.example.com</field>
-        </record>
-        <record id="res_partner_address_12" model="res.partner">
-            <field name="name">James Miller</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Electrical Supervisor</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_13" model="res.partner">
-            <field name="function">Senior Associate</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="name">Charlie Bernard</field>
-            <field name="email">charlie.bernard@wealthyandsons.example.com</field>
-        </record>
-        <record id="res_partner_address_14" model="res.partner">
-            <field name="function">Analyst</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="name">Jessica Dupont</field>
-            <field name="email">jessica.dupont@wealthyandsons.example.com</field>
-        </record>
-        <record id="res_partner_address_15" model="res.partner">
-            <field name="function">Creative Director</field>
-            <field name="parent_id" eval="ref('res_partner_12')"/>
-            <field name="name">Phillipp Miller</field>
-            <field name="email">phillipp.miller@mediapole.example.com</field>
-        </record>
-        <record id="res_partner_address_16" model="res.partner">
-            <field name="function">Director</field>
-            <field name="parent_id" eval="ref('res_partner_12')"/>
-            <field name="name">Ayaan Agarwal</field>
-            <field name="email">ayaan.agarwal@bestdesigners.example.com</field>
-        </record>
-        <record id="res_partner_address_17" model="res.partner">
-            <field name="function">Managing Partner</field>
-            <field name="parent_id" eval="ref('res_partner_10')"/>
-            <field name="name">Daniel Jackson</field>
-            <field name="email">daniel.jackson@jackson.example.com</field>
-        </record>
-        <record id="res_partner_address_18" model="res.partner">
-            <field name="function">Senior Consultant</field>
-            <field name="parent_id" eval="ref('res_partner_10')"/>
-            <field name="name">William Thomas</field>
-            <field name="email">william.jackson@jackson.example.com</field>
-        </record>
-        <record id="res_partner_address_22" model="res.partner">
-            <field name="function">Director</field>
-            <field name="parent_id" eval="ref('res_partner_2')"/>
-            <field name="name">Laith Jubair</field>
-            <field name="email">laith.jubair@axelor.example.com</field>
-        </record>
-        <record id="res_partner_address_24" model="res.partner">
-            <field name="function">System Analyst</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="name">Robert Anderson</field>
-            <field name="email">robert.anderson@chamberworks.example.com</field>
-        </record>
-        <record id="res_partner_address_25" model="res.partner">
-            <field name="function">Order Clerk</field>
-            <field name="parent_id" eval="ref('res_partner_3')"/>
-            <field name="name">Jacob Taylor</field>
-            <field name="email">jacob.taylor@millennium.example.com</field>
-        </record>
-        <record id="res_partner_address_28" model="res.partner">
-            <field name="function">Business Executive</field>
-            <field name="parent_id" eval="ref('res_partner_12')"/>
-            <field name="name">Benjamin Flores</field>
-            <field name="email">benjamin.flores@nebula.example.com</field>
-        </record>
-        <record id="res_partner_address_30" model="res.partner">
-            <field name="function">Functional Consultant</field>
-            <field name="parent_id" eval="ref('res_partner_18')"/>
-            <field name="name">Lucas Jones</field>
-            <field name="email">lucas.jones@thinkbig.example.com</field>
-        </record>
-        <record id="res_partner_address_31" model="res.partner">
-            <field name="name">Edward Foster</field>
-            <field name="parent_id" eval="ref('res_partner_2')"/>
-            <field name="function">Sales Representative</field>
-            <field name="email">efoster@seagate.com</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_32" model="res.partner">
-            <field name="function">Sales Manager</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="name">Robin Smith</field>
-            <field name="email">robin.smith@globalsolutions.example.com</field>
-        </record>
-        <record id="res_partner_address_33" model="res.partner">
-            <field name="function">Financial Manager</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="name">Morgan Rose</field>
-            <field name="email">morgan.rose@globalsolutions.example.com</field>
-        </record>
-        <record id="res_partner_address_34" model="res.partner">
-            <field name="function">Knowledge Manager</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="name">Kevin Clarke</field>
-            <field name="email">kevin.clarke@globalsolutions.example.com</field>
-        </record>
-        <record id="res_partner_address_27" model="res.partner">
-            <field name="name">Arthur Gomez</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Software Developer</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_26" model="res.partner">
-            <field name="name">Julia Rivero</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Technical Director</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_35" model="res.partner">
-            <field name="name">Peter Mitchell</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Store Manager</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_main1" model="res.partner">
-          <field name="customer" eval="False"/>
-          <field name="parent_id" eval="ref('main_partner')"/>
-          <field name="function">Chief Executive Officer (CEO)</field>
-          <field name="name">Mark Davis</field>
-          <field name="email">mark.davis@yourcompany.example.com</field>
-        </record>
-        <record id="res_partner_main2" model="res.partner">
-          <field name="customer" eval="False"/>
-          <field name="parent_id" eval="ref('main_partner')"/>
-          <field name="function">Chief Operations Officer (COO)</field>
-          <field name="name">Roger Scott</field>
-          <field name="email">roger.scott@yourcompany.example.com</field>
+        <record id="res_users_3" model="res.users">
+            <field name="partner_id" eval="res_partner_user_3"/>
+            <field name="login">dummy3</field>
+            <field name="password">dummy</field>
+            <field name="notification_type">email</field>
+            <field name="groups_id" eval="[(6, 0,  [ref('base.group_portal')])]"/>
+            <field name="signature" type="html"><p>--<br />Your Portal User</p></field>
         </record>
     </data>
 </odoo>
