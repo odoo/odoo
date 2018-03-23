@@ -80,6 +80,20 @@
     </data>
 
     <data noupdate="0">
+        <record id="res_partner_employee_0" model="res.partner">
+            <field name="name">Fabien Tartaldjotte</field>
+            <field name="parent_id" eval="ref('base.main_partner')"/>
+            <!-- <field name="image" type="base64" file="hr_data/static/img/people_man_lumber_0.jpg"/> -->
+            <field name="type">other</field>
+            <field name="function">Employee</field>
+            <field name="street">Place de la Cathédrale 6</field>
+            <field name="zip">4000</field>
+            <field name="city">Liège</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+    </data>
+
+    <data noupdate="0">
         <!-- FIRST COMPANY: WOOD/TREE SUPPLIERS, UK -->
         <record id="res_partner_company_0" model="res.partner">
             <field name="name">Gimli Axe LTD</field>
