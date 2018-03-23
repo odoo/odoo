@@ -303,6 +303,7 @@ class Picking(models.Model):
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
+    immediate_transfer = fields.Boolean()
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -319,7 +320,7 @@ class Picking(models.Model):
                 picking.show_operations = True
                 continue
             if picking.picking_type_id.show_operations:
-                if (picking.state == 'draft' and not self.env.context.get('planned_picking')) or picking.state != 'draft':
+                if (picking.state == 'draft' and picking.immediate_transfer) or picking.state != 'draft':
                     picking.show_operations = True
                 else:
                     picking.show_operations = False
@@ -437,7 +438,7 @@ class Picking(models.Model):
         for picking in self:
             if not picking.move_lines:
                 picking.show_mark_as_todo = False
-            elif self._context.get('planned_picking') and picking.state == 'draft':
+            elif not (picking.immediate_transfer) and picking.state == 'draft':
                 picking.show_mark_as_todo = True
             elif picking.state != 'draft' or not picking.id:
                 picking.show_mark_as_todo = False
@@ -448,7 +449,7 @@ class Picking(models.Model):
     @api.depends('state', 'is_locked')
     def _compute_show_validate(self):
         for picking in self:
-            if self._context.get('planned_picking') and picking.state == 'draft':
+            if not (picking.immediate_transfer) and picking.state == 'draft':
                 picking.show_validate = False
             elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned') or not picking.is_locked:
                 picking.show_validate = False
@@ -562,19 +563,7 @@ class Picking(models.Model):
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
-        if self.env.context.get('planned_picking') and len(self) == 1:
-            action = self.env.ref('stock.action_picking_form')
-            result = action.read()[0]
-            result['res_id'] = self.id
-            result['context'] = {
-                'search_default_picking_type_id': [self.picking_type_id.id],
-                'default_picking_type_id': self.picking_type_id.id,
-                'contact_display': 'partner_address',
-                'planned_picking': False,
-            }
-            return result
-        else:
-            return True
+        return True
 
     @api.multi
     def action_assign(self):
@@ -793,9 +782,8 @@ class Picking(models.Model):
 
     @api.multi
     def _autoconfirm_picking(self):
-        if not self._context.get('planned_picking'):
-            for picking in self.filtered(lambda picking: picking.state not in ('done', 'cancel') and picking.move_lines):
-                picking.action_confirm()
+        for picking in self.filtered(lambda picking: picking.immediate_transfer and picking.state not in ('done', 'cancel') and picking.move_lines):
+            picking.action_confirm()
 
     def _get_overprocessed_stock_moves(self):
         self.ensure_one()

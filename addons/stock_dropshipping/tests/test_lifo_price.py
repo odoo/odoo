@@ -82,6 +82,7 @@ class TestLifoPrice(common.TransactionCase):
         # Let us send some goods
         out_form = Form(self.env['stock.picking'])
         out_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        out_form.immediate_transfer = True
         with out_form.move_lines.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0

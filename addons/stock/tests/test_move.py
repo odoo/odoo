@@ -3549,6 +3549,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'immediate_transfer': True,
         })
         move1 = self.env['stock.move'].create({
             'name': 'test_transit_1',
