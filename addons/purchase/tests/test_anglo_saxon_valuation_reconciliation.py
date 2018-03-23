@@ -13,7 +13,7 @@ from odoo.tests import tagged
 class TestValuationReconciliation(ValuationReconciliationTestCase):
 
     def setUp(self):
-        super(ValuationReconciliationTestCase, self).setUp()
+        super(TestValuationReconciliation, self).setUp()
 
         #set a price difference account on the category
         self.price_dif_account = self.env['account.account'].create({
@@ -28,7 +28,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
     def create_purchase(self, product):
         rslt = self.env['purchase.order'].create({
             'partner_id': self.test_partner.id,
-            'currency_id': self.currency_one.id,
+            'currency_id': self.currency_two.id,
             'order_line': [
                 (0, 0, {
                     'name': product.name,
@@ -77,6 +77,9 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         invoice.action_invoice_open()
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
+        # cancel the invoice
+        invoice.journal_id.write({'update_posted': 1})
+        invoice.action_cancel()
 
     def test_invoice_shipment(self):
         """ Tests the case into which we make the invoice first, and then receive the goods.
@@ -94,3 +97,23 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         self.receive_po(purchase_order)
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
+
+        #return the goods and refund the invoice
+        self.currency_rate.rate = 10.54739702
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=[picking.id], active_id=picking.id).create({})
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.action_assign()
+        return_pick.move_lines.quantity_done = 1
+        return_pick.action_done()
+        self.currency_rate.rate = 9.56564564
+        refund_invoice_wiz = self.env['account.invoice.refund'].with_context(active_ids=[invoice.id]).create({
+            'description': 'test_invoice_shipment_refund',
+            'filter_refund': 'cancel',
+        })
+        refund_invoice_wiz.invoice_refund()
+        refund_invoice = self.env['account.invoice'].search([('name', '=', 'test_invoice_shipment_refund')])[0]
+        self.assertTrue(invoice.state == refund_invoice.state == 'paid'), "Invoice and refund should both be in 'Paid' state"
+        self.check_reconciliation(refund_invoice, return_pick)
