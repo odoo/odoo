@@ -19,7 +19,8 @@ class HrContract(models.Model):
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     max_unused_cars = fields.Integer(compute='_compute_max_unused_cars')
 
-    @api.depends('car_id', 'new_car', 'new_car_model_id')
+    @api.depends('car_id', 'new_car', 'new_car_model_id', 'car_id.total_depreciated_cost',
+        'car_id.atn', 'new_car_model_id.default_atn', 'new_car_model_id.default_total_depreciated_cost')
     def _compute_car_atn_and_costs(self):
         for contract in self:
             if not contract.new_car and contract.car_id:
