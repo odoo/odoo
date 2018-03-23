@@ -11,7 +11,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
     """
 
     def check_reconciliation(self, invoice, picking, full_reconcile=True):
-        invoice_line = self.env['account.move.line'].search([('move_id','=', invoice.move_id.id), ('account_id','=',self.input_account.id)])
+        invoice_line = self.env['account.move.line'].search([('move_id','=', invoice.move_id.id), ('account_id', '=', self.input_account.id)])
         valuation_line = picking.move_lines.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id == self.input_account)
         self.assertEqual(len(invoice_line), 1, "Only one line should have been written by invoice in stock input account")
         self.assertEqual(len(valuation_line), 1, "Only one line should have been written for stock valuation in stock input account")
@@ -77,7 +77,6 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'categ_id': self.test_product_category.id,
             'uom_id': uom.id,
             'uom_po_id': uom.id,
-            'invoice_policy': 'delivery',
         })
         test_product_order_inv_template = self.env['product.template'].create({
             'name': 'Test product template invoiced on order',
@@ -85,7 +84,6 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'categ_id': self.test_product_category.id,
             'uom_id': uom.id,
             'uom_po_id': uom.id,
-            'invoice_policy': 'delivery',
         })
 
         self.test_product_order = self.env['product.product'].create({
