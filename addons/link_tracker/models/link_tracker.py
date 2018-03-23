@@ -248,7 +248,6 @@ class link_tracker_click(models.Model):
 
             vals = {
                 'link_id': code_rec.link_id.id,
-                'create_date': datetime.date.today(),
                 'ip': ip,
                 'country_id': country_record.id,
             }
