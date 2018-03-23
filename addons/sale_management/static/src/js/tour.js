@@ -15,7 +15,7 @@ tour.register('sale_tour', {
 },  {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order",
-    content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
+    content: _t("Let's create a new quotation.<br/><i>"),
     position: "bottom",
 }, {
     trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
@@ -66,7 +66,7 @@ tour.register('sale_tour', {
 }, {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: ".o_sale_order [data-value='sent'].btn-primary",
-    content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
+    content: _t("Use the breadcrumbs to <b>go back to previous screens</b>."),
     position: "bottom"
 }, {
     trigger: 'li a[data-menu-xmlid="sale.sale_order_menu"], .oe_secondary_menu_section[data-menu-xmlid="sale.sale_order_menu"]',
