@@ -140,7 +140,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         picking_stock_preprod.move_line_ids.qty_done = 4
         picking_stock_preprod.action_done()
 
-        self.assertFalse(self.env['stock.quant']._gather(self.raw_product, self.warehouse.lot_stock_id))
+        self.assertFalse(sum(self.env['stock.quant']._gather(self.raw_product, self.warehouse.lot_stock_id).mapped('quantity')))
         self.assertTrue(self.env['stock.quant']._gather(self.raw_product, self.warehouse.pbm_loc_id))
 
         production_order.action_assign()
@@ -156,7 +156,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         product_produce.do_produce()
         production_order.button_mark_done()
 
-        self.assertFalse(self.env['stock.quant']._gather(self.raw_product, self.warehouse.pbm_loc_id))
+        self.assertFalse(sum(self.env['stock.quant']._gather(self.raw_product, self.warehouse.pbm_loc_id).mapped('quantity')))
 
         self.assertEqual(picking_stock_postprod.state, 'assigned')
 
