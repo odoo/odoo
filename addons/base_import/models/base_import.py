@@ -376,7 +376,7 @@ class Import(models.TransientModel):
 
         if results:
             return results
-        return ['id', 'text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
+        return ['id', 'text', 'boolean', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
 
     @api.model
     def _find_type_from_preview(self, options, preview):
