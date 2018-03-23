@@ -1164,18 +1164,24 @@ var BasicModel = AbstractModel.extend({
      * @param {Array} recordIDs local ids of the records to (un)archive
      * @param {boolean} value false to archive, true to unarchive (value of the active field)
      * @param {string} parentID id of the parent resource to reload
+     * @param {Object} options
+     * @param {Array} options.active_domain
+     * @param {string} options.active_model
      * @returns {Deferred<string>} resolves to the parent id
      */
-    toggleActive: function (recordIDs, value, parentID) {
+    toggleActive: function (recordIDs, value, parentID, options) {
         var self = this;
         var parent = this.localData[parentID];
         var resIDs = _.map(recordIDs, function (recordID) {
             return self.localData[recordID].res_id;
         });
+        var context = _.extend(this.localData[parentID].getContext(), session.user_context, options);
         return this._rpc({
+                 route: '/web/dataset/call_kw_with_domain',
                 model: parent.model,
                 method: 'write',
                 args: [resIDs, { active: value }],
+                context: context,
             })
             .then(function () {
                 // optionally clear the DataManager's cache

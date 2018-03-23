@@ -266,8 +266,14 @@ var ListController = BasicController.extend({
         if (ids.length === 0) {
             return $.when();
         }
+        var options = {};
+        if (this.allSelected) {
+            var record = this.model.get(this.handle);
+            options['active_domain'] = record.getDomain();
+            options['active_model'] = record.model;
+        }
         return this.model
-            .toggleActive(ids, !archive, this.handle)
+            .toggleActive(ids, !archive, this.handle, options)
             .then(this.update.bind(this, {}, {reload: false}));
     },
     /**
