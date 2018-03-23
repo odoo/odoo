@@ -8,6 +8,7 @@ from odoo.http import request
 from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal, pager as portal_pager
 
 from odoo.osv.expression import OR
+from odoo.exceptions import AccessError
 
 
 class CustomerPortal(CustomerPortal):
@@ -71,6 +72,10 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/project/<int:project_id>'], type='http', auth="user", website=True)
     def portal_my_project(self, project_id=None, **kw):
         project = request.env['project.project'].browse(project_id)
+        try:
+            project.check_access_rule('read')
+        except AccessError:
+            return request.redirect('/my')
         vals = {'project': project}
         history = request.session.get('my_projects_history', [])
         vals.update(get_records_pager(history, project))
@@ -166,6 +171,10 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/task/<int:task_id>'], type='http', auth="user", website=True)
     def portal_my_task(self, task_id=None, **kw):
         task = request.env['project.task'].browse(task_id)
+        try:
+            task.check_access_rule('read')
+        except AccessError:
+            return request.redirect('/my')
         vals = {
             'task': task,
             'user': request.env.user
