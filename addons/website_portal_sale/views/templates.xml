@@ -77,7 +77,7 @@
                         <td><span t-field="order.date_order"/></td>
                         <td>
                             <t t-if="order.state == 'progress'">
-                                <span class="label label-info"><i class="fa fa-fw fa-clock-o"/> Invoiced</span>
+                                <span class="label label-info"><i class="fa fa-fw fa-clock-o"/> In preparation</span>
                             </t>
                             <t t-if="order.state in ['shipping_except','invoice_except']">
                                 <span class="label label-danger"><i class="fa fa-fw fa-warning"/> Problem</span>
