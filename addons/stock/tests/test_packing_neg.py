@@ -125,7 +125,7 @@ class TestPackingNeg(TransactionCase):
 
         # Check the quants that you have -20 pieces pallet 2 in stock, and a total quantity
         # of 50 in stock from pallet 3 (should be 20+30, as it has been split by reservation)
-        records = self.env['stock.quant'].search([('product_id', '=', product_neg.id)])
+        records = self.env['stock.quant'].search([('product_id', '=', product_neg.id), ('quantity', '!=', '0')])
         pallet_3_stock_qty = 0
         for rec in records:
             if rec.package_id.name == 'Palneg 2' and rec.location_id.id == self.ref('stock.stock_location_stock'):

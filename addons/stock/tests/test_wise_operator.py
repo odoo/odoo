@@ -171,5 +171,6 @@ class TestWiseOperator(TransactionCase):
         records = self.env['stock.quant'].search([
             ('product_id', '=', product_wise.id),
             ('location_id', '!=', self.ref('stock.stock_location_suppliers'))])
-        self.assertTrue(all([x.location_id.id == self.ref('stock.stock_location_customers') and x.quantity > 0.0 for x in records]),
+        self.assertTrue(all([x.location_id.id == self.ref('stock.stock_location_customers') and x.quantity > 0.0 or
+                             x.location_id.id != self.ref('stock.stock_location_customers') and x.quantity == 0.0 for x in records]),
                         "Negative quant or wrong location detected")
