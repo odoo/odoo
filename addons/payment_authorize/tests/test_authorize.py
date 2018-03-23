@@ -155,14 +155,19 @@ class AuthorizeForm(AuthorizeCommon):
         with self.assertRaises(ValidationError):
             self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
 
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 320.0,
-            'acquirer_id': self.authorize.id,
             'currency_id': self.currency_usd.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.authorize.id,
             'reference': 'SO004',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
         # validate it
         self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
@@ -171,14 +176,19 @@ class AuthorizeForm(AuthorizeCommon):
 
         # reset tx
         tx.unlink()
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 320.0,
-            'acquirer_id': self.authorize.id,
             'currency_id': self.currency_usd.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.authorize.id,
             'reference': 'SO004',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # simulate an error
         authorize_post_data['x_response_code'] = u'3'
@@ -214,31 +224,42 @@ class AuthorizeForm(AuthorizeCommon):
         })
 
         # create normal s2s transaction
-        transaction = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 500,
-            'acquirer_id': authorize.id,
-            'type': 'server2server',
             'currency_id': self.currency_usd.id,
-            'reference': 'test_ref_%s' % int(time.time()),
-            'payment_token_id': payment_token.id,
             'partner_id': self.buyer_id,
-
+        }).with_transaction({
+            'payment_token_id': payment_token.id,
+            'type': 'server2server',
+            'acquirer_id': authorize.id,
+            'reference': 'test_ref_%s' % int(time.time()),
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
         })
+        payment.post()
+        transaction = payment.payment_transaction_id
+
         transaction.authorize_s2s_do_transaction()
         self.assertEqual(transaction.state, 'posted',)
 
         # switch to 'authorize only'
         # create authorize only s2s transaction & capture it
         self.authorize.capture_manually = True
-        transaction = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 500,
-            'acquirer_id': authorize.id,
-            'type': 'server2server',
             'currency_id': self.currency_usd.id,
-            'reference': 'test_%s' % int(time.time()),
-            'payment_token_id': payment_token.id,
             'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': payment_token.id,
+            'type': 'server2server',
+            'acquirer_id': authorize.id,
+            'reference': 'test_%s' % int(time.time()),
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
         })
+        payment.post()
+        transaction = payment.payment_transaction_id
+
         transaction.authorize_s2s_do_transaction()
         self.assertTrue(transaction.capture)
         transaction.action_capture()
@@ -246,15 +267,21 @@ class AuthorizeForm(AuthorizeCommon):
 
         # create authorize only s2s transaction & void it
         self.authorize.capture_manually = True
-        transaction = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 500,
-            'acquirer_id': authorize.id,
-            'type': 'server2server',
             'currency_id': self.currency_usd.id,
-            'reference': 'test_%s' % int(time.time()),
-            'payment_token_id': payment_token.id,
             'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': payment_token.id,
+            'type': 'server2server',
+            'acquirer_id': authorize.id,
+            'reference': 'test_%s' % int(time.time()),
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
         })
+        payment.post()
+        transaction = payment.payment_transaction_id
+
         transaction.authorize_s2s_do_transaction()
         self.assertTrue(transaction.capture)
         transaction.action_void()

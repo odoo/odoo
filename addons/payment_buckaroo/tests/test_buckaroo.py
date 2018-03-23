@@ -68,13 +68,19 @@ class BuckarooForm(BuckarooCommon):
         # ----------------------------------------
 
         # create a new draft tx
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 2240.0,
-            'acquirer_id': self.buckaroo.id,
             'currency_id': self.currency_euro.id,
-            'reference': 'SO004',
             'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.buckaroo.id,
+            'reference': 'SO004',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
         })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # render the button
         res = self.buckaroo_id.render(
@@ -129,14 +135,19 @@ class BuckarooForm(BuckarooCommon):
         with self.assertRaises(ValidationError):
             self.env['payment.transaction'].form_feedback(buckaroo_post_data, 'buckaroo')
 
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 2240.0,
-            'acquirer_id': self.buckaroo.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.buckaroo.id,
             'reference': 'SO004',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # validate it
         tx.form_feedback(buckaroo_post_data, 'buckaroo')
@@ -146,14 +157,19 @@ class BuckarooForm(BuckarooCommon):
 
         # reset tx
         tx.unlink()
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 2240.0,
-            'acquirer_id': self.buckaroo.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.buckaroo.id,
             'reference': 'SO004',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # now buckaroo post is ok: try to modify the SHASIGN
         buckaroo_post_data['BRQ_SIGNATURE'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'

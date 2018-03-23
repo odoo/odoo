@@ -72,12 +72,19 @@ class OgonePayment(PaymentAcquirerCommon):
         # ----------------------------------------
 
         # create a new draft tx
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 0.01,
-            'acquirer_id': self.ogone.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.ogone.id,
+            'type': 'validation',
             'reference': 'test_ref0',
-            'partner_id': self.buyer_id})
+            'partner_country_id': self.partner_id.country_id.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
         # render the button
         res = self.ogone.render(
             'should_be_erased', 0.01, self.currency_euro,
@@ -126,14 +133,20 @@ class OgonePayment(PaymentAcquirerCommon):
             self.env['payment.transaction'].form_feedback(ogone_post_data)
 
         # create tx
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 1.95,
-            'acquirer_id': self.ogone.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.ogone.id,
+            'type': 'validation',
             'reference': 'test_ref_2',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
         # validate it
         tx.form_feedback(ogone_post_data)
         # check state
@@ -142,14 +155,20 @@ class OgonePayment(PaymentAcquirerCommon):
 
         # reset tx
         tx.unlink()
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 1.95,
-            'acquirer_id': self.ogone.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.ogone.id,
+            'type': 'validation',
             'reference': 'test_ref_2',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # now ogone post is ok: try to modify the SHASIGN
         ogone_post_data['SHASIGN'] = 'a4c16bae286317b82edb49188d3399249a784691'
@@ -169,14 +188,20 @@ class OgonePayment(PaymentAcquirerCommon):
         self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
 
         # create a new draft tx
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 0.01,
-            'acquirer_id': self.ogone.id,
             'currency_id': self.currency_euro.id,
-            'reference': test_ref,
             'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.ogone.id,
             'type': 'server2server',
+            'reference': test_ref,
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
         })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # create an alias
         res = tx.ogone_s2s_create_alias({

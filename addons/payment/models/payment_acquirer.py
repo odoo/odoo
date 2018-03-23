@@ -351,6 +351,7 @@ class PaymentAcquirer(models.Model):
 
         # currency id
         currency_id = values.setdefault('currency_id', currency_id)
+        currency_id = values.setdefault('currency_id', currency_id)
         if currency_id:
             currency = self.env['res.currency'].browse(currency_id)
         else:
@@ -582,8 +583,6 @@ class PaymentTransaction(models.Model):
     callback_method = fields.Char('Callback Method', groups="base.group_system")
     callback_hash = fields.Char('Callback Hash', groups="base.group_system")
 
-    payment_token_id = fields.Many2one('payment.token', 'Payment Token', domain="[('acquirer_id', '=', acquirer_id)]")
-
     token_implemented = fields.Boolean(related='acquirer_id.token_implemented')
     authorize_implemented = fields.Boolean(related='acquirer_id.authorize_implemented')
     fees_implemented = fields.Boolean(related='acquirer_id.fees_implemented')
@@ -591,19 +590,6 @@ class PaymentTransaction(models.Model):
     _sql_constraints = [
         ('reference_uniq', 'unique(reference)', 'Reference must be unique!'),
     ]
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        onchange_vals = self.on_change_partner_id(self.partner_id.id).get('value', {})
-        self.update(onchange_vals)
-
-    @api.onchange('payment_method_id', 'journal_id')
-    def _onchange_payment_method(self):
-        if self.payment_method_code == 'electronic':
-            self.payment_token_id = self.env['payment.token'].search(
-                [('partner_id', '=', self.partner_id.id), ('acquirer_id.capture_manually', '=', False)], limit=1)
-        else:
-            self.payment_token_id = False
 
     @api.multi
     def _get_oe_log_html(self):
@@ -677,6 +663,7 @@ class PaymentTransaction(models.Model):
         '''
         if any(trans.state != 'draft' or trans.pending or trans.capture for trans in self):
             raise UserError(_('Some transactions can\'t be processed because they are already pending, capture or not linked to draft payment.'))
+
         self.write({'pending': True, 'capture': True})
         self._log_payment_transaction_received()
 
@@ -692,9 +679,8 @@ class PaymentTransaction(models.Model):
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
         invoices.action_invoice_open()
 
-        self.payment_id.post()
-
         self.write({'pending': True, 'capture': False})
+        self.payment_id.post()
         self._log_payment_transaction_received()
 
     @api.multi
@@ -705,9 +691,8 @@ class PaymentTransaction(models.Model):
         if any(trans.state != 'draft' for trans in self):
             raise UserError(_('Some transactions can\'t be cancelled because they are not linked to draft payment.'))
 
-        self.payment_id.cancel()
-
         self.write({'pending': True, 'capture': False})
+        self.payment_id.cancel()
         self._log_payment_transaction_received()
 
     @api.multi
@@ -733,53 +718,29 @@ class PaymentTransaction(models.Model):
             raise exceptions.ValidationError(_('The %s payment acquirers are not allowed to manual capture mode!' % failed_tx.mapped('acquirer_id.name')))
 
     @api.model
-    def _prepare_account_payment_vals(self, vals, acquirer=None):
-        '''Prepare values to create the account.payment record.
-        :param vals: vals used during the create.
-        :param acquirer: The payment.acquirer record to browsing twice.
-        :return: a dictionary of values.
-        '''
-        if not acquirer:
-            acquirer = self.env['payment.acquirer'].browse(vals['acquirer_id'])
-
-        if not acquirer.journal_id:
-            raise UserError(_('A journal must be specified of the acquirer %s.' % acquirer.name))
-
-        amount = vals.get('amount')
-        payment_type = 'inbound' if amount > 0 else 'outbound'
-        invoice_ids = vals.get('invoice_ids')
-        return {
-            'amount': amount,
-            'partner_id': vals.get('partner_id'),
-            'partner_type': 'customer',
-            'invoice_ids': invoice_ids,
-            'currency_id': vals.get('currency_id'),
-            'journal_id': acquirer.journal_id.id,
-            'company_id': acquirer.company_id.id,
-            'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
-            'payment_type': payment_type,
-            'state': 'draft',
-        }
-
-    @api.model
-    def _compute_reference(self, vals=None):
+    def _compute_reference(self, payment):
         '''Compute a unique reference for the transaction.
         If some invoices:
             <inv_number_0>.number,<inv_number_1>,...,<inv_number_n>-x
         If some sale orders:
             <so_name_0>.number,<so_name_1>,...,<so_name_n>-x
+        Else:
+            tx-\d+
         :param vals: values passed on the create function.
         :return: A unique reference for the transaction.
         '''
         def as_reference(many_field, ref_field):
-            many_list = self.resolve_2many_commands(many_field, vals[many_field], fields=[ref_field])
+            many_list = self.resolve_2many_commands(many_field, getattr(payment, many_field).ids, fields=[ref_field])
             return ','.join(dic[ref_field] for dic in many_list)
 
         reference = ''
-        if vals and vals.get('invoice_ids'):
+        if payment.invoice_ids:
             reference = as_reference('invoice_ids', 'number')
-        elif vals and vals.get('sale_order_ids'):
+        elif payment.sale_order_ids:
             reference = as_reference('sale_order_ids', 'name')
+
+        if not reference:
+            reference = 'tx'
 
         # Fetch the last reference
         # E.g. If the last reference is SO42-5, this query will return '-5'
@@ -791,11 +752,12 @@ class PaymentTransaction(models.Model):
 
         if query_res:
             # Increment the last reference by one
-            reference += '-%s' % (-query_res[0] + 1)
+            suffix = '%s' % (-query_res[0] + 1)
         else:
             # Start a new indexing from 1
-            reference += '-1'
-        return reference
+            suffix = '1'
+
+        return '%s-%s' % (reference, suffix)
 
     @api.model
     def create(self, values):
@@ -805,39 +767,25 @@ class PaymentTransaction(models.Model):
         # call custom create method if defined (i.e. ogone_create for ogone)
         acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
 
+        payment = self.env['account.payment'].browse(values['payment_id'])
+
         # compute fees
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id'))
-            values['fees'] = float_round(fees, 2)
+                payment.amount, payment.currency_id.id, payment.partner_id.country_id.id)
+            values['fees'] = fees
 
         # custom create
         custom_method_name = '%s_create' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             values.update(getattr(self, custom_method_name)(values))
 
-        payment_record = None
-        if values.get('payment_id'):
-            payment_record = self.env['account.payment'].browse(values['payment_id'])
-        else:
-            payment_record = self.env['account.payment'].sudo().create(
-                self._prepare_account_payment_vals(values, acquirer=acquirer))
-            values['payment_id'] = payment_record.id
-
         if not values.get('reference'):
-            values['reference'] = self._compute_reference(values)
-
-        # The invoice_ids fields is declared on account.payment.
-        # Then, no need to write this value again.
-        if 'invoice_ids' in values:
-            values.pop('invoice_ids')
+            values['reference'] = self._compute_reference(payment)
 
         # Default value of reference is
         tx = super(PaymentTransaction, self).create(values)
-
-        # Assign the id to the account.payment to make a one2one relation.
-        payment_record.payment_transaction_id = tx.id
 
         # Generate callback hash if it is configured on the tx; avoid generating unnecessary stuff
         # (limited sudo env for checking callback presence, must work for manual transactions too)
@@ -1064,16 +1012,18 @@ class PaymentToken(models.Model):
             return False
 
         reference = "VALIDATION-%s-%s" % (self.id, datetime.now().strftime('%y%m%d_%H%M%S'))
-        tx = self.env['payment.transaction'].sudo().create({
+        payment = self.env['account.payment'].create({
             'amount': amount,
+            'currency_id': currency.id,
+            'partner_id': self.partner_id.id,
+        }).with_transaction({
+            'payment_token_id': self.id,
             'acquirer_id': self.acquirer_id.id,
             'type': 'validation',
-            'currency_id': currency.id,
             'reference': reference,
-            'payment_token_id': self.id,
-            'partner_id': self.partner_id.id,
             'partner_country_id': self.partner_id.country_id.id,
         })
+        tx = payment.payment_transaction_id
 
         try:
             kwargs.update({'3d_secure': True})

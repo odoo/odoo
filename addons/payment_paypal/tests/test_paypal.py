@@ -168,14 +168,19 @@ class PaypalForm(PaypalCommon):
             self.env['payment.transaction'].form_feedback(paypal_post_data, 'paypal')
 
         # create tx
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 1.95,
-            'acquirer_id': self.paypal.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'payment_token_id': self.id,
+            'acquirer_id': self.paypal.id,
             'reference': 'test_ref_2',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # validate it
         tx.form_feedback(paypal_post_data, 'paypal')

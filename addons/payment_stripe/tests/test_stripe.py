@@ -36,15 +36,20 @@ class StripeTest(StripeCommon):
         })
 
         # Create transaction
-        tx = self.env['payment.transaction'].create({
-            'reference': 'test_ref_%s' % fields.date.today(),
+        payment = self.env['account.payment'].create({
+            'amount': 115.0,
             'currency_id': self.currency_euro.id,
-            'acquirer_id': self.stripe.id,
             'partner_id': self.buyer_id,
+        }).with_transaction({
             'payment_token_id': payment_token.id,
             'type': 'server2server',
-            'amount': 115.0
+            'acquirer_id': self.stripe.id,
+            'reference': 'test_ref_%s' % fields.date.today(),
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id,
         })
+        payment.post()
+        tx = payment.payment_transaction_id
         tx.stripe_s2s_do_transaction()
 
         # Check state
@@ -142,14 +147,18 @@ class StripeTest(StripeCommon):
             u'statement_descriptor': None,
             u'status': u'succeeded'}
 
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 4700,
-            'acquirer_id': self.stripe.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'acquirer_id': self.stripe.id,
             'reference': 'SO100',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
 
         # validate it
         tx.form_feedback(stripe_post_data, 'stripe')
@@ -157,14 +166,19 @@ class StripeTest(StripeCommon):
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
         # reset tx
         tx.unlink()
-        tx = self.env['payment.transaction'].create({
+        payment = self.env['account.payment'].create({
             'amount': 4700,
-            'acquirer_id': self.stripe.id,
             'currency_id': self.currency_euro.id,
+            'partner_id': self.buyer_id,
+        }).with_transaction({
+            'acquirer_id': self.stripe.id,
             'reference': 'SO100',
             'partner_name': 'Norbert Buyer',
-            'partner_id': self.buyer_id,
-            'partner_country_id': self.country_france.id})
+            'partner_country_id': self.country_france.id,
+        })
+        payment.post()
+        tx = payment.payment_transaction_id
+
         # simulate an error
         stripe_post_data['status'] = 'error'
         stripe_post_data.update({u'error': {u'message': u"Your card's expiration year is invalid.", u'code': u'invalid_expiry_year', u'type': u'card_error', u'param': u'exp_year'}})

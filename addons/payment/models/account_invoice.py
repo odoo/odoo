@@ -31,13 +31,16 @@ class AccountInvoice(models.Model):
 
         # Try to retrieve the acquirer. However, fallback to the token's acquirer.
         acquirer_id = vals.get('acquirer_id')
+        acquirer = None
+        payment_token_id = vals.get('payment_token_id')
+        payment_token = None
 
-        if vals.get('payment_token_id'):
-            payment_token = self.env['payment.token'].sudo().browse(vals['payment_token_id'])
+        if payment_token_id:
+            payment_token = self.env['payment.token'].sudo().browse(payment_token_id)
 
             # Check payment_token/acquirer matching or take the acquirer from token
             if acquirer_id:
-                acquirer = self.env['payment.acquirer'].browse(vals['acquirer_id'])
+                acquirer = self.env['payment.acquirer'].browse(acquirer_id)
                 if payment_token and payment_token.acquirer_id != acquirer:
                     raise UserError(_('Invalid token found! Token acquirer %s != %s') % (
                     payment_token.acquirer_id.name, acquirer.name))
@@ -45,28 +48,48 @@ class AccountInvoice(models.Model):
                     raise UserError(_('Invalid token found! Token partner %s != %s') % (
                     payment_token.partner.name, partner.name))
             else:
-                acquirer_id = payment_token.acquirer_id.id
+                acquirer = payment_token.acquirer_id
 
-        # Check an acquirer was found.
-        if not acquirer_id:
+        # Check an acquirer is there.
+        if not acquirer_id and not acquirer:
             raise UserError(_('A payment acquirer is required to create a transaction.'))
 
-        vals.update({
-            'acquirer_id': acquirer_id,
-            'amount': sum(self.mapped('amount_total')),
+        if not acquirer:
+            acquirer = self.env['payment.acquirer'].browse(acquirer_id)
+
+        # Check a journal is set on acquirer.
+        if not acquirer.journal_id:
+            raise UserError(_('A journal must be specified of the acquirer %s.' % acquirer.name))
+
+        amount = sum(self.mapped('amount_total'))
+        payment_type = 'inbound' if amount > 0 else 'outbound'
+        payment_vals = {
+            'amount': amount,
+            'payment_type': payment_type,
             'currency_id': currency.id,
             'partner_id': partner.id,
-            'partner_country_id': partner.country_id.id,
+            'partner_type': 'customer',
             'invoice_ids': [(6, 0, self.ids)],
+            'journal_id': acquirer.journal_id.id,
+            'company_id': acquirer.company_id.id,
+            'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
+        }
+
+        vals.update({
+            'acquirer_id': acquirer.id,
+            'partner_country_id': partner.country_id.id,
+            # Do not pass the token to the payment to avoid creating a transaction automatically.
+            'payment_token_id': payment_token and payment_token.id or None,
         })
 
-        transaction = self.env['payment.transaction'].create(vals)
+        payment = self.env['account.payment'].sudo().create(payment_vals).with_transaction(vals)
+        transaction = payment.payment_transaction_id
 
         # Track the last transaction (used on frontend)
         self.write({'payment_tx_id': transaction.id})
 
         # Process directly if payment_token
         if transaction.payment_token_id:
-            transaction.s2s_do_transaction()
+            payment.post()
 
         return transaction

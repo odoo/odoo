@@ -229,6 +229,9 @@ class account_register_payments(models.TransientModel):
         payments = Payment
         for payment_vals in self.get_payments_vals():
             payments += Payment.create(payment_vals)
+
+        # In case of an electronic payment, the payment could be already posted at this point.
+        # Then, we need to filter on the draft payments.
         payments.post()
         return {
             'name': _('Payments'),
