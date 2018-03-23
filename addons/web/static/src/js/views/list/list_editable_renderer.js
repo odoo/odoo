@@ -504,8 +504,8 @@ ListRenderer.include({
         var $row = this._super.apply(this, arguments);
         if (this.addTrashIcon) {
             var $icon = this.isMany2Many ?
-                            $('<button>', {class: 'fa fa-times o_list_record_remove', name: 'unlink', 'aria-label': _t('Unlink row ') + (index+1)}) :
-                            $('<button>', {class: 'fa fa-trash-o o_list_record_remove', name: 'delete', 'aria-label': _t('Delete row ') + (index+1)});
+                            $('<button>', {class: 'fa fa-times', name: 'unlink', 'aria-label': _t('Unlink row ') + (index+1)}) :
+                            $('<button>', {class: 'fa fa-trash-o', name: 'delete', 'aria-label': _t('Delete row ') + (index+1)});
             var $td = $('<td>', {class: 'o_list_record_remove'}).append($icon);
             $row.append($td);
         }

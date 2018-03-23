@@ -3958,7 +3958,7 @@ QUnit.module('relational_fields', {
 
         form.$('td.o_list_record_remove button').first().click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove i').length, 1,
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
             "should have 1 remove button (a record is supposed to have been unlinked)");
 
         // save and check that the correct command has been generated
@@ -4004,7 +4004,7 @@ QUnit.module('relational_fields', {
 
         form.$('td.o_list_record_remove button').first().click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove i').length, 1,
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
             "should have 1 remove button (a record is supposed to have been deleted)");
 
         // save and check that the correct command has been generated
@@ -9056,7 +9056,7 @@ QUnit.module('relational_fields', {
             'display_name of first subrecord should be the one in DB');
         assert.ok(form.$('.o_list_record_remove').length,
             'delete icon should be visible in edit');
-        assert.ok(form.$('td.o_list_record_remove i').first().hasClass('fa fa-times'),
+        assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-times'),
             "should have X icons to remove (unlink) records");
         assert.ok(form.$('.o_field_x2many_list_row_add').length,
             '"Add an item" should not visible in edit');
