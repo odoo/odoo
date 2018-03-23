@@ -13,7 +13,11 @@ odoo.define('website_form.animation', function (require) {
     snippet_animation.registry.form_builder_send = snippet_animation.Class.extend({
         selector: '.s_website_form',
 
-        start: function() {
+        start: function(editable_mode) {
+            if (editable_mode) {
+                this.stop();
+                return;
+            }
             var self = this;
             this.templates_loaded = ajax.loadXML('/website_form/static/src/xml/website_form.xml', qweb);
             this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
