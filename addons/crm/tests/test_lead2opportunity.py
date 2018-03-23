@@ -24,11 +24,11 @@ class TestLead2opportunity2win(TestCrmCases):
 
         # Giving access rights of salesman to convert the lead into opportunity.
         # I convert lead into opportunity for exiting customer.
-        crm_case_3.sudo(self.crm_salemanager.id).convert_opportunity(self.env.ref("base.res_partner_2").id)
+        crm_case_3.sudo(self.crm_salemanager.id).convert_opportunity(self.env.ref("base.res_partner_company_6").id)
 
         # I check details of converted opportunity.
         self.assertEqual(crm_case_3.type, 'opportunity', 'Lead is not converted to opportunity!')
-        self.assertEqual(crm_case_3.partner_id.id, self.env.ref("base.res_partner_2").id, 'Partner mismatch!')
+        self.assertEqual(crm_case_3.partner_id.id, self.env.ref("base.res_partner_company_6").id, 'Partner mismatch!')
         self.assertEqual(crm_case_3.stage_id.id, default_stage_id, 'Stage of opportunity is incorrect!')
 
         # Now I schedule meeting with customer.

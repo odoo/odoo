@@ -46,7 +46,7 @@ class TestLifoPrice(common.TransactionCase):
 
         # I create a draft Purchase Order for first in move for 10 pieces at 60 euro
         order_form = Form(self.env['purchase.order'])
-        order_form.partner_id = self.env.ref('base.res_partner_3')
+        order_form.partner_id = self.env.ref('base.res_partner_company_3')
         with order_form.order_line.new() as line:
             line.product_id = product_lifo_icecream
             line.product_qty = 10.0
@@ -55,7 +55,7 @@ class TestLifoPrice(common.TransactionCase):
 
         # I create a draft Purchase Order for second shipment for 30 pieces at 80 euro
         order2_form = Form(self.env['purchase.order'])
-        order2_form.partner_id = self.env.ref('base.res_partner_3')
+        order2_form.partner_id = self.env.ref('base.res_partner_company_3')
         with order2_form.order_line.new() as line:
             line.product_id = product_lifo_icecream
             line.product_qty = 30.0

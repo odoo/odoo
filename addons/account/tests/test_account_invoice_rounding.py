@@ -34,7 +34,7 @@ class TestAccountInvoiceRounding(AccountingTestCase):
     def create_invoice(self, amount, cash_rounding_id, tax_amount=None):
         """ Returns an open invoice """
         invoice_id = self.env['account.invoice'].create({
-            'partner_id': self.env.ref("base.res_partner_2").id,
+            'partner_id': self.env.ref("base.res_partner_company_6").id,
             'reference_type': 'none',
             'currency_id': self.env.ref('base.USD').id,
             'name': 'invoice test rounding',

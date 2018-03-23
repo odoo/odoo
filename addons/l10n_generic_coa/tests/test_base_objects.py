@@ -26,7 +26,7 @@ class TestAccountBankStatement(TransactionCase):
         with f.line_ids.new() as line:
             line.name = 'EXT001'
             line.amount = 1000
-            line.partner_id = env.ref('base.res_partner_4')
+            line.partner_id = env.ref('base.res_partner_company_5')
 
         statement_id = f.save()
 
@@ -57,7 +57,7 @@ class TestAccountInvoice(TransactionCase):
         # In order to test Confirm Draft Invoice wizard I create an invoice
         # and confirm it with this wizard
         f = Form(self.env['account.invoice'])
-        f.partner_id = self.env.ref('base.res_partner_12')
+        f.partner_id = self.env.ref('base.res_partner_company_4')
         with f.invoice_line_ids.new() as l:
             l.product_id = self.env.ref('product.product_product_3')
         invoice = f.save()

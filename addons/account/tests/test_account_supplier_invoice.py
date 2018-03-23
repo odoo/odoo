@@ -20,7 +20,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         invoice_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1).id
         invoice_line_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1).id
 
-        invoice = self.env['account.invoice'].create({'partner_id': self.env.ref('base.res_partner_2').id,
+        invoice = self.env['account.invoice'].create({'partner_id': self.env.ref('base.res_partner_company_6').id,
             'account_id': invoice_account,
             'type': 'in_invoice',
         })
@@ -75,7 +75,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         invoice_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1).id
         invoice_line_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1).id
 
-        invoice = self.env['account.invoice'].create({'partner_id': self.env.ref('base.res_partner_2').id,
+        invoice = self.env['account.invoice'].create({'partner_id': self.env.ref('base.res_partner_company_6').id,
             'account_id': invoice_account,
             'type': 'in_invoice',
         })

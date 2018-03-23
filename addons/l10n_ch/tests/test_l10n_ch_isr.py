@@ -15,7 +15,7 @@ class ISRTest(AccountingTestCase):
         """ Generates a test invoice """
         account_receivable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
         currency = self.env.ref(currency_to_use)
-        partner_agrolait = self.env.ref("base.res_partner_2")
+        partner_agrolait = self.env.ref("base.res_partner_company_6")
         product = self.env.ref("product.product_product_4")
         account_revenue = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
 

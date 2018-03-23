@@ -77,7 +77,7 @@ class TestWarehouse(TestStockCommon):
         product = self.product_3.sudo(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env.ref('base.res_partner_company_6').id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': self.warehouse_1.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -138,7 +138,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env.ref('base.res_partner_company_6').id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
@@ -181,7 +181,7 @@ class TestWarehouse(TestStockCommon):
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env.ref('base.res_partner_company_6').id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,

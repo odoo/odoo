@@ -8,7 +8,7 @@ class TestBatchPicking(TransactionCase):
         super(TestBatchPicking, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.partner_delta_id = self.env['ir.model.data'].xmlid_to_res_id('base.res_partner_4')
+        self.partner_delta_id = self.env['ir.model.data'].xmlid_to_res_id('base.res_partner_company_5')
         self.picking_type_out = self.env['ir.model.data'].xmlid_to_res_id('stock.picking_type_out')
         self.productA = self.env['product.product'].create({
             'name': 'Product A',

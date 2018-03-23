@@ -21,7 +21,7 @@
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">1175.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_id" ref="base.res_partner_company_6"/>
         </record>
 
         <record id="demo_bank_statement_line_2" model="account.bank.statement.line">
@@ -46,7 +46,7 @@
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">650.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="partner_id" ref="base.res_partner_company_4"/>
         </record>
 
         <record id="demo_bank_statement_line_4" model="account.bank.statement.line">
@@ -59,7 +59,7 @@
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">2000.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="partner_id" ref="base.res_partner_company_4"/>
         </record>
 
         <record id="demo_bank_statement_line_5" model="account.bank.statement.line">

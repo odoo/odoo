@@ -38,7 +38,7 @@ class TestRepair(AccountingTestCase):
 
     def _create_simple_repair_order(self, invoice_method):
         product_to_repair = self.env.ref('product.product_product_5')
-        partner = self.env.ref('base.res_partner_address_1')
+        partner = self.env.ref('base.res_partner_1_0')
         return self.env['repair.order'].create({
             'product_id': product_to_repair.id,
             'product_uom': product_to_repair.uom_id.id,
@@ -47,7 +47,7 @@ class TestRepair(AccountingTestCase):
             'invoice_method': invoice_method,
             'partner_invoice_id': partner.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'partner_id': self.env.ref('base.res_partner_12').id
+            'partner_id': self.env.ref('base.res_partner_company_4').id
         })
 
     def _create_simple_operation(self, repair_id=False, qty=0.0, price_unit=0.0):

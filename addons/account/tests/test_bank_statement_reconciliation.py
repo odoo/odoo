@@ -12,7 +12,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.bs_model = self.env['account.bank.statement']
         self.bsl_model = self.env['account.bank.statement.line']
         self.reconciliation_widget = self.env['account.reconciliation.widget']
-        self.partner_agrolait = self.env.ref("base.res_partner_2")
+        self.partner_agrolait = self.env.ref("base.res_partner_company_6")
 
     def test_reconciliation_proposition(self):
         rcv_mv_line = self.create_invoice(100)

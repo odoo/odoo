@@ -204,7 +204,7 @@ class TestOnChange(common.TransactionCase):
 
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
-        partner1 = self.env.ref('base.res_partner_1')
+        partner1 = self.env.ref('base.res_partner_company_1')
         multi = self.env['test_new_api.multi'].create({'partner': partner1.id})
         line1 = multi.lines.create({'multi': multi.id})
 
@@ -230,7 +230,7 @@ class TestOnChange(common.TransactionCase):
         #   -> set 'partner' on all lines
         #   -> recompute 'name'
         #       -> set 'name' on all lines
-        partner2 = self.env.ref('base.res_partner_2')
+        partner2 = self.env.ref('base.res_partner_company_6')
         values = {
             'name': partner1.name,
             'partner': partner2.id,             # this one just changed

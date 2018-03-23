@@ -81,7 +81,7 @@ class base_automation_test(common.TransactionCase):
         Check that a rule is executed whenever a field is recomputed after a
         change on another model.
         """
-        partner = self.env.ref('base.res_partner_1')
+        partner = self.env.ref('base.res_partner_company_1')
         partner.write({'customer': False})
         lead = self.create_lead(state='open', partner_id=partner.id)
         self.assertFalse(lead.customer, "Customer field should updated to False")
@@ -96,7 +96,7 @@ class base_automation_test(common.TransactionCase):
         Check that a rule is executed whenever a field is recomputed and the
         context contains the target field
         """
-        partner = self.env.ref('base.res_partner_1')
+        partner = self.env.ref('base.res_partner_company_1')
         lead = self.create_lead(state='draft', partner_id=partner.id)
         self.assertFalse(lead.deadline, 'There should not be a deadline defined')
         # change priority and user; this triggers deadline recomputation, and
@@ -111,7 +111,7 @@ class base_automation_test(common.TransactionCase):
         self.assertEqual(lead.state, 'open')
         self.assertEqual(lead.user_id, self.user_admin)
         # change partner; this should trigger the rule that modifies the state
-        partner = self.env.ref('base.res_partner_1')
+        partner = self.env.ref('base.res_partner_company_1')
         lead.write({'partner_id': partner.id})
         self.assertEqual(lead.state, 'draft')
 

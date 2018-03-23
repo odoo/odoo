@@ -120,7 +120,7 @@ class TestSaleStock(TestSale):
         of the picking. Check that a refund invoice is well generated.
         """
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env.ref('base.res_partner_company_1')
         self.product = self.env.ref('product.product_delivery_01')
         so_vals = {
             'partner_id': self.partner.id,
@@ -194,7 +194,7 @@ class TestSaleStock(TestSale):
         the SO is set on 'done', the SO should be fully invoiced.
         """
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env.ref('base.res_partner_company_1')
         self.product = self.env.ref('product.product_delivery_01')
         so_vals = {
             'partner_id': self.partner.id,
@@ -343,7 +343,7 @@ class TestSaleStock(TestSale):
         """
         item1 = self.products['prod_order']
         partner1 = self.partner.id
-        partner2 = self.env.ref('base.res_partner_2').id
+        partner2 = self.env.ref('base.res_partner_company_6').id
         so1 = self.env['sale.order'].create({
             'partner_id': partner1,
             'order_line': [(0, 0, {

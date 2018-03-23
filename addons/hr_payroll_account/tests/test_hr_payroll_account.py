@@ -27,14 +27,14 @@ class TestHrPayrollAccount(common.TransactionCase):
 
         self.res_partner_bank = self.env['res.partner.bank'].create({
             'acc_number': '001-9876543-21',
-            'partner_id': self.ref('base.res_partner_12'),
+            'partner_id': self.ref('base.res_partner_company_4'),
             'acc_type': 'bank',
             'bank_id': self.ref('base.res_bank_1'),
         })
 
         self.hr_employee_john = self.env['hr.employee'].create({
-            'address_home_id': self.ref('base.res_partner_address_2'),
-            'address_id': self.ref('base.res_partner_address_12'),
+            'address_home_id': self.ref('base.res_partner_6_2'),
+            'address_id': self.ref('base.res_partner_1_2'),
             'birthday': '1984-05-01',
             'children': 0.0,
             'country_id': self.ref('base.in'),

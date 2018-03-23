@@ -18,7 +18,7 @@ class TestPacking(TransactionCase):
             'standard_price': 70.0,
             'seller_ids': [(0, 0, {
                 'delay': 1,
-                'name': self.ref('base.res_partner_2'),
+                'name': self.ref('base.res_partner_company_6'),
                 'min_qty': 2.0,
             })],
             'uom_id': self.ref('uom.product_uom_unit'),
@@ -29,7 +29,7 @@ class TestPacking(TransactionCase):
         default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
         default_get_vals.update({
             'name': 'Incoming picking',
-            'partner_id': self.ref('base.res_partner_2'),
+            'partner_id': self.ref('base.res_partner_company_6'),
             'picking_type_id': self.ref('stock.picking_type_in'),
             'move_lines': [(0, 0, {
                 'product_id': product1.id,
@@ -109,7 +109,7 @@ class TestPacking(TransactionCase):
         default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
         default_get_vals.update({
             'name': 'outgoing picking',
-            'partner_id': self.ref('base.res_partner_4'),
+            'partner_id': self.ref('base.res_partner_company_5'),
             'picking_type_id': self.ref('stock.picking_type_out'),
             'move_lines': [(0, 0, {
                 'product_id': product1.id,

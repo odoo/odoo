@@ -18,7 +18,7 @@ class TestPurchaseOrder(AccountingTestCase):
         self.PurchaseOrderLine = self.env['purchase.order.line']
         self.AccountInvoice = self.env['account.invoice']
         self.AccountInvoiceLine = self.env['account.invoice.line']
-        self.partner_id = self.env.ref('base.res_partner_1')
+        self.partner_id = self.env.ref('base.res_partner_company_1')
         self.product_id_1 = self.env.ref('product.product_product_8')
         self.product_id_2 = self.env.ref('product.product_product_11')
 

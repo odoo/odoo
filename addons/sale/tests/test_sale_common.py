@@ -35,7 +35,7 @@ class TestSale(AccountingTestCase):
             ('prod_del', self.env.ref('product.product_delivery_01')),
         ])
 
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env.ref('base.res_partner_company_1')
 
 
 class TestCommonSaleNoChart(TestAccountNoChartCommon):

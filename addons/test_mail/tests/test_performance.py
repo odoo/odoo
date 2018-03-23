@@ -74,7 +74,7 @@ class TestMailPerformance(TransactionCase):
             'name': 'Test',
             'track': 'Y',
             'value': 40,
-            'partner_id': self.env.ref('base.res_partner_12').id,
+            'partner_id': self.env.ref('base.res_partner_company_4').id,
         })
 
         with self.assertQueryCount(admin=8, demo=8):  # test_mail only: 8 - 8

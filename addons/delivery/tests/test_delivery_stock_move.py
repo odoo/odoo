@@ -13,7 +13,7 @@ class StockMoveInvoice(AccountingTestCase):
         self.SaleOrder = self.env['sale.order']
         self.AccountJournal = self.env['account.journal']
 
-        self.partner_18 = self.env.ref('base.res_partner_18')
+        self.partner_18 = self.env.ref('base.res_partner_company_0')
         self.pricelist_id = self.env.ref('product.list0')
         self.product_11 = self.env.ref('product.product_product_11')
         self.product_icecream = self.env.ref('stock.product_icecream')

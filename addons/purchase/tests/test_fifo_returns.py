@@ -31,7 +31,7 @@ class TestFifoReturns(TestPurchase):
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
-            'partner_id': self.ref('base.res_partner_3'),
+            'partner_id': self.ref('base.res_partner_company_3'),
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,
@@ -44,7 +44,7 @@ class TestFifoReturns(TestPurchase):
 
         # Create a draft Purchase Order for second shipment for 30kg at 80€/kg
         purchase_order_2 = self.env['purchase.order'].create({
-            'partner_id': self.ref('base.res_partner_3'),
+            'partner_id': self.ref('base.res_partner_company_3'),
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,

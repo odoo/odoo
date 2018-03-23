@@ -45,7 +45,7 @@ class TestSaleMrpProcurement(TransactionCase):
 
         # I create a sale order for product Slider mobile
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_4')
+        so_form.partner_id = self.env.ref('base.res_partner_company_5')
         with so_form.order_line.new() as line:
             line.product_id = product_template_slidermobile0.product_variant_ids
             line.price_unit = 200

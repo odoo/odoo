@@ -33,7 +33,7 @@ class TestPartnerAssign(TransactionCase):
 
     def test_partner_assign(self):
         """ Test the automatic assignation using geolocalisation """
-        partner2 = self.env.ref('base.res_partner_2')
+        partner2 = self.env.ref('base.res_partner_company_6')
         lead = self.env.ref('crm.crm_case_21')
 
         # In order to test find nearest Partner functionality and assign to opportunity,
@@ -48,7 +48,7 @@ class TestPartnerAssign(TransactionCase):
         lead.assign_partner()
 
         # I check assigned partner of opportunity who is nearest Geo Latitude and Longitude of opportunity.
-        self.assertEqual(lead.partner_assigned_id, self.env.ref('base.res_partner_18'), "Opportuniy is not assigned nearest partner")
+        self.assertEqual(lead.partner_assigned_id, self.env.ref('base.res_partner_company_0'), "Opportuniy is not assigned nearest partner")
         self.assertTrue(50 < lead.partner_latitude < 55, "Latitude is wrong: 50 < %s < 55" % lead.partner_latitude)
         self.assertTrue(-4 < lead.partner_longitude < -1, "Longitude is wrong: -4 < %s < -1" % lead.partner_longitude)
 

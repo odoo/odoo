@@ -16,7 +16,7 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.Statement = self.env['account.bank.statement']
         self.company = self.env.ref('base.main_company')
         self.product = self.env.ref('product.product_product_3')
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env.ref('base.res_partner_company_1')
         self.category = self.env.ref('product.product_category_1')
         self.category = self.category.copy({'name': 'New category','property_valuation': 'real_time'})
         account_type_rcv = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'receivable'})

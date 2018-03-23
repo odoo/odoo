@@ -19,7 +19,7 @@ class TestAccountVoucher(common.TransactionCase):
         self._load('account', 'test', 'account_minimal_test.xml')
 
         # User-groups and References
-        partner_id = self.env.ref('base.res_partner_12')
+        partner_id = self.env.ref('base.res_partner_company_4')
         cash_journal_id = self.env.ref('account_voucher.cash_journal')
         sales_journal_id = self.env.ref('account_voucher.sales_journal')
         account_receivable_id = self.env.ref('account_voucher.a_recv')

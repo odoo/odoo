@@ -33,7 +33,7 @@ class TestFifoPrice(TestPurchase):
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_icecream.id,
@@ -60,7 +60,7 @@ class TestFifoPrice(TestPurchase):
 
         # I create a draft Purchase Order for second shipment for 30 kg at 80 euro
         purchase_order_2 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_icecream.id,
@@ -140,7 +140,7 @@ class TestFifoPrice(TestPurchase):
 
         # Create PO for 30000 g at 0.150$/g and 10 kg at 150$/kg
         purchase_order_usd = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'currency_id': NewUSD.id,
             'order_line': [(0, 0, {
                     'name': 'FIFO Ice Cream',
@@ -276,7 +276,7 @@ class TestFifoPrice(TestPurchase):
 
         # Receive purchase order with 50 kg Ice Cream at 50€/kg
         purchase_order_neg = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fifo_negative.id,
@@ -295,7 +295,7 @@ class TestFifoPrice(TestPurchase):
 
         # Receive purchase order with 600 kg FIFO Ice Cream at 80 euro/kg
         purchase_order_neg2 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'order_line': [(0, 0, {
                 'name': product_icecream.name,
                 'product_id': product_fifo_negative.id,

@@ -250,7 +250,7 @@ class TestUi(odoo.tests.HttpCase):
         excluded_pricelist = env['product.pricelist'].create({
             'name': 'Not loaded'
         })
-        env.ref('base.res_partner_18').property_product_pricelist = excluded_pricelist
+        env.ref('base.res_partner_company_0').property_product_pricelist = excluded_pricelist
 
         # set the company currency to USD, otherwise it will assume
         # euro's. this will cause issues as the sales journal is in

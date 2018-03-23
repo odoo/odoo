@@ -33,7 +33,7 @@ class TestCrmMailActivity(TestCrmCases):
         })
 
         # I create an opportunity, as salesman
-        self.partner_client = self.env.ref("base.res_partner_1")
+        self.partner_client = self.env.ref("base.res_partner_company_1")
         self.lead = self.env['crm.lead'].sudo(self.crm_salesman.id).create({
             'name': 'Test Opp',
             'type': 'opportunity',

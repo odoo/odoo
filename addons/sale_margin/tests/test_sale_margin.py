@@ -13,8 +13,8 @@ class TestSaleMargin(common.TransactionCase):
 
         self.product_uom_id = self.ref('uom.product_uom_unit')
         self.product_id = self.ref('product.product_product_24')
-        self.partner_id = self.ref('base.res_partner_4')
-        self.partner_invoice_address_id = self.ref('base.res_partner_address_7')
+        self.partner_id = self.ref('base.res_partner_company_5')
+        self.partner_invoice_address_id = self.ref('base.res_partner_5_0')
         self.pricelist_id = self.ref('product.list0')
 
     def test_sale_margin(self):

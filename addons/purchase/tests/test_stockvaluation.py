@@ -13,7 +13,7 @@ class TestStockValuation(TransactionCase):
         super(TestStockValuation, self).setUp()
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.partner_id = self.env.ref('base.res_partner_1')
+        self.partner_id = self.env.ref('base.res_partner_company_1')
         self.product1 = self.env.ref('product.product_product_8')
         Account = self.env['account.account']
         self.stock_input_account = Account.create({

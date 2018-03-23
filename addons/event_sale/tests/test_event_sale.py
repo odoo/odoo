@@ -27,7 +27,7 @@ class EventSaleTest(common.TransactionCase):
 
         # I create a sales order
         self.sale_order = self.env['sale.order'].create({
-            'partner_id': self.env.ref('base.res_partner_2').id,
+            'partner_id': self.env.ref('base.res_partner_company_6').id,
             'note': 'Invoice after delivery',
             'payment_term_id': self.env.ref('account.account_payment_term').id
         })

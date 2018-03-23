@@ -5,7 +5,7 @@
         <record id="test_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="partner_id" ref="base.res_partner_company_1"/>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
             <field name="state">draft</field>
             <field name="type">in_invoice</field>

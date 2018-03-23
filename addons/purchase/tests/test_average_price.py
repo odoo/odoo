@@ -34,7 +34,7 @@ class TestAveragePrice(TestPurchase):
 
         # I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
         purchase_order_1 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'order_line': [(0, 0, {
                 'name': 'Average Ice Cream',
                 'product_id': product_icecream.id,
@@ -61,7 +61,7 @@ class TestAveragePrice(TestPurchase):
 
         # I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
         purchase_order_2 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'order_line': [(0, 0, {
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,
@@ -105,7 +105,7 @@ class TestAveragePrice(TestPurchase):
 
         # Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
         purchase_order_3 = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env.ref('base.res_partner_company_3').id,
             'order_line': [(0, 0, {
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,

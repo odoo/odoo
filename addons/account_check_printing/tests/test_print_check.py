@@ -19,7 +19,7 @@ class TestPrintCheck(AccountingTestCase):
         self.invoice_line_model = self.env['account.invoice.line']
         self.register_payments_model = self.env['account.register.payments']
 
-        self.partner_axelor = self.env.ref("base.res_partner_2")
+        self.partner_axelor = self.env.ref("base.res_partner_company_6")
         self.product = self.env.ref("product.product_product_4")
         self.payment_method_check = self.env.ref("account_check_printing.account_payment_method_check")
 

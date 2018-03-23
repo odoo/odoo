@@ -27,32 +27,32 @@
     <record id="event_sponsor_0" model="event.sponsor">
         <field name="event_id" ref="event.event_0"/>
         <field name="sponsor_type_id" ref="event_sponsor_type1"/>
-        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_id" ref="base.res_partner_company_6"/>
         <field name="url">http://odoo.com</field>
     </record>
 
     <record id="event_sponsor_1" model="event.sponsor">
         <field name="event_id" ref="event.event_0"/>
         <field name="sponsor_type_id" ref="event_sponsor_type2"/>
-        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="partner_id" ref="base.res_partner_company_4"/>
         <field name="url">http://odoo.com</field>
     </record>
 
     <record id="event_sponsor_2" model="event.sponsor">
         <field name="event_id" ref="event.event_0"/>
         <field name="sponsor_type_id" ref="event_sponsor_type2"/>
-        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_id" ref="base.res_partner_company_3"/>
     </record>
 
     <record id="event_sponsor_3" model="event.sponsor">
         <field name="event_id" ref="event.event_0"/>
         <field name="sponsor_type_id" ref="event_sponsor_type3"/>
-        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_id" ref="base.res_partner_company_5"/>
         <field name="url">http://odoo.com</field>
     </record>
 
     <!-- Tracks -->
-    <record id="base.res_partner_address_16" model="res.partner">
+    <record id="base.res_partner_4_0" model="res.partner">
         <field name="website">http://facebook.com/odoo</field>
         <field name="website_description" type="xml">
             <p>
@@ -93,7 +93,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 06:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="1"/>
-        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_id" ref="base.res_partner_company_6"/>
         <field name="color">3</field>
         <field name="stage_id" ref="event_track_stage0"/>
         <field name="kanban_state">blocked</field>
@@ -105,7 +105,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="0.25"/>
-        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_id" ref="base.res_partner_company_3"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="kanban_state">done</field>
     </record>
@@ -116,7 +116,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="0.3"/>
-        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_id" ref="base.res_partner_company_5"/>
         <field name="stage_id" ref="event_track_stage1"/>
     </record>
     <record id="event_track4" model="event.track">
@@ -126,7 +126,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 9:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location5"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_id" ref="base.res_partner_company_6"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track5" model="event.track">
@@ -136,7 +136,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_id" ref="base.res_partner_company_5"/>
         <field name="stage_id" ref="event_track_stage2"/>
     </record>
     <record id="event_track6" model="event.track">
@@ -146,7 +146,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_id" ref="base.res_partner_company_3"/>
         <field name="stage_id" ref="event_track_stage2"/>
     </record>
     <record id="event_track7" model="event.track">
@@ -156,7 +156,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location6"/>
         <field name="duration" eval="1"/>
-        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_id" ref="base.res_partner_company_1"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track8" model="event.track">
@@ -167,7 +167,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="0.5"/>
         <field name="color">2</field>
-        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_id" ref="base.res_partner_company_5"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="kanban_state">blocked</field>
     </record>
@@ -180,7 +180,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="1"/>
         <field name="color">2</field>
-        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="partner_id" ref="base.res_partner_company_4"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track10" model="event.track">
@@ -200,7 +200,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_id" ref="base.res_partner_company_5"/>
         <field name="stage_id" ref="event_track_stage1"/>
     </record>
     <record id="event_track12" model="event.track">
@@ -210,7 +210,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_id" ref="base.res_partner_company_6"/>
         <field name="stage_id" ref="event_track_stage2"/>
     </record>
     <record id="event_track13" model="event.track">
@@ -220,7 +220,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.25"/>
-        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="partner_id" ref="base.res_partner_company_4"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track14" model="event.track">
@@ -230,7 +230,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 7:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="partner_id" ref="base.res_partner_company_2"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track15" model="event.track">
@@ -240,7 +240,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_id" ref="base.res_partner_company_3"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track16" model="event.track">
@@ -250,7 +250,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location8"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="partner_id" ref="base.res_partner_company_4"/>
         <field name="stage_id" ref="event_track_stage0"/>
     </record>
     <record id="event_track17" model="event.track">
@@ -260,7 +260,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="partner_id" ref="base.res_partner_company_2"/>
         <field name="stage_id" ref="event_track_stage0"/>
     </record>
     <record id="event_track18" model="event.track">
@@ -271,7 +271,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="color">5</field>
-        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_id" ref="base.res_partner_company_6"/>
         <field name="stage_id" ref="event_track_stage1"/>
     </record>
     <record id="event_track19" model="event.track">
@@ -282,7 +282,7 @@
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
         <field name="color">5</field>
-        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="partner_id" ref="base.res_partner_company_5"/>
         <field name="stage_id" ref="event_track_stage1"/>
     </record>
     <record id="event_track20" model="event.track">
@@ -292,7 +292,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_id" ref="base.res_partner_company_3"/>
         <field name="stage_id" ref="event_track_stage1"/>
     </record>
     <record id="event_track21" model="event.track">
@@ -312,7 +312,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="partner_id" ref="base.res_partner_company_3"/>
         <field name="stage_id" ref="event_track_stage0"/>
     </record>
     <record id="event_track23" model="event.track">
@@ -322,7 +322,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 7:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_id" ref="base.res_partner_company_1"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track24" model="event.track">
@@ -332,7 +332,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location10"/>
         <field name="duration" eval="1.5"/>
-        <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="partner_id" ref="base.res_partner_company_0"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track25" model="event.track">
@@ -342,7 +342,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location10"/>
         <field name="duration" eval="2.5"/>
-        <field name="partner_id" ref="base.res_partner_18"/>
+        <field name="partner_id" ref="base.res_partner_company_0"/>
         <field name="stage_id" ref="event_track_stage3"/>
     </record>
     <record id="event_track27" model="event.track">
@@ -351,7 +351,7 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 04:00:00')"></field>
         <field name="duration" eval="1"/>
-        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="partner_id" ref="base.res_partner_company_1"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="color">3</field>
     </record>
@@ -361,7 +361,7 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 5:00:00')"></field>
         <field name="duration" eval="0.5"/>
-        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_id" ref="base.res_partner_company_6"/>
         <field name="stage_id" ref="event_track_stage2"/>
     </record>
     <record id="event_track29" model="event.track">
@@ -370,7 +370,7 @@
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 5:30:00')"></field>
         <field name="duration" eval="0.25"/>
-        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="partner_id" ref="base.res_partner_company_6"/>
         <field name="stage_id" ref="event_track_stage2"/>
         <field name="color">6</field>
     </record>

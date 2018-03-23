@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="demo_invoice_1" model="account.invoice">
-            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="partner_id" ref="base.res_partner_company_4"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
@@ -31,7 +31,7 @@
         </function>
 
         <record id="demo_invoice_2" model="account.invoice">
-            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_id" ref="base.res_partner_company_6"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
         </record>
@@ -57,7 +57,7 @@
         </function>
 
         <record id="demo_invoice_3" model="account.invoice">
-            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_id" ref="base.res_partner_company_6"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
         </record>
@@ -84,7 +84,7 @@
 
        <!-- Create an invoice that will generate a followup -->
         <record id="demo_invoice_followup" model="account.invoice">
-            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="partner_id" ref="base.res_partner_company_6"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
@@ -113,7 +113,7 @@
         </function>
 
         <record id="demo_invoice_0" model="account.invoice">
-            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="partner_id" ref="base.res_partner_company_4"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
@@ -139,7 +139,7 @@
         </record>
 
         <record id="demo_invoice_january_wages" model="account.invoice">
-            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="partner_id" ref="base.res_partner_company_4"/>
             <field name="type">in_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
@@ -159,7 +159,7 @@
         </function>
 
         <record id="demo_invoice_equipment_purchase" model="account.invoice">
-            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="partner_id" ref="base.res_partner_company_1"/>
             <field name="type">in_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-15'"/>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>

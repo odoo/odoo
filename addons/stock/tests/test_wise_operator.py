@@ -22,7 +22,7 @@ class TestWiseOperator(TransactionCase):
         # Create an incoming picking for this product of 10 PCE from suppliers to stock
         vals = dict(picking_default_vals, **{
             'name': 'Incoming picking (wise unit)',
-            'partner_id': self.ref('base.res_partner_2'),
+            'partner_id': self.ref('base.res_partner_company_6'),
             'picking_type_id': self.ref('stock.picking_type_in'),
             'move_lines': [(0, 0, {
                 'product_id': product_wise.id,
@@ -67,7 +67,7 @@ class TestWiseOperator(TransactionCase):
         # Make a delivery order of 5 pieces to the customer
         vals = dict(picking_default_vals, **{
             'name': 'outgoing picking 1 (wise unit)',
-            'partner_id': self.ref('base.res_partner_4'),
+            'partner_id': self.ref('base.res_partner_company_5'),
             'picking_type_id': self.ref('stock.picking_type_out'),
             'move_lines': [(0, 0, {
                 'product_id': product_wise.id,
@@ -90,7 +90,7 @@ class TestWiseOperator(TransactionCase):
         # Make a delivery order of 5 pieces to the customer
         vals = dict(picking_default_vals, **{
             'name': 'outgoing picking 2 (wise unit)',
-            'partner_id': self.ref('base.res_partner_4'),
+            'partner_id': self.ref('base.res_partner_company_5'),
             'picking_type_id': self.ref('stock.picking_type_out'),
             'move_lines': [(0, 0, {
                 'product_id': product_wise.id,

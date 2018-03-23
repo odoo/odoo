@@ -30,7 +30,7 @@ class TestProcRule(TransactionCase):
         default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
         default_get_vals.update({
             'name': 'Delivery order for procurement',
-            'partner_id': self.ref('base.res_partner_2'),
+            'partner_id': self.ref('base.res_partner_company_6'),
             'picking_type_id': self.ref('stock.picking_type_out'),
             'move_lines': [(0, 0, {
                 'product_id': self.ref('product.product_product_3'),

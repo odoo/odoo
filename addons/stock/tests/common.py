@@ -21,8 +21,8 @@ class TestStockCommon(common.TransactionCase):
         self.LotObj = self.env['stock.production.lot']
 
         # Model Data
-        self.partner_agrolite_id = self.ModelDataObj.xmlid_to_res_id('base.res_partner_2')
-        self.partner_delta_id = self.ModelDataObj.xmlid_to_res_id('base.res_partner_4')
+        self.partner_agrolite_id = self.ModelDataObj.xmlid_to_res_id('base.res_partner_company_6')
+        self.partner_delta_id = self.ModelDataObj.xmlid_to_res_id('base.res_partner_company_5')
         self.picking_type_in = self.ModelDataObj.xmlid_to_res_id('stock.picking_type_in')
         self.picking_type_out = self.ModelDataObj.xmlid_to_res_id('stock.picking_type_out')
         self.supplier_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')

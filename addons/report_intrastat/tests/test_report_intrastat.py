@@ -19,7 +19,7 @@ class RepoortIntrastatTest(common.TransactionCase):
         self.invoice = self.env['account.invoice'].create({
             'currency_id': self.ref('base.EUR'),
             'company_id': self.ref('base.main_company'),
-            'partner_id': self.ref('base.res_partner_1'),
+            'partner_id': self.ref('base.res_partner_company_1'),
             'state': 'draft',
             'type': 'out_invoice',
             'account_id': self.ref('report_intrastat.a_recv'),

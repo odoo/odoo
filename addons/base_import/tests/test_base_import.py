@@ -407,7 +407,7 @@ class test_convert_import_data(TransactionCase):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
             'file': u'name,parent_id/id,parent_id/date,parent_id/credit_limit\n'
-                    u'"foo","__export__.res_partner_1","2017年10月12日","5,69"\n'.encode('utf-8'),
+                    u'"foo","__export__.res_partner_company_1","2017年10月12日","5,69"\n'.encode('utf-8'),
             'file_type': 'text/csv'
 
         })

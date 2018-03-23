@@ -10,7 +10,7 @@ class TestProductPricelist(TransactionCase):
     def setUp(self):
         super(TestProductPricelist, self).setUp()
         self.ProductPricelist = self.env['product.pricelist']
-        self.res_partner_4 = self.env.ref('base.res_partner_4')
+        self.res_partner_4 = self.env.ref('base.res_partner_company_5')
         self.computer_SC234 = self.env.ref("product.product_product_3")
         self.ipad_retina_display = self.env.ref('product.product_product_4')
         self.custom_computer_kit = self.env.ref("product.product_product_5")

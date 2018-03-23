@@ -15,8 +15,8 @@ class TestPayment(AccountingTestCase):
         self.acc_bank_stmt_model = self.env['account.bank.statement']
         self.acc_bank_stmt_line_model = self.env['account.bank.statement.line']
 
-        self.partner_agrolait = self.env.ref("base.res_partner_2")
-        self.partner_china_exp = self.env.ref("base.res_partner_3")
+        self.partner_agrolait = self.env.ref("base.res_partner_company_6")
+        self.partner_china_exp = self.env.ref("base.res_partner_company_3")
         self.currency_chf_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_eur_id = self.env.ref("base.EUR").id
