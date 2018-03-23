@@ -25,17 +25,34 @@ class TestSaleCouponCommon(common.TransactionCase):
 
         self.uom_unit = self.env.ref('uom.product_uom_unit')
 
+        # Taxes
+        self.tax_15pc_excl = self.env['account.tax'].create({
+            'name': "Tax 15%",
+            'amount_type': 'percent',
+            'amount': 15,
+            'type_tax_use': 'sale',
+        })
+
+        self.tax_10pc_incl = self.env['account.tax'].create({
+            'name': "10% Tax incl",
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+        })
+
         #products
         self.product_A = self.env['product.product'].create({
             'name': 'Product A',
             'list_price': 100,
-            'sale_ok': True
+            'sale_ok': True,
+            'taxes_id': [(6, 0, [self.tax_15pc_excl.id])],
         })
 
         self.product_B = self.env['product.product'].create({
             'name': 'Product B',
             'list_price': 5,
-            'sale_ok': True
+            'sale_ok': True,
+            'taxes_id': [(6, 0, [self.tax_15pc_excl.id])],
         })
 
         # Immediate Program By A + B: get B free
@@ -56,11 +73,4 @@ class TestSaleCouponCommon(common.TransactionCase):
             'reward_product_id': self.product_A.id,
             'rule_products_domain': "[('id', 'in', [%s])]" % (self.product_A.id),
             'active': True,
-        })
-
-        self.tax_10pc_incl = self.env['account.tax'].create({
-            'name': "10% Tax incl",
-            'amount_type': 'percent',
-            'amount': 10,
-            'price_include': True,
         })

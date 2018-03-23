@@ -39,14 +39,12 @@ class SaleOrder(models.Model):
     @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        order = super(SaleOrder, self).copy(dict(default or {}, order_line=False))
-        for line in self._get_reward_lines():
-            line.copy({'order_id': order.id})
+        order = super(SaleOrder, self).copy(default)
+        order._get_reward_lines().unlink()
         order.with_context(sale_coupon_no_loop=False)._create_new_no_code_promo_reward_lines()
         return order
 
     def action_confirm(self):
-        self.recompute_coupon_lines()
         self.generated_coupon_ids.write({'state': 'new'})
         return super(SaleOrder, self).action_confirm()
 
