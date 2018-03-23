@@ -43,6 +43,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> Đơn vị sản phẩm là %s (%s) - Đơn vị dịch chuyển là %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:231
@@ -52,6 +55,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"Đang khóa: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:308
@@ -138,6 +144,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Here is your current inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Tồn kho hiện tại của bạn: </strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -173,7 +181,7 @@ msgid ""
 "Order</span>"
 msgstr ""
 "<span class=\"label label-default text-center odoo_purple\">Xác nhận "
-"Order</span>"
+"Đơn hàng</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -223,7 +231,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "<span class=\"o_stat_text\">Details</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Chi tiết</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -268,6 +276,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 50 vendors</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Nhập</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 50 nhà cung cấp</span>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -356,7 +369,7 @@ msgstr "<span>Mới</span>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span>No reservation or quantity done yet.</span>"
-msgstr ""
+msgstr "<span>Không có xí trước hoặc chưa có sản phẩm hoàn thành</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
