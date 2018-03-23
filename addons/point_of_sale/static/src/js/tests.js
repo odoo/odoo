@@ -136,8 +136,8 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "open customer list",
         trigger: "button.set-customer",
     }, {
-        content: "select think big systems",
-        trigger: ".client-line:contains('Think Big Systems')",
+        content: "select Bloem GmbH",
+        trigger: ".client-line:contains('Bloem GmbH')",
     },  {
         content: "confirm selection",
         trigger: ".clientlist-screen .next",

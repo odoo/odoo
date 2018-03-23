@@ -18,7 +18,7 @@ class TestPartnerAssign(TransactionCase):
 
         def geo_find(addr):
             return {
-                'Wavre, Belgium': (50.7158956, 4.6128075),
+                'Rue Montagne aux Herbes Potagères 7, 1000 Bruxelles, Belgium': (50.7158956, 4.6128075),
                 'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),
             }.get(addr)
 
