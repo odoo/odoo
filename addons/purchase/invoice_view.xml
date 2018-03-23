@@ -66,15 +66,4 @@
             </xpath>
         </field>
     </record>
-
-    <record id="view_invoice_line_form_inherit_purchase" model="ir.ui.view">
-        <field name="name">account.invoice.line.form.inherit.purchase</field>
-        <field name="model">account.invoice.line</field>
-        <field name="inherit_id" ref="account.view_invoice_line_form"/>
-        <field name="arch" type="xml">
-            <field name="account_id" position="before">
-                <field name="purchase_id"/>
-            </field>
-        </field>
-    </record>
 </odoo>
