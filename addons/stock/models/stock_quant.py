@@ -198,7 +198,6 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-        rounding = product_id.uom_id.rounding
 
         incoming_dates = [d for d in quants.mapped('in_date') if d]
         incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
@@ -219,9 +218,6 @@ class StockQuant(models.Model):
                         'quantity': quant.quantity + quantity,
                         'in_date': in_date,
                     })
-                    # cleanup empty quants
-                    if float_is_zero(quant.quantity, precision_rounding=rounding) and float_is_zero(quant.reserved_quantity, precision_rounding=rounding):
-                        quant.unlink()
                     break
             except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
@@ -291,6 +287,17 @@ class StockQuant(models.Model):
             if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
                 break
         return reserved_quants
+
+    @api.model
+    def _unlink_zero_quants(self):
+        """ _update_available_quantity may leave quants with no
+        quantity and no reserved_quantity. It used to directly unlink
+        these zero quants but this proved to hurt the performance as
+        this method is often called in batch and each unlink invalidate
+        the cache. We defer the calls to unlink in this method.
+        """
+        query = "DELETE FROM stock_quant WHERE round(quantity::numeric, 5) = 0 AND round(reserved_quantity::numeric, 5) = 0;"
+        self.env.cr.execute(query)
 
     @api.model
     def _merge_quants(self):
