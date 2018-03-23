@@ -490,7 +490,7 @@ class StockMove(models.Model):
                 debit_value = self.origin_returned_move_id.price_unit * qty
                 credit_value = debit_value
 
-        valuation_partner_id = partner_id = self._get_partner_id_for_valuation_lines()
+        valuation_partner_id = self._get_partner_id_for_valuation_lines()
         res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id).values()]
 
         return res
@@ -534,7 +534,7 @@ class StockMove(models.Model):
             if not price_diff_account:
                 raise UserError(_('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
 
-            price_diff_line = {
+            rslt['price_diff_line_vals'] = {
                 'name': self.name,
                 'product_id': self.product_id.id,
                 'quantity': qty,
@@ -545,9 +545,6 @@ class StockMove(models.Model):
                 'debit': diff_amount < 0 and -diff_amount or 0,
                 'account_id': price_diff_account.id,
             }
-
-            rslt['price_diff_line_vals'] = price_diff_line
-
         return rslt
 
     def _get_partner_id_for_valuation_lines(self):
@@ -606,7 +603,8 @@ class StockMove(models.Model):
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
 
         if self.company_id.anglo_saxon_accounting:
-            self._get_related_invoices().anglo_saxon_reconcile_valuation(self)
+            #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
+            self._get_related_invoices()._anglo_saxon_reconcile_valuation(self)
 
     def _get_related_invoices(self): # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt

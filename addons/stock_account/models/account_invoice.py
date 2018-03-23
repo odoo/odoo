@@ -38,15 +38,14 @@ class AccountInvoice(models.Model):
 
         return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, i_line.product_id, i_line.uom_id, i_line.quantity, price_unit, currency=currency, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id, analytic_tags=i_line.analytic_tag_ids)
 
-    def _get_related_stock_moves(self):
+    def _get_last_step_stock_moves(self):
         """ To be overridden for customer invoices and vendor bills in order to
-        return the stock moves related to this invoice.
+        return the stock moves related to the invoices in self.
         """
         return self.env['stock.move']
 
     def _get_products_set(self):
-        """ Returns a recordset of the products contained in this invoice's lines
-        """
+        """ Returns a recordset of the products contained in this invoice's lines """
         return self.mapped('invoice_line_ids.product_id')
 
     def _get_anglosaxon_interim_account(self, product):
@@ -54,16 +53,14 @@ class AccountInvoice(models.Model):
         this invoice"""
         if self.type in ('out_invoice', 'out_refund'):
             return product.product_tmpl_id._get_product_accounts()['stock_output']
-        elif self.type in ('in_invoice', 'in_refund'):
-            return product.product_tmpl_id.get_product_accounts()['stock_input']
-
-        return None
+        return product.product_tmpl_id.get_product_accounts()['stock_input']
 
     def invoice_validate(self):
-        super(AccountInvoice, self).invoice_validate()
-        self.anglo_saxon_reconcile_valuation(self._get_related_stock_moves())
+        res = super(AccountInvoice, self).invoice_validate()
+        self._anglo_saxon_reconcile_valuation(self._get_last_step_stock_moves())
+        return res
 
-    def anglo_saxon_reconcile_valuation(self, stock_moves):
+    def _anglo_saxon_reconcile_valuation(self, stock_moves):
         """ Reconciles the entries made in the interim accounts in anglosaxon accounting,
         reconciling stock valuation move lines with the invoice's.
         """

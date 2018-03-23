@@ -256,14 +256,14 @@ class AccountInvoice(models.Model):
                 invoice.message_post(body=message)
         return result
 
-    def _get_related_stock_moves(self):
+    def _get_last_step_stock_moves(self):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""
-        rslt = super(AccountInvoice, self)._get_related_stock_moves()
-
-        rslt += self.filtered(lambda x: x.type in ('in_invoice', 'in_refund')).mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done')
-
+        rslt = super(AccountInvoice, self)._get_last_step_stock_moves()
+        for invoice in self.filtered(lambda x: x.type in ('in_invoice', 'in_refund')):
+            rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'supplier')
         return rslt
+
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
