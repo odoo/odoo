@@ -456,7 +456,13 @@ var ListController = BasicController.extend({
      * @private
      */
     _onDeleteSelectedRecords: function () {
-        this._deleteRecords(this.selectedRecords);
+        var options = {};
+        if (this.allSelected) {
+            var record = this.model.get(this.handle);
+            options['active_domain'] = record.getDomain();
+            options['active_model'] = record.model;
+        }
+        this._deleteRecords(this.selectedRecords, options);
     },
     /**
      * Handler called when the user clicked on the 'Discard' button.

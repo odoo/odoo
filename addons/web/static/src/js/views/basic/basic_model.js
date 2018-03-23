@@ -388,13 +388,17 @@ var BasicModel = AbstractModel.extend({
      * @param {string[]} recordIds list of local resources ids. They should all
      *   be of type 'record', be of the same model and have the same parent.
      * @param {string} modelName mode name used to unlink the records
+     * @param {Object} options
+     * @param {Array} options.active_domain
+     * @param {string} options.active_model
      * @returns {Deferred}
      */
-    deleteRecords: function (recordIds, modelName) {
+    deleteRecords: function (recordIds, modelName, options) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
-        var context = _.extend(records[0].getContext(), session.user_context);
+        var context = _.extend(records[0].getContext(), session.user_context, options);
         return this._rpc({
+                route: '/web/dataset/call_kw_with_domain',
                 model: modelName,
                 method: 'unlink',
                 args: [_.pluck(records, 'res_id')],
