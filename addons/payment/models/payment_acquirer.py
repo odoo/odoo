@@ -597,6 +597,12 @@ class PaymentTransaction(models.Model):
         return '<a href=# data-oe-model=payment.transaction data-oe-id=%d>%s</a>' % (self.id, self.reference)
 
     @api.multi
+    def _log_payment_transaction_process(self, documents):
+        '''Log on business documents a new transaction is currently processed by a customer.
+        '''
+        message = 'Transaction %s sent to %s:'
+
+    @api.multi
     def _log_payment_transaction_sent(self):
         '''Log the message saying the transaction has been sent to the remote server to be
         processed by the acquirer.
@@ -695,22 +701,6 @@ class PaymentTransaction(models.Model):
         self.payment_id.cancel()
         self._log_payment_transaction_received()
 
-    @api.multi
-    def on_change_partner_id(self, partner_id):
-        if partner_id:
-            partner = self.env['res.partner'].browse(partner_id)
-            return {'value': {
-                'partner_name': partner and partner.name or False,
-                'partner_lang': partner and partner.lang or 'en_US',
-                'partner_email': partner and partner.email or False,
-                'partner_zip': partner and partner.zip or False,
-                'partner_address': _partner_format_address(partner and partner.street or '', partner and partner.street2 or ''),
-                'partner_city': partner and partner.city or False,
-                'partner_country_id': partner and partner.country_id.id or self._get_default_partner_country_id(),
-                'partner_phone': partner and partner.phone or False,
-            }}
-        return {}
-
     @api.constrains('capture', 'state', 'acquirer_id')
     def _check_authorize_state(self):
         failed_tx = self.filtered(lambda tx: tx.capture and tx.acquirer_id.provider not in self.env['payment.acquirer']._get_feature_support()['authorize'])
@@ -761,9 +751,6 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('partner_id'):  # @TDENOTE: not sure
-            values.update(self.on_change_partner_id(values['partner_id'])['value'])
-
         # call custom create method if defined (i.e. ogone_create for ogone)
         acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
 
