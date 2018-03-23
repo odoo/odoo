@@ -398,7 +398,7 @@ class EventRegistration(models.Model):
             for attendee in self:
                 if attendee.partner_id and not set(attendee.partner_id.user_ids.ids) & public_users:
                     attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
-                if attendee.email not in {False, attendee.partner_id.email}:
+                elif attendee.email:
                     attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
         except AccessError:     # no read access rights -> ignore suggested recipients
             pass
