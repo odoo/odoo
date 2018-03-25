@@ -4,11 +4,12 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Talway <9010446@qq.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Martin Trigaux, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
@@ -273,243 +274,241 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-" \n"
+"                 \n"
 "% set record = ctx.get('record')\n"
 "% set company = record and record.company_id or user.company_id\n"
-"% set challenge_lines = ctx.get('challenge_lines', []) \n"
+"% set challenge_lines = ctx.get('challenge_lines', [])     \n"
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"font-family: 'Helvetica'; background-color: #EEE; border-collapse: collapse;\">\n"
+"<tr>\n"
+"    <td valign=\"top\" align=\"center\">\n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; width: 600px;\">\n"
+"            <tr><td>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                    <tr>\n"
+"                        <td valign=\"middle\" align=\"left\" style=\"padding:30px 15px;\">\n"
+"                            <img width=\"90\" src=\"/logo.png?company=${user.company_id.id}\" style=\"width:80px;\"/>\n"
+"                        </td>\n"
+"                        % if object.visibility_mode == 'ranking':\n"
+"                            <td style=\"padding:15px;\">\n"
+"                                <p style=\"font-size:20px;color:#666666;\" align=\"right\">排行榜</p>\n"
+"                            </td>\n"
+"                        % endif\n"
+"                    </tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
+"                    <tr><td style=\"padding: 15px;\">\n"
+"                        % if object.visibility_mode == 'personal':\n"
+"                            <span style=\"color:#666666;font-size:13px;\">这是您在 <strong>${object.name}</strong> 挑战中的当前进度。</span>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"center\">\n"
+"                                        <p style=\"font-size:27px;color:#666666;\">个人表现</p>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
+"                                <thead>\n"
+"                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">得分</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">目标</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">当前</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">完成情况</th>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody>\n"
+"                                % for line in challenge_lines:\n"
+"                                    <tr\n"
+"                                        % if line['completeness'] >= 100:\n"
+"                                            style=\"font-weight:bold;\"\n"
+"                                        % endif\n"
+"                                        >\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"left\">\n"
+"                                            ${line['name']}\n"
+"                                            % if line['suffix'] or line['monetary']:\n"
+"                                                (${line['full_suffix']})\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\">${\"%.2f\" % line['target']}\n"
+"                                            % if line['suffix']:\n"
+"                                                ${line['suffix']}\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align=\"right\">${\"%.2f\" % line['current']}\n"
+"                                            % if line['suffix']:\n"
+"                                                ${line['suffix']}\n"
+"                                            % endif\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong>${line['completeness']| int}%</strong></td>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"></td>\n"
+"                                    </tr>\n"
+"                                % endfor        \n"
+"                                </tbody>\n"
+"                            </table>                   \n"
+"                        % else: \n"
+"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
+"                                挑战：<strong>${object.name}</strong>。\n"
+"                            </span> \n"
+"                            % for line in challenge_lines:\n"
+"                                <!-- Header + Button table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"style=\"margin-top:35px;\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"50%\">\n"
+"                                            <p style=\"font-size:22px;color:#666666;\">顶级得分人 <strong>${line['name']}</strong></p>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                                <!-- Podium -->\n"
+"                                % if len(line['goals'])>2:\n"
+"                                    <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
+"                                        <tr><td style=\"padding:0 30px;\">\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
+"                                                <tr>\n"
+"                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
+"                                                    % for goal in top_goals:\n"
+"                                                        <td align=\"center\" style=\"width:32%;\">\n"
+"                                                            % if loop.index == 1:\n"
+"                                                                % set extra_div = '<div style=\"height:40px;\"></div>'\n"
+"                                                                % set heightA = 95\n"
+"                                                                % set heightB = 75\n"
+"                                                                % set bgColor = '#b898b0'\n"
+"                                                                % set fontSize = 50\n"
+"                                                                % set podiumPosition = '2'\n"
+"                                                            % elif loop.index == 2:\n"
+"                                                                % set extra_div = ''\n"
+"                                                                % set heightA = 55\n"
+"                                                                % set heightB = 115\n"
+"                                                                % set bgColor = '#9A6C8E'\n"
+"                                                                % set fontSize = 85\n"
+"                                                                % set podiumPosition = '1'\n"
+"                                                            % elif loop.index == 3:\n"
+"                                                                % set extra_div = '<div style=\"height:60px;\"></div>'\n"
+"                                                                % set heightA = 115\n"
+"                                                                % set heightB = 55\n"
+"                                                                % set bgColor = '#c8afc1'\n"
+"                                                                % set fontSize = 35\n"
+"                                                                % set podiumPosition = '3'\n"
+"                                                            % endif\n"
+"                                                            <div style=\"margin:0 3px 0 3px;height:220px;\">\n"
+"                                                                <div style=\"height:${heightA}px;\">\n"
+"                                                                    ${extra_div | safe}   \n"
+"                                                                    <div style=\"height:55px;\">\n"
+"                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/>\n"
+"                                                                    </div> \n"
+"                                                                    <div align=\"center\" style =\"color:${bgColor};height:20px\">\n"
+"                                                                        ${goal['name']}\n"
+"                                                                    </div \n"
+"                                                                </div>\n"
+"                                                                <div style=\"background-color:${bgColor | safe};height:${heightB}px;\">\n"
+"                                                                    <strong><span style=\"color:#fff;font-size:${fontSize}px;\">${podiumPosition | safe}</span></strong>\n"
+"                                                                </div>\n"
+"                                                                <div style=\"height:30px;\">\n"
+"                                                                    <p style=\"color:#9A6C8E;font-size:20px;margin-top:10px;\">\n"
+"                                                                        ${\"%.2f\" % goal['current']}\n"
+"                                                                        % if line['suffix'] or line['monetary']:\n"
+"                                                                            ${line['full_suffix']}\n"
+"                                                                        % endif\n"
+"                                                                    </p>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </td>\n"
+"                                                    % endfor\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                % endif\n"
+"                                <!-- data table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-bottom:5px\">\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-bottom:5px;color:#666666;\">\n"
+"                                                <thead>\n"
+"                                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                                        <th style=\"width:15%;text-align:center;\">排名</th>\n"
+"                                                        <th style=\"width:25%;text-align:left;\">姓名</th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\">表现 \n"
+"                                                            % if line['suffix']:\n"
+"                                                                (${line['suffix']})\n"
+"                                                            % elif line['monetary']:\n"
+"                                                                (${company.currency_id.symbol})\n"
+"                                                            % endif\n"
+"                                                        </th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\"\">完成情况</th>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                                    </tr>\n"
+"                                                </thead>\n"
+"                                                <tbody>\n"
+"                                                    % for goal in line['goals']:\n"
+"                                                        <tr>\n"
+"                                                            % set tdBgColor = '#fff'\n"
+"                                                            % set tdColor = 'gray'\n"
+"                                                            % set mutedColor = '#AAAAAA'\n"
+"                                                            % set tdPercentageColor = '#9A6C8E'\n"
+"                                                            <td width=\"15%\" align=\"center\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:20px;\">${goal['rank']+1}\n"
+"                                                            </td>\n"
+"                                                            <td width=\"25%\" align=\"left\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:13px;\">${goal['name']}</td>\n"
+"                                                            <td width=\"30%\" align=\"right\" style=\"background-color:${tdBgColor};padding:5px 0;line-height:1;\">${\"%.2f\" % goal['current']}<br/><span style=\"font-size:13px;color:${mutedColor};\">on ${\"%.2f\" % line['target']}</span>\n"
+"                                                            </td>\n"
+"                                                            <td width=\"30%\" style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;\" align=\"right\"><strong>${goal['completeness'] | int}%</strong></td>\n"
+"                                                        </tr>\n"
+"                                                        <tr>\n"
+"                                                            <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"></td>\n"
+"                                                        </tr>\n"
+"                                                    % endfor\n"
+"                                                </tbody>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table> \n"
+"                            % endfor\n"
+"                        % endif\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"padding: 15px; color: #666666;margin-bottom: 5px;\">\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table width=\"580\" border=\"0\" cellpadding=\"0\" style=\"min-width: 580px; font-size: 12px;\">\n"
+"                                <tr>\n"
+"                                    <td valign=\"middle\" align=\"left\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
+"                                        ${company.name}<br/>\n"
+"                                        ${company.phone or ''}\n"
+"                                    </td>\n"
+"                                    <td valign=\"middle\" align=\"right\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
+"                                        % if company.email:\n"
+"                                            <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: #666666;\">${company.email}</a><br/>\n"
+"                                        % endif\n"
+"                                        % if company.website:\n"
+"                                            <a href=\"${company.website}\" style=\"text-decoration:none; color: #666666;\">\n"
+"                                               ${company.website}\n"
+"                                            </a>\n"
+"                                        % endif\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr> \n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            技术支持：<a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>。\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>\n"
+"            \n"
 "\n"
-"\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % if object.visibility_mode == 'ranking':<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"font-family: 'Helvetica'; background-color: #EEE; border-collapse: collapse;\"><tr><td valign=\"top\" align=\"center\"><table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; width: 600px;\"><tr><td><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td valign=\"middle\" align=\"left\" style=\"padding:30px 15px;\"><img width=\"90\" src=\"/logo.png?company=${user.company_id.id}\" style=\"width:80px;\"/></td>\n"
-" \n"
-" 积分榜\n"
-" \n"
-" % endif\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % if object.visibility_mode == 'personal':\n"
-" 这是您在 ${object.name} 挑战中的当前进度。\n"
-" \n"
-" \n"
-" \n"
-" 个人表现\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" 得分\n"
-" 目标\n"
-" 当前\n"
-" 完成情况\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % challenge_lines 中的排名：<td style=\"padding:15px;\"><p style=\"font-size:20px;color:#666666;\" align=\"right\"></p></td></tr></table>\n"
-" = 100:\n"
-" style=\"font-weight:bold;\"\n"
-" % endif\n"
-" &gt;\n"
-" \n"
-" ${line['name']}\n"
-" % if line['suffix'] or line['monetary']:\n"
-" (${line['full_suffix']})\n"
-" % endif\n"
-" \n"
-" ${\"%.2f\" % line['target']}\n"
-" % if line['suffix']:\n"
-" ${line['suffix']}\n"
-" % endif\n"
-" \n"
-" ${\"%.2f\" % line['current']}\n"
-" % if line['suffix']:\n"
-" ${line['suffix']}\n"
-" % endif\n"
-" \n"
-" ${line['completeness']| int}%\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % endfor \n"
-" \n"
-" \n"
-" % else: \n"
-" \n"
-" 挑战：${object.name}。\n"
-" \n"
-" % 对于 challenge_lines 中的排名：\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" 顶尖得分人 ${line['name']}\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % if len(line['goals'])&gt;2：\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
-" % for goal in top_goals:\n"
-" \n"
-" % if loop.index == 1:\n"
-" % set extra_div = ''\n"
-" % set heightA = 95\n"
-" % set heightB = 75\n"
-" % set bgColor = '#b898b0'\n"
-" % set fontSize = 50\n"
-" % set podiumPosition = '2'\n"
-" % elif loop.index == 2:\n"
-" % set extra_div = ''\n"
-" % set heightA = 55\n"
-" % set heightB = 115\n"
-" % set bgColor = '#9A6C8E'\n"
-" % set fontSize = 85\n"
-" % set podiumPosition = '1'\n"
-" % elif loop.index == 3:\n"
-" % set extra_div = ''\n"
-" % set heightA = 115\n"
-" % set heightB = 55\n"
-" % set bgColor = '#c8afc1'\n"
-" % set fontSize = 35\n"
-" % set podiumPosition = '3'\n"
-" % endif\n"
-" \n"
-" \n"
-" ${extra_div | safe} \n"
-" \n"
-" % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
-" \n"
-" \n"
-" \n"
-"${goal['name']}\n"
-" &lt;/div \n"
-" \n"
-" \n"
-" ${podiumPosition | safe}\n"
-" \n"
-" \n"
-" \n"
-" ${\"%.2f\" % goal['current']}\n"
-" % if line['suffix'] or line['monetary']:\n"
-" ${line['full_suffix']}\n"
-" % endif\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % endfor\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % endif\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" 排名\n"
-" 姓名\n"
-" 表现\n"
-" % if line['suffix']：\n"
-" (${line['suffix']})\n"
-" % elif line['monetary']:\n"
-" (${company.currency_id.symbol})\n"
-" % endif\n"
-" \n"
-" 完成情况\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % for goal in line['goals']：\n"
-" \n"
-" % set tdBgColor = '#fff'\n"
-" % set tdColor = 'gray'\n"
-" % set mutedColor = '#AAAAAA'\n"
-" % set tdPercentageColor = '#9A6C8E'\n"
-" ${goal['rank']+1}\n"
-" \n"
-" ${goal['name']}\n"
-" ${\"%.2f\" % goal['current']} on ${\"%.2f\" % line['target']}\n"
-" \n"
-" ${goal['completeness'] | int}%\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % endfor\n"
-" \n"
-" \n"
-" \n"
-" \n"
-"\n"
-" % endfor\n"
-" % endif\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" ${company.name} \n"
-" ${company.phone or ''}\n"
-" \n"
-" \n"
-" % if company.email:\n"
-" ${company.email} \n"
-" % endif\n"
-" % if company.website:\n"
-" \n"
-" ${company.website}\n"
-" \n"
-" % endif\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" 由 Odoo 提供技术支持。\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-"\n"
-"\n"
-" \n"
-"\n"
-"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\"><tr><td style=\"padding: 15px;\"><span style=\"color:#666666;font-size:13px;\"><strong></strong></span><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\"><tr><td align=\"center\"><p style=\"font-size:27px;color:#666666;\"></p></td></tr></table><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;color:#666666;\"><thead><tr style=\"color:#9A6C8E; font-size:12px;\"><th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\"></th><th style=\"width:20%;text-align:right;\" align=\"left\"></th><th style=\"width:20%;text-align:right;\" align=\"right\"></th><th style=\"width:20%;text-align:right;\" align=\"right\"></th></tr><tr><td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td></tr></thead><tbody><tr\n"
-" % if line['completeness'] ><td style=\"padding: 20px 0;\" align=\"left\"></td><td style=\"padding: 20px 0;\" align=\"right\"></td><td style=\"padding: 20px 0;\" align=\"right\"></td><td style=\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong></strong></td></tr><tr><td colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"></td></tr></tbody></table><span style=\"color:#A8A8A8;font-size:13px;\"><strong></strong></span><!-- Header + Button table --><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"style=\"margin-top:35px;\"><tr><td width=\"50%\"><p style=\"font-size:22px;color:#666666;\"><strong></strong></p></td></tr></table><!-- Podium --><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\"><tr><td style=\"padding:0 30px;\"><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\"><tr><td align=\"center\" style=\"width:32%;\"><div style=\"height:40px;\"></div><div style=\"height:60px;\"></div><div style=\"margin:0 3px 0 3px;height:220px;\"><div style=\"height:${heightA}px;\"><div style=\"height:55px;\"><img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/></div><div align=\"center\" style =\"color:${bgColor};height:20px\"></div \n"
-"                                                                </div><div style=\"background-color:${bgColor | safe};height:${heightB}px;\"><strong><span style=\"color:#fff;font-size:${fontSize}px;\"></span></strong></div><div style=\"height:30px;\"><p style=\"color:#9A6C8E;font-size:20px;margin-top:10px;\"></p></div></div></td></tr></table></td></tr></table><!-- data table --><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-bottom:5px\"><tr><td><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-bottom:5px;color:#666666;\"><thead><tr style=\"color:#9A6C8E; font-size:12px;\"><th style=\"width:15%;text-align:center;\"></th><th style=\"width:25%;text-align:left;\"></th><th style=\"width:30%;text-align:right;\"></th><th style=\"width:30%;text-align:right;\"\"></th></tr><tr><td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td></tr></thead><tbody><tr><td width=\"15%\" align=\"center\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:20px;\"></td><td width=\"25%\" align=\"left\" valign=\"middle\" style=\"background-color:${tdBgColor};padding :5px 0;font-size:13px;\"></td><td width=\"30%\" align=\"right\" style=\"background-color:${tdBgColor};padding:5px 0;line-height:1;\"><br/><span style=\"font-size:13px;color:${mutedColor};\"></span></td><td width=\"30%\" style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;\" align=\"right\"><strong></strong></td></tr><tr><td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"></td></tr></tbody></table></td></tr></table></td></tr></table><table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"padding: 15px; color: #666666;margin-bottom: 5px;\"><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"580\" border=\"0\" cellpadding=\"0\" style=\"min-width: 580px; font-size: 12px;\"><tr><td valign=\"middle\" align=\"left\" style=\"padding-top: 10px; padding-bottom: 10px;\"><br/></td><td valign=\"middle\" align=\"right\" style=\"padding-top: 10px; padding-bottom: 10px;\"><a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: #666666;\"></a><br/><a href=\"${company.website}\" style=\"text-decoration:none; color: #666666;\"></a></td></tr></table></td></tr><tr><td align=\"center\"><a target=\"_blank\" href=\"https://www.odoo.com\"></a></td></tr></table></td></tr></table></td></tr></table>\n"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -534,13 +533,13 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:589
 #, python-format
 msgid "%s has joined the challenge"
-msgstr "%s 加入挑战"
+msgstr "%s 已经加入挑战"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:598
 #, python-format
 msgid "%s has refused the challenge"
-msgstr "%s 拒绝挑战"
+msgstr "%s 已经拒绝挑战"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
@@ -623,7 +622,7 @@ msgstr "<br/>%(rank)d. %(user_name)s - %(reward_name)s"
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
-msgstr "<br/>没有人成功的完成每一个目标，那么这个挑战不会发放任何徽章"
+msgstr "<br/>没有人成功的完成每一个目标，那么这个挑战不会发放任何徽章。"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:650
@@ -637,7 +636,7 @@ msgstr "每一个成功用户的<br/> 奖励（徽章 %s）被送到 %s。"
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
-msgstr "<br/>特殊的奖励被派往上相互竞争的用户。这个挑战是："
+msgstr "<br/>特殊的奖励被发送至顶尖的相互竞争的用户。这个挑战的排名是："
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -800,7 +799,7 @@ msgid ""
 "of a running period (eg: end of the month for a monthly challenge), at the "
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
-msgstr "当挑战完成时授予奖章，这是在一个运行周期关闭时（如：最后的每月挑战月），在一个挑战的结束日期（如果没有周期性设置）或挑战时的手动关闭。"
+msgstr "当挑战完成时授予奖章，这是在一个运行周期关闭时（如：最后的每月挑战月），在一个挑战的结束日期（如果没有周期性设置）或当挑战被手动关闭时。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_mode
@@ -810,7 +809,7 @@ msgstr "批量模式"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr "天才"
+msgstr "优秀"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
@@ -870,7 +869,7 @@ msgstr "挑战源于"
 msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
-msgstr "已产生目标的挑战，分配具体的目标任务给用户"
+msgstr "挑战已产生的目标，分配具体的目标任务给用户并在此栏设置一个值。"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -887,43 +886,43 @@ msgstr "检查按人设定发放此徽章的月度限额"
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Click to create a badge."
-msgstr "点击创建一个徽章"
+msgstr "点击创建一个徽章。"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
 msgid "Click to create a challenge."
-msgstr "点击创建一个挑战"
+msgstr "点击以创建一个挑战"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid "Click to create a goal definition."
-msgstr "点击创建一个目标定义"
+msgstr "点击以创建一个目标定义。"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
 msgid "Click to create a goal."
-msgstr "点击创建一个目标"
+msgstr "点击以创建一个目标。"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Clickable Goals"
-msgstr "可点击目标"
+msgstr "可点击的目标"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_closed
 msgid "Closed goal"
-msgstr "关闭的目标"
+msgstr "已关闭的目标"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_comment
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_comment
 msgid "Comment"
-msgstr "备注"
+msgstr "评语"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
 msgid "Complete your Profile"
-msgstr "填写你的个人资料"
+msgstr "填写你的个人简介"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_completeness
@@ -949,7 +948,8 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr "为系统创建和管理用户。在一段时间内用该系统的用户可以暂不激活。你还可以给用户分配某一个组，以便他们能用到系统的指定功能。"
+msgstr ""
+"创建和管理将会连接到系统的用户。在一段时间内该系统的用户应可以暂不激活，在这期间他们将会／不应连接到系统。你还可以将用户分配至组别，以便他们能访问他们需要使用系统的特定功能。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
@@ -1012,7 +1012,7 @@ msgstr "日期字段"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr "通过菜单定义的可见性的挑战"
+msgstr "通过菜单定义的可见性挑战"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_computation_mode
@@ -1020,7 +1020,7 @@ msgstr "通过菜单定义的可见性的挑战"
 msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
 "stored in the field 'Current'."
-msgstr "定义将计算的目标，操作的结果将存储在“当前”"
+msgstr "定义将如何计算目标。操作的结果将存储在“当前”字段。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3119
@@ -1030,13 +1030,13 @@ msgstr "定义说明"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
-msgstr "根据不同的显示模式，报告将是个人或共享"
+msgstr "根据不同的显示模式，报告将是个人的或共享。"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr "描述挑战：目标是什么，谁的目标，为什么重要..."
+msgstr "描述挑战：它做什么，谁的目标，为什么重要..."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -1084,8 +1084,8 @@ msgid ""
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
-"用于筛选记录的领域。一般规则，不是用户依赖的，例如.[('state', '=', 'done')]. "
-"如果不是在批处理模式下，该规则可以包含当前用户的浏览记录作为参考给“user”。"
+"用于筛选记录的域名。一般规则，不是用户依赖的，例如[('state', '=', "
+"'done')]。如果不是在批处理模式下，该表述可以包含当前用户的浏览记录作为参考给“user”。"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -1110,7 +1110,7 @@ msgstr "结束日期"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
-msgstr "批量评估每个用户的表现"
+msgstr "以批次而非一次性的评估每个用户的表达"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
@@ -1140,7 +1140,7 @@ msgstr "字段总计"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_domain
 msgid "Filter Domain"
-msgstr "筛选域"
+msgstr "筛选域名"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
@@ -1160,7 +1160,7 @@ msgstr "第三位用户"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
 msgid "For Every Succeeding User"
-msgstr "每位获得成功的用户"
+msgstr "每位成功的用户"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1325,12 +1325,12 @@ msgstr "授予"
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
-msgstr "分组"
+msgstr "分组按"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
-msgstr "公司将接收报告的副本，除了用户"
+msgstr "除了用户，将收取报告副本的组"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1377,7 +1377,7 @@ msgstr "如果设置了最大"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
 msgid "If this badge was rewarded through a challenge"
-msgstr "如果完成一个任务就奖赏这枚徽章"
+msgstr "如果这枚这枚徽章是透过挑战来奖赏的"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_image
@@ -1401,7 +1401,7 @@ msgstr "在批处理模式下，评估范围是全部，如果启用，不要在
 msgid ""
 "In batch mode, this indicates which field distinct one user form the other, "
 "e.g. user_id, partner_id..."
-msgstr "用批处理模式，这表明一个用户形式跟其它用户 有区别，例如.user_id, partner_id..."
+msgstr "为批量模式，这表明一个用户形式跟其它用户 有区别，例如.user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_last_update
@@ -1476,7 +1476,7 @@ msgstr "最后更新时间"
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
 msgid "Leader Board (Group Ranking)"
-msgstr "排行榜(小组排行)"
+msgstr "排行榜(小组排名)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max_number
@@ -1506,7 +1506,7 @@ msgstr "参与挑战的用户列表"
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
 msgid "Mail Group Following"
-msgstr "以下邮件组"
+msgstr "邮件组遵从"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
@@ -1517,7 +1517,7 @@ msgstr "模型"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_monetary
 msgid "Monetary"
-msgstr "货币"
+msgstr "货币的"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_monetary
@@ -1548,12 +1548,12 @@ msgstr "我的目标"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_monthly_sending
 msgid "My Monthly Sending Total"
-msgstr "月度发放总数"
+msgstr "我的月度发放总计"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_this_month
 msgid "My Monthly Total"
-msgstr "我的月份总计"
+msgstr "我的每月总计"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my
@@ -1573,7 +1573,7 @@ msgstr "从不"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
 msgid "Never reminded if no value or zero is specified."
-msgstr "从来没有提醒如果没有指定值或零"
+msgstr "如果没有指定值或为零则不会提示。"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -1588,12 +1588,12 @@ msgstr "下次报告日期"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "No monthly sending limit"
-msgstr "没有月度发放限额"
+msgstr "没有月度花费限额"
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr "没有人能像你一样解决挑战"
+msgstr "没有人能像你一样解决挑战。"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -1604,7 +1604,7 @@ msgstr "没有人完成已分配的挑战"
 #: code:addons/gamification/models/challenge.py:667
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "没有人达到获得特殊徽章的要求"
+msgstr "没有人达到获得特殊徽章的要求。"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1634,12 +1634,12 @@ msgstr "改变"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr "只有人有这些徽章，才可以给这个徽章"
+msgstr "只有拥有这些徽章的人才可以授予此徽章。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr "只有这些人能给这个徽章"
+msgstr "只有这些人能给给予此徽章"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1666,7 +1666,7 @@ msgstr "期间"
 msgid ""
 "Period of automatic goal assigment. If none is selected, should be launched "
 "manually."
-msgstr "目标自动分配周期，如果没有选择，应启动手动"
+msgstr "目标自动分配周期。如果没有选择，应启动手动。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_period
@@ -1681,7 +1681,7 @@ msgstr "问题解决者"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Progressive (using numerical values)"
-msgstr "逐行（使用数值化值）"
+msgstr "递增的（使用数值化值）"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
@@ -1728,12 +1728,12 @@ msgstr "相关目标"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "用于管理资源访问权限的用户名"
+msgstr "用于管理资源访问权限的相关用户名。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_remaining_sending
 msgid "Remaining Sending Allowed"
-msgstr "其他的允许发送"
+msgstr "允许剩下的发送"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_remind_update_delay
@@ -1784,7 +1784,7 @@ msgstr "奖励"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_failure
 msgid "Reward Bests if not Succeeded?"
-msgstr "未达成时奖励最优者?"
+msgstr "未成功时奖励最优者?"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_realtime
@@ -1841,7 +1841,7 @@ msgstr "搜索目标"
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
-msgstr "安全规则来定义谁可以手动授予徽章，管理员不能强制执行"
+msgstr "安全规则来定义谁可以手动授予徽章。管理员不能强制执行。"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1883,7 +1883,7 @@ msgstr "设置你的公司数据"
 #: model:gamification.challenge.line,name:gamification.line_base_admin2
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr "设置你的公司LOGO徽标"
+msgstr "设置你的公司徽标"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_discover1
@@ -2138,7 +2138,7 @@ msgstr "用户发送的徽章"
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
-msgstr "这些目标已经成功的用户会自动的收到徽章"
+msgstr "成功达成这些目标的用户会自动的收到徽章"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression

@@ -6,12 +6,12 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Ted Wang <feiyuwang2012@gmail.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Martin Trigaux, 2017
 # Jonathon Li <jonathonli@gmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
-# zpq001 <zpq001@live.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # THL <wt39181819@gmail.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # Xiaoming Deng <sumandeng@hotmail.com>, 2017
@@ -210,7 +210,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "<span>kg</span>"
-msgstr "<span>kg</span>"
+msgstr "<span>公斤</span>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -232,7 +232,7 @@ msgstr "<strong>重量</strong>"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr "操作在验证交货的订单"
+msgstr "在验证交货订单时的操作"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -249,7 +249,7 @@ msgstr "金额"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "免费送货的订单金额，以公司本位币显示"
+msgstr "免费送货的订单金额，以公司本位货币显示"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -297,7 +297,7 @@ msgstr "查看价格"
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr "点击创建一个新的运输方式"
+msgstr "点击以创建一个新的送货方式。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
@@ -440,8 +440,8 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"每一个承运人(例如UPS)能有几种不同的运输方式(例如UPS快运, UPS 标准)\n"
-"并且每种方式都相应的一套定价规则"
+"每一个承运人(例如UPS)能有几种不同的运输方式(例如\n"
+"UPS快运, UPS 标准)并且每种方式都有相应的一套定价规则。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -463,14 +463,14 @@ msgstr "预估运输价格"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "如果你打算根据发货的实际数量填写账单的话，就填写这一字段"
+msgstr "如果你打算根据发货的实际数量开具账单的话，就填写这一字段"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
-msgstr "填写此表，你可以根据你的客户的送货地址进行过滤。"
+msgstr "填写此表格，你可以根据你的客户送货地址进行过滤。"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -482,7 +482,7 @@ msgstr "固定价格"
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
-msgstr "免费运输"
+msgstr "免费运输费用"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_over
@@ -518,7 +518,7 @@ msgstr "高度"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr "高度必须是正数。"
+msgstr "高度必须是正数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_id
@@ -554,7 +554,7 @@ msgstr "增加更多供应商"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr "基础等级"
+msgstr "集成等级"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
@@ -640,7 +640,7 @@ msgstr "最大值"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr "可交付最大重量包装。"
+msgstr "可送货的最大重量包装。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
@@ -658,7 +658,7 @@ msgstr "无承运商集成"
 #: code:addons/delivery/models/sale_order.py:73
 #, python-format
 msgid "No carrier set for this order."
-msgstr "此订单没有设置承运商"
+msgstr "此订单没有设置承运商。"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:100
@@ -858,7 +858,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_product_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr "国际航运和货物申报代码规范"
+msgstr "国际航运和货物申报的标准化代码"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -890,7 +890,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "这个交货方式会用在当从拣货开发票时。"
+msgstr "从拣货开发票时将使用此交货方式。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
@@ -905,7 +905,7 @@ msgstr "追踪"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "跟踪参照"
+msgstr "跟踪参考"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
@@ -926,7 +926,7 @@ msgstr "计量单位"
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr "计量单位 是测量重量的单位"
+msgstr "计量单位（计量单位）是测量重量的单位"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
@@ -1029,4 +1029,4 @@ msgstr "邮编到"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "例如，UPS　快递"
+msgstr "例如，UPS快递"

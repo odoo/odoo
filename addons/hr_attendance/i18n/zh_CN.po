@@ -3,14 +3,14 @@
 # * hr_attendance
 # 
 # Translators:
-# niulin lnc. <admin@niulin.net>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# niulin lnc. <admin@niulin.net>, 2017
 # Talway <9010446@qq.com>, 2017
 # Martin Trigaux, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
 # Liping Wang <lynn.config@gmail.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
@@ -49,7 +49,7 @@ msgstr "%(empl_name)s 从%(check_in)s 到 %(check_out)s"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr "<span class =“o_stat_text”>考勤</ span>"
+msgstr "<span class=\"o_stat_text\">考勤</span>"
 
 #. module: hr_attendance
 #. openerp-web
@@ -63,7 +63,7 @@ msgstr "一天一苹果，医生远离我"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:106
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr "期待很快与您见面！"
+msgstr "又是一天超棒的工作！期待很快与您见面！"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -96,7 +96,7 @@ msgstr "考勤"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
 msgid "Badge ID"
-msgstr "工牌 ID"
+msgstr "徽章 ID"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -104,7 +104,7 @@ msgstr "工牌 ID"
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
-msgstr "无法为%(empl_name)s 创建新的出勤记录, 因为 %(datetime)s, 员工尚未签退"
+msgstr "无法为%(empl_name)s 创建新的出勤记录, 因为自 %(datetime)s员工尚未签退"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -167,7 +167,7 @@ msgstr "签到/签退"
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
 msgid "Checked in"
-msgstr "签到"
+msgstr "已签到"
 
 #. module: hr_attendance
 #. openerp-web
@@ -220,7 +220,7 @@ msgstr "配置"
 msgid ""
 "Create a few employees to be able to select an employee here and perform his"
 " check in / check out."
-msgstr "创建几个员工, 以便能够在这里选择一个员工并执行他的签到/签退。"
+msgstr "创建几个员工以便能够在这里选择一个员工并执行他的签到/签退。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
@@ -259,7 +259,7 @@ msgstr "早睡早起，使男人健康，富有和明智"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:115
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
-msgstr "早餐当国王，午餐当商人，晚餐当乞丐"
+msgstr "早餐吃得像国王，午餐吃得像商人，晚餐吃得像乞丐"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -498,7 +498,7 @@ msgstr "未签退"
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "No attendance records to display."
-msgstr "无出勤记录显示。"
+msgstr "无出勤记录可显示。"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
@@ -514,26 +514,26 @@ msgstr "主管"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_pin
 msgid "PIN"
-msgstr "PIN"
+msgstr "密码"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
-msgstr "在信息亭模式下用于签到/签退的PIN（如果在配置中启用）。"
+msgstr "在信息亭模式用于签到/签退的密码（如果在配置中启用）。"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:62
 #, python-format
 msgid "Please enter your PIN to check in"
-msgstr "请输入您的PIN签到"
+msgstr "请输入您的密码以签到"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:59
 #, python-format
 msgid "Please enter your PIN to check out"
-msgstr "请输入您的PIN签退"
+msgstr "请输入您的密码以签退"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -546,7 +546,7 @@ msgstr "如果您希望看到任何内容，请确保您使用了正确的筛选
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:82
 #, python-format
 msgid "Please return to the main menu."
-msgstr "请返回到主菜单"
+msgstr "请返回到主菜单。"
 
 #. module: hr_attendance
 #: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
@@ -575,7 +575,7 @@ msgstr "选择员工"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr "在员工详细信息表单（HR设置选项卡）中设置PIN码。"
+msgstr "在员工详细信息表单（人力资源设置选项卡）中设置密码。"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -593,12 +593,12 @@ msgstr "徽章ID必须是唯一的，这个已经分配给另一个员工。"
 #: code:addons/hr_attendance/models/hr_employee.py:63
 #, python-format
 msgid "The PIN must be a sequence of digits."
-msgstr "PIN码必须是一串数字。"
+msgstr "密码必须是一串数字序列。"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
 msgid "The attendance records of your employees will be displayed here."
-msgstr "您的员工的出勤记录将显示在此处。"
+msgstr "您的员工出勤记录将显示在此处。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -612,26 +612,26 @@ msgstr "早起的鸟儿有虫吃"
 msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
-msgstr "员工将有权访问  “我的出勤 “ 菜单, 在会话中进行签到和签退。"
+msgstr "员工将有权访问  “我的出勤 “ 菜单以在会话中进行签到和签退。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
 msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
-msgstr "用户将获得权限访问人力资源的考勤菜单，使他能够管理自己的考勤。"
+msgstr "用户将获得权限访问人力资源的考勤菜单，使他能管理自己的考勤。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
-msgstr "用户必须输入他的PIN才能在公司屏幕上手动签到和签退。"
+msgstr "用户必须输入其密码才能在公司屏幕上手动的签到和签退。"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "To create employees go to the Employees menu."
-msgstr "要创建员工，请转到“员工”菜单。"
+msgstr "要创建员工请转到员工菜单。"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -677,7 +677,7 @@ msgstr "工作时数"
 #: code:addons/hr_attendance/models/hr_employee.py:79
 #, python-format
 msgid "Wrong PIN"
-msgstr "错误的PIN"
+msgstr "错误的密码"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:105

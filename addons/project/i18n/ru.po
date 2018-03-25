@@ -6,10 +6,11 @@
 # Collex100, 2017
 # Martin Trigaux, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # KingOPl Slav <87slava13@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Denis Baranov <baranov@itlibertas.com>, 2017
 # Alex Puchkov <ap@alteco.co>, 2017
@@ -168,12 +169,12 @@ msgstr "# Задач"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Рабочих дней до начала"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Рабочих дней до завершения"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -204,7 +205,7 @@ msgstr "— Команда Odoo"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks and Timesheets."
-msgstr ""
+msgstr "1. Узнайте о задачах и табелях."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -424,6 +425,11 @@ msgid ""
 "                                            <span class=\"small\">Delay to close an Task</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> Упраждение 2</strong><br/>\n"
+"                                            <span class=\"small\">Задержка закрытия задачи</span>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -457,6 +463,8 @@ msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
 msgstr ""
+"<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
+"the destination task)</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -502,6 +510,8 @@ msgid ""
 "<strong> New business tasks (5 min)</strong>\n"
 "                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  task as you walk through the project status session. Not every task warrants spending time here, so keep discussions to a minimum."
 msgstr ""
+"<strong> Новые задачи (5 мин)</strong>\n"
+"                                Возможно, за неделю вы выяснили что-то, могущее повлиять на проект. Делитесь новостями на каждом совещании, помогайте команде уточнить задачи по проекту. Вместе с тем не каждая задача достойно длительных разговоров - старайтесь свести дискуссии к минимуму."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -523,6 +533,8 @@ msgid ""
 "<strong> Q&amp;A and discussion time (10 min)</strong>\n"
 "                                Always give your team time to ask questions on tasks that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
 msgstr ""
+"<strong> Вопросы, ответы и обсуждения (10 мин)</strong>\n"
+"                                Всегда давайте команде время, чтобы задавать вопросы по задачам, которые не в плане обсуждения. Это дает возможность выявить ключевые события за неделю, которые вы могли пропустить."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -548,6 +560,8 @@ msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and is extremely useful for several cases."
 msgstr ""
+"<strong>Отличной особенностью Odoo является интеграция совместных блокнотов под названием Etherpad.</strong><br/>\n"
+"                            Etherpad заменяет стандартное описание проекта и очень полезно для некоторых вещей."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -560,6 +574,8 @@ msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
 "                                    The deadline will help you determine if a task is progressing as expected  and to anticipate its next update."
 msgstr ""
+"<strong>Добавьте крайний срок(дедлайн)</strong><br/>\n"
+"                                    Крайний срок помогает понять, как движется задача и запланировать ее переход с этапа на этап. "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -632,6 +648,8 @@ msgid ""
 "<strong>Create tasks by email</strong><br/>\n"
 "                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task in the first stage of the project, with all the email recipients as its default followers."
 msgstr ""
+"<strong>Создавайте задачи по эл.почте</strong><br/>\n"
+"                                В Odoo каждый проект привязан к отдельному псевдониму. Если вы шлете емейл на этот псевдоним, в проекте создается задача на первом настроенном этапе. Люди, указанные в получателях письма, автоматически будут подписаны на эту задачу. "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
@@ -678,6 +696,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Tasks."
 msgstr ""
+"<strong>Упражнение:</strong> Попробуйте создать график помесячного изменения"
+" показателя 'Средняя просрочка' у задач."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -694,6 +714,8 @@ msgid ""
 "<strong>Follow every meeting with a recap email</strong>\n"
 "                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, task/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
 msgstr ""
+"<strong>Получайте отчет о каждом совещании</strong>\n"
+"                                    Как только совещание закончено, публикуйте время, потраченное на него, обновив расписание, матрицу задач/действий, а также любые затронутые документы. Попробуйте вести совещания по шаблону, чтобы увеличить их продуктивность."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -701,6 +723,8 @@ msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks of a project."
 msgstr ""
+"<strong>Следите только за тем, что вас интересует</strong><br/>\n"
+"                                    Самый простой способ использовать уведомления - подписаться на весь проект. Тогда вы будете получать сообщения обо всех существующих и новых задачах."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -728,7 +752,7 @@ msgid ""
 "<strong>Have Clear Responsibilities</strong><br/>\n"
 "                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
-"<strong>Назначайте понятные обязанности</strong><br/>\n"
+"<strong>Понятные обязанности</strong><br/>\n"
 "Человек, назначенный на задачу, отвечает за её выполнение, и в отображении Канбан показывается его аватар. Естественно, ответственность за задачу может меняться с зависимости от этапа."
 
 #. module: project
@@ -741,7 +765,7 @@ msgid ""
 "best way to work if you have diluted responsibilities for your Kanban "
 "stages."
 msgstr ""
-"<strong>В режиме 'Подтягивания'</strong> человек, ответственный за текущий "
+"<strong>В режиме 'Перетягивания'</strong> человек, ответственный за текущий "
 "этап, всего лишь ставит отметку 'Готово' на готовые к следующему этапу "
 "задачи  (с использованием иконки статуса). Затем человек, отвечающий за "
 "следующий этап, берёт задачу и перемещает на свой этап. Это наилучший способ"
@@ -836,6 +860,8 @@ msgid ""
 "<strong>Rely on the chatter</strong><br/>\n"
 "                                    Below every Task (or more generally, below every Document in Odoo) is an area called Chatter."
 msgstr ""
+"<strong>Отвечайте в чате</strong><br/>\n"
+"                                    Под каждой задачей(да и вообще под каждым документом в Odoo) есть область чата."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -848,6 +874,8 @@ msgid ""
 "<strong>Set Priorities</strong><br/>\n"
 "                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
 msgstr ""
+"<strong>Set Priorities</strong><br/>\n"
+"                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -866,7 +894,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
-msgstr "<strong>Есть два способа управления вашими канбан-этапами:</strong>"
+msgstr "<strong>Есть два способа управления вашими этапами Канбан:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -875,7 +903,7 @@ msgid ""
 "have a look at some of our other apps:"
 msgstr ""
 "<strong>Чтобы увеличить эффективность модуля Проекты</strong>, вы можете "
-"рассмотреть другие наши приложения:"
+"использовать другие наши приложения:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -892,6 +920,8 @@ msgid ""
 "<strong>Use Status Indicator</strong><br/>\n"
 "                                    The Status indicator helps you manage Tasks by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:"
 msgstr ""
+"<strong>Пользуйтесь индикаторами статуса.</strong><br/>\n"
+"                                    Индикатор статуса помогает вам управлять задачами, деля их на три вида: серые, зеленые и красные. Их значение вы можете установить сами, но как правило:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -899,6 +929,8 @@ msgid ""
 "<strong>Use Tags</strong><br/>\n"
 "                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks to manage. Also, it becomes very easy to find Tasks by typing  the Tag into the main Search bar."
 msgstr ""
+"<strong>Используйте теги</strong><br/>\n"
+"                                    Теги дополняют этапы проекта: они могут быть использованы втором слоем категоризации, если у вас под контролем множество проектов. Упрощается поиск задач - просто вводите тег в поле поиска."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -964,11 +996,15 @@ msgid ""
 " * Red indicates something is preventing the progress of this task\n"
 " * Green indicates the task is ready to be pulled to the next stage"
 msgstr ""
+"Статус задачи по Канбан обозначает примерно следующее:\n"
+" * Серый - все идет по плану\n"
+" * Красный - есть какие-то несоответствия, не позволяющие продолжать работу\n"
+" * Зеленый - задача окончена и может быть переведена на следующий этап"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr "Принять электронные письма от"
+msgstr "Принимать электронные письма от"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -995,7 +1031,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_active
 #: model:ir.model.fields,field_description:project.field_project_task_active
 msgid "Active"
-msgstr "Актив"
+msgstr "Активный"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1006,7 +1042,7 @@ msgstr "Деятельность"
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Виды деятельности"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1022,7 +1058,7 @@ msgid ""
 "Specification &gt; Development &gt; Done</i>"
 msgstr ""
 "Добавьте столбцы для настройки <b>этапов для ваших "
-"задач</b>.<br><i>Например, спецификация > развитие > сделано</i>"
+"задач</b>.<br><i>Например, Описание > Разработка > Сделано</i>"
 
 #. module: project
 #. openerp-web
@@ -1044,12 +1080,12 @@ msgstr "Псевдоним"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr "Псевдоним контакта безопасности"
+msgstr "Безопасность псевдонима"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr "Имя алиас"
+msgstr "Псевдоним"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
@@ -1084,8 +1120,8 @@ msgid ""
 "<strong>'Log work activities on tasks'</strong> in the"
 msgstr ""
 "В качестве альтернативы табели можно добавлять непосредственно из "
-"мероприятий, включив опцию <strong>«Вести журнал мероприятий для "
-"задач»</strong> в "
+"мероприятий, включив опцию <strong>«Вести записи о работе в "
+"задачах»</strong> в "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1093,7 +1129,7 @@ msgid ""
 "An internal message will not send any email notification, but your message "
 "will still be displayed to every user that has access to the page."
 msgstr ""
-"Внутреннее сообщение не отправляет email-уведомления, однако ваше сообщение "
+"О внутреннее сообщении на почту уведомление не придет, однако это сообщение "
 "увидит каждый пользователь, у которого есть доступ на страницу."
 
 #. module: project
@@ -1115,6 +1151,10 @@ msgid ""
 " a Task is created, and can  manually decide if you want to be notified for "
 "its other events too."
 msgstr ""
+"Еще один хороший способ сократить количество уведомлений, которые вы "
+"получаете, - это следить только за назначениями в задачах ответственных. В "
+"этом случае вас уведомят о создании задачи, там уже вы сами решите, хотите "
+"ли вы следить за ними. "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1125,7 +1165,7 @@ msgstr "Архивировано"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Поручено мне"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1145,7 +1185,7 @@ msgstr "Назначенные задания"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
 msgid "Assigned To"
-msgstr "Назначено"
+msgstr "Исполнитель"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_user_id
@@ -1153,7 +1193,7 @@ msgstr "Назначено"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "Назначено"
+msgstr "Исполнитель"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
@@ -1179,14 +1219,14 @@ msgstr "Приложение"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Приложения не из сообщения"
 
 #. module: project
 #: code:addons/project/models/project.py:109
 #: model:ir.ui.view,arch_db:project.portal_my_task
 #, python-format
 msgid "Attachments"
-msgstr "Вложения"
+msgstr "Приложения"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1200,7 +1240,7 @@ msgid ""
 "tasks and delegates them to several employees."
 msgstr ""
 "Вернувшись в офис, менеджер разбивает запросы клиента на несколько задач и "
-"делегирует их нескольким сотрудникам."
+"делегирует их сотрудникам."
 
 #. module: project
 #. openerp-web
@@ -1224,7 +1264,7 @@ msgstr "Основной"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Basic Management"
-msgstr "Базовое управление"
+msgstr "Основы управления"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1356,7 +1396,7 @@ msgstr "Утверждено описание и назначение"
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr "Нажмите на карту, чтобы получить подробности о задаче."
+msgstr "Нажмите на карточку, чтобы узнать о задаче подробнее."
 
 #. module: project
 #. openerp-web
@@ -1365,7 +1405,8 @@ msgstr "Нажмите на карту, чтобы получить подроб
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
 msgstr ""
-"Нажмите на карту, чтобы <b>Перейти к проекту</b> и начать организацию задач."
+"Нажмите на карточку, чтобы <b>Перейти к проекту</b> и начать организацию "
+"задач."
 
 #. module: project
 #. openerp-web
@@ -1377,7 +1418,7 @@ msgstr "Нажмите на эту кнопку, чтобы изменить з�
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr "Кликните, чтобы создать новый тег."
+msgstr "Нажмите, чтобы создать новый тег."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1387,7 +1428,7 @@ msgstr "Нажмите для добавления нового этапа в р
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr "Щелкните, чтобы создать новый проект.<br>"
+msgstr "Нажмите, чтобы создать новый проект.<br>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1446,7 +1487,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Congratulations, you're done !"
-msgstr "Поздравляем, вы это сделали!"
+msgstr "Поздравляем, справились!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1482,7 +1523,7 @@ msgstr "Написание текстов / дизайн"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Обложка"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1492,7 +1533,7 @@ msgstr "Создать"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create & Edit"
-msgstr ""
+msgstr "Создать и изменить"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
@@ -1503,7 +1544,7 @@ msgstr "Дата создания"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create a Gantt chart with your projects tasks and deadlines"
 msgstr ""
-"Создать диаграмму Ганта с задачами вашего проекта и датами окончания задач"
+"Создать диаграмму Гантта с задачами вашего проекта и сроками их завершения"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -1513,12 +1554,12 @@ msgstr "Создайте проект"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr "Создать новый проект"
+msgstr "Создать проект"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Создайте задачу"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1526,8 +1567,8 @@ msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
-"Создайте задачу, отправив email на алиас проекта с одним из ваших коллег в "
-"копии"
+"Создайте задачу, отправив email на электронную почту проекта с одним из "
+"ваших коллег в копии"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1543,7 +1584,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create the Projects"
-msgstr "Создайте проекты,"
+msgstr "Создавайте проекты,"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_create_uid
@@ -1552,7 +1593,7 @@ msgstr "Создайте проекты,"
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создан"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_create_date
@@ -1568,6 +1609,8 @@ msgid ""
 "Creating Tasks is the next step in managing your Projects.<br/>\n"
 "                        In Odoo, it is pretty straightforward, but here are some explanations you may find useful."
 msgstr ""
+"Создание задач - следующий шаг в управлении вашим проектом.<br/>\n"
+"                        В Odoo это достаточно просто и наглядно, но не которые объяснения могут вам пригодиться."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1602,12 +1645,12 @@ msgstr "Текущий этап задачи"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr "Текущий этап этой задачи"
+msgstr "Текущий этап задачи"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "На данный момент ничего не запланировано"
 
 #. module: project
 #: code:addons/project/models/project.py:818
@@ -1616,7 +1659,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.edit_project
 #, python-format
 msgid "Customer"
-msgstr "Заказчик"
+msgstr "Клиент"
 
 #. module: project
 #: code:addons/project/models/project.py:818
@@ -1641,14 +1684,14 @@ msgstr "Ждём обратной связи от клиента"
 #: code:addons/project/static/src/js/web_planner_project.js:92
 #, python-format
 msgid "Customer has cancelled repair"
-msgstr "Заказчик отменил ремонт"
+msgstr "Клиент отменил ремонт"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Customer has reported new issue"
-msgstr "Клиент создал новый вопрос"
+msgstr "Клиент создал новый запрос"
 
 #. module: project
 #. openerp-web
@@ -1660,7 +1703,7 @@ msgstr "Новый вопрос из отдела клиентской подд�
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr "Билеты поддержки клиентов"
+msgstr "Тикеты от клиентской поддержки"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1718,6 +1761,9 @@ msgid ""
 "ways to work with Odoo. First, decide if you want to think in terms of "
 "tasks. Then, activate the Timesheets app if you need it."
 msgstr ""
+"В зависимости от того, что вам нужно и как вы хотите работать, в Odoo есть "
+"несколько способов. Во-первых, решите, хотите ли вы мыслить категориями "
+"задач. Затем подключите приложение «Табели», если оно вам понадобится."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1801,7 +1847,7 @@ msgid ""
 "that work at different locations)."
 msgstr ""
 "Не создавайте отдельные проекты для разных локаций (это может изолировать "
-"друг от друга команды, работающие в разных местах)."
+"друг от друга команды, работающие не в одном офисе)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1900,8 +1946,7 @@ msgid ""
 "task is in draft state."
 msgstr ""
 "Приблизительное время, необходимое для завершения задания. Обычно "
-"устанавливается руководителем проекта, когда задание находится в статусе "
-"\"Черновик\"."
+"устанавливается руководителем проекта, пока задача в статусе \"Черновик\"."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1909,7 +1954,7 @@ msgid ""
 "Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
 "                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
 msgstr ""
-"Даже если в Odoo нет специального поля, важно назначать отвественного за каждый этап вашего проекта.<br/>\n"
+"Даже если в Odoo нет специального поля, важно назначать ответственного за каждый этап вашего проекта.<br/>\n"
 "Этот человек будет отвечать за проверку каждого этапа, а также за то, чтобы были удовлетворены все требования для перехода к следующему этапу."
 
 #. module: project
@@ -1944,6 +1989,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
+"Текст объяснения, помогающий пользователям верно пользоваться звездами на "
+"задачах и вопросах на этом этапе."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1958,7 +2005,7 @@ msgstr "Доп. инфо"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Extra useful for when you're with a customer or in a meeting."
-msgstr "Особенно полезно, когда вы с клиентом или на встрече."
+msgstr "Особенно полезно, когда вы с клиентом или на совещении."
 
 #. module: project
 #. openerp-web
@@ -1972,7 +2019,7 @@ msgstr "Запросили обратную связь от клиента"
 #: code:addons/project/static/src/js/web_planner_project.js:27
 #, python-format
 msgid "Finally task is deployed"
-msgstr "Наконец задача развернута"
+msgstr "Наконец задача размещена"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
@@ -2004,6 +2051,8 @@ msgid ""
 "For example, risk and task owners should come prepared to share the status "
 "of their item and, ideally, a path to resolution."
 msgstr ""
+"Например, управляющие рисками и проектами должны быть готовы показать, над "
+"чем они работают и, в идеале, способ решения"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2031,7 +2080,7 @@ msgstr "Прогнозы"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr ""
+msgstr "Будущие действия"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2047,12 +2096,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get full synchronization with Odoo"
-msgstr "Получите полную синхронизацию с Odoo"
+msgstr "Использовать полную синхронизацию с Odoo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get it on Google Play"
-msgstr "Получить на Google Play"
+msgstr "Перейти на Google Play"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2062,7 +2111,7 @@ msgstr "Получить больше приложений"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr "Дает метку задач в просмотре канбан проекта."
+msgstr "Добавляет метки к задачам в режиме просмотра Канбан"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_sequence
@@ -2083,8 +2132,8 @@ msgid ""
 "the <b>implementation guide</b> to help you setup Project Management in your"
 " company."
 msgstr ""
-"Молодец! Ваш завершил тур управления проектами. Вы можете продолжать с "
-"<b>руководство по внедрению</b> , чтобы помочь настроить управление "
+"Отлично! Вы завершили тур по управлению проектами. Можете продолжить с "
+"<b>руководством по внедрению</b> , чтобы лучше настроить управление "
 "проектами в вашей компании."
 
 #. module: project
@@ -2100,7 +2149,7 @@ msgstr "Зеленый"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Зеленый уровень Канбан"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2112,12 +2161,12 @@ msgstr ""
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Серый"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Серый уровень Канбан"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2222,7 +2271,7 @@ msgstr "Идеи"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr "Легче определяйте проблемы и блокеры"
+msgstr "Легче определяйте проблемы и стопы"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
@@ -2267,6 +2316,9 @@ msgid ""
 "extract a Timesheet of the tasks to invoice directly to the customer. To do "
 "that:"
 msgstr ""
+"Если вы работает над проектом типа \"Время и материалы\", вы, возможно, "
+"захотите извлекать табели из задач, чтобы выставлять счета клиенту. Чтобы "
+"сделать это:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2281,7 +2333,7 @@ msgstr "Улучшения"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve collaboration with customers"
-msgstr "Улучшение взаимодействия с клиентами"
+msgstr "Улучшение взаимодействие с клиентами"
 
 #. module: project
 #: model:project.task,legend_normal:project.project_task_1
@@ -2416,6 +2468,8 @@ msgid ""
 "It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
 "                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
 msgstr ""
+"Самое время подумать, как преобразовать ваши действия в реальные проекты в Odoo.<br/>\n"
+"Для начало важно в первую очередь определить этапы вашего проекта. Этапы - это шаги, которые должна пройти задача от создания до завершения. Вы их увидите в том, что мы называем  Канбан-представленим проекта."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2441,11 +2495,13 @@ msgid ""
 "Here are some KPIs you should take a look at. Ask yourself 'How can they be "
 "improved?'"
 msgstr ""
+"Хорошая идея - потратить раз в год немного времени для анализа своих задач. Вот некоторые KPI, на которые вы можете обратить внимание. Спросите себя \"Как можно было бы действовать лучше?\"\n"
+"It's usually a good idea to take time to analyze your tasks once a year. Here are some KPIs you should take a look at. Ask yourself 'How can they be improved?'"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "Канбан блокированное объяснение"
+msgstr "Канбан не принятое объяснение"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
@@ -2472,7 +2528,7 @@ msgstr "Канбан статус"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Канбан: верное объяснение"
+msgstr "Подтвержденное объяснение(по Канбан)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2482,7 +2538,7 @@ msgstr "Следите за сообщениями и переговорами"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Know what my employees are working on"
-msgstr "Знаю, что мои сотрудники работают на"
+msgstr "Знайте, над чем работают ваши сотрудники"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2505,7 +2561,7 @@ msgstr "Последнее изменение"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr "Обновление последнего этапа"
+msgstr "Последнее изменение этапа"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_write_uid
@@ -2514,7 +2570,7 @@ msgstr "Обновление последнего этапа"
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновил"
+msgstr "Последний обновивший(-ая)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_write_date
@@ -2527,7 +2583,7 @@ msgstr "Последнее обновление"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "Действия с опозданием"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2535,6 +2591,8 @@ msgid ""
 "Learn how to better organize your company using Projects, Tasks and "
 "Timesheets."
 msgstr ""
+"Узнайте, как лучшим образом организовать работу вашей компании с проектами, "
+"задачами и табелями"
 
 #. module: project
 #. openerp-web
@@ -2549,6 +2607,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Lets the company customize which Pad installation should be used to link to "
+"new pads (for example: http://etherpad.com/)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2576,12 +2636,12 @@ msgstr "Низкий"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Почтовые вложения"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Manage your resources with Gantt charts"
-msgstr ""
+msgstr "Управляйте ресурсами при помощи диаграмм Гантта"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2634,17 +2694,17 @@ msgstr "Члены"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
 msgid "Merge Selected Tasks"
-msgstr ""
+msgstr "Объединить выбранные задачи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 msgid "Merge Tasks"
-msgstr ""
+msgstr "Объединить задачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
 msgid "Merge into an existing task"
-msgstr ""
+msgstr "Объединить с существующей задачей"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2654,22 +2714,22 @@ msgstr "Более эффективное взаимодействие межд�
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
-msgstr ""
+msgstr "Мои задачи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr "Мои любимые"
+msgstr "Избранное"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Задачи, за которыми я слежу"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
 msgid "My Next Activities"
-msgstr ""
+msgstr "Мои ближайшие задачи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2682,12 +2742,12 @@ msgstr "Мои задачи"
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 #, python-format
 msgid "Name"
-msgstr "Название"
+msgstr "Наименование"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Наименование задач:"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2726,7 +2786,7 @@ msgstr "Добавлен новый ремонт"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
 msgid "New task name"
-msgstr ""
+msgstr "Новое наименование задачи"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:30
@@ -2751,7 +2811,7 @@ msgstr "Без темы"
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
-msgstr "Нормальный"
+msgstr "Обычный"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_1
@@ -2784,12 +2844,12 @@ msgstr "Теперь, когда проект создан, <b>Создайте 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Рабочих дней до открытия задачи"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Рабочих дней до закрытия задачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -2819,16 +2879,16 @@ msgid ""
 "efficiently. You can track progress, discuss on tasks, attach documents, "
 "etc."
 msgstr ""
-"Менеджер проектов Odoo позволяет вам управлять процессом решения задач более"
-" эффективно. Вы можете следить за прогрессом, обсуждать задачи, прикреплять "
-"документы и т. п."
+"Менеджер проектов в Odoo позволяет вам управлять процессом решения задач "
+"более эффективно. Вы можете следить за прогрессом, обсуждать задачи, "
+"прикреплять документы и т. п."
 
 #. module: project
 #: code:addons/project/models/project.py:200
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr "По приглашению только"
+msgstr "Только по приглашению"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
@@ -2837,9 +2897,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Опциональный номер записи к которой все входящие сообщения будут "
-"присоединены, даже если на них не было ответа. Если установлено, это "
-"отключит создание новых записей полностью."
+"Опциональный ID записи к которой будут присоединены все входящие сообщения, "
+"даже если на них не ответили. Если активировано, это отключит создание новых"
+" записей."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -3051,7 +3111,7 @@ msgstr "Настройки проекта."
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
 #: model:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
-msgstr "Задания проекта"
+msgstr "Задачи проекта"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
@@ -3072,7 +3132,7 @@ msgstr "Задания проекта"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Проект: Активируйте Образец проекта"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -3098,7 +3158,7 @@ msgstr "Проекты и задачи"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_rating_project
 msgid "Rating on Tasks"
-msgstr ""
+msgstr "Рейтинг задач"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_1
@@ -3131,14 +3191,14 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Готова к следующему этапу"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready for layout / copywriting"
-msgstr "Готово для размещения / создания наполнения"
+msgstr "Готово для размещения / копирайтинга"
 
 #. module: project
 #: selection:report.project.task.user,state:0
@@ -3194,7 +3254,7 @@ msgstr "ID цепочки записей"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "Цвет записи"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -3204,7 +3264,7 @@ msgstr "Красный"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Красная метка Канбан"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3265,7 +3325,7 @@ msgstr "Отчетность"
 #: code:addons/project/static/src/js/web_planner_project.js:90
 #, python-format
 msgid "Request for parts has been sent"
-msgstr "Отправили запрос на запчасти"
+msgstr "Запрос на запчасти отправлен"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3296,36 +3356,36 @@ msgstr "Поиск"
 #: code:addons/project/controllers/portal.py:92
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Поиск <span class=\"nolabel\"> (в содержимом)</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr "Поиск Проекта"
+msgstr "Поиск проекта"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Поиск по всему"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:94
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Поиск в клиентах"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:93
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Поиск в сообщениях"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Поиск в этапах"
 
 #. module: project
 #. openerp-web
@@ -3346,6 +3406,8 @@ msgstr ""
 msgid ""
 "Send an automatic confirmation to all emails sent to your customer support"
 msgstr ""
+"Отправлять автоматические подтверждения на все емейлы, полученные службой "
+"поддержки клиентов"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_sequence
@@ -3405,6 +3467,8 @@ msgid ""
 "So if you're looking for the history of a Task, or the latest message on a "
 "Task, simply go to the corresponding Document and you'll find it!"
 msgstr ""
+"Если вы ищете историю по задаче или последнее сообщение в ней, просто "
+"перейдите в связанный документ!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3435,7 +3499,7 @@ msgstr "Спецификация задачи написана"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Делите ваши задачи для организации вашей работы поэтапно"
 
 #. module: project
 #. openerp-web
@@ -3489,7 +3553,7 @@ msgstr "Отмеченные"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "Отмеченные пометки"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3515,7 +3579,7 @@ msgstr "Подзадача проекта"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr "Количество вложенных задач"
+msgstr "Количество подзадач"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3523,7 +3587,7 @@ msgstr "Количество вложенных задач"
 #: model:ir.model.fields,field_description:project.field_res_config_settings_group_subtask_project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Под задачи"
+msgstr "Подзадачи"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3542,12 +3606,12 @@ msgstr "Теги"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks"
-msgstr ""
+msgstr "Теги задач проекта"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
 msgid "Target Project"
-msgstr ""
+msgstr "Целевой проект"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -3566,18 +3630,18 @@ msgstr "Задача -"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
 msgid "Task Activities"
-msgstr "Активность по задаче"
+msgstr "Деятельность по задаче"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr "Задание заблокировано"
+msgstr "Задача заблокирована"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Task Management"
-msgstr ""
+msgstr "Управление задачами"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3622,14 +3686,14 @@ msgstr "Название задачи..."
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "Задание заблокировано"
+msgstr "Задача заблокирована"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is Developed"
-msgstr "Задача в разработке"
+msgstr "Задача в работе"
 
 #. module: project
 #. openerp-web
@@ -3693,7 +3757,7 @@ msgstr "Анализ задач"
 #: model:ir.model.fields,field_description:project.field_project_project_type_ids
 #: model:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Шаги задания"
+msgstr "Этапы задач"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3714,7 +3778,7 @@ msgstr "Задачи по пользователю и проекту"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
-msgstr ""
+msgstr "Задачи к объединению"
 
 #. module: project
 #. openerp-web
@@ -3757,12 +3821,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following task has been merged into this one:"
-msgstr ""
+msgstr "Задача была объединена в:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following tasks have been merged into this one:"
-msgstr ""
+msgstr "Следующие задачи объединены в одну:"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model_id
@@ -3773,7 +3837,7 @@ msgid ""
 msgstr ""
 "Модель (тип документа Odoo) которой соответствует этот псевдоним. Любая "
 "входящая электронная почта, которая не отвечает существующей записи, вызовет"
-" создание новой записи этой модели (например, задача в проекте)"
+" создание новой записи этой модели (например, Project Task)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3781,8 +3845,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Наименование псевдонима электронной почты, например, &quot;работа&quot;, "
-"если вы хотите получать почту для <jobs@example.odoo.com>"
+"Наименование псевдонима электронной почты, например, &quot;jobs&quot;, если "
+"вы хотите получать почту для <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3799,9 +3863,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "The same features as the Chrome extension, but on your mobile phone!"
-msgstr ""
-"Тот же функционал, как и в расширении для Chrome, но на вашем мобильном "
-"телефоне!"
+msgstr "Функционал расширения для Chrome в вашем мобильном телефоне!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
@@ -3845,6 +3907,9 @@ msgid ""
 "from customers will be transformed into a task that you'll be able to track "
 "easily!"
 msgstr ""
+"Это может быть полезным для управления помощью и поддержкой: вся входящая "
+"почта от клиентов автоматически преобразуется в задачи, которые удобно "
+"отслеживать."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3852,6 +3917,8 @@ msgid ""
 "This replaces task's description text field by a collaborative rich text "
 "pad. This is advised if tasks involve several people."
 msgstr ""
+"Это заменит описание задачи на описание расширенную общую панель. "
+"Рекомендуется для задач, над которыми работает несколько человек."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3877,7 +3944,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "This task has been merged into the following task:"
-msgstr ""
+msgstr "Эта задача слита с:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3885,7 +3952,7 @@ msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
 "                        return to it at any time: your progress is automatically saved."
 msgstr ""
-"Весь процесс может занять неколько часов, но не беспокойтесь - вы сможете "
+"Весь процесс может занять несколько часов, но не беспокойтесь - вы сможете "
 "прерваться и вернуться к нему в любое время: ваш прогресс сохраняется "
 "автоматически."
 
@@ -3918,12 +3985,12 @@ msgstr "Оценка времени на задачи"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Тайм-менеджмент"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr "Время планирования"
+msgstr "Планирования времени"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_hr_timesheet
@@ -4001,7 +4068,7 @@ msgstr "Отслеживание задач клиентов"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "Отслеживание времени, потраченное на проект и задачи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -4018,7 +4085,7 @@ msgstr "Непрочитанные Сообщения"
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtask Project"
-msgstr ""
+msgstr "Используйте проект с подзадачами"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
@@ -4033,7 +4100,7 @@ msgstr "Используйте табели"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Используйте общие панели для задач"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4041,6 +4108,8 @@ msgid ""
 "Use separate meetings to solve big tasks or tasks that aren’t important for "
 "the entire team."
 msgstr ""
+"Используйте отдельные встречи для решения вопросов по крупным задачам или по"
+" тем, кто не имеют важности для всех членов команды."
 
 #. module: project
 #. openerp-web
@@ -4059,7 +4128,7 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
-"Используйте хлебные крошки, чтобы <b>вернуться к конвейеру ваших задач</b>."
+"Используйте навигацию сверху, чтобы <b>вернуться к списку ваших задач</b>."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
@@ -4196,12 +4265,12 @@ msgstr "Добро пожаловать"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average number of working hours necessary to close a task?"
-msgstr ""
+msgstr "Сколько в среднем рабочих часов требовалось на закрытие задачи?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average time before a task is assigned / closed?"
-msgstr ""
+msgstr "Сколько в среднем времени проходило до принятия/закрытия задачи?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4217,7 +4286,7 @@ msgstr "Сколько раз срывали сроки?"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of tasks worked on / closed?"
-msgstr ""
+msgstr "Сколько в среднем задач в работе/закрытых?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4244,32 +4313,32 @@ msgstr "Рабочее время"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Рабочих времени до назначения"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Рабочего времени до окончания"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Рабочих дней до назначения"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Рабочих дней до окончания"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Рабочих часов до назначеня"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Рабочих часов до завершения"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -4279,7 +4348,7 @@ msgstr "Нагрузка"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Дата записи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4346,6 +4415,8 @@ msgid ""
 "The sub-task's project of the parent task's project should be this task's "
 "project"
 msgstr ""
+"Вы не можете назначить задачу-родителя, если проект неверно сконфигурирован."
+" Подзадачи проекта задачи-родителя должны принадлежать одному проекту."
 
 #. module: project
 #: code:addons/project/models/project.py:67
@@ -4392,7 +4463,7 @@ msgstr "попробуйте демо-проект"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "and activate 'Log work activities on tasks'"
-msgstr ""
+msgstr "и активируйте 'Вести записи о работе в задачах'"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -4412,7 +4483,7 @@ msgstr "oe_kanban_text_red"
 #. module: project
 #: model:ir.model,name:project.model_project_task_merge_wizard
 msgid "project.task.merge.wizard"
-msgstr ""
+msgstr "project.task.merge.wizard"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings

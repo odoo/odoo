@@ -3,6 +3,7 @@
 # * pos_mercury
 # 
 # Translators:
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # fausthuang, 2017
@@ -47,21 +48,21 @@ msgid ""
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
 "<i>Mercury配置</i>定义在销售点用信用卡进行交易的Mercury账号\n"
-"设置Mercury配置能够让你用不同的付款方式支付（例如Visa， 万事达卡，Discovery，美国快线等等）。配置好之后你应该把他和销售点的付款方式联系起来"
+"设置Mercury配置能够让你用不同的付款方式支付（例如Visa， 万事达卡，Discovery，美国运通等等）。配置好之后你应该把他和销售点的付款方式联系起来。"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:46
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
-msgstr "上述金额"
+msgstr "根据上述金额"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:60
 #, python-format
 msgid "APPROVAL CODE:"
-msgstr "验证代码"
+msgstr "批准代码："
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
@@ -100,7 +101,7 @@ msgstr "读卡器"
 #. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Click to configure your card reader."
-msgstr "点击配置你的读卡器"
+msgstr "点击配置你的读卡器。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -153,14 +154,16 @@ msgid ""
 "For quickly handling orders: just swiping a credit card when on the payment screen\n"
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
-msgstr "快速处理订单：在支付屏幕只刷信用卡（不做其他任何操作）就会用卡支付订单的总额"
+msgstr ""
+"快速处理订单：在支付屏幕只刷信用卡\n"
+"（不按下其他任何东西）就会用卡支付订单的总额"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr "到支付屏幕使用卡"
+msgstr "前往支付屏幕以使用卡"
 
 #. module: pos_mercury
 #. openerp-web
@@ -185,7 +188,7 @@ msgstr "授权给商人的ID让他能在支付供应商的服务器上支付"
 msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
-msgstr "如果你还没有Mercury账户，请拨打+1 (800) 846-4472，然后创建一个Mercury账号"
+msgstr "如果你还没有Mercury账户，请拨打+1 (800) 846-4472以创建账号。"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
@@ -249,7 +252,7 @@ msgstr "Mercury记录号码"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Mercury reference number"
-msgstr "Mercury参照号码"
+msgstr "Mercury参考号码"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_name
@@ -278,14 +281,14 @@ msgstr "未找到用户 %s 的已打开销售点会话"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr "Mercury没有响应（Mercury down？）"
+msgstr "Mercury没有响应（Mercury 关闭？）"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr "服务器没有响应（连接到网络？）"
+msgstr "服务器没有响应（已连接到网络？）"
 
 #. module: pos_mercury
 #. openerp-web
@@ -293,14 +296,14 @@ msgstr "服务器没有响应（连接到网络？）"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:567
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr "处理交易事务的ODoo错误"
+msgstr "处理交易时出现ODoo错误。"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:642
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr "已经有一个信用卡在刷了"
+msgstr "已经有一个信用卡在等待被刷。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -323,14 +326,14 @@ msgstr "Mercury支付的支付记录号码"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr "Mercury支付的支付参照号码"
+msgstr "Mercury支付的支付参考号码"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:407
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr "请设置你的Mercury商人账户"
+msgstr "请设置你的Mercury商人账户。"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -342,7 +345,7 @@ msgstr "POS订单"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:539
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr "逆转失败，发送VoidSale"
+msgstr "逆转失败，发送取消销售..."
 
 #. module: pos_mercury
 #. openerp-web
@@ -373,7 +376,7 @@ msgstr "支付卡的品牌（例如 Visa ，AMEX……"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr "付款的卡号"
+msgstr "用来付款的卡号。"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal_pos_mercury_config_id
@@ -383,7 +386,7 @@ msgstr "该日记账使用的Mercury配置"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr "付款卡的最后4位号码"
+msgstr "用来付款的卡之最后4位号码"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
@@ -397,7 +400,7 @@ msgstr "卡主的名称"
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
-msgstr "可能是由于严重的刷卡错误或者你的键盘没有设置为美国标准（不是美国国际标准）"
+msgstr "可能是由于严重的刷卡错误或者你的键盘没有被设置为美国标准US QWERTY（非美国国际标准）。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -415,8 +418,8 @@ msgid ""
 "                                can be swiped through the card reader device."
 msgstr ""
 "在销售点使用Mercury集成比较容易：只要按下相关的付款方式。\n"
-"之后金额会像其他在其他付款行一样能被调整。\n"
-"不管任何时候只要付款行建立起来，就可以通过读卡设备刷卡"
+"之后金额会像其他在其他付款行一样能被调整（例如现金返回）。\n"
+"不管任何时候只要付款行建立起来，就可以通过读卡设备刷卡。"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
@@ -444,7 +447,7 @@ msgid ""
 "                                directly to the Point Of Sale device or it can be connected to the POSBox."
 msgstr ""
 "我们目前支持MagTek Dynamag读卡设备。\n"
-"它能直接链接到销售点设备或者和POSBox链接"
+"它能直接链接到销售点设备或者和POSBox链接。"
 
 #. module: pos_mercury
 #. openerp-web

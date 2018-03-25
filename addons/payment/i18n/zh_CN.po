@@ -10,10 +10,10 @@
 # Martin Trigaux, 2017
 # glovebx <ruinning@163.com>, 2017
 # Talway <9010446@qq.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # 钟小华 <mackz@sina.com>, 2017
 # fausthuang, 2017
 # waveyeung <waveyeung@qq.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # THL <wt39181819@gmail.com>, 2017
 # Zamba Lee <zambalee@gmail.com>, 2017
 # Eddie Lim <bhweelim@yahoo.com>, 2017
@@ -129,7 +129,7 @@ msgstr ""
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
+msgstr "<span><i>取消,</i> 你的付款已被取消。</span>"
 
 #. module: payment
 #: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -145,7 +145,7 @@ msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 你的在线付款已成功完成. 感谢你的订单.</span>"
+msgstr "<span><i>完成，</i> 你的在线付款已成功完成。感谢你的订单。</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -179,14 +179,14 @@ msgstr ""
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>待定,</i> 你的在线付款已完成. 但是你的订单还验证.</span>"
+msgstr "<span><i>待定,</i> 你的在线付款已完成。但是你的订单尚未被验证。</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
-msgstr "<span><i>待定</i>... 订单将在付款后被验证.</span>"
+msgstr "<span><i>待定</i>... 订单将在付款后被验证。</span>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -206,7 +206,7 @@ msgstr "收单参照"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr "收单参照"
+msgstr "收单参考"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
@@ -354,7 +354,7 @@ msgstr "城市"
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Click to create a payment acquirer."
-msgstr "点击创建付款托收."
+msgstr "点击以创建收单银行。"
 
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_icon
@@ -464,7 +464,7 @@ msgstr "客户"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
 msgid "Description"
-msgstr "说明"
+msgstr "描述"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
@@ -545,12 +545,12 @@ msgstr "支持费用计算"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "费用金额; 由系统设置，因为它依赖于收单方"
+msgstr "费用金额; 由系统设置因为它依赖于收单方"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr "用来存储错误或信息的验证信息领域"
+msgstr "用来存储错误或信息的验证信息字段"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -637,7 +637,7 @@ msgstr "安装状态"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
 msgid "Internal reference of the TX"
-msgstr "该TX内部参考"
+msgstr "TX内部参考"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
@@ -720,36 +720,36 @@ msgstr "消息"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
-msgstr "在付款完成后显示完成消息通知"
+msgstr "在付款完成后显示完成消息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr "在支付过程中显示说明及帮助信息."
+msgstr "在支付过程中显示说明及帮助信息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr "如果在付款过程中发生错误，会有消息提示"
+msgstr "如果在付款过程中发生错误，会有消息提示。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr "如果在付款的时候订单被取消，会有消息提示"
+msgstr "如果在付款的时候订单被取消，会有消息提示。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr "如果付款后订单被顺利完成，会有消息提示"
+msgstr "如果付款后订单被顺利完成，会显示消息。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr "如果在付款后订单还是打开的状态，会有消息提示"
+msgstr "如果在付款后订单还是打开的状态，会显示消息"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -935,14 +935,14 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:59
 #, python-format
 msgid "Payment transaction failed (%s)"
-msgstr "付款交易失败 (%s)"
+msgstr "付款交易已失败 (%s)"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr "收付款"
+msgstr "付款"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -967,7 +967,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr "贝宝"
+msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -1038,7 +1038,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Reference"
-msgstr "参照"
+msgstr "参考"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
@@ -1191,7 +1191,7 @@ msgstr "付款受让人 %s 无法使用手动捕获模式！"
 #: code:addons/payment/models/payment_acquirer.py:560
 #, python-format
 msgid "The payment transaction reference must be unique!"
-msgstr "支付的订单必须是唯一的"
+msgstr "交易付款参考必须是唯一的！"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:42
@@ -1419,7 +1419,7 @@ msgstr "acquirer: payment.acquirer 浏览记录"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr "amount:交易金额,浮点数"
+msgstr "金额：交易金额、浮点数"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -1464,7 +1464,7 @@ msgstr "payment.token"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr "reference:交易参考号码"
+msgstr "参考：交易参考号码"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

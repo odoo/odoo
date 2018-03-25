@@ -7,14 +7,13 @@
 # liAnGjiA <liangjia@qq.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # THL <wt39181819@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Ted Wang <feiyuwang2012@gmail.com>, 2017
 # guohuadeng <guohuadeng@hotmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
-# fausthuang, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 msgid ""
 msgstr ""
@@ -60,14 +59,14 @@ msgstr "确认之前"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "选择活动"
+msgstr "选择一个活动，它将会自动为此活动创建登记。"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
-msgstr "选译活动入券场，它将自动生成该活动的入场券"
+msgstr "选译活动入券场，它将自动生成该活动入场券的登记。"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_2_product
@@ -95,7 +94,7 @@ msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr "定义可用入场券的数量。如果太多人来注册，超过设置数量就卖不出去。如果设置为0，就是忽略这条规则当成无限制"
+msgstr "定义可用入场券的数量。如果太多人来注册，超过设置数量就不可再卖票。如果设置为0，可忽略此规则变成无限制。"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
@@ -104,7 +103,7 @@ msgstr "定义可用入场券的数量。如果太多人来注册，超过设置
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr "决定是否在销售订单行被确认时，一个产品自动创建一个事件登记项。"
+msgstr "决定是否在销售订单行被确认时，一个产品自动创建一个活动登记。"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -151,7 +150,7 @@ msgstr "活动登记"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr "活动登记记录"
+msgstr "活动登记"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -181,7 +180,7 @@ msgstr "活动"
 #: code:addons/event_sale/models/event.py:226
 #, python-format
 msgid "Free"
-msgstr "空闲"
+msgstr "免费"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_1_product
@@ -204,14 +203,14 @@ msgstr "发票"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_is_expired
 msgid "Is Expired"
-msgstr "已结束"
+msgstr "已到期"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 msgid "Is an Event Ticket"
-msgstr "是一张活动票吗？"
+msgstr "是一张活动门票"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket___last_update
@@ -384,7 +383,7 @@ msgstr "销售订单行"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
 msgid "Seats Used"
-msgstr "座椅"
+msgstr "使用的座椅"
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type_data_sale
@@ -437,7 +436,7 @@ msgstr "入场券类型"
 #: code:addons/event_sale/models/event.py:156
 #, python-format
 msgid "Ticket should belong to either event category or event but not both"
-msgstr "票应该属于事件类别和事件，但不能同时属于"
+msgstr "票应该属于事件类别或事件，但不能同时属于这两项"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type_use_ticketing

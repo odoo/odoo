@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2017
@@ -14,7 +15,6 @@
 # Xu Lei <xulei8@qq.com>, 2017
 # zpq001 <zpq001@live.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # Talway <9010446@qq.com>, 2018
 # Jonathon Li <jonathonli@gmail.com>, 2018
@@ -168,7 +168,7 @@ msgstr "有效"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr "添加内部备注"
+msgstr "添加内部备注..."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
@@ -224,7 +224,7 @@ msgstr "显示在工资单"
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
-msgstr "如果条件为真，为计算应用这个规则。你可以指定条件，例如 basic > 1000。"
+msgstr "如果条件为真，为计算应用这个规则。你可以指定条件，例如基本 > 1000。"
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.BASIC
@@ -309,7 +309,7 @@ msgstr "选择工资本地化"
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Click to add a new contribution register."
-msgstr "点击添加一个新的缴纳登记册"
+msgstr "点击以添加一个新的缴纳登记册。"
 
 #. module: hr_payroll
 #: selection:hr.payslip.run,state:0
@@ -477,7 +477,7 @@ msgstr "创建时间"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_credit_note
 msgid "Credit Note"
-msgstr "退款"
+msgstr "退款备注"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_from
@@ -515,8 +515,7 @@ msgid ""
 "the contract chosen. If you let empty the field contract, this field isn't "
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
-msgstr ""
-"设置依据所选合同在这个工资单上适用的规则。如果合同字段为空，这个字段也不是必输的，这样所有在所选期间内的所有设置在员工合同结构上的规则都生效"
+msgstr "依据所选合同，在这个工资单上设置适用的规则。如果你让合同字段留空，这个字段也不再必须，而且在所选期间内所有设置在员工合同结构上的规则都适用"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
@@ -572,7 +571,7 @@ msgstr "完成"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Done Payslip Batches"
-msgstr "已完成的工资单批处理"
+msgstr "已完成的工资单批次处理"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -589,7 +588,7 @@ msgstr "草稿"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Draft Payslip Batches"
-msgstr "草稿工资单批"
+msgstr "草稿工资单批次"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -644,7 +643,7 @@ msgstr "错误!你不能创建递归的薪资结构。"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr "员工薪资支付中涉及的最终第三方"
+msgstr "员工薪资支付中涉及的最终第三方。"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -658,13 +657,13 @@ msgstr "固定金额"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage
 msgid "For example, enter 50.0 to apply a percentage of 50%"
-msgstr "例如，输入50意味着50%"
+msgstr "例如，输入50.0意味着适用50%的百分比"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/report/report_contribution_register.py:34
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr "表单内容丢失，无法打印此报表。"
+msgstr "表单内容丢失，无法打印此报告。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
@@ -674,7 +673,7 @@ msgstr "法国工资表"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "General"
-msgstr "常规"
+msgstr "一般"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -708,7 +707,7 @@ msgstr "总额"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
-msgstr "分组"
+msgstr "分组按"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
@@ -739,7 +738,7 @@ msgstr "ID"
 msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
-msgstr "如果勾选它，表示这里生成的工资条都是退款工资单"
+msgstr "如果勾选它，表示这里生成的所有工资条都是退款工资单。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
@@ -747,7 +746,7 @@ msgstr "如果勾选它，表示这里生成的工资条都是退款工资单"
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
-msgstr "如果去掉了“有效”这个字段上的勾，你可以不必删除就停用这个薪资规则。"
+msgstr "如果有效字段被设为“无效”，这可允许你不必删除就隐藏薪资规则。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_in_hr_payroll
@@ -860,7 +859,7 @@ msgstr "最后更新时间"
 msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
-msgstr "薪资类别的父级类别只用于报告目的"
+msgstr "连接薪资类别至其父级类别只用于报告的目的。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_lower_bound
@@ -880,7 +879,7 @@ msgstr "已建立付款命令？ "
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
 msgid "Manager"
-msgstr "管理员"
+msgstr "经理"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
@@ -1009,7 +1008,7 @@ msgstr "工资单明细"
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr "工资单明细按供款记录"
+msgstr "工资单明细按缴纳记录"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -1063,7 +1062,7 @@ msgstr "工资单"
 #: code:addons/hr_payroll/models/hr_payslip.py:84
 #, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "工资单的 '开始日期 '必须在 '结束日期 '之前."
+msgstr "工资单的 '开始日期 '必须在 '结束日期 '之前。"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1157,7 +1156,7 @@ msgstr "百分比(%)"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage_base
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage_base
 msgid "Percentage based on"
-msgstr "百分比基数"
+msgstr "百分比基于"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
@@ -1248,7 +1247,7 @@ msgstr "比率(%)"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
 msgid "Reference"
-msgstr "参照"
+msgstr "参考"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1312,7 +1311,7 @@ msgstr "薪资规则类别"
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
 msgid "Salary Rule Input"
-msgstr "薪薪资规则输入项"
+msgstr "薪资规则输入项"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
@@ -1351,12 +1350,12 @@ msgstr "薪资结构"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
 msgid "Scheduled Pay"
-msgstr "付款安排"
+msgstr "已安排的付款"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Search Payslip Batches"
-msgstr "搜索工资单批处理"
+msgstr "搜索工资单批次"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
@@ -1451,7 +1450,7 @@ msgstr "适用这个规则的最大金额."
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_min
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_min
 msgid "The minimum amount, applied for this rule."
-msgstr "这条规则的最小金额."
+msgstr "这条规则适用最小金额。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range

@@ -6,14 +6,14 @@
 # Mateus Lopes <mateus1@gmail.com>, 2017
 # Fábio Novais <fabionovais@aptu.com.br>, 2017
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
 # grazziano <gra.negocia@gmail.com>, 2017
 # danimaribeiro <danimaribeiro@gmail.com>, 2017
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
+# Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2017
 # falexandresilva <falexandresilva@gmail.com>, 2017
 # Adriel Kotviski <kotviski@gmail.com>, 2017
-# SILMAR PINHEIRO VIANA <pinheirosilmar@gmail.com>, 2017
+# Silmar <pinheirosilmar@gmail.com>, 2017
 # Yannick Belot <yannickbh@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -67,7 +67,7 @@ msgstr "Arquivado"
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Bar"
-msgstr ""
+msgstr "Barras"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:269
@@ -78,12 +78,12 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
 msgid "Channel Leader"
-msgstr ""
+msgstr "Líder do Canal"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 msgid "Channel Members"
-msgstr ""
+msgstr "Membros do Canal"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
@@ -94,7 +94,7 @@ msgstr "Tipo de Canal"
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Click here to define a new sales channel."
-msgstr ""
+msgstr "Clique aqui para definir um novo canal de vendas."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -169,13 +169,13 @@ msgstr "Europa"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "Membros favoritos"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
-msgstr ""
+msgstr "Equipes favoritas para mostrar no Painel e acessá-las facilmente."
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -285,12 +285,12 @@ msgstr "Meus Favoritos"
 #: code:addons/sales_team/models/crm_team.py:255
 #, python-format
 msgid "Not Defined"
-msgstr ""
+msgstr "Indefinido"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Pipeline"
-msgstr "Funil de Vendas"
+msgstr "Linha de Produto"
 
 #. module: sales_team
 #: selection:crm.team,team_type:0
@@ -316,7 +316,7 @@ msgstr "Vendas"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Channel"
-msgstr ""
+msgstr "Canal de Vendas"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
@@ -329,7 +329,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
 msgid "Sales Channels"
-msgstr ""
+msgstr "Canais de Venda"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -349,7 +349,7 @@ msgstr "Procurar Equipe de Vendas"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
 msgid "Scale"
-msgstr "Scala "
+msgstr "Escala "
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -359,7 +359,7 @@ msgstr "Configurações"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "Mostrar no Painel"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -374,7 +374,7 @@ msgstr "Membros da Equipe"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
 msgid "The color of the channel"
-msgstr ""
+msgstr "Cor do canal"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -382,11 +382,13 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this sales channel"
 msgstr ""
+"O endereço de e-mail colocado no campo 'Responder para' em todos os emails "
+"enviados pelo Odoo, sobre casos neste canal de vendas"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "O gráfico mostrado pelo canal no Painel.\n"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
@@ -402,7 +404,7 @@ msgstr ""
 #: model:ir.model.fields,help:sales_team.field_crm_team_team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
-msgstr ""
+msgstr "O tipo deste canal, que definirá os recursos dos usuários do canal."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
@@ -414,7 +416,7 @@ msgstr "Tipo"
 #: code:addons/sales_team/models/crm_team.py:173
 #, python-format
 msgid "Undefined graph model for Sales Channel: %s"
-msgstr ""
+msgstr "Modelo de gráfico indefinido para Canal de Vendas: %s"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
@@ -423,6 +425,8 @@ msgid ""
 "Use sales channels to organize your sales departments. \n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
+"Use canais de venda para organizar seus departamentos de vendas. \n"
+"                    Cada canal trabalhará com uma linha de produto separadamente."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads

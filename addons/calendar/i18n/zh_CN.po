@@ -9,6 +9,7 @@
 # Martin Trigaux, 2017
 # Talway <9010446@qq.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # Rona Lin <ssauapw@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
@@ -185,13 +186,13 @@ msgstr ""
 "                        % endif\n"
 "                        <li>参与者\n"
 "                        <ul>\n"
-"                        % 对于 object.event_id.attendee_ids 中的参与者：\n"
+"                        % for attendee in object.event_id.attendee_ids:\n"
 "                            <li>\n"
 "                                <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};\"></div>\n"
 "                                % if attendee.common_name != object.common_name:\n"
 "                                <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
 "                                % else:\n"
-"                                <span style=\"margin-left:5px\">You</span>\n"
+"                                <span style=\"margin-left:5px\">您</span>\n"
 "                                % endif\n"
 "                            </li>\n"
 "                        % endfor\n"
@@ -320,7 +321,7 @@ msgstr ""
 "    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:10px 10px 10px 5px;font-size: 14px;\">\n"
-"                <p style=\"font-size: 20px; text-align: center;\">邀请<strong>${object.event_id.name}</strong></p>\n"
+"                <p style=\"font-size: 20px; text-align: center;\">邀请参加<strong>${object.event_id.name}</strong></p>\n"
 "                <p>\n"
 "                    <strong>尊敬的 ${object.common_name}</strong>，<br />\n"
 "                    ${object.event_id.user_id.partner_id.name} 邀请您参加 ${object.event_id.user_id.company_id.name} 的 ${object.event_id.name} 会议。</p>\n"
@@ -352,13 +353,13 @@ msgstr ""
 "                        % endif\n"
 "                        <li>参加者\n"
 "                        <ul>\n"
-"                        % 对于 object.event_id.attendee_ids 中的参加者：\n"
+"                        % for attendee in object.event_id.attendee_ids:\n"
 "                            <li>\n"
 "                                <div style=\"display:inline-block; border-radius: 50%; width:10px; height:10px;background:${colors[attendee.state] or 'white'};\"></div>\n"
 "                                % if attendee.common_name != object.common_name:\n"
 "                                <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
 "                                % else:\n"
-"                                <span style=\"margin-left:5px\">You</span>\n"
+"                                <span style=\"margin-left:5px\">您</span>\n"
 "                                % endif\n"
 "                            </li>\n"
 "                        % endfor\n"
@@ -581,7 +582,7 @@ msgstr "%s接受了邀请"
 #: code:addons/calendar/models/calendar.py:233
 #, python-format
 msgid "%s has declined invitation"
-msgstr "%s拒绝了邀请"
+msgstr "%s已经拒绝了邀请"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
@@ -606,17 +607,17 @@ msgstr "2小时"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "3 Hour(s), by e-mail"
-msgstr "3小时发邮件"
+msgstr "3小时，透过邮件"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "30 Minute(s)"
-msgstr "20分钟"
+msgstr "30分钟"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "6 Hour(s), by e-mail"
-msgstr "6小时发邮件"
+msgstr "6小时，透过邮件"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -747,12 +748,12 @@ msgstr "日历：活动提醒"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr "点击这里只更新这个实例，不包含其它定期会议"
+msgstr "点击这里只更新此实例，不包含其它定期会议。"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Click to schedule a new meeting."
-msgstr "点击去计划一个新的会议"
+msgstr "点击去计划一个新的会议。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
@@ -949,7 +950,7 @@ msgstr "活动警报"
 #: code:addons/calendar/models/calendar.py:1164
 #, python-format
 msgid "Event recurrence interval cannot be negative."
-msgstr "事件重复间隔不能为负数"
+msgstr "事件重复间隔不能为负数。"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
@@ -976,7 +977,7 @@ msgstr "第一个"
 #: code:addons/calendar/models/calendar.py:955
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr "首先，必须确定邀请的日期"
+msgstr "首先，必须指定邀请的日期。"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1013,7 +1014,7 @@ msgstr "分组"
 #: code:addons/calendar/models/calendar.py:1549
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr "目前不支持按日期分组，可以通过日历视图达到此目的。"
+msgstr "目前不支持按日期分组，使用日历视图来进行。"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1040,7 +1041,7 @@ msgstr "ID"
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr "如果有效字段设为false，它将允许你隐藏提醒信息而不需要删除它。"
+msgstr "如果有效字段设为false，它将允许你隐藏活动提醒信息而不需要删除它。"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1114,7 +1115,7 @@ msgstr "最后更新时间"
 #: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "最后的提醒已经标志为已读"
+msgstr "从基本日历标示最后的提醒为已读"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_rrule_type
@@ -1244,7 +1245,7 @@ msgstr "通知"
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr "收件人数量"
+msgstr "重复的数量"
 
 #. module: calendar
 #. openerp-web
@@ -1292,7 +1293,7 @@ msgstr "用户的业务伙伴相关数据"
 #: code:addons/calendar/models/calendar.py:1177
 #, python-format
 msgid "Please select a proper day of the month."
-msgstr "请选择这个月合适的一天"
+msgstr "请选择这个月合适的一天。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
@@ -1328,7 +1329,7 @@ msgstr "循环ID日期"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_recurrency
 msgid "Recurrent Meeting"
-msgstr "循环会议"
+msgstr "定期会议"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule
@@ -1353,7 +1354,7 @@ msgstr "重复"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_interval
 msgid "Repeat Every"
-msgstr "重复"
+msgstr "重复每"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_final_date
@@ -1363,19 +1364,19 @@ msgstr "重复直到"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "重复间隔 (日/周/月/年)"
+msgstr "每(日/周/月/年)重复"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_count
 msgid "Repeat x times"
-msgstr "重复 N 次"
+msgstr "重复 x 次"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_user_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr "负责人"
+msgstr "负责"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1443,7 +1444,7 @@ msgstr "开始日期"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start_datetime
 msgid "Start DateTime"
-msgstr "开始时间"
+msgstr "开始日期时间"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_start
@@ -1500,7 +1501,7 @@ msgstr "标签名已存在!"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
 msgid "Tags"
-msgstr "摘要"
+msgstr "标签"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form

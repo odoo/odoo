@@ -6,8 +6,9 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # fausthuang, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
-# Talway <9010446@qq.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Martin Trigaux, 2017
+# Talway <9010446@qq.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
@@ -16,7 +17,6 @@
 # SHOM <shanmuxin@yeah.net>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
@@ -56,22 +56,22 @@ msgid ""
 "            "
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"\n"
-" \n"
-" 亲爱的 \n"
-" \n"
-" 我们很高兴通知您，我们已采纳并确认您针对活动  ${object.event_id.name} 提出的建议 ${object.name}。\n"
-" \n"
-" 您将会在此处找到更多详细信息：\n"
-" \n"
-" \n"
-" 查看活动\n"
-" \n"
-" \n"
-" \n"
-"此致，\n"
-"\n"
-"<div><p><t t-esc=\"object.partner_name\"/></p><p></p><p><div style=\"margin-top: 16px;\"><a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\"></a></div></p><p></p></div>"
+"<div>\n"
+"    <p>\n"
+"        尊敬的 <t t-esc=\"object.partner_name\"/>\n"
+"    </p><p>\n"
+"        很高兴通知您，我们已采纳并确认您对活动 ${object.event_id.name} 提出的建议 ${object.name}。\n"
+"    </p><p>\n"
+"        您将在此找到更多详细信息：\n"
+"        <div style=\"margin-top: 16px;\">\n"
+"            <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"                查看活动\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"    <p>此致</p>\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -96,7 +96,7 @@ msgstr "<b>提议者</b>:"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speakers Biography</b>:"
-msgstr "<b>演讲人履历</b>:"
+msgstr "<b>演讲人简介</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -129,26 +129,26 @@ msgstr "<span id=\"search_number\">0</span> 发现"
 msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
 "                                    different topics. Most topics are accepted in lightning talks."
-msgstr "<strong>敏捷会谈</strong>。这是在30分钟内讨论许多不同的话题。大多数话题都可以接受闪电会谈。"
+msgstr "<strong>闪电会谈</strong>。这是在30分钟内讨论许多不同的话题。大多数话题都可以接受闪电会谈。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "<strong>Participate on Twitter</strong>"
-msgstr "<STRONG>参加Twitter</STRONG>"
+msgstr "<strong>以Twitter参与</strong>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
-msgstr "<strong>定期会谈</strong>. 使用幻灯的，在60分钟内的标准讨论"
+msgstr "<strong>定期会谈</strong>。使用幻灯片的，在60分钟内的标准讨论。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
 msgid ""
 "A technical explanation of Odoo as a CMS and a eCommerce platform for "
 "version 8."
-msgstr "一份以Odoo8.0版本为蓝本且从技术角度阐述Odoo是开源电子商务开源CMS的说明文档。"
+msgstr "一份以8.0版本从技术角度解释Odoo为客户关系管理和电子商务平台。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_kanban_state
@@ -181,12 +181,12 @@ msgstr "有效"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management with Odoo: tips and tricks from the fields"
-msgstr "先进领先的管理:字段的提示和技巧"
+msgstr "Odoo的先进领先的管理:字段的提示和技巧"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
 msgid "Advanced reporting with Google Spreadsheets integration."
-msgstr "高级报告与谷歌电子表格集成。"
+msgstr "高级报告和谷歌电子表格集成。"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:95
@@ -206,13 +206,13 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                                    presentation, for publishing on our website."
 msgstr ""
-"允许视频和音频的录制\n"
-"              介绍，在我们的网站上发布。"
+"允许录制视频和音频\n"
+"              介绍他们，以在我们的网站上发布。"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
 msgid "Announced"
-msgstr "公布"
+msgstr "已公布"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -252,13 +252,13 @@ msgstr "已取消"
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid "Click to add a stage in the task pipeline."
-msgstr "在任务管道点击添加阶段"
+msgstr "点击以在任务管道添加阶段。"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Click to add a track."
-msgstr "点击添加一个专场"
+msgstr "点击添加一个专场。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_color
@@ -328,13 +328,13 @@ msgstr "刪除"
 #: model:event.track,name:website_event_track.event_track6
 msgid ""
 "Detailed roadmap of accounting new modules and improvements for version 8."
-msgstr "8版本的新的会计模块和改进的详细路线图。"
+msgstr "版本8的新会计模块和改进的详细路线图。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track8
 msgid ""
 "Discover Odoo CRM: How to optimize your sales, from leads to sales orders."
-msgstr "发现的Odoo CRM：如何优化你的销售，从线索到销售订单。"
+msgstr "发现Odoo CRM：如何优化你的销售，从线索到销售订单。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track11
@@ -369,7 +369,7 @@ msgstr "编辑专场"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_mail_template_id
 msgid "Email Template"
-msgstr "Email模板"
+msgstr "电邮模板"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -414,7 +414,7 @@ msgstr "主办单位的类型"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
 msgid "Event Sponsors"
-msgstr "事件发起人"
+msgstr "活动赞助人"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
@@ -442,7 +442,7 @@ msgstr "活动专场"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Fill this form to propose your talk."
-msgstr "将你们的演讲填入该表单。"
+msgstr "填写此表单来建议你的讲座。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
@@ -513,24 +513,24 @@ msgstr "如何开发一个网站模块。"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track4
 msgid "How to develop automated tests in the Odoo web client."
-msgstr "在Odoo Web客户端,如何开发自动化测试。"
+msgstr "在Odoo Web客户端，如何开发自动化测试。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
 msgid "How to develop real time apps, the website live chat module explained."
-msgstr "如何开发实时应用程序，网站在线聊天模块就是这样的应用。"
+msgstr "如何开发实时应用，解释网站在线聊天模块。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track2
 msgid "How to integrate hardware materials with the Odoo point of sale."
-msgstr "如何与Odoo POS集成硬件设备。"
+msgstr "如何与Odoo POS集成硬件物料。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track9
 msgid ""
 "How to use Odoo for your HR process: recruitment, leaves management, "
 "appraisals, expenses, etc."
-msgstr "如何利用你的人力资源流程：Odoo招聘，层级管理，评价，费用，等"
+msgstr "如何在你的人力资源流程中利用Odoo：招聘、休假管理、考核、费用等。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_id
@@ -567,7 +567,7 @@ msgstr "看板状态"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
 msgid "Key Success factors selling Odoo."
-msgstr "销售Odoo关键成功因素。"
+msgstr "销售Odoo的关键成功因素。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor___last_update
@@ -627,12 +627,12 @@ msgstr "午餐管理"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track22
 msgid "Manage your KPIs (recomended to openERP partners)."
-msgstr "管理你的关键绩效指标（建议Odoo的合作伙伴）。"
+msgstr "管理你的关键绩效指标（向openERP合作伙伴建议）。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
 msgid "Manage your events with Odoo, the new training modules."
-msgstr "在Odoo上管理活动,新的培训模块。"
+msgstr "在Odoo上管理你的活动，新的培训模块。"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
@@ -646,12 +646,12 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "该联系人的中等尺寸照片，它自动缩放为128x128px，保存纵横比。表单视图和一些看板视图使用这个字段。"
+msgstr "该联系人的中等尺寸照片，它自动缩放为128x128px的图片，保存纵横比。使用表单视图和一些看板视图中的此字段。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
 msgid "Merge proposals review, code sprint (entire afternoon)"
-msgstr "合并提案审查，代码冲刺（整个下午）"
+msgstr "合并提案审查、代码冲刺（整个下午）"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track24
@@ -676,7 +676,7 @@ msgstr "新的认证计划（从2013年10月有效）。"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track14
 msgid "New Paypal modules (portal, handling, installments)."
-msgstr "新贝宝模块（门户，处理，分期付款）。"
+msgstr "新Paypal模块（门户、处理、分期付款）。"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -686,7 +686,7 @@ msgstr "新专场"
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_event_track
 msgid "New Track Created"
-msgstr "新专场创建"
+msgstr "已创建的新专场"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -701,7 +701,7 @@ msgstr "没有找到的专场！"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
 msgid "Odoo Mobile for Notes, Meetings and Messages."
-msgstr "ODOO的移动笔记，会议和消息。"
+msgstr "ODOO移动的笔记、会议和消息。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -711,12 +711,12 @@ msgstr "Odoo的现状与策略2014"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track16
 msgid "Odoo as your Enterprise Social Network."
-msgstr "Odoo就可作为你的企业社交网络。"
+msgstr "Odoo作为你的企业社交网络。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "Odoo in 2014"
-msgstr "Odoo 2014"
+msgstr "Odoo 在 2014"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_sponsor
@@ -764,17 +764,20 @@ msgid ""
 "Put here the list of documents, like slides of\n"
 "                            the presentations. Remove the above t-if when\n"
 "                            it's implemented."
-msgstr "像演示幻灯片这样的文档列表放在这里。当它生效的时候移除上面的t-if。"
+msgstr ""
+"像演示的幻灯片\n"
+"这样将文档列表放在此处。当\n"
+"它生效的时候移除上面的t-if。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
 msgid "Raising qualitive insights with the survey app"
-msgstr "以提高调查程序的定性见解"
+msgstr "以调查应用提高质量见解"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
 msgid "Recruiting high skilled talents with Odoo HR apps"
-msgstr "招聘高技能人才的Odoo人力资源应用程序"
+msgstr "透过Odoo人力资源应用程序招聘高技能人才"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
@@ -790,7 +793,7 @@ msgstr "已拒绝"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_user_id
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Responsible"
-msgstr "负责人"
+msgstr "负责"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_10951
@@ -823,7 +826,7 @@ msgstr "社交圈"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_id
 msgid "Speaker"
-msgstr "关注者"
+msgstr "讲者"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_biography
@@ -852,7 +855,7 @@ msgstr "发言人电话"
 #: code:addons/website_event_track/models/event_track.py:179
 #, python-format
 msgid "Speakers"
-msgstr "音箱"
+msgstr "讲者"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_name
@@ -868,7 +871,7 @@ msgstr "主办单位类型"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_url
 msgid "Sponsor Website"
-msgstr "赞助网站"
+msgstr "赞助人网站"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_partner_id
@@ -884,7 +887,7 @@ msgstr "赞助类型"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_sponsor_count
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_sponsor_ids
 msgid "Sponsors"
-msgstr "发起人"
+msgstr "赞助人"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_id_10946
@@ -921,7 +924,7 @@ msgstr "标签名已存在!"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_ids
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Tags"
-msgstr "摘要"
+msgstr "标签"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -973,7 +976,7 @@ msgstr "新的营销战略。"
 #: model:event.track,name:website_event_track.event_track5
 msgid ""
 "The new way to promote your modules in the Apps platform and Odoo website."
-msgstr "在应用程序平台和Odoo网站,新的方式来推广你的模块"
+msgstr "在应用程序平台和Odoo网站以新的方式来推广你的模块。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -985,7 +988,7 @@ msgstr "这一活动不接受建议。"
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "当这个阶段中没有任何记录要呈现的时候，这个阶段在看板视图中被折叠起来"
+msgstr "当这个阶段中没有记录要呈现的时候，这个阶段看板视图中被折叠起来。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -993,8 +996,8 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                                    for publishing on our website."
 msgstr ""
-"演示材料的及时发布（幻灯片）,\n"
-"                 在我们的网站上发布。"
+"及时发布演示材料（幻灯片）,\n"
+"                 用以在我们的网站上发布。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_name
@@ -1120,7 +1123,7 @@ msgstr "未读消息"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "Use this tag:"
-msgstr "用这个标签："
+msgstr "使用此标签："
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -1130,7 +1133,7 @@ msgstr "查看专场"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
-msgstr "我们要求发言者接受，他们承诺的协议"
+msgstr "我们要求发言者接受协议，他们承诺："
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1154,7 +1157,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "We will evaluate your proposition and get back to you shortly."
-msgstr "我们将评估你的建议，得到结果尽快给你回复。"
+msgstr "我们将评估你的建议，并尽快给你回复。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1174,7 +1177,7 @@ msgstr "你的电话"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr "例如鼓舞人心的商务谈判"
+msgstr "例如：具启发性的商务谈判"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form

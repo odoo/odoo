@@ -6,6 +6,7 @@
 # Martin Trigaux, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # liu <winddxr@gmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
@@ -81,7 +82,7 @@ msgstr "创建新记录"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
@@ -218,7 +219,7 @@ msgstr "未确认"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "可选的自定义服务器动作，用于在接收自动触发，作用于此邮件建立或更新的记录。"
+msgstr "可选的自定义服务器动作，在接收每个电邮后自动触发，用于此邮件建立或更新的记录。"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
@@ -228,7 +229,7 @@ msgstr "发送邮件服务器"
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "出向邮件"
+msgstr "寄出邮件"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -266,7 +267,7 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "对于这种类型的单据，把收件作为会话的一部分。也就是说，为新会话创建新的单据，或把接下来的邮件附加到已有的会话中。"
+msgstr "对于这种类型的单据，将每份收件作为会话的一部分来处理。也就是说，将为新会话创建新的单据，或把接下来的邮件附加到已有的会话（文件）中。"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -326,12 +327,12 @@ msgstr "服务器类型"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
-msgstr "服务器类型IMAP"
+msgstr "服务器类型IMAP。"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
-msgstr "服务器类型 POP"
+msgstr "服务器类型 POP."
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
@@ -361,4 +362,4 @@ msgstr "是不是把每个邮件的内容复制并附加到每次处理内容上
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "是否应该下载附件。如果不勾这里，收件会在被处理前去掉附件。"
+msgstr "是否应该下载附件。如果没有启动，收件会在被处理前去掉附件。"
