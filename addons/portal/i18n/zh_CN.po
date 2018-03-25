@@ -7,11 +7,12 @@
 # liAnGjiA <liangjia@qq.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
 # Talway <9010446@qq.com>, 2017
-# Martin Trigaux, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # SHOM <shanmuxin@yeah.net>, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
 # fausthuang, 2017
 # Wei "oldrev" Li <liwei@sandwych.com>, 2017
+# Martin Trigaux, 2017
 # Siyuan Gu <siyuancn@hotmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # glovebx <ruinning@163.com>, 2017
@@ -63,13 +64,13 @@ msgid ""
 msgstr ""
 "\n"
 "<p>\n"
-"    亲爱的 ${object.user_id.name or ''}，\n"
+"    尊敬的 ${object.user_id.name or ''}：\n"
 "</p>\n"
 "<p>\n"
-"    您已获得访问 ${user.company_id.name}'s ${object.wizard_id.portal_id.name} 的权限。\n"
+"    您已获得访问 ${user.company_id.name} ${object.wizard_id.portal_id.name} 的权限。\n"
 "</p>\n"
 "<p>\n"
-"    您的登录账户信息为：\n"
+"    您的登录账户信息：\n"
 "</p>\n"
 "<ul>\n"
 "    <li>用户名：${object.user_id.login or ''}</li>\n"
@@ -113,7 +114,7 @@ msgstr "取消"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
-msgstr "找零："
+msgstr "找零"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -212,7 +213,7 @@ msgstr "电子邮箱"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "Email线程"
+msgstr "电邮线程"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:130
@@ -236,7 +237,7 @@ msgstr "在门户中"
 #: code:addons/portal/controllers/portal.py:180
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "不合规电邮！ 请输入有效的电子邮件地址。"
+msgstr "无效电邮！请输入有效的电子邮件地址。"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
@@ -351,9 +352,9 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
-"请从下面的列表选择需要显示在门户页面的联系人。\n"
-"    请确认每个联系人的email地址是有效且唯一的。\n"
-"    如果需要，可以直接在列表中修改联系人的email地址。"
+"请从下面的列表中选择需要显示在门户页面的联系人。\n"
+"    请确认每个联系人的电邮地址必须是有效且唯一的。\n"
+"    如果需要，可以直接在列表中修改联系人的电邮地址。"
 
 #. module: portal
 #. openerp-web
@@ -378,13 +379,13 @@ msgstr "一些联系人没有有效的邮箱："
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr "一个联系人的邮箱和已存在的门户用户的邮箱相同："
+msgstr "某些联系人的邮箱和一个已存在的门户用户之邮箱相同："
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:197
 #, python-format
 msgid "Some required fields are empty."
-msgstr "一些必须的字段是空的"
+msgstr "一些必须的字段是空的。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -406,7 +407,7 @@ msgstr "感谢你！"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr "用户能够添加或删除的门户"
+msgstr "用户能够添加或删除的门户。"
 
 #. module: portal
 #. openerp-web
@@ -423,7 +424,7 @@ msgstr "这段文字将包含在发送给新门户网站用户的电子邮件中
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr "这段文字会被包含在发给门户网站的新用户的email中。"
+msgstr "这段文字会被包含在发给门户网站的新用户的电邮中。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -435,7 +436,7 @@ msgid ""
 msgstr ""
 "要解决这个错误，你可以： \n"
 "- 更正相关联系人的邮箱\n"
-"- 仅允许拥有唯一的邮箱地址的联系人访问。"
+"- 仅允许拥有唯一的邮箱地址的联系人访问"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -581,21 +582,21 @@ msgstr "向导"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:32
 #, python-format
 msgid "Write a message..."
-msgstr "写信息"
+msgstr "写信息..."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "You must be"
-msgstr "你应该"
+msgstr "你必须"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:182
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr "你的个人设置里必须要输入电子邮件地址才能发送邮件"
+msgstr "你必须在用户设置里输入电子邮件地址才能发送邮件。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -674,4 +675,4 @@ msgstr "请选择……"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "to post a comment."
-msgstr "张贴评论"
+msgstr "张贴评论。"

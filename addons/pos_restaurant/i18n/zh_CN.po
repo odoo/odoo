@@ -3,16 +3,17 @@
 # * pos_restaurant
 # 
 # Translators:
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Rona Lin <ssauapw@qq.com>, 2017
 # Martin Trigaux, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
 # Eddie Lim <bhweelim@yahoo.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # Xia Fajin <xia.fajin@elico-corp.com>, 2017
 # Alex Duan <alex.duan@elico-corp.com>, 2017
 # Talway <9010446@qq.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
@@ -46,7 +47,7 @@ msgstr "<strong>POS：</strong>"
 msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
-msgstr "背景图像，用于在销售点界面显示楼层规划"
+msgstr "背景图像用于在销售点界面显示楼层规划"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -54,8 +55,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
-"餐馆楼层代表你服务的客户的位置，你可以\n"
-"                定义和布置桌椅。"
+"餐馆楼层代表服务客户的位置，你可以\n"
+"                定义和布置餐桌。"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -102,7 +103,7 @@ msgstr "一表单的内部识别"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_name
 msgid "An internal identification of the printer"
-msgstr "打印机的内部标识"
+msgstr "打印机的内部辨识"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_name
@@ -127,7 +128,7 @@ msgstr "你确定？"
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:61
 #, python-format
 msgid "Back"
-msgstr "回退"
+msgstr "退回"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_background_color
@@ -198,7 +199,7 @@ msgstr "颜色"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_create_date
@@ -312,7 +313,7 @@ msgstr "ID"
 msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
-msgstr "如果失败，表单将会在POS失效"
+msgstr "如果失败，桌子将会被取消而且会在POS失效"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
@@ -367,7 +368,7 @@ msgstr "便笺"
 #: code:addons/pos_restaurant/static/src/js/floors.js:495
 #, python-format
 msgid "Number of Seats ?"
-msgstr "座位数？"
+msgstr "座位数量？"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -397,7 +398,7 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
-"当服务员更新订单时订单打印机被餐馆和吧台用来打印\n"
+"当服务员更新订单时订单打印机被餐馆和酒吧用来打印\n"
 "                在厨房或吧台更新的订单。"
 
 #. module: pos_restaurant
@@ -480,7 +481,7 @@ msgstr "餐馆楼层"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr "餐馆小票打印机"
+msgstr "餐馆订单打印机"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -548,7 +549,7 @@ msgstr "总计"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_table_id
 msgid "Table"
-msgstr "桌台"
+msgstr "桌子"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_is_table_management
@@ -583,7 +584,7 @@ msgstr "电话:"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr "打印机的IP地址或主机名"
+msgstr "打印机硬件代理的IP地址或主机名"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count
@@ -595,17 +596,17 @@ msgstr "本订单接待的客人总数"
 msgid ""
 "The background color of the floor layout, (must be specified in a html-"
 "compatible format)"
-msgstr "楼层布局图的背景色（必须是HTML兼容的格式）"
+msgstr "楼层布局图的背景色（必须指定位HTML兼容的格式）"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_seats
 msgid "The default number of customer served at this table."
-msgstr "本桌默认座位数"
+msgstr "本桌默认的可服务客户数目"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
 msgid "The list of tables in this floor"
-msgstr "本层座位清单"
+msgstr "本层的桌子清单"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
@@ -615,7 +616,7 @@ msgstr "此销售点提供的餐厅楼层数。"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
 msgid "The table where this order was served"
-msgstr "本订单所预定胡座位"
+msgstr "本订单所服务的桌子"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
@@ -626,32 +627,32 @@ msgstr "桌子的颜色，用一个有效的“背景色”CSS属性值表示"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_height
 msgid "The table's height in pixels"
-msgstr "阵列中表格的高度"
+msgstr "以像素表达表的高度 "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_h
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr "阵列中表格的水平位置-从左到中心"
+msgstr "阵列中表格的横向位置－从顶部到中心, 以像素表示"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr "阵列中表格的竖直位置-从顶部到中心"
+msgstr "阵列中表格的竖直位置－从顶部到中心, 以像素表示"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
 msgid "The table's width in pixels"
-msgstr "阵列中表格的宽度"
+msgstr "阵列中表格的宽度以像素显示"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
-msgstr "这个楼层没有多余的桌子，请使用"
+msgstr "这个楼层没有桌子，请使用"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -695,7 +696,7 @@ msgstr "宽度"
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
 #, python-format
 msgid "With a"
-msgstr "同"
+msgstr "以一个"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -719,7 +720,7 @@ msgstr "在"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:17
 #, python-format
 msgid "at table"
-msgstr "桌号为"
+msgstr "在桌号"
 
 #. module: pos_restaurant
 #. openerp-web

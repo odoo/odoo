@@ -27,27 +27,29 @@ msgid ""
 "\n"
 "There are %s %s available accross all warehouses."
 msgstr ""
+"\n"
+"Има %s%sналични във всички складове"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>Референция на клиента:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr ""
+msgstr "Следпродажбено"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr ""
+msgstr "Прилагайте специални маршрути от поръчките (напр. дропшишинг)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -56,6 +58,10 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"По подразбиране системата изчислява очакваната дата на доставка по следния "
+"начин: дата на поръчката + най-високото време за доставка на продуктите. С "
+"тази опция можете да зададете конкретна дата на доставка за поръчките, "
+"вместо да зададете време за доставка на продуктите."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -65,12 +71,12 @@ msgstr "Компании"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Доставяйте всички продукти наведнъж"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Доставяйте всеки продукт, когато е налице"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -80,12 +86,12 @@ msgstr "Доставка"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
 msgid "Delivery Date"
-msgstr ""
+msgstr "Дата на доставка"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Поръчки за доставка"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -172,7 +178,7 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Няма достатъчно инвентаризация!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
@@ -198,12 +204,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Група за доставки"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Заявка за поръчка"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_rule
@@ -297,32 +303,33 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Set a delivery date on orders"
-msgstr ""
+msgstr "Задайте дата на доставка на поръчките"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Изпрати всички продукти наведнъж"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
 msgstr ""
+"Изпрати продуктите веднага след като са на разположение, с обратни поръчки"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr ""
+msgstr "Информация за доставка"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
 msgid "Shipping Management"
-msgstr ""
+msgstr "Управление на доставките"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Правила за доставка"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -332,7 +339,7 @@ msgstr "Преместване на стока"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
 msgid "Stock Moves"
-msgstr ""
+msgstr "Складови движения"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -374,7 +381,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Кога да започне доставката"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:189
