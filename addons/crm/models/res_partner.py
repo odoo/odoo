@@ -17,8 +17,8 @@ class Partner(models.Model):
     @api.multi
     def _compute_opportunity_count(self):
         for partner in self:
-            operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
-            partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity')])
+            # the opportunity count should counts the opportunities of this company and all its contacts
+            partner.opportunity_count = len(partner.opportunity_ids) + (len(partner.mapped('child_ids.opportunity_ids')) if partner.is_company else 0)
 
     @api.multi
     def _compute_meeting_count(self):
