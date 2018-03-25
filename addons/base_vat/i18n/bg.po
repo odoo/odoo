@@ -36,6 +36,8 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"Ако това поле е отметнато, няма да можете да запазите контакт, ако неговият "
+"ДДС номер не може да бъде потвърден от европейската услуга VIES."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:134
@@ -44,6 +46,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"ДДС номера [%s] за партньор [%s] не изглежда валиден.\n"
+"Забележка: очакваният формат е %s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:133
@@ -52,23 +56,25 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"ДДС номера [%s] за партньор [%s] или не е преминал проверката за ДДС за "
+"VIES, или не е спазил очаквания формат %s."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 #: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
-msgstr ""
+msgstr "ДДС"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Проверете номера по ДДС"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "Проверете номерата по ДДС чрез европейската услуга VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings

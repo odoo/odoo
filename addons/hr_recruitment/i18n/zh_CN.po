@@ -7,12 +7,12 @@
 # Martin Trigaux, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # fausthuang, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
-# Xia Fajin <xia.fajin@elico-corp.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # niulin lnc. <admin@niulin.net>, 2017
 # 菜小蛇 <lttlsnk@gmail.com>, 2017
@@ -22,15 +22,15 @@
 # Xu Lei <xulei8@qq.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
-# e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,77 +122,84 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-" <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-" <table style=\"width:600px;margin:10px auto;\">\n"
-" <tbody>\\<tr><td><a href=\"/\"><img alt=\"${object.company_id.name}\" src=\"/logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a></td><td style=\"text-align:right;vertical-align:middle;\"><a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\"/></td></tr></tbody>n \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" % if 'website_url' in object.job_id and object.job_id.website_url:\n"
-" 职位描述\n"
-" % endif\n"
-" \n"
-" \n"
-"</table> <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px; border:1px solid #e1e1e1;\"><tr><td style=\"font-size:16px; font-weight:300;\">\n"
-" <p style=\"font-size:16px;\">\n"
-" \n"
-" \n"
-"</p><p style=\"font-size:16px;\"> \n"
-" \n"
-" 您好，\n"
-" \n"
-" <b>感谢您有兴趣</b></p>加入\n"
-" ${object.company_id.name} 团队。我们想\n"
-" 让您知道，尽管您的简历很有竞争力，\n"
-" 但我们的招聘团队审阅了您的申请，<b>未选择您的</b>简历做进一步考虑。\n"
-" <p lilt=\"split=0\" style=\"font-size:16px;\">\n"
-" 请注意，招聘是很难的，我们也可能出错。</p>如果<p lilt=\"split=1\" style=\"font-size:16px;\">您\n"
-" 认为是我们出现了错误，或者您想要了解更多关于我们作出这个决定的信息\n"
-"</p><p lilt=\"split=0\" style=\"font-size:16px;\">，请毫不犹豫</p>地回复此电子邮件。\n"
-" \n"
-" 但是，我们会<p lilt=\"split=1\" style=\"font-size:16px;\">记录下您的简历，并就未来可能\n"
-" 更适合您能力和经验的机会与您联系。\n"
-"</p> \n"
-" <p style=\"font-size:16px;\">\n"
-" 我们祝愿您在求职过程中一切顺利，并希望我们将有机会在未来\n"
-" 考虑为您提供其他角色。\n"
-"</p><p lilt=\"split=0\" style=\"font-size:16px;\"/> \n"
-" \n"
-" </td></tr></table></div>此致，<p lilt=\"split=1\" style=\"font-size:16px;\">\n"
-"</p> \n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">职位描述</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px; border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        您好！\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        感谢您对加入\n"
+"                        <b>${object.company_id.name}</b> 团队表示关心。我们希望\n"
+"                       让您知道，尽管您的简历很有竞争力，\n"
+"                        但我们的招聘团队审阅了您的申请，<b>未\n"
+"                        选择您的简历作进一步考虑</b>。\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        请理解，招聘是一个困难的过程，我们可能会\n"
+"                        出错。如果您认为我们出现了错误，或者想要了解\n"
+"                        更多关于此次决定的信息，请务必回复这封\n"
+"                        电子邮件。\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        我们会将您的简历保留在案，在未来有\n"
+"                        更适合您的技能和工作经验的机会时\n"
+"                        与您联系。\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        希望您在求职的过程中一切顺利，\n"
+"                        希望我们在未来能找到适合您的\n"
+"                        职位。\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        此致，\n"
+"                    </p>\n"
 "\n"
-" -<p style=\"color:grey;\">- <br/>\n"
-" % if object.user_id:\n"
-" <strong>${object.user</strong>_id.name} <br/>\n"
-" <br/>电子邮件： ${object.user_id.email or ''} <br/>\n"
-" 电话： ${object.user_id.phone or ''}\n"
-" % else:\n"
-" ${object.company_id.name} \n"
-"</p><table style=\"width:600px;margin:0px auto;text-align:center;\"><tbody><tr><td style=\"padding-top:10px;font-size: 12px;\"><div/> 人力资源团队\n"
-" % endif\n"
-" \\<div>n\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" 由 <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">${object.company_id.name} 发送\n"
-" % if 'website_url' in object.job_id and</a> object.job_id</div></td></tr></tbody></table>.website_url:\n"
-" \n"
-" 发现其他职位。\n"
-" \n"
-" % endif\n"
-" \n"
-" \n"
-" \n"
-" \n"
+"                    <p style=\"color:grey;\">-- <br/>\n"
+"                    % if object.user_id:\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        Email：${object.user_id.email or ''}<br/>\n"
+"                        电话：${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        HR 团队\n"
+"                    % endif\n"
+"                    </p>\n"
 "\n"
-" \n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>发送者 ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                发现<a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">我们的其他职位</a>。\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"          </div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -762,7 +769,7 @@ msgstr "<b>联系方式:</b>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Degree:</b>"
-msgstr "<b>学历:</b>"
+msgstr "<b>学位:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -792,7 +799,7 @@ msgstr "<span>新建</span>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>报表</span>"
+msgstr "<span>报告</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -804,7 +811,7 @@ msgstr "<span>查看</span>"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "当创建别名的新记录时，一个Python字典被提供作为默认值"
+msgstr "当创建别名的新记录时，一个Python字典将被提供作为默认值。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
@@ -848,7 +855,7 @@ msgstr "别名"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
 msgid "Alias domain"
-msgstr "别名域"
+msgstr "别名域名"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
@@ -875,17 +882,17 @@ msgstr "应聘者被聘用"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
-msgstr "申请步骤变更"
+msgstr "申请人的阶段已经变更"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr "申请已申请"
+msgstr "申请已创建"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr "聘请申请人"
+msgstr "已聘请申请人"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_name
@@ -905,7 +912,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-"申请人及其附着的简历会被自动创建时当电子邮件被被发送时。如果你安装了文件管理模块，所有的简历会自动建立索引，这样就可以通过他们的内容轻松地搜索。"
+"当电子邮件被被发送时，申请人及其附上的简历会被自动创建。\n"
+"如果你安装了文件管理模块，所有的简历会自动建立索引，\n"
+"所你可以通过他们的内容轻松地搜索。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -921,7 +930,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application"
-msgstr "应用程序"
+msgstr "应用"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -943,7 +952,7 @@ msgstr "申请"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications"
-msgstr "应用模块"
+msgstr "应用"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_job_id
@@ -974,7 +983,7 @@ msgstr "附件"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
 msgid "Automated Email"
-msgstr "自动发邮件"
+msgstr "自动发电邮"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_availability
@@ -994,17 +1003,17 @@ msgstr "部门"
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
 msgid "By Job"
-msgstr "工作"
+msgstr "按工作"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
 msgid "By Recruiter"
-msgstr "被招聘人"
+msgstr "由招聘人"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 msgid "Cases By Stage and Estimates"
-msgstr "案件，按阶段和估算"
+msgstr "按阶段和估算的案件"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
@@ -1020,18 +1029,18 @@ msgstr "点击此处创建新职位。"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid "Click to add a new employee."
-msgstr "单击添加一个新的员工"
+msgstr "点击以添加一个新的员工。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
-msgstr "点击在招聘过程中增加一个新的阶段"
+msgstr "点击以在招聘过程中增加一个新的阶段。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
 msgid "Click to add a new tag."
-msgstr "点击创建一个新标签"
+msgstr "点击以创建一个新标签。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
@@ -1113,7 +1122,7 @@ msgstr "创建职位"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Create alias"
-msgstr "生产别名"
+msgstr "创建别名"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -1176,7 +1185,7 @@ msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
-msgstr "为这个工作岗位定义一个特定的联系地址。如果为空，将默认使用人事部门预设的电子邮件"
+msgstr "为这个工作岗位定义一个特定的联系地址。如果为空，将默认使用人事部门预设的电子邮件地址"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1184,7 +1193,10 @@ msgid ""
 "Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
-msgstr "这里定义招聘过程中的各个阶段，例如：资格通话，第一次面试，第二次面试，拒绝，录用。"
+msgstr ""
+"这里定义你的招聘过程中各个阶段，例如：\n"
+"资格通话、第一次面试、第二次面试、被拒绝、\n"
+"录用。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1195,17 +1207,17 @@ msgstr "这里定义招聘过程中的各个阶段，例如：资格通话，第
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Degree"
-msgstr "学历"
+msgstr "学位"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
-msgstr "招聘的学历"
+msgstr "招聘的层度"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
 msgid "Degrees"
-msgstr "学历"
+msgstr "学位"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_delay_close
@@ -1256,7 +1268,7 @@ msgstr "显示名称"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid "Doctoral Degree"
-msgstr "博士"
+msgstr "博士学位"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_documents_count
@@ -1273,8 +1285,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
-"不要忘了，指定部门\n"
-"如果你的招聘流程根据工作岗位。"
+"不要忘了指定部门\n"
+"如果你的招聘流程是根据工作岗位而有别的。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
@@ -1286,7 +1298,7 @@ msgstr "电子邮箱"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "Email别名"
+msgstr "电邮别名"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -1298,7 +1310,7 @@ msgstr "邮箱别名"
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
-msgstr "这个职位的电子邮件别名。新邮件会自动创建新的申请这个职位。"
+msgstr "这个职位的电子邮件别名。新邮件会自动为此职位创建新的申请人。"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -1315,7 +1327,7 @@ msgstr "员工姓名"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_emp_id
 msgid "Employee linked to the applicant."
-msgstr "员工内部申请"
+msgstr "连接到申请人的员工。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_no_employee
@@ -1346,7 +1358,7 @@ msgstr "期望的薪酬"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Expected Salary Extra"
-msgstr "期望薪资"
+msgstr "期望额外薪资"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1356,7 +1368,7 @@ msgstr "扩展筛选"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Extra advantages..."
-msgstr "额外奖金或补贴..."
+msgstr "额外好处..."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1381,12 +1393,12 @@ msgstr "未来的活动"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr "定义一个显示学历列表的序列"
+msgstr "当显示学位列表时显示序列顺序"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "定义一个序列按顺序显示列表中的各阶段。"
+msgstr "当显示列表中的各阶段时提供一个序列。"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1402,12 +1414,12 @@ msgstr "毕业生"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Group By"
-msgstr "分组"
+msgstr "分组按"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "HR Department"
-msgstr "HR 部门"
+msgstr "人力资源部门"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_hr_responsible_id
@@ -1447,12 +1459,12 @@ msgstr "如果设置,当应聘者设置此场景时,将通过这个模板推送�
 msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
-msgstr "如果“有效”字段设为false，它对信息进行隐藏但不删除它。"
+msgstr "如果“有效”字段设为否，它允许你对信息进行隐藏但不删除它。"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
-msgstr "初步评价"
+msgstr "初始资历"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_hr_recruitment_survey
@@ -1506,12 +1518,12 @@ msgstr "工作岗位"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_department_new
 msgid "Job Position Created"
-msgstr "工作岗位建立"
+msgstr "已建立工作岗位"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr "工作岗位建立"
+msgstr "工作岗位已创建"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -1539,7 +1551,7 @@ msgstr "工作"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Jobs - Recruitment Form"
-msgstr "工作 - 招聘表"
+msgstr "工作－招聘表"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
@@ -1599,7 +1611,7 @@ msgstr "让我们看一看此职位的申请<b>渠道。</b>"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
 msgid "Manager"
-msgstr "管理员"
+msgstr "经理"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -1645,7 +1657,7 @@ msgstr "新申请"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr "新的申请"
+msgstr "新的申请人"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
@@ -1703,7 +1715,7 @@ msgstr "还没有文件。"
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 msgid "Normal"
-msgstr "一般"
+msgstr "正常"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
@@ -1720,14 +1732,16 @@ msgstr "持续天数"
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
-msgstr "Odoo帮助你在招聘过程跟踪申请人及跟进所有操作：会议，采访等。"
+msgstr "Odoo帮助你在招聘过程跟踪申请人及跟进所有操作：会议、面试等。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
-msgstr "Odoo帮助你在招聘过程跟踪申请人及跟进所有操作：会议，采访等。"
+msgstr ""
+"Odoo帮助你在招聘\n"
+"过程跟踪申请人及跟进所有操作：会议、面试等。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -1775,7 +1789,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所收的邮件都将附上一条线程（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
+msgstr "所有收到的邮件都将附上一条线程（记录）可选的ID，即使他们不曾回复过它。如果设置了，这将完全阻止新记录的创建。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1895,7 +1909,7 @@ msgstr "招聘"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
 msgid "Referred By"
-msgstr "引荐于"
+msgstr "由 推荐"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
