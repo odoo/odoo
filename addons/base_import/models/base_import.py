@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import chardet
 import datetime
 import io
 import itertools
@@ -251,15 +252,10 @@ class Import(models.TransientModel):
     def _read_csv(self, options):
         """ Returns a CSV-parsed iterator of all non-empty lines in the file
             :throws csv.Error: if an error is detected during CSV parsing
-            :throws UnicodeDecodeError: if ``options.encoding`` is incorrect
         """
         csv_data = self.file
-
-        # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
-        encoding = options.get('encoding', 'utf-8')
-        if encoding != 'utf-8':
-            # csv module expect utf-8, see http://docs.python.org/2/library/csv.html
-            csv_data = csv_data.decode(encoding).encode('utf-8')
+        encoding = chardet.detect(csv_data)['encoding']
+        csv_data = csv_data.decode(encoding).encode('utf-8')
 
         csv_iterator = pycompat.csv_reader(
             io.BytesIO(csv_data),
@@ -469,7 +465,7 @@ class Import(models.TransientModel):
 
             :param int count: number of preview lines to generate
             :param options: format-specific options.
-                            CSV: {encoding, quoting, separator, headers}
+                            CSV: {quoting, separator, headers}
             :type options: {str, str, str, bool}
             :returns: {fields, matches, headers, preview} | {error, preview}
             :rtype: {dict(str: dict(...)), dict(int, list(str)), list(str), list(list(str))} | {str, str}

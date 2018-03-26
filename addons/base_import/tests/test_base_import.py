@@ -207,7 +207,7 @@ class TestPreview(TransactionCase):
             'quoting': '"',
             'separator': ',',
         })
-        self.assertTrue('error' in result)
+        self.assertFalse('error' in result)
 
     @mute_logger('odoo.addons.base_import.models.base_import')
     def test_csv_errors(self):
@@ -216,14 +216,12 @@ class TestPreview(TransactionCase):
         result = import_wizard.parse_preview({
             'quoting': 'foo',
             'separator': ',',
-            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 
         result = import_wizard.parse_preview({
             'quoting': '"',
             'separator': 'bob',
-            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 

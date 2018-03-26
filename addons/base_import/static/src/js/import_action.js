@@ -47,7 +47,6 @@ function jsonp(form, attributes, callback) {
 var DataImport = AbstractAction.extend(ControlPanelMixin, {
     template: 'ImportView',
     opts: [
-        {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
         {name: 'separator', label: _lt("Separator:"), value: ','},
         {name: 'quoting', label: _lt("Text Delimiter:"), value: '"'}
     ],
@@ -112,7 +111,6 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     },
     start: function () {
         var self = this;
-        this.setup_encoding_picker();
         this.setup_separator_picker();
         this.setup_float_format_picker();
 
@@ -158,25 +156,6 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
             this.$(".import-link").prop({"text": _t(" Import Template for Customers"), "href": "/base_import/static/csv/res.partner.csv"});
             this.$(".template-import").removeClass("hidden");
         }
-    },
-    setup_encoding_picker: function () {
-        this.$('input.oe_import_encoding').select2({
-            width: '160px',
-            query: function (q) {
-                var make = function (term) { return {id: term, text: term}; };
-                var suggestions = _.map(
-                    ('utf-8 utf-16 windows-1252 latin1 latin2 big5 ' +
-                     'gb18030 shift_jis windows-1251 koir8_r').split(/\s+/),
-                    make);
-                if (q.term) {
-                    suggestions.unshift(make(q.term));
-                }
-                q.callback({results: suggestions});
-            },
-            initSelection: function (e, c) {
-                return c({id: 'utf-8', text: 'utf-8'});
-            }
-        }).select2('val', 'utf-8');
     },
     setup_separator_picker: function () {
         this.$('input.oe_import_separator').select2({
