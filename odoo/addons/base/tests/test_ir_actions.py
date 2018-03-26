@@ -316,7 +316,6 @@ class TestCustomFields(common.TransactionCase):
         field.unlink()
         self.assertFalse(related_field.exists())
 
-
     def test_rename_custom(self):
         """ custom field names must be start with 'x_' """
         field = self.create_field('x_foo')
