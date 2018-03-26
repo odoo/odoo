@@ -14,4 +14,7 @@ class TestUi(odoo.tests.HttpCase):
     def test_03_demo_checkout(self):
         self.start_tour("/", 'shop_buy_product', login="demo")
 
+    def test_04_admin_website_sale_tour(self):
+        self.start_tour("/", 'website_sale_tour', login="admin")
+
     # TO DO - add public test with new address when convert to web.tour format.
