@@ -33,3 +33,21 @@ class ProductUom(models.Model):
     _inherit = 'product.uom'
 
     is_pos_groupable = fields.Boolean(related='category_id.is_pos_groupable')
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    def get_pos_anglo_saxon_price_unit(self, partner_id, quantity, order_ids):
+        # In the SO part, the entries will be inverted by function compute_invoice_totals
+        price_unit = - self._get_anglo_saxon_price_unit()
+        if self._get_invoice_policy() == "delivery":
+            moves = self.env['stock.move']
+            orders = self.env['pos.order'].browse(order_ids)
+            pickings = orders.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id')
+            for picking in pickings:
+                moves |= picking.move_lines.filtered(lambda m: m.product_id.id == self.id)
+            moves.sorted(lambda x: x.date)
+            average_price_unit = self._compute_average_price(quantity, quantity, moves)
+            price_unit = average_price_unit or price_unit
+        return price_unit

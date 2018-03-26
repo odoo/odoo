@@ -258,7 +258,7 @@ class PosOrder(models.Model):
                     line = grouped_data[product_key][0]
                     product = Product.browse(line['product_id'])
                     # In the SO part, the entries will be inverted by function compute_invoice_totals
-                    price_unit = - product._get_anglo_saxon_price_unit()
+                    price_unit = product.get_pos_anglo_saxon_price_unit(line['partner_id'], line['quantity'], self.ids)
                     account_analytic = Analytic.browse(line.get('analytic_account_id'))
                     res = Product._anglo_saxon_sale_move_lines(
                         line['name'], product, product.uom_id, line['quantity'], price_unit,
