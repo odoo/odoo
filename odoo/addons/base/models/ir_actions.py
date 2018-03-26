@@ -576,6 +576,8 @@ class IrActionsServer(models.Model):
                         func = getattr(self, 'run_action_%s' % action.state)
                         res = func(action, eval_context=eval_context)
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
+                if self._context.get('active_domain'):
+                    active_ids = self.env[self._context.get('active_model')].get_active_records().ids
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = self.with_context(active_ids=[active_id], active_id=active_id)
