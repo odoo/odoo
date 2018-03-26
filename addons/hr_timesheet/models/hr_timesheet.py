@@ -18,15 +18,26 @@ class AccountAnalyticLine(models.Model):
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
     employee_id = fields.Many2one('hr.employee', "Employee")
-    department_id = fields.Many2one('hr.department', "Department", related='employee_id.department_id', store=True, readonly=True)
+    department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True)
 
     @api.onchange('project_id')
     def onchange_project_id(self):
+        # reset task when changing project
         self.task_id = False
+        # force domain on task when project is set
+        if self.project_id:
+            return {'domain': {
+                'task_id': [('project_id', '=', self.project_id.id)]
+            }}
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         self.user_id = self.employee_id.user_id
+
+    @api.depends('employee_id')
+    def _compute_department_id(self):
+        for line in self:
+            line.department_id = line.employee_id.department_id
 
     @api.model
     def create(self, vals):

@@ -111,7 +111,8 @@ var ImageDialog = Widget.extend({
         'change input.url': "change_input",
         'keyup input.url': "change_input",
         'click .existing-attachments [data-src]': 'select_existing',
-        'dblclick .existing-attachments [data-src]': function () {
+        'dblclick .existing-attachments [data-src]': function (e) {
+            this.select_existing(e, true);
             this.getParent().save();
         },
         'click .o_existing_attachment_remove': 'try_remove',
@@ -165,11 +166,13 @@ var ImageDialog = Widget.extend({
         });
         return res;
     },
-    push: function (attachment) {
+    push: function (attachment, force_select) {
         if (this.options.select_images) {
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
-                this.images.splice(this.images.indexOf(img[0]),1);
+                if (!force_select) {
+                  this.images.splice(this.images.indexOf(img[0]),1);
+                }
             } else {
                 this.images.push(attachment);
             }
@@ -368,10 +371,10 @@ var ImageDialog = Widget.extend({
         });
         this.selected_existing();
     },
-    select_existing: function (e) {
+    select_existing: function (e, force_select) {
         var $img = $(e.currentTarget);
         var attachment = _.find(this.records, function (record) { return record.id === $img.data('id'); });
-        this.push(attachment);
+        this.push(attachment, force_select);
         this.selected_existing();
     },
     selected_existing: function () {

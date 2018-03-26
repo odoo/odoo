@@ -19,12 +19,18 @@ body.l10n_ch_isr {
             }
         }
     }
-}
 
-/* content outside isr needs margins to not overlap header */
-body.l10n_ch_isr #content_outside_isr {
-    padding: 15px;
-    padding-top: 150px;
+    /* content outside isr needs margins to not overlap header */
+    #content_outside_isr {
+        padding: 15px;
+        padding-top: 150px;
+    }
+
+    /* ISR is intended for pre-printed paper, we don't want stylistic background */
+    .o_report_layout_background {
+        background: none;
+        min-height: 0;
+    }
 }
 
 body.l10n_ch_isr #isr {

@@ -5,15 +5,15 @@
 # Translators:
 # waveyeung <waveyeung@qq.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # 文 李 <leroyen913@cenniao.com>, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Martin Trigaux, 2017
 # liyes <bodetools@gmail.com>, 2017
 # fausthuang, 2017
 # Siyuan Gu <siyuancn@hotmail.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
@@ -35,7 +35,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
-msgstr "%d 已导入的交易将被忽略"
+msgstr "%d 已导入的交易将被忽略。"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
@@ -129,7 +129,7 @@ msgstr "银行设置标记为完成"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr "当前用户属于公司"
+msgstr "属于用户的当前公司"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -143,26 +143,26 @@ msgstr "取消"
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
-msgstr "不能找到所需导入的账簿. 请手动选择账簿."
+msgstr "不能找到需导入此对账单的账簿。请手动选择账簿。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "如果你不想在这帐中使用同样的序号记录发票和信用记录，请检查这个盒子"
+msgstr "如果你不想在这帐中使用同样的序号记录发票和信用记录，请在此方格打勾"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr "则此日记账下的日记账分录或发票可以被作废，勾选此项。"
+msgstr "若果你想允许取消有关此 日记账下的分录或有关此日记帐的发票，勾选此方格。"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
-msgstr "选择需要导入的文件"
+msgstr "选择需要导入的文件..."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_color
@@ -186,8 +186,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
-"提供的文件不对.\n"
-"你有安装支持这文件的模块吗?"
+"提供的文件不对。\n"
+"你有安装支持这类文件的模块吗?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -224,7 +224,7 @@ msgstr "借记方式"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "专门的信贷记录顺序"
+msgstr "专门的信贷备注顺序"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -247,7 +247,7 @@ msgstr "显示名称"
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr "从银行下载一张银行对账单并且在这里导入。支持的格式："
+msgstr "从你的银行下载一张银行对账单并且在这里导入。支持的格式："
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -264,7 +264,7 @@ msgstr "文件名"
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
-msgstr "从银行拿到电子格式的银行对账单并且在这里选择他们"
+msgstr "从银行拿到电子格式的银行对账单并且在这里选择他们。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -282,7 +282,7 @@ msgstr "ID"
 msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
-msgstr "如果这个框已被检查,系统会集成行来生成发票。"
+msgstr "如果已经勾选此框，系统将会尝试从发票生成的会计行并将之组合。"
 
 #. module: account_bank_statement_import
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
@@ -317,12 +317,12 @@ msgstr "导入对账单"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
 msgid "It acts as a default account for credit amount"
-msgstr "它将充当贷方金额的默认科目"
+msgstr "它充当贷方金额的默认科目"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
 msgid "It acts as a default account for debit amount"
-msgstr "它将作为一个默认借方科目"
+msgstr "它将作为一个借记金额的默认账户"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
@@ -347,7 +347,7 @@ msgstr "日记账名称"
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
-msgstr "只是点击 OK　来创建科目／日记账并且完成导入。如果导入有错误，点击‘取消’放弃导入。"
+msgstr "只是点击 OK来创建科目／日记账并且完成导入。如果有错误，点击‘取消’放弃导入。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -400,9 +400,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
-"手册:用现金支付账单或在Odoo之外的任何其他方法。\n"
-"支票:用支票付款，并把它打印出来。\n"
-"SEPA信用转账:从你提交给银行的SEPA信用转账支付账单。从设置中启用此选项。"
+"手动：用现金支付账单或在Odoo之外的任何其他方法。\n"
+"支票：用支票付账单，并从odoo把它打印出来。\n"
+"SEPA信用转账：从你提交给银行的SEPA信用转账支付账单。从设置中启用此选项。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
@@ -413,7 +413,7 @@ msgstr "下一号码"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:138
 #, python-format
 msgid "No currency found matching '%s'."
-msgstr "找不到与'%s'匹配的币种"
+msgstr "找不到与'%s'匹配的币种。"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -438,7 +438,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"给客户发票日记账选择‘销售’，　给供应商发票选‘采购’，在客户或者供应商付款的日记账中选择‘现金’或者‘银行’。给‘其余操作’的日记账选择‘通用’。"
+"给客户发票日记账选择‘销售’。\n"
+"给供应商发票选‘采购’。\n"
+"在客户或者供应商付款的日记账中选择‘现金’或者‘银行’。\n"
+"给其余操作的日记账选择‘通用’。"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -453,7 +456,7 @@ msgstr "序列"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr "设置活动为false以隐藏帐，而不删除它。"
+msgstr "设置活动为无效以隐藏日记帐，而不删除它。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
@@ -476,14 +479,14 @@ msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
-msgstr "要导入的报表中的账户还没有被记录在Odoo中。为了能够导入成功，你需要对这个账户创建一个银行日记账"
+msgstr "你要导入的报表中的账户还没有被记录在Odoo中。为了能够导入成功，你需要对这个账户创建一个银行日记账。"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:153
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr "对账单中的科目(%s)和日记账(%s)中的不一样"
+msgstr "对账单中的科目(%s)和日记账(%s)中的不一样。"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:163
@@ -491,22 +494,22 @@ msgstr "对账单中的科目(%s)和日记账(%s)中的不一样"
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s) !"
-msgstr "银行对账单(%s)中的币种和日记账(%s)中的币种不一致"
+msgstr "银行对账单(%s)的币种和日记账(%s)的币种不一样！"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
 msgid "The currency used to enter statement"
-msgstr "货币用来输入状态"
+msgstr "货币用来输入对账单"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr "这个日记账中的日记账分录会被用这个前缀命名"
+msgstr "此日记账的日记账分录将以此前缀来命名"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr "下一个序列号将用于下一个信用记录。"
+msgstr "下一个序列号将用于下一个信用备注。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
@@ -525,19 +528,19 @@ msgstr "该字段包含与此日记账的信用票据条目编号有关的信息
 msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
-msgstr "这个字段包含和这个日记中日记账分录数量相关的信息"
+msgstr "这个字段包含和这个日记中日记账分录数量相关的信息。"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:113
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr "这个文件不包含任何对账单"
+msgstr "这个文件不包含任何对账单。"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:121
 #, python-format
 msgid "This file doesn't contain any transaction."
-msgstr "这个文件不包含任何交易"
+msgstr "这个文件不包含任何交易。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -572,7 +575,7 @@ msgstr "不管这个日记账是否显示在仪表板"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:233
 #, python-format
 msgid "You have already imported that file."
-msgstr "你已经导入文件"
+msgstr "你已经导入此文件。"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:47

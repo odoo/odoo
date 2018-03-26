@@ -6,7 +6,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 from odoo import http
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import consteq
+from odoo.tools import consteq, plaintext2html
 
 
 def _has_token_access(res_model, res_id, token=''):
@@ -59,6 +59,8 @@ class PortalChatter(http.Controller):
     def portal_chatter_post(self, res_model, res_id, message, **kw):
         url = request.httprequest.referrer
         if message:
+            # message is received in plaintext and saved in html
+            message = plaintext2html(message)
             _message_post_helper(res_model, int(res_id), message, **kw)
             url = url + "#discussion"
         return request.redirect(url)

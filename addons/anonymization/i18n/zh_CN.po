@@ -6,9 +6,9 @@
 # liAnGjiA <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Martin Trigaux, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
-# fausthuang, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # 菜小蛇 <lttlsnk@gmail.com>, 2017
 # Rangy Chen <rangychen@163.com>, 2017
@@ -65,7 +65,7 @@ msgstr "隐藏数据库"
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Anonymized"
-msgstr "隐藏"
+msgstr "隐去名字"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_form
@@ -83,7 +83,7 @@ msgstr "隐藏的字段"
 #: code:addons/anonymization/wizard/anonymize_wizard.py:196
 #, python-format
 msgid "Anonymized value can not be empty."
-msgstr "匿名值不能为空"
+msgstr "匿名值不能为空。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:71
@@ -91,7 +91,7 @@ msgstr "匿名值不能为空"
 msgid ""
 "Before executing the anonymization process, you should make a backup of your"
 " database."
-msgstr "在进行匿名化处理前，你需要给你的数据库做一个备份"
+msgstr "在进行匿名化处理前，你需要给你的数据库做一个备份。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:193
@@ -99,7 +99,7 @@ msgstr "在进行匿名化处理前，你需要给你的数据库做一个备份
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr "不能匿名化这些字段类型： binary, many2many, many2one, one2many, 参照。"
+msgstr "这些字段类型不能匿名化：binary, many2many, many2one, one2many, 参照。"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -166,7 +166,7 @@ msgstr "错误！"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Exception occured"
-msgstr "出现异常"
+msgstr "出现例外"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_file_export
@@ -328,7 +328,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr "此数据库匿名化处于不稳定状态，有些字段已经匿名，有些没有。你在尝试进行创建、写入或者删除这些字段前，要解决这个问题。"
+msgstr "此数据库匿名化正处于不稳定状态。有些字段已经匿名，有些还没有。你在尝试进行创建、写入或者删除这些字段前，要解决这个问题。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:122
@@ -337,7 +337,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr "此数据库匿名化处于不稳定状态，有些字段已经匿名，有些没有。你在尝试进行其它任何操作前字段前，要解决这个问题。"
+msgstr "此数据库匿名化正处于不稳定状态。有些字段已经匿名，有些没有。你在尝试进行其它任何操作前，要尝试解决这个问题。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:145
@@ -347,13 +347,13 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr "数据库匿名化当时在不稳定的状态。 有些字段匿名了，有些没有。你在做任何操作前要解决这个问题。"
+msgstr "数据库匿名化当下在不稳定的状态。 有些字段匿名了，有些则没有。你在做任何操作前要解决这个问题。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:143
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr "此数据库已经匿名化，你不能再次使其匿名。"
+msgstr "此数据库当下已经被匿名化，你不能再次使其匿名。"
 
 #. module: anonymization
 #: code:addons/anonymization/models/anonymization.py:54
@@ -361,7 +361,7 @@ msgstr "此数据库已经匿名化，你不能再次使其匿名。"
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
 "fields."
-msgstr "数据库目前已经匿名，你不能创建吗更改或者删除字段"
+msgstr "数据库目前已经匿名，你不能创建、更改或者删除字段。"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:257
@@ -369,7 +369,7 @@ msgstr "数据库目前已经匿名，你不能创建吗更改或者删除字段
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
 "anonymization."
-msgstr "数据库目前没有匿名，你不能逆转匿名"
+msgstr "数据库目前没有匿名，你不能逆转匿名。"
 
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
@@ -386,7 +386,7 @@ msgstr "不稳定"
 #. module: anonymization
 #: sql_constraint:ir.model.fields.anonymization:0
 msgid "You cannot have two fields with the same name on the same object!"
-msgstr "同一个对象上不能有两个同名字段！"
+msgstr "早同一个对象上不能有两个同名字段！"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0

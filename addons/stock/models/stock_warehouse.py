@@ -21,7 +21,7 @@ class Warehouse(models.Model):
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type'])
 
-    name = fields.Char('Warehouse Name', index=True, required=True)
+    name = fields.Char('Warehouse Name', index=True, required=True, default=lambda self: self.env['res.company']._company_default_get('stock.inventory').name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('stock.inventory'),
@@ -684,11 +684,11 @@ class Warehouse(models.Model):
 
     def _get_sequence_values(self):
         return {
-            'in_type_id': {'name': self.name + _('Sequence in'), 'prefix': self.code + '/IN/', 'padding': 5},
-            'out_type_id': {'name': self.name + _('Sequence out'), 'prefix': self.code + '/OUT/', 'padding': 5},
-            'pack_type_id': {'name': self.name + _('Sequence packing'), 'prefix': self.code + '/PACK/', 'padding': 5},
-            'pick_type_id': {'name': self.name + _('Sequence picking'), 'prefix': self.code + '/PICK/', 'padding': 5},
-            'int_type_id': {'name': self.name + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
+            'in_type_id': {'name': self.name + ' ' + _('Sequence in'), 'prefix': self.code + '/IN/', 'padding': 5},
+            'out_type_id': {'name': self.name + ' ' + _('Sequence out'), 'prefix': self.code + '/OUT/', 'padding': 5},
+            'pack_type_id': {'name': self.name + ' ' + _('Sequence packing'), 'prefix': self.code + '/PACK/', 'padding': 5},
+            'pick_type_id': {'name': self.name + ' ' + _('Sequence picking'), 'prefix': self.code + '/PICK/', 'padding': 5},
+            'int_type_id': {'name': self.name + ' ' + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
         }
 
     def _format_rulename(self, from_loc, dest_loc, suffix):
@@ -829,5 +829,6 @@ class Orderpoint(models.Model):
             'date_planned': date or self._get_date_planned(product_qty, datetime.today()),
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
+            'company_id': self.company_id,
             'group_id': group or self.group_id,
         }

@@ -15,13 +15,14 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
+"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,23 +43,23 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Wróć do Moje Konto"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"> Zapłać</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\">Dodaj nową kartę</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Usuń"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:112
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Anuluj,</i> Twoja płatność została anulowana"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:108
@@ -67,6 +68,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Gotowe,</i> Twoja płatność online została pomyślnie przetworzona. "
+"Dziękujemy za Twoje zamówienie."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -84,6 +87,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Oczekiwanie,</i> Twoja płatność online została pomyślnie przetworzona. "
+"Ale twoje zamówienie nie zostało jeszcze zatwierdzone."
 
 #. module: payment
 #. openerp-web
@@ -524,7 +529,7 @@ msgstr "Wiadomość o błędzie"
 #: code:addons/payment/static/src/js/payment_form.js:372
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "Błąd: "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
@@ -680,7 +685,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "Zarządzaj swymi metodami płatności"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
@@ -690,7 +695,7 @@ msgstr "Zarządzaj swymi metodami płatności"
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Manualna Konfiguracja"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -714,22 +719,24 @@ msgstr "Wiadomość"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Komunikat wyświetlany po zakończeniu procesu płatności."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Komunikat wyświetlany aby wyjaśnić i wspomóc proces płatności."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "Komunikat wyświetlany, jeśli wystąpi błąd podczas procesu płatności."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
+"Komunikat wyświetlany, jeśli zamówienie zostaje anulowane podczas procesu "
+"płatności."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -737,6 +744,8 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
+"Komunikat wyświetlany, jeśli zamówienie zostanie wykonane pomyślnie po "
+"zakończeniu procesu płatności."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
@@ -744,6 +753,8 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
+"Komunikat wyświetlany, jeśli zamówienie ma status oczekujące po zakończeniu "
+"procesu płatności."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -782,7 +793,7 @@ msgstr "Nigdy"
 #: code:addons/payment/static/src/js/payment_form.js:273
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "Nie wybrano metody płatności"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
@@ -976,7 +987,7 @@ msgstr "Telefon"
 #: code:addons/payment/static/src/js/payment_form.js:199
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "Proszę wybrać metodę płatności"
 
 #. module: payment
 #. openerp-web
@@ -1035,7 +1046,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Refunded"
-msgstr ""
+msgstr "Zwrócone"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -1055,18 +1066,18 @@ msgstr "S2S Szablon formularza"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Zapisz karty"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Save my payment data"
-msgstr ""
+msgstr "Zapisz moje dane do płatności"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_token_action
 #: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
-msgstr ""
+msgstr "Zapisano dane do płatności"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
@@ -1094,7 +1105,7 @@ msgstr "Numeracja"
 #: code:addons/payment/static/src/js/payment_form.js:332
 #, python-format
 msgid "Server Error"
-msgstr ""
+msgstr "Błąd Serwera"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -1106,7 +1117,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:266
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "Błąd serwera"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_short_name
@@ -1282,14 +1293,14 @@ msgstr "Uwaga!"
 #: code:addons/payment/static/src/js/payment_form.js:134
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "Nie możemy w tej chwili dodać twojej metody płatności."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:300
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "Nie możemy w tej chwili dodać twojej metody płatności.</p>"
 
 #. module: payment
 #. openerp-web
@@ -1297,7 +1308,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:367
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
-msgstr ""
+msgstr "Nie możemy w tej chwili usunąć twojej metody płatności."
 
 #. module: payment
 #. openerp-web
@@ -1318,7 +1329,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:188
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "Nie możemy przetworzyć twojej płatności."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1372,6 +1383,7 @@ msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
 msgstr ""
+"Zostaniesz przekierowany na stronę PayPal po kliknięciu przycisku płatności."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips

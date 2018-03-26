@@ -51,7 +51,7 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
                  'free_member',
-                 'member_lines.date_to', 'member_lines.date_from',
+                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
                  'membership_state',
                  'associate_member.membership_state')
     def _compute_membership_start(self):
@@ -65,7 +65,7 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
                  'free_member',
-                 'member_lines.date_to', 'member_lines.date_from',
+                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
                  'membership_state',
                  'associate_member.membership_state')
     def _compute_membership_stop(self):
@@ -79,7 +79,7 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
                  'free_member',
-                 'member_lines.date_to', 'member_lines.date_from',
+                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
                  'membership_state',
                  'associate_member.membership_state')
     def _compute_membership_cancel(self):

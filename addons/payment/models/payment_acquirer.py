@@ -312,6 +312,7 @@ class PaymentAcquirer(models.Model):
                 'billing_partner': billing_partner,
                 'billing_partner_id': billing_partner_id,
                 'billing_partner_name': billing_partner.name,
+                'billing_partner_commercial_company_name': billing_partner.commercial_company_name,
                 'billing_partner_lang': billing_partner.lang,
                 'billing_partner_email': billing_partner.email,
                 'billing_partner_zip': billing_partner.zip,
@@ -683,6 +684,10 @@ class PaymentTransaction(models.Model):
 
         return True
 
+    @api.multi
+    def _post_process_after_done(self, **kwargs):
+        return True
+
     # --------------------------------------------------
     # SERVER2SERVER RELATED METHODS
     # --------------------------------------------------
@@ -843,16 +848,13 @@ class PaymentToken(models.Model):
             'partner_country_id': self.partner_id.country_id.id,
         })
 
-        try:
-            kwargs.update({'3d_secure': True})
-            tx.s2s_do_transaction(**kwargs)
-            # if 3D secure is called, then we do not refund right now
-            if tx.html_3ds:
-                return tx
-        except:
-            _logger.error('Error while validating a payment method')
-        finally:
+        kwargs.update({'3d_secure': True})
+        tx.s2s_do_transaction(**kwargs)
+
+        # if 3D secure is called, then we do not refund right now
+        if not tx.html_3ds:
             tx.s2s_do_refund()
+
         return tx
 
     @api.multi

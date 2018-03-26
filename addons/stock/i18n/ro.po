@@ -639,7 +639,7 @@ msgstr "Un proces clasic de vânzare aratăȘ"
 #: code:addons/stock/models/stock_move_line.py:86
 #, python-format
 msgid "A done move line should never have a reserved quantity."
-msgstr ""
+msgstr "O linie de mișcare făcută nu ar trebui să aibă o cantitate rezervată."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -858,12 +858,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 msgid "Are you sure you want to validate this picking?"
-msgstr ""
+msgstr "Sigur doriți să validați această mișcare de stoc?"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "As soon as possible"
-msgstr ""
+msgstr "Cât mai curând posibil"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -878,7 +878,7 @@ msgstr "Mișcări asignate"
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr ""
+msgstr "La o dată specifică"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
@@ -1028,12 +1028,12 @@ msgstr "Cumpără"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr "După loturi"
+msgstr "Prin loturi"
 
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr "După număr serial unic"
+msgstr "Prin număr serial unic"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:612
@@ -1466,7 +1466,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr ""
+msgstr "Locații contrapartide"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1975,17 +1975,17 @@ msgstr "Descriere"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr ""
+msgstr "Descriere pentru comenzi de livrare"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr ""
+msgstr "Descriere pentru transferurile interne"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receptions"
-msgstr ""
+msgstr "Descriere pentru Recepții"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_pickingout
@@ -2055,7 +2055,7 @@ msgstr "Ruta destinație"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
-msgstr ""
+msgstr "Operații detaliate"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -2708,6 +2708,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
+"Dacă este bifată această căsuță, liniile de ridicare vor reprezenta "
+"operațiunile detaliate ale stocurilor. În caz contrar, liniile din ridicare "
+"vor reprezenta o agregare de operațiuni detaliate ale stocurilor."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_create_lots
@@ -3122,7 +3125,7 @@ msgstr "Referință inventar"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
 msgid "Inventory Report"
-msgstr ""
+msgstr "Raport de stoc"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3221,6 +3224,8 @@ msgstr ""
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
+"Nu este posibil să anulați rezervarea la mai multe produse %s decât aveți în"
+" stoc."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3945,7 +3950,7 @@ msgstr "Nu sunt permise cantități negative"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr "Nicio operație de făcut la acest lot."
+msgstr "Nicio operație facută la acest lot."
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:185
@@ -4135,7 +4140,7 @@ msgstr "Nume operațiune"
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Type"
-msgstr ""
+msgstr "Tip operație"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_picking_type_id
@@ -4147,7 +4152,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr ""
+msgstr "Tip operație pentru retur"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4575,7 +4580,7 @@ msgstr "Liste ridicare"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 msgid "Picking Moves"
-msgstr ""
+msgstr "Mișcări ridicare"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
@@ -4633,6 +4638,7 @@ msgstr ""
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr ""
+"Vă rugăm să procesați mai întâi câteva cantități pentru a pune în pachet!"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:126
@@ -5391,7 +5397,7 @@ msgstr "Depozite de reaprovizionare"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Retrieve the Inventory Quantities"
-msgstr ""
+msgstr "Obțineți stocul"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5805,7 +5811,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_operations
 msgid "Show Detailed Operations"
-msgstr ""
+msgstr "Afișare operații detaliate"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_lots_text
@@ -5825,7 +5831,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_reserved
 msgid "Show Reserved"
-msgstr ""
+msgstr "Afișare rezervări"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_validate
@@ -6475,11 +6481,13 @@ msgid ""
 "This note will show up  on internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
+"Această notă se va afișa în cazul comenzilor interne de transfer (de "
+"exemplu, unde să alegeți produsul din depozit)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note will show up on delivery orders."
-msgstr ""
+msgstr "Această notă se va afișa la comenzile de livrare."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6487,6 +6495,8 @@ msgid ""
 "This note will show up on the receipt orders (e.g. where to store the "
 "product in the warehouse)."
 msgstr ""
+"Această notă se va afișa pe ordinele de primire (de exemplu, unde se "
+"stochează produsul în depozit)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -6564,6 +6574,8 @@ msgid ""
 "Those are the entire packages of a picking shown in the view of detailed "
 "operations"
 msgstr ""
+"Acestea sunt toate pachetele din ridicarea afișată în vizualizarea "
+"operațiunilor detaliate"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
@@ -7202,6 +7214,9 @@ msgid ""
 "When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
 "                and verify if some reordering rules should be triggered."
 msgstr ""
+"Când rulați planificarea, Odoo încearcă să rezerve stocul disponibil pentru "
+"a îndeplini operațiunile existente și pentru a verifica dacă ar trebui "
+"declanșate anumite reguli de reordonare."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7445,6 +7460,7 @@ msgid ""
 "You have processed more than what was initially\n"
 "                    planned for the product"
 msgstr ""
+"Ați procesat mai mult decât a fost planificat inițial pentru produsul "
 
 #. module: stock
 #: code:addons/stock/models/product.py:304
@@ -7476,6 +7492,8 @@ msgid ""
 "You haven't entered <i>done</i> quantities, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
 msgstr ""
+"Nu ați introdus cantitățile <i>efectuate</i>, făcând clic pe <i>Aplică</i> "
+"Odoo va procesa toate cantitățile <i>rezervate</i>."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:44

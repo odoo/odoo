@@ -6,12 +6,12 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # zhining wu <wzn63@21cn.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # fausthuang, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Martin Trigaux, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
@@ -181,12 +181,12 @@ msgid ""
 "Number of the check corresponding to this payment. If your pre-printed check"
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
-msgstr "对应于该付款的支票编号。如果你的预先印制支票还没有被编号，你可以在帐户配置页面进行管理。"
+msgstr "与该付款相关的支票编号。如果你的预先印制支票还没有被编号，你可以在帐户配置页面进行管理。"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "收付款"
+msgstr "付款"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:86
@@ -194,7 +194,7 @@ msgstr "收付款"
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr "以支票方式付款要必须选择'支票'并且未被调节"
+msgstr "要打印为支票的付款必须选择'支票'为付款方式并且尚未被调节"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -234,14 +234,14 @@ msgstr "登记多张发票的付款"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "下个打印支票的序列编号"
+msgstr "下个打印支票的序列编号。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_printing_payment_method_selected
 msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
-msgstr "从技术特征可以知道，是否可将支票作为付款方式。"
+msgstr "从技术特征可以知道是否可将打印支票作为付款方式。"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:26
@@ -249,7 +249,7 @@ msgstr "从技术特征可以知道，是否可将支票作为付款方式。"
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr "最后一张支票号码是%s。以防发票被银行拒收，你可以用一个稍大一点的号码"
+msgstr "最后一张支票号码是%s。以防发票被银行拒收，你仅可以适用一个稍大的号码。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -257,7 +257,7 @@ msgid ""
 "The selected journal is configured to print check numbers. If your pre-"
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
-msgstr "所选的账簿已配置成打印支票编号。如果支票已有了编号或当前编号是错误的,你可在账簿界面去更改设置。"
+msgstr "所选的账簿已配置成打印支票编号。如果你的预先打印支票纸张已有了编号或当前编号是错误的，你可在账簿界面去更改设置。"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:121
@@ -266,14 +266,14 @@ msgid ""
 "There is no check layout configured.\n"
 "Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
 msgstr ""
-"发票显示未配置\n"
-"请确保正确的打印模块被安装并且配置（公司设置>'配置'页面）正确"
+"发票显示未配置。\n"
+"请确保安装正确的打印模块并且配置（公司设置>'配置'页面）正确。"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr "这能够让你节约相应的付款支票数量"
+msgstr "这能够让你节约相应的付款支票数量。"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited

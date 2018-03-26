@@ -408,7 +408,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.ui-autocomplete a:first',
     }, { // remove record
         content: "delete the last item in the editable list",
-        trigger: '.o_list_view .o_data_row td.o_list_record_delete span:visible:last',
+        trigger: '.o_list_view .o_data_row td.o_list_record_delete button:visible:last',
     }, {
         content: "test one2many onchange after delete",
         trigger: '.o_content:not(:has(textarea[name="message_concat"]:propValueContains(Administrator:d)))',

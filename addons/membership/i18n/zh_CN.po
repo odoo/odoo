@@ -6,6 +6,7 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
@@ -138,7 +139,7 @@ msgstr "勾选，如果产品适于会员。"
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid "Click to add a new Member"
-msgstr "点击添加新的会员"
+msgstr "点击以添加新的会员"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_company_id
@@ -197,7 +198,7 @@ msgstr "客户"
 #: model:ir.model.fields,help:membership.field_res_partner_membership_start
 #: model:ir.model.fields,help:membership.field_res_users_membership_start
 msgid "Date from which membership becomes active."
-msgstr "会籍开始生效的日期"
+msgstr "会籍开始生效的日期。"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_date
@@ -258,13 +259,13 @@ msgstr "会籍终止月份"
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr "错误！失效日期不能早于开始日期"
+msgstr "错误！失效日期不能早于开始日期。"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:159
 #, python-format
 msgid "Error ! You cannot create recursive associated members."
-msgstr "错误，你不能创建循环引用的会员用户"
+msgstr "错误！你不能创建循环引用的会员用户。"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -299,7 +300,7 @@ msgstr "分组"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Group by..."
-msgstr "分组 于"
+msgstr "按分组..."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_id
@@ -355,11 +356,11 @@ msgid ""
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
 "它表明会员的状态。\n"
-"                    -非会员：业务伙伴没有申请任何会员。\n"
-"                    -取消会员：会员已取消他的会员资格。\n"
-"                    -到期会员:其成员日期已经到期。\n"
+"                    -非会员：业务伙伴没有申请任何会籍。\n"
+"                    -已经被取消的会员：会员已取消其会员资格。\n"
+"                    -旧会员:其成员日期已经到期。\n"
 "                    -未审核会员：已申请成为成员的人，他们的发票即将被创建。\n"
-"                    -开具发票的会员：会员的发票已创建。\n"
+"                    -已开具发票的会员：会员的发票已创建。\n"
 "                    -付费会员：已支付会员费的会员。"
 
 #. module: membership
@@ -446,7 +447,7 @@ msgstr "会籍"
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr "会籍费用"
+msgstr "会籍金额"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
@@ -556,8 +557,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
-"Odoo帮你快捷的管理会员相关的所有的活动：\n"
-"当前会员状态,讨论和会员历史等等"
+"Odoo帮你快捷的跟踪与会员相关的所有的活动：\n"
+"当前会员状态、讨论和会员历史等等。"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -582,7 +583,7 @@ msgstr "业务伙伴"
 #: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr "业务伙伴没有发票地址"
+msgstr "业务伙伴没有地址来开具发票。"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:179
@@ -613,7 +614,7 @@ msgstr "报告"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Revenue Done"
-msgstr "已实现收入"
+msgstr "已完成的收入"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_user_id
@@ -626,7 +627,7 @@ msgstr "销售员"
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 #: model:ir.model.fields,help:membership.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr "提供免费成员资格"
+msgstr "若果你向获得免费会籍请勾选。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
@@ -652,22 +653,22 @@ msgstr "税"
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount
 #: model:ir.model.fields,help:membership.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
-msgstr "协商后的价格"
+msgstr "合作伙伴协商后的价格"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr "此说明将显示在报价单上..."
+msgstr "此备注将显示在报价单上..."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr "将显示已支付、旧的、实现收入总计三列"
+msgstr "这将显示已支付、旧的、实现收入总计列"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr "将显示等待、已开票、应付总额三列"
+msgstr "将显示等待、已开票、应付总额列"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to

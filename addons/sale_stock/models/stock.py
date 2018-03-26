@@ -64,15 +64,3 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True)
-
-    @api.multi
-    def _create_backorder(self, backorder_moves=[]):
-        res = super(StockPicking, self)._create_backorder(backorder_moves)
-        for picking in self.filtered(lambda pick: pick.picking_type_id.code == 'outgoing'):
-            backorder = picking.search([('backorder_id', '=', picking.id)])
-            if backorder.sale_id:
-                backorder.message_post_with_view(
-                    'mail.message_origin_link',
-                    values={'self': backorder, 'origin': backorder.sale_id},
-                    subtype_id=self.env.ref('mail.mt_note').id)
-        return res
