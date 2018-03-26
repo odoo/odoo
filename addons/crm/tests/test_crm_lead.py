@@ -11,7 +11,7 @@ class TestCRMLead(TestCrmCases):
         # I set a new sales team giving access rights of salesman.
         team = self.env['crm.team'].sudo(self.crm_salemanager.id).create({'name': "Phone Marketing"})
         lead = self.env.ref('crm.crm_case_1')
-        lead.sudo(self.crm_salemanager.id).write({'team_id': team.id})
+        lead.sudo(self.crm_salemanager.id).write({'team_id': team.id, 'user_id': False})
         # Salesmananger check unqualified lead
         self.assertEqual(lead.stage_id.sequence, 1, 'Lead is in new stage')
 
@@ -76,7 +76,7 @@ class TestCRMLead(TestCrmCases):
     def test_crm_lead_merge(self):
         # During a mixed merge (involving leads and opps), data should be handled a certain way following their type (m2o, m2m, text, ...)  Start by creating two leads and an opp and giving the rights of Sales manager.
         default_stage_id = self.ref("crm.stage_lead1")
-        LeadSalesmanager = self.env['crm.lead'].sudo(self.crm_salemanager.id)
+        LeadSalesmanager = self.env['crm.lead'].sudo(self.crm_salemanager.id).with_context(default_team_id=self.crm_salemanager.sale_team_id.id)
 
         # TEST CASE 1
         test_crm_opp_01 = LeadSalesmanager.create({
