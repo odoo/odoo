@@ -510,7 +510,6 @@ class Warehouse(models.Model):
                 'name': self._format_rulename(routing.from_loc, routing.dest_loc, name_suffix),
                 'location_from_id': routing.from_loc.id,
                 'location_dest_id': routing.dest_loc.id,
-                'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
                 'warehouse_id': self.id,
                 'company_id': self.company_id.id,

@@ -1913,7 +1913,6 @@ class TestRoutes(TransactionCase):
                 'name': 'create a move to push location',
                 'location_from_id': stock_location.id,
                 'location_dest_id': push_location.id,
-                'auto': 'manual',
                 'picking_type_id': self.env.ref('stock.picking_type_in').id,
             })],
         })
