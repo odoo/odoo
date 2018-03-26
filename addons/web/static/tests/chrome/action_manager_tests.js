@@ -126,6 +126,9 @@ QUnit.module('ActionManager', {
 
             // search views
             'partner,false,search': '<search><field name="foo" string="Foo"/></search>',
+            'partner,1,search': '<search>' +
+                   '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
+                '</search>',
             'pony,false,search': '<search></search>',
         };
     },
@@ -2714,13 +2717,6 @@ QUnit.module('ActionManager', {
             },
         });
 
-        _.extend(this.archs, {
-            'partner,7,search':
-                '<search>' +
-                   '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
-                '</search>',
-        });
-
         this.actions.push({
             id: 33,
             context: {
@@ -2728,7 +2724,7 @@ QUnit.module('ActionManager', {
             },
             name: 'Partners',
             res_model: 'partner',
-            search_view_id: [7, 'a custom search view'],
+            search_view_id: [1, 'a custom search view'],
             type: 'ir.actions.act_window',
             views: [[false, 'list']],
         });
@@ -2788,6 +2784,46 @@ QUnit.module('ActionManager', {
         $('.o_control_panel .breadcrumb a:first').click();
         assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
             "the search options should be available");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test("doAction with option 'keepSearchView'", function (assert) {
+        assert.expect(4);
+
+        this.actions.push({
+            id: 33,
+            name: 'Partners',
+            res_model: 'partner',
+            search_view_id: [1, 'a specific search view'],
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        });
+
+        var checkRPC = false;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (checkRPC && route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, [['bar', '=', 1]],
+                        "should search with the correct domain");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(33);
+
+        checkRPC = true;
+        $('.o_control_panel .o_filters_menu a:contains(Bar)').click(); // filter on bar
+        assert.strictEqual($('.o_control_panel .o_facet_values').text().trim(), 'Bar',
+            "the filter on Bar should appear in the search view");
+
+        actionManager.doAction(3, {keepSearchView: true});
+        assert.strictEqual($('.o_control_panel .o_facet_values').text().trim(), 'Bar',
+            "the filter on Bar should still be in the search view");
 
         actionManager.destroy();
     });

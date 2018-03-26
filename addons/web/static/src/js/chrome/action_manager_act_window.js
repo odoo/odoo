@@ -121,6 +121,22 @@ ActionManager.include({
      * @returns {Deferred} resolved with the search view when it is ready
      */
     _createSearchView: function (action) {
+        // if requested, keep the searchview of the current action instead of
+        // creating a new one
+        if (action._keepSearchView) {
+            var currentAction = this.getCurrentAction();
+            if (currentAction) {
+                action.searchView = currentAction.searchView;
+                action.env = currentAction.env; // make those actions share the same env
+                return $.when(currentAction.searchView);
+            } else {
+                // there is not searchview to keep, so reset the flag to false
+                // to ensure that the one that will be created will be correctly
+                // destroyed
+                action._keepSearchView = false;
+            }
+        }
+
         // AAB: temporarily create a dataset, until the SearchView is refactored
         // and stops using it
         var dataset = new data.DataSetSearch(this, action.res_model, action.context, action.domain);
@@ -254,7 +270,7 @@ ActionManager.include({
             // its reference is removed
             controllerDef.reject();
         });
-        if (action.searchView) {
+        if (action.searchView && !action._keepSearchView) {
             action.searchView.destroy();
         }
     },
@@ -482,6 +498,20 @@ ActionManager.include({
             views.push([searchviewID || false, 'search']);
         }
         return this.loadViews(action.res_model, action.context, views, options);
+    },
+    /**
+     * Overrides to handle the 'keepSearchView' option. If set to true, the
+     * search view of the current action will be re-used in the new action, i.e.
+     * the environment (domain, context, groupby) will be shared between both
+     * actions.
+     *
+     * @override
+     */
+    _preprocessAction: function (action, options) {
+        this._super.apply(this, arguments);
+        if (action.type === 'ir.actions.act_window' && options.keepSearchView) {
+            action._keepSearchView = true;
+        }
     },
     /**
      * Processes the search data sent by the search view.
