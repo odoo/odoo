@@ -119,6 +119,9 @@ class StockQuant(models.Model):
         removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
         domain = [
             ('product_id', '=', product_id.id),
+            '|',
+            ('quantity', '!=', 0.0),
+            ('reserved_quantity', '>', 0),
         ]
         if not strict:
             if lot_id:
@@ -194,7 +197,6 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-        rounding = product_id.uom_id.rounding
 
         if lot_id:
             incoming_dates = quants.mapped('in_date')  # `mapped` already filtered out falsy items
@@ -216,9 +218,6 @@ class StockQuant(models.Model):
                         'quantity': quant.quantity + quantity,
                         'in_date': in_date,
                     })
-                    # cleanup empty quants
-                    if float_is_zero(quant.quantity, precision_rounding=rounding) and float_is_zero(quant.reserved_quantity, precision_rounding=rounding):
-                        quant.unlink()
                     break
             except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
@@ -287,8 +286,11 @@ class StockQuant(models.Model):
         `_update_available_quantity` and another concurrent one calls this function with the same
         argument, we’ll create a new quant in order for these transactions to not rollback. This
         method will find and deduplicate these quants.
+        - This method will also find quants withtout quantity and remove them.
         """
-        query = """WITH
+        query_unlink_quants = "DELETE FROM stock_quant WHERE round(quantity::numeric, 5) = 0 AND round(reserved_quantity::numeric, 5) = 0;"
+
+        query_merge_quants = """WITH
                         dupes AS (
                             SELECT min(id) as to_update_quant_id,
                                 (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
@@ -309,7 +311,8 @@ class StockQuant(models.Model):
         """
         try:
             with self.env.cr.savepoint():
-                self.env.cr.execute(query)
+                self.env.cr.execute(query_unlink_quants)
+                self.env.cr.execute(query_merge_quants)
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
 
@@ -347,8 +350,9 @@ class QuantPackage(models.Model):
     def _compute_package_info(self):
         for package in self:
             values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
-            if package.quant_ids:
-                values['location_id'] = package.quant_ids[0].location_id
+            quants = package.quant_ids.filtered(lambda q: not float_is_zero(q.quantity, precision_rounding=q.product_uom_id.rounding))
+            if quants:
+                values['location_id'] = quants[0].location_id
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']

@@ -158,7 +158,7 @@ class TestWarehouse(TestStockCommon):
         picking_out.move_lines.quantity_done = 1
         picking_out.action_done()
 
-        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        quant = self.env['stock.quant'].search(productA, stock_location)
         self.assertEqual(len(quant), 1)
         stock_return_picking = self.env['stock.return.picking']\
             .with_context(active_ids=picking_out.ids, active_id=picking_out.ids[0])\
@@ -170,7 +170,7 @@ class TestWarehouse(TestStockCommon):
         return_pick.move_lines.quantity_done = 1
         return_pick.action_done()
 
-        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        quant = self.env['stock.quant']._gather(productA, stock_location)
         self.assertEqual(len(quant), 0)
 
     def test_inventory_adjustment_and_negative_quants_2(self):
@@ -222,11 +222,11 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(set(location_ids), {location_loss.id})
 
         # There should be no quant in the stock location
-        quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        quants = self.env['stock.quant']._gather(productA, stock_location)
         self.assertEqual(len(quants), 0)
 
         # There should be one quant in the inventory loss location
-        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
+        quant = self.env['stock.quant']._gather(productA, location_loss)
         self.assertEqual(len(quant), 1)
 
 
