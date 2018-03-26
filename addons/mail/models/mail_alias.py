@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools import remove_accents
 from odoo.tools.safe_eval import safe_eval
 
@@ -87,6 +87,11 @@ class Alias(models.Model):
         except Exception:
             raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        return super(Alias, self.with_context({'raise_if_exist':False})).copy(default=default)
+
     @api.model
     def create(self, vals):
         """ Creates an email.alias record according to the values provided in ``vals``,
@@ -98,7 +103,7 @@ class Alias(models.Model):
         model_name = self._context.get('alias_model_name')
         parent_model_name = self._context.get('alias_parent_model_name')
         if vals.get('alias_name'):
-            vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'))
+            vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), raise_if_exist=self._context.get('raise_if_exist', True))
         if model_name:
             model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
@@ -131,7 +136,7 @@ class Alias(models.Model):
         return res
 
     @api.model
-    def _find_unique(self, name, alias_ids=False):
+    def _find_unique(self, name, alias_ids=False, raise_if_exist=True):
         """Find a unique alias name similar to ``name``. If ``name`` is
            already taken, make a variant by adding an integer suffix until
            an unused alias is found.
@@ -144,15 +149,18 @@ class Alias(models.Model):
                 domain += [('id', 'not in', alias_ids)]
             if not self.search(domain):
                 break
+            # raise UserError if already alias_name exist
+            if raise_if_exist:
+                raise UserError(_('The e-mail alias is already used. Please enter another one.'))
             sequence = (sequence + 1) if sequence else 2
         return new_name
 
     @api.model
-    def _clean_and_make_unique(self, name, alias_ids=False):
+    def _clean_and_make_unique(self, name, alias_ids=False, raise_if_exist=True):
         # when an alias name appears to already be an email, we keep the local part only
         name = remove_accents(name).lower().split('@')[0]
         name = re.sub(r'[^\w+.]+', '-', name)
-        return self._find_unique(name, alias_ids=alias_ids)
+        return self._find_unique(name, alias_ids=alias_ids, raise_if_exist=raise_if_exist)
 
     @api.multi
     def open_document(self):
@@ -202,6 +210,11 @@ class AliasMixin(models.AbstractModel):
             creation.
         """
         return {'alias_parent_thread_id': self.id}
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        return super(AliasMixin, self.with_context({'raise_if_exist':False})).copy(default=default)
 
     @api.model
     def create(self, vals):
