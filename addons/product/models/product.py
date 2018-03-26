@@ -195,6 +195,9 @@ class ProductProduct(models.Model):
         for product in self:
             product.price = prices.get(product.id, 0.0)
 
+    def _get_invoice_policy(self):
+        return False
+
     def _set_product_price(self):
         for product in self:
             if self._context.get('uom'):
