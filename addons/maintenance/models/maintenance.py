@@ -256,7 +256,7 @@ class MaintenanceEquipment(models.Model):
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Maintenance Requests'
+    _description = 'Maintenance Request'
     _order = "id desc"
 
     @api.returns('self')
