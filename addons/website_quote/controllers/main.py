@@ -64,11 +64,7 @@ class sale_quote(http.Controller):
             pdf = request.env.ref('website_quote.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
-        transaction_id = request.session.get('quote_%s_transaction_id' % order_sudo.id)
-        if not transaction_id:
-            Transaction = request.env['payment.transaction'].sudo().search([('reference', '=', order_sudo.name)])
-        else:
-            Transaction = request.env['payment.transaction'].sudo().browse(transaction_id)
+        transaction = order_sudo.get_portal_last_transaction()
         values = {
             'quotation': order_sudo,
             'message': message and int(message) or False,
@@ -77,11 +73,11 @@ class sale_quote(http.Controller):
             'days_valid': days,
             'action': request.env.ref('sale.action_quotations').id,
             'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
-            'tx_id': Transaction.id if Transaction else False,
-            'tx_state': Transaction.state if Transaction else False,
-            'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,
-            'payment_tx': Transaction,
-            'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
+            'tx_id': transaction.id if transaction else False,
+            'tx_state': transaction.state if transaction else False,
+            'payment_tx': transaction,
+            'tx_post_msg': transaction.acquirer_id.post_msg if transaction else False,
+            'need_payment': order_sudo.invoice_status == 'to invoice' and transaction.state in ['draft', 'cancel'],
             'token': token,
             'return_url': '/shop/payment/validate',
             'bootstrap_formatting': True,
@@ -171,23 +167,36 @@ class sale_quote(http.Controller):
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
         """
-        order = request.env['sale.order'].sudo().browse(order_id)
-        if not order or not order.order_line or acquirer_id is None:
+        # Ensure a payment acquirer is selected
+        if not acquirer_id:
             return False
 
-        # find an already existing transaction
-        acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
-        token = request.env['payment.token'].sudo()  # currently no support of payment tokens
-        tx = request.env['payment.transaction'].sudo().search([('reference', '=', order.name)], limit=1)
-        tx_type = order._get_payment_type()
-        tx = tx._check_or_create_sale_tx(order, acquirer, payment_token=token, tx_type=tx_type)
-        request.session['quote_%s_transaction_id' % order.id] = tx.id
+        try:
+            acquirer_id = int(acquirer_id)
+        except:
+            return False
 
-        return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, access_token) if access_token else '/quote/%s' % order_id,
-                                     submit_txt=_('Pay & Confirm'), render_values={
-                                         'type': order._get_payment_type(),
-                                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-                                         })
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order or not order.order_line:
+            return False
+
+        # Create transaction
+        vals = {
+            'acquirer_id': acquirer_id,
+            'type': order._get_payment_type(),
+        }
+
+        transaction = order._create_payment_transaction(vals)
+
+        return transaction.render_sale_button(
+            order,
+            '/quote/%s/%s' % (order_id, access_token) if access_token else '/quote/%s' % order_id,
+             submit_txt=_('Pay & Confirm'),
+            render_values={
+                 'type': order._get_payment_type(),
+                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+             }
+        )
 
     @http.route('/quote/<int:order_id>/transaction/token', type='http', auth='public', website=True)
     def payment_token(self, order_id, pm_id=None, **kwargs):
@@ -202,20 +211,12 @@ class sale_quote(http.Controller):
         except ValueError:
             return request.redirect('/quote/%s' % order_id)
 
-        # retrieve the token from its id
-        token = request.env['payment.token'].sudo().browse(pm_id)
-        if not token:
-            return request.redirect('/quote/%s' % order_id)
+        # Create transaction
+        vals = {
+            'payment_token_id': pm_id,
+            'type': 'server2server',
+        }
 
-        # find an already existing transaction
-        tx = request.env['payment.transaction'].sudo().search([('reference', '=', order.name)], limit=1)
-        # set the transaction type to server2server
-        tx_type = 'server2server'
-        # check if the transaction exists, if not then it create one
-        tx = tx._check_or_create_sale_tx(order, token.acquirer_id, payment_token=token, tx_type=tx_type)
-        # set the transaction id into the session
-        request.session['quote_%s_transaction_id' % order_id] = tx.id
-        # proceed to the payment
-        tx.confirm_sale_token()
-        # redirect the user to the online quote
+        order._create_payment_transaction(vals)
+
         return request.redirect('/quote/%s/%s' % (order_id, order.access_token))

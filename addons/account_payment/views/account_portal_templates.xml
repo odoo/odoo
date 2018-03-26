@@ -12,39 +12,9 @@
         </xpath>
     </template>
 
-
-    <!-- duplicata of the template payment.payment_confirmation_status. 
-        The duplication avoid to break an existing installation in stable version-->
-    <template id="payment_confirmation_status">
-        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
-            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
-            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-            <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
-        </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
-            Your payment has been authorized.
-            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
-        </div>
-    </template>
-
-
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//div[@id='o_portal_account_actions']/a" position="before">
-            <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <a t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total"
                     class="btn btn-primary pull-right ml8" href="#portal_pay">
                 <i class="fa fa-arrow-circle-right"/> Pay Now
@@ -59,9 +29,9 @@
             </a>
         </xpath>
         <xpath expr="//t[@t-call='account.portal_invoice_success']" position="after">
-            <div t-if="invoice.payment_tx_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
-                <t t-call="account_payment.payment_confirmation_status">
-                    <t t-set="payment_tx_id" t-value="invoice.payment_tx_id"/>
+            <div t-if="invoice.transaction_ids and invoice.amount_total and not success and not error" class="o_account_payment_tx_status" t-att-data-invoice-id="invoice.id">
+                <t t-call="payment.payment_confirmation_status">
+                    <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 </t>
             </div>
         </xpath>
@@ -88,7 +58,7 @@
 
     <template id="portal_invoice_report" name="Invoice portal page inherit payment" inherit_id="account.portal_invoice_report">
         <xpath expr="//div[@name='customer_address']" position="after">
-            <t t-set="tx_ids" t-value="invoice.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state != 'draft')"/>
             <t t-if="tx_ids">
                 <div>
                     <strong>Transactions</strong>
@@ -118,33 +88,15 @@
             <t t-if="error == 'pay_invoice_invalid_doc'">
                 There was an error processing your payment: invalid invoice.
             </t>
-            <t t-if="error == 'pay_invoice_invalid_doc_state'">
-                There was an error processing your payment: invalid invoice state.
-            </t>
             <t t-if="error == 'pay_invoice_invalid_token'">
                 There was en error processing your payment: invalid credit card ID.
             </t>
-
-            <t t-if="error == 'pay_invoice_tx_amount'">
-                There was an error processing your payment: transaction amount issue.<br />
-                <t t-if="invoice.payment_tx_id">
-                    <t t-esc="invoice.payment_tx_id.amount"/> / <t t-esc="invoice.amount_total"/>
-                </t>
-            </t>
             <t t-if="error == 'pay_invoice_tx_fail'">
                 There was an error processing your payment: transaction failed.<br />
-                <t t-if="invoice.payment_tx_id and invoice.payment_tx_id.state_message">
-                    <t t-esc="invoice.payment_tx_id.state_message"/>
+                <t t-set="tx_id" t-value="invoice.get_portal_last_transaction()"/>
+                <t t-if="tx_id and tx_id.state_message">
+                    <t t-esc="tx_id.state_message"/>
                 </t>
-            </t>
-            <t t-if="error == 'pay_invoice_tx_state'">
-                There was an error processing your payment: transaction issue.<br />
-                <t t-if="invoice.payment_tx_id and invoice.payment_tx_id.state_message">
-                    <t t-esc="invoice.payment_tx_id.state_message"/>
-                </t>
-            </t>
-            <t t-if="error == 'pay_invoice_tx_confirm'">
-                There was an error processing your payment: impossible to validate invoice.
             </t>
             <t t-if="error == 'pay_invoice_tx_token'">
                 There was an error processing your payment: issue with credit card ID validation.
@@ -156,8 +108,9 @@
             inherit_id="account.portal_invoice_success">
         <xpath expr="//a[hasclass('close')]" position="after">
             <t t-if="success == 'pay_invoice'">
-                <span t-if='invoice.payment_acquirer_id.done_msg' t-raw="invoice.payment_acquirer_id.done_msg"/>
-                <span t-if='invoice.payment_acquirer_id.post_msg' t-raw="invoice.payment_acquirer_id.post_msg"/>
+                <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
+                <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
+                <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
             </t>
         </xpath>
     </template>

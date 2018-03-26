@@ -10,7 +10,7 @@ from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 from odoo.tools import mute_logger
 
 
-@odoo.tests.tagged('-post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
 class BuckarooCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -19,7 +19,7 @@ class BuckarooCommon(PaymentAcquirerCommon):
         self.buckaroo = self.env.ref('payment.payment_acquirer_buckaroo')
 
 
-@odoo.tests.tagged('-post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
 class BuckarooForm(BuckarooCommon):
 
     def test_10_Buckaroo_form_render(self):
@@ -134,7 +134,7 @@ class BuckarooForm(BuckarooCommon):
             'amount': 2240.0,
             'acquirer_id': self.buckaroo.id,
             'currency_id': self.currency_euro.id,
-            'reference': 'SO004',
+            'reference': 'SO004-1',
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id})
 
@@ -145,7 +145,13 @@ class BuckarooForm(BuckarooCommon):
         self.assertEqual(tx.acquirer_reference, buckaroo_post_data.get('BRQ_TRANSACTIONS'), 'Buckaroo: validation did not update tx payid')
 
         # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
+        tx = self.env['payment.transaction'].create({
+            'amount': 2240.0,
+            'acquirer_id': self.buckaroo.id,
+            'currency_id': self.currency_euro.id,
+            'reference': 'SO004-2',
+            'partner_name': 'Norbert Buyer',
+            'partner_country_id': self.country_france.id})
 
         # now buckaroo post is ok: try to modify the SHASIGN
         buckaroo_post_data['BRQ_SIGNATURE'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'
@@ -158,4 +164,4 @@ class BuckarooForm(BuckarooCommon):
         tx.form_feedback(buckaroo_post_data, 'buckaroo')
 
         # check state
-        self.assertEqual(tx.state, 'error', 'Buckaroo: erroneous validation did not put tx into error state')
+        self.assertEqual(tx.state, 'cancel', 'Buckaroo: erroneous validation did not put tx into error state')

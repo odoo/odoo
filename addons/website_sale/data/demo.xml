@@ -1035,23 +1035,6 @@ Weight: 31 grams</field>
             <field name="price_unit">1799.0</field>
         </record>
 
-        <record id="website_payment_transaction_2" model="payment.transaction">
-            <field name="create_date" eval="datetime.now()"/>
-            <field name="acquirer_id" ref="payment.payment_acquirer_transfer"/>
-            <field name="sale_order_id" ref="website_sale_order_13"/>
-            <field name="reference" ref="website_sale_order_13"/>
-            <field name="type">form</field>
-            <field name="state">pending</field>
-            <field name="amount">1799.0</field>
-            <field name="currency_id" ref="base.USD"/>
-            <field name="partner_id" ref="base.res_partner_3"/>
-        </record>
-
-        <record id="website_sale_order_13" model="sale.order">
-            <field name="payment_acquirer_id" ref="payment.payment_acquirer_transfer"/>
-            <field name="payment_tx_id" ref="website_payment_transaction_2"/>
-        </record>
-
         <!-- Order to Invoice -->
         <record id="website_sale_order_14" model="sale.order">
             <field name="partner_id" ref="base.res_partner_3"/>
