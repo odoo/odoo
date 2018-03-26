@@ -18,8 +18,8 @@ def monkey_patch(cls):
 #
 # Implement sparse fields by monkey-patching fields.Field
 #
-
-fields.Field.__doc__ += """
+try:
+    fields.Field.__doc__ += """
 
         .. _field-sparse:
 
@@ -31,7 +31,10 @@ fields.Field.__doc__ += """
 
         :param sparse: the name of the field where the value of this field must
             be stored.
-"""
+    """
+except TypeError:
+    pass  # Your are possibly under PYTHONOPTIMIZE=2, where __doc__ is None
+
 
 @monkey_patch(fields.Field)
 def _get_attrs(self, model, name):
