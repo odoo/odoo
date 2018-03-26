@@ -484,13 +484,18 @@ class IrTranslation(models.Model):
                 continue
 
             # remap existing translations on terms when possible
+            trans_src = record_trans.mapped('src')
             for trans in record_trans:
                 if trans.src == trans.value:
                     discarded += trans
                 elif trans.src not in terms:
                     matches = get_close_matches(trans.src, terms, 1, 0.9)
                     if matches:
-                        trans.write({'src': matches[0], 'state': trans.state})
+                        if matches[0] in trans_src:
+                            # there is already a translation for this term; discard this one
+                            discarded += trans
+                        else:
+                            trans.write({'src': matches[0], 'state': trans.state})
                     else:
                         outdated += trans
 
