@@ -22,6 +22,7 @@ class NewLeadNotification(TestCrm):
             "email_from": "somemail@example.com",
             "name": "Some subject",
             "partner_name": "Some company",
+            "user_id": False,
             "team_id": self.sales_team_1.id,
             "phone": "+0000000000"
         })

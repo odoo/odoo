@@ -49,5 +49,6 @@ class TestCrmCases(TransactionCase):
             'name': "Crm Salesman",
             'login': "csu",
             'email': "crmuser@yourcompany.com",
+            'sale_team_id': self.env.ref("sales_team.team_sales_department").id,
             'groups_id': [(6, 0, [self.env.ref('sales_team.group_sale_salesman_all_leads').id, self.env.ref('base.group_partner_manager').id])]
         })

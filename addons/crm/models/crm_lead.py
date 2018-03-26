@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 
 from . import crm_stage
 
@@ -249,14 +249,12 @@ class Lead(models.Model):
         values = self._onchange_user_values(self.user_id.id)
         self.update(values)
 
-    @api.constrains('user_id')
-    @api.multi
+    @api.constrains('user_id', 'team_id')
     def _valid_team(self):
         for lead in self:
-            if lead.user_id:
-                values = lead.with_context(team_id=lead.team_id.id)._onchange_user_values(lead.user_id.id)
-                if values:
-                    lead.update(values)
+            if lead.user_id and lead.team_id:
+                if lead.user_id not in lead.team_id.member_ids:
+                    raise ValidationError(_('The Salesperson must belong to the Sales Channel'))
 
     @api.onchange('state_id')
     def _onchange_state(self):
@@ -833,7 +831,7 @@ class Lead(models.Model):
         return partner_ids
 
     @api.multi
-    def allocate_salesman(self, user_ids=None, team_id=False):
+    def allocate_salesman(self, user_ids=None, team_id=None):
         """ Assign salesmen and salesteam to a batch of leads.  If there are more
             leads than salesmen, these salesmen will be assigned in round-robin.
             E.g.: 4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6).  They
@@ -848,7 +846,7 @@ class Lead(models.Model):
         index = 0
         for lead in self:
             value = {}
-            if team_id:
+            if team_id is not None:
                 value['team_id'] = team_id
             if user_ids:
                 value['user_id'] = user_ids[index]
