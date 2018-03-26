@@ -311,7 +311,7 @@ tour.register('main_flow_tour', {
     content: _t('<p><b>Create a quotation</p>'),
     position: "right"
 }, {
-    trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > a",
+    trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add",
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
@@ -331,7 +331,7 @@ tour.register('main_flow_tour', {
         }
     },
 }, {
-    trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > a",
+    trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add",
     content: _t("Click here to add some lines to your quotations."),
     position: "bottom",
 }, {
