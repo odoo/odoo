@@ -3,9 +3,17 @@
 <menuitem id="account_reports_vn_statements_menu" name="Vietnam" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
 <data>
+    <record id="transfer_account_id" model="account.account.template">
+        <field name="name">Cash in transit</field>
+        <field name="code">113</field>
+        <field name="reconcile" eval="True"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_113')])]"/>
+    </record>
+
     <!-- Account Chart Templates -->
     <record id="vn_template" model="account.chart.template">
-        <field name="name">VN - Chart of Accounts</field>
+        <field name="name">VN - Chart of Accounts - C200</field>
         <field name="code_digits">0</field>
         <field name="currency_id" ref="base.VND"/>
         <field name="bank_account_code_prefix">112</field>
@@ -15,49 +23,103 @@
 
     <!-- Account Templates -->
 
-    <!-- Loại 1 -->
+    <!-- Type 1: Current Assets -->
+    <record id="chart1112" model="account.account.template">
+        <field name="code">1112</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="chart_template_id" ref="l10n_vn.vn_template"/>
+        <field name="name">Foreign currencies</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_111')])]"/>
+    </record>
+    <record id="chart1113" model="account.account.template">
+        <field name="code">1113</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="chart_template_id" ref="l10n_vn.vn_template"/>
+        <field name="name">Monetary Gold</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_111')])]"/>
+    </record>
+
+    <record id="chart1122" model="account.account.template">
+        <field name="code">1122</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="chart_template_id" ref="l10n_vn.vn_template"/>
+        <field name="name">Foreign currencies</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_112')])]"/>
+    </record>
+    <record id="chart1123" model="account.account.template">
+        <field name="code">1123</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="chart_template_id" ref="l10n_vn.vn_template"/>
+        <field name="name">Monetary Gold</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_112')])]"/>
+    </record>
+
+    <record id="chart1131" model="account.account.template">
+        <field name="name">Vietnam Dong</field>
+        <field name="code">1131</field>
+        <field name="reconcile" eval="True"/>
+        <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_113')])]"/>
+    </record>
+    <record id="chart1132" model="account.account.template">
+        <field name="name">Foreign Currencies</field>
+        <field name="code">1132</field>
+        <field name="reconcile" eval="True"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_113')])]"/>
+    </record>
     
     <record id="chart1211" model="account.account.template">
         <field name="code">1211</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cổ phiếu</field>
+        <field name="name">Shares</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_121')])]"/>
     </record>
     <record id="chart1212" model="account.account.template">
         <field name="code">1212</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Trái phiếu, Tín phiếu, Kỳ phiếu</field>
+        <field name="name">Bonds</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_121')])]"/>
     </record>
     <record id="chart1218" model="account.account.template">
         <field name="code">1218</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chứng khoán và công cụ tài chính khác</field>
+        <field name="name">Other securities and financial instruments</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_121')])]"/>
     </record>
     <record id="chart1281" model="account.account.template">
         <field name="code">1281</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tiền gửi có kỳ hạn</field>
+        <field name="name">Term deposits</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]"/>
     </record>
     <record id="chart1282" model="account.account.template">
         <field name="code">1282</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Trái phiếu có kỳ hạn</field>
+        <field name="name">Bonds</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]"/>
     </record>
     <record id="chart1283" model="account.account.template">
         <field name="code">1283</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cho vay</field>
+        <field name="name">Lending Loans</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]"/>
     </record>
     
     <record id="chart1288" model="account.account.template">
@@ -65,7 +127,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Các khoản đầu tư khác nắm giữ đến ngày đáo hạn</field>
+        <field name="name">Other held to maturity investments</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]"/>
     </record>
         
     <record id="chart131" model="account.account.template">
@@ -73,7 +136,8 @@
         <field name="reconcile" eval="True"/>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải thu của khách hàng</field>
+        <field name="name">Trade receivables</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_131')])]"/>
     </record>
 
     <record id="chart1331" model="account.account.template">
@@ -81,14 +145,16 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế GTGT được khấu trừ của hàng hóa, dịch vụ</field>
+        <field name="name">VAT on purchase of goods and services</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_133')])]"/>
     </record>
     <record id="chart1332" model="account.account.template">
         <field name="code">1332</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế GTGT được khấu trừ của TSCĐ</field>
+        <field name="name">VAT on purchase of fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_133')])]"/>
     </record>
 
     <record id="chart1361" model="account.account.template">
@@ -96,7 +162,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Vốn kinh doanh ở đơn vị trực thuộc</field>
+        <field name="name">Working capital provided to sub-units</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]"/>
     </record>
     
     <record id="chart1362" model="account.account.template">
@@ -104,7 +171,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải thu nội bộ về chênh lệch tỷ giá</field>
+        <field name="name">Intra-company receivables on foreign exchange defferences</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]"/>
     </record>       
         
     <record id="chart1363" model="account.account.template">
@@ -112,7 +180,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải thu nội bộ về chi phí đi vay đủ điều kiện được vốn hoá</field>
+        <field name="name">Intra-company receivables on borrowing costs eligible to be capitalized</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]"/>
     </record>       
         
     <record id="chart1368" model="account.account.template">
@@ -120,7 +189,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải thu nội bộ khác</field>
+        <field name="name">Other intra-company receivables</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]"/>
     </record>
 
     <record id="chart1381" model="account.account.template">
@@ -128,21 +198,24 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản thiếu chờ xử lý</field>
+        <field name="name">Shortage of assets awaiting resolution</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_138')])]"/>
     </record>
     <record id="chart1385" model="account.account.template">
         <field name="code">1385</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải thu về cổ phần hóa</field>
+        <field name="name">Receivables from equitization</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_138')])]"/>
     </record>
     <record id="chart1388" model="account.account.template">
         <field name="code">1388</field>
         <field name="reconcile" eval="True"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải thu khác</field>
+        <field name="name">Other receivables</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_138')])]"/>
     </record>
     
 
@@ -151,7 +224,8 @@
         <field name="reconcile" eval="True"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tạm ứng</field>
+        <field name="name">Employee Advances</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_141')])]"/>
     </record>
     
     <record id="chart151" model="account.account.template">
@@ -159,7 +233,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hàng hóa mua đang đi trên đường</field>
+        <field name="name">Goods in transit</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_151')])]"/>
     </record>
 
     <record id="chart152" model="account.account.template">
@@ -167,7 +242,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nguyên liệu, vật liệu</field>
+        <field name="name">Raw materials</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_152')])]"/>
     </record>
 
     <record id="chart1531" model="account.account.template">
@@ -175,7 +251,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Công cụ, dụng cụ</field>
+        <field name="name">Tools and supplies</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]"/>
     </record>
         
     <record id="chart1532" model="account.account.template">
@@ -183,7 +260,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Bao bì luân chuyển</field>
+        <field name="name">Reusable packaging materials</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]"/>
     </record>
         
     <record id="chart1533" model="account.account.template">
@@ -191,7 +269,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Đồ dùng cho thuê</field>
+        <field name="name">Instruments for renting</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]"/>
     </record>
             
     <record id="chart1534" model="account.account.template">
@@ -199,7 +278,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thiết bị, phụ tùng thay thế</field>
+        <field name="name">Equipment and spare parts for replacement</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]"/>
     </record>
 
     <record id="chart154" model="account.account.template">
@@ -207,15 +287,57 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí sản xuất kinh doanh dở dang</field>
+        <field name="name">Work in progress</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]"/>
+    </record>
+    <record id="chart1541" model="account.account.template">
+        <field name="code">1541</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Construction Contracts</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]"/>
+    </record>
+    <record id="chart1542" model="account.account.template">
+        <field name="code">1542</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Other Products</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]"/>
+    </record>
+    <record id="chart1543" model="account.account.template">
+        <field name="code">1543</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Services</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]"/>
+    </record>
+    <record id="chart1544" model="account.account.template">
+        <field name="code">1544</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Warranty costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]"/>
     </record>
 
+    <record id="chart155" model="account.account.template">
+        <field name="code">155</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="chart_template_id" ref="l10n_vn.vn_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_155')])]"/>
+        <field name="name">Finished goods</field>
+    </record>
     <record id="chart1551" model="account.account.template">
         <field name="code">1551</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thành phẩm nhập kho</field>
+        <field name="name">Finished products - inventory</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_155')])]"/>
     </record>
 
     <record id="chart1557" model="account.account.template">
@@ -223,7 +345,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thành phẩm bất động sản</field>
+        <field name="name">Finished products - real estate</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_155')])]"/>
     </record>
         
     <record id="chart1561" model="account.account.template">
@@ -231,21 +354,24 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Giá mua hàng hóa</field>
+        <field name="name">Purchase costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_156')])]"/>
     </record>
     <record id="chart1562" model="account.account.template">
         <field name="code">1562</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí thu mua hàng hóa</field>
+        <field name="name">Incident purchase costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_156')])]"/>
     </record>
     <record id="chart1567" model="account.account.template">
         <field name="code">1567</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hàng hóa bất động sản</field>
+        <field name="name">Properties held for sale</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_156')])]"/>
     </record>
 
     <record id="chart157" model="account.account.template">
@@ -253,7 +379,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hàng gửi đi bán</field>
+        <field name="name">Outward goods on consignment</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_157')])]"/>
     </record>
 
     <record id="chart158" model="account.account.template">
@@ -261,7 +388,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hàng hóa kho bảo thuế</field>
+        <field name="name">Goods in bonded warehouse</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_158')])]"/>
     </record>
 
     <record id="chart1611" model="account.account.template">
@@ -269,14 +397,16 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi sự nghiệp năm trước</field>
+        <field name="name">Expenditure broght forward</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_161')])]"/>
     </record>
     <record id="chart1612" model="account.account.template">
         <field name="code">1612</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi sự nghiệp năm nay</field>
+        <field name="name">Expenditure of current year</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_161')])]"/>
     </record>
 
      <record id="chart171" model="account.account.template">
@@ -284,51 +414,58 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Giao dịch mua bán lại trái phiếu chính phủ</field>
+        <field name="name">Government bonds purchased for resale</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_171')])]"/>
     </record>
         
-    <!-- Loại 2 -->
+    <!-- Type 2: None Current Assets -->
     <record id="chart2111" model="account.account.template">
         <field name="code">2111</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nhà cửa, vật kiến trúc</field>
+        <field name="name">Buildings and structures</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_211')])]"/>
     </record>
     <record id="chart2112" model="account.account.template">
         <field name="code">2112</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Máy móc, thiết bị</field>
+        <field name="name">Machinery and equipment</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_211')])]"/>
     </record>
     <record id="chart2113" model="account.account.template">
         <field name="code">2113</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phương tiện vận tải truyền dẫn</field>
+        <field name="name">Means of transportation and transmission</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_211')])]"/>
     </record>
     <record id="chart2114" model="account.account.template">
         <field name="code">2114</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thiết bị, dụng cụ quản lý</field>
+        <field name="name">Office equipment and furniture</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_211')])]"/>
     </record>
     <record id="chart2115" model="account.account.template">
         <field name="code">2115</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cây lâu năm, súc vật làm việc và cho sản phẩm</field>
+        <field name="name">Perennial plants, working animals and farm livestocks</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_211')])]"/>
     </record>
     <record id="chart2118" model="account.account.template">
         <field name="code">2118</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản cố định khác</field>
+        <field name="name">Other fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_211')])]"/>
     </record>
 
     <record id="chart2121" model="account.account.template">
@@ -336,7 +473,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản cố định hữu hình thuê tài chính</field>
+        <field name="name">Finance lease tangible fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_212')])]"/>
     </record>
 
     <record id="chart2122" model="account.account.template">
@@ -344,7 +482,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản cố định vô hình thuê tài chính</field>
+        <field name="name">Finance lease intangible fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_212')])]"/>
     </record>
         
     <record id="chart2131" model="account.account.template">
@@ -352,49 +491,56 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quyền sử dụng đất</field>
+        <field name="name">Land use rights</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_213')])]"/>
     </record>
     <record id="chart2132" model="account.account.template">
         <field name="code">2132</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quyền phát hành</field>
+        <field name="name">Copyrights</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_213')])]"/>
     </record>
     <record id="chart2133" model="account.account.template">
         <field name="code">2133</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Bản quyền, bằng sáng chế</field>
+        <field name="name">Patents and inventions</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_213')])]"/>
     </record>
     <record id="chart2134" model="account.account.template">
         <field name="code">2134</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nhãn hiệu, tên thương mại</field>
+        <field name="name">Product labels and trademarks</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_213')])]"/>
     </record>
     <record id="chart2135" model="account.account.template">
         <field name="code">2135</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chương trình phần mềm</field>
+        <field name="name">Computer software</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_213')])]"/>
     </record>
     <record id="chart2136" model="account.account.template">
         <field name="code">2136</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Giấy phép và giấy phép nhượng quyền</field>
+        <field name="name">Licences and franchises</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_213')])]"/>
     </record>
     <record id="chart2138" model="account.account.template">
         <field name="code">2138</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản cố định vô hình khác</field>
+        <field name="name">Other intangible fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_213')])]"/>
     </record>
 
     <record id="chart2141" model="account.account.template">
@@ -402,28 +548,32 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hao mòn TSCĐ cố định hữu hình</field>
+        <field name="name">Deprecation of tangible fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_214')])]"/>
     </record>
     <record id="chart2142" model="account.account.template">
         <field name="code">2142</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hao mòn TSCĐ thuê tài chính</field>
+        <field name="name">Deprecation of finance lease fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_214')])]"/>
     </record>
     <record id="chart2143" model="account.account.template">
         <field name="code">2143</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hao mòn TSCĐ vô hình</field>
+        <field name="name">Amortisation of intangible assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_214')])]"/>
     </record>
     <record id="chart2147" model="account.account.template">
         <field name="code">2147</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_depreciation"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hao mòn bất động sản đầu tư</field>
+        <field name="name">Deprecation of of investment properties</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_214')])]"/>
     </record>
 
     <record id="chart217" model="account.account.template">
@@ -431,7 +581,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Bất động sản đầu tư</field>
+        <field name="name">Investment properties</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_217')])]"/>
     </record>
 
     <record id="chart221" model="account.account.template">
@@ -439,7 +590,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Đầu tư vào công ty con</field>
+        <field name="name">Investments in subsidiaries</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_221')])]"/>
     </record>
 
     <record id="chart222" model="account.account.template">
@@ -447,7 +599,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Đầu tư vào công ty liên doanh</field>
+        <field name="name">Investments in joint ventures and associates</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_222')])]"/>
     </record>
 
     
@@ -457,7 +610,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Đầu tư góp vốn vào đơn vị khác</field>
+        <field name="name">Investments in equity of &amp; other entities</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_228')])]"/>
     </record>
         
     <record id="chart2288" model="account.account.template">
@@ -465,7 +619,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Đầu tư dài hạn khác</field>
+        <field name="name">Other investments</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_228')])]"/>
     </record>
 
     <record id="chart2291" model="account.account.template">
@@ -473,7 +628,8 @@
         <field name="reconcile" eval="False"/>  
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng giảm giá chứng khoán kinh doanh</field>
+        <field name="name">Allowances for decline in value of trading securities</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_229')])]"/>
     </record>
         
     <record id="chart2292" model="account.account.template">
@@ -481,7 +637,8 @@
         <field name="reconcile" eval="False"/>  
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng tổn thất đầu tư vào đơn vị khác</field>
+        <field name="name">Allowances for impairment of investments in other entities</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_229')])]"/>
     </record>
         
     <record id="chart2293" model="account.account.template">
@@ -489,7 +646,8 @@
         <field name="reconcile" eval="False"/>  
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng phải thu khó đòi</field>
+        <field name="name">Allowances for doubtful debts</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_229')])]"/>
     </record>
 
     <record id="chart2294" model="account.account.template">
@@ -497,7 +655,8 @@
         <field name="reconcile" eval="False"/>  
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng giảm giá hàng tồn kho</field>
+        <field name="name">Allowances for inventories</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_229')])]"/>
     </record>
         
     <record id="chart2411" model="account.account.template">
@@ -505,21 +664,24 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Mua sắm TSCĐ</field>
+        <field name="name">Fixed assets prior to commissioning</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_241')])]"/>
     </record>
     <record id="chart2412" model="account.account.template">
         <field name="code">2412</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Xây dựng cơ bản</field>
+        <field name="name">Construction works</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_241')])]"/>
     </record>
     <record id="chart2413" model="account.account.template">
         <field name="code">2413</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Sửa chữa lớn TSCĐ</field>
+        <field name="name">Major repairs of fixed assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_241')])]"/>
     </record>
 
     <record id="chart242" model="account.account.template">
@@ -527,7 +689,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí trả trước dài hạn</field>
+        <field name="name">Prepaid expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_242')])]"/>
     </record>
 
     <record id="chart243" model="account.account.template">
@@ -535,7 +698,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản thuế thu nhập hoãn lại</field>
+        <field name="name">Deferred tax assets</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_243')])]"/>
     </record>
 
     <record id="chart244" model="account.account.template">
@@ -543,108 +707,123 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cầm cố, thế chấp, ký quỹ, ký cược</field>
+        <field name="name">Mortgage, collaterals and deposits</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_244')])]"/>
     </record>
 
-    <!-- Loại 3 -->
+    <!-- Type 3: Liabilities-->
     
     <record id="chart331" model="account.account.template">
         <field name="code">331</field>
         <field name="reconcile" eval="True"/>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả người bán</field>
+        <field name="name">Trade payables</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_331')])]"/>
     </record>
     <record id="chart3331" model="account.account.template">
         <field name="code">3331</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế giá trị gia tăng phải nộp</field>
+        <field name="name">Value Added Tax (VAT)</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333'),ref('account_tag_3331')])]"/>
     </record>
     <record id="chart33311" model="account.account.template">
         <field name="code">33311</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế GTGT đầu ra</field>
+        <field name="name">Output VAT</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333'),ref('account_tag_3331')])]"/>
     </record>
     <record id="chart33312" model="account.account.template">
         <field name="code">33312</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế GTGT hàng nhập khẩu</field>
+        <field name="name">VAT on imported goods</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333'),ref('account_tag_3331')])]"/>
     </record>
     <record id="chart3332" model="account.account.template">
         <field name="code">3332</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế tiêu thụ đặc biệt</field>
+        <field name="name">Special consumption tax</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333')])]"/>
     </record>
     <record id="chart3333" model="account.account.template">
         <field name="code">3333</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế xuất, nhập khẩu</field>
+        <field name="name">Import and export tax</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333')])]"/>
     </record>
     <record id="chart3334" model="account.account.template">
         <field name="code">3334</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế thu nhập doanh nghiệp</field>
+        <field name="name">Corporate income tax</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333')])]"/>
     </record>
     <record id="chart3335" model="account.account.template">
         <field name="code">3335</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế thu nhập cá nhân</field>
+        <field name="name">Personal income tax</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333')])]"/>
     </record>
     <record id="chart3336" model="account.account.template">
         <field name="code">3336</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế tài nguyên</field>
+        <field name="name">Tax on use of natural resources</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333')])]"/>
     </record>
     <record id="chart3337" model="account.account.template">
         <field name="code">3337</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế nhà đất, tiền thuê đất</field>
+        <field name="name">Land and housing tax, and rental charges</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333')])]"/>
     </record>
     <record id="chart3338" model="account.account.template">
         <field name="code">3338</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Các loại thuế môi trường và các loại thuế khác</field>
+        <field name="name">Environment protection tax and other taxes</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333'),ref('account_tag_3338')])]"/>
     </record>
     <record id="chart33381" model="account.account.template">
         <field name="code">33381</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Các loại thuế môi trường</field>
+        <field name="name">Environment protection tax</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333'),ref('account_tag_3338')])]"/>
     </record>
     <record id="chart33382" model="account.account.template">
         <field name="code">33382</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Các loại thuế khác</field>
+        <field name="name">Other taxes</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333'),ref('account_tag_3338')])]"/>
     </record>
     <record id="chart3339" model="account.account.template">
         <field name="code">3339</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phí, lệ phí và các khoản phải nộp khác</field>
+        <field name="name">Fees, charges and other payables</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_333')])]"/>
     </record>
 
         <record id="chart3341" model="account.account.template">
@@ -652,14 +831,16 @@
         <field name="reconcile" eval="True"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả công nhân viên</field>
+        <field name="name">Payables to staff</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_334')])]"/>
     </record>
     <record id="chart3348" model="account.account.template">
         <field name="code">3348</field>
         <field name="reconcile" eval="True"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả người lao động khác</field>
+        <field name="name">Payables to others</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_334')])]"/>
     </record>
 
     <record id="chart335" model="account.account.template">
@@ -667,7 +848,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí phải trả</field>
+        <field name="name">Accured Expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_335')])]"/>
     </record>
 
     <record id="chart3361" model="account.account.template">
@@ -675,7 +857,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả nội bộ về vốn kinh doanh</field>
+        <field name="name">Intra-company payables for operating capital received</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_336')])]"/>
     </record>
 
     <record id="chart3362" model="account.account.template">
@@ -683,7 +866,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả nội bộ về vốn chênh lệch tỷ giá</field>
+        <field name="name">Intra-company payables for foreign exchange differences</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_336')])]"/>
     </record>
         
     <record id="chart3363" model="account.account.template">
@@ -691,7 +875,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả nội bộ về chi phí đi vay đủ điều kiện được vốn hoá</field>
+        <field name="name">Intra-company payables for borrowing costs eligible to be capitalized</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_336')])]"/>
     </record>
         
     <record id="chart3368" model="account.account.template">
@@ -699,7 +884,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả nội bộ khác</field>
+        <field name="name">Other intra-company payables</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_336')])]"/>
     </record>
         
     <record id="chart337" model="account.account.template">
@@ -707,7 +893,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thanh toán theo tiến độ kế hoạch hợp đồng xây dựng</field>
+        <field name="name">Progress billing</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_337')])]"/>
     </record>
 
     <record id="chart3381" model="account.account.template">
@@ -715,56 +902,64 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Tài sản thừa chờ giải quyết</field>
+        <field name="name">Surplus of assets awaitingresolution</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
     <record id="chart3382" model="account.account.template">
         <field name="code">3382</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Kinh phí công đoàn</field>
+        <field name="name">Trade union fees</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
     <record id="chart3383" model="account.account.template">
         <field name="code">3383</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Bảo hiểm xã hội</field>
+        <field name="name">Social insurance</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
     <record id="chart3384" model="account.account.template">
         <field name="code">3384</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Bảo hiểm y tế</field>
+        <field name="name">Health insurance</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
     <record id="chart3385" model="account.account.template">
         <field name="code">3385</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả về cổ phần hóa</field>
+        <field name="name">Payables on equitization</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
     <record id="chart3386" model="account.account.template">
         <field name="code">3386</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Bảo hiểm thất nghiệp</field>
+        <field name="name">Unemployment insurance</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
     <record id="chart3387" model="account.account.template">
         <field name="code">3387</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu chưa thực hiện</field>
+        <field name="name">Unearned revenue</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
     <record id="chart3388" model="account.account.template">
         <field name="code">3388</field>
         <field name="reconcile" eval="True"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phải trả, phải nộp khác</field>
+        <field name="name">Others</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_338')])]"/>
     </record>
 
     <record id="chart3411" model="account.account.template">
@@ -772,7 +967,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Các khoản đi vay</field>
+        <field name="name">Borrowing loans</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_341')])]"/>
     </record>
     
     <record id="chart3412" model="account.account.template">
@@ -780,7 +976,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nợ thuê tài chính</field>
+        <field name="name">Finance lease liabilities</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_341')])]"/>
     </record>
 
     <record id="chart3431" model="account.account.template">
@@ -788,35 +985,40 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Trái phiếu</field>
+        <field name="name">Ordinary bonds</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_343'),ref('account_tag_3431')])]"/>
     </record>
     <record id="chart34311" model="account.account.template">
         <field name="code">34311</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Mệnh giá trái phiếu</field>
+        <field name="name">Par value off bonds</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_343'),ref('account_tag_3431')])]"/>
     </record>
     <record id="chart34312" model="account.account.template">
         <field name="code">34312</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chiết khấu trái phiếu</field>
+        <field name="name">Bond distcounts</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_343'),ref('account_tag_3431')])]"/>
     </record>
     <record id="chart34313" model="account.account.template">
         <field name="code">34313</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Phụ trội trái phiếu</field>
+        <field name="name">Bond premiums</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_343'),ref('account_tag_3431')])]"/>
     </record>
     <record id="chart3432" model="account.account.template">
         <field name="code">3432</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Trái phiếu chuyển đổi</field>
+        <field name="name">Convertible bonds</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_343')])]"/>
     </record>
 
     <record id="chart344" model="account.account.template">
@@ -824,7 +1026,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nhận ký quỹ, ký cược dài hạn</field>
+        <field name="name">Deposits received</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_344')])]"/>
     </record>
 
     <record id="chart347" model="account.account.template">
@@ -832,7 +1035,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế thu nhập hoãn lại phải trả</field>
+        <field name="name">Deferred tax liabilities</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_347')])]"/>
     </record>
 
         
@@ -841,7 +1045,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ khen thưởng</field>
+        <field name="name">Bonus fund</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_353')])]"/>
     </record>
     
     <record id="chart3532" model="account.account.template">
@@ -849,7 +1054,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ phúc lợi</field>
+        <field name="name">Welfare fund</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_353')])]"/>
     </record>
     
     <record id="chart3533" model="account.account.template">
@@ -857,7 +1063,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ phúc lợi đã hình thành TSCĐ</field>
+        <field name="name">Welfare fund used for fixed asset acquisitions</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_353')])]"/>
     </record>
     
     <record id="chart3534" model="account.account.template">
@@ -865,7 +1072,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ thưởng ban quản lý điều hành công ty</field>
+        <field name="name">Management bonus fund</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_353')])]"/>
     </record>
     
     <record id="chart3561" model="account.account.template">
@@ -873,7 +1081,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ phát triển khoa học và công nghệ</field>
+        <field name="name">Science and technology development fund</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_356')])]"/>
     </record>
     
     <record id="chart3562" model="account.account.template">
@@ -881,7 +1090,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ phát triển khoa học và công nghệ đã hình thành TSCĐ</field>
+        <field name="name">Science and technology development fund used for fixed asset acquisition</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_356')])]"/>
     </record>
     
     <record id="chart357" model="account.account.template">
@@ -889,7 +1099,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ bình ổn giá</field>
+        <field name="name">Price stabilization fund</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_357')])]"/>
     </record>
     
     
@@ -899,7 +1110,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng bảo hành sản phẩm hàng hóa</field>
+        <field name="name">Product warranty provisions</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_352')])]"/>
     </record>
     
     <record id="chart3522" model="account.account.template">
@@ -907,7 +1119,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng bảo hành công trình xây dựng</field>
+        <field name="name">Construction warranty provisions</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_352')])]"/>
     </record>
 
     <record id="chart3523" model="account.account.template">
@@ -915,7 +1128,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng tái cơ cấu doanh nghiệp</field>
+        <field name="name">Enterprise restructuring provisions</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_352')])]"/>
     </record>
     
     <record id="chart3524" model="account.account.template">
@@ -923,51 +1137,58 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Dự phòng phải trả khác</field>
+        <field name="name">Other provisions</field>
+        <field name="tag_ids" eval="[(6,0 ,[ref('account_tag_352')])]"/>
     </record>
     
-    <!-- Loại 4 -->
+    <!-- Type 4: Owner’s Equity -->
     <record id="chart4111" model="account.account.template">
         <field name="code">4111</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Vốn đầu tư chủ sỡ hữu</field>
+        <field name="name">Contributed capital</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_411'),ref('account_tag_4111')])]"/>
     </record>
     <record id="chart41111" model="account.account.template">
         <field name="code">41111</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cổ phiếu phổ thông có quyền biểu quyết</field>
+        <field name="name">Ordinary shares with voting rights</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_411'),ref('account_tag_4111')])]"/>
     </record>
     <record id="chart41112" model="account.account.template">
         <field name="code">41112</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cổ phiếu ưu đãi</field>
+        <field name="name">Preference shares</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_411'),ref('account_tag_4111')])]"/>
     </record>
     <record id="chart4112" model="account.account.template">
         <field name="code">4112</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thặng dư vốn cổ phần</field>
+        <field name="name">Capital surplus</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_411')])]"/>
     </record>
     <record id="chart4113" model="account.account.template">
         <field name="code">4113</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quyền chọn chuyển đổi trái phiếu</field>
+        <field name="name">Conversion options on convertible bonds</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_411')])]"/>
     </record>
     <record id="chart4118" model="account.account.template">
         <field name="code">4118</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Vốn khác</field>
+        <field name="name">Other capital</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_411')])]"/>
     </record>
 
     <record id="chart412" model="account.account.template">
@@ -975,7 +1196,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chênh lệch đánh giá lại tài sản</field>
+        <field name="name">Differences upon asset revaluation</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_412')])]"/>
     </record>
 
     <record id="chart4131" model="account.account.template">
@@ -983,14 +1205,16 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chênh lệch tỷ giá do đánh giá lại các khoản mục tiền tệ có gốc ngoại tệ</field>
+        <field name="name">Exchange rate differences upon revaluation of monetary items denominated in foreign currency</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_413')])]"/>
     </record>
     <record id="chart4132" model="account.account.template">
         <field name="code">4132</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chênh lệch tỷ giá hối đoái trong giai đoạn trước hoạt động</field>
+        <field name="name">Exchange rate differences in pre-operating period</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_413')])]"/>
     </record>
 
     <record id="chart414" model="account.account.template">
@@ -998,7 +1222,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ đầu tư phát triển</field>
+        <field name="name">Investment and development fund</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_414')])]"/>
     </record>
 
     <record id="chart417" model="account.account.template">
@@ -1006,7 +1231,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Quỹ hỗ trợ sắp xếp doanh nghiệp</field>
+        <field name="name">Enterprise reorganization assistance fund</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_417')])]"/>
     </record>
 
     <record id="chart418" model="account.account.template">
@@ -1014,7 +1240,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Các quỹ khác thuộc vốn chủ sở hữu</field>
+        <field name="name">Other equity funds</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_418')])]"/>
     </record>
 
     <record id="chart419" model="account.account.template">
@@ -1022,7 +1249,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Cổ phiếu quỹ</field>
+        <field name="name">Treasury shares</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_419')])]"/>
     </record>
 
     <record id="chart4211" model="account.account.template">
@@ -1030,14 +1258,16 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Lợi nhuận chưa phân phối năm trước</field>
+        <field name="name">Undistributed profit after tax brought forward</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_421')])]"/>
     </record>
     <record id="chart4212" model="account.account.template">
         <field name="code">4212</field>
         <field name="reconcile" eval="False"/>
-        <field name="user_type_id" ref="account.data_account_type_equity"/>
+        <field name="user_type_id" ref="account.data_unaffected_earnings"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Lợi nhuận chưa phân phối năm nay</field>
+        <field name="name">Undistributed profit/loss after tax for the current year</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_421')])]"/>
     </record>
 
     <record id="chart441" model="account.account.template">
@@ -1045,7 +1275,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Ngồn vố đầu tư xây dựng cơ bản</field>
+        <field name="name">Capital expenditure funds</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_441')])]"/>
     </record>
 
     <record id="chart4611" model="account.account.template">
@@ -1053,14 +1284,16 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nguồn kinh phí sự nghiệp năm trước</field>
+        <field name="name">Non-business funds brought forward</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_461')])]"/>
     </record>
     <record id="chart4612" model="account.account.template">
         <field name="code">4612</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nguồn kinh phí sự nghiệp năm nay</field>
+        <field name="name">Non-business funds for current year</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_461')])]"/>
     </record>
 
     <record id="chart466" model="account.account.template">
@@ -1068,44 +1301,50 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_equity"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Nguồn kinh phí đã hình thành TSCĐ</field>
+        <field name="name">Non-business funds used for fixed asset acquisitions</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_466')])]"/>
     </record>
 
-    <!-- Loại 5 -->
+    <!-- Type 5: Revenue -->
     <record id="chart5111" model="account.account.template">
         <field name="code">5111</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu bán hàng hóa</field>
+        <field name="name">Revenue from sales of merchandises</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_511')])]"/>
     </record>
     <record id="chart5112" model="account.account.template">
         <field name="code">5112</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu bán các thành phẩm</field>
+        <field name="name">Revenue from sales of finished goods</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_511')])]"/>
     </record>
     <record id="chart5113" model="account.account.template">
         <field name="code">5113</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu cung cấp dịch vụ</field>
+        <field name="name">Revenue from services rendered</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_511')])]"/>
     </record>
     <record id="chart5114" model="account.account.template">
         <field name="code">5114</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu trợ cấp, trợ giá</field>
+        <field name="name">Revenue from government grants</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_511')])]"/>
     </record>
     <record id="chart5117" model="account.account.template">
         <field name="code">5117</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu kinh doanh bất động sản đầu tư</field>
+        <field name="name">Revenue from investment properties</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_511')])]"/>
     </record>
 
     <record id="chart5118" model="account.account.template">
@@ -1113,7 +1352,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu khác</field>
+        <field name="name">Other revenue</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_511')])]"/>
     </record>
         
     <record id="chart515" model="account.account.template">
@@ -1121,7 +1361,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Doanh thu hoạt động tài chính</field>
+        <field name="name">Financial income</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_515')])]"/>
     </record>
 
     <record id="chart5211" model="account.account.template">
@@ -1129,7 +1370,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chiết khấu thương mại</field>
+        <field name="name">Trade discounts</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_521')])]"/>
     </record>
 
     <record id="chart5212" model="account.account.template">
@@ -1137,7 +1379,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Giảm giá hàng bán</field>
+        <field name="name">Sales returns</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_521')])]"/>
     </record>
 
     <record id="chart5213" model="account.account.template">
@@ -1145,23 +1388,26 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_revenue"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Hàng bán bị trả lại</field>
+        <field name="name">Sales rebates</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_521')])]"/>
     </record>
     
-    <!-- Loại 6 -->
+    <!-- Type 6: Costs of Production & Business -->
     <record id="chart6111" model="account.account.template">
         <field name="code">6111</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Mua nguyên liệu, vật liệu</field>
+        <field name="name">Purchases of raw materials</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_611')])]"/>
     </record>
     <record id="chart6112" model="account.account.template">
         <field name="code">6112</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Mua hàng hóa</field>
+        <field name="name">Purchases of goods</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_611')])]"/>
     </record>
 
     <record id="chart621" model="account.account.template">
@@ -1169,7 +1415,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí nguyên liệu, vật liệu trực tiếp</field>
+        <field name="name">Direct raw material costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_621')])]"/>
     </record>
 
     <record id="chart622" model="account.account.template">
@@ -1177,7 +1424,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí nhân công trực tiếp</field>
+        <field name="name">Direct labour costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_622')])]"/>
     </record>
 
     <record id="chart6231" model="account.account.template">
@@ -1185,42 +1433,48 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí nhân công</field>
+        <field name="name">Labour costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_623')])]"/>
     </record>
     <record id="chart6232" model="account.account.template">
         <field name="code">6232</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí vật liệu</field>
+        <field name="name">Material costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_623')])]"/>
     </record>
     <record id="chart6233" model="account.account.template">
         <field name="code">6233</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dụng cụ sản xuất</field>
+        <field name="name">Tools and instruments</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_623')])]"/>
     </record>
     <record id="chart6234" model="account.account.template">
         <field name="code">6234</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí khấu hao máy thi công</field>
+        <field name="name">Depreciation expense</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_623')])]"/>
     </record>
     <record id="chart6237" model="account.account.template">
         <field name="code">6237</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dịch vụ mua ngoài</field>
+        <field name="name">Outside services</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_623')])]"/>
     </record>
     <record id="chart6238" model="account.account.template">
         <field name="code">6238</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí bằng tiền khác</field>
+        <field name="name">Other expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_623')])]"/>
     </record>
 
     <record id="chart6271" model="account.account.template">
@@ -1228,42 +1482,48 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí nhân viên phân xưởng</field>
+        <field name="name">Factory staff costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_627')])]"/>
     </record>
     <record id="chart6272" model="account.account.template">
         <field name="code">6272</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí vật liệu</field>
+        <field name="name">Material costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_627')])]"/>
     </record>
     <record id="chart6273" model="account.account.template">
         <field name="code">6273</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dụng cụ sản xuất</field>
+        <field name="name">Tools and instruments</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_627')])]"/>
     </record>
     <record id="chart6274" model="account.account.template">
         <field name="code">6274</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí khấu hao TSCĐ</field>
+        <field name="name">Fixed asset depreciation</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_627')])]"/>
     </record>
     <record id="chart6277" model="account.account.template">
         <field name="code">6277</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dịch vụ mua ngoài</field>
+        <field name="name">Outside services</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_627')])]"/>
     </record>
     <record id="chart6278" model="account.account.template">
         <field name="code">6278</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí bằng tiền khác</field>
+        <field name="name">Other expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_627')])]"/>
     </record>
 
     <record id="chart631" model="account.account.template">
@@ -1271,7 +1531,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Giá thành sản xuất</field>
+        <field name="name">Production costs</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_631')])]"/>
     </record>
 
     <record id="chart632" model="account.account.template">
@@ -1279,7 +1540,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Giá vốn hàng bán</field>
+        <field name="name">Costs of goods sold</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_632')])]"/>
     </record>
 
     <record id="chart635" model="account.account.template">
@@ -1287,7 +1549,8 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí tài chính</field>
+        <field name="name">Financial expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_635')])]"/>
     </record>
 
     <record id="chart6411" model="account.account.template">
@@ -1295,49 +1558,56 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí nhân viên</field>
+        <field name="name">Staff expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_641')])]"/>
     </record>
     <record id="chart6412" model="account.account.template">
         <field name="code">6412</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí vật liệu, bao bì</field>
+        <field name="name">Materials and packing materials</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_641')])]"/>
     </record>
     <record id="chart6413" model="account.account.template">
         <field name="code">6413</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dụng cụ, đồ dùng</field>
+        <field name="name">Tools and instruments</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_641')])]"/>
     </record>
     <record id="chart6414" model="account.account.template">
         <field name="code">6414</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí khấu hao TSCĐ</field>
+        <field name="name">Fixed asset depreciation</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_641')])]"/>
     </record>
     <record id="chart6415" model="account.account.template">
         <field name="code">6415</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí bảo hành</field>
+        <field name="name">Warranty expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_641')])]"/>
     </record>
     <record id="chart6417" model="account.account.template">
         <field name="code">6417</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dịch vụ mua ngoài</field>
+        <field name="name">Outside services</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_641')])]"/>
     </record>
     <record id="chart6418" model="account.account.template">
         <field name="code">6418</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí bằng tiền khác</field>
+        <field name="name">Other expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_641')])]"/>
     </record>
 
     <record id="chart6421" model="account.account.template">
@@ -1345,74 +1615,84 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí nhân viên quản lý</field>
+        <field name="name">Staff expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
     <record id="chart6422" model="account.account.template">
         <field name="code">6422</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí vật liệu quản lý</field>
+        <field name="name">Office supply expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
     <record id="chart6423" model="account.account.template">
         <field name="code">6423</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí đồ dùng văn phòng</field>
+        <field name="name">Office equipment expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
     <record id="chart6424" model="account.account.template">
         <field name="code">6424</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí khấu hao tài sản cố định</field>
+        <field name="name">Fixed asset depreciation</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
     <record id="chart6425" model="account.account.template">
         <field name="code">6425</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thuế, phí và lệ phí</field>
+        <field name="name">Taxes, fees and charges</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
     <record id="chart6426" model="account.account.template">
         <field name="code">6426</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dự phòng</field>
+        <field name="name">Provision expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
     <record id="chart6427" model="account.account.template">
         <field name="code">6427</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí dịch vụ mua ngoài</field>
+        <field name="name">Outside services</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
     <record id="chart6428" model="account.account.template">
         <field name="code">6428</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí bằng tiền khác</field>
+        <field name="name">Other expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_642')])]"/>
     </record>
 
-    <!-- Loại 7 -->
+    <!-- Type 7: Other Income -->
     <record id="chart711" model="account.account.template">
         <field name="code">711</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_other_income"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Thu nhập khác</field>
+        <field name="name">Other income</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_711')])]"/>
     </record>
 
-    <!-- Loại 8 -->
+    <!-- Type 8: Other Expenses -->
     <record id="chart811" model="account.account.template">
         <field name="code">811</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí khác</field>
+        <field name="name">Other expenses</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_811')])]"/>
     </record>
 
     <record id="chart8211" model="account.account.template">
@@ -1420,17 +1700,29 @@
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí thuế TNDN hiện hành</field>
+        <field name="name">Current corporate tax expense</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_821')])]"/>
     </record>
     <record id="chart8212" model="account.account.template">
         <field name="code">8212</field>
         <field name="reconcile" eval="False"/>
         <field name="user_type_id" ref="account.data_account_type_expenses"/>
         <field name="chart_template_id" ref="vn_template"/>
-        <field name="name">Chi phí thuế TNDN hoãn lại</field>
+        <field name="name">Deferred corporate tax expense (benefit)</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_821')])]"/>
     </record>
 
  
+
+    <!-- Type 9: Income Summary -->
+    <record id="chart911" model="account.account.template">
+        <field name="code">911</field>
+        <field name="reconcile" eval="False"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="chart_template_id" ref="vn_template"/>
+        <field name="name">Income Summary</field>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_911')])]"/>
+    </record>
 
     <!-- Chart template -->
     <record id="vn_template" model="account.chart.template">
