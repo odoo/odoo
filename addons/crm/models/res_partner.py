@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models
 
-
 class Partner(models.Model):
 
     _inherit = 'res.partner'
@@ -16,9 +15,10 @@ class Partner(models.Model):
 
     @api.multi
     def _compute_opportunity_count(self):
+        partners_data = self.env['crm.lead'].read_group([('partner_id', 'in', self.ids), ('type', '=', 'opportunity')], ['partner_id'], ['partner_id'])
+        mapped_data = dict([(partner['partner_id'][0], partner['partner_id_count']) for partner in partners_data])
         for partner in self:
-            # the opportunity count should counts the opportunities of this company and all its contacts
-            partner.opportunity_count = len(partner.opportunity_ids) + (len(partner.mapped('child_ids.opportunity_ids')) if partner.is_company else 0)
+            partner.opportunity_count = mapped_data.get(partner.id, 0) + sum(mapped_data.get(int(child), 0) for child in partner.mapped('child_ids'))
 
     @api.multi
     def _compute_meeting_count(self):

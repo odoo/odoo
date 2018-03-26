@@ -11,11 +11,13 @@ class res_partner(models.Model):
 
     @api.multi
     def _purchase_invoice_count(self):
-        PurchaseOrder = self.env['purchase.order']
-        Invoice = self.env['account.invoice']
+        partners_data = self.env['purchase.order'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        mapped_data = dict([(partner['partner_id'][0], partner['partner_id_count']) for partner in partners_data])
+        partners_invoice_data = self.env['account.invoice'].read_group([('partner_id', 'in', self.ids), ('type', '=', 'in_invoice')], ['partner_id'], ['partner_id'])
+        mapped_invoice_data = dict([(partner['partner_id'][0], partner['partner_id_count']) for partner in partners_data])
         for partner in self:
-            partner.purchase_order_count = PurchaseOrder.search_count([('partner_id', 'child_of', partner.id)])
-            partner.supplier_invoice_count = Invoice.search_count([('partner_id', 'child_of', partner.id), ('type', '=', 'in_invoice')])
+            partner.purchase_order_count = mapped_data.get(partner.id, 0) + sum(mapped_data.get(int(child), 0) for child in partner.mapped('child_ids'))
+            partner.supplier_invoice_count = mapped_invoice_data.get(partner.id, 0) + sum(mapped_invoice_data.get(int(child), 0) for child in partner.mapped('child_ids'))
 
     @api.model
     def _commercial_fields(self):
@@ -26,5 +28,6 @@ class res_partner(models.Model):
         help="This currency will be used, instead of the default one, for purchases from the current partner")
     purchase_order_count = fields.Integer(compute='_purchase_invoice_count', string='# of Purchase Order')
     supplier_invoice_count = fields.Integer(compute='_purchase_invoice_count', string='# Vendor Bills')
+    purchase_order_ids = fields.One2many('purchase.order', 'partner_id', 'Purchase Order')
     purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, required=True, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')

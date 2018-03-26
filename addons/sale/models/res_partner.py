@@ -14,5 +14,7 @@ class ResPartner(models.Model):
     sale_warn_msg = fields.Text('Message for Sales Order')
 
     def _compute_sale_order_count(self):
+        partners_data = self.env['sale.order'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        mapped_data = dict([(partner['partner_id'][0], partner['partner_id_count']) for partner in partners_data])
         for partner in self:
-            partner.sale_order_count = len(partner.sale_order_ids) + (len(partner.mapped('child_ids.sale_order_ids')) if partner.is_company else 0)
+            partner.sale_order_count = mapped_data.get(partner.id, 0) + sum(mapped_data.get(int(child), 0) for child in partner.mapped('child_ids'))
