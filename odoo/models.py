@@ -64,6 +64,7 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
+regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
@@ -1813,7 +1814,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         Get the list of records in list view grouped by the given ``groupby`` fields
 
         :param domain: list specifying search criteria [['field_name', 'operator', 'value'], ...]
-        :param list fields: list of fields present in the list view specified on the object
+        :param list fields: list of fields present in the list view specified on the object.
+                Each element is either 'field' (field name, using the default aggregation),
+                or 'field:agg' (aggregate field with aggregation function 'agg'),
+                or 'name:agg(field)' (aggregate field with 'agg' and return it as 'name').
+                The possible aggregation functions are the ones provided by PostgreSQL
+                (https://www.postgresql.org/docs/current/static/functions-aggregate.html)
+                and 'count_distinct', with the expected meaning.
         :param list groupby: list of groupby descriptions by which the records will be grouped.  
                 A groupby description is either a field (then it will be grouped by that field)
                 or a string 'field:groupby_function'.  Right now, the only functions supported
@@ -1877,22 +1884,44 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             gb_field = self._fields[gb].base_field
             assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
 
-        aggregated_fields = [
-            f for f in fields
-            if f != 'sequence'
-            if f not in groupby_fields
-            for field in [self._fields.get(f)]
-            if field
-            if field.group_operator
-            if field.base_field.store and field.base_field.column_type
-        ]
+        aggregated_fields = []
+        select_terms = []
 
-        field_formatter = lambda f: (
-            self._fields[f].group_operator,
-            self._inherits_join_calc(self._table, f, query),
-            f,
-        )
-        select_terms = ['%s(%s) AS "%s" ' % field_formatter(f) for f in aggregated_fields]
+        for fspec in fields:
+            if fspec == 'sequence' or fspec in groupby_fields:
+                continue
+
+            match = regex_field_agg.match(fspec)
+            if not match:
+                raise UserError(_("Invalid field specification %r.") % fspec)
+
+            name, func, fname = match.groups()
+            if func:
+                # we have either 'name:func' or 'name:func(fname)'
+                fname = fname or name
+                field = self._fields[fname]
+                if not (field.base_field.store and field.base_field.column_type):
+                    raise UserError(_("Cannot aggregate field %r.") % fname)
+                if not func.isidentifier():
+                    raise UserError(_("Invalid aggregation function %r.") % func)
+            else:
+                # we have 'name', retrieve the aggregator on the field
+                field = self._fields.get(name)
+                if not (field and field.base_field.store and
+                        field.base_field.column_type and field.group_operator):
+                    continue
+                func, fname = field.group_operator, name
+
+            if name in aggregated_fields:
+                raise UserError(_("Output name %r is used twice.") % name)
+            aggregated_fields.append(name)
+
+            expr = self._inherits_join_calc(self._table, fname, query)
+            if func.lower() == 'count_distinct':
+                term = 'COUNT(DISTINCT %s) AS "%s"' % (expr, name)
+            else:
+                term = '%s(%s) AS "%s"' % (func, expr, name)
+            select_terms.append(term)
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
