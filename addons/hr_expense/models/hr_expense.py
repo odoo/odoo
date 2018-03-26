@@ -416,7 +416,8 @@ class HrExpense(models.Model):
             product = default_product
         else:
             expense_description = expense_description.replace(product_code.group(), '')
-            product = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            products = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            product = products.filtered(lambda p: p.default_code == product_code.group(1)) or products[0]
 
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
@@ -559,8 +560,6 @@ class HrExpenseSheet(models.Model):
             return 'hr_expense.mt_expense_refused'
         elif 'state' in init_values and self.state == 'done':
             return 'hr_expense.mt_expense_paid'
-        elif 'user_id' in init_values:
-            return 'hr_expense.mt_expense_responsible'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
     def _get_users_to_subscribe(self, employee=False):
@@ -591,10 +590,13 @@ class HrExpenseSheet(models.Model):
         MailFollowers = self.env['mail.followers']
         for partner in users.mapped('partner_id'):
             values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {partner.id: None}, {})[0]
-        
-        if values.get('user_id') and values.get('user_id') != employee.user_id.id:
+
+        if values.get('user_id') and values.get('user_id') != employee.user_id.id and values.get('user_id') != self.env.uid:
             resp_partner = self.env['res.users'].browse(values['user_id'])
-            values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {resp_partner.partner_id.id: None}, {})[0]
+            # Parsing ORM command to avoid adding several times the same partner
+            # TDE note: a better implementation should come in saas 11.3 or 11.4, allowing to normally remove that code
+            if resp_partner.partner_id.id not in (x[2].get('partner_id') for x in values['message_follower_ids'] if len(x) == 3):
+                values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {resp_partner.partner_id.id: None}, {})[0]
 
     # --------------------------------------------
     # Actions

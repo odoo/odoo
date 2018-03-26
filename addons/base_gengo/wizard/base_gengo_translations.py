@@ -63,7 +63,7 @@ class BaseGengoTranslations(models.TransientModel):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'res.config.settings',
-            'target': 'current',
+            'target': 'inline',
             'context': {'module' : 'general_settings'},
             }
 

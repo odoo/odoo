@@ -351,12 +351,12 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 
     // click on the activity button to re-open dropdown
     $record.find('.o_activity_btn').click();
-    assert.strictEqual(rpcCount, 2, 'no RPC should be done as the activities are now in cache');
+    assert.strictEqual(rpcCount, 3, 'should have reloaded the activities');
 
     // mark activity as done
     $record.find('.o_mark_as_done').click();
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
-    assert.strictEqual(rpcCount, 4, 'should have done an RPC to mark activity as done, and a read');
+    assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
         "activity widget should have been updated correctly");
     assert.strictEqual($record.find('.o_mail_activity.open').length, 1,
@@ -463,8 +463,8 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     assert.ok(form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
         "log note button should be available");
     assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain one message");
-    assert.ok(!form.$('.o_thread_message:first() .o_mail_note').length,
-        "the message shouldn't be a note");
+    assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('A message') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('John Doe') >= 0,
@@ -477,8 +477,8 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 2, "thread should contain two messages");
-    assert.ok(!form.$('.o_thread_message:first() .o_mail_note').length,
-        "the last message shouldn't be a note");
+    assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the last message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('Me') >= 0,
@@ -491,8 +491,8 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 3, "thread should contain three messages");
-    assert.ok(form.$('.o_thread_message:first() .o_mail_note').length,
-        "the last message should be a note");
+    assert.ok(!form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the last message should not be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first note') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('Me') >= 0,
@@ -707,6 +707,128 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     form.destroy();
 });
 
+QUnit.test('form activity widget: read RPCs', function (assert) {
+    // Records of model 'mail.activity' may be updated in business flows (e.g.
+    // the date of a 'Meeting' activity is updated when the associated meeting
+    // is dragged&dropped in the Calendar view). Because of that, the activities
+    // must be reloaded when the form is reloaded (the widget can't keep an
+    // internal cache).
+    assert.expect(6);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var nbReads = 0;
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'read' && args.model === 'mail.activity') {
+                nbReads++;
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(nbReads, 1, "should have read the activities");
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "should display an activity");
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message .o_activity_date').text(),
+        'Today', "the activity should be today");
+
+    form.$buttons.find('.o_form_button_edit').click();
+    form.$buttons.find('.o_form_button_save').click();
+
+    assert.strictEqual(nbReads, 1, "should not have re-read the activities");
+
+    // simulate a date change, and a reload of the form view
+    var tomorrow = moment().add(1, 'day').format("YYYY-MM-DD");
+    this.data['mail.activity'].records[0].date_deadline = tomorrow;
+    form.reload();
+
+    assert.strictEqual(nbReads, 2, "should have re-read the activities");
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message .o_activity_date').text(),
+        'Tomorrow', "the activity should be tomorrow");
+
+    form.destroy();
+});
+
+QUnit.test('form activity widget on a new record', function (assert) {
+    assert.expect(0);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'read' && args.model === 'mail.activity') {
+                throw new Error("should not do a read on mail.activity");
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    form.destroy();
+});
+
+QUnit.test('form activity widget with another x2many field in view', function (assert) {
+    assert.expect(1);
+
+    this.data.partner.fields.m2m = {string: "M2M", type: 'many2many', relation: 'partner'};
+
+    this.data.partner.records[0].m2m = [2];
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<field name="m2m" widget="many2many_tags"/>' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+    });
+
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "should display an activity");
+
+    form.destroy();
+});
+
 QUnit.test('form activity widget: schedule next activity', function (assert) {
     assert.expect(5);
     this.data.partner.records[0].activity_ids = [1];
@@ -746,7 +868,7 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
                     "the feedback should be sent correctly");
                 return $.when();
             }
-            if (args.method === 'read' && checkReadArgs) {
+            if (args.method === 'read' && args.model === 'partner' && checkReadArgs) {
                 assert.deepEqual(args.args[1], ['activity_ids', 'message_ids', 'display_name'],
                     "should only read the mail fields");
             }
@@ -1214,7 +1336,6 @@ QUnit.module('FieldMany2ManyTagsEmail', {
 QUnit.test('fieldmany2many tags email', function (assert) {
     assert.expect(13);
     var done = assert.async();
-    var nameGottenIds = [[12], [12, 14]];
 
     this.data.partner.records[0].timmy = [12, 14];
 
@@ -1234,11 +1355,7 @@ QUnit.test('fieldmany2many tags email', function (assert) {
             mode: 'edit',
         },
         mockRPC: function (route, args) {
-            if (route === "/web/dataset/call_kw/partner_type/name_get") {
-                assert.deepEqual(args.args[0], nameGottenIds.shift(),
-                    "partner with email should be name_get'ed");
-            }
-            else if (args.method ==='read' && args.model === 'partner_type') {
+            if (args.method ==='read' && args.model === 'partner_type') {
                 assert.step(args.args[0]);
                 assert.deepEqual(args.args[1] , ['display_name', 'email'], "should read the email");
             }
@@ -1251,8 +1368,12 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
         assert.verifySteps([[12, 14], [14], [14]]);
         assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_0').length, 2,
-            "the second tag should be present");
-
+            "two tags should be present");
+        var firstTag = form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_0').first();
+        assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
+            "tag should only show display_name");
+        assert.strictEqual(firstTag.find('.o_badge_text').attr('title'), "coucou@petite.perruche",
+            "tag should show email address on mouse hover");
         form.destroy();
         done();
     });

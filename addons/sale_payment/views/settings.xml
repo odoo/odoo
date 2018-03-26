@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.inherit.sale_payment</field>
+    <field name="model">res.config.settings</field>
+    <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='portal_confirmation_options']/.." position="after">
+        <div attrs="{'invisible': [('portal_confirmation_options', '!=', 'pay')]}">
+          <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
+        </div>
+      </xpath>
+    </field>
+  </record>
+</odoo>

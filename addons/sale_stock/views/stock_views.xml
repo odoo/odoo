@@ -92,7 +92,8 @@
             <field name="arch" type="xml">
                 <button name="action_view_orderpoints" position="after">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}">
+                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}"
+                        groups="sales_team.group_sale_salesman">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>

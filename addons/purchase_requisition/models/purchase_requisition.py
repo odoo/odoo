@@ -73,7 +73,6 @@ class PurchaseRequisition(models.Model):
                               'Status', track_visibility='onchange', required=True,
                               copy=False, default='draft')
     state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
-    account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
@@ -201,11 +200,12 @@ class PurchaseRequisitionLine(models.Model):
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env['res.company']._company_default_get('purchase.requisition.line'))
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     schedule_date = fields.Date(string='Scheduled Date')
     move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
-    @api.multi
+    @api.model
     def create(self,vals):
         res = super(PurchaseRequisitionLine, self).create(vals)
         if res.requisition_id.state not in ['draft', 'cancel', 'done'] and res.requisition_id.is_quantity_copy == 'none':
@@ -265,8 +265,6 @@ class PurchaseRequisitionLine(models.Model):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id
             self.product_qty = 1.0
-        if not self.account_analytic_id:
-            self.account_analytic_id = self.requisition_id.account_analytic_id
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
@@ -283,6 +281,7 @@ class PurchaseRequisitionLine(models.Model):
             'taxes_id': [(6, 0, taxes_ids)],
             'date_planned': requisition.schedule_date or fields.Date.today(),
             'account_analytic_id': self.account_analytic_id.id,
+            'analytic_tag_ids': self.analytic_tag_ids.ids,
             'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or []
         }
 

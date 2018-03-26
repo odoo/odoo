@@ -435,7 +435,7 @@ class Task(models.Model):
     _date_name = "date_start"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
-    _order = "priority desc, sequence, date_start, name, id"
+    _order = "priority desc, sequence, id desc"
 
     @api.model
     def default_get(self, fields_list):
@@ -492,7 +492,7 @@ class Task(models.Model):
     index=True, copy=False)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False)
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, track_visibility='onchange')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         default=fields.Datetime.now,
         index=True,
@@ -505,8 +505,8 @@ class Task(models.Model):
         track_visibility='onchange',
         change_default=True)
     notes = fields.Text(string='Notes')
-    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.')
-    subtask_planned_hours = fields.Float("Subtask Planned Hours", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
+    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',track_visibility='onchange')
+    subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
@@ -528,7 +528,7 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True, related_sudo=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
-    parent_id = fields.Many2one('project.task', string='Parent Task')
+    parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
@@ -539,6 +539,8 @@ class Task(models.Model):
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
     working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
+    # customer portal: include comment and incoming emails in communication history
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
 
     _constraints = [(models.BaseModel._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
 
@@ -853,8 +855,6 @@ class Task(models.Model):
             return 'project.mt_task_blocked'
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return 'project.mt_task_ready'
-        elif 'user_id' in init_values and self.user_id:  # assigned -> new
-            return 'project.mt_task_new'
         elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
             return 'project.mt_task_new'
         elif 'stage_id' in init_values:
@@ -933,23 +933,6 @@ class Task(models.Model):
     @api.multi
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
-        if update_vals is None:
-            update_vals = {}
-        maps = {
-            'cost': 'planned_hours',
-        }
-        for line in msg['body'].split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res:
-                match = res.group(1).lower()
-                field = maps.get(match)
-                if field:
-                    try:
-                        update_vals[field] = float(res.group(2).lower())
-                    except (ValueError, TypeError):
-                        pass
-
         email_list = self.email_split(msg)
         partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
         self.message_subscribe(partner_ids)

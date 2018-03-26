@@ -13,9 +13,6 @@ class TestFifoPrice(TestPurchase):
         self._load('account', 'test', 'account_minimal_test.xml')
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
-        # Set the company currency as EURO for the sake of repeatibility
-        self.env.ref('base.main_company').currency_id = self.env.ref('base.EUR')
-
         # Set a product as using fifo price
         product_icecream = self.env['product.product'].create({
             'default_code': 'FIFO',

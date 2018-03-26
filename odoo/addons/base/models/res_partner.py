@@ -204,7 +204,7 @@ class Partner(models.Model):
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
-        help="Either customer (no user), either shared user. Indicated the current partner is a customer without "
+        help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
@@ -501,7 +501,7 @@ class Partner(models.Model):
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
                         raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
-        tools.image_resize_images(vals)
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
 
         result = True
         # To write in SUPERUSER on field is_company and avoid access rights problems.
@@ -525,7 +525,7 @@ class Partner(models.Model):
         # cannot be easily performed if default images are in the way
         if not vals.get('image'):
             vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-        tools.image_resize_images(vals)
+        tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
         partner._handle_first_contact_creation()

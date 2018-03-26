@@ -6,6 +6,7 @@ var ReportClientAction = require('report.client_action');
 var AbstractAction = require('web.AbstractAction');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
+var ListController = require('web.ListController');
 var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -276,6 +277,102 @@ QUnit.module('ActionManager', {
         testUtils.unpatch(Widget);
     });
 
+    QUnit.test('no memory leaks when executing an action while loading views', function (assert) {
+        assert.expect(1);
+
+        var def;
+        var delta = 0;
+        testUtils.patch(Widget, {
+            init: function () {
+                delta += 1;
+                this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                delta -= 1;
+                this._super.apply(this, arguments);
+            },
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+               var result = this._super.apply(this, arguments);
+                if (args.method === 'load_views') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute action 4 to know the number of widgets it instantiates
+        actionManager.doAction(4);
+        var n = delta;
+
+        // execute a first action (its 'load_views' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3, {clear_breadcrumbs: true});
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4, {clear_breadcrumbs: true});
+        def.resolve();
+
+        assert.strictEqual(n, delta,
+            "all widgets of action 3 should have been destroyed");
+
+        actionManager.destroy();
+        testUtils.unpatch(Widget);
+    });
+
+    QUnit.test('no memory leaks when executing an action while loading data of default view', function (assert) {
+        assert.expect(1);
+
+        var def;
+        var delta = 0;
+        testUtils.patch(Widget, {
+            init: function () {
+                delta += 1;
+                this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                delta -= 1;
+                this._super.apply(this, arguments);
+            },
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route) {
+                var result = this._super.apply(this, arguments);
+                if (route === '/web/dataset/search_read') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute action 4 to know the number of widgets it instantiates
+        actionManager.doAction(4);
+        var n = delta;
+
+        // execute a first action (its 'search_read' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3, {clear_breadcrumbs: true});
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4, {clear_breadcrumbs: true});
+        def.resolve();
+
+        assert.strictEqual(n, delta,
+            "all widgets of action 3 should have been destroyed");
+
+        actionManager.destroy();
+        testUtils.unpatch(Widget);
+    });
+
     QUnit.test('action with "no_breadcrumbs" set to true', function (assert) {
         assert.expect(2);
 
@@ -345,6 +442,52 @@ QUnit.module('ActionManager', {
             "there should be one controller in the breadcrumbs");
         assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
             "breadcrumbs should display the display_name of the action");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('stores and restores scroll position', function (assert) {
+        assert.expect(7);
+
+        var left;
+        var top;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                getScrollPosition: function (ev) {
+                    assert.step('getScrollPosition');
+                    ev.data.callback({left: left, top: top});
+                },
+                scrollTo: function (ev) {
+                    assert.step('scrollTo left ' + ev.data.left + ', top ' + ev.data.top);
+                },
+            },
+        });
+
+        // execute a first action and simulate a scroll
+        assert.step('execute action 3');
+        actionManager.doAction(3);
+        left = 50;
+        top = 100;
+
+        // execute a second action (in which we don't scroll)
+        assert.step('execute action 4');
+        actionManager.doAction(4);
+
+        // go back using the breadcrumbs
+        assert.step('go back to action 3');
+        $('.o_control_panel .breadcrumb a').click();
+
+        assert.verifySteps([
+            'execute action 3',
+            'execute action 4',
+            'getScrollPosition', // of action 3, before leaving it
+            'go back to action 3',
+            'getScrollPosition', // of action 4, before leaving it
+            'scrollTo left 50, top 100', // restore scroll position of action 3
+        ]);
 
         actionManager.destroy();
     });
@@ -760,7 +903,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('should not push a loaded state', function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -772,9 +915,64 @@ QUnit.module('ActionManager', {
                 },
             },
         });
-        actionManager.loadState({action: 1});
+        actionManager.loadState({action: 3});
 
-        assert.verifySteps([]);
+        assert.verifySteps([], "should not push the loaded state");
+
+        actionManager.$('tr.o_data_row:first').click();
+
+        assert.verifySteps(['push_state'],
+            "should push the state of it changes afterwards");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('should not push a loaded state of a client action', function (assert) {
+        assert.expect(4);
+
+        var ClientAction = Widget.extend({
+            init: function (parent, action, options) {
+                this._super.apply(this, arguments);
+                this.controllerID = options.controllerID;
+            },
+            start: function () {
+                var self = this;
+                var $button = $('<button>').text('Click Me!');
+                $button.on('click', function () {
+                    self.trigger_up('push_state', {
+                        controllerID: self.controllerID,
+                        state: {someValue: 'X'},
+                    });
+                });
+                this.$el.append($button);
+                return this._super.apply(this, arguments);
+            },
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                push_state: function (ev) {
+                    assert.step('push_state');
+                    assert.deepEqual(ev.data.state, {
+                        action: 9,
+                        someValue: 'X',
+                        title: 'A Client Action',
+                    });
+                },
+            },
+        });
+        actionManager.loadState({action: 9});
+
+        assert.verifySteps([], "should not push the loaded state");
+
+        actionManager.$('button').click();
+
+        assert.verifySteps(['push_state'],
+            "should push the state of it changes afterwards");
 
         actionManager.destroy();
     });
@@ -1193,6 +1391,101 @@ QUnit.module('ActionManager', {
             'load_views', // action 3
             '/web/dataset/search_read', // search read of list view of action 3
             'read', // read the opened record of action 3 (this request is blocked)
+            '/web/action/load', // action 4
+            'load_views', // action 4
+            '/web/dataset/search_read', // search read action 4
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('execute a new action while loading views', function (assert) {
+        assert.expect(10);
+
+        var def;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method || route);
+                if (args.method === 'load_views') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute a first action (its 'load_views' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3);
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4);
+        def.resolve();
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should display the kanban view of action 4");
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // action 3
+            '/web/action/load', // action 4
+            'load_views', // action 4
+            '/web/dataset/search_read', // search read action 4
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('execute a new action while loading data of default view', function (assert) {
+        assert.expect(11);
+
+        var def;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                assert.step(args.method || route);
+                if (route === '/web/dataset/search_read') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // execute a first action (its 'search_read' RPC is blocked)
+        def = $.Deferred();
+        actionManager.doAction(3);
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+
+        // execute another action meanwhile (and unlock the RPC)
+        actionManager.doAction(4);
+        def.resolve();
+
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            "should display the kanban view of action 4");
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view of action 3");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+
+        assert.verifySteps([
+            '/web/action/load', // action 3
+            'load_views', // action 3
+            '/web/dataset/search_read', // search read action 3
             '/web/action/load', // action 4
             'load_views', // action 4
             '/web/dataset/search_read', // search read action 4
@@ -2350,6 +2643,95 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('save current search', function (assert) {
+        assert.expect(4);
+
+        testUtils.patch(ListController, {
+            getContext: function () {
+                return {
+                    shouldBeInFilterContext: true,
+                };
+            },
+        });
+
+        _.extend(this.archs, {
+            'partner,7,search':
+                '<search>' +
+                   '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
+                '</search>',
+        });
+
+        this.actions.push({
+            id: 33,
+            context: {
+                shouldNotBeInFilterContext: false,
+            },
+            name: 'Partners',
+            res_model: 'partner',
+            search_view_id: [7, 'a custom search view'],
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                create_filter: function (event) {
+                    var filter = event.data.filter;
+                    assert.deepEqual(filter.domain, [['bar', '=', 1]],
+                        "should save the correct domain");
+                    assert.deepEqual(filter.context, {shouldBeInFilterContext: true},
+                        "should save the correct context");
+                },
+            },
+        });
+        actionManager.doAction(33);
+
+        assert.strictEqual(actionManager.$('.o_data_row').length, 5,
+            "should contain 5 records");
+
+        // filter on bar
+        $('.o_control_panel .o_filters_menu a:contains(Bar)').click();
+
+        assert.strictEqual(actionManager.$('.o_data_row').length, 2,
+            "should contain 2 records");
+
+        // save filter
+        $('.o_control_panel .o_save_search a').click(); // toggle 'Save current search'
+        $('.o_control_panel .o_save_name input[type=text]').val('some name'); // name the filter
+        $('.o_control_panel .o_save_name button').click(); // click on 'Save'
+
+        testUtils.unpatch(ListController);
+        actionManager.destroy();
+    });
+
+    QUnit.test("search menus are still available when switching between actions", function (assert) {
+        assert.expect(3);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+        assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+            "the search options should be available");
+
+        actionManager.doAction(3);
+        assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+            "the search options should be available");
+
+        // go back using the breadcrumbs
+        $('.o_control_panel .breadcrumb a:first').click();
+        assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+            "the search options should be available");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Actions in target="new"');
 
     QUnit.test('can execute act_window actions in target="new"', function (assert) {
@@ -2527,6 +2909,33 @@ QUnit.module('ActionManager', {
         assert.verifySteps(['on_close']);
 
         actionManager.destroy();
+    });
+
+    QUnit.test('doAction resolved with an action', function (assert) {
+        assert.expect(4);
+
+        this.actions.push({
+            id: 21,
+            name: 'A Close Action',
+            type: 'ir.actions.act_window_close',
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(21).then(function (action) {
+            assert.ok(action, "doAction should be resolved with an action");
+            assert.strictEqual(action.id, 21,
+                "should be resolved with correct action id");
+            assert.strictEqual(action.name, 'A Close Action',
+                "should be resolved with correct action name");
+            assert.strictEqual(action.type, 'ir.actions.act_window_close',
+                "should be resolved with correct action type");
+            actionManager.destroy();
+        });
     });
 });
 

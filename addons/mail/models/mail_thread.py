@@ -613,15 +613,10 @@ class MailThread(models.AbstractModel):
     @api.multi
     def _notify_get_action_link(self, link_type, **kwargs):
         local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
-        if kwargs.get('message_id'):
-            base_params = {
-                'message_id': kwargs['message_id'],
-            }
-        else:
-            base_params = {
-                'model': kwargs.get('model', self._name),
-                'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
-            }
+        base_params = {
+            'model': kwargs.get('model', self._name),
+            'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
+        }
 
         local_kwargs.pop('message_id', None)
         local_kwargs.pop('model', None)
@@ -680,10 +675,7 @@ class MailThread(models.AbstractModel):
         # access rights checks and speedup the computation.
         result = {}
 
-        if self._context.get('auto_delete', False):
-            access_link = self._notify_get_action_link('view')
-        else:
-            access_link = self._notify_get_action_link('view', message_id=message.id)
+        access_link = self._notify_get_action_link('view')
 
         if message.model:
             model_name = self.env['ir.model']._get(message.model).display_name
@@ -1939,7 +1931,7 @@ class MailThread(models.AbstractModel):
             return
         for record in self:
             values['object'] = record
-            rendered_template = views.render(values, engine='ir.qweb')
+            rendered_template = views.render(values, engine='ir.qweb', minimal_qcontext=True)
             kwargs['body'] = rendered_template
             record.message_post_with_template(False, **kwargs)
 
@@ -2156,7 +2148,7 @@ class MailThread(models.AbstractModel):
             values = {
                 'object': record,
             }
-            assignation_msg = assignation_tpl.render(values, engine='ir.qweb')
+            assignation_msg = assignation_tpl.render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
             record.message_notify(
                 subject='You have been assigned to %s' % record.display_name,

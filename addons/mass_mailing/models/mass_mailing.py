@@ -6,6 +6,7 @@ import hmac
 import logging
 import random
 import threading
+from ast import literal_eval
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -361,6 +362,15 @@ class MassMailing(models.Model):
     _rec_name = "source_id"
 
     @api.model
+    def _get_default_mail_server_id(self):
+        server_id = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mail_server_id')
+        try:
+            server_id = literal_eval(server_id) if server_id else False
+            return self.env['ir.mail_server'].search([('id', '=', server_id)]).id
+        except ValueError:
+            return False
+
+    @api.model
     def default_get(self, fields):
         res = super(MassMailing, self).default_get(fields)
         if 'reply_to_mode' in fields and not 'reply_to_mode' in res and res.get('mailing_model_real'):
@@ -403,6 +413,9 @@ class MassMailing(models.Model):
         default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
     mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
+    mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
+        default=_get_default_mail_server_id,
+        help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
     contact_list_ids = fields.Many2many('mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
         string='Mailing Lists')
     contact_ab_pc = fields.Integer(string='A/B Testing percentage',
@@ -760,6 +773,7 @@ class MassMailing(models.Model):
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
                 'no_auto_thread': mailing.reply_to_mode != 'thread',
+                'mail_server_id': mailing.mail_server_id.id,
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to
@@ -798,6 +812,8 @@ class MassMailing(models.Model):
     def _process_mass_mailing_queue(self):
         mass_mailings = self.search([('state', 'in', ('in_queue', 'sending')), '|', ('schedule_date', '<', fields.Datetime.now()), ('schedule_date', '=', False)])
         for mass_mailing in mass_mailings:
+            user = mass_mailing.write_uid or self.env.user
+            mass_mailing = mass_mailing.with_context(**user.sudo(user=user).context_get())
             if len(mass_mailing.get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
                 mass_mailing.send_mail()

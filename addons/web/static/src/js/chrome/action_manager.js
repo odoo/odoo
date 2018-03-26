@@ -62,7 +62,6 @@ var ActionManager = Widget.extend({
         // dialog (i.e. coming from an action with target='new')
         this.currentDialogController = null;
     },
-
     /**
      * @override
      */
@@ -136,10 +135,11 @@ var ActionManager = Widget.extend({
      *   is useful when we come from a loadState())
      * @param {boolean} [options.replace_last_action=false] set to true to
      *   replace last part of the breadcrumbs with the action
-     * @return {Deferred} resolved when the action is loaded and appended to the
-     *   DOM ; rejected if the action can't be executed (e.g. if doAction has
-     *   been called to execute another action before this one was complete).
-    */
+     * @return {$.Deferred<Object>} resolved with the action when the action is
+     *   loaded and appended to the DOM ; rejected if the action can't be
+     *   executed (e.g. if doAction has been called to execute another action
+     *   before this one was complete).
+     */
     doAction: function (action, options) {
         var self = this;
         options = _.defaults({}, options, {
@@ -175,7 +175,14 @@ var ActionManager = Widget.extend({
 
             self._preprocessAction(action, options);
 
-            return self._handleAction(action, options);
+            return self._handleAction(action, options).then(function () {
+                // now that the action has been executed, force its 'pushState'
+                // flag to 'true', as we don't want to prevent its controller
+                // from pushing its state if it changes in the future
+                action.pushState = true;
+
+                return action;
+            });
         });
     },
     /**
@@ -255,7 +262,9 @@ var ActionManager = Widget.extend({
             callbacks: [{widget: controller.widget}],
         });
 
-        this.trigger_up('scrollTo', {offset: controller.scrollTop || 0});
+        if (controller.scrollPosition) {
+            this.trigger_up('scrollTo', controller.scrollPosition);
+        }
 
         if (!controller.widget.need_control_panel) {
             this.controlPanel.do_hide();
@@ -291,7 +300,7 @@ var ActionManager = Widget.extend({
     _detachCurrentController: function () {
         var currentController = this.getCurrentController();
         if (currentController) {
-            currentController.scrollTop = this._getScrollTop();
+            currentController.scrollPosition = this._getScrollPosition();
             dom.detach([{widget: currentController.widget}]);
         }
     },
@@ -441,6 +450,7 @@ var ActionManager = Widget.extend({
         }
 
         var controllerID = _.uniqueId('controller_');
+        options.controllerID = controllerID;
         var controller = {
             actionID: action.jsID,
             jsID: controllerID,
@@ -605,19 +615,19 @@ var ActionManager = Widget.extend({
         return state;
     },
     /**
-     * Returns the current vertical scroll position.
+     * Returns the current horizontal and vertical scroll positions.
      *
      * @private
-     * @returns {integer}
+     * @returns {Object}
      */
-    _getScrollTop: function () {
-        var scrollTop;
-        this.trigger_up('getScrollTop', {
-            callback: function (value) {
-                scrollTop = value;
+    _getScrollPosition: function () {
+        var scrollPosition;
+        this.trigger_up('getScrollPosition', {
+            callback: function (_scrollPosition) {
+                scrollPosition = _scrollPosition;
             }
         });
-        return scrollTop;
+        return scrollPosition;
     },
     /**
      * Dispatches the given action to the corresponding handler to execute it,
@@ -893,13 +903,13 @@ var ActionManager = Widget.extend({
         }
     },
     /**
-    * Intercepts and triggers a redirection on a link
-    *
-    * @private
-    * @param {OdooEvent} ev
-    * @param {integer} ev.data.res_id
-    * @param {string} ev.data.res_model
-    */
+     * Intercepts and triggers a redirection on a link.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.res_id
+     * @param {string} ev.data.res_model
+     */
     _onRedirect: function (ev) {
         this.do_action({
             type:'ir.actions.act_window',

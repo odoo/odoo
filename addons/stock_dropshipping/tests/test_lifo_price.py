@@ -17,9 +17,6 @@ class TestLifoPrice(common.TransactionCase):
         self._load('account', 'test', 'account_minimal_test.xml')
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
-        # Set the company currency as EURO for the sake of repeatibility
-        self.env.ref('base.main_company').write({'currency_id': self.env.ref('base.EUR').id})
-
         # Set product category removal strategy as LIFO
         product_category_001 = self.env['product.category'].create({
             'name': 'Lifo Category',

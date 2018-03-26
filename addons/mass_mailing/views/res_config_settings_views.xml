@@ -28,6 +28,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6 o_setting_box col-xs-12">
+                                <div class="o_setting_left_pane" title="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.">
+                                    <field name="mass_mailing_outgoing_mail_server"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="mass_mailing_outgoing_mail_server"/>
+                                    <div class="text-muted">
+                                        Use a specific mail server for mailings
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('mass_mailing_outgoing_mail_server', '=', False)]}">
+                                        <div class="mt16">
+                                            <field name="mass_mailing_mail_server_id" options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2>Mailing Lists</h2>
                         <div id="mailing_list" class="row mt16 o_settings_container"/>

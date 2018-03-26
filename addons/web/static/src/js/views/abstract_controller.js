@@ -102,6 +102,18 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * Called each time the controller is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        this.renderer.on_attach_callback();
+    },
+    /**
+     * Called each time the controller is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        this.renderer.on_detach_callback();
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -318,7 +330,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         if (this.searchView) {
             _.extend(cpContent, {
                 $searchview: this.searchView.$el,
-                $searchview_buttons: this.searchView.$buttons.contents(),
+                $searchview_buttons: this.searchView.$buttons,
             });
         }
         this.update_control_panel({

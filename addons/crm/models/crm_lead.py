@@ -973,6 +973,8 @@ class Lead(models.Model):
             'nb_opportunities': 0,
         }
 
+        today = fields.Date.from_string(fields.Date.context_today(self))
+
         opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
 
         for opp in opportunities:
@@ -980,28 +982,28 @@ class Lead(models.Model):
             if opp.activity_date_deadline:
                 if opp.date_deadline:
                     date_deadline = fields.Date.from_string(opp.date_deadline)
-                    if date_deadline == date.today():
+                    if date_deadline == today:
                         result['closing']['today'] += 1
-                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                    if today <= date_deadline <= today + timedelta(days=7):
                         result['closing']['next_7_days'] += 1
-                    if date_deadline < date.today() and not opp.date_closed:
+                    if date_deadline < today and not opp.date_closed:
                         result['closing']['overdue'] += 1
                 # Next activities
                 for activity in opp.activity_ids:
                     date_deadline = fields.Date.from_string(activity.date_deadline)
-                    if date_deadline == date.today():
+                    if date_deadline == today:
                         result['activity']['today'] += 1
-                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                    if today <= date_deadline <= today + timedelta(days=7):
                         result['activity']['next_7_days'] += 1
-                    if date_deadline < date.today():
+                    if date_deadline < today:
                         result['activity']['overdue'] += 1
             # Won in Opportunities
             if opp.date_closed and opp.stage_id.probability == 100:
                 date_closed = fields.Date.from_string(opp.date_closed)
-                if date.today().replace(day=1) <= date_closed <= date.today():
+                if today.replace(day=1) <= date_closed <= today:
                     if opp.planned_revenue:
                         result['won']['this_month'] += opp.planned_revenue
-                elif  date.today() + relativedelta(months=-1, day=1) <= date_closed < date.today().replace(day=1):
+                elif  today + relativedelta(months=-1, day=1) <= date_closed < today.replace(day=1):
                     if opp.planned_revenue:
                         result['won']['last_month'] += opp.planned_revenue
 
@@ -1026,9 +1028,9 @@ class Lead(models.Model):
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])
-                if date.today().replace(day=1) <= date_act <= date.today():
+                if today.replace(day=1) <= date_act <= today:
                     result['done']['this_month'] += 1
-                elif date.today() + relativedelta(months=-1, day=1) <= date_act < date.today().replace(day=1):
+                elif today + relativedelta(months=-1, day=1) <= date_act < today.replace(day=1):
                     result['done']['last_month'] += 1
 
         # Meetings
@@ -1043,9 +1045,9 @@ class Lead(models.Model):
         for meeting in meetings:
             if meeting['start']:
                 start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                if start == date.today():
+                if start == today:
                     result['meeting']['today'] += 1
-                if date.today() <= start <= date.today() + timedelta(days=7):
+                if today <= start <= today + timedelta(days=7):
                     result['meeting']['next_7_days'] += 1
 
         result['done']['target'] = self.env.user.target_sales_done
@@ -1170,28 +1172,6 @@ class Lead(models.Model):
             defaults['priority'] = msg_dict.get('priority')
         defaults.update(custom_values)
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
-
-    @api.multi
-    def message_update(self, msg_dict, update_vals=None):
-        """ Overrides mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if update_vals is None:
-            update_vals = {}
-        if msg_dict.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
-            update_vals['priority'] = msg_dict.get('priority')
-        maps = {
-            'revenue': 'planned_revenue',
-            'probability': 'probability',
-        }
-        for line in msg_dict.get('body', '').split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower()):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-        return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
 
     def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         if self.email_from and not self.partner_id:

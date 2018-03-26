@@ -21,6 +21,7 @@ ActionManager.include({
     custom_events: _.extend({}, ActionManager.prototype.custom_events, {
         env_updated: '_onEnvUpdated',
         execute_action: '_onExecuteAction',
+        get_controller_context: '_onGetControllerContext',
         search: '_onSearch',
         switch_view: '_onSwitchView',
     }),
@@ -223,6 +224,31 @@ ActionManager.include({
         return action.controllers[viewType];
     },
     /**
+     * Destroys the controllers and search view of a given action of type
+     * 'ir.actions.act_window'.
+     *
+     * @private
+     * @param {Object} action
+     */
+    _destroyWindowAction: function (action) {
+        var self = this;
+        _.each(action.controllers, function (controllerDef) {
+            controllerDef.then(function (controller) {
+                delete self.controllers[controller.jsID];
+                if (controller.widget) {
+                    controller.widget.destroy();
+                }
+            });
+            // reject the deferred if it is not yet resolved, so that the
+            // controller is correctly destroyed as soon as it is ready, and
+            // its reference is removed
+            controllerDef.reject();
+        });
+        if (action.searchView) {
+            action.searchView.destroy();
+        }
+    },
+    /**
      * Executes actions of type 'ir.actions.act_window'.
      *
      * @private
@@ -244,7 +270,7 @@ ActionManager.include({
         }
         action.flags = this._generateActionFlags(action);
 
-        return this._loadViews(action).then(function (fieldsViews) {
+        return this.dp.add(this._loadViews(action)).then(function (fieldsViews) {
             var views = self._generateActionViews(action, fieldsViews);
             action._views = action.views;  // save the initial attribute
             action.views = views;
@@ -254,18 +280,26 @@ ActionManager.include({
             action.env = self._generateActionEnv(action, options);
             action.controllers = {};
 
-            // select the first view to display
-            var lazyLoadFirstView = false;
+            // select the first view to display, and optionally the main view
+            // which will be lazyloaded
             var firstView = options.viewType && _.findWhere(views, {type: options.viewType});
+            var mainView;
             if (firstView) {
                 if (!firstView.multiRecord && views[0].multiRecord) {
-                    lazyLoadFirstView = true;
+                    mainView = views[0];
                 }
             } else {
                 firstView = views[0];
             }
-            if (config.device.isMobile && !firstView.isMobileFriendly) {
-                firstView = _.findWhere(action.views, {isMobileFriendly: true}) || firstView;
+
+            // use mobile-friendly view by default in mobile, if possible
+            if (config.device.isMobile) {
+                if (!firstView.isMobileFriendly) {
+                    firstView = self._findMobileView(views, firstView.multiRecord) || firstView;
+                }
+                if (mainView && !mainView.isMobileFriendly) {
+                    mainView = self._findMobileView(views, mainView.multiRecord) || mainView;
+                }
             }
 
             var def;
@@ -279,10 +313,10 @@ ActionManager.include({
             return $.when(def).then(function () {
                 var defs = [];
                 defs.push(self._createViewController(action, firstView.type));
-                if (lazyLoadFirstView) {
-                    defs.push(self._createViewController(action, views[0].type, {}, {lazy: true}));
+                if (mainView) {
+                    defs.push(self._createViewController(action, mainView.type, {}, {lazy: true}));
                 }
-                return $.when.apply($, defs);
+                return self.dp.add($.when.apply($, defs));
             }).then(function (controller, lazyLoadedController) {
                 action.controllerID = controller.jsID;
                 return self._executeAction(action, options).done(function () {
@@ -293,7 +327,23 @@ ActionManager.include({
                         }, {clear: false});
                     }
                 });
-            });
+            }).fail(self._destroyWindowAction.bind(self, action));
+        });
+    },
+    /**
+     * Helper function to find the first mobile-friendly view, if any.
+     *
+     * @private
+     * @param {Array} views an array of views
+     * @param {boolean} multiRecord set to true iff we search for a multiRecord
+     *   view
+     * @returns {Object|undefined} a mobile-friendly view of the requested
+     *   multiRecord type, undefined if there is no such view
+     */
+    _findMobileView: function (views, multiRecord) {
+        return _.findWhere(views, {
+            isMobileFriendly: true,
+            multiRecord: multiRecord,
         });
     },
     /**
@@ -465,25 +515,10 @@ ActionManager.include({
      * @private
      */
     _removeAction: function (actionID) {
-        var self = this;
         var action = this.actions[actionID];
         if (action.type === 'ir.actions.act_window') {
             delete this.actions[action.jsID];
-            _.each(action.controllers, function (controllerDef) {
-                controllerDef.then(function (controller) {
-                    delete self.controllers[controller.jsID];
-                    if (controller.widget) {
-                        controller.widget.destroy();
-                    }
-                });
-                // reject the deferred if it is not yet resolved, so that the
-                // controller is correctly destroyed as soon as it is ready, and
-                // its reference is removed
-                controllerDef.reject();
-            });
-            if (action.searchView) {
-                action.searchView.destroy();
-            }
+            this._destroyWindowAction(action);
         } else {
             this._super.apply(this, arguments);
         }
@@ -714,6 +749,20 @@ ActionManager.include({
             var options = {on_close: ev.data.on_closed};
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
+    },
+    /**
+     * Handles a context request: provides to the caller the context of the
+     * current controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested context
+     */
+    _onGetControllerContext: function (ev) {
+        ev.stopPropagation();
+        var currentController = this.getCurrentController();
+        var context = currentController && currentController.widget.getContext();
+        ev.data.callback(context || {});
     },
     /**
      * Called when there is a change in the search view, so the current action's

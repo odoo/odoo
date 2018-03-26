@@ -10,6 +10,7 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
+from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
 
 _logger = logging.getLogger(__name__)
@@ -116,7 +117,19 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({'id': order.id})
 
 
+class Website(Website):
+    @http.route()
+    def get_switchable_related_views(self, key):
+        views = super(Website, self).get_switchable_related_views(key)
+        if key == 'website_sale.product':
+            if not request.env.user.has_group('product.group_product_variant'):
+                view_product_variants = request.env.ref('website_sale.product_variants')
+                views[:] = [v for v in views if v['id'] != view_product_variants.id]
+        return views
+
+
 class WebsiteSale(http.Controller):
+
     def _get_compute_currency_and_context(self):
         pricelist_context = dict(request.env.context)
         pricelist = False
@@ -417,6 +430,10 @@ class WebsiteSale(http.Controller):
             'compute_currency': lambda price: from_currency.compute(price, to_currency),
             'suggested_products': order._cart_accessories()
         })
+        value['website_sale.short_cart_summary'] = request.env['ir.ui.view'].render_template("website_sale.short_cart_summary", {
+            'website_sale_order': order,
+            'compute_currency': lambda price: from_currency.compute(price, to_currency),
+        })
         return value
 
     # ------------------------------------------------------
@@ -615,16 +632,17 @@ class WebsiteSale(http.Controller):
                 values = kw
             else:
                 partner_id = self._checkout_form_save(mode, post, kw)
-
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
                     order.onchange_partner_id()
+                    if not kw.get('use_same'):
+                        kw['callback'] = kw.get('callback') or (not order.only_services and '/shop/address')
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
 
                 order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
                 if not errors:
-                    return request.redirect(kw.get('callback') or '/shop/checkout')
+                    return request.redirect(kw.get('callback') or '/shop/confirm_order')
 
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
         country = country and country.exists() or def_country_id
@@ -638,6 +656,7 @@ class WebsiteSale(http.Controller):
             "states": country.get_website_sale_states(mode=mode[1]),
             'error': errors,
             'callback': kw.get('callback'),
+            'only_services': order and order.only_services,
         }
         return request.render("website_sale.address", render_values)
 
@@ -657,6 +676,10 @@ class WebsiteSale(http.Controller):
                 return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
 
         values = self.checkout_values(**post)
+
+        if post.get('express'):
+            return request.redirect('/shop/confirm_order')
+
 
         values.update({'website_sale_order': order})
 
@@ -770,6 +793,7 @@ class WebsiteSale(http.Controller):
             return redirection
 
         render_values = self._get_shop_payment_values(order, **post)
+        render_values['only_services'] = order and order.only_services or False
 
         if render_values['errors']:
             render_values.pop('acquirers', '')

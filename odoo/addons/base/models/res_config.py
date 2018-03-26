@@ -370,9 +370,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             ``execute``` will save its value in an ir.config.parameter (global setting for the
             database).
 
-        *   For the other fields, the method ``execute`` invokes all methods with a name
-            that starts with 'set_'; such methods can be defined to implement the effect
-            of those fields.
+        *   For the other fields, the method ``execute`` invokes `set_values`.
+            Override it to implement the effect of those fields.
 
         The method ``default_get`` retrieves values that reflect the current status of the
         fields like 'default_XXX', 'group_XXX', 'module_XXX' and config_XXX.
