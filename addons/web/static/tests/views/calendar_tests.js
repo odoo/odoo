@@ -1571,7 +1571,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('set event as all day when field is date', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.event.records[0].start_date = "2016-12-14";
 
@@ -1595,9 +1595,16 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+            session: {
+                getTZOffset: function () {
+                    return -480;
+                }
+            },
         });
         assert.strictEqual(calendar.$('.fc-day-grid .fc-event-container').length, 1,
             "should be one event in the all day row");
+        assert.strictEqual(calendar.model.data.data[0].r_start.date(), 14,
+            "the date should be 14");
         calendar.destroy();
     });
 
