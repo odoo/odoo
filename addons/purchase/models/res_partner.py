@@ -28,6 +28,5 @@ class res_partner(models.Model):
         help="This currency will be used, instead of the default one, for purchases from the current partner")
     purchase_order_count = fields.Integer(compute='_purchase_invoice_count', string='# of Purchase Order')
     supplier_invoice_count = fields.Integer(compute='_purchase_invoice_count', string='# Vendor Bills')
-    purchase_order_ids = fields.One2many('purchase.order', 'partner_id', 'Purchase Order')
     purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, required=True, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')
