@@ -258,7 +258,7 @@ class PosOrder(models.Model):
                     line = grouped_data[product_key][0]
                     product = Product.browse(line['product_id'])
                     # In the SO part, the entries will be inverted by function compute_invoice_totals
-                    price_unit = - product._get_anglo_saxon_price_unit()
+                    price_unit = self._get_pos_anglo_saxon_price_unit(product, line['partner_id'], line['quantity'])
                     account_analytic = Analytic.browse(line.get('analytic_account_id'))
                     res = Product._anglo_saxon_sale_move_lines(
                         line['name'], product, product.uom_id, line['quantity'], price_unit,
@@ -411,6 +411,16 @@ class PosOrder(models.Model):
             move.sudo().write({'line_ids': all_lines})
             move.sudo().post()
         return True
+
+    def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
+        # In the SO part, the entries will be inverted by function compute_invoice_totals
+        price_unit = - product._get_anglo_saxon_price_unit()
+        if product._get_invoice_policy() == "delivery":
+            moves = self.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id.move_lines').filtered(lambda m: m.product_id.id == product.id)
+            moves.sorted(lambda x: x.date)
+            average_price_unit = product._compute_average_price(quantity, quantity, moves)
+            price_unit = average_price_unit or price_unit
+        return price_unit
 
     def _reconcile_payments(self):
         for order in self:
