@@ -392,7 +392,7 @@ class AccountInvoice(models.Model):
         """ computes the prefix of the number that will be assigned to the first invoice/bill/refund of a journal, in order to
         let the user manually change it.
         """
-        if not self.env.user._is_admin():
+        if not self.env.user._is_system():
             for invoice in self:
                 invoice.sequence_number_next_prefix = False
                 invoice.sequence_number_next = ''
