@@ -50,4 +50,5 @@ class ProductProduct(models.Model):
             moves.sorted(lambda x: x.date)
             average_price_unit = self._compute_average_price(quantity, quantity, moves)
             price_unit = average_price_unit or price_unit
+            price_unit = self._get_bom_anglo_saxon_price_unit(price_unit, moves, quantity)
         return price_unit

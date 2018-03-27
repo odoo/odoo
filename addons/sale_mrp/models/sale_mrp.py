@@ -25,27 +25,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_bom_component_qty(self, bom):
-        bom_quantity = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id)
-        boms, lines = bom.explode(self.product_id, bom_quantity)
-        components = {}
-        for line, line_data in lines:
-            product = line.product_id.id
-            uom = line.product_uom_id
-            qty = line.product_qty
-            if components.get(product, False):
-                if uom.id != components[product]['uom']:
-                    from_uom = uom
-                    to_uom = self.env['product.uom'].browse(components[product]['uom'])
-                    qty = from_uom._compute_quantity(qty, to_uom)
-                components[product]['qty'] += qty
-            else:
-                # To be in the uom reference of the product
-                to_uom = self.env['product.product'].browse(product).uom_id
-                if uom.id != to_uom.id:
-                    from_uom = uom
-                    qty = from_uom._compute_quantity(qty, to_uom)
-                components[product] = {'qty': qty, 'uom': to_uom.id}
-        return components
+        return self.product_id._get_bom_component_qty(self.product_uom, self.product_uom_qty, bom)
 
 
 class AccountInvoiceLine(models.Model):
@@ -79,4 +59,44 @@ class AccountInvoiceLine(models.Model):
                         average_price_unit += factor * self._compute_average_price(prod_qty_done, prod_quantity, prod_moves)
                     price_unit = average_price_unit or price_unit
                     price_unit = self.product_id.uom_id._compute_price(price_unit, self.uom_id)
+        return price_unit
+
+class Product(models.Model):
+    _inherit = "product.product"
+
+    def _get_bom_component_qty(self, uom, qty, bom):
+        self.ensure_one()
+        bom_quantity = uom._compute_quantity(qty, bom.product_uom_id)
+        boms, lines = bom.explode(self, bom_quantity)
+        components = {}
+        for line, line_data in lines:
+            product = line.product_id.id
+            uom = line.product_uom_id
+            qty = line.product_qty
+            if components.get(product, False):
+                if uom.id != components[product]['uom']:
+                    from_uom = uom
+                    to_uom = self.env['product.uom'].browse(components[product]['uom'])
+                    qty = from_uom._compute_quantity(qty, to_uom)
+                components[product]['qty'] += qty
+            else:
+                # To be in the uom reference of the product
+                to_uom = self.browse(product).uom_id
+                if uom.id != to_uom.id:
+                    from_uom = uom
+                    qty = from_uom._compute_quantity(qty, to_uom)
+                components[product] = {'qty': qty, 'uom': to_uom.id}
+        return components
+
+    def _get_bom_anglo_saxon_price_unit(self, price_unit, moves, quantity):
+        bom = self.product_tmpl_id.bom_ids and self.product_tmpl_id.bom_ids[0]
+        if bom.type == 'phantom':
+            average_price_unit = 0
+            components = self._get_bom_component_qty(self.uom_id, quantity, bom)
+            for product_id in components:
+                factor = components[product_id]['qty']
+                prod_moves = [m for m in moves if m.product_id.id == product_id]
+                prod_quantity = factor * quantity
+                average_price_unit += factor * self._compute_average_price(prod_quantity, prod_quantity, prod_moves)
+            price_unit = average_price_unit or price_unit
         return price_unit

@@ -397,6 +397,9 @@ class Product(models.Model):
                 break
         return average_price_unit
 
+    def _get_bom_anglo_saxon_price_unit(self, price_unit, moves, quantity):
+        return price_unit
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
