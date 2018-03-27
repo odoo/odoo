@@ -116,9 +116,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             the freshly created opportunity view.
         """
         self.ensure_one()
-        values = {
-            'team_id': self.team_id.id,
-        }
+        values = {}
 
         if self.partner_id:
             values['partner_id'] = self.partner_id.id
@@ -128,14 +126,15 @@ class Lead2OpportunityPartner(models.TransientModel):
             if not leads.active:
                 leads.write({'active': True, 'activity_type_id': False, 'lost_reason': False})
             if leads.type == "lead":
-                values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id]})
+                values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id], 'team_id': self.user_id.sale_team_id.id})
                 self.with_context(active_ids=leads.ids)._convert_opportunity(values)
             elif not self._context.get('no_force_assignation') or not leads.user_id:
                 values['user_id'] = self.user_id.id
+                values['team_id'] = self.user_id.sale_team_id.id
                 leads.write(values)
         else:
             leads = self.env['crm.lead'].browse(self._context.get('active_ids', []))
-            values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id]})
+            values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id], 'team_id': self.user_id.sale_team_id.id})
             self._convert_opportunity(values)
 
         return leads[0].redirect_opportunity_view()
@@ -212,11 +211,13 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             the values before calling super.
         """
         self.ensure_one()
-        salesteam_id = self.team_id.id if self.team_id else False
+        vals['team_id'] = self.team_id.id
         salesmen_ids = []
         if self.user_ids:
             salesmen_ids = self.user_ids.ids
-        vals.update({'user_ids': salesmen_ids, 'team_id': salesteam_id})
+            vals['user_ids'] = salesmen_ids
+            if len(self.user_ids.mapped('sale_team_id')) != 1:
+                vals['team_id'] = False
         return super(Lead2OpportunityMassConvert, self)._convert_opportunity(vals)
 
     @api.multi

@@ -42,11 +42,11 @@ class CrmLead(models.Model):
         for lead in self:
             if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
-                    salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
+                    salesmans_leads.setdefault(lead.partner_assigned_id.user_id, []).append(lead.id)
 
-        for salesman_id, leads_ids in salesmans_leads.items():
+        for salesman, leads_ids in salesmans_leads.items():
             leads = self.browse(leads_ids)
-            leads.write({'user_id': salesman_id})
+            leads.write({'user_id': salesman.id, 'team_id': salesman.sale_team_id.id})
 
     @api.multi
     def action_assign_partner(self):
