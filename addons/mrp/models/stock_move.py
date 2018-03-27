@@ -137,12 +137,12 @@ class StockMove(models.Model):
              If you want to cancel this MO, please change the consumed quantities to 0.'))
         return super(StockMove, self)._action_cancel()
 
-    def _action_confirm(self, merge=True):
+    def _action_confirm(self, merge=True, merge_into=False):
         moves = self.env['stock.move']
         for move in self:
             moves |= move.action_explode()
         # we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, moves)._action_confirm(merge=merge)
+        return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
     def action_explode(self):
         """ Explodes pickings """
