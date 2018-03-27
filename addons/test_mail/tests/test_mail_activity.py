@@ -55,8 +55,6 @@ class TestMailActivity(BaseFunctionalTest):
 
         with self.sudoAs('chell'):
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
-            # test_record.name
-            # test_record.read()
             with self.assertRaises(exceptions.AccessError):
                 self.env['mail.activity'].create({
                     'summary': 'Test Activity',
@@ -64,52 +62,47 @@ class TestMailActivity(BaseFunctionalTest):
                     'res_model_id': self.env['ir.model']._get(test_record._name).id,
                     'res_id': test_record.id,
                 })
-            # self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
+
     def test_reminder_security(self):
-        admin = self.env.ref('base.user_root')
-        demo = self.env.ref('base.user_demo')
-
-        reminder = self.env['mail.activity'].sudo(admin).create({
-                'note': 'Test Reminder',
-                'date_deadline': date.today() + relativedelta(days=1),
-        })        #try to delete record with demo user
-        with self.assertRaises(exceptions.AccessError):
-            #try to delete admin record with demo user
-            reminder.sudo(demo).unlink()
-
-        with self.assertRaises(exceptions.AccessError):
-            #try to update admin record with demo user
-            reminder.sudo(demo).write({'note': 'Give money to demo user'})
-            
-        #but demo should be able to edit and delete its own reminder
-        demo_reminder = self.env['mail.activity'].sudo(demo).create({
-                'note': 'Test Reminder demo',
-                'date_deadline': date.today() + relativedelta(days=2),
+        reminder = self.env['mail.activity'].sudo(self.user_admin).create({
+            'note': 'Test Reminder',
+            'date_deadline': date.today() + relativedelta(days=1),
         })
 
-        demo_reminder.sudo(demo).write({'note': 'Holidays'})
-        self.assertEqual(demo_reminder.note, '<p>Holidays</p>')
-        #but edit or res_id and res_model should be impossible
         with self.assertRaises(exceptions.AccessError):
-            demo_reminder.sudo(demo).write({'res_id': 1})
-        with self.assertRaises(exceptions.AccessError):
-            demo_reminder.sudo(demo).write({'res_model_id': 1})
-        #user can unlink own reminder
-        demo_reminder.sudo(demo).unlink()
+            # try to delete admin record with demo user
+            reminder.sudo(self.user_employee).unlink()
 
-    def test_reminder_summary(self):
-        reminder = self.env['mail.activity'].create({
+        with self.assertRaises(exceptions.AccessError):
+            # try to update admin record with demo user
+            reminder.sudo(self.user_employee).write({'note': 'Give money to demo user'})
+
+        # but demo should be able to edit and delete its own reminder
+        demo_reminder = self.env['mail.activity'].sudo(self.user_employee).create({
+            'note': 'Test Reminder demo',
+            'date_deadline': date.today() + relativedelta(days=2),
+        })
+        demo_reminder.write({'note': '<p>Holidays</p>'})
+        self.assertEqual(demo_reminder.note, '<p>Holidays</p>')
+
+        # edit of res_id and res_model should be impossible
+        with self.assertRaises(exceptions.AccessError):
+            demo_reminder.write({'res_id': 1})
+        with self.assertRaises(exceptions.AccessError):
+            demo_reminder.write({'res_model_id': 1})
+
+        demo_reminder.unlink()
+
+    def test_reminder_flow(self):
+        with self.sudoAs('ernest'):
+            reminder = self.env['mail.activity'].create({
                 'note': 'Test Reminder',
                 'date_deadline': date.today(),
-        })
-        self.assertEqual(reminder.summary, 'Test Reminder', "Summary should be first line of note by default")
-        reminder.write({'note': 'Holidays\nDestination: Pescara'})
-        self.assertEqual(reminder.summary, 'Holidays', "Summary should be first line of note by default")
-        reminder.write({'note': ''})
-        self.assertEqual(reminder.summary, 'Reminder', "If note is empty, summary should be Reminder")
-        reminder.write({'note': 'Holidays', 'summary': 'Summary'})
-        self.assertEqual(reminder.summary, 'Summary', "If summary is set, shouldn't be changed")
-
-        
-
-
+            })
+            self.assertEqual(reminder.summary, 'Test Reminder')
+            reminder.write({'note': 'Holidays\nDestination: Pescara'})
+            self.assertEqual(reminder.summary, 'Holidays')
+            reminder.write({'note': ''})
+            self.assertEqual(reminder.summary, 'Reminder')
+            reminder.write({'note': 'Holidays', 'summary': 'Summary'})
+            self.assertEqual(reminder.summary, 'Summary')
