@@ -187,6 +187,7 @@
                         <group string="Contract details">
                             <field name="vehicle_id"/>
                             <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
+                            <field name="user_id"/>
                             <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
                             <label for="cost_generated"/>
                             <div>
