@@ -632,7 +632,8 @@ return AbstractModel.extend({
         var date_start;
         var date_stop;
         var date_delay = evt[this.mapping.date_delay] || 1.0,
-            all_day = this.mapping.all_day ? evt[this.mapping.all_day] : false,
+            all_day = this.fields[this.mapping.date_start].type === 'date' ||
+                this.mapping.all_day && evt[this.mapping.all_day] || false,
             the_title = '',
             attendees = [];
 
@@ -656,8 +657,6 @@ return AbstractModel.extend({
         if (this.mapping.all_day && evt[this.mapping.all_day]) {
             date_stop.add(1, 'days');
         }
-        var isAllDay = this.fields[this.mapping.date_start].type === 'date' ||
-                        this.mapping.all_day && evt[this.mapping.all_day] || false;
         var r = {
             'record': evt,
             'start': date_start,
@@ -665,7 +664,7 @@ return AbstractModel.extend({
             'r_start': date_start,
             'r_end': date_stop,
             'title': the_title,
-            'allDay': isAllDay,
+            'allDay': all_day,
             'id': evt.id,
             'attendees':attendees,
         };
