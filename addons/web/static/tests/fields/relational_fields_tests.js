@@ -10867,6 +10867,99 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldReference');
 
+    QUnit.test('Reference field in modal readonly mode', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].trululu = 1;
+        this.data.partner.records[1].reference = 'product,41';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="reference"/>' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form><field name="reference"/></form>',
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+            },
+            res_id: 1,
+        });
+
+        // Cuurent Form
+        assert.equal(form.$('.o_form_uri.o_field_widget[name=reference]').text(), 'xphone',
+            'the field reference of the form should have the right value');
+
+        var $cell_o2m = form.$('.o_data_cell');
+        assert.equal($cell_o2m.text(), 'second record',
+            'the list should have one record');
+
+        $cell_o2m.click();
+
+        // In modal
+        var $modal = $('.modal-dialog.modal-lg');
+        assert.equal($modal.length, 1,
+            'there should be one modal opened');
+
+        assert.equal($modal.find('.o_form_uri.o_field_widget[name=reference]').text(), 'xpad',
+            'The field reference in the modal should have the right value');
+
+        $modal.find('.o_form_button_cancel').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('Reference field in modal write mode', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].trululu = 1;
+        this.data.partner.records[1].reference = 'product,41';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="reference"/>' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form><field name="reference"/></form>',
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+            },
+            res_id: 1,
+        });
+
+        // current form
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var $fieldRef = form.$('.o_field_widget.o_field_many2one[name=reference]');
+        assert.equal($fieldRef.find('option:selected').text(), 'Product',
+            'The reference field\'s model should be Product');
+        assert.equal($fieldRef.find('.o_input.ui-autocomplete-input').val(), 'xphone',
+            'The reference field\'s record should be xphone');
+
+        form.$('.o_data_cell').click();
+
+        // In modal
+        var $modal = $('.modal-dialog.modal-lg');
+        assert.equal($modal.length, 1,
+            'there should be one modal opened');
+
+        var $fieldRefModal = $modal.find('.o_field_widget.o_field_many2one[name=reference]');
+
+        assert.equal($fieldRefModal.find('option:selected').text(), 'Product',
+            'The reference field\'s model should be Product');
+        assert.equal($fieldRefModal.find('.o_input.ui-autocomplete-input').val(), 'xpad',
+            'The reference field\'s record should be xpad');
+
+        form.destroy();
+    });
+
     QUnit.test('reference in form view', function (assert) {
         assert.expect(15);
 
