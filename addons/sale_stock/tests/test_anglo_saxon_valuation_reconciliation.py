@@ -10,10 +10,10 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install')
 class TestValuationReconciliation(ValuationReconciliationTestCase):
 
-    def create_sale(self, product):
+    def _create_sale(self, product):
         rslt = self.env['sale.order'].create({
             'partner_id': self.test_partner.id,
-            'currency_id': self.currency_one.id,
+            'currency_id': self.currency_two.id,
             'order_line': [
                 (0, 0, {
                     'name': product.name,
@@ -26,8 +26,8 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         rslt.action_confirm()
         return rslt
 
-    def create_invoice_for_so(self, sale_order, product):
-        account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'Sale - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
+    def _create_invoice_for_so(self, sale_order, product):
+        account_receivable = self.env['account.account'].create({'code': 'X1111', 'name': 'Sale - Test Receivable Account', 'user_type_id': self.env.ref('account.data_account_type_receivable').id, 'reconcile': True})
         account_income = self.env['account.account'].create({'code': 'X1112', 'name': 'Sale - Test Account', 'user_type_id': self.env.ref('account.data_account_type_direct_costs').id})
         rslt = self.env['account.invoice'].create({
             'partner_id': self.test_partner.id,
@@ -36,7 +36,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'name': 'customer invoice',
             'type': 'out_invoice',
             'date_invoice': time.strftime('%Y') + '-12-22',
-            'account_id': account_payable.id,
+            'account_id': account_receivable.id,
             'invoice_line_ids': [(0, 0, {
                 'name': 'test line',
                 'origin': sale_order.name,
@@ -53,15 +53,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         sale_order.invoice_ids += rslt
         return rslt
 
-    def send_so(self, sale_order):
-        sale_order.picking_ids.action_confirm()
-        sale_order.picking_ids.action_assign()
-        for picking in sale_order.picking_ids:
-            for ml in picking.move_line_ids:
-                ml.qty_done = ml.product_qty
-        sale_order.picking_ids.action_done()
-
-    def set_initial_stock_for_product(self, product):
+    def _set_initial_stock_for_product(self, product):
         move1 = self.env['stock.move'].create({
             'name': 'Initial stock',
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
@@ -81,12 +73,12 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         making the invoice
         """
         test_product = self.test_product_delivery
-        self.set_initial_stock_for_product(test_product)
+        self._set_initial_stock_for_product(test_product)
 
-        sale_order = self.create_sale(test_product)
-        self.send_so(sale_order)
+        sale_order = self._create_sale(test_product)
+        self._process_pickings(sale_order.picking_ids)
 
-        invoice = self.create_invoice_for_so(sale_order, test_product)
+        invoice = self._create_invoice_for_so(sale_order, test_product)
         self.currency_rate.rate = 9.87366352
         invoice.action_invoice_open()
         picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)])
@@ -97,15 +89,35 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         the goods to our customer.
         """
         test_product = self.test_product_order
-        self.set_initial_stock_for_product(test_product)
+        self._set_initial_stock_for_product(test_product)
 
-        sale_order = self.create_sale(test_product)
+        sale_order = self._create_sale(test_product)
 
-        invoice = self.create_invoice_for_so(sale_order, test_product)
+        invoice = self._create_invoice_for_so(sale_order, test_product)
         self.currency_rate.rate = 0.974784
         invoice.action_invoice_open()
 
-        self.send_so(sale_order)
+        self._process_pickings(sale_order.picking_ids)
 
         picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)])
         self.check_reconciliation(invoice, picking)
+
+        #return the goods and refund the invoice
+        self.currency_rate.rate = 10.54739702
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=[picking.id], active_id=picking.id).create({})
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.action_assign()
+        return_pick.move_lines.quantity_done = 1
+        return_pick.action_done()
+        self.currency_rate.rate = 9.56564564
+        refund_invoice_wiz = self.env['account.invoice.refund'].with_context(active_ids=[invoice.id]).create({
+            'description': 'test_invoice_shipment_refund',
+            'filter_refund': 'cancel',
+        })
+        refund_invoice_wiz.invoice_refund()
+        refund_invoice = self.env['account.invoice'].search([('name', '=', 'test_invoice_shipment_refund')])[0]
+        self.assertTrue(invoice.state == refund_invoice.state == 'paid'), "Invoice and refund should both be in 'Paid' state"
+        self.check_reconciliation(refund_invoice, return_pick)

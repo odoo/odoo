@@ -637,7 +637,7 @@ class StockMove(models.Model):
 
         if self.company_id.anglo_saxon_accounting:
             #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
-            self._get_related_invoices()._anglo_saxon_reconcile_valuation(self)
+            self._get_related_invoices()._anglo_saxon_reconcile_valuation()
 
     def _get_related_invoices(self): # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt

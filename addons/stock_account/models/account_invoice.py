@@ -57,24 +57,29 @@ class AccountInvoice(models.Model):
 
     def invoice_validate(self):
         res = super(AccountInvoice, self).invoice_validate()
-        self._anglo_saxon_reconcile_valuation(self._get_last_step_stock_moves())
+        self.filtered(lambda i: i.company_id.anglo_saxon_accounting)._anglo_saxon_reconcile_valuation()
         return res
 
-    def _anglo_saxon_reconcile_valuation(self, stock_moves):
+    def _anglo_saxon_reconcile_valuation(self):
         """ Reconciles the entries made in the interim accounts in anglosaxon accounting,
         reconciling stock valuation move lines with the invoice's.
         """
         for invoice in self:
             if invoice.company_id.anglo_saxon_accounting:
+                stock_moves = invoice._get_last_step_stock_moves()
                 for product in invoice._get_products_set():
-                    if product.valuation == 'real_time' and product.cost_method == 'fifo':
+                    if product.valuation == 'real_time' and product.cost_method == 'fifo' and stock_moves:
                         # We first get the invoices move lines (taking the invoice and the previous ones into account)...
                         product_interim_account = invoice._get_anglosaxon_interim_account(product)
-                        to_reconcile = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',product.id), ('account_id','=',product_interim_account.id), ('reconciled','=',False)])
+                        to_reconcile = self.env['account.move.line'].search([
+                            ('move_id', '=', invoice.move_id.id),
+                            ('product_id', '=', product.id),
+                            ('account_id','=', product_interim_account.id),
+                            ('reconciled','=', False)
+                        ])
 
                         # And then the stock valuation ones.
-                        product_stock_moves = self.env['stock.move'].search([('id','in',stock_moves.ids), ('product_id','=',product.id)])
-
+                        product_stock_moves = stock_moves.filtered(lambda s: s.product_id.id == product.id)
                         for valuation_line in product_stock_moves.mapped('account_move_ids.line_ids'):
                             if valuation_line.account_id == product_interim_account and not valuation_line.reconciled:
                                 to_reconcile += valuation_line

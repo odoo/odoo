@@ -19,6 +19,16 @@ class ValuationReconciliationTestCase(AccountingTestCase):
 
         if full_reconcile:
             self.assertTrue(valuation_line.full_reconcile_id, "The reconciliation should be total at that point.")
+        else:
+            self.assertFalse(valuation_line.full_reconcile_id, "The reconciliation should not be total at that point.")
+
+    def _process_pickings(self, pickings, quantity=False):
+        pickings.action_confirm()
+        pickings.action_assign()
+        for picking in pickings:
+            for ml in picking.move_line_ids:
+                ml.qty_done = quantity or ml.product_qty
+        pickings.action_done()
 
     def _create_product_category(self):
         return self.env['product.category'].create({
