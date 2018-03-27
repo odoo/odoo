@@ -195,7 +195,10 @@ class AccountBankStatementImport(models.TransientModel):
                             bank_account_id = partner_bank.id
                             partner_id = partner_bank.partner_id.id
                         else:
-                            bank_account_id = self.env['res.partner.bank'].create({'acc_number': line_vals['account_number']}).id
+                            bank_account_id = self.env['res.partner.bank'].create({
+                                'acc_number': line_vals['account_number'],
+                                'partner_id': False,
+                            }).id
                     line_vals['partner_id'] = partner_id
                     line_vals['bank_account_id'] = bank_account_id
 
