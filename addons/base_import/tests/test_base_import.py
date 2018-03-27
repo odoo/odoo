@@ -189,6 +189,31 @@ class TestMatchHeadersMultiple(TransactionCase):
         )
 
 
+class TestColumnMapping(TransactionCase):
+
+    def test_column_mapping(self):
+        import_record = self.env['base_import.import'].create({
+            'res_model': 'base_import.tests.models.preview',
+            'file': u"Name,Some Value,value\n"
+                    u"chhagan,10,1\n"
+                    u"magan,20,2\n".encode('utf-8'),
+            'file_type': 'text/csv',
+            'file_name': 'data.csv',
+        })
+        import_record.do(
+            ['name', 'somevalue', 'othervalue'],
+            ['Name', 'Some Value', 'value'],
+            {'quoting': '"', 'separator': ',', 'headers': True},
+            True
+        )
+        fields = self.env['base_import.mapping'].search_read(
+            [('res_model', '=', 'base_import.tests.models.preview')],
+            ['column_name', 'field_name']
+        )
+        self.assertItemsEqual([f['column_name'] for f in fields], ['Name', 'Some Value', 'value'])
+        self.assertItemsEqual([f['field_name'] for f in fields], ['somevalue', 'name', 'othervalue'])
+
+
 class TestPreview(TransactionCase):
 
     def make_import(self):
@@ -386,6 +411,7 @@ class test_convert_import_data(TransactionCase):
 
         results = import_wizard.do(
             ['name', 'date', 'create_date'],
+            [],
             {
                 'date_format': '%Y年%m月%d日',
                 'datetime_format': '%Y-%m-%d %H:%M',
@@ -568,5 +594,6 @@ class test_failures(TransactionCase):
         })
         results = import_wizard.do(
             ['name', 'db_datas'],
+            [],
             {'headers': True, 'separator': ',', 'quoting': '"'})
         self.assertFalse(results, "results should be empty on successful import")

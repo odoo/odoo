@@ -47,6 +47,15 @@ EXTENSIONS = {
 }
 
 
+class ImportMapping(models.Model):
+    """ mapping of previous column:field selections """
+    _name = 'base_import.mapping'
+
+    res_model = fields.Char()
+    column_name = fields.Char()
+    field_name = fields.Char()
+
+
 class Import(models.TransientModel):
 
     _name = 'base_import.import'
@@ -449,10 +458,18 @@ class Import(models.TransientModel):
             return [], {}
 
         headers = next(rows)
-        return headers, {
-            index: [field['name'] for field in self._match_header(header, fields, options)] or None
-            for index, header in enumerate(headers)
-        }
+        matches = {}
+        mapping_records = self.env['base_import.mapping'].search_read([('res_model', '=', self.res_model)], ['column_name', 'field_name'])
+        mapping_fields = {rec['column_name']: rec['field_name'] for rec in mapping_records}
+        for index, header in enumerate(headers):
+            match_field = []
+            if mapping_fields.get(header.lower()):
+                mapping_field_name = mapping_fields[header.lower()]
+                match_field = mapping_field_name.split('/') if mapping_field_name else []
+            if not match_field:
+                match_field = [field['name'] for field in self._match_header(header, fields, options)]
+            matches[index] = match_field or None
+        return headers, matches
 
     @api.multi
     def parse_preview(self, options, count=10):
@@ -639,12 +656,14 @@ class Import(models.TransientModel):
         return data
 
     @api.multi
-    def do(self, fields, options, dryrun=False):
+    def do(self, fields, columns, options, dryrun=False):
         """ Actual execution of the import
 
         :param fields: import mapping: maps each column to a field,
                        ``False`` for the columns to ignore
         :type fields: list(str|bool)
+        :param columns: columns label
+        :type columns: list(str|bool)
         :param dict options:
         :param bool dryrun: performs all import operations (and
                             validations) but rollbacks writes, allows
@@ -693,5 +712,21 @@ class Import(models.TransientModel):
                 self._cr.execute('RELEASE SAVEPOINT import')
         except psycopg2.InternalError:
             pass
+
+        # Insert/Update mapping columns when import complete successfully
+        if import_result['ids'] and options.get('headers'):
+            BaseImportMapping = self.env['base_import.mapping']
+            for index, column_name in enumerate(columns):
+                if column_name:
+                    # Update to latest selected field
+                    exist_records = BaseImportMapping.search([('res_model', '=', self.res_model), ('column_name', '=', column_name)])
+                    if exist_records:
+                        exist_records.write({'field_name': fields[index]})
+                    else:
+                        BaseImportMapping.create({
+                            'res_model': self.res_model,
+                            'column_name': column_name,
+                            'field_name': fields[index]
+                        })
 
         return import_result['messages']

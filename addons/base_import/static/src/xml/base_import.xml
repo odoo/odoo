@@ -98,7 +98,7 @@
         <thead>
             <tr t-if="headers" class="oe_import_grid-header">
                 <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
-                    ><t t-esc="header"/></td>
+                    ><span class="o_import_header_name"><t t-esc="header"/></span></td>
             </tr>
             <tr class="oe_import_fields">
                 <!-- Iterate on first row to ensure we have all columns -->

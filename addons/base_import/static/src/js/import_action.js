@@ -445,6 +445,9 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
             return $(el).select2('val') || false;
         }).get();
+        var columns = this.$('.oe_import_grid-header .oe_import_grid-cell .o_import_header_name').map(function () {
+            return $(this).text().trim().toLowerCase() || false;
+        }).get();
         var tracking_disable = 'tracking_disable' in kwargs ? kwargs.tracking_disable : !this.$('#oe_import_tracking').prop('checked')
         var defer_parent_store = 'defer_parent_store' in kwargs ? kwargs.defer_parent_store : !!this.$('#oe_import_deferparentstore').prop('checked')
         delete kwargs.tracking_disable;
@@ -456,7 +459,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
                 model: 'base_import.import',
                 method: 'do',
-                args: [this.id, fields, this.import_options()],
+                args: [this.id, fields, columns, this.import_options()],
                 kwargs : kwargs,
             }).fail(function (error, event) {
                 // In case of unexpected exception, convert
