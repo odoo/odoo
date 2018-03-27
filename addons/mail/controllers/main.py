@@ -237,7 +237,7 @@ class MailController(http.Controller):
         if date_deadline:
             values['date_deadline'] = date_deadline
         if not activity_type_id:
-            activity_type_id = request.env['mail.activity.type'].sudo().search([('category', '=', 'reminder')]).id
+            activity_type_id = request.env['mail.activity.type'].sudo().search([('category', '=', 'reminder')], limit=1).id
         if activity_type_id:
             values['activity_type_id'] = activity_type_id
         activity = request.env['mail.activity'].create(values)
