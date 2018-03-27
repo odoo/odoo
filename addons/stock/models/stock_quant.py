@@ -296,7 +296,18 @@ class StockQuant(models.Model):
         this method is often called in batch and each unlink invalidate
         the cache. We defer the calls to unlink in this method.
         """
-        query = "DELETE FROM stock_quant WHERE round(quantity::numeric, 5) = 0 AND round(reserved_quantity::numeric, 5) = 0;"
+        query = """WITH
+                useless_quants AS (
+                    SELECT quant.id
+                    FROM stock_quant as quant, product_product as product, product_template as template, product_uom as uom
+                    WHERE quant.product_id =  product.id AND
+                    product.product_tmpl_id = template.id AND
+                    template.uom_id = uom.id AND
+                    round(quant.quantity::numeric, (-log(uom.rounding, 10))::integer) = 0 AND
+                    round(quant.reserved_quantity::numeric, (-log(uom.rounding, 10))::integer) = 0
+                )
+            DELETE FROM stock_quant WHERE id in (SELECT id from useless_quants);
+        """
         self.env.cr.execute(query)
 
     @api.model
