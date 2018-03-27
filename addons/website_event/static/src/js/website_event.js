@@ -34,6 +34,7 @@ var EventRegistrationForm = Widget.extend({
             $modal.on('click', '.js_goto_event', function () {
                 $modal.modal('hide');
             });
+            return $modal;
         });
     },
 });
