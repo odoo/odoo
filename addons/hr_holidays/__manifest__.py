@@ -34,10 +34,11 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'security/ir.model.access.csv',
 
         'views/resource_views.xml',
+        'views/hr_leave_views.xml',
         'views/hr_leave_type_views.xml',
         'views/hr_leave_allocation_views.xml',
-        'views/hr_leave_views.xml',
         'views/hr_views.xml',
+        'views/mail_activity_views.xml',
 
         'wizard/hr_holidays_summary_department_views.xml',
         'wizard/hr_holidays_summary_employees_views.xml',

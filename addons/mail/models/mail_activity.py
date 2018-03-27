@@ -93,6 +93,9 @@ class MailActivity(models.Model):
     active = fields.Boolean(
         'Open', default=True,
         help='Done reminders should be archived instead of marked as done.')
+    automated = fields.Boolean(
+        'Automated activity', readonly=True,
+        help='Indicates this activity has been created automatically and not by any user.')
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
@@ -345,7 +348,15 @@ class MailActivityMixin(models.AbstractModel):
     There is also a kanban widget defined. It defines a small widget to integrate
     in kanban vignettes. It allow to manage activities directly from the kanban
     view. Use widget="kanban_activity" on activitiy_ids field in kanban view to
-    use it."""
+    use it.
+
+    Some context keys allow to control the mixin behavior. Use those in some
+    specific cases like import
+
+     * ``mail_activity_automation_skip``: skip activities automation; it means
+       no automated activities will be generated, updated or unlinked, allowing
+       to save computation and avoid generating unwanted activities;
+    """
     _name = 'mail.activity.mixin'
     _description = 'Activity Mixin'
 
@@ -432,3 +443,103 @@ class MailActivityMixin(models.AbstractModel):
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
         ).unlink()
         return result
+
+    def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
+        """ Schedule an activity on each record of the current record set.
+        This method allow to provide as parameter act_type_xmlid. This is an
+        xml_id of activity type instead of directly giving an activity_type_id.
+        It is useful to avoid having various "env.ref" in the code and allow
+        to let the mixin handle access rights.
+        """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        if not date_deadline:
+            date_deadline = fields.Date.today()
+        if act_type_xmlid:
+            activity_type = self.sudo().env.ref(act_type_xmlid)
+        else:
+            activity_type = self.env['mail.activity.type'].sudo().browse(act_values['activity_type_id'])
+
+        model_id = self.env['ir.model']._get(self._name).id
+        activities = self.env['mail.activity']
+        for record in self:
+            create_vals = {
+                'activity_type_id': activity_type.id,
+                'summary': summary or activity_type.summary,
+                'automated': True,
+                'note': note,
+                'date_deadline': date_deadline,
+                'res_model_id': model_id,
+                'res_id': record.id,
+            }
+            create_vals.update(act_values)
+            activities |= self.env['mail.activity'].create(create_vals)
+        return activities
+
+    def activity_reschedule(self, act_type_xmlids, user_id=None, date_deadline=None):
+        """ Reschedule some automated activities. Activities to reschedule are
+        selected based on type xml ids and optionally by user. Purpose is to be
+        able to change the deadline, not anything else currently. """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        Data = self.env['ir.model.data'].sudo()
+        activity_types_ids = [Data.xmlid_to_res_id(xmlid) for xmlid in act_type_xmlids]
+        domain = [
+            '&', '&', '&',
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('automated', '=', True),
+            ('activity_type_id', 'in', activity_types_ids)
+        ]
+        if user_id:
+            domain = ['&'] + domain + [('user_id', '=', user_id)]
+        activities = self.env['mail.activity'].search(domain)
+        if activities:
+            activities.write({
+                'date_deadline': date_deadline,
+            })
+        return activities
+
+    def activity_feedback(self, act_type_xmlids, user_id=None, feedback=None):
+        """ Set activities as done, limiting to some activity types and
+        optionally to a given user. """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        Data = self.env['ir.model.data'].sudo()
+        activity_types_ids = [Data.xmlid_to_res_id(xmlid) for xmlid in act_type_xmlids]
+        domain = [
+            '&', '&', '&',
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('automated', '=', True),
+            ('activity_type_id', 'in', activity_types_ids)
+        ]
+        if user_id:
+            domain = ['&'] + domain + [('user_id', '=', user_id)]
+        activities = self.env['mail.activity'].search(domain)
+        if activities:
+            activities.action_feedback(feedback=feedback)
+        return True
+
+    def activity_unlink(self, act_type_xmlids, user_id=None):
+        """ Unlink activities, limiting to some activity types and optionally
+        to a given user. """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        Data = self.env['ir.model.data'].sudo()
+        activity_types_ids = [Data.xmlid_to_res_id(xmlid) for xmlid in act_type_xmlids]
+        domain = [
+            '&', '&', '&',
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('automated', '=', True),
+            ('activity_type_id', 'in', activity_types_ids)
+        ]
+        if user_id:
+            domain = ['&'] + domain + [('user_id', '=', user_id)]
+        self.env['mail.activity'].search(domain).unlink()
+        return True

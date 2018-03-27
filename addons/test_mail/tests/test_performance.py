@@ -160,15 +160,31 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(admin=26, emp=32):  # test_mail only: 26 - 32
+        with self.assertQueryCount(admin=26, emp=33):  # test_mail only: 26 - 32
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
                 'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
             })
 
-        with self.assertQueryCount(admin=59, emp=88):  # test_mail only: 58 - 86
+        with self.assertQueryCount(admin=59, emp=88):  # test_mail only: 58 - 87
             activity.action_feedback(feedback='Zizisse Done !')
+
+    @users('admin', 'emp')
+    @warmup
+    @mute_logger('odoo.models.unlink')
+    def test_adv_activity_mixin(self):
+        record = self.env['mail.test.activity'].create({'name': 'Test'})
+
+        with self.assertQueryCount(admin=26, emp=32):  # test_mail only: 26 - 32
+            record.action_start('Test Start')
+
+        record.write({'name': 'Dupe write'})
+
+        with self.assertQueryCount(admin=58, emp=88):  # test_mail only: 58 - 88
+            record.action_close('Dupe feedback')
+
+        self.assertEqual(record.activity_ids, self.env['mail.activity'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'emp')
