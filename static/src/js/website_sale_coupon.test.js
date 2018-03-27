@@ -11,6 +11,15 @@ tour.register('shop_sale_coupon', {
     wait_for: base.ready()
 },
     [
+        /* 0. Test 'Show # found' customize option works correctly */
+        {
+            content: "open customize menu",
+            trigger: '#customize-menu > a',
+        },
+        {
+            content: "click on 'Show # found'",
+            trigger: "#customize-menu a:contains(Show # found)",
+        },
         /* 1. Buy 1 iPad Mini, enable coupon code & insert 10% code */
         {
             content: "type iPad Mini in search",
@@ -23,7 +32,7 @@ tour.register('shop_sale_coupon', {
         },
         {
             content: "select iPad Mini",
-            extra_trigger: '.oe_website_sale_search', // Wait to be on search results or it sometimes throws concurent error (sent search form + click on product on /shop)
+            extra_trigger: '.oe_search_found', // Wait to be on search results or it sometimes throws concurent error (sent search form + click on product on /shop)
             trigger: '.oe_product_cart a:contains("iPad Mini")',
         },
         {
@@ -95,7 +104,7 @@ tour.register('shop_sale_coupon', {
             trigger: '#wrap:not(:has(#cart_products))',
             run: function () {}, // it's a check
         },
-        /* 4. Disabled coupon box */
+        /* 4. Disabled customize options coupon box & 'Show # found'*/
         {
             content: "open customize menu",
             extra_trigger: '.oe_website_sale .oe_cart',
@@ -104,6 +113,19 @@ tour.register('shop_sale_coupon', {
         {
             content: "click on 'Promo Code'",
             trigger: "#customize-menu a:contains(Promo Code)",
+        },
+        {
+            content: "click on 'Continue Shopping'",
+            trigger: "a:contains(Continue Shopping)",
+        },
+        {
+            content: "open customize menu",
+            extra_trigger: '.oe_website_sale #products_grid',
+            trigger: '#customize-menu > a',
+        },
+        {
+            content: "click on 'Show # found'",
+            trigger: "#customize-menu a:contains(Show # found)",
         },
     ]
 );
