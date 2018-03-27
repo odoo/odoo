@@ -95,7 +95,8 @@ class FleetVehicleLogContract(models.Model):
 
     name = fields.Text(compute='_compute_contract_name', store=True)
     active = fields.Boolean(default=True)
-    start_date = fields.Date('Contract Start Date', default=fields.Date.context_today, 
+    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user, index=True)
+    start_date = fields.Date('Contract Start Date', default=fields.Date.context_today,
         help='Date when the coverage of the contract begins')
     expiration_date = fields.Date('Contract Expiration Date', default=lambda self:
         self.compute_next_year_date(fields.Date.context_today(self)),
