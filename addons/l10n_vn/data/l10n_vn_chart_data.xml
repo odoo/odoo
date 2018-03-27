@@ -13,11 +13,17 @@
     <!-- Account Chart Templates -->
     <record id="vn_template" model="account.chart.template">
         <field name="name">VN - Chart of Accounts - C200</field>
-        <field name="code_digits">0</field>
+        <field name="code_digits">5</field>
         <field name="currency_id" ref="base.VND"/>
         <field name="bank_account_code_prefix">112</field>
         <field name="cash_account_code_prefix">111</field>
         <field name="transfer_account_code_prefix">113</field>
+        <field name="transfer_account_id" ref="transfer_account_id"/>
+        <field name="spoken_languages" eval="'vi_VN'"/>
+    </record>
+
+    <record id="transfer_account_id" model="account.account.template">
+        <field name="chart_template_id" ref="vn_template"/>
     </record>
 
     <!-- Account Templates -->

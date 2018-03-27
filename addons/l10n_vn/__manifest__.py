@@ -37,7 +37,8 @@ Credits
 """,
     "depends": [
         "account",
-        "base_iban"
+        "base_iban",
+        "l10n_multilang",
     ],
     "data": [
          'data/res.country.state.csv',
