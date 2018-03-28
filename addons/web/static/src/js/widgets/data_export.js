@@ -195,7 +195,7 @@ var DataExport = Dialog.extend({
             });
         },
     },
-    init: function(parent, record) {
+    init: function(parent, record, defaultExportFields) {
         var options = {
             title: _t("Export Data"),
             buttons: [
@@ -206,6 +206,7 @@ var DataExport = Dialog.extend({
         this._super(parent, options);
         this.records = {};
         this.record = record;
+        this.defaultExportFields = defaultExportFields;
         this.exports = new data.DataSetSearch(this, 'ir.exports', this.record.getContext());
 
         this.row_index = 0;
@@ -250,6 +251,11 @@ var DataExport = Dialog.extend({
                         .remove();
                     got_fields.resolve();
                     self.on_show_data(records);
+                    _.each(records, function (record) {
+                        if (_.contains(self.defaultExportFields, record.id)) {
+                            self.add_field(record.id, record.string);
+                        }
+                    });
                 });
         }).eq(0).change();
         waitFor.push(got_fields);
@@ -264,7 +270,13 @@ var DataExport = Dialog.extend({
             }
         }));
 
-        waitFor.push(this.show_exports_list());
+        waitFor.push(this.show_exports_list().then(function () {
+            _.each(self.records, function (record, key) {
+                if (_.contains(self.defaultExportFields, key)) {
+                    self.add_field(key, record.string);
+                }
+            });
+        }));
 
         return $.when.apply($, waitFor);
 
