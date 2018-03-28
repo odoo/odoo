@@ -174,6 +174,14 @@ var AbstractField = Widget.extend({
         this.parseOptions = {};
     },
     /**
+     * Loads the libraries listed in this.jsLibs and this.cssLibs
+     *
+     * @override
+     */
+    willStart: function () {
+        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
+    },
+    /**
      * When a field widget is appended to the DOM, its start method is called,
      * and will automatically call render. Most widgets should not override this.
      *
@@ -186,14 +194,6 @@ var AbstractField = Widget.extend({
             self.$el.addClass('o_field_widget');
             return self._render();
         });
-    },
-    /**
-     * Loads the libraries listed in this.jsLibs and this.cssLibs
-     *
-     * @override
-     */
-    willStart: function () {
-        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
     },
 
     //--------------------------------------------------------------------------
