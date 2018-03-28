@@ -422,6 +422,7 @@ class IrMailServer(models.Model):
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
+        del message['Bcc']
 
         smtp_to_list = [
             address

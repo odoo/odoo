@@ -230,3 +230,15 @@ class MailController(http.Controller):
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mail_channel_menu_root_chat'),
         }
         return values
+
+    @http.route('/mail/activity/new', type='json', auth='user')
+    def mail_activity_new(self, note, activity_type_id=None, date_deadline=None):
+        values = {'note': note}
+        if date_deadline:
+            values['date_deadline'] = date_deadline
+        if not activity_type_id:
+            activity_type_id = request.env['mail.activity.type'].sudo().search([('category', '=', 'reminder')], limit=1).id
+        if activity_type_id:
+            values['activity_type_id'] = activity_type_id
+        activity = request.env['mail.activity'].create(values)
+        return activity.id

@@ -14,8 +14,8 @@ _logger = logging.getLogger(__name__)
 
 class HolidaysAllocation(models.Model):
     _name = "hr.leave.allocation"
-    _description = "Allocation"
-    _inherit = ['mail.thread']
+    _description = "Leaves Allocation"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -147,6 +147,7 @@ class HolidaysAllocation(models.Model):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         holiday = super(HolidaysAllocation, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
+        holiday.activity_update()
         return holiday
 
     @api.multi
@@ -200,13 +201,16 @@ class HolidaysAllocation(models.Model):
             for linked_request in linked_requests:
                 linked_request.action_draft()
             linked_requests.unlink()
+        self.activity_update()
         return True
 
     @api.multi
     def action_confirm(self):
         if self.filtered(lambda holiday: holiday.state != 'draft'):
             raise UserError(_('Leave request must be in Draft state ("To Submit") in order to confirm it.'))
-        return self.write({'state': 'confirm'})
+        res = self.write({'state': 'confirm'})
+        self.activity_update()
+        return res
 
     @api.multi
     def action_approve(self):
@@ -230,6 +234,7 @@ class HolidaysAllocation(models.Model):
 
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
+        self.activity_update()
         return True
 
     @api.multi
@@ -259,6 +264,7 @@ class HolidaysAllocation(models.Model):
                 leaves.action_approve()
                 if leaves and leaves[0].validation_type == 'both':
                     leaves.action_validate()
+        self.activity_update()
         return True
 
     @api.multi
@@ -277,7 +283,42 @@ class HolidaysAllocation(models.Model):
                 holiday.write({'state': 'refuse', 'second_approver_id': current_employee.id})
             # If a category that created several holidays, cancel all related
             holiday.linked_request_ids.action_refuse()
+        self.activity_update()
         return True
+
+    # ------------------------------------------------------------
+    # Activity methods
+    # ------------------------------------------------------------
+
+    def _get_responsible_for_approval(self):
+        if self.state == 'confirm' and self.employee_id.parent_id.user_id:
+            return self.employee_id.parent_id.user_id
+        elif self.department_id.manager_id.user_id:
+            return self.department_id.manager_id.user_id
+        return self.env.user
+
+    def activity_update(self):
+        to_clean, to_do = self.env['hr.leave.allocation'], self.env['hr.leave.allocation']
+        for allocation in self:
+            if allocation.state == 'draft':
+                to_clean |= allocation
+            elif allocation.state == 'confirm':
+                allocation.activity_schedule(
+                    'hr_holidays.mail_act_leave_allocation_approval', fields.Date.today(),
+                    user_id=allocation._get_responsible_for_approval().id)
+            elif allocation.state == 'validate1':
+                allocation.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval'])
+                allocation.activity_schedule(
+                    'hr_holidays.mail_act_leave_allocation_second_approval', fields.Date.today(),
+                    user_id=allocation._get_responsible_for_approval().id)
+            elif allocation.state == 'validate':
+                to_do |= allocation
+            elif allocation.state == 'refuse':
+                to_clean |= allocation
+        if to_clean:
+            to_clean.activity_unlink(['hr_holidays.mail_act_leave_allocation_approval', 'hr_holidays.mail_act_leave_allocation_second_approval'])
+        if to_do:
+            to_do.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval', 'hr_holidays.mail_act_leave_allocation_second_approval'])
 
     ####################################################
     # Messaging methods
@@ -287,10 +328,6 @@ class HolidaysAllocation(models.Model):
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
             return 'hr_holidays.mt_leave_allocation_approved'
-        elif 'state' in init_values and self.state == 'validate1':
-            return 'hr_holidays.mt_leave_allocation_first_validated'
-        elif 'state' in init_values and self.state == 'confirm':
-            return 'hr_holidays.mt_leave_allocation_confirmed'
         elif 'state' in init_values and self.state == 'refuse':
             return 'hr_holidays.mt_leave_allocation_refused'
         return super(HolidaysAllocation, self)._track_subtype(init_values)

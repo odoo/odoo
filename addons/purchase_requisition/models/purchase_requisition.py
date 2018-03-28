@@ -243,6 +243,7 @@ class PurchaseRequisitionLine(models.Model):
                 'product_id': self.product_id.id,
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,
                 'price': self.price_unit,
+                'currency_id': self.requisition_id.currency_id.id,
                 'purchase_requisition_id': purchase_requisition.id,
                 'purchase_requisition_line_id': self.id,
             })

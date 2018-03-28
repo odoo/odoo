@@ -1474,6 +1474,41 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'confirmed')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1), 0.0)
 
+    def test_use_unreserved_move_line_3(self):
+        """ Test the behavior of `_free_reservation` when ran on a recordset of move lines where
+        some are assigned and some are force assigned. `_free_reservation` should not use an
+        already processed move line when looking for a move line candidate to unreserve.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1.0)
+
+        move1 = self.env['stock.move'].create({
+            'name': 'test_use_unreserved_move_line_3',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 3.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.quantity_done = 1
+
+        # add a forced move line in `move1`
+        move1.write({'move_line_ids': [(0, 0, {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 2,
+            'product_uom_qty': 0,
+            'lot_id': False,
+            'package_id': False,
+            'result_package_id': False,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })]})
+        move1._action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 3.0)
+
     def test_edit_reserved_move_line_1(self):
         """ Test that editing a stock move line linked to an untracked product correctly and
         directly adapts the reservation. In this case, we edit the sublocation where we take the
