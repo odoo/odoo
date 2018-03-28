@@ -43,6 +43,8 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="language_ids" widget="many2many_checkboxes"/>
                             <field name="default_lang_id" widget="selection"/>
+                            <field name="installed_theme_id" groups="base.group_no_one"/>
+                            <field name="theme_ids" groups="base.group_no_one"/>
                         </group>
                     </div>
                 </form>
@@ -55,8 +57,11 @@
             <field name="arch" type="xml">
                 <tree string="Websites">
                     <field name="name"/>
+                    <field name="domain"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="default_lang_id"/>
+                    <field name="installed_theme_id" groups="base.group_no_one"/>
+                    <field name="theme_ids" groups="base.group_no_one" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>
@@ -193,7 +198,7 @@
                             <group>
                                 <field name="new_window"/>
                                 <field name="sequence"/>
-                                <field attrs="{'invisible': [('parent_id', '!=', False)]}" name="website_id"/>
+                                <field name="website_id"/>
                             </group>
                             <group>
                                 <field name="parent_id"/>
@@ -263,7 +268,8 @@
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="website_id" readonly="1"/>
+                    <field name="website_id"/>
+                    <field name="module_id" groups="base.group_no_one"/>
                     <field name="key" readonly="1"/>
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />

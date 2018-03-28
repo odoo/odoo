@@ -34,6 +34,7 @@ class ResConfigSettings(models.TransientModel):
     cdn_filters = fields.Text(related='website_id.cdn_filters')
     module_website_version = fields.Boolean("A/B Testing")
     module_website_links = fields.Boolean(string="Link Trackers")
+    auth_signup_uninvited = fields.Selection(string="Customer Account", related='website_id.auth_signup_uninvited')
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
     # Set as global config parameter since methods using it are not website-aware. To be changed
@@ -42,10 +43,6 @@ class ResConfigSettings(models.TransientModel):
     has_google_analytics = fields.Boolean("Google Analytics", config_parameter='website.has_google_analytics')
     has_google_analytics_dashboard = fields.Boolean("Google Analytics in Dashboard", config_parameter='website.has_google_analytics_dashboard')
     has_google_maps = fields.Boolean("Google Maps", config_parameter='website.has_google_maps')
-    auth_signup_uninvited = fields.Selection([
-        ('b2b', 'On invitation (B2B)'),
-        ('b2c', 'Free sign up (B2C)'),
-    ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     @api.onchange('has_google_analytics')
     def onchange_has_google_analytics(self):

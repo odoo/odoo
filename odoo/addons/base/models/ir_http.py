@@ -248,6 +248,10 @@ class IrHttp(models.AbstractModel):
         return content_disposition(filename)
 
     @classmethod
+    def _xmlid_to_obj(cls, env, xmlid):
+        return env.ref(xmlid, False)
+
+    @classmethod
     def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='datas_fname', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
@@ -277,7 +281,7 @@ class IrHttp(models.AbstractModel):
         # get object and content
         obj = None
         if xmlid:
-            obj = env.ref(xmlid, False)
+            obj = cls._xmlid_to_obj(env, xmlid)
         elif id and model == 'ir.attachment' and access_token:
             obj = env[model].sudo().browse(int(id))
             if not consteq(obj.access_token, access_token):

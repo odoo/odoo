@@ -180,8 +180,8 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         domain = [
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.name, type)),  # The wilcards are id, version and pagination number (if any)
-            '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
+            ('url', '=like', '/web/content/%-%-{}/{}%.{}'.format(self.env.context.get('website_id'), self.name, type)),  # The wilcards are id, version and pagination number (if any)
+            '!', ('url', '=like', '/web/content/%-{}-{}/%'.format(self.version, self.env.context.get('website_id')))
         ]
 
         # force bundle invalidation on other workers
@@ -198,7 +198,7 @@ class AssetsBundle(object):
         by file name and only return the one with the max id for each group.
         """
         version = "%" if ignore_version else self.version
-        url_pattern = '/web/content/%-{0}/{1}{2}.{3}'.format(version, self.name, '.%' if type == 'css' else '', type)
+        url_pattern = '/web/content/%-{}-{}/{}{}.{}'.format(version, self.env.context.get('website_id'), self.name, '.%' if type == 'css' else '', type)
         self.env.cr.execute("""
              SELECT max(id)
                FROM ir_attachment
@@ -227,7 +227,7 @@ class AssetsBundle(object):
         }
         attachment = ira.sudo().create(values)
 
-        url = '/web/content/%s-%s/%s' % (attachment.id, self.version, fname)
+        url = '/web/content/%s-%s-%s/%s' % (attachment.id, self.version, self.env.context.get('website_id'), fname)
         values = {
             'name': url,
             'url': url,

@@ -15,6 +15,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
 from odoo.tools import pycompat
 from odoo.http import request
+from odoo.osv import expression
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools.translate import _
 
@@ -71,16 +72,33 @@ class Website(models.Model):
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
+    installed_theme_id = fields.Many2one('ir.module.module')
+    theme_ids = fields.Many2many('ir.module.module', 'website_theme', 'website_id', 'ir_module_module_id')
+    auth_signup_uninvited = fields.Selection([
+        ('b2b', 'On invitation (B2B)'),
+        ('b2c', 'Free sign up (B2C)'),
+    ], string='Customer Account', default='b2b')
 
     @api.multi
     def _compute_menu(self):
         Menu = self.env['website.menu']
         for website in self:
-            website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', website.id)], order='id', limit=1).id
+            website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', 'in', (website.id, False))], order='id', limit=1).id
 
     # cf. Wizard hack in website_views.xml
     def noop(self, *args, **kwargs):
         pass
+
+    @api.model
+    def create(self, vals):
+        res = super(Website, self).create(vals)
+
+        # publish default homepage on new website so people can login
+        default_homepage = self.env.ref('website.homepage_page', raise_if_not_found=False)
+        if default_homepage:
+            default_homepage.website_ids |= res
+
+        return res
 
     @api.multi
     def write(self, values):
@@ -378,12 +396,19 @@ class Website(models.Model):
             request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
-    @tools.cache('domain_name')
     def _get_current_website_id(self, domain_name):
-        """ Reminder : cached method should be return record, since they will use a closed cursor. """
-        website = self.search([('domain', '=', domain_name)], limit=1)
+        forced_website_id = self.env['ir.config_parameter'].sudo().get_param('website_multi.force_website_id', '')
+        # todo jov public user
+        website = False
+        if forced_website_id.isdigit():
+            website = request.env['website'].browse(int(forced_website_id))
+            logger.debug('forcing website %s (ID: %s)', website.name, website.id)
+
         if not website:
-            website = self.search([], limit=1)
+            website = self.search([('domain', '=', domain_name)], limit=1)
+            if not website:
+                website = self.search([], limit=1)
+
         return website.id
 
     @api.model
@@ -595,8 +620,50 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     _name = "website.published.mixin"
 
-    website_published = fields.Boolean('Visible in Website', copy=False)
+    website_published = fields.Boolean('Visible on current website',
+                                       compute='_compute_website_published',
+                                       inverse='_inverse_website_published',
+                                       search='_search_website_published')
+    website_ids = fields.Many2many('website', string='Published on Websites', help='Determines on what websites this record will be visible.')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
+
+    @api.multi
+    def _compute_website_published(self):
+        for record in self:
+            current_website_id = self._context.get('website_id')
+            if current_website_id:
+                record.website_published = current_website_id in record.website_ids.ids
+            else:  # should be in the backend, return things that are published anywhere
+                record.website_published = bool(record.website_ids)
+
+    @api.multi
+    def _inverse_website_published(self):
+        for record in self:
+            current_website_id = self._context.get('website_id')
+            if current_website_id:
+                current_website = self.env['website'].browse(current_website_id)
+
+                if record.website_published:
+                    record.website_ids |= current_website
+                else:
+                    record.website_ids -= current_website
+
+            else:  # this happens during e.g. demo data installation -> publish on all websites
+                record.website_ids = self.env['website'].search([])
+
+    def _search_website_published(self, operator, value):
+        if not isinstance(value, bool) or operator not in ('=', '!='):
+            logger.warning('unsupported search on website_published: %s, %s', operator, value)
+            return [()]
+
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            value = not value
+
+        current_website_id = self._context.get('website_id')
+        if current_website_id:
+            return [('website_ids', 'in' if value is True else 'not in', current_website_id)]
+        else:  # should be in the backend, return things that are published anywhere
+            return [('website_ids', '!=' if value is True else '=', False)]
 
     @api.multi
     def _compute_website_url(self):
@@ -606,9 +673,34 @@ class WebsitePublishedMixin(models.AbstractModel):
     @api.multi
     def website_publish_button(self):
         self.ensure_one()
-        if self.env.user.has_group('website.group_website_publisher') and self.website_url != '#':
-            return self.open_website_url()
-        return self.write({'website_published': not self.website_published})
+        if self.env['website'].search_count([]) <= 1:
+            return super(WebsitePublishedMixin, self).website_publish_button()
+        else:
+            # Some models using the mixin put the base url in the
+            # website_url (e.g. website_slides' slide.slide), other
+            # ones use a relative url (e.g. website_sale's
+            # product.template). Since we are going to construct the
+            # urls ourselves filter that out.
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            self.website_url = self.website_url.replace(base_url, '')
+
+            wizard = self.env['website.urls.wizard'].create({
+                'path': self.website_url,
+                'record_id': self.id,
+                'model_name': self._name,
+            })
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'website.urls.wizard',
+                'view_mode': 'form',
+                'res_id': wizard.id,
+                'target': 'new',
+            }
+
+    @api.multi
+    def toggle_publish(self):
+        for record in self:
+            record.website_published = not record.website_published
 
     def open_website_url(self):
         return {
@@ -623,9 +715,9 @@ class Page(models.Model):
     _inherits = {'ir.ui.view': 'view_id'}
     _inherit = 'website.published.mixin'
     _description = 'Page'
+    _order = 'specificity'
 
     url = fields.Char('Page URL')
-    website_ids = fields.Many2many('website', string='Websites')
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Page Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
@@ -633,6 +725,10 @@ class Page(models.Model):
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+    specificity = fields.Integer(compute='_compute_specifity', store=True,
+                             help='''Used to order pages from most specific (i.e. belonging to 1 website)
+                             to least specific (i.e. not belonging to a website.). Note that this is defined
+                             in ascending order, so a specificity of 0 is a page for 1 website (i.e. most specific).''')
 
     @api.one
     def _compute_homepage(self):
@@ -651,6 +747,44 @@ class Page(models.Model):
     @api.one
     def _compute_visible(self):
         self.is_visible = self.website_published and (not self.date_publish or self.date_publish < fields.Datetime.now())
+
+    @api.multi
+    @api.depends('website_ids', 'view_id.website_id')
+    def _compute_specifity(self):
+        '''This defines a specificity as follows:
+
+        |--------------------+-------------|
+        | amount of websites | specificity |
+        |--------------------+-------------|
+        |                  1 |           0 |
+        |                  2 |           1 |
+        |                ... |         ... |
+        |                  0 |         MAX |
+        |--------------------+-------------|
+
+        So when there are multiple pages for a given url, the most
+        specific one will be chosen.
+        '''
+        for page in self:
+            if page.view_id.website_id:
+                page.specificity = 0
+            elif page.website_ids:
+                page.specificity = len(page.website_ids) - 1
+            else:
+                # This is an arbitrary maximum, the important thing is
+                # that this should always be greater than #websites - 1.
+                # Presumably noone is going to create >1024 websites...
+                page.specificity = 1024
+
+    @api.multi
+    def _is_most_specific_page(self, page_to_test):
+        '''This will test if page_to_test is the most specific page in self.'''
+        pages_for_url = self.filtered(lambda page: page.url == page_to_test.url)
+
+        # this works because pages are _order'ed by specificity
+        most_specific_page = pages_for_url[0]
+
+        return most_specific_page == page_to_test
 
     @api.model
     def get_page_info(self, id, website_id):
@@ -725,17 +859,18 @@ class Page(models.Model):
     @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        view = self.env['ir.ui.view'].browse(self.view_id.id)
-        # website.page's ir.ui.view should have a different key than the one it
-        # is copied from.
-        # (eg: website_version: an ir.ui.view record with the same key is
-        # expected to be the same ir.ui.view but from another version)
-        new_view = view.copy({'key': view.key + '.copy', 'name': '%s %s' % (view.name,  _('(copy)'))})
-        default = {
-            'name': '%s %s' % (self.name,  _('(copy)')),
-            'url': self.env['website'].get_unique_path(self.url),
-            'view_id': new_view.id,
-        }
+        if default and not default.get('view_id'):
+            view = self.env['ir.ui.view'].browse(self.view_id.id)
+            # website.page's ir.ui.view should have a different key than the one it
+            # is copied from.
+            # (eg: website_version: an ir.ui.view record with the same key is
+            # expected to be the same ir.ui.view but from another version)
+            new_view = view.copy({'key': view.key + '.copy', 'name': '%s %s' % (view.name,  _('(copy)'))})
+            default = {
+                'name': '%s %s' % (self.name,  _('(copy)')),
+                'url': self.env['website'].get_unique_path(self.url),
+                'view_id': new_view.id,
+            }
         return super(Page, self).copy(default=default)
 
     @api.model
@@ -787,11 +922,9 @@ class Page(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.ensure_one()
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
-        result = super(Page, self).write(vals)
-        return result
+        return super(Page, self).write(vals)
 
 
 class Menu(models.Model):
@@ -808,14 +941,33 @@ class Menu(models.Model):
 
     name = fields.Char('Menu', required=True, translate=True)
     url = fields.Char('Url', default='')
-    page_id = fields.Many2one('website.page', 'Related Page')
+    page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website')  # TODO: support multiwebsite once done for ir.ui.views
+    website_id = fields.Many2one('website', 'Website')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
+
+    @api.multi
+    def write(self, vals):
+        '''COW for ir.ui.view. This way editing websites does not
+        impact other websites and so that newly created websites will
+        only contain the default views.
+        '''
+        current_website_id = self._context.get('website_id')
+
+        # if generic menu in multi-website context
+        if current_website_id and not self.website_id and not self._context.get('no_cow') and self.env['website'].search_count([]) > 1:
+            new_website_specific_menu = self.copy({'website_id': current_website_id})
+
+            for child in self.child_id:
+                child.write({'parent_id': new_website_specific_menu.id})
+
+            return new_website_specific_menu.write(vals)
+
+        return super(Menu, self).write(vals)
 
     @api.one
     def _compute_visible(self):
@@ -839,6 +991,21 @@ class Menu(models.Model):
                     url = '/%s' % self.url
         return url
 
+    def get_children_for_current_website(self):
+        most_specific_child_menus = self.env['website.menu']
+        website_id = self._context.get('website_id')
+
+        if not website_id:
+            return self.child_id
+
+        for child in self.child_id:
+            if child.website_id and child.website_id.id == website_id:
+                most_specific_child_menus |= child
+            elif not child.website_id and not any(child.clean_url() == child2.clean_url() and child2.website_id.id == website_id for child2 in self.child_id):
+                most_specific_child_menus |= child
+
+        return most_specific_child_menus
+
     # would be better to take a menu_id as argument
     @api.model
     def get_tree(self, website_id, menu_id=None):
@@ -855,7 +1022,7 @@ class Menu(models.Model):
                 children=[],
                 is_homepage=is_homepage,
             )
-            for child in node.child_id:
+            for child in node.get_children_for_current_website():
                 menu_node['children'].append(make_tree(child))
             return menu_node
         if menu_id:

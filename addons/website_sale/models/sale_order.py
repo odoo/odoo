@@ -29,6 +29,7 @@ class SaleOrder(models.Model):
                 is sent or confirmed and if the payment acquire is of the type transfer or manual""")
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
+    website_id = fields.Many2one('website', string='Origin Website', help='Website through which this order was placed.')
 
     @api.depends('state', 'transaction_ids')
     def _compute_can_directly_mark_as_paid(self):

@@ -8,7 +8,7 @@ from odoo.http import request
 class WebsiteBackend(http.Controller):
 
     @http.route('/website/fetch_dashboard_data', type="json", auth='user')
-    def fetch_dashboard_data(self, date_from, date_to):
+    def fetch_dashboard_data(self, website_id, date_from, date_to):
         has_group_system = request.env.user.has_group('base.group_system')
         has_group_designer = request.env.user.has_group('website.group_website_designer')
         dashboard_data = {
@@ -21,6 +21,13 @@ class WebsiteBackend(http.Controller):
                 'visits': {},
             }
         }
+
+        current_website = request.env['website'].browse(website_id) if website_id else request.env['website'].get_current_website()
+        dashboard_data['websites'] = request.env['website'].search_read([], ['id', 'name'])
+        for website in dashboard_data['websites']:
+            if website['id'] == current_website.id:
+                website['selected'] = True
+
         if has_group_designer:
             config = request.env['res.config.settings'].sudo().create({})
             if config.has_google_analytics_dashboard:
