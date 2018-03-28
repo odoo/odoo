@@ -405,6 +405,7 @@ class Import(models.TransientModel):
             :rtype: list(Field)
         """
         string_match = None
+        IrTranslation = self.env['ir.translation']
         for field in fields:
             # FIXME: should match all translations & original
             # TODO: use string distance (levenshtein? hamming?)
@@ -413,6 +414,9 @@ class Import(models.TransientModel):
             if header.lower() == field['string'].lower():
                 # matching string are not reliable way because
                 # strings have no unique constraint
+                string_match = field
+            translated_header = IrTranslation._get_source('ir.model.fields,field_description', 'model', self.env.lang, header).lower()
+            if translated_header == field['string'].lower():
                 string_match = field
         if string_match:
             # this behavior is only applied if there is no matching field['name']
