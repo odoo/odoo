@@ -2,6 +2,7 @@ odoo.define('mail.ChatterComposer', function (require) {
 "use strict";
 
 var composer = require('mail.composer');
+var DraftMixin = require('mail.DraftMixin');
 var utils = require('mail.utils');
 
 var core = require('web.core');
@@ -14,7 +15,7 @@ var _t = core._t;
 // Extends the basic Composer Widget to add 'suggested partner' layer (open
 // popup when suggested partner is selected without email, or other
 // informations), and the button to open the full composer wizard.
-var ChatterComposer = composer.BasicComposer.extend({
+var ChatterComposer = composer.BasicComposer.extend(DraftMixin, {
     template: 'mail.chatter.ChatComposer',
 
     init: function (parent, model, suggested_partners, options) {
@@ -213,12 +214,15 @@ var ChatterComposer = composer.BasicComposer.extend({
         recipient_done.then(function (partner_ids) {
             var context = {
                 default_parent_id: self.id,
-                default_body: utils.get_text2html(self.$input.html()),
+                default_body: self.$input.html(),
                 default_attachment_ids: _.pluck(self.get('attachment_ids'), 'id'),
                 default_partner_ids: partner_ids,
                 default_is_log: self.options.is_log,
                 mail_post_autofollow: true,
             };
+
+            // clear basic composer content content
+            self.$input.html("");
 
             if (self.context.default_model && self.context.default_res_id) {
                 context.default_model = self.context.default_model;
@@ -235,10 +239,42 @@ var ChatterComposer = composer.BasicComposer.extend({
                 context: context,
             };
             self.do_action(action, {
-                on_close: self.trigger.bind(self, 'need_refresh'),
+                on_close: function (reason) {
+                    if (reason !== 'mail_sent' && reason !== 'cancel') {
+                        // restore draft in basic composer
+                        self.$input.html(self._getDraft());
+                        if (!_.isEmpty(self.$input.html())) {
+                            self._openBasicComposer();
+                        }
+                    }
+                    self._dropDraft();
+                    self.trigger('need_refresh');
+                },
+            }).then(function () {
+                self._setDraftInput($('.modal .o_act_window .note-editable'));
+                self._autosaveDraft();
             }).then(self.trigger.bind(self, 'close_composer'));
         });
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Open the basic composer
+     *
+     * This is useful when the full-composer is closed and text is restored
+     * in the basic composer. To clearly see that the message is not lost,
+     * we should open the composer.
+     *
+     * @private
+     */
+    _openBasicComposer: function () {
+        this.trigger_up('open_composer', {
+            isLog: this.options.is_log,
+        });
+    },
 });
 
 return ChatterComposer;

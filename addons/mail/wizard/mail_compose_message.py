@@ -261,7 +261,10 @@ class MailComposer(models.TransientModel):
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)
 
-        return {'type': 'ir.actions.act_window_close'}
+        return {
+            'type': 'ir.actions.act_window_close',
+            'close_reason': 'mail_sent',
+        }
 
     @api.multi
     def get_mail_values(self, res_ids):
@@ -413,7 +416,13 @@ class MailComposer(models.TransientModel):
             # generate the saved template
             record.write({'template_id': template.id})
             record.onchange_template_id_wrapper()
-            return _reopen(self, record.id, record.model, context=self._context)
+
+            # by default, web_client performs a close_window action
+            # on `false` returned. "noop" means "do nothing"
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'noop',
+            }
 
     #------------------------------------------------------
     # Template rendering

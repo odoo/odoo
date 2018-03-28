@@ -1,12 +1,14 @@
 odoo.define('mail.Activity', function (require) {
 "use strict";
 
+var DraftMixin = require('mail.DraftMixin');
+var utils = require('mail.utils');
+
 var AbstractField = require('web.AbstractField');
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var time = require('web.time');
-var utils = require('mail.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -100,7 +102,7 @@ var setDelayLabel = function(activities){
     return activities;
 };
 
-var AbstractActivityField = AbstractField.extend({
+var AbstractActivityField = AbstractField.extend(DraftMixin, {
     // private
     _markActivityDone: function (id, feedback) {
         return this._rpc({
@@ -111,6 +113,7 @@ var AbstractActivityField = AbstractField.extend({
             });
     },
     _scheduleActivity: function (id, previous_activity_type_id, callback) {
+        var self = this;
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
@@ -121,11 +124,25 @@ var AbstractActivityField = AbstractField.extend({
             context: {
                 default_res_id: this.res_id,
                 default_res_model: this.model,
+                default_note: this._getDraft() || "",
                 default_previous_activity_type_id: previous_activity_type_id,
             },
             res_id: id || false,
         };
-        return this.do_action(action, { on_close: callback });
+        return this.do_action(action, {
+            on_close: function (reason) {
+                var shouldDropDraft = reason === 'activity_scheduled' ||
+                                      reason === 'marked_as_done' ||
+                                      reason === 'cancel';
+                if (shouldDropDraft) {
+                    self._dropDraft();
+                }
+                callback();
+            }
+        }).then(function () {
+            self._setDraftInput($('.modal .o_act_window .note-editable'));
+            self._autosaveDraft();
+        });
     },
 });
 

@@ -24,6 +24,7 @@ var QWeb = core.qweb;
 var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
+        open_composer: '_onOpenComposer',
         reload_mail_fields: '_onReloadMailFields',
     },
     events: {
@@ -312,6 +313,24 @@ var Chatter = Widget.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    /**
+     * Simulate clicking on "Send message" or "Log note"
+     *
+     * Useful to recover from closing full-composer on non-empty text.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {boolean} [ev.data.isLog=false]
+     */
+    _onOpenComposer: function (ev) {
+        if (ev.data.isLog) {
+            this._onOpenComposerNote();
+        } else {
+            this._onOpenComposerMessage();
+        }
+    },
 
     /**
      * @private

@@ -289,7 +289,11 @@ class MailActivity(models.Model):
     def action_done(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
-        return self.action_feedback()
+        self.action_feedback()
+        return {
+            'type': 'ir.actions.act_window_close',
+            'close_reason': 'marked_as_done'
+        }
 
     def action_feedback(self, feedback=False):
         message = self.env['mail.message']
@@ -326,6 +330,12 @@ class MailActivity(models.Model):
             'views': [(False, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
+        }
+
+    def action_schedule(self):
+        return {
+            'type': 'ir.actions.act_window_close',
+            'close_reason': 'activity_scheduled'
         }
 
     @api.multi

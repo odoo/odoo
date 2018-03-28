@@ -23,7 +23,7 @@
             <xpath expr="//field[@name='user_id']" position="attributes">
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_close_dialog']" position="attributes">
+            <xpath expr="//button[@name='action_schedule']" position="attributes">
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_done']" position="attributes">
@@ -32,7 +32,7 @@
             <xpath expr="//button[@special='cancel']" position="attributes">
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_close_dialog']" position="before">
+            <xpath expr="//button[@name='action_schedule']" position="before">
                 <button string="Schedule a meeting"
                     attrs="{'invisible': [('activity_category', '!=', 'meeting')]}"
                     name="action_create_calendar_event"

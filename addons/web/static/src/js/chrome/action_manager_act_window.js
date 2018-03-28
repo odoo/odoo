@@ -708,7 +708,10 @@ ActionManager.include({
 
         // determine the action to execute according to the actionData
         if (actionData.special) {
-            def = $.when({type: 'ir.actions.act_window_close'});
+            def = $.when({
+                type: 'ir.actions.act_window_close',
+                close_reason: 'cancel',
+            });
         } else if (actionData.type === 'object') {
             // call a Python Object method, which may return an action to execute
             var args = recordID ? [[recordID]] : [env.resIDs];
