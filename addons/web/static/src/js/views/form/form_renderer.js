@@ -503,6 +503,32 @@ var FormRenderer = BasicRenderer.extend({
         return this._renderGenericTag(node);
     },
     /**
+     * Renders a 'group' node, which contains 'group' nodes in its children.
+     *
+     * @param {Object} node]
+     * @returns {JQueryElement}
+     */
+    _renderOuterGroup: function (node) {
+        var self = this;
+        var $result = $('<div/>', {class: 'o_group'});
+        var colSize = Math.max(1, Math.round(12 / (parseInt(node.attrs.col, 10) || 2)));
+        if (node.attrs.string) {
+            var $sep = $('<div/>', {class: 'o_horizontal_separator'}).text(node.attrs.string);
+            $result.append($sep);
+        }
+        $result.append(_.map(node.children, function (child) {
+            if (child.tag === 'newline') {
+                return $('<br/>');
+            }
+            var $child = self._renderNode(child);
+            $child.addClass('o_group_col_' + (colSize * (parseInt(child.attrs.colspan, 10) || 1)));
+            return $child;
+        }));
+        this._handleAttributes($result, node);
+        this._registerModifiers(node, this.state, $result);
+        return $result;
+    },
+    /**
      * @private
      * @param {Object} node
      * @returns {jQueryElement}
@@ -603,31 +629,13 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagGroup: function (node) {
-        var self = this;
         var isOuterGroup = _.some(node.children, function (child) {
             return child.tag === 'group';
         });
         if (!isOuterGroup) {
             return this._renderInnerGroup(node);
         }
-
-        var $result = $('<div/>', {class: 'o_group'});
-        var colSize = Math.max(1, Math.round(12 / (parseInt(node.attrs.col, 10) || 2)));
-        if (node.attrs.string) {
-            var $sep = $('<div/>', {class: 'o_horizontal_separator'}).text(node.attrs.string);
-            $result.append($sep);
-        }
-        $result.append(_.map(node.children, function (child) {
-            if (child.tag === 'newline') {
-                return $('<br/>');
-            }
-            var $child = self._renderNode(child);
-            $child.addClass('o_group_col_' + (colSize * (parseInt(child.attrs.colspan, 10) || 1)));
-            return $child;
-        }));
-        this._handleAttributes($result, node);
-        this._registerModifiers(node, this.state, $result);
-        return $result;
+        return this._renderOuterGroup(node);
     },
     /**
      * @private
