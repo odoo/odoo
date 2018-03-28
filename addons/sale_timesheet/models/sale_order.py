@@ -236,13 +236,16 @@ class SaleOrderLine(models.Model):
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
         planned_hours = self._convert_qty_company_hours()
+        sale_line_name_parts = self.name.split('\n')
+        title = sale_line_name_parts[0] or self.product_id.name
+        description = '<br/>'.join(sale_line_name_parts[1:])
         return {
-            'name': '%s:%s' % (self.order_id.name or '', self.name.split('\n')[0] or self.product_id.name),
+            'name': title if project.sale_line_id else '%s: %s' % (self.order_id.name or '', title),
             'planned_hours': planned_hours,
             'remaining_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
-            'description': self.name + '<br/>',
+            'description': description,
             'project_id': project.id,
             'sale_line_id': self.id,
             'company_id': self.company_id.id,
