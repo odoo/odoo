@@ -262,7 +262,6 @@ var DataExport = Dialog.extend({
                 self.ids_to_export = false;
                 self.domain = domain;
             }
-            self.on_show_domain();
         }));
 
         waitFor.push(this.show_exports_list());
@@ -274,14 +273,15 @@ var DataExport = Dialog.extend({
 
             _.each(formats, function(format, i) {
                 var $radio = $('<input/>', {type: 'radio', value: format.tag, name: 'o_export_format_name'});
-                var $label = $('<label/>', {html: format.label});
+                var $label = $('<span/>', {html: format.label});
 
                 if (format.error) {
                     $radio.prop('disabled', true);
                     $label.html(_.str.sprintf("%s — %s", format.label, format.error));
                 }
 
-                $fmts.append($("<div/>").append($radio, $label));
+                var $radioButton = $('<label/>').append($radio, $label);
+                $fmts.append($("<div class='radio'></div>").append($radioButton));
             });
 
             self.$export_format_inputs = $fmts.find('input');
@@ -376,10 +376,6 @@ var DataExport = Dialog.extend({
         } else {
             this.show_content(record.id);
         }
-    },
-    on_show_domain: function() {
-        this.$('p').first()
-                   .after(QWeb.render('Export.DomainMessage', {record: this}));
     },
     on_show_data: function(records, expansion) {
         var self = this;

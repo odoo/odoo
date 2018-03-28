@@ -1281,21 +1281,26 @@
 </div>
 
 <div t-name="ExportDialog" class="o_export">
-    <p role="status">
-        This wizard will export all data that matches the current search criteria to a CSV file.
-        You can export all data or only the fields that can be reimported after modification.
-    </p>
-
     <div class="row">
         <div class="col-md-6">
-            <label>Export Type :</label>
+            <strong>What do you want to do?</strong>
             <div class="o_import_compat">
-                <div><input type="radio" name="o_import_compat_name" value="yes" checked="checked"/><label>Import-Compatible Export</label></div>
-                <div><input type="radio" name="o_import_compat_name" value=""/><label>Export all Data</label></div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="o_import_compat_name" value="" checked="checked"/>
+                        Use data in a spreadsheet (export all data)
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="o_import_compat_name" value="yes"/>
+                        Update data (import-compatible export)
+                    </label>
+                </div>
             </div>
         </div>
         <div class="col-md-6">
-            <label>Export Formats :</label>
+            <strong>Export Format:</strong>
             <div class="o_export_format"/>
         </div>
     </div>
@@ -1323,10 +1328,6 @@
         </div>
     </div>
 </div>
-<p t-name="Export.DomainMessage">
-    <strong t-if="!record.ids_to_export" role="alert">Please pay attention that all records matching your search filter will be exported. Not only the selected ids.</strong>
-    <strong t-if="record.ids_to_export" role="alert">Please note that only the selected ids will be exported.</strong>
-</p>
 <div t-name="Export.TreeItems"
     t-foreach="fields" t-as="field"
     t-att-data-id="field.id"
