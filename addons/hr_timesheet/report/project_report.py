@@ -16,7 +16,7 @@ class ReportProjectTaskUser(models.Model):
         return super(ReportProjectTaskUser, self)._select() + """,
             progress as progress,
             t.effective_hours as hours_effective,
-            remaining_hours as remaining_hours,
+            t.planned_hours - t.effective_hours - t.subtask_effective_hours as remaining_hours,
             planned_hours as hours_planned"""
 
     def _group_by(self):

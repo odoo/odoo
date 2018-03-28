@@ -96,7 +96,7 @@
                             <field name="effective_hours" widget="float_time" />
                             <field name="subtask_effective_hours" widget="float_time" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
                             <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('subtask_effective_hours', '=', 0.0)]}" />
-                            <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" readonly="1"/>
+                            <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator"/>
                         </group>
                     </group>
                 </page>
@@ -151,9 +151,8 @@
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
                    <t t-if="record.progress.raw_value &gt; 80 and record.progress.raw_value &lt; 100">
-                       <div t-att-class="'oe_kanban_align label label-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')"
-                             groups="project.group_time_work_estimation_tasks" title="Remaining hours">
-                              <field name="remaining_hours" widget="float_time" />
+                       <div t-att-class="'oe_kanban_align label label-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')" title="Remaining hours">
+                            <field name="remaining_hours" widget="float_time" />
                        </div>
                    </t>
                 </div>

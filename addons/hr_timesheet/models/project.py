@@ -84,9 +84,9 @@ class Task(models.Model):
 
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", related='project_id.analytic_account_id', readonly=True)
     allow_timesheets = fields.Boolean("Allow timesheets", compute='_compute_allow_timesheets', help="Timesheets can be logged on this task.")
-    remaining_hours = fields.Float("Remaining Hours", compute='_compute_progress_hours', inverse='_inverse_remaining_hours', store=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
+    remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', inverse='_inverse_remaining_hours', help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
-    total_hours_spent = fields.Float("Total Hours", compute='_compute_progress_hours', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
+    total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)", oldname='children_hours')
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
@@ -113,13 +113,20 @@ class Task(models.Model):
             else:
                 task.progress = 0.0
 
+    @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
+    def _compute_remaining_hours(self):
+        for task in self:
             task.remaining_hours = task.planned_hours - task.effective_hours - task.subtask_effective_hours
-            task.total_hours_spent = task.effective_hours + task.subtask_effective_hours
 
     @api.onchange('remaining_hours')
     def _inverse_remaining_hours(self):
         for task in self:
             task.planned_hours = task.remaining_hours + task.effective_hours + task.subtask_effective_hours
+
+    @api.depends('effective_hours', 'subtask_effective_hours')
+    def _compute_total_hours_spent(self):
+        for task in self:
+            task.total_hours_spent = task.effective_hours + task.subtask_effective_hours
 
     @api.depends('child_ids.effective_hours', 'child_ids.subtask_effective_hours')
     def _compute_subtask_effective_hours(self):
