@@ -160,7 +160,7 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(admin=26, emp=33):  # test_mail only: 26 - 32
+        with self.assertQueryCount(admin=27, emp=33):  # test_mail only: 26 - 32
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
@@ -176,12 +176,12 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=26, emp=32):  # test_mail only: 26 - 32
+        with self.assertQueryCount(admin=27, emp=33):  # test_mail only: 26 - 32
             record.action_start('Test Start')
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=58, emp=88):  # test_mail only: 58 - 88
+        with self.assertQueryCount(admin=59, emp=88):  # test_mail only: 58 - 87
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
