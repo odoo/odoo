@@ -53,7 +53,7 @@ class UoM(models.Model):
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
-        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be greater than 0!')
+        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be strictly positive.')
     ]
 
     @api.one
