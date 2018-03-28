@@ -3065,6 +3065,30 @@ QUnit.module('ActionManager', {
             actionManager.destroy();
         });
     });
+
+    QUnit.test('close action with provided close_reason', function (assert) {
+        assert.expect(1);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        var options = {
+            on_close: function (reason) {
+                assert.strictEqual(reason, 'just for testing',
+                    "should have the correct close reason");
+            },
+        };
+
+        actionManager.doAction({
+            type: 'ir.actions.act_window_close',
+            close_reason: 'just for testing',
+        }, options);
+
+        actionManager.destroy();
+    });
 });
 
 });

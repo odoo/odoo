@@ -57,7 +57,7 @@ ActionManager.include({
             if (currentAction && currentAction.id === state.action &&
                 currentAction.type === 'ir.actions.act_window') {
                 // the action to load is already the current one, so update it
-                this._closeDialog(true); // there may be a currently opened dialog, close it
+                this._closeDialog({silent: true}); // there may be a currently opened dialog, close it
                 currentAction.env.currentId = state.id;
                 var viewType = state.view_type || currentController.viewType;
                 return this._switchController(currentAction, viewType);

@@ -281,14 +281,17 @@ var ActionManager = Widget.extend({
      * This also executes the 'on_close' handler in some cases.
      *
      * @private
-     * @param {boolean} [silent=false] if true, the 'on_close' handler won't be
+     * @param {Object} params
+     * @param {string} [params.closeReason] a reason for closing the dialog. Useful
+     *   for decision making for 'on_close' handler.
+     * @param {boolean} [params.silent=false] if true, the 'on_close' handler won't be
      *   called ; this is in general the case when the current dialog is closed
      *   because another action is opened, so we don't want the former action
      *   to execute its handler as it won't be displayed anyway
      */
-    _closeDialog: function (silent) {
+    _closeDialog: function (params) {
         if (this.currentDialogController) {
-            this.currentDialogController.dialog.destroy(silent);
+            this.currentDialogController.dialog.destroy(params);
         }
     },
     /**
@@ -339,7 +342,7 @@ var ActionManager = Widget.extend({
             })
             .then(function (controller) {
                 if (self.currentDialogController) {
-                    self._closeDialog(true);
+                    self._closeDialog({silent: true});
                 }
 
                 // store the optional 'on_reverse_breadcrumb' handler
@@ -391,7 +394,7 @@ var ActionManager = Widget.extend({
 
         return this._startController(controller).then(function (controller) {
             if (self.currentDialogController) {
-                self._closeDialog(true);
+                self._closeDialog({silent: true});
             }
 
             var dialog = new Dialog(self, _.defaults({}, options, {
@@ -400,11 +403,12 @@ var ActionManager = Widget.extend({
                 title: action.name,
                 size: action.context.dialog_size,
             }));
-            dialog.on('closed', self, function (silent) {
+            dialog.on('closed', self, function (params) {
+                // params: {Object|undefined} with keys: [closeReason, silent]
                 self._removeAction(action.jsID);
                 self.currentDialogController = null;
-                if (silent !== true) {
-                    options.on_close();
+                if (params && params.silent !== true) {
+                    options.on_close(params.closeReason);
                 }
             });
             controller.dialog = dialog;
@@ -478,19 +482,30 @@ var ActionManager = Widget.extend({
         });
     },
     /**
-     * Executes actions of type 'ir.actions.act_window_close', i.e. closes the
-     * last opened dialog.
+     * Executes actions of type 'ir.actions.act_window_close', i.e. closes
+     * the last opened dialog.
+     *
+     * The action may also specify an effect to display right after being
+     * closed, or name an `close_reason` performing a close action
+     *
+     * The `close_reason` is useful for decision making for the `on_close`
+     * handler. For instance: sending a message closes the full-composer,
+     * and of course it should be treated differently than an action that
+     * simply closes the dialog by canceling the message.
      *
      * @private
      * @param {Object} action
+     * @param {string} [action.close_reason] reason for performing the
+     *   close action. Useful for 'on_close' handler decision making.
+     * @param {Object} [action.effect] effect to show up, e.g. rainbow man
      * @returns {Deferred} resolved immediately
      */
     _executeCloseAction: function (action, options) {
         if (!this.currentDialogController) {
-            options.on_close();
+            options.on_close(action.close_reason);
         }
 
-        this._closeDialog();
+        this._closeDialog({closeReason: action.close_reason });
 
         // display some effect (like rainbowman) on appropriate actions
         if (action.effect) {
