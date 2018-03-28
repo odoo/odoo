@@ -762,13 +762,14 @@ QUnit.module('Views', {
     });
 
     QUnit.test('selection changes are triggered correctly', function (assert) {
-        assert.expect(8);
+        assert.expect(10);
 
+        this.data.foo.records.push({id:5, name: "Crime master gogo"});
         var list = createView({
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+            arch: '<tree limit="4"><field name="foo"/><field name="bar"/></tree>',
         });
         var $tbody_selector = list.$('tbody .o_list_record_selector input').first();
         var $thead_selector = list.$('thead .o_list_record_selector input');
@@ -797,6 +798,12 @@ QUnit.module('Views', {
 
         assert.containsNone(list, 'tbody .o_list_record_selector input:checked',
                             "no selection checkbox should be checked");
+
+        $thead_selector.click();
+        list.$('.o_list_view_select_action[data-action-type="select_all"]').click();
+        assert.strictEqual(n, 6, "selection_changed should have been triggered");
+        list.$('.o_list_view_select_action[data-action-type="clear_selection"]').click();
+        assert.strictEqual(n, 7, "selection_changed should have been triggered");
         list.destroy();
     });
 
@@ -4049,6 +4056,122 @@ QUnit.module('Views', {
 
         assert.strictEqual($('.o_data_cell').text(), "blipblipyopgnap" + inputText);
 
+        list.destroy();
+    });
+
+    QUnit.test('list view "hasSelectionBar" param', function (assert) {
+        assert.expect(1);
+         var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: { hasSelectionBar: false},
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+        });
+         list.$('thead .o_list_record_selector input').click();
+        assert.strictEqual(list.$('.o_list_view_select_all').length, 0,
+            "Don't display selection bar if 'hasSelectionBar' param is false");
+        list.destroy();
+    });
+
+    QUnit.test('list view select all records', function (assert) {
+        assert.expect(9);
+         var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+         // select all records of current page
+        list.$('thead .o_list_record_selector input').click();
+        assert.strictEqual(list.$('.o_list_view_select_all').length, 0,
+            "Don't display selection bar if no records in other page");
+        // change pager limit
+        list.pager.$('.o_pager_value').click();
+        list.pager.$('.o_pager_value .o_input').val('1-2').blur();
+         list.$('thead .o_list_record_selector input').click();
+        assert.strictEqual(list.$('.o_list_view_select_all').length, 1,
+            "Display selection bar to select all records");
+        // unselect one record
+        list.$('tbody .o_list_record_selector .o_checkbox input').eq(1).click();
+        assert.strictEqual(list.$('.o_list_view_select_all').length, 0,
+            "Don't display selection bar if single record of page is unselected");
+        // select record
+        list.$('tbody .o_list_record_selector .o_checkbox input').eq(1).click();
+        assert.strictEqual(list.$('.o_list_view_select_action').data('action-type'), 'select_all',
+            "Display action to select all records of current domain");
+        list.$('.o_list_view_select_action[data-action-type="select_all"]').click();
+        assert.ok(list.allSelected, "boolean value of allSelected should be true");
+        assert.strictEqual(list.$('.o_list_view_select_action').data('action-type'), 'clear_selection',
+            "Display action to clear current selection");
+        list.$('.o_list_view_select_action[data-action-type="clear_selection"]').click();
+        assert.ok(!list.allSelected, "boolean value of allSelected should be false");
+        assert.ok(!list.$('.o_checkbox input:checked').length, "should unselect all records of page");
+        assert.ok(!list.allSelected, "boolean value of allSelected should be false");
+        list.destroy();
+    });
+
+    QUnit.test('list view delete all records', function (assert) {
+        assert.expect(7);
+         var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: { hasSidebar: true},
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw_with_domain') {
+                    assert.ok(args.kwargs.context.active_domain, "Must have 'active_domain' in context");
+                    assert.deepEqual(args.kwargs.context.active_domain, [['bar', '=', true]],
+                        "should be called with correct domain");
+                }
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+        });
+        // select all records of current page
+        list.$('thead .o_list_record_selector input').click();
+        // select all records of active domain
+        list.$('.o_list_view_select_action[data-action-type="select_all"]').click();
+        list.sidebar.$('a:contains(Delete)').click();
+        $('.modal .modal-footer .btn-primary').click();
+        assert.strictEqual(list.$('.o_data_row').length, 0, "Delete all records of active domain");
+         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw_with_domain',
+            '/web/dataset/search_read'], "shouldn't called '/web/dataset/call_kw/foo/unlink'");
+        list.destroy();
+    });
+
+    QUnit.test('list view archive all records', function (assert) {
+        assert.expect(7);
+         // add active field on foo model and make all records active
+        this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
+         var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: { hasSidebar: true},
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            domain: [['bar', '=', true]],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw_with_domain') {
+                    assert.ok(args.kwargs.context.active_domain, "Must have 'active_domain' in context");
+                    assert.deepEqual(args.kwargs.context.active_domain, [["active", "=", true],['bar', '=', true]],
+                        "should be called with correct domain");
+                }
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            },
+        });
+        // select all records of current page
+        list.$('thead .o_list_record_selector input').click();
+        // select all records of active domain
+        list.$('.o_list_view_select_action[data-action-type="select_all"]').click();
+        list.sidebar.$('a:contains(Archive)').click();
+        $('.modal .modal-footer .btn-primary').click(); // confirm
+        assert.strictEqual(list.$('.o_data_row').length, 0, "Archive all records of active domain");
+        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw_with_domain',
+            '/web/dataset/search_read'], "shouldn't called '/web/dataset/call_kw/foo/write'");
         list.destroy();
     });
 });
