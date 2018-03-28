@@ -6,6 +6,7 @@ var ExtendedChatWindow = require('mail.ExtendedChatWindow');
 var AbstractService = require('web.AbstractService');
 var config = require('web.config');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var utils = require('web.utils');
 var web_client = require('web.web_client');
 
@@ -110,9 +111,12 @@ var ChatWindowManager =  AbstractService.extend({
                 keep_unread: options.passively, // don't automatically mark unread messages as seen
                 window: new ExtendedChatWindow(web_client, session.id, prefix + session.name, session.is_folded, session.unread_counter, windowOptions),
             };
-            chatSession.window.on("close_chat_session", null, function () {
-                self._closeChat(chatSession);
-                self.call('chat_manager', 'closeChatSession', chatSession.id);
+            chatSession.window.on("close_chat_session", null, function (composerContent) {
+                if (composerContent) {
+                    self._askCloseChatConfirmation(chatSession);
+                } else {
+                    self._closeChatAndWarnChatManager(chatSession);
+                }
             });
             chatSession.window.on("toggle_star_status", null, function (messageID) {
                 self.call('chat_manager', 'toggleStarStatus', messageID);
@@ -214,6 +218,35 @@ var ChatWindowManager =  AbstractService.extend({
         this.chatSessions.splice(this.displayState.nbSlots-1, 0, chatSession);
     },
     /**
+     * Ask user confirmation to close the chat session
+     *
+     * Any message that has not been sent will be lost
+     *
+     * @private
+     * @param {Object} chatSession
+     * @param {integer} chatSession.id
+     */
+    _askCloseChatConfirmation: function (chatSession) {
+        new Dialog(this, {
+            dialogClass: 'o_mail_close_chat_confirmation',
+            size: 'small',
+            title: _t("You haven't sent your message"),
+            $content: $('<div>', {
+                html: _t("<p>Do you want to close this chat window?</p>"),
+            }),
+            buttons: [{
+                text: _t("Confirm"),
+                classes: 'btn-primary',
+                click: this._closeChatAndWarnChatManager.bind(this, chatSession),
+                close: true,
+            }, {
+                text: _t("Cancel"),
+                close: true,
+            }],
+            zIndex: Number($('.o_chat_window').css('z-index')),
+        }).open();
+    },
+    /**
      * @private
      * @param {Object} chatSession
      * @param {boolean} [chatSession.keep_unread]
@@ -228,6 +261,15 @@ var ChatWindowManager =  AbstractService.extend({
         this.chatSessions = _.without(this.chatSessions, chatSession);
         chatSession.window.destroy();
         this._repositionWindows();
+    },
+    /**
+     * @private
+     * @param {Object} chatSession
+     * @param {integer} chatSession.id
+     */
+    _closeChatAndWarnChatManager: function (chatSession) {
+        this._closeChat(chatSession);
+        this.call('chat_manager', 'closeChatSession', chatSession.id);
     },
     /**
      * @private

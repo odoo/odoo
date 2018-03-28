@@ -149,7 +149,7 @@ return Widget.extend({
     on_click_close: function (event) {
         event.stopPropagation();
         event.preventDefault();
-        this.trigger("close_chat_session");
+        this.trigger("close_chat_session", this.$input.html());
     },
     on_click_fold: function () {
         if (!config.device.isMobile) {
@@ -187,7 +187,7 @@ return Widget.extend({
      */
     _onEscapePressed: function () {
         if (!this.folded) {
-            this.trigger("close_chat_session");
+            this.trigger("close_chat_session", this.$input.html());
         }
     },
 });
