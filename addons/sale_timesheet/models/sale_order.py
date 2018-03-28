@@ -242,7 +242,6 @@ class SaleOrderLine(models.Model):
         return {
             'name': title if project.sale_line_id else '%s: %s' % (self.order_id.name or '', title),
             'planned_hours': planned_hours,
-            'remaining_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
             'description': description,

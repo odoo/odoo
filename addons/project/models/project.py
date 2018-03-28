@@ -486,7 +486,6 @@ class Task(models.Model):
     notes = fields.Text(string='Notes')
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',track_visibility='onchange')
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
-    remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
@@ -619,8 +618,6 @@ class Task(models.Model):
             default = {}
         if not default.get('name'):
             default['name'] = _("%s (copy)") % self.name
-        if 'remaining_hours' not in default:
-            default['remaining_hours'] = self.planned_hours
         return super(Task, self).copy(default)
 
     # Override view according to the company definition

@@ -34,7 +34,7 @@
             <field name="name">Workload</field>
             <field name="model_id">report.project.task.user</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['project_id'], 'measures': ['planned_hours','remaining_hours']}</field>
+            <field name="context">{'group_by': ['project_id'], 'measures': ['planned_hours']}</field>
         </record>
         <record id="filter_task_report_responsible" model="ir.filters">
             <field name="name">By Responsible</field>
@@ -46,7 +46,7 @@
             <field name="name">Cumulative Flow</field>
             <field name="model_id">report.project.task.user</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['stage_id', 'state'], 'measures': ['nbr','planned_hours','remaining_hours']}</field>
+            <field name="context">{'group_by': ['stage_id', 'state'], 'measures': ['nbr','planned_hours']}</field>
         </record>
 
         <record id="view_task_project_user_search" model="ir.ui.view">
