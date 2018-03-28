@@ -14,6 +14,15 @@
         float: left;
         font-size: 2em;
         height: 1.5em;
+        line-height: 1.5em;
+        &.statement_name {
+            .o-text-overflow();
+            &.editable:hover {
+                outline: 1px dashed @odoo-brand-optional;
+                outline-offset: -1px;
+                cursor: pointer;
+            }
+        }
         &.statement_name_edition input {
             width: 85%;
         }

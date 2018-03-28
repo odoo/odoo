@@ -20,9 +20,10 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
         'click div:first h1.statement_name': '_onClickStatementName',
-        'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
+        'blur .statement_name_edition > input': '_onValidateName',
+        'keyup .statement_name_edition > input': '_onKeyupInput'
     },
     /**
      * @override
@@ -63,9 +64,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             defs.push(def);
         }
 
-        this.$('h1.statement_name').text(this._initialState.title);
-
-        delete this._initialState;
+        this.$('h1.statement_name').text(this._initialState.title || _t('No Title'));
 
         this.enterHandler = function (e) {
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
@@ -134,7 +133,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             this._renderNotifications(state.notifications);
         }
 
-        this.$('h1.statement_name').text(state.title);
+        this.$('.statement_name, .statement_name_edition').toggle();
+        this.$('h1.statement_name').text(state.title || _t('No Title'));
     },
 
     //--------------------------------------------------------------------------
@@ -171,7 +171,10 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onClickStatementName: function () {
-        this.$('.statement_name, .statement_name_edition').toggle();
+        if (this._initialState.bank_statement_id) {
+            this.$('.statement_name, .statement_name_edition').toggle();
+            this.$('.statement_name_edition input').focus();
+        }
     },
     /**
      * @private
@@ -233,9 +236,19 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onValidateName: function () {
-        var name = this.model.get(this.handleNameRecord).data.name;
+        var name = this.$('.statement_name_edition input').val().trim();
         this.trigger_up('change_name', {'data': name});
-        this.$('.statement_name, .statement_name_edition').toggle();
+    },
+    /**
+     * Save title on enter key pressed
+     *
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _onKeyupInput: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            this.$('.statement_name_edition input').blur();
+        }
     },
 });
 

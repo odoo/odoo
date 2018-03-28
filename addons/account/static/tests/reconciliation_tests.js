@@ -857,8 +857,7 @@ QUnit.module('account', {
         clientAction.$('h1.statement_name').trigger('click');
         assert.strictEqual(clientAction.$('h1.statement_name:visible').length, 0, "Should hide the statement name title to edit the content");
         assert.strictEqual(clientAction.$('h1.statement_name_edition:visible').length, 1, "Should show the edition field of statement name");
-        clientAction.$('h1.statement_name_edition input').val('BNK/2014/001-BB').trigger('input');
-        clientAction.$('h1.statement_name_edition button').trigger('click');
+        clientAction.$('h1.statement_name_edition input').val('BNK/2014/001-BB').trigger('input').blur();
         assert.strictEqual(clientAction.$('h1.statement_name_edition:visible').length, 0, "Should hide the edition field of statement name");
         assert.strictEqual(clientAction.$('h1.statement_name:visible').length, 1, "Should show the statement name");
         assert.strictEqual(clientAction.$('h1.statement_name:visible').text(), "BNK/2014/001-BB", "Should update the statement name");
