@@ -451,7 +451,7 @@ tour.register('main_flow_tour', {
     content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
-    trigger: '.o_app > div:contains("Purchases"), .oe_menu_toggler:contains("Purchases")',
+    trigger: '.o_app > div:contains("Purchase"), .oe_menu_toggler:contains("Purchase")',
     content: _t('Go to Purchase'),
     position: 'bottom',
 }, {
