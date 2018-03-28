@@ -194,7 +194,8 @@ var FieldTextHtml = widget.extend({
     },
     start: function () {
         var self = this;
-
+        // Do not Forward port in >= 11.0
+        this.$formButtons = this.getParent().$buttons;
         this.callback = _.uniqueId('FieldTextHtml_');
         window.odoo[this.callback+"_editor"] = function (EditorBar) {
             setTimeout(function () {
@@ -297,7 +298,8 @@ var FieldTextHtml = widget.extend({
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
         // deactivate any button to avoid saving a not ready iframe
-        $('.o_cp_buttons, .o_statusbar_buttons').find('button').addClass('o_disabled').attr('disabled', true);
+        // Do not Forward port in >= 11.0
+        this.$formButtons.find('button').addClass('o_disabled').attr('disabled', true);
         this.document = null;
         this.$body = $();
         this.$content = $();
@@ -324,7 +326,8 @@ var FieldTextHtml = widget.extend({
         this._dirty_flag = false;
         this.render_value();
         // reactivate all the buttons when the field's content (the iframe) is loaded
-        $('.o_cp_buttons, .o_statusbar_buttons').find('button').removeClass('o_disabled').attr('disabled', false);
+        // Do not Forward port in >= 11.0
+        this.$formButtons.find('button').removeClass('o_disabled').attr('disabled', false);
         setTimeout(function () {
             self.add_button();
             setTimeout(self.resize,0);
@@ -422,6 +425,8 @@ var FieldTextHtml = widget.extend({
         }
     },
     destroy: function () {
+        // Do not Forward port in >= 11.0
+        this.$formButtons.find('button').removeClass('o_disabled').attr('disabled', false);
         $(window).off('resize', this.resize);
         delete window.odoo[this.callback+"_editor"];
         delete window.odoo[this.callback+"_content"];
