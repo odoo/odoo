@@ -22,55 +22,39 @@
     <t t-name="DocumentViewer.Content">
         <div class="o_viewer_content">
             <div class="o_viewer-header">
-                <h2 class="o_image_caption"><t t-esc="widget.activeAttachment.name"/></h2>
-                <ul class="list-inline pull-right">
-                    <li t-if="widget.activeAttachment.type == 'image'">
-                        <a class="o_print_btn" href="#">
-                            <i class="fa fa-2x fa-print"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_close_btn" href="#">
-                            <i class="fa fa-2x fa-times"/>
-                        </a>
-                    </li>
-                </ul>
+                <span class="o_image_caption">
+                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.type == 'image'"/>
+                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.type == 'application/pdf'"/>
+                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.type == 'video'"/>
+                    <t t-esc="widget.activeAttachment.name"/>
+                    <a href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download"/></a>
+                </span>
+                <a class="o_close_btn pull-right" href="#">×</a>
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
-                    <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img">
-                        <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"/>
+                    <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img text-center">
+                        <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" aria-hidden="true"/>
                     </div>
                     <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1"/>
-                    <iframe class="mb48 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
+                    <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
                     <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
                 </div>
             </div>
-            <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar">
-                <ul class="list-inline">
-                    <li>
-                        <a class="o_rotate" href="#">
-                            <i class="fa fa-2x fa-repeat"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_zoom_out" href="#">
-                            <i class="fa fa-2x fa-search-minus"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_zoom_in" href="#">
-                            <i class="fa fa-2x fa-search-plus"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_download_btn" href="#">
-                            <i class="fa fa-2x fa-download"/>
-                        </a>
-                    </li>
-                </ul>
+            <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
+                <div class="btn-group ml0" role="group">
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_out" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus"/></a>
+                </div>
+                <div class="btn-group" role="group">
+                    <a href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat"/></a>
+                </div>
+                <div class="btn-group" role="group">
+                    <a href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download"/></a>
+                </div>
             </div>
         </div>
     </t>
@@ -81,10 +65,10 @@
 
             <t t-if="widget.attachment.length != 1">
                 <a class="arrow arrow-left move_previous" href="#">
-                    <span class="fa fa-3x fa-chevron-left"/>
+                    <span class="fa fa-chevron-left"/>
                 </a>
                 <a class="arrow arrow-right move_next" href="#">
-                    <span class="fa fa-3x fa-chevron-right"/>
+                    <span class="fa fa-chevron-right"/>
                 </a>
             </t>
         </div>
