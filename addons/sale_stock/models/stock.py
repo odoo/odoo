@@ -26,6 +26,15 @@ class StockMove(models.Model):
         keys_sorted.append(move.sale_line_id.id)
         return keys_sorted
 
+    def _get_related_invoices(self):
+        """ Overridden from stock_account to return the customer invoices
+        related to this stock move.
+        """
+        rslt = super(StockMove, self)._get_related_invoices()
+        invoices = self.mapped('picking_id.sale_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
+        rslt += invoices
+        #rslt += invoices.mapped('refund_invoice_ids')
+        return rslt
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
