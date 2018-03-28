@@ -1878,7 +1878,7 @@ class AccountPartialReconcile(models.Model):
                 exchange_move = self.env['account.move'].create(
                     self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=aml_to_balance[0].company_id))
                 #eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
-                rate_diff_amls, rate_diff_partial_rec = self.create_exchange_rate_entry(aml_to_balance, total_debit - total_credit, total_amount_currency, aml_to_balance.currency_id, exchange_move)
+                rate_diff_amls, rate_diff_partial_rec = self.create_exchange_rate_entry(aml_to_balance, total_debit - total_credit, total_amount_currency, aml_to_balance[0].currency_id, exchange_move)
                 aml_ids += rate_diff_amls.ids
                 partial_rec_ids += rate_diff_partial_rec.ids
                 exchange_move.post()
