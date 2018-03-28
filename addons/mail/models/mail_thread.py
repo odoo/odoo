@@ -461,7 +461,7 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()
         # get the subtype of the comment Message
-        subtype_comment = self.env.ref('mail.mt_comment')
+        subtype_comment = self.env['mail.message.subtype']._get_subtype_id('discussion')
 
         # get the ids of the comment and not-comment of the thread
         # TDE check: sudo on mail.message, to be sure all messages are moved ?
@@ -1837,12 +1837,20 @@ class MailThread(models.AbstractModel):
             partner_ids |= private_followers
 
         # 4: mail.message.subtype
-        subtype_id = kwargs.get('subtype_id', False)
+        subtype_id, subtype_code = kwargs.get('subtype_id', False), kwargs.pop('subtype_code', False)
         if not subtype_id:
-            subtype = subtype or 'mt_note'
-            if '.' not in subtype:
-                subtype = 'mail.%s' % subtype
-            subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype)
+            if subtype_code:
+                if subtype_code in ['note', 'discussion', 'activity']:
+                    subtype_id = self.env['mail.message.subtype']._get_subtype_id(subtype_code)
+                else:
+                    subtype_id = self.env['mail.message.subtype'].sudo().search([('code', '=', subtype_code)], limit=1).id
+            elif (subtype and 'mt_note' in subtype) or not subtype:
+                subtype_id = self.env['mail.message.subtype']._get_subtype_id('note')
+            elif subtype and 'mt_comment' in subtype:
+                subtype_id = self.env['mail.message.subtype']._get_subtype_id('discussion')
+            else:
+                subtype = 'mail.%s' % subtype if '.' not in subtype else subtype
+                subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype)
 
         # automatically subscribe recipients if asked to
         if self._context.get('mail_post_autofollow') and self.ids and partner_ids:
@@ -1986,7 +1994,7 @@ class MailThread(models.AbstractModel):
             'message_type': 'notification',
             'partner_ids': partner_ids,
             'model': False,
-            'subtype_id': self.env['ir.model.data'].sudo().xmlid_to_res_id('mail.mt_note'),
+            'subtype_id': self.env['mail.message.subtype']._get_subtype_id('note'),
             'record_name': False,
             'reply_to': self.env['mail.thread'].sudo()._notify_get_reply_to([0])[0],
             'message_id': tools.generate_tracking_message_id('message-notify'),
