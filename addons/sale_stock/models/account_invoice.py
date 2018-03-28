@@ -18,7 +18,7 @@ class AccountInvoice(models.Model):
         for invoice in self.filtered(lambda x: x.type == 'out_invoice'):
             rslt += invoice.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
         for invoice in self.filtered(lambda x: x.type == 'out_refund'):
-            rslt += invoice.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
+            rslt += invoice.mapped('refund_invoice_id.invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return rslt
 
 

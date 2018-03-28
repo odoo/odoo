@@ -10,9 +10,11 @@ class ValuationReconciliationTestCase(AccountingTestCase):
     extended in both sale_stock and purchase modules to run the 'true' tests.
     """
 
-    def check_reconciliation(self, invoice, picking, full_reconcile=True):
-        invoice_line = self.env['account.move.line'].search([('move_id','=', invoice.move_id.id), ('account_id', '=', self.input_account.id)])
-        valuation_line = picking.move_lines.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id == self.input_account)
+    def check_reconciliation(self, invoice, picking, full_reconcile=True, operation='purchase'):
+        interim_account_id = operation == 'purchase' and self.input_account.id or self.output_account.id
+        invoice_line = self.env['account.move.line'].search([('move_id','=', invoice.move_id.id), ('account_id', '=', interim_account_id)])
+        valuation_line = picking.move_lines.mapped('account_move_ids.line_ids').filtered(lambda x: x.account_id.id == interim_account_id)
+
         self.assertEqual(len(invoice_line), 1, "Only one line should have been written by invoice in stock input account")
         self.assertEqual(len(valuation_line), 1, "Only one line should have been written for stock valuation in stock input account")
         self.assertTrue(valuation_line.reconciled or invoice_line.reconciled, "The valuation and invoice line should have been reconciled together.")
@@ -77,6 +79,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'reconcile': True,
             'company_id': self.company.id,
         })
+
 
         self.test_product_category = self._create_product_category()
 
