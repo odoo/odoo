@@ -103,7 +103,7 @@ class MrpUnbuild(models.Model):
         produce_moves = self._generate_produce_moves()
 
         if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
-            raise UserError(_('You should specify a manufacturing order in order to find the correct tracked products.'))
+            raise UserError(_('Some of your components are tracked, you have to specify a manufacturing order in order to retrieve the correct components.'))
 
         if consume_move.has_tracking != 'none':
             self.env['stock.move.line'].create({
