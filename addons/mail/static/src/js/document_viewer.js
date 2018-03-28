@@ -59,6 +59,7 @@ var DocumentViewer = Widget.extend({
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
     },
 
@@ -102,6 +103,7 @@ var DocumentViewer = Widget.extend({
             widget: this
         }));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         this._reset();
     },
     /**
@@ -184,6 +186,7 @@ var DocumentViewer = Widget.extend({
             var top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
             var left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
             $zoomer.css("transform", "translate3d("+ left +"px, " + top + "px, 0)");
+            $image.css('cursor', 'move');
         }
     },
     /**
@@ -196,6 +199,7 @@ var DocumentViewer = Widget.extend({
             this.enableDrag = false;
             this.dragstopX = e.clientX - this.dragStartX;
             this.dragstopY = e.clientY - this.dragStartY;
+            this.$('.o_viewer_img').css('cursor', '');
         }
     },
     /**
