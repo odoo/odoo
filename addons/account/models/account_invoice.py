@@ -1204,8 +1204,8 @@ class AccountInvoice(models.Model):
         for inv in self:
             if inv.move_id:
                 moves += inv.move_id
-            if inv.payment_move_line_ids:
-                raise UserError(_('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
+            #unreconcile all journal items of the invoice, since the cancellation will unlink them anyway
+            inv.move_id.line_ids.filtered(lambda x: x.account_id.reconcile).remove_move_reconcile()
 
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})

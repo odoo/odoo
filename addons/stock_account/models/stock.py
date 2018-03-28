@@ -71,7 +71,7 @@ class StockMoveLine(models.Model):
             if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
                 move.with_context(force_valuation_amount=correction_value)._account_entry_move()
         return res
-    
+
     @api.multi
     def write(self, vals):
         if 'qty_done' in vals:
@@ -489,7 +489,7 @@ class StockMove(models.Model):
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
-    
+
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
@@ -522,7 +522,16 @@ class StockMove(models.Model):
             if self.location_id.usage == 'customer' and self.origin_returned_move_id:
                 debit_value = self.origin_returned_move_id.price_unit * qty
                 credit_value = debit_value
-        partner_id = (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
+
+        valuation_partner_id = self._get_partner_id_for_valuation_lines()
+        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id).values()]
+
+        return res
+
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+        # This method returns a dictonary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
+        self.ensure_one()
+
         debit_line_vals = {
             'name': self.name,
             'product_id': self.product_id.id,
@@ -534,6 +543,7 @@ class StockMove(models.Model):
             'credit': -debit_value if debit_value < 0 else 0,
             'account_id': debit_account_id,
         }
+
         credit_line_vals = {
             'name': self.name,
             'product_id': self.product_id.id,
@@ -545,16 +555,19 @@ class StockMove(models.Model):
             'debit': -credit_value if credit_value < 0 else 0,
             'account_id': credit_account_id,
         }
-        res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+
+        rslt = {'credit_line_vals': credit_line_vals, 'debit_line_vals': debit_line_vals}
         if credit_value != debit_value:
             # for supplier returns of product in average costing method, in anglo saxon mode
             diff_amount = debit_value - credit_value
             price_diff_account = self.product_id.property_account_creditor_price_difference
+
             if not price_diff_account:
                 price_diff_account = self.product_id.categ_id.property_account_creditor_price_difference_categ
             if not price_diff_account:
                 raise UserError(_('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
-            price_diff_line = {
+
+            rslt['price_diff_line_vals'] = {
                 'name': self.name,
                 'product_id': self.product_id.id,
                 'quantity': qty,
@@ -565,8 +578,10 @@ class StockMove(models.Model):
                 'debit': diff_amount < 0 and -diff_amount or 0,
                 'account_id': price_diff_account.id,
             }
-            res.append((0, 0, price_diff_line))
-        return res
+        return rslt
+
+    def _get_partner_id_for_valuation_lines(self):
+        return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
 
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
         self.ensure_one()
@@ -619,6 +634,16 @@ class StockMove(models.Model):
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+
+        if self.company_id.anglo_saxon_accounting:
+            #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
+            self._get_related_invoices()._anglo_saxon_reconcile_valuation(product=self.product_id)
+
+    def _get_related_invoices(self): # To be overridden in purchase and sale_stock
+        """ This method is overrided in both purchase and sale_stock modules to adapt
+        to the way they mix stock moves with invoices.
+        """
+        return self.env['account.invoice']
 
 
 class StockReturnPicking(models.TransientModel):
