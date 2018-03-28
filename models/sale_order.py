@@ -41,7 +41,8 @@ class SaleOrder(models.Model):
         }
 
     def _get_lines_unit_prices(self):
-        return [x.price_unit for x in self.order_line.filtered(lambda x: not x.is_delivery and not x.program_id)]
+        # Unit prices tax included
+        return [x.price_total / x.product_uom_qty for x in self.order_line.filtered(lambda x: not x.is_delivery and not x.is_reward_line)]
 
 class SalesOrderLine(models.Model):
     _inherit = "sale.order.line"
