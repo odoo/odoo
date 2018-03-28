@@ -46,7 +46,7 @@ class ResUsers(models.Model):
     def _inverse_password(self):
         for user in self:
             user._set_password(user.password)
-            self.invalidate_cache()
+            self.invalidate_cache(['password'])
 
     @api.model
     def check_credentials(self, password):
