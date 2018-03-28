@@ -1064,6 +1064,10 @@ var MockServer = Class.extend({
      *          exception (@see performRpc for error handling).
      */
     _performRpc: function (route, args) {
+        if (args.kwargs && args.kwargs.context && args.kwargs.context.active_domain) {
+            var records = this._getRecords(args.model, args.kwargs.context.active_domain);
+            args.args[0] = _.pluck(records, 'id');
+        }
         switch (route) {
             case '/web/action/load':
                 return $.when(this._mockLoadAction(args.kwargs));
