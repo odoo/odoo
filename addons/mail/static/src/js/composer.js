@@ -537,9 +537,14 @@ var BasicComposer = Widget.extend({
         clearTimeout(this.canned_timeout);
         var self = this;
         this.preprocess_message().then(function (message) {
-            self.trigger('post_message', message);
-            self.clear_composer_on_send();
-            self.$input.focus();
+            self.trigger('post_message', {
+                message: message,
+                callback: function () {
+                    // executed when message has been posted (server response)
+                    self.clear_composer_on_send();
+                    self.$input.focus();
+                },
+            });
         });
     },
 

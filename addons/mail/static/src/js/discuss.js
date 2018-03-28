@@ -850,11 +850,14 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
-     * @param {Object} message
+     * @param {Object} params
+     * @param {Object} params.message
+     * @param {function} params.callback
      */
-    _onPostMessage: function (message) {
+    _onPostMessage: function (params) {
         var self = this;
         var options = this.selected_message ? {} : {channelID: this.channel.id};
+        var message = params.message;
         if (this.selected_message) {
             message.subtype = this.selected_message.is_note ? 'mail.mt_note': 'mail.mt_comment';
             message.subtype_id = false;
@@ -869,6 +872,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 } else {
                     self.thread.scroll_to();
                 }
+                params.callback(); // warn composer that message has been posted (server response)
             })
             .fail(function () {
                 // todo: display notification

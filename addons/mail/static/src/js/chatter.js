@@ -199,14 +199,7 @@ var Chatter = Widget.extend({
             if (!config.device.touch) {
                 self.composer.focus();
             }
-            self.composer.on('post_message', self, function (message) {
-                self.fields.thread.postMessage(message).then(function () {
-                    self._closeComposer(true);
-                    if (self.postRefresh === 'always' || (self.postRefresh === 'recipients' && message.partner_ids.length)) {
-                        self.trigger_up('reload');
-                    }
-                });
-            });
+            self.composer.on('post_message', self, self._onPostMessage);
             self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
             self.composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
@@ -371,6 +364,26 @@ var Chatter = Widget.extend({
      */
     _onOpenComposerNote: function () {
         this._openComposer({is_log: true});
+    },
+    /**
+     * Post the message from the composer
+     *
+     * @private
+     * @param {Object} params
+     * @param {Object} params.message message object created by the composer
+     * @param {function} params.callback callback function to warn the composer
+     *    when the message has been posted
+     */
+    _onPostMessage: function (params) {
+        var self = this;
+        var message = params.message;
+        this.fields.thread.postMessage(message).then(function () {
+            self._closeComposer(true);
+            if (self.postRefresh === 'always' || (self.postRefresh === 'recipients' && message.partner_ids.length)) {
+                self.trigger_up('reload');
+            }
+            params.callback(); // warn composer that message has been posted (server response)
+        });
     },
     /**
      * @private

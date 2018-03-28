@@ -293,6 +293,61 @@ QUnit.test('no crash focusout emoji button', function (assert) {
     });
 });
 
+QUnit.test('input not cleared on unresolved message_post rpc', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    // Deferred to simulate late server response on message post
+    var messagePostDef = $.Deferred();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'message_post') {
+                // unresolved deferred to simulates message not posted
+                return messagePostDef;
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        // Click on channel 'general'
+        var $general = discuss.$('.o_mail_chat_sidebar')
+            .find('.o_mail_chat_channel_item[data-channel-id=1]');
+        $general.click();
+
+        // Type message
+        var $input = discuss.$('.o_composer_input').first();
+        $input.text('test message');
+
+        // Send message
+        $input.trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+        assert.strictEqual($input.text(), 'test message',
+            "composer should not be cleared on send without server response");
+
+        // Simulate server response
+        messagePostDef.resolve();
+        assert.strictEqual($input.text(), '',
+            "composer should be cleared on send after server response");
+            discuss.destroy();
+            done();
+    });
+});
+
 QUnit.test('older messages are loaded on scroll', function (assert) {
     assert.expect(4);
     var done = assert.async();
@@ -425,13 +480,13 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
                     type: 'boolean',
                 },
                 needaction: {
-                  string: "Need Action",
-                  type: 'boolean',
-              },
-              starred_partner_ids: {
-                  string: "partner ids",
-                  type: 'integer',
-              }
+                string: "Need Action",
+                type: 'boolean',
+            },
+            starred_partner_ids: {
+                string: "partner ids",
+                type: 'integer',
+            }
             },
             records: msgData,
         },
@@ -477,7 +532,6 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
         done();
     });
 });
-
 
 });
 });

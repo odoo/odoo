@@ -26,9 +26,11 @@ return ChatWindow.extend({
                 .focus();
         } else if (!self.options.input_less) {
             var basicComposer = new composer.BasicComposer(self, {mention_partners_restricted: true, isMini: true});
-            basicComposer.on('post_message', self, function (message) {
-                self.call('chat_manager', 'postMessage', message, {
+            basicComposer.on('post_message', self, function (params) {
+                self.call('chat_manager', 'postMessage', params.message, {
                     channelID: self.channel_id,
+                }).then(function () {
+                    params.callback(); // warn composer that message has been posted (server response)
                 });
             });
             basicComposer.once('input_focused', self, function () {
