@@ -448,7 +448,8 @@ class AccountInvoice(models.Model):
         for invoice in self:
             if invoice.state not in ('draft', 'cancel'):
                 raise UserError(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
-            elif invoice.move_name:
+            #TRESCLOUD - se agrega el bypass_move_name_restriction
+            elif not self._context.get('bypass_move_name_restriction') and invoice.move_name:
                 raise UserError(_('You cannot delete an invoice after it has been validated (and received a number). You can set it back to "Draft" state and modify its content, then re-confirm it.'))
         return super(AccountInvoice, self).unlink()
 
