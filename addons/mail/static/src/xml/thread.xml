@@ -46,12 +46,13 @@
             <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
                 <div class="btn-group ml0" role="group">
                     <a href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus"/></a>
-                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_out" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus"/></a>
                 </div>
-                <div class="btn-group" role="group">
+                <div class="btn-group ml8" role="group">
                     <a href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat"/></a>
                 </div>
-                <div class="btn-group" role="group">
+                <div class="btn-group ml8" role="group">
                     <a href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print"/></a>
                     <a href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download"/></a>
                 </div>
