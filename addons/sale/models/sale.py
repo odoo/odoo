@@ -585,7 +585,6 @@ class SaleOrder(models.Model):
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, {'amount': 0.0, 'base': 0.0})
-                # FORWARD-PORT UP TO SAAS-17
                 for t in taxes:
                     if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
                         res[group]['amount'] += t['amount']
