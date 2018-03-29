@@ -92,9 +92,9 @@
                     <field name="partner_id" />
                     <field name="journal_id" />
                     <field name="company_id" groups="base.group_multi_company" />
-                    <filter string="Payable" domain="[('payment_type','=','outbound')]"/>
-                    <filter string="Receivable" domain="[('payment_type','=','inbound')]"/>
-                    <filter string="Transfers" domain="[('payment_type','=','transfer')]"/>
+                    <filter string="Payable" name="payable_filter" domain="[('payment_type','=','outbound')]"/>
+                    <filter string="Receivable" name="receivable_filter" domain="[('payment_type','=','inbound')]"/>
+                    <filter string="Transfers" name="transfers_filter" domain="[('payment_type','=','transfer')]"/>
                     <separator/>
                     <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
                     <filter string="Posted" domain="[('state','=','posted')]" name='state_posted'/>
@@ -188,8 +188,8 @@
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph</field>
-            <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer'}</field>
-            <field name="domain">[('partner_type', '=', 'customer')]</field>
+            <field name="context">{'default_payment_type': 'inbound', 'default_partner_type': 'customer', 'search_default_receivable_filter': 1}</field>
+            <field name="domain">[]</field>
             <field name="view_id" ref="view_account_payment_tree"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -206,8 +206,8 @@
             <field name="res_model">account.payment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph</field>
-            <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier'}</field>
-            <field name="domain">[('partner_type', '=', 'supplier')]</field>
+            <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier', 'search_default_payable_filter': 1}</field>
+            <field name="domain">[]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
