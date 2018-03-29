@@ -110,16 +110,6 @@ class Project(models.Model):
         for project in self:
             project.task_count = result.get(project.id, 0)
 
-    def _compute_task_needaction_count(self):
-        projects_data = self.env['project.task'].read_group([
-            ('project_id', 'in', self.ids),
-            ('message_needaction', '=', True)
-        ], ['project_id'], ['project_id'])
-        mapped_data = {project_data['project_id'][0]: int(project_data['project_id_count'])
-                       for project_data in projects_data}
-        for project in self:
-            project.task_needaction_count = mapped_data.get(project.id, 0)
-
     @api.multi
     def attachment_tree_view(self):
         self.ensure_one()
@@ -211,7 +201,6 @@ class Project(models.Model):
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
-    task_needaction_count = fields.Integer(compute='_compute_task_needaction_count', string="Task Activitie Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
     color = fields.Integer(string='Color Index')
