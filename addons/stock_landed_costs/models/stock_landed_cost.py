@@ -103,6 +103,7 @@ class LandedCost(models.Model):
                 new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
                 line.move_id.write({
                     'landed_cost_value': new_landed_cost_value,
+                    'value': line.move_id.value + cost_to_add,
                     'remaining_value': line.move_id.remaining_value + cost_to_add,
                     'price_unit': (line.move_id.value + new_landed_cost_value) / line.move_id.product_qty,
                 })
@@ -321,7 +322,7 @@ class AdjustmentLines(models.Model):
             'name': self.name,
             'move_id': move.id,
             'product_id': self.product_id.id,
-            'quantity': self.quantity,
+            'quantity': 0,
         }
         debit_line = dict(base_line, account_id=debit_account_id)
         credit_line = dict(base_line, account_id=credit_account_id)
@@ -340,11 +341,11 @@ class AdjustmentLines(models.Model):
         if qty_out > 0:
             debit_line = dict(base_line,
                               name=(self.name + ": " + str(qty_out) + _(' already out')),
-                              quantity=qty_out,
+                              quantity=0,
                               account_id=already_out_account_id)
             credit_line = dict(base_line,
                                name=(self.name + ": " + str(qty_out) + _(' already out')),
-                               quantity=qty_out,
+                               quantity=0,
                                account_id=debit_account_id)
             diff = diff * qty_out / self.quantity
             if diff > 0:
@@ -361,11 +362,11 @@ class AdjustmentLines(models.Model):
             if self.env.user.company_id.anglo_saxon_accounting:
                 debit_line = dict(base_line,
                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                  quantity=qty_out,
+                                  quantity=0,
                                   account_id=credit_account_id)
                 credit_line = dict(base_line,
                                    name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                   quantity=qty_out,
+                                   quantity=0,
                                    account_id=already_out_account_id)
 
                 if diff > 0:
