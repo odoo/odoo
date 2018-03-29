@@ -503,10 +503,14 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # determine the chain of fields, and make sure they are all set up
         target = model
+        field = None
         for name in self.related:
-            field = target._fields[name]
-            field.setup_full(target)
-            target = target[name]
+            if name in target._fields:
+                field = target._fields[name]
+                field.setup_full(target)
+                target = target[name]
+        if not field:
+            return
 
         self.related_field = field
 
