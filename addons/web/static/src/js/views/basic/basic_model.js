@@ -472,8 +472,12 @@ var BasicModel = AbstractModel.extend({
                 } else if (field.type === 'one2many' || field.type === 'many2many') {
                     if (options.raw) {
                         relDataPoint = this.localData[data[fieldName]];
-                        relDataPoint = this._applyX2ManyOperations(relDataPoint);
-                        data[fieldName] = relDataPoint.res_ids;
+                        if (relDataPoint) {
+                            relDataPoint = this._applyX2ManyOperations(relDataPoint);
+                            data[fieldName] = relDataPoint.res_ids;
+                        } else {
+                            data[fieldName] = [];
+                        }
                     } else {
                         data[fieldName] = this.get(data[fieldName]) || [];
                     }
