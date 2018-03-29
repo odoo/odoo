@@ -386,26 +386,77 @@ class PosOrder(models.Model):
             move.sudo().post()
         return True
 
+    def _fast_reconcile(self, amls):
+        debit_amls = amls.filtered(lambda aml: aml.debit > 0)
+        credit_amls = amls.filtered(lambda aml: aml.credit > 0)
+        company_id = debit_amls and debit_amls[0].company_id
+        company_currency_id = company_id.currency_id
+        # Ensure that this is a full reconciliation
+        sum_debit = sum([a.debit for a in debit_amls])
+        sum_credit = sum([a.credit for a in credit_amls])
+        # If reconciliation is not total or that all moves don't have same currency, skip, it won't be reconciled at all
+        # So user will have to do it himself
+        if not float_is_zero(sum_debit-sum_credit, precision_rounding=company_currency_id.rounding):
+            return
+        if len(set([a.currency_id for a in amls])) > 1:
+            return
+        currency_id = debit_amls and debit_amls[0].currency_id
+        if currency_id.id:
+            currency_id = currency_id.id
+        else:
+            currency_id = None
+        partial_reconcile_ids = []
+        full_reconcile = self.env['account.full.reconcile'].create({})
+        test = []
+        while True:
+            if not debit_amls.ids or not credit_amls.ids:
+                break
+            debit = debit_amls[0]
+            credit = credit_amls[0]
+            amount = min(debit.amount_residual, credit.amount_residual)
+            amount_currency = min(debit.amount_currency, credit.amount_currency)
+
+            vals = (debit.id, credit.id, amount, amount_currency, currency_id, company_id.id, full_reconcile.id)
+            test.append(vals)
+            if float_is_zero(debit.amount_residual - amount, precision_rounding=company_currency_id.rounding):
+                debit_amls = debit_amls[1:]
+            else:
+                debit_amls[0].amount_residual -= amount
+                debit_amls[0].amount_residual_currency -= amount_currency
+            if float_is_zero(credit.amount_residual - amount, precision_rounding=company_currency_id.rounding):
+                credit_amls = credit_amls[1:]
+            else:
+                credit_amls[0].amount_residual -= amount
+                credit_amls[0].amount_residual_currency -= amount_currency
+            # Create partial reconcile
+            self.env.cr.execute('''INSERT INTO account_partial_reconcile
+                    (debit_move_id, credit_move_id, amount, amount_currency, currency_id, company_id, full_reconcile_id) VALUES (%s, %s, %s, %s, %s, %s, %s)''', vals)
+
+        # update account_move_line 
+        self.env.cr.execute('UPDATE account_move_line SET reconciled=%s, amount_residual=0, amount_residual_currency=0, full_reconcile_id=%s WHERE id IN %s', (True, full_reconcile.id, tuple(amls.ids)))
+
+
     def _reconcile_payments(self):
+        reconcile_by_partner = {}
+        invoices = self.env['account.invoice']
         for order in self:
             aml = order.statement_ids.mapped('journal_entry_ids').mapped('line_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
+            if order.invoice_id:
+                invoices += order.invoice_id
             aml = aml.filtered(lambda r: not r.reconciled and r.account_id.internal_type == 'receivable' and r.partner_id == order.partner_id.commercial_partner_id)
+            partner = len(aml) > 1 and aml[0].partner_id and aml[0].partner_id.id or False
+            if reconcile_by_partner.get(partner):
+                reconcile_by_partner[partner] = reconcile_by_partner[partner] | aml
+            else:
+                reconcile_by_partner[partner] = aml
+        for k,v in reconcile_by_partner.items():
+            self._fast_reconcile(v)
+        # Validate invoice
+        self.invalidate_cache()
+        for inv in invoices:
+            inv._compute_residual()
+            inv._compute_payments()
 
-            # Reconcile returns first
-            # to avoid mixing up the credit of a payment and the credit of a return
-            # in the receivable account
-            aml_returns = aml.filtered(lambda l: (l.journal_id.type == 'sale' and l.credit) or (l.journal_id.type != 'sale' and l.debit))
-            try:
-                aml_returns.reconcile()
-                (aml - aml_returns).reconcile()
-            except:
-                # There might be unexpected situations where the automatic reconciliation won't
-                # work. We don't want the user to be blocked because of this, since the automatic
-                # reconciliation is introduced for convenience, not for mandatory accounting
-                # reasons.
-                # It may be interesting to have the Traceback logged anyway
-                # for debugging and support purposes
-                _logger.exception('Reconciliation did not work for order %s', order.name)
 
     def _default_session(self):
         return self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
