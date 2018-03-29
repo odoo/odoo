@@ -1328,15 +1328,20 @@
         </div>
     </div>
 </div>
-<div t-name="Export.TreeItems"
-    t-foreach="fields" t-as="field"
-    t-att-data-id="field.id"
-    class="o_export_tree_item"
-    tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
-    <span t-if="field.children &amp;&amp; (field.id).split('/').length != 3"
-          class="o_expand_parent fa fa-plus" role="img" aria-label="Expand parents" title="Expand parents"/>
-    <span class="o_tree_column" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
-</div>
+<t t-name="Export.TreeItems">
+    <t t-foreach="fields" t-as="field">
+        <t t-set="has_child" t-value="field.children &amp;&amp; (field.id).split('/').length != 3" />
+        <div t-att-data-id="field.id" t-attf-class="o_export_tree_item #{has_child ? 'haschild' : ''}" tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
+            <t t-if="has_child">
+                <span class="o_expand o_expand_parent fa fa-chevron-right" role="img" aria-label="Expand parents" title="Expand parents"/>
+                <span class="o_tree_column o_expand" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
+            </t>
+            <t t-else="">
+                <span class="o_tree_column" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
+            </t>
+        </div>
+    </t>
+</t>
 <t t-name="Export.SaveList">
     <label>Save as:</label> <input type="text"/><button type="button" class="btn btn-sm btn-default">Ok</button>
 </t>

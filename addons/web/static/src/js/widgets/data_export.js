@@ -14,7 +14,7 @@ var _t = core._t;
 var DataExport = Dialog.extend({
     template: 'ExportDialog',
     events: {
-        'click .o_expand_parent': function(e) {
+        'click .o_expand': function(e) {
             this.on_expand_action(this.records[$(e.target).closest('.o_export_tree_item').data('id')]);
         },
         'click .o_export_tree_item': function(e) {
@@ -56,10 +56,19 @@ var DataExport = Dialog.extend({
                 }
             }
         },
-        'dblclick .o_export_tree_item': function(e) {
+        'dblclick .o_export_tree_item:not(.haschild)': function(e) {
+            var self = this;
             var $elem = $(e.currentTarget);
             $elem.removeClass('o_selected');
             this.add_field($elem.data('id'), $elem.find('.o_tree_column').first().text());
+            // Add its parents to export
+            var $parents = $elem.parents('.o_export_tree_item');
+            if ($parents.length) {
+                _.each($parents, function (el) {
+                    var $el = $(el);
+                    self.add_field($el.data('id'), $el.find('.o_tree_column').first().text());
+                })
+            }
         },
         'keydown .o_export_tree_item': function(e) {
             e.stopPropagation();
@@ -395,7 +404,7 @@ var DataExport = Dialog.extend({
             this.$('.o_export_tree_item[data-id="' + expansion + '"]')
                 .addClass('open')
                 .find('.o_expand_parent')
-                .toggleClass('fa-plus fa-minus')
+                .toggleClass('fa-chevron-right fa-chevron-down')
                 .next()
                 .after(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.getSession().debug}));
         } else {
@@ -417,7 +426,7 @@ var DataExport = Dialog.extend({
         $this.toggleClass('open');
         var is_open = $this.hasClass('open');
 
-        $this.children('.o_expand_parent').toggleClass('fa-minus', !!is_open).toggleClass('fa-plus', !is_open);
+        $this.children('.o_expand_parent').toggleClass('fa-chevron-down', !!is_open).toggleClass('fa-chevron-right', !is_open);
 
         var $child_field = $this.find('.o_export_tree_item');
         var child_len = (id.split("/")).length + 1;
@@ -428,7 +437,7 @@ var DataExport = Dialog.extend({
             } else if(child_len === $child_field.eq(i).data('id').split("/").length) {
                 if ($child.hasClass('open')) {
                     $child.removeClass('open');
-                    $child.children('.o_expand_parent').removeClass('fa-minus').addClass('fa-plus');
+                    $child.children('.o_expand_parent').removeClass('fa-chevron-down').addClass('fa-chevron-right');
                 }
                 $child.show();
             }
