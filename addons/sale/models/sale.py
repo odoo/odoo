@@ -1067,23 +1067,21 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def name_get(self):
-        if self._context.get('sale_show_order_product_name'):
-            result = []
-            for so_line in self:
-                name = '%s - %s' % (so_line.order_id.name, so_line.product_id.name)
-                result.append((so_line.id, name))
-            return result
-        return super(SaleOrderLine, self).name_get()
+        result = []
+        for so_line in self:
+            name = '%s - %s' % (so_line.order_id.name, so_line.name.split('\n')[0] or so_line.product_id.name)
+            if so_line.order_partner_id.ref:
+                name = '%s (%s)' % (name, so_line.order_partner_id.ref)
+            result.append((so_line.id, name))
+        return result
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if self._context.get('sale_show_order_product_name'):
-            if operator in ('ilike', 'like', '=', '=like', '=ilike'):
-                domain = expression.AND([
-                    args or [],
-                    ['|', ('order_id.name', operator, name), ('name', operator, name)]
-                ])
-                return self.search(domain, limit=limit).name_get()
+        if operator in ('ilike', 'like', '=', '=like', '=ilike'):
+            args = expression.AND([
+                args or [],
+                ['|', ('order_id.name', operator, name), ('name', operator, name)]
+            ])
         return super(SaleOrderLine, self).name_search(name, args, operator, limit)
 
     @api.multi
