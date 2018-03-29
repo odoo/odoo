@@ -79,11 +79,13 @@ class ResConfigSettings(models.TransientModel):
         operation types of the warehouses, so they won't appear in the dashboard.
         Otherwise, activate them.
         """
+        warehouse_obj = self.env['stock.warehouse']
         if self.group_stock_multi_locations:
-            warehouses = self.env['stock.warehouse'].search([])
+            # override active_test that is false in set_values
+            warehouses = warehouse_obj.with_context(active_test=True).search([])
             active = True
         else:
-            warehouses = self.env['stock.warehouse'].search([
+            warehouses = warehouse_obj.search([
                 ('reception_steps', '=', 'one_step'),
                 ('delivery_steps', '=', 'ship_only')])
             active = False
