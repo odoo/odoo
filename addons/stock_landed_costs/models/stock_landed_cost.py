@@ -282,13 +282,12 @@ class AdjustmentLines(models.Model):
     product_id = fields.Many2one('product.product', 'Product', required=True)
     quantity = fields.Float(
         'Quantity', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'), required=True)
+        digits=0, required=True)
     weight = fields.Float(
         'Weight', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Stock Weight'))
     volume = fields.Float(
-        'Volume', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        'Volume', default=1.0)
     former_cost = fields.Float(
         'Former Cost', digits=dp.get_precision('Product Price'))
     former_cost_per_unit = fields.Float(
