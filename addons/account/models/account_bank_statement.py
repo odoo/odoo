@@ -696,6 +696,8 @@ class AccountBankStatementLine(models.Model):
 
             # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
+                if aml_dict['move_line'].payment_id:
+                    aml_dict['move_line'].write({'statement_line_id': self.id})
                 if aml_dict['move_line'].partner_id.id:
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
                 aml_dict['account_id'] = aml_dict['move_line'].account_id.id
