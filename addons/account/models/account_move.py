@@ -1329,7 +1329,7 @@ class AccountPartialReconcile(models.Model):
         :param tax: An account.tax record
         :return: An account record
         '''
-        return line.account_id
+        return tax.cash_basis_base_account_id or line.account_id
 
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
