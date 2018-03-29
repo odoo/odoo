@@ -163,6 +163,13 @@ class SaleOrder(models.Model):
     team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
+    is_installed_account_invoice = fields.Boolean(compute='_compute_is_installed_account_invoice', string="Is the Account Invoice Module Installed")
+
+    @api.multi
+    def _compute_is_installed_account_invoice(self):
+        is_installed = 'account_invoicing' in self.env['ir.module.module']._installed()
+        for order in self:
+            order.is_installed_account_invoice = is_installed
 
     def _compute_portal_url(self):
         super(SaleOrder, self)._compute_portal_url()
