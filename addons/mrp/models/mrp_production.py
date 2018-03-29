@@ -532,6 +532,22 @@ class MrpProduction(models.Model):
             workorder._generate_lot_ids()
         return workorders
 
+    def _check_lots(self):
+        # Check that the raw materials were consumed for lots that we have produced.
+        if self.product_id.tracking != 'none':
+            finished_lots = set(self.finished_move_line_ids.mapped('lot_id'))
+            raw_finished_lots = set(self.move_raw_ids.mapped('move_line_ids.lot_produced_id'))
+            if not (raw_finished_lots <= finished_lots):
+                lots_short = raw_finished_lots - finished_lots
+                error_msg = _(
+                    'Some raw materials were produced for a lot without finished product. '
+                    'You can correct the following components by unlocking:\n'
+                )
+                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda x: x.lot_produced_id in lots_short)
+                for ml in move_lines:
+                    error_msg += ml.product_id.display_name + ' (' + ml.lot_produced_id.name +')\n'
+                raise UserError(error_msg)
+
     @api.multi
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
@@ -584,6 +600,7 @@ class MrpProduction(models.Model):
         for wo in self.workorder_ids:
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 raise UserError(_('Work order %s is still running') % wo.name)
+        self._check_lots()
         self.post_inventory()
         moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_cancel._action_cancel()
