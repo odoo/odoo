@@ -26,6 +26,7 @@ ActionManager.include({
         search: '_onSearch',
         switch_view: '_onSwitchView',
         navigation_move: '_onNavigationMove',
+        open_record_new_tab: '_onOpenRecordNewTab',
     }),
 
     //--------------------------------------------------------------------------
@@ -834,6 +835,29 @@ ActionManager.include({
                 event.stopPropagation();
                 break;
         }
+    },
+    /**
+     * Opens record in new tab
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} ev.data.view_type the type of view to open
+     * @param {integer} [ev.data.res_id] the id of the record to open (for
+     *   mono-record views)
+     * @param {string} [ev.data.model] record model
+     *
+     */
+    _onOpenRecordNewTab: function (event) {
+        var currentController = this.getCurrentController();
+        var currentAction = currentController && this.actions[currentController.actionID];
+        this.do_action({
+            name: currentAction.name,
+            type: 'ir.actions.act_url',
+            target: 'new',
+            url: '#id=' + event.data.res_id + '&action=' + currentAction.id + '&model=' + event.data.model
+                    + '&view_type=' + event.data.view_type
+                    + (currentAction.context.active_id ? '&active_id='+currentAction.context.active_id : ''),
+        });
     },
     /**
      * Called when there is a change in the search view, so the current action's

@@ -362,6 +362,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
     /**
      * When an Odoo event arrives requesting a record to be opened, this method
      * gets the res_id, and request a switch view in the appropriate mode
+     * if target is given to this method then it will open record in new tab instead of switch view
      *
      * Note: this method seems wrong, it relies on the model being a basic model,
      * to get the res_id.  It should receive the res_id in the event data
@@ -376,12 +377,21 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
     _onOpenRecord: function (event) {
         event.stopPropagation();
         var record = this.model.get(event.data.id, {raw: true});
-        this.trigger_up('switch_view', {
-            view_type: 'form',
-            res_id: record.res_id,
-            mode: event.data.mode || 'readonly',
-            model: this.modelName,
-        });
+        // Open record in new tab if target is new
+        if (event.data.target === "new") {
+            this.trigger_up('open_record_new_tab', {
+                view_type: 'form',
+                res_id: record.res_id,
+                model: this.modelName,
+            });
+        } else {
+            this.trigger_up('switch_view', {
+                view_type: 'form',
+                res_id: record.res_id,
+                mode: event.data.mode || 'readonly',
+                model: this.modelName,
+            });
+        }
     },
     /**
      * When a user clicks on an <a> link with type="action", we need to actually

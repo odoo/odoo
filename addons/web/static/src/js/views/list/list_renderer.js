@@ -33,6 +33,12 @@ var FIELD_CLASSES = {
 var ListRenderer = BasicRenderer.extend({
     events: {
         'click tbody tr': '_onRowClicked',
+        'mouseup tbody tr': function (event) {
+            //only trigger if it is mouse middle click
+            if (event.which === 2 || event.button === 1) {
+                this._onRowClicked(event);
+            }
+        },
         'click tbody .o_list_record_selector': '_onSelectRecord',
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
@@ -746,7 +752,7 @@ var ListRenderer = BasicRenderer.extend({
                     e.preventDefault();
                     var id = $(e.currentTarget).data('id');
                     if (id) {
-                        this.trigger_up('open_record', {id:id, target: e.target});
+                        this.trigger_up('open_record', {id:id});
                     }
                     break;
             }
@@ -760,9 +766,12 @@ var ListRenderer = BasicRenderer.extend({
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
         if (!$(event.target).prop('special_click')) {
+            var target = (event.which === 2
+                        || event.button === 1
+                        || (event.type === 'click' && event.ctrlKey)) ? 'new' : 'current';
             var id = $(event.currentTarget).data('id');
             if (id) {
-                this.trigger_up('open_record', {id:id, target: event.target});
+                this.trigger_up('open_record', {id:id, target: target});
             }
         }
     },

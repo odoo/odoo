@@ -163,10 +163,12 @@ var KanbanRecord = Widget.extend({
     },
     /**
      * Triggers up an event to open the record
+     * if target is new then record is opened in new TAB
      *
      * @private
+     * @param {boolean} target
      */
-    _openRecord: function () {
+    _openRecord: function (target) {
         var self = this;
         var action = this.default_action;
         if (action) {
@@ -186,6 +188,7 @@ var KanbanRecord = Widget.extend({
             this.trigger_up('open_record', {
                 id: this.db_id,
                 mode: editMode ? 'edit' : 'readonly',
+                target: target,
             });
         }
     },
@@ -302,12 +305,19 @@ var KanbanRecord = Widget.extend({
      * Renders the record
      */
     _render: function () {
+        var self = this;
         this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record').attr("tabindex",0);
         this.$el.data('record', this);
         if (this.$el.hasClass('oe_kanban_global_click') ||
             this.$el.hasClass('oe_kanban_global_click_edit')) {
             this.$el.on('click', this._onGlobalClick.bind(this));
+            this.$el.on('mouseup', function (event) {
+                // only call _onGlobalClick on mouseup if it is middle button
+                if (event.which === 2 || event.button === 1) {
+                    self._onGlobalClick(event);
+                }
+            });
         }
         this._processFields();
         this._processWidgets();
@@ -490,7 +500,10 @@ var KanbanRecord = Widget.extend({
             elem = elem.parentElement;
         }
         if (trigger) {
-            this._openRecord();
+            var target = (event.which === 2
+                            || event.button === 1
+                            || (event.type === 'click' && event.ctrlKey)) ? 'new' : 'current';
+            this._openRecord(target);
         }
     },
     /**

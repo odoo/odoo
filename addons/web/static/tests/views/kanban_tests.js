@@ -1501,6 +1501,35 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('open kanban record in new tab on middle click of mouse', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="product_id"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            intercepts: {
+                open_record_new_tab: function (event) {
+                    assert.ok(true, "should call open_record_new_tab");
+                },
+            },
+        });
+
+        kanban.$('.o_kanban_record:first').trigger($.Event('mouseup', {
+            which: 2,
+        }));
+        kanban.$('.o_kanban_record:first').trigger($.Event('click', {
+            ctrlKey: true,
+        }));
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with default_group_by', function (assert) {
         assert.expect(7);
         this.data.partner.records.product_id = 1;

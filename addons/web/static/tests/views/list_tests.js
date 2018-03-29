@@ -369,6 +369,29 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('opening records in new tab when clicking middle button of mouse on record', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+        });
+
+        testUtils.intercept(list, "open_record_new_tab", function () {
+            assert.ok("list view should trigger 'open_record_new_tab' event on middle click");
+        });
+
+        // Trigger middle click
+        list.$('tr td:not(.o_list_record_selector)').first().trigger($.Event('mouseup', {
+            which: 2,
+        }));
+        // Click with ctrlKey
+        list.$('tr td:not(.o_list_record_selector)').first().trigger($.Event('click', {ctrlKey: true}));
+        list.destroy();
+    });
+
     QUnit.test('editable list view: readonly fields cannot be edited', function (assert) {
         assert.expect(4);
 
