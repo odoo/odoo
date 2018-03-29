@@ -123,7 +123,7 @@ class StockMoveLine(models.Model):
                 move_id.write(move_vals)
 
                 if move_id.product_id.valuation == 'real_time':
-                    move_id.with_context(force_valuation_amount=correction_value)._account_entry_move()
+                    move_id.with_context(force_valuation_amount=correction_value, forced_quantity=qty_difference)._account_entry_move()
                 if qty_difference > 0:
                     move_id.product_price_update_before_done(forced_qty=qty_difference)
         return super(StockMoveLine, self).write(vals)
@@ -453,9 +453,9 @@ class StockMove(models.Model):
                     # The correction should behave as a return too. As `_account_entry_move`
                     # will post the natural values for an IN move (credit IN account, debit
                     # OUT one), we inverse the sign to create the correct entries.
-                    move.with_context(force_valuation_amount=-corrected_value)._account_entry_move()
+                    move.with_context(force_valuation_amount=-corrected_value, forced_quantity=0)._account_entry_move()
                 else:
-                    move.with_context(force_valuation_amount=corrected_value)._account_entry_move()
+                    move.with_context(force_valuation_amount=corrected_value, forced_quantity=0)._account_entry_move()
 
     @api.model
     def _run_fifo_vacuum(self):
@@ -514,6 +514,11 @@ class StockMove(models.Model):
         else:
             valuation_amount = cost
 
+        if self._context.get('forced_ref'):
+            ref = self._context['forced_ref']
+        else:
+            ref = self.picking_id.name
+
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
         debit_value = self.company_id.currency_id.round(valuation_amount)
@@ -540,7 +545,7 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
-            'ref': self.picking_id.name,
+            'ref': ref,
             'partner_id': partner_id,
             'debit': debit_value if debit_value > 0 else 0,
             'credit': -debit_value if debit_value < 0 else 0,
@@ -551,7 +556,7 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
-            'ref': self.picking_id.name,
+            'ref': ref,
             'partner_id': partner_id,
             'credit': credit_value if credit_value > 0 else 0,
             'debit': -credit_value if credit_value < 0 else 0,
@@ -571,7 +576,7 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,
                 'quantity': qty,
                 'product_uom_id': self.product_id.uom_id.id,
-                'ref': self.picking_id.name,
+                'ref': ref,
                 'partner_id': partner_id,
                 'credit': diff_amount > 0 and diff_amount or 0,
                 'debit': diff_amount < 0 and -diff_amount or 0,
@@ -583,14 +588,25 @@ class StockMove(models.Model):
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
         self.ensure_one()
         AccountMove = self.env['account.move']
-        move_lines = self._prepare_account_move_line(self.product_qty, abs(self.value), credit_account_id, debit_account_id)
+        quantity = self.env.context.get('forced_quantity', self.product_qty if self._is_in() else -1 * self.product_qty)
+
+        # Make an informative `ref` on the created account move to differentiate between classic
+        # movements, vacuum and edition of past moves.
+        ref = self.picking_id.name
+        if self.env.context.get('force_valuation_amount'):
+            if self.env.context.get('forced_quantity') == 0:
+                ref = 'Revaluation of %s (negative inventory)' % ref
+            elif self.env.context.get('forced_quantity') is not None:
+                ref = 'Correction of %s (modification of past move)' % ref
+
+        move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': self.picking_id.name,
+                'ref': ref,
                 'stock_move_id': self.id,
             })
             new_account_move.post()

@@ -115,6 +115,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 1)
         self.assertEqual(move1_valuation_aml.debit, 100)
         self.assertEqual(move1_valuation_aml.credit, 0)
+        self.assertEqual(move1_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move1_valuation_aml.quantity, 10)
+        self.assertEqual(move1_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         self.assertEqual(len(output_aml), 0)
@@ -159,6 +162,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 2)
         self.assertEqual(move2_valuation_aml.debit, 80)
         self.assertEqual(move2_valuation_aml.credit, 0)
+        self.assertEqual(move2_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move2_valuation_aml.quantity, 10)
+        self.assertEqual(move2_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         self.assertEqual(len(output_aml), 0)
@@ -207,6 +213,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 3)
         self.assertEqual(move3_valuation_aml.debit, 0)
         self.assertEqual(move3_valuation_aml.credit, 30)
+        self.assertEqual(move3_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move3_valuation_aml.quantity, -3)
+        self.assertEqual(move3_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         move3_output_aml = output_aml[-1]
@@ -258,6 +267,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 4)
         self.assertEqual(move1_correction_valuation_aml.debit, 20)
         self.assertEqual(move1_correction_valuation_aml.credit, 0)
+        self.assertEqual(move1_correction_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move1_correction_valuation_aml.quantity, 2)
+        self.assertEqual(move1_correction_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         self.assertEqual(len(output_aml), 1)
@@ -311,6 +323,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 5)
         self.assertEqual(move4_valuation_aml.debit, 0)
         self.assertEqual(move4_valuation_aml.credit, 90)
+        self.assertEqual(move4_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move4_valuation_aml.quantity, -9)
+        self.assertEqual(move4_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         move4_output_aml = output_aml[-1]
@@ -373,6 +388,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 6)
         self.assertEqual(move5_valuation_aml.debit, 0)
         self.assertEqual(move5_valuation_aml.credit, 160)
+        self.assertEqual(move5_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move5_valuation_aml.quantity, -20)
+        self.assertEqual(move5_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         move5_output_aml = output_aml[-1]
@@ -445,6 +463,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 7)
         self.assertEqual(move6_valuation_aml.debit, 120)
         self.assertEqual(move6_valuation_aml.credit, 0)
+        self.assertEqual(move6_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move6_valuation_aml.quantity, 10)
+        self.assertEqual(move6_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         self.assertEqual(len(output_aml), 3)
@@ -495,6 +516,9 @@ class TestStockValuation(TransactionCase):
         vacuum_valuation_aml = valuation_aml[-1]
         self.assertEqual(len(valuation_aml), 8)
         self.assertEqual(vacuum_valuation_aml.balance, -40)
+        self.assertEqual(vacuum_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(vacuum_valuation_aml.quantity, 0)
+        self.assertEqual(vacuum_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
         vacuum_output_aml = output_aml[-1]
@@ -570,6 +594,9 @@ class TestStockValuation(TransactionCase):
         move6_correction_valuation_aml = valuation_aml[-1]
         self.assertEqual(move6_correction_valuation_aml.debit, 0)
         self.assertEqual(move6_correction_valuation_aml.credit, 24)
+        self.assertEqual(move6_correction_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move6_correction_valuation_aml.quantity, -2)
+        self.assertEqual(move6_correction_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         # link between stock move and account move
         self.assertEqual(len(move6.account_move_ids), 2)
@@ -611,6 +638,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 10)
         self.assertEqual(move7_valuation_aml.debit, 60)
         self.assertEqual(move7_valuation_aml.credit, 0)
+        self.assertEqual(move7_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move7_valuation_aml.quantity, 4)
+        self.assertEqual(move7_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         # link between stock move and account move
         self.assertEqual(len(move7.account_move_ids), 1)
@@ -633,6 +663,9 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(valuation_aml), 11)
         self.assertEqual(move6_correction2_valuation_aml.debit, 0)
         self.assertEqual(move6_correction2_valuation_aml.credit, 6)
+        self.assertEqual(move6_correction2_valuation_aml.product_id.id, self.product1.id)
+        self.assertEqual(move6_correction2_valuation_aml.quantity, 0)
+        self.assertEqual(move6_correction_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         # stock_account values
         self.assertEqual(move1.product_uom_qty, 12)
