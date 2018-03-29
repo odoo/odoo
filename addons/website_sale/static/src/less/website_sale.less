@@ -792,6 +792,7 @@ a.no-decoration {
 
     .carousel-control {
         background-image: none !important;
+        height: 400px;
     }
 
     .carousel-indicators {
@@ -834,12 +835,17 @@ a.no-decoration {
             cursor: zoom-in;
         }
     }
+    &.ecom-autozoom {
+        img[data-zoom] {
+            cursor: crosshair;
+        }
+    }
     .o_editable img[data-zoom] {
         cursor: pointer;
     }
-    #o-carousel-product + div.zoomodoo-flyout {
-        max-height: 400px;
-    }
+    // #o-carousel-product + div.zoomodoo-flyout {
+    //     max-height: 400px;
+    // }
 }
 
 .break-word {
