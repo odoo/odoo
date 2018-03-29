@@ -20,6 +20,7 @@ var DocumentViewer = Widget.extend({
         'click .o_rotate': '_onRotate',
         'click .o_zoom_in': '_onZoomIn',
         'click .o_zoom_out': '_onZoomOut',
+        'click .o_zoom_reset': '_onZoomReset',
         'click .o_close_btn, .o_viewer_img_wrapper': '_onClose',
         'click .o_print_btn': '_onPrint',
         'DOMMouseScroll .o_viewer_content': '_onScroll',    // Firefox
@@ -141,6 +142,7 @@ var DocumentViewer = Widget.extend({
             this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
         }
+        this.$('.o_zoom_reset').add('.o_zoom_out').toggleClass('disabled', scale === 1);
     },
 
     //--------------------------------------------------------------------------
@@ -334,6 +336,15 @@ var DocumentViewer = Widget.extend({
         e.preventDefault();
         var scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onZoomReset: function (e) {
+        e.preventDefault();
+        this.$('.o_viewer_zoomer').css("transform", "");
+        this._zoom(1);
     },
 });
 return DocumentViewer;
