@@ -110,7 +110,8 @@ class SaleOrder(models.Model):
             return fixed_amount
 
     def _get_lines_unit_prices(self):
-        return [x.price_unit for x in self.order_line.filtered(lambda x: not x.is_reward_line)]
+        # Unit prices tax included
+        return [x.price_total / x.product_uom_qty for x in self.order_line.filtered(lambda x: not x.is_reward_line)]
 
     def _get_reward_values_discount_percentage(self, program):
         discount_amount = 0
@@ -122,7 +123,7 @@ class SaleOrder(models.Model):
             unit_prices = self._get_lines_unit_prices()
             discount_amount = (min(unit_prices) * (program.discount_percentage) / 100)
         if program.discount_apply_on == 'specific_product':
-            discount_amount = sum([(x.price_total * x.product_uom_qty) * (program.discount_percentage / 100) for x in self.order_line.filtered(
+            discount_amount = sum([x.price_total * (program.discount_percentage / 100) for x in self.order_line.filtered(
                 lambda x: x.product_id == program.discount_specific_product_id)])
         if program.discount_max_amount and discount_amount > max_amount:
             discount_amount = max_amount
