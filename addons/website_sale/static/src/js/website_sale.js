@@ -327,7 +327,9 @@ odoo.define('website_sale.website_sale', function (require) {
                         $default_price.parent().addClass('hidden');
                     }
                     product_id = variant_ids[k][0];
-                    update_product_image(this, product_id);
+                    if (!$(ev.target).hasClass('js_add_cart_variants')) {
+                        update_product_image(this, product_id);
+                    }
                     break;
                 }
             }
