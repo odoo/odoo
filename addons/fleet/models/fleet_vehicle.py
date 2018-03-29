@@ -75,7 +75,7 @@ class FleetVehicle(models.Model):
         ('driver_id_unique', 'UNIQUE(driver_id)', 'Only one car can be assigned to the same employee!')
     ]
 
-    @api.depends('model_id', 'license_plate')
+    @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
             record.name = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + (record.license_plate or _('No Plate'))
