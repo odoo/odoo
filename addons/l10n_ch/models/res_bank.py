@@ -44,12 +44,12 @@ class ResPartnerBank(models.Model):
     @api.onchange('acc_number')
     def _onchange_set_l10n_ch_postal(self):
         if self.acc_type == 'iban':
-            self.l10n_ch_postal = self.retrieve_l10n_ch_postal(self.sanitized_acc_number)
+            self.l10n_ch_postal = self._retrieve_l10n_ch_postal(self.sanitized_acc_number)
         else:
             self.l10n_ch_postal = self.sanitized_acc_number
 
     @api.model
-    def retrieve_l10n_ch_postal(self, iban):
+    def _retrieve_l10n_ch_postal(self, iban):
         """ Reads a swiss postal account number from a an IBAN and returns it as
         a string. Returns None if no valid postal account number was found, or
         the given iban was not from Switzerland.

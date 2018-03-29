@@ -12,27 +12,25 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    # For bank journals
+    # creation of bank journals by giving the account number, allow craetion of the
     l10n_ch_postal = fields.Char(related='bank_account_id.l10n_ch_postal')
 
     @api.model
     def create(self, vals):
         rslt = super(AccountJournal, self).create(vals)
-        # The call to super() creates the related bank_account_id field
 
+        # The call to super() creates the related bank_account_id field
         if 'l10n_ch_postal' in vals:
             rslt.l10n_ch_postal = vals['l10n_ch_postal']
-
         return rslt
 
     def write(self, vals):
         rslt = super(AccountJournal, self).write(vals)
-        # The call to super() creates the related bank_account_id field if necessary
 
+        # The call to super() creates the related bank_account_id field if necessary
         if 'l10n_ch_postal' in vals:
             for record in self:
                 record.bank_account_id.l10n_ch_postal = vals['l10n_ch_postal']
-
         return rslt
 
     @api.onchange('bank_acc_number')
@@ -44,6 +42,6 @@ class AccountJournal(models.Model):
             is_iban = False
 
         if is_iban:
-            self.l10n_ch_postal = self.env['res.partner.bank'].retrieve_l10n_ch_postal(sanitize_account_number(self.bank_acc_number))
+            self.l10n_ch_postal = self.env['res.partner.bank']._retrieve_l10n_ch_postal(sanitize_account_number(self.bank_acc_number))
         else:
             self.l10n_ch_postal = self.bank_acc_number
