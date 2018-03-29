@@ -186,3 +186,17 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(order.reward_amount, -20 -290.91)
         self.assertEqual(sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 0)
         self.assertEqual(order.amount_untaxed, 872.73)
+
+        p_specific_product = self.env['sale.coupon.program'].create({
+            'name': '20% reduction on ipad in cart',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'program_type': 'promotion_program',
+            'discount_type': 'percentage',
+            'discount_percentage': 20.0,
+            'discount_apply_on': 'cheapest_product',
+        })
+        p_specific_product.discount_apply_on = 'cheapest_product'
+        order.recompute_coupon_lines()
+        # 872.73 - (20% of 1 iPad) = 872.73 - 64 = 808.73
+        self.assertEqual(order.amount_untaxed, 808.73, "One iPad should be discounted by 20%")
