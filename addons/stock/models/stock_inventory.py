@@ -96,6 +96,13 @@ class Inventory(models.Model):
         else:
             self.total_qty = 0
 
+    @api.multi
+    def unlink(self):
+        for inventory in self:
+            if inventory.state == 'done':
+                raise UserError(_('You cannot delete a validated inventory adjustement.'))
+        return super(Inventory, self).unlink()
+
     @api.model
     def _selection_filter(self):
         """ Get the list of filter allowed according to the options checked
