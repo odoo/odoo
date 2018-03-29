@@ -278,6 +278,17 @@ class SaleOrder(models.Model):
             return {'warning': warning}
 
     @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(SaleOrder, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=False)
+        if view_type in ['form', 'tree'] and res.get('toolbar'):
+            is_installed_account_invoicing = 'account_invoicing' in self.env['ir.module.module']._installed()
+            if not is_installed_account_invoicing:
+                action_id = self.env.ref('sale.action_view_sale_advance_payment_inv').id
+                action = [rec for rec in res['toolbar']['action'] if rec.get('id') != action_id]
+                res['toolbar'] = {'action': action}
+        return res
+
+    @api.model
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
             if 'company_id' in vals:
