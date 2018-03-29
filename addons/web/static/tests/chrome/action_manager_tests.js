@@ -2851,6 +2851,38 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('on_attach_callback is called for actions in target="new"', function (assert) {
+        assert.expect(4);
+
+        var ClientAction = AbstractAction.extend({
+            className: 'o_test',
+            on_attach_callback: function () {
+                assert.step('on_attach_callback');
+                assert.ok(actionManager.currentDialogController,
+                    "the currentDialogController should have been set already");
+            },
+        });
+        core.action_registry.add('test', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction({
+            tag: 'test',
+            target: 'new',
+            type: 'ir.actions.client',
+        });
+
+        assert.strictEqual($('.modal .o_test').length, 1,
+            "should have rendered the client action in a dialog");
+        assert.verifySteps(['on_attach_callback']);
+
+        actionManager.destroy();
+        delete core.action_registry.map.test;
+    });
+
     QUnit.module('Actions in target="inline"');
 
     QUnit.test('form views for actions in target="inline" open in edit mode', function (assert) {

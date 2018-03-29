@@ -410,13 +410,13 @@ var ActionManager = Widget.extend({
             controller.dialog = dialog;
 
             return dialog.open().opened(function () {
+                self.currentDialogController = controller;
+
                 dom.append(dialog.$el, widget.$el, {
                     in_DOM: true,
-                    callbacks: [{widget: dialog}],
+                    callbacks: [{widget: dialog}, {widget: controller.widget}],
                 });
                 widget.renderButtons(dialog.$footer);
-
-                self.currentDialogController = controller;
 
                 return action;
             });
