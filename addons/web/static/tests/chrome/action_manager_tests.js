@@ -2,7 +2,7 @@ odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
 var ReportClientAction = require('report.client_action');
-
+var NotificationService = require('web.NotificationService');
 var AbstractAction = require('web.AbstractAction');
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicFields = require('web.basic_fields');
@@ -1770,6 +1770,7 @@ QUnit.module('ActionManager', {
                     assert.step(params.url);
                     params.success();
                     params.complete();
+                    return true;
                 },
             },
         });
@@ -1797,7 +1798,11 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [ReportService],
+            services: [ReportService, NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type || 'notification');
+                }
+            })],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1810,11 +1815,7 @@ QUnit.module('ActionManager', {
                     assert.step(params.url);
                     params.success();
                     params.complete();
-                },
-            },
-            intercepts: {
-                notification: function () {
-                    assert.step('notification');
+                    return true;
                 },
             },
         });
@@ -1851,7 +1852,11 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [ReportService],
+            services: [ReportService, NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type || 'notification');
+                }
+            })],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1865,11 +1870,7 @@ QUnit.module('ActionManager', {
             session: {
                 get_file: function (params) {
                     assert.step(params.url); // should not be called
-                },
-            },
-            intercepts: {
-                notification: function () {
-                    assert.step('notification');
+                    return true;
                 },
             },
         });
