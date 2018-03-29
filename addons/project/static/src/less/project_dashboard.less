@@ -7,16 +7,18 @@
             position: relative;
             text-align: center;
             padding: 0 0 0 0;
-            .o-flex(1, 1, auto);
-            .o-flex-display();
-            .o-flex-flow(row, nowrap);
-            .o-justify-content(center);
+            width: 33.33%;
+
+            &:last-child {
+                text-align: right;
+            }
+
+            &:nth-child(2){
+                width: 66.66%;
+            }
 
             &:first-child {
-                .o-justify-content(flex-start);
-            }
-            &:last-child {
-                .o-justify-content(flex-end);
+                text-align: left;
             }
 
             .o_value {
@@ -42,6 +44,13 @@
                     }
                 }
             }
+        }
+        .o_project_timesheet_box{
+            position: relative;
+            padding: 0 0 0 0;
+            /* The important are here to assure this class is display in the center */
+            width: 33.33% !important;
+            text-align: center !important;
         }
     }
 }
