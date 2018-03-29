@@ -13,7 +13,8 @@ class FleetVehicle(models.Model):
 
     co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee")
     total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost',
-        string="Total Cost (Depreciated)", help="This includes all the depreciated costs and the CO2 fee")
+        string="Total Cost (Depreciated)", track_visibility="onchange",
+        help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
     fuel_type = fields.Selection(required=True, default='diesel')
     atn = fields.Float(compute='_compute_car_atn', string="ATN")
