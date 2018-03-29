@@ -8,6 +8,7 @@ var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
+var NotificationService = require('web.NotificationService');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -2095,11 +2096,13 @@ QUnit.module('Views', {
                     '<field name="foo" required="1"/>' +
                     '<field name="bar"/>' +
                 '</tree>',
-            intercepts: {
-                warning: function () {
-                    warnings++;
-                },
-            },
+            services: [NotificationService.extend({
+                notify: function (params) {
+                    if (params.type === 'warning') {
+                        warnings++;
+                    }
+                }
+            })],
         });
 
         // Start first line edition

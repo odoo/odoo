@@ -115,19 +115,23 @@
 </t>
 
 <t t-name="Notification">
-    <div t-attf-class="o_notification #{className}" t-translation="off">
+    <div t-attf-class="o_notification #{widget.className}" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
         <div class="o_notification_title">
-            <span class="o_icon fa fa-3x fa-lightbulb-o"/>
+            <span t-attf-class="o_icon fa fa-3x #{widget.icon}"/>
             <t t-raw="widget.title"/>
         </div>
-        <div class="o_notification_content" t-if="widget.text"><t t-raw="widget.text"/></div>
+        <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
+        <div t-if="widget.buttons.length" class="o_buttons">
+            <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn btn-sm #{button.primary ? 'btn-primary' : 'btn-default'}" type="button">
+                <t t-if="button.icon">
+                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}"/>
+                    <img t-else="" t-att-src="button.icon"/>
+                </t>
+                <span><t t-esc="button.text"/></span>
+            </button>
+        </div>
     </div>
-</t>
-<t t-name="Warning" t-extend="Notification">
-    <t t-jquery=".o_icon" t-operation="replace">
-        <span class="o_icon fa fa-3x fa-exclamation"/>
-    </t>
 </t>
 
 <div t-name="CrashManager.warning" class="o_dialog_warning">

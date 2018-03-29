@@ -21,7 +21,6 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 var Loading = require('web.Loading');
-var NotificationManager = require('web.NotificationManager');
 var RainbowMan = require('web.RainbowMan');
 var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
@@ -31,6 +30,7 @@ var _t = core._t;
 var qweb = core.qweb;
 
 var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMixin, {
+    dependencies: ['notification'],
     events: _.extend(KeyboardNavigationMixin.events, {}),
     custom_events: {
         clear_uncommitted_changes: function (e) {
@@ -46,13 +46,6 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         // the next events are dedicated to generic services required by
         // downstream widgets.  Mainly side effects, such as rpcs, notifications
         // or cache.
-
-        // notifications, warnings and effects
-        notification: function (e) {
-            if (this.notification_manager) {
-                this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
-            }
-        },
         warning: '_onDisplayWarning',
         load_action: '_onLoadAction',
         load_views: function (event) {
@@ -120,7 +113,6 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 self.bind_events();
                 return $.when(
                     self.set_action_manager(),
-                    self.set_notification_manager(),
                     self.set_loading()
                 );
             }).then(function () {
@@ -174,8 +166,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
             }
             this._hideAccessKeyOverlay();
         });
-        core.bus.on('connection_lost', this, this.on_connection_lost);
-        core.bus.on('connection_restored', this, this.on_connection_restored);
+        core.bus.on('connection_lost', this, this._onConnectionLost);
+        core.bus.on('connection_restored', this, this._onConnectionRestored);
 
         // crash manager integration
         session.on('error', crash_manager, crash_manager.rpc_error);
@@ -221,10 +213,6 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 callbacks: [{widget: self.action_manager}],
             });
         });
-    },
-    set_notification_manager: function () {
-        this.notification_manager = new NotificationManager(this);
-        return this.notification_manager.appendTo(this.$el);
     },
     set_loading: function () {
         this.loading = new Loading(this);
@@ -309,24 +297,6 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     // --------------------------------------------------------------
     // Connection notifications
     // --------------------------------------------------------------
-    on_connection_lost: function () {
-        this.connection_notification = this.notification_manager.notify(
-            _t('Connection lost'),
-            _t('Trying to reconnect...'),
-            true
-        );
-    },
-    on_connection_restored: function () {
-        if (this.connection_notification) {
-            this.connection_notification.destroy();
-            this.notification_manager.notify(
-                _t('Connection restored'),
-                _t('You are back online'),
-                false
-            );
-            this.connection_notification = false;
-        }
-    },
     /**
      * Handler to be overridden, called each time the UI is updated by the
      * ActionManager.
@@ -348,6 +318,34 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
     //--------------------------------------------------------------------------
 
     /**
+     * Whenever the connection is lost, we need to notify the user.
+     *
+     * @private
+     */
+    _onConnectionLost: function () {
+        this.connectionNotificationID = this.call('notification', 'notify', {
+            title: _t('Connection lost'),
+            message: _t('Trying to reconnect...'),
+            sticky: true
+        });
+    },
+    /**
+     * Whenever the connection is restored, we need to notify the user.
+     *
+     * @private
+     */
+    _onConnectionRestored: function () {
+        if (this.connectionNotificationID) {
+            this.call('notification', 'close', this.connectionNotificationID);
+            this.call('notification', 'notify', {
+                title: _t('Connection restored'),
+                message: _t('You are back online'),
+                sticky: false
+            });
+            this.connectionNotificationID = false;
+        }
+    },
+    /**
      * @private
      * @param {OdooEvent} e
      * @param {Object} e.data.filter the filter description
@@ -360,7 +358,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
             .then(e.data.on_success);
     },
     /**
-     * Displays a warning in a dialog of with the NotificationManager
+     * Displays a warning in a dialog or with the notification service
      *
      * @private
      * @param {OdooEvent} e
@@ -368,7 +366,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
      * @param {string} e.data.title the warning's title
      * @param {string} [e.data.type] 'dialog' to display in a dialog
      * @param {boolean} [e.data.sticky] whether or not the warning should be
-     *   sticky (if displayed with the NotificationManager)
+     *   sticky (if displayed with the Notification)
      */
     _onDisplayWarning: function (e) {
         var data = e.data;
@@ -378,8 +376,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 title: data.title,
                 $content: qweb.render("CrashManager.warning", data),
             }).open();
-        } else if (this.notification_manager) {
-            this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
+        } else {
+            this.call('notification', 'notify', e.data);
         }
     },
     /**
