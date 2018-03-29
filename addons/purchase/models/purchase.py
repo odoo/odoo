@@ -372,6 +372,7 @@ class PurchaseOrder(models.Model):
                         siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
                         if all(state in ('done', 'cancel') for state in siblings_states):
                             order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
+                            order_line.move_dest_ids._recompute_state()
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
