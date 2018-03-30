@@ -240,6 +240,34 @@ class ProductProduct(models.Model):
                         value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
                         product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
 
+    def action_valuation_at_date_details(self):
+        """ Returns an action with either a list view of all the valued stock moves of `self` if the
+        valuation is set as manual or a list view of all the account move lines if the valuation is
+        set as automated.
+        """
+        self.ensure_one()
+        to_date = self.env.context.get('to_date')
+        action = {
+            'name': _('Valuation at date'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context': self.env.context,
+        }
+        if self.valuation == 'real_time':
+            action['res_model'] = 'account.move.line'
+            action['domain'] = [('id', 'in', self.with_context(to_date=to_date).stock_fifo_real_time_aml_ids.ids)]
+            tree_view_ref = self.env.ref('stock_account.view_stock_account_aml')
+            form_view_ref = self.env.ref('account.view_move_line_form')
+            action['views'] = [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')]
+        else:
+            action['res_model'] = 'stock.move'
+            action['domain'] = [('id', 'in', self.with_context(to_date=to_date).stock_fifo_manual_move_ids.ids)]
+            tree_view_ref = self.env.ref('stock_account.view_move_tree_valuation_at_date')
+            form_view_ref = self.env.ref('stock.view_move_form')
+            action['views'] = [(tree_view_ref.id, 'tree'), (form_view_ref.id, 'form')]
+        return action
+
     @api.multi
     def action_open_product_moves(self):
         self.ensure_one()
