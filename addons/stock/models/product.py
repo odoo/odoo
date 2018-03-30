@@ -133,11 +133,11 @@ class Product(models.Model):
             domain_move_in_done = list(domain_move_in)
             domain_move_out_done = list(domain_move_out)
         if from_date:
-            domain_move_in += [('date', '>=', from_date)]
-            domain_move_out += [('date', '>=', from_date)]
+            domain_move_in += [('date_expected', '>=', from_date)]
+            domain_move_out += [('date_expected', '>=', from_date)]
         if to_date:
-            domain_move_in += [('date', '<=', to_date)]
-            domain_move_out += [('date', '<=', to_date)]
+            domain_move_in += [('date_expected', '<=', to_date)]
+            domain_move_out += [('date_expected', '<=', to_date)]
 
         Move = self.env['stock.move']
         Quant = self.env['stock.quant']
