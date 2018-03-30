@@ -63,6 +63,7 @@ GROUP BY id"""
                 activities[note_index]['name'] = note_label
             else:
                 activities.append({
+                    'type': 'activity',
                     'name': note_label,
                     'model': 'note.note',
                     'icon': modules.module.get_module_icon(self.env['note.note']._original_module),

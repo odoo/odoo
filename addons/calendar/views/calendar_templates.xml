@@ -5,12 +5,14 @@
             <link rel="stylesheet" type="text/scss" href="/calendar/static/src/scss/calendar.scss"/>
             <script type="text/javascript" src="/calendar/static/src/js/base_calendar.js"></script>
             <script type="text/javascript" src="/calendar/static/src/js/mail_activity.js"></script>
+            <script type="text/javascript" src="/calendar/static/src/js/systray.js"></script>
         </xpath>
     </template>
 
     <template id="qunit_suite" inherit_id="web.qunit_suite">
         <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/calendar/static/tests/calendar_tests.js"/>
+            <script type="text/javascript" src="/calendar/static/tests/systray_tests.js"/>
         </xpath>
     </template>
 
