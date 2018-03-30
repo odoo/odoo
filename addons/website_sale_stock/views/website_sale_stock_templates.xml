@@ -39,8 +39,8 @@
     </xpath>
   </template>
 
-  <template id="website_sale_stock_payment" inherit_id="website_sale.payment">
-    <xpath expr="//table[@id='cart_products']//td[hasclass('td-qty')]" position="inside">
+  <template id="website_sale_stock_payment" inherit_id="website_sale.cart_summary">
+     <xpath expr="//table[@id='cart_products']//td[hasclass('td-qty')]" position="inside">
       <t t-if='line._get_stock_warning(clear=False)'>
         <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" />
       </t>

@@ -44,6 +44,7 @@
             <xpath expr="//t[@t-set='head']" position="inside">
                 <script type="text/javascript" src="/mail/static/tests/chat_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/systray_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
@@ -54,6 +55,8 @@
         <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
                 <script type="text/javascript" src="/mail/static/tests/discuss_mobile_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
             </xpath>
         </template>
 
@@ -66,22 +69,22 @@
         </template>
 
         <template id="message_user_assigned">
-            <p>Dear <t t-esc="object.user_id.name"/>,</p>
-            <p>You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</p>
-            <p>
-                <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)"
-                        style="background-color: #9E588B; margin-top: 10px; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">
-                    View <t t-esc="object._description.lower()"/>
-                </a>
-            </p>
-            <p style="color:#9E588B;">Powered by <a target="_blank" href="https://www.odoo.com">Odoo</a>.</p>
+<p style="margin: 0px;">
+    <span>Dear <t t-esc="object.user_id.name"/>,</span><br />
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</span>
+</p>
+<p style="margin-top: 24px; margin-bottom: 16px;">
+    <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+            View <t t-esc="object._description.lower()"/>
+    </a>
+</p>
         </template>
 
         <template id="message_activity_done">
 <div>
     <p>
         <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
-        by <span t-field="activity.user_id.name"/>:
+        by <span t-field="activity.user_id.name"/><span t-if="activity.summary">:</span>
         <span t-if="activity.summary" t-field="activity.summary"/>
     </p>
     <div t-field="activity.note" style="margin-left: 8px;"/>

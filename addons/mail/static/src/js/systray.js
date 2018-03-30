@@ -3,11 +3,13 @@ odoo.define('mail.systray', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
+var datepicker = require('web.datepicker');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 /**
  * Menu item appended in the systray part of the navbar
@@ -36,8 +38,7 @@ var MessagingMenu = Widget.extend({
         var chatBus = this.call('chat_manager', 'getChatBus');
         chatBus.on("update_needaction", this, this.update_counter);
         chatBus.on("update_channel_unread_counter", this, this.update_counter);
-        var chatReady = this.call('chat_manager', 'isReady');
-        chatReady.then(this.update_counter.bind(this));
+        this.call('chat_manager', 'isReady').then(this.update_counter.bind(this));
         return this._super();
     },
     is_open: function () {
@@ -58,8 +59,7 @@ var MessagingMenu = Widget.extend({
 
         // Display spinner while waiting for channels preview
         this.$channels_preview.html(QWeb.render('Spinner'));
-        var chatReady = this.call('chat_manager', 'isReady');
-        chatReady.then(function () {
+        this.call('chat_manager', 'isReady').then(function () {
             var allChannels = self.call('chat_manager', 'getChannels');
             var channels = _.filter(allChannels, function (channel) {
                 if (self.filter === 'chat') {
@@ -70,23 +70,28 @@ var MessagingMenu = Widget.extend({
                     return channel.type !== 'static';
                 }
             });
-            self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'}).then(function (result) {
-                var res = [];
-                _.each(result, function (message) {
-                    message.unread_counter = 1;
-                    var duplicatedMessage = _.findWhere(res, {model: message.model, 'res_id': message.res_id});
-                    if (message.model && message.res_id && duplicatedMessage) {
-                        message.unread_counter = duplicatedMessage.unread_counter + 1;
-                        res[_.findIndex(res, duplicatedMessage)] = message;
-                    } else {
-                        res.push(message);
+            self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'})
+                .then(function (messages) {
+                    var res = [];
+                    _.each(messages, function (message) {
+                        message.unread_counter = 1;
+                        var duplicatedMessage = _.findWhere(res, {
+                            model: message.model,
+                            'res_id': message.res_id
+                        });
+                        if (message.model && message.res_id && duplicatedMessage) {
+                            message.unread_counter = duplicatedMessage.unread_counter + 1;
+                            res[_.findIndex(res, duplicatedMessage)] = message;
+                        } else {
+                            res.push(message);
+                        }
+                    });
+                    if (self.filter === 'channel_inbox' || !self.filter) {
+                        channels = _.union(channels, res);
                     }
+                    self.call('chat_manager', 'getChannelsPreview', channels)
+                        .then(self._render_channels_preview.bind(self));
                 });
-                if (self.filter === 'channel_inbox' || !self.filter) {
-                    channels = _.union(channels, res);
-                }
-                self.call('chat_manager', 'getChannelsPreview', channels).then(self._render_channels_preview.bind(self));
-            });
         });
     },
     _render_channels_preview: function (channels_preview) {
@@ -129,7 +134,7 @@ var MessagingMenu = Widget.extend({
                 this.do_action({
                     type: 'ir.actions.act_window',
                     res_model: resModel,
-                    views: [[false, 'form'], [false, 'kanban']],
+                    views: [[false, 'form']],
                     res_id: resID
                 });
             } else {
@@ -142,7 +147,7 @@ var MessagingMenu = Widget.extend({
         } else {
             var channel = this.call('chat_manager', 'getChannel', channelID);
             if (channel) {
-                self.call('chat_manager', 'openChannel', channel);
+                this.call('chat_manager', 'openChannel', channel);
             }
         }
     },
@@ -154,21 +159,24 @@ var MessagingMenu = Widget.extend({
 var ActivityMenu = Widget.extend({
     template:'mail.chat.ActivityMenu',
     events: {
-        "click": "_onActivityMenuClick",
-        "click .o_mail_channel_preview": "_onActivityFilterClick",
+        'click': '_onActivityMenuClick',
+        'click .o_mail_channel_preview:not(.o_reminder)': '_onActivityFilterClick',
+        'click .o_reminder_show': '_onAddReminderClick',
+        'click .o_reminder_save': '_onReminderSaveClick',
+        'click .o_reminder_set_datetime': '_onReminderDateTimeSetClick',
+        'keydown input.o_reminder_input': '_onReminderInputKeyDown',
+        'click .o_reminder': '_onNewReminderClick',
     },
     start: function () {
         this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.on("activity_updated", this, this._updateCounter);
-        var chatReady = this.call('chat_manager', 'isReady');
-        chatReady.then(this._updateCounter.bind(this));
+        this.call('chat_manager', 'getChatBus').on("activity_updated", this, this._updateCounter);
+        this.call('chat_manager', 'isReady').then(this._updateCounter.bind(this));
         this._updateActivityPreview();
         return this._super();
     },
-
+    //--------------------------------------------------
     // Private
-
+    //--------------------------------------------------
     /**
      * Make RPC and get current user's activity details
      * @private
@@ -183,8 +191,21 @@ var ActivityMenu = Widget.extend({
                 context: session.user_context,
             },
         }).then(function (data) {
+            // We required reminder to be first always. Moving its position from n-th to zero if not at zero
+            var reminderIndex = _.findIndex(data, function (val) { return val.model == null; });
+            if (reminderIndex > 0) {
+                data.splice(0, 0, data.splice(reminderIndex, 1)[0]);
+            }
             self.activities = data;
-            self.activityCounter = _.reduce(data, function (total_count, p_data) { return total_count + p_data.total_count; }, 0);
+
+            //we want to add count in reminders title
+            var reminders = _.findWhere(data, {'model': null});
+            if (reminders) {
+                var totalReminders = reminders.overdue_count + reminders.planned_count + reminders.today_count;
+                //manualy count total reminders since reminders.total_count only sum today and overdue
+                reminders.name = _.str.sprintf(_t('Reminders (%s)'), totalReminders);
+            }
+            self.activityCounter = _.reduce(self.activities, function (total_count, p_data) { return total_count + p_data.total_count; }, 0);
             self.$('.o_notification_counter').text(self.activityCounter);
             self.$el.toggleClass('o_no_notification', !self.activityCounter);
         });
@@ -240,10 +261,30 @@ var ActivityMenu = Widget.extend({
             this.$el.toggleClass('o_no_notification', !this.activityCounter);
         }
     },
-
-
+    /**
+     * Save the reminder to database using datepicker date and field as note
+     * @private
+     */
+    _saveReminder: function () {
+        var note = this.$('.o_reminder_input').val().trim();
+        if (! note) {
+            return;
+        }
+        var params = {'note': note};
+        var reminderDateTime = this.reminderDateTimeWidget.getValue();
+        if (reminderDateTime) {
+            params = _.extend(params, {'date_deadline': reminderDateTime});
+        }
+        this.$('.o_reminder_show').removeClass('hidden');
+        this.$('.o_reminder').addClass('hidden');
+        this._rpc({
+            route: '/mail/activity/new',
+            params: params,
+        }).then(this._updateActivityPreview.bind(this));
+    },
+    //------------------------------------------------------------
     // Handlers
-
+    //-----------------------------------------------------------
     /**
      * Redirect to particular model view
      * @private
@@ -259,15 +300,20 @@ var ActivityMenu = Widget.extend({
         } else {
             context['search_default_activities_' + data.filter] = 1;
         }
-        this.do_action({
-            type: 'ir.actions.act_window',
-            name: data.model_name,
-            res_model:  data.res_model,
-            views: [[false, 'kanban'], [false, 'form']],
-            search_view_id: [false],
-            domain: [['activity_user_id', '=', session.uid]],
-            context:context,
-        });
+        if (data.res_model == null) {
+            // Opening Reminder custom kanban view with action.
+            this.do_action('mail.mail_activity_action_reminders', {additional_context: context});
+        } else {
+            this.do_action({
+                type: 'ir.actions.act_window',
+                name: data.model_name,
+                res_model:  data.res_model,
+                views: [[false, 'kanban'], [false, 'form']],
+                search_view_id: [false],
+                domain: [['activity_user_id', '=', session.uid]],
+                context:context,
+            });
+        }
     },
     /**
      * When menu clicked update activity preview if counter updated
@@ -279,7 +325,65 @@ var ActivityMenu = Widget.extend({
             this._updateActivityPreview();
         }
     },
-
+    /**
+     * When add new reminder button clicked, toggling quick reminder create view inside
+     * Systray activity view
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAddReminderClick: function (event) {
+        event.stopPropagation();
+        if (!this.reminderDateTimeWidget){
+            this.reminderDateTimeWidget = new datepicker.DateWidget(this, {useCurrent: true});
+        }
+        this.reminderDateTimeWidget.appendTo(this.$('.o_reminder_datetime'));
+        this.$('.o_reminder_show, .o_reminder').toggleClass('hidden');
+        this.$('.o_reminder_input').val('').focus();
+      
+    },
+    /**
+     * When focusing on input for new quick reminder systerm tray must be open.
+     * Preventing to close
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onNewReminderClick: function (event) {
+        event.stopPropagation();
+    },
+    /**
+     * Opens datetime picker for reminder.
+     * Quick FIX due to no option for set custom icon instead of caret in datepicker.
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onReminderDateTimeSetClick: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.reminderDateTimeWidget.$input.click();
+    },
+    /**
+     * Saving reminder (quick create) and updating activity preview
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onReminderSaveClick: function (event) {
+        this._saveReminder();
+    },
+    /**
+     * Handling Enter key for quick create reminder.
+     *
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _onReminderInputKeyDown: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            this._saveReminder();
+        }
+    },
 });
 
 SystrayMenu.Items.push(MessagingMenu);

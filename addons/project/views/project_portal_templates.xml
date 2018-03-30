@@ -139,8 +139,9 @@
                 <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
                     <thead>
                         <tr class="active">
-                            <th class="col-md-10">Task</th>
-                            <th>Stage</th>
+                            <th class="col-md-9">Task</th>
+                            <th class="col-md-2">Stage</th>
+                            <th>Ref</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,6 +152,9 @@
                                 </td>
                                 <td>
                                     <span class="label label-info" title="Current stage of the task" t-esc="task.stage_id.name" />
+                                </td>
+                                <td>
+                                    <span t-esc="task.id"/>
                                 </td>
                             </tr>
                         </t>
@@ -171,7 +175,7 @@
                         <div class="col-md-12">
                             <h4>
                                 <t t-call='portal.record_pager'/>
-                                Task - <span t-field="task.name"/>
+                                Task - <span t-field="task.name"/> (#<span t-esc="task.id"/>)
                                 <span t-field="task.stage_id.name" class="pull-right label label-info" title="Current stage of this task"/>
                                 <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>
                             </h4>

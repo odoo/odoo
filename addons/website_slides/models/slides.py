@@ -348,7 +348,7 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
-                record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
+                record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
@@ -453,10 +453,10 @@ class Slide(models.Model):
         return super(Slide, self).get_access_action(access_uid)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Slide, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Add access button to everyone if the document is active. """
+        groups = super(Slide, self)._notify_get_groups(message, groups)
 
-        self.ensure_one()
         if self.website_published:
             for group_name, group_method, group_data in groups:
                 group_data['has_button_access'] = True

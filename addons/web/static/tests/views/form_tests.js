@@ -7,6 +7,7 @@ var config = require('web.config');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
+var mixins = require('web.mixins');
 var pyeval = require('web.pyeval');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
@@ -629,7 +630,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = createView({
             View: FormView,
@@ -655,6 +656,9 @@ QUnit.module('Views', {
         form.$('.o_field_boolean input').click();
         assert.strictEqual(form.$('span[name="foo"]').length, 1,
             "the foo field widget should have been rerendered to now be readonly again");
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('input[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered to now be editable again");
 
         form.destroy();
     });
@@ -1028,7 +1032,7 @@ QUnit.module('Views', {
         });
         form.$('.o_form_statusbar button.s').click();
 
-        assert.strictEqual(rpcCount, 2, "should have done 2 rpcs to reload");
+        assert.strictEqual(rpcCount, 1, "should have done 1 rpc, because we do not reload anymore if the server action fails");
         form.destroy();
     });
 
@@ -3814,14 +3818,6 @@ QUnit.module('Views', {
     });
 
     QUnit.test('navigation with tab key in readonly form view', function (assert) {
-        // The behavior of the phone widget is completely altered by voip so
-        // this test fails if voip is installed. The enterprise module is
-        // responsible for testing its own behavior in its own tests.
-        if ('voip.user_agent' in odoo.__DEBUG__.services) {
-            assert.expect(0);
-            return;
-        }
-
         assert.expect(3);
 
         this.data.partner.records[1].product_id = 37;
@@ -3847,13 +3843,17 @@ QUnit.module('Views', {
         // focus first field, trigger tab
         form.$('[name="trululu"]').focus();
         form.$('[name="trululu"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        form.$('[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.strictEqual(form.$('[name="product_id"]')[0], document.activeElement,
             "product_id should be focused");
         form.$('[name="product_id"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        form.$('[name="foo"]:eq(1)').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.strictEqual(form.$('[name="display_name"]')[0], document.activeElement,
-            "display_name should be focused (emails are focusable but phone aren't)");
+            "display_name should be focused");
 
         // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         assert.strictEqual(document.activeElement, form.$('[name="trululu"]')[0],
@@ -5198,6 +5198,46 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('outer and inner groups string attribute', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group string="parent group" class="parent_group">' +
+                            '<group string="child group 1" class="group_1">' +
+                                '<field name="bar"/>' +
+                            '</group>' +
+                            '<group string="child group 2" class="group_2">' +
+                                '<field name="bar"/>' +
+                            '</group>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        var $parentGroup = form.$('.parent_group');
+        var $group1 = form.$('.group_1');
+        var $group2 = form.$('.group_2');
+
+        assert.strictEqual(form.$('table.o_inner_group').length, 2,
+            "should contain two inner groups");
+        assert.strictEqual($group1.find('.o_horizontal_separator').length, 1,
+            "inner group should contain one string separator");
+        assert.strictEqual($group1.find('.o_horizontal_separator:contains(child group 1)').length, 1,
+            "first inner group should contain 'child group 1' string");
+        assert.strictEqual($group2.find('.o_horizontal_separator:contains(child group 2)').length, 1,
+            "second inner group should contain 'child group 2' string");
+        assert.strictEqual($parentGroup.find('> div.o_horizontal_separator:contains(parent group)').length, 1,
+            "outer group should contain 'parent group' string");
+
+        form.destroy();
+    });
+
     QUnit.test('form group with newline tag inside', function (assert) {
         assert.expect(6);
 
@@ -6227,6 +6267,63 @@ QUnit.module('Views', {
         delete widgetRegistry.map.test;
     });
 
+    QUnit.test('support header button as widgets on form statusbar', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<widget name="attach_document" string="Attach document"/>' +
+                    '</header>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('button.o_attachment_button').length, 1,
+            "should have 1 attach_document widget in the statusbar");
+        assert.strictEqual(form.$('span.o_attach_document').text().trim(), 'Attach document',
+            "widget should have been instantiated");
+
+        form.destroy();
+    });
+
+    QUnit.test('basic support for widgets', function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            init: function (parent, dataPoint) {
+                this.data = dataPoint.data;
+            },
+            start: function () {
+                this.$el.text(this.data.foo + "!");
+            },
+            updateState: function (dataPoint) {
+                this.$el.text(dataPoint.data.foo + "!");
+            },
+        });
+        widgetRegistry.add('test', MyWidget);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<widget name="test"/>' +
+                '</form>',
+        });
+
+        form.$('input[name="foo"]').val("I am alive").trigger('input');
+        assert.strictEqual(form.$('.o_widget').text(), 'I am alive!',
+            "widget should have been updated");
+
+        form.destroy();
+        delete widgetRegistry.map.test;
+    });
+
+
     QUnit.test('bounce edit button in readonly mode', function (assert) {
         assert.expect(3);
 
@@ -6338,6 +6435,84 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('check if the view destroys all widgets and instances', function (assert) {
+        assert.expect(1);
+
+        var instanceNumber = 0;
+        testUtils.patch(mixins.ParentedMixin, {
+            init: function () {
+                instanceNumber++;
+                return this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                if (!this.isDestroyed()) {
+                    instanceNumber--;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        var params = {
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                        '<field name="bar"/>' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux"/>' +
+                        '<field name="trululu"/>' +
+                        '<field name="timmy"/>' +
+                        '<field name="product_id"/>' +
+                        '<field name="priority"/>' +
+                        '<field name="state"/>' +
+                        '<field name="date"/>' +
+                        '<field name="datetime"/>' +
+                        '<field name="product_ids"/>' +
+                        '<field name="p">' +
+                            '<tree default_order="foo desc">' +
+                                '<field name="display_name"/>' +
+                                '<field name="foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form':
+                    '<form string="Partner">' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="foo"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+                "partner_type,false,list": '<tree><field name="name"/></tree>',
+                'product,false,list': '<tree><field name="display_name"/></tree>',
+
+            },
+            res_id: 1,
+        };
+
+        var form = createView(params);
+        form.destroy();
+
+        var initialInstanceNumber = instanceNumber;
+        instanceNumber = 0;
+
+        form = createView(params);
+
+        // call destroy function of controller to ensure that it correctly destroys everything
+        form.__destroy();
+
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+
+        form.destroy();
+
+        testUtils.unpatch(mixins.ParentedMixin);
+    });
+
     QUnit.test('edition in form view on a "noCache" model', function (assert) {
         assert.expect(4);
 
@@ -6446,6 +6621,102 @@ QUnit.module('Views', {
         form.destroy();
         testUtils.unpatch(BasicModel);
     });
+
+    QUnit.test('a popup window should automatically close after a do_action event', function (assert) {
+
+        // Having clicked on a one2many in a form view and clicked on a many2one
+        // field in the resulting popup window that popup window should automatically close.
+
+        assert.expect(2);
+
+        this.data.partner.records[0].product_ids = [37];
+        this.data.product.records[0].partner_type_id = 12;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form>' +
+                    '<field name="product_ids">' + 
+                        '<tree><field name="partner_type_id"/></tree>' + 
+                        '<form><field name="partner_type_id"/></form>' + 
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_action' && args.model === 'partner_type') {
+                    return $.when();
+                }
+                return this._super(route, args);
+            },
+            intercepts: {
+                do_action: function (event) {
+                    event.data.on_success();
+                }
+            },
+        });
+        // Open one2many
+        form.$('.o_data_row').click();
+        assert.strictEqual($('.modal-content').length, 1, "a popup window should have opened");       
+        // Click on many2one and trigger do_action
+        $('.modal-content a[name="partner_type_id"]').click();
+        assert.strictEqual($('.modal-content').length, 0, "the popup window should have closed");
+
+        form.destroy();
+    });
+
+    QUnit.test('all popup windows should automatically close after a do_action event', function (assert) {
+
+        // Having clicked successively on two different one2many in form views
+        // and clicked on a many2one in the last popup window all popup
+        // windows should automatically close.
+
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].product_ids = [37];
+        this.data.product.records[0].partner_type_id = 12;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form>' +
+                        '<field name="p">' +
+                            '<tree><field name="display_name"/></tree>' + 
+                        '</field>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form><field name="product_ids">' +
+                                            '<tree><field name="partner_type_id"/></tree>' +
+                                            '<form><field name="partner_type_id"/></form>' +
+                                        '</field></form>', 
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_action' && args.model === 'partner_type') {
+                    return $.when();
+                }
+                return this._super(route, args);
+            },
+            intercepts: {
+                do_action: function (event) {
+                    event.data.on_success();
+                }
+            },
+        });
+        // Open two one2manys
+        form.$('.o_data_row').click();
+        $('.modal-content .o_data_row').click();
+        assert.strictEqual($('.modal-content').length, 2, "Two popup windows should have opened.");
+        // Click on many2one and trigger do_action
+        $('.modal-content a[name="partner_type_id"]').click();
+        assert.strictEqual($('.modal-content').length, 0, "All popup windows should have closed.");
+
+        form.destroy();
+    });
+
+
 });
 
 });

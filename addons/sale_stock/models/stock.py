@@ -26,6 +26,15 @@ class StockMove(models.Model):
         keys_sorted.append(move.sale_line_id.id)
         return keys_sorted
 
+    def _get_related_invoices(self):
+        """ Overridden from stock_account to return the customer invoices
+        related to this stock move.
+        """
+        rslt = super(StockMove, self)._get_related_invoices()
+        invoices = self.mapped('picking_id.sale_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
+        rslt += invoices
+        #rslt += invoices.mapped('refund_invoice_ids')
+        return rslt
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -50,17 +59,6 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True)
 
-    @api.multi
-    def _create_backorder(self, backorder_moves=[]):
-        res = super(StockPicking, self)._create_backorder(backorder_moves)
-        for picking in self.filtered(lambda pick: pick.picking_type_id.code == 'outgoing'):
-            backorder = picking.search([('backorder_id', '=', picking.id)])
-            if backorder.sale_id:
-                backorder.message_post_with_view(
-                    'mail.message_origin_link',
-                    values={'self': backorder, 'origin': backorder.sale_id},
-                    subtype_id=self.env.ref('mail.mt_note').id)
-        return res
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The

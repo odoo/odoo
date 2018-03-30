@@ -35,7 +35,7 @@
                                         </td>
                                         <td class="text-right">
                                             <span t-field="l.quantity"/>
-                                            <span groups="product.group_uom" t-field="l.product_id.uom_id.name"/>
+                                            <span groups="uom.group_uom" t-field="l.product_id.uom_id.name"/>
                                         </td>
                                         <td>
                                             <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>

@@ -41,7 +41,7 @@ class Repair(models.Model):
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
         readonly=True, required=True, states={'draft': [('readonly', False)]})
     product_uom = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         readonly=True, required=True, states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
@@ -504,7 +504,7 @@ class RepairLine(models.Model):
         'Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         required=True)
     invoice_line_id = fields.Many2one(
         'account.invoice.line', 'Invoice Line',
@@ -608,7 +608,7 @@ class RepairFee(models.Model):
     product_id = fields.Many2one('product.product', 'Product')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True)
-    product_uom = fields.Many2one('product.uom', 'Product Unit of Measure', required=True)
+    product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True)
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
     tax_id = fields.Many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes')
     invoice_line_id = fields.Many2one('account.invoice.line', 'Invoice Line', copy=False, readonly=True)

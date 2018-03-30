@@ -415,9 +415,6 @@ email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""",
 # matches a string containing only one email
 single_email_re = re.compile(r"""^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$""", re.VERBOSE)
 
-# update command in emails body
-command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-
 # Updated in 7.0 to match the model name as well
 # Typical form of references is <timestamp-openerp-record_id-model_name@domain>
 # group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain

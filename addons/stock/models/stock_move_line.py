@@ -23,7 +23,7 @@ class StockMoveLine(models.Model):
         'stock.move', 'Stock Move',
         help="Change to a better name")
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
-    product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
         'Real Reserved Quantity', digits=0,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)
@@ -143,7 +143,7 @@ class StockMoveLine(models.Model):
         res = {}
         if self.product_id.tracking == 'serial':
             if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
-                message = _('You can only process 1.0 %s for products with unique serial number.') % self.product_id.uom_id.name
+                message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
@@ -167,7 +167,7 @@ class StockMoveLine(models.Model):
         # If the move line is directly create on the picking view.
         # If this picking is already done we should generate an
         # associated done move.
-        if 'picking_id' in vals and 'move_id' not in vals:
+        if 'picking_id' in vals and not vals.get('move_id'):
             picking = self.env['stock.picking'].browse(vals['picking_id'])
             if picking.state == 'done':
                 product = self.env['product.product'].browse(vals['product_id'])
@@ -340,8 +340,13 @@ class StockMoveLine(models.Model):
                 raise UserError(_('You can not delete product moves if the picking is done. You can only correct the done quantities.'))
             # Unlinking a move line should unreserve.
             if ml.product_id.type == 'product' and not ml.location_id.should_bypass_reservation() and not float_is_zero(ml.product_qty, precision_digits=precision):
-                self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id,
-                                                                   package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                try:
+                    self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                except UserError:
+                    if ml.lot_id:
+                        self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                    else:
+                        raise
         moves = self.mapped('move_id')
         res = super(StockMoveLine, self).unlink()
         if moves:
@@ -398,6 +403,7 @@ class StockMoveLine(models.Model):
         ml_to_delete.unlink()
 
         # Now, we can actually move the quant.
+        done_ml = self.env['stock.move.line']
         for ml in self - ml_to_delete:
             if ml.product_id.type == 'product':
                 Quant = self.env['stock.quant']
@@ -406,7 +412,7 @@ class StockMoveLine(models.Model):
                 # if this move line is force assigned, unreserve elsewhere if needed
                 if not ml.location_id.should_bypass_reservation() and float_compare(ml.qty_done, ml.product_qty, precision_rounding=rounding) > 0:
                     extra_qty = ml.qty_done - ml.product_qty
-                    ml._free_reservation(ml.product_id, ml.location_id, extra_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
+                    ml._free_reservation(ml.product_id, ml.location_id, extra_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, ml_to_ignore=done_ml)
                 # unreserve what's been reserved
                 if not ml.location_id.should_bypass_reservation() and ml.product_id.type == 'product' and ml.product_qty:
                     try:
@@ -425,8 +431,12 @@ class StockMoveLine(models.Model):
                         Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
+            done_ml |= ml
         # Reset the reserved quantity as we just moved it to the destination location.
-        (self - ml_to_delete).with_context(bypass_reservation_update=True).write({'product_uom_qty': 0.00})
+        (self - ml_to_delete).with_context(bypass_reservation_update=True).write({
+            'product_uom_qty': 0.00,
+            'date': fields.Datetime.now(),
+        })
 
     def _log_message(self, record, move, template, vals):
         data = vals.copy()
@@ -444,12 +454,18 @@ class StockMoveLine(models.Model):
             data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
         record.message_post_with_view(template, values={'move': move, 'vals': dict(vals, **data)}, subtype_id=self.env.ref('mail.mt_note').id)
 
-    def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None):
+    def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
         """ When editing a done move line or validating one with some forced quantities, it is
         possible to impact quants that were not reserved. It is therefore necessary to edit or
         unlink the move lines that reserved a quantity now unavailable.
+
+        :param ml_to_ignore: recordset of `stock.move.line` that should NOT be unreserved
         """
         self.ensure_one()
+
+        if ml_to_ignore is None:
+            ml_to_ignore = self.env['stock.move.line']
+        ml_to_ignore |= self
 
         # Check the available quantity, with the `strict` kw set to `True`. If the available
         # quantity is greather than the quantity now unavailable, there is nothing to do.
@@ -467,7 +483,7 @@ class StockMoveLine(models.Model):
                 ('owner_id', '=', owner_id.id if owner_id else False),
                 ('package_id', '=', package_id.id if package_id else False),
                 ('product_qty', '>', 0.0),
-                ('id', '!=', self.id),
+                ('id', 'not in', ml_to_ignore.ids),
             ]
             oudated_candidates = self.env['stock.move.line'].search(oudated_move_lines_domain)
 

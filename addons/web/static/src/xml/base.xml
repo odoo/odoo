@@ -125,7 +125,6 @@
     </div>
 </t>
 <t t-name="Warning" t-extend="Notification">
-    <t t-jquery=".o_notification">$(this).addClass('o_error');</t>
     <t t-jquery=".o_icon" t-operation="replace">
         <span class="o_icon fa fa-3x fa-exclamation"/>
     </t>
@@ -210,7 +209,7 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="o_debug_manager">
-        <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown">
+        <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <span class="fa fa-bug"/>
         </a>
         <ul class="dropdown-menu o_debug_dropdown" role="menu"/>
@@ -326,12 +325,12 @@
 <t t-name="Sidebar">
     <t t-foreach="widget.sections" t-as="section">
         <div class="btn-group o_dropdown">
-            <button t-if="section.name != 'buttons'" class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
+            <button t-if="section.name != 'buttons'" class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                 <t t-esc="section.label"/> <span class="caret"/>
             </button>
             <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
-                <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
+                <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url or '#'" target="_blank">
                     <t t-raw="item.label"/>
                 </a>
             </t>
@@ -353,7 +352,7 @@
                             <t t-raw="item.write_uid[1]"/>  <t t-esc="item.write_date_string"/>
                         </t>
                     </t>
-                    <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
+                    <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url or '#'">
                         <t t-raw="item.label"/>
                         <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment"/>
                     </a>
@@ -470,7 +469,7 @@
 </form>
 <t t-name="GraphView.buttons">
     <div class="btn-group btn-group-sm" role="group">
-        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             Measures <span class="caret"/>
         </button>
         <ul class="dropdown-menu o_graph_measures_list">
@@ -488,8 +487,10 @@
     </div>
 </t>
 <div t-name="GraphView.error" class="o_view_nocontent" >
-    <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
-    <p><t t-esc="description"/></p>
+    <div class="o_nocontent_help">
+        <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
+        <p><t t-esc="description"/></p>
+    </div>
 </div>
 
 <div t-name="PivotView" class="o_pivot">
@@ -497,7 +498,7 @@
 </div>
 <t t-name="PivotView.buttons">
     <div class="btn-group btn-group-sm" role="group">
-        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             Measures <span class="caret"/>
         </button>
         <ul class="dropdown-menu o_pivot_measures_list">
@@ -539,14 +540,16 @@
         </t>
     </ul>
 </t>
-<div t-name="PivotView.nodata" class="o_view_nocontent_container" >
+<div t-name="PivotView.nodata">
     <div class="o_view_nocontent">
-        <p class="o_view_nocontent_empty_folder">
-            No data to display
-        </p><p>
-            Try to add some records, or make sure
-            that there is at least one measure and no active filter in the search bar.
-        </p>
+        <div class="o_nocontent_help">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p><p>
+                Try to add some records, or make sure
+                that there is at least one measure and no active filter in the search bar.
+            </p>
+        </div>
     </div>
 </div>
 
@@ -849,7 +852,7 @@
                 <t t-call="FieldStatus.content.button"/>
             </li>
         </ul>
-        <button type="button" class="btn btn-sm o_arrow_button btn-default dropdown-toggle" data-toggle="dropdown">More <span class="caret"/></button>
+        <button type="button" class="btn btn-sm o_arrow_button btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"/></button>
     </t>
     <t t-foreach="selection_unfolded.reverse()" t-as="i">
         <t t-call="FieldStatus.content.button"/>
@@ -882,9 +885,7 @@
     <img class="img img-responsive"
         t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
-        t-att-name="widget.name"
-        t-att-width="widget.nodeOptions.size ? widget.nodeOptions.size[0] : widget.attrs.img_width || widget.attrs.width"
-        t-att-height="widget.nodeOptions.size ? widget.nodeOptions.size[1] : widget.attrs.img_height || widget.attrs.height"/>
+        t-att-name="widget.name"/>
 </t>
 <t t-name="FieldBinaryFile">
     <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
@@ -907,6 +908,7 @@
         </t>
     </div>
 </t>
+
 <t t-name="HiddenInputFile">
     <div t-attf-class="o_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
         <form class="o_form_binary_form" t-att-target="fileupload_id"
@@ -921,6 +923,31 @@
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>
 </t>
+
+<t t-name="FieldPdfViewer">
+    <div class="o_field_pdfviewer">
+        <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8">
+            <span class="o_form_binary_progress">Uploading...</span>
+            <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
+            <button class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select" type="button"></button>
+            <button class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear" type="button"></button>
+        </div>
+        <iframe class="o_pdfview_iframe o_field_pdfviewer"/>
+        <t t-call="HiddenInputPDFFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
+        </t>
+    </div>
+</t>
+
+<t t-name="HiddenInputPDFFile" t-extend="HiddenInputFile">
+    <!-- remove the inputs and put a new one for pdf only -->
+    <t t-jquery="input[type='file']" t-operation="replace"/>
+    <t t-jquery="form" t-operation="append">
+        <input type="file" class="o_input_file" name="ufile" accept="application/pdf"/>
+    </t>
+</t>
+
 <div t-name="FieldBinaryFileUploader" t-attf-class="oe_fileupload #{widget.attrs.class ? widget.attrs.class :''}">
     <div class="oe_placeholder_files"/>
     <div t-if="widget.mode !== 'readonly'" class="oe_add">
@@ -982,7 +1009,7 @@
     <ul class="dropdown-menu o_searchview_autocomplete" role="menu"></ul>
 </t>
 <div t-name="SearchView.FilterMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
+    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="fa fa-filter"/> Filters <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_filters_menu" role="menu">
@@ -1094,7 +1121,7 @@
     </select>
 </t>
 <div t-name="SearchView.GroupByMenu" class="btn-group hidden-xs o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
+    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="fa fa-bars"/> Group By <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_group_by_menu" role="menu">
@@ -1115,7 +1142,7 @@
     </li>
 </t>
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
+    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
         <span class="fa fa-star"/> Favorites <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_favorites_menu" role="menu">
@@ -1244,8 +1271,8 @@
     <span class="o_stat_text"><t t-esc="text"/></span>
 </t>
 <t t-name="toggle_button">
-    <button type="button" class="o_icon_button" t-att-title="widget.string">
-        <i t-attf-class="fa #{widget.icon}" t-att-title="widget.string"/>
+    <button type="button" class="o_icon_button" t-att-title="widget.string" t-att-aria-label="widget.string">
+        <i class="fa fa-circle" t-att-title="widget.string"/>
     </button>
 </t>
 
@@ -1259,8 +1286,8 @@
             <t t-set="att_prev" t-value="{'accesskey': 'p'}" />
             <t t-set="att_next" t-value="{'accesskey': 'n'}" />
         </t>
-        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev"/>
-        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next"/>
+        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev" aria-label="Previous"/>
+        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next" aria-label="Next"/>
     </span>
 </div>
 
@@ -1349,6 +1376,22 @@
         <img class="icon" t-att-src="imgurl"></img>
         <span class="appName"><t t-esc="string"/></span>
     </div>
+</t>
+
+<t t-name="AttachDocument">
+    <button class="btn btn-sm btn-default o_attachment_button">
+        <span class="o_attach_document"><t t-esc="widget.node.attrs.string"/></span>
+        <span class="hide">
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                <t t-set="multi_upload" t-value="true"/>
+                <input type="hidden" name="model" t-att-value="widget.res_model"/>
+                <input type="hidden" name="id" t-att-value="widget.res_id"/>
+                <input type="hidden" name="session_id" t-att-value="widget.getSession().session_id"/>
+            </t>
+        </span>
+    </button>
 </t>
 
 </templates>

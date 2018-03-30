@@ -246,9 +246,69 @@ class TestSaleStock(TestSale):
         the new move lines.
         """
         # sell two products
-        item1 = self.products['prod_order']
-        item2 = self.products['prod_del']
+        item1 = self.products['prod_order']  # consumable
+        item2 = self.products['prod_del']    # stockable
 
+        self.so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
+            ],
+        })
+        self.so.action_confirm()
+
+        # deliver them
+        # One of the move is for a consumable product, thus is assigned. The second one is for a
+        # stockable product, thus is unavailable. Hitting `button_validate` will first ask to
+        # process all the reserved quantities and, if the user chose to process, a second wizard
+        # will ask to create a backorder for the unavailable product.
+        self.assertEquals(len(self.so.picking_ids), 1)
+        res_dict = self.so.picking_ids[0].button_validate()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        self.assertEqual(wizard._name, 'stock.immediate.transfer')
+        res_dict = wizard.process()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        self.assertEqual(wizard._name, 'stock.backorder.confirmation')
+        wizard.process()
+
+        # Now, the original picking is done and there is a new one (the backorder).
+        self.assertEquals(len(self.so.picking_ids), 2)
+        for picking in self.so.picking_ids:
+            move = picking.move_lines
+            if picking.backorder_id:
+                self.assertEqual(move.product_id.id, item2.id)
+                self.assertEqual(move.state, 'confirmed')
+            else:
+                self.assertEqual(picking.move_lines.product_id.id, item1.id)
+                self.assertEqual(move.state, 'done')
+
+        # update the two original sale order lines
+        self.so.write({
+            'order_line': [
+                (1, self.so.order_line[0].id, {'product_uom_qty': 2}),
+                (1, self.so.order_line[1].id, {'product_uom_qty': 2}),
+            ]
+        })
+        # a single picking should be created for the new delivery
+        self.assertEquals(len(self.so.picking_ids), 2)
+        backorder = self.so.picking_ids.filtered(lambda p: p.backorder_id)
+        self.assertEqual(len(backorder.move_lines), 2)
+        for backorder_move in backorder.move_lines:
+            if backorder_move.product_id.id == item1.id:
+                self.assertEqual(backorder_move.product_qty, 1)
+            elif backorder_move.product_id.id == item2.id:
+                self.assertEqual(backorder_move.product_qty, 2)
+
+    def test_05_create_picking_update_saleorderline(self):
+        """ Same test than test_04 but only with enough products in stock so that the reservation
+        is successful.
+        """
+        # sell two products
+        item1 = self.products['prod_order']  # consumable
+        item2 = self.products['prod_del']    # stockable
+
+        self.env['stock.quant']._update_available_quantity(item2, self.env.ref('stock.stock_location_stock'), 2)
         self.so = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'order_line': [
@@ -305,3 +365,61 @@ class TestSaleStock(TestSale):
         self.assertEqual(len(so1.picking_ids), 2)
         picking2 = so1.picking_ids.filtered(lambda p: p.state != 'cancel')
         self.assertEqual(picking2.partner_id.id, partner2)
+
+    def test_06_uom(self):
+        """ Sell a dozen of products stocked in units. Check that the quantities on the sale order
+        lines as well as the delivered quantities are handled in dozen while the moves themselves
+        are handled in units. Edit the ordered quantities, check that the quantites are correctly
+        updated on the moves. Edit the ir.config_parameter to propagate the uom of the sale order
+        lines to the moves and edit a last time the ordered quantities. Deliver, check the
+        quantities.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        item1 = self.products['prod_order']
+
+        self.assertEqual(item1.uom_id.id, uom_unit.id)
+
+        # sell a dozen
+        so1 = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'name': item1.name,
+                'product_id': item1.id,
+                'product_uom_qty': 1,
+                'product_uom': uom_dozen.id,
+                'price_unit': item1.list_price,
+            })],
+        })
+        so1.action_confirm()
+
+        # the move should be 12 units
+        # note: move.product_qty = computed field, always in the uom of the quant
+        #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
+        move1 = so1.picking_ids.move_lines[0]
+        self.assertEqual(move1.product_uom_qty, 12)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 12)
+
+        # edit the so line, sell 2 dozen, the move should now be 24 units
+        so1.order_line.product_uom_qty = 2
+        self.assertEqual(move1.product_uom_qty, 24)
+        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.product_qty, 24)
+
+        # force the propagation of the uom, sell 3 dozen
+        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
+        so1.order_line.product_uom_qty = 3
+        move2 = so1.picking_ids.move_lines.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        self.assertEqual(move2.product_uom_qty, 1)
+        self.assertEqual(move2.product_uom.id, uom_dozen.id)
+        self.assertEqual(move2.product_qty, 12)
+
+        # deliver everything
+        move1.quantity_done = 24
+        move2.quantity_done = 1
+        so1.picking_ids.button_validate()
+
+        # check the delivered quantity
+        self.assertEqual(so1.order_line.qty_delivered, 3.0)
+

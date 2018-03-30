@@ -1,6 +1,7 @@
 odoo.define('account.ReconciliationClientAction', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var ReconciliationModel = require('account.ReconciliationModel');
 var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var ControlPanelMixin = require('web.ControlPanelMixin');
@@ -11,8 +12,8 @@ var core = require('web.core');
 /**
  * Widget used as action for 'account.bank.statement' reconciliation
  */
-var StatementAction = Widget.extend(ControlPanelMixin, {
-    title: core._t('Bank reconciliation'),
+var StatementAction = AbstractAction.extend(ControlPanelMixin, {
+    title: core._t('Bank Reconciliation'),
     template: 'reconciliation',
     custom_events: {
         change_mode: '_onAction',
@@ -57,7 +58,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this.action_manager = parent;
         this.params = params;
         this.model = new this.config.Model(this, {
-            modelName: "account.bank.statement.line",
+            modelName: "account.reconciliation.widget",
             limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];

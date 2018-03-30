@@ -155,13 +155,12 @@
                     <field name="tot_start_survey" invisible="1"/>
                     <field name="is_closed" invisible="1"/>
                     <header groups="survey.group_survey_manager">
-                        <button name="action_test_survey" string="Design Survey" type="object" class="oe_highlight"/>
                         <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
                         <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
                         <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
-                        <field name="stage_id" widget="statusbar" clickable="True" />
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -256,10 +255,7 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <ul class="list-unstyled">
-                                    <li>
-                                        <a name="action_test_survey" type="object">Design</a>
-                                    </li>
-                                    <li>
+                                    <li id="survey_test">
                                         <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey">Test</a></t>
                                         <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
                                     </li>

@@ -40,8 +40,7 @@ var ChatWindowManager =  AbstractService.extend({
             spaceLeft: 0,
             windowsDropdownIsOpen: false,  // used to keep dropdown open when closing chat windows
         };
-        var chatReady = this.call('chat_manager', 'isReady');
-        chatReady.then(function () {
+        this.call('chat_manager', 'isReady').then(function () {
             var channels = self.call('chat_manager', 'getChannels');
             _.each(channels, function (channel) {
                 if (channel.is_detached) {
@@ -88,7 +87,7 @@ var ChatWindowManager =  AbstractService.extend({
      * @param {boolean} [options.passively] if set to true, open the chat window
      * without focusing the input and marking messages as read if it is not
      * open yet, and do nothing otherwise
-     */ 
+     */
     openChat: function (session, options) {
         var self = this;
         if (!session) {
@@ -188,7 +187,7 @@ var ChatWindowManager =  AbstractService.extend({
     },
     /**
      * Called when unfolding the chat window
-     * 
+     *
      * @param {Object} channel
      * @param {integer} channel.id
      * @param {boolean} [channel.is_folded]
@@ -326,12 +325,13 @@ var ChatWindowManager =  AbstractService.extend({
                     var channel = self.call('chat_manager', 'getChannel', session.id);
                     self.call('chat_manager', 'markChannelAsSeen', channel);
                 }
-                self.call('chat_manager', 'getMessages', {channelID: session.id}).then(function (messages) {
-                    session.window.render(messages);
-                    if (scrollBottom && messageVisible) {
-                        session.window.thread.scroll_to();
-                    }
-                });
+                self.call('chat_manager', 'getMessages', {channelID: session.id})
+                    .then(function (messages) {
+                        session.window.render(messages);
+                        if (scrollBottom && messageVisible) {
+                            session.window.thread.scroll_to();
+                        }
+                    });
             }
         });
     },
@@ -386,9 +386,9 @@ var ChatWindowManager =  AbstractService.extend({
         });
         this.displayState.hiddenSessions = hiddenSessions;
         this.displayState.hiddenUnreadCounter = hiddenUnreadCounter;
-    
-        if (this.displayState.$hidden_windows_dropdown) {
-            this.displayState.$hidden_windows_dropdown.remove();
+
+        if (this.displayState.$hiddenWindowsDropdown) {
+            this.displayState.$hiddenWindowsDropdown.remove();
         }
         if (hiddenSessions.length) {
             this.displayState.$hiddenWindowsDropdown = this._renderHiddenSessionsDropdown();
@@ -397,7 +397,7 @@ var ChatWindowManager =  AbstractService.extend({
                                     .appendTo($('body'));
             this._repositionHiddenSessionsDropdown();
             this.displayState.windowsDropdownIsOpen = false;
-    
+
             $hiddenWindowsDropdown.on('click', '.o_chat_header', function (event) {
                 var sessionID = $(event.currentTarget).data('session-id');
                 var session = _.findWhere(hiddenSessions, {id: sessionID});
@@ -487,8 +487,8 @@ var ChatWindowManager =  AbstractService.extend({
                 self.displayState.hiddenUnreadCounter += session.window.unread_msgs;
             }
         });
-        if (self.displayState.$hidden_windows_dropdown) {
-            self.displayState.$hidden_windows_dropdown.html(self.renderHiddenSessionsDropdown().html());
+        if (self.displayState.$hiddenWindowsDropdown) {
+            self.displayState.$hiddenWindowsDropdown.html(self._renderHiddenSessionsDropdown().html());
             self._repositionHiddenSessionsDropdown();
         }
     },
@@ -526,6 +526,8 @@ var ChatWindowManager =  AbstractService.extend({
     },
 
 });
+
+core.serviceRegistry.add('chat_window_manager', ChatWindowManager);
 
 return ChatWindowManager;
 

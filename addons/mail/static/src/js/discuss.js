@@ -4,6 +4,7 @@ odoo.define('mail.chat_discuss', function (require) {
 var ChatThread = require('mail.ChatThread');
 var composer = require('mail.composer');
 
+var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
@@ -13,7 +14,6 @@ var dom = require('web.dom');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var session = require('web.session');
-var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -63,13 +63,14 @@ var PartnerInviteDialog = Dialog.extend({
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.call('chat_manager', 'searchPartner', query.term, 20).then(function (partners) {
-                    query.callback({
-                        results: _.map(partners, function (partner) {
-                            return _.extend(partner, { text: partner.label });
-                        }),
+                self.call('chat_manager', 'searchPartner', query.term, 20)
+                    .then(function (partners) {
+                        query.callback({
+                            results: _.map(partners, function (partner) {
+                                return _.extend(partner, { text: partner.label });
+                            }),
+                        });
                     });
-                });
             }
         });
         return this._super.apply(this, arguments);
@@ -98,14 +99,14 @@ var PartnerInviteDialog = Dialog.extend({
                     self.do_notify(_t('New people'), notification);
                     // Clear the membersDeferred to fetch again the partner
                     // when getMentionPartnerSuggestions from the chatManager is triggered
-                    var channel = this.call('chat_manager', 'getChannel', self.channelID);
+                    var channel = self.call('chat_manager', 'getChannel', self.channelID);
                     delete channel.membersDeferred;
                 });
         }
     },
 });
 
-var Discuss = Widget.extend(ControlPanelMixin, {
+var Discuss = AbstractAction.extend(ControlPanelMixin, {
     template: 'mail.discuss',
     custom_events: {
         search: '_onSearch',
@@ -116,6 +117,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         'click .o_mail_chat_channel_item': '_onChannelClicked',
         'click .o_mail_open_channels': '_onPublicChannelsClick',
         'click .o_mail_partner_unpin': '_onUnpinChannel',
+        'click .o_mail_channel_settings': '_onChannelSettingsClicked',
         'click .o_mail_request_permission': '_onRequestNotificationPermission',
         'click .o_mail_sidebar_title .o_add': '_onAddChannel',
         'keydown': '_onKeydown',
@@ -152,15 +154,13 @@ var Discuss = Widget.extend(ControlPanelMixin, {
             .then(function (fields_view) {
                 self.fields_view = fields_view;
             });
-        var chatReady = this.call('chat_manager', 'isReady');
-        return $.when(this._super(), chatReady, def);
+        return $.when(this._super(), this.call('chat_manager', 'isReady'), def);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
-
         var defaultChannel = this.call('chat_manager', 'getChannel', this.defaultChannelID) ||
                                 this.call('chat_manager', 'getChannel', 'channel_inbox');
 
@@ -214,8 +214,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      * @override
      */
     on_attach_callback: function () {
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.trigger('discuss_open', true);
+        this.call('chat_manager', 'getChatBus').trigger('discuss_open', true);
         if (this.channel) {
             this.thread.scroll_to({offset: this.channelsScrolltop[this.channel.id]});
         }
@@ -224,8 +223,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      * @override
      */
     on_detach_callback: function () {
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.trigger('discuss_open', false);
+        this.call('chat_manager', 'getChatBus').trigger('discuss_open', false);
         this.channelsScrolltop[this.channel.id] = this.thread.get_scrolltop();
     },
 
@@ -376,8 +374,6 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {debug: session.debug}));
         this.$buttons.find('button').css({display:"inline-block"});
         this.$buttons.on('click', '.o_mail_chat_button_invite', this._onInviteButtonClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_unsubscribe', this._onUnsubscribeButtonClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_settings', this._onSettingsButtonClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', this._onMarkAllReadClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', this._onUnstarAllClicked.bind(this));
     },
@@ -511,7 +507,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      */
     _selectMessage: function (messageID) {
         this.$el.addClass('o_mail_selection_mode');
-        var message = this._getMessage(messageID);
+        var message = this.call('chat_manager', 'getMessage', messageID);;
         this.selected_message = message;
         var subject = "Re: " + message.record_name;
         this.extendedComposer.set_subject(subject);
@@ -582,7 +578,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         chatBus.on('new_channel', this, this._onNewChannel);
         chatBus.on('anyone_listening', this, function (channel, query) {
             query.is_displayed = query.is_displayed ||
-                                 (channel.id === this.channel.id && this.thread.is_at_bottom());
+                                (channel.id === this.channel.id && this.thread.is_at_bottom());
         });
         chatBus.on('unsubscribe_from_channel', this, this._onChannelLeft);
         chatBus.on('update_needaction', this, this.throttledUpdateChannels);
@@ -642,7 +638,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
             needaction_counter: this.call('chat_manager', 'getNeedactionCounter'),
             starred_counter: this.call('chat_manager', 'getStarredCounter'),
         });
-        self.$(".o_mail_chat_sidebar").html($sidebar.contents());
+        this.$(".o_mail_chat_sidebar").html($sidebar.contents());
         _.each(['dm', 'public', 'private'], function (type) {
             var $input = self.$('.o_mail_add_channel[data-type=' + type + '] input');
             self._prepareAddChannelInput($input, type);
@@ -694,10 +690,6 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      */
     _updateControlPanelButtons: function (channel) {
         // Hide 'unsubscribe' button in state channels and DM and channels with group-based subscription
-        this.$buttons
-            .find('.o_mail_chat_button_unsubscribe')
-            .toggle(channel.type !== "dm" && channel.type !== 'static' && ! channel.group_based_subscription);
-        // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
         this.$buttons
             .find('.o_mail_chat_button_invite, .o_mail_chat_button_settings')
             .toggle(channel.type !== "dm" && channel.type !== 'static');
@@ -791,10 +783,10 @@ var Discuss = Widget.extend(ControlPanelMixin, {
                         domain: this.domain
                 }).then(function (messages) {
                     var options = self._getThreadRenderingOptions(messages);
-                    self.thread.remove_message_and_render(message.id, messages, options).then(function () {
-                        self._updateButtonStatus(messages.length === 0, type);
-                
-                    });
+                    self.thread.remove_message_and_render(message.id, messages, options)
+                        .then(function () {
+                            self._updateButtonStatus(messages.length === 0, type);
+                        });
                 });
         } else if (_.contains(message.channel_ids, currentChannelID)) {
             this._fetchAndRenderThread();
@@ -906,10 +898,10 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         if (def) {
             def.then(function (value) {
                 if (value !== 'granted') {
-                    self._sendNotification(self, _t('Permission denied'),
+                    self.call('bus_service', 'sendNotification', self, _t('Permission denied'),
                         _t('Odoo will not have the permission to send native notifications on this device.'));
                 } else {
-                    self._sendNotification(self, _t('Permission granted'),
+                    self.call('bus_service', 'sendNotification', self, _t('Permission granted'),
                         _t('Odoo has now the permission to send you native notifications on this device.'));
                 }
             });
@@ -936,12 +928,14 @@ var Discuss = Widget.extend(ControlPanelMixin, {
     },
     /**
      * @private
+     * @param {MouseEvent} event
      */
-    _onSettingsButtonClicked: function () {
+    _onChannelSettingsClicked: function (event) {
+        var channelID = $(event.target).data("channel-id");
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: "mail.channel",
-            res_id: this.channel.id,
+            res_id: channelID,
             views: [[false, 'form']],
             target: 'current'
         });
@@ -961,12 +955,6 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      */
     _onUnstarAllClicked: function () {
         this.call('chat_manager', 'unstarAll');
-    },
-    /**
-     * @private
-     */
-    _onUnsubscribeButtonClicked: function () {
-        this._unsubscribe(this.channel);
     },
 });
 

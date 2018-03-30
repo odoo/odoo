@@ -111,6 +111,15 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertNotIn('mail.test', msg.message_id)
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id)
 
+    def test_mail_message_base64_image(self):
+        msg = self.env['mail.message'].sudo(self.user_employee).create({
+            'body': 'taratata <img src="data:image/png;base64,iV/+OkI=" width="2"> <img src="data:image/png;base64,iV/+OkI=" width="2">',
+        })
+        self.assertEqual(len(msg.attachment_ids), 1)
+        body = '<p>taratata <img src="/web/image/%s?access_token=%s" alt="image0" width="2"> <img src="/web/image/%s?access_token=%s" alt="image0" width="2"></p>'
+        body = body % (msg.attachment_ids[0].id, msg.attachment_ids[0].access_token, msg.attachment_ids[0].id, msg.attachment_ids[0].access_token)
+        self.assertEqual(msg.body, body)
+
 
 class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
 
@@ -155,53 +164,53 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
     def test_mail_message_access_search(self):
         # Data: various author_ids, partner_ids, documents
         msg1 = self.env['mail.message'].create({
-            'subject': '_Test', 'body': 'A', 'subtype_id': self.ref('mail.mt_comment')})
+            'subject': '_ZTest', 'body': 'A', 'subtype_id': self.ref('mail.mt_comment')})
         msg2 = self.env['mail.message'].create({
-            'subject': '_Test', 'body': 'A+B', 'subtype_id': self.ref('mail.mt_comment'),
+            'subject': '_ZTest', 'body': 'A+B', 'subtype_id': self.ref('mail.mt_comment'),
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg3 = self.env['mail.message'].create({
-            'subject': '_Test', 'body': 'A Pigs', 'subtype_id': False,
+            'subject': '_ZTest', 'body': 'A Pigs', 'subtype_id': False,
             'model': 'mail.channel', 'res_id': self.group_pigs.id})
         msg4 = self.env['mail.message'].create({
-            'subject': '_Test', 'body': 'A+P Pigs', 'subtype_id': self.ref('mail.mt_comment'),
+            'subject': '_ZTest', 'body': 'A+P Pigs', 'subtype_id': self.ref('mail.mt_comment'),
             'model': 'mail.channel', 'res_id': self.group_pigs.id,
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg5 = self.env['mail.message'].create({
-            'subject': '_Test', 'body': 'A+E Pigs', 'subtype_id': self.ref('mail.mt_comment'),
+            'subject': '_ZTest', 'body': 'A+E Pigs', 'subtype_id': self.ref('mail.mt_comment'),
             'model': 'mail.channel', 'res_id': self.group_pigs.id,
             'partner_ids': [(6, 0, [self.user_employee.partner_id.id])]})
         msg6 = self.env['mail.message'].create({
-            'subject': '_Test', 'body': 'A Birds', 'subtype_id': self.ref('mail.mt_comment'),
+            'subject': '_ZTest', 'body': 'A Birds', 'subtype_id': self.ref('mail.mt_comment'),
             'model': 'mail.channel', 'res_id': self.group_private.id})
         msg7 = self.env['mail.message'].sudo(self.user_employee).create({
-            'subject': '_Test', 'body': 'B', 'subtype_id': self.ref('mail.mt_comment')})
+            'subject': '_ZTest', 'body': 'B', 'subtype_id': self.ref('mail.mt_comment')})
         msg8 = self.env['mail.message'].sudo(self.user_employee).create({
-            'subject': '_Test', 'body': 'B+E', 'subtype_id': self.ref('mail.mt_comment'),
+            'subject': '_ZTest', 'body': 'B+E', 'subtype_id': self.ref('mail.mt_comment'),
             'partner_ids': [(6, 0, [self.user_employee.partner_id.id])]})
 
         # Test: Public: 2 messages (recipient)
-        messages = self.env['mail.message'].sudo(self.user_public).search([('subject', 'like', '_Test')])
+        messages = self.env['mail.message'].sudo(self.user_public).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg2 | msg4)
 
         # Test: Employee: 3 messages on Pigs Raoul can read (employee can read group with default values)
-        messages = self.env['mail.message'].sudo(self.user_employee).search([('subject', 'like', '_Test'), ('body', 'ilike', 'A')])
+        messages = self.env['mail.message'].sudo(self.user_employee).search([('subject', 'like', '_ZTest'), ('body', 'ilike', 'A')])
         self.assertEqual(messages, msg3 | msg4 | msg5)
 
         # Test: Raoul: 3 messages on Pigs Raoul can read (employee can read group with default values), 0 on Birds (private group) + 2 messages as author
-        messages = self.env['mail.message'].sudo(self.user_employee).search([('subject', 'like', '_Test')])
+        messages = self.env['mail.message'].sudo(self.user_employee).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg3 | msg4 | msg5 | msg7 | msg8)
 
         # Test: Admin: all messages
-        messages = self.env['mail.message'].search([('subject', 'like', '_Test')])
+        messages = self.env['mail.message'].search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg1 | msg2 | msg3 | msg4 | msg5 | msg6 | msg7 | msg8)
 
         # Test: Portal: 0 (no access to groups, not recipient)
-        messages = self.env['mail.message'].sudo(self.user_portal).search([('subject', 'like', '_Test')])
+        messages = self.env['mail.message'].sudo(self.user_portal).search([('subject', 'like', '_ZTest')])
         self.assertFalse(messages)
 
         # Test: Portal: 2 messages (public group with a subtype)
         self.group_pigs.write({'public': 'public'})
-        messages = self.env['mail.message'].sudo(self.user_portal).search([('subject', 'like', '_Test')])
+        messages = self.env['mail.message'].sudo(self.user_portal).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg4 | msg5)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')

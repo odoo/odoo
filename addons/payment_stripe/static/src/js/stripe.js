@@ -108,11 +108,14 @@ odoo.define('payment_stripe.stripe', function(require) {
 
 
         if ($('.o_website_payment').length !== 0) {
-            var create_tx = ajax.jsonRpc('/website_payment/transaction', 'call', {
-                    reference: $("input[name='invoice_num']").val(),
-                    amount: amount, // exact amount, not stripe cents
-                    currency_id: currency_id,
+            var invoice_num = $("input[name='invoice_num']").val();
+            var url = _.str.sprintf("/website_payment/transaction/v2/%f/%s/%s",
+                amount, currency_id, invoice_num);
+
+            var create_tx = ajax.jsonRpc(url, 'call', {
                     acquirer_id: acquirer_id
+            }).then(function (data) {
+                try { provider_form[0].innerHTML = data; } catch (e) {}
             });
         }
         else if ($('.o_website_quote').length !== 0) {
@@ -148,15 +151,12 @@ odoo.define('payment_stripe.stripe', function(require) {
             });
         }
         create_tx.done(function () {
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
             getStripeHandler().open({
                 name: $("input[name='merchant']").val(),
                 description: $("input[name='invoice_num']").val(),
                 email: $("input[name='email']").val(),
                 currency: currency,
-                amount: amount,
+                amount: _.contains(int_currencies, currency) ? amount : amount * 100,
             });
         });
     }

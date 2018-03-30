@@ -5,6 +5,7 @@ var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
 var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
+var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
@@ -141,39 +142,6 @@ QUnit.module('Views', {
         kanban.reload();
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 3,
                         "column should contain " + 3 + " record(s)");
-        kanban.destroy();
-    });
-
-    QUnit.test('basic grouped rendering with active field', function (assert) {
-        assert.expect(2);
-
-        // add active field on partner model and make all records active
-        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
-
-        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
-                        '<field name="active"/>' +
-                        '<field name="bar"/>' +
-                        '<templates><t t-name="kanban-box">' +
-                        '<div><field name="foo"/></div>' +
-                    '</t></templates></kanban>',
-            groupBy: ['bar'],
-            intercepts: {
-                env_updated: function (event) {
-                    assert.deepEqual(event.data.env.ids, envIDs,
-                        "should notify the environment with the correct ids");
-                },
-            },
-        });
-
-        // archive the records of the first column
-        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3,
-            "last column should contain 3 records");
-        envIDs = [4];
         kanban.destroy();
     });
 
@@ -2106,7 +2074,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper when no data', function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         var records = this.data.partner.records;
 
@@ -2137,9 +2105,6 @@ QUnit.module('Views', {
 
         this.data.partner.records = records;
         kanban.reload();
-
-        assert.notOk(kanban.$el.hasClass('o_view_nocontent_container'),
-            "$el should have removed no content class");
 
         assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
@@ -2466,8 +2431,8 @@ QUnit.module('Views', {
             "there should be no columns");
         assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
             "there should be no records");
-        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
-            "there should be a nocontent helper");
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should not be a nocontent helper");
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 0,
             "there should not be a column quick create");
         kanban.destroy();
@@ -2737,34 +2702,6 @@ QUnit.module('Views', {
         $firstRecord = kanban.$('.o_kanban_record:first()'); // First record is reloaded here
         assert.ok($firstRecord.is('.oe_kanban_color_9'),
             "the first record should have the color 9");
-
-        kanban.destroy();
-    });
-
-    QUnit.test('archive kanban column, when active field is not in the view', function (assert) {
-        assert.expect(0);
-
-        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
-
-        var writeOnActive;
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban>' +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                    '<div><field name="foo"/></div>' +
-                '</t></templates>' +
-            '</kanban>',
-            groupBy: ['product_id'],
-            mockRPC: function (route, args) {
-                if (args.method === 'write' && 'active' in args.args[1]) {
-                    writeOnActive = true;
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
 
         kanban.destroy();
     });
@@ -3337,15 +3274,71 @@ QUnit.module('Views', {
                   '</kanban>',
         });
 
-        var imageOnRecord = kanban.$('img[src*="/web/image"][src*="&id=1"]');
+        var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image");
 
-        var placeholders = kanban.$('img[src$="/web/static/src/img/placeholder.png"]');
+        var placeholders = kanban.$('img[data-src$="/web/static/src/img/placeholder.png"]');
         assert.strictEqual(placeholders.length, this.data.partner.records.length - 1,
-            "partner with image should displaiy");
+            "partner with no image should display the placeholder");
 
         kanban.destroy();
     });
+
+    QUnit.test('check if the view destroys all widgets and instances', function (assert) {
+        assert.expect(1);
+
+        var instanceNumber = 0;
+        testUtils.patch(mixins.ParentedMixin, {
+            init: function () {
+                instanceNumber++;
+                return this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                if (!this.isDestroyed()) {
+                    instanceNumber--;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        var params = {
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="product_id"/>' +
+                    '<field name="category_ids"/>' +
+                    '<field name="state"/>' +
+                    '<field name="date"/>' +
+                    '<field name="datetime"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+        };
+
+        var kanban = createView(params);
+        kanban.destroy();
+
+        var initialInstanceNumber = instanceNumber;
+        instanceNumber = 0;
+
+        kanban = createView(params);
+
+        // call destroy function of controller to ensure that it correctly destroys everything
+        kanban.__destroy();
+
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+
+        kanban.destroy();
+
+        testUtils.unpatch(mixins.ParentedMixin);
+    });
+
 });
 
 });

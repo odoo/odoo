@@ -94,13 +94,13 @@ tour.STEPS.MENU_MORE, {
     content: _t("Configuration options are available in the Settings app."),
     position: "bottom"
 }, {
-    trigger: ".o_web_settings_dashboard textarea#user_emails",
+    trigger: ".o_web_settings_dashboard .o_user_emails",
     content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
     position: "right"
 }, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="project.menu_main_pm"]',
-    content: _t("Good job! Your completed the Project Management tour."),
+    content: _t("Good job! You completed the Project Management tour."),
     position: 'bottom',
 }]);
 

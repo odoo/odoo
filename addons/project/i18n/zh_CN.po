@@ -207,6 +207,37 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\"><table "
+"style=\"width:600px;margin:5px auto;\"><tbody><tr><td><a href=\"/\"><img "
+"src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-"
+"width:100px;\"/></a></td><td style=\"text-align:right;vertical-"
+"align:middle;\"/></tr></tbody></table><table style=\"width:600px;margin:0px "
+"auto;background:white;border:1px solid #e1e1e1;\"><tbody><tr><td "
+"style=\"padding:15px 20px 10px "
+"20px;\"/></tr><p/><p><strong/><strong/></p></tbody><td style=\"padding:10px "
+"10px;\"><table style=\"width:100%;text-align:center;\"><tr><td><a "
+"href=\"/rating/${access_token}/10\"><img alt=\"Satisfied\" "
+"src=\"/rating/static/src/img/rating_10.png\" "
+"title=\"Satisfied\"/></a></td><td><a href=\"/rating/${access_token}/5\"><img"
+" alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" "
+"title=\"Not satisfied\"/></a></td><td><a "
+"href=\"/rating/${access_token}/1\"><img alt=\"Highly Dissatisfied\" "
+"src=\"/rating/static/src/img/rating_1.png\" title=\"Highly "
+"Dissatisfied\"/></a></td></tr></table></td><td style=\"text-"
+"align:center;\"><h2 style=\"font-weight:300;font-size:18px;\"/><div style"
+"=\"text-color: #888888\"/></td><tr><td style=\"padding:10px 20px\"><table "
+"style=\"width:100%;border-top:1px solid #e1e1e1;\" "
+"summary=\"o_mail_notification\"><tr/><tr/></table></td></tr><tr><td "
+"style=\"padding:15px 20px 10px 20px;\"/></tr></table><p/><table "
+"style=\"width:600px;margin:auto;text-align:center;font-size:12px;\"><tbody "
+"lilt=\"split=0\"><b><p><b/></p><tr lilt=\"split=0\"><td style=\"padding-"
+"top:10px;color:#afafaf;\"><p><b/></p><p><a href=\"https://www.odoo.com/page"
+"/project-management\" style=\"color:#875A7B;text-decoration:none;\" "
+"target=\"_blank\"/><a href=\"${object.project_id.company_id.website}\" "
+"style=\"color:#875A7B;text-"
+"decoration:none;\"/></p></td></tr></b></tbody><tbody lilt=\"split=1\"><tr "
+"lilt=\"split=1\"/></tbody></table></div>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
@@ -265,7 +296,7 @@ msgstr "(Un)通过完成相关的任务和解决议题来达成项目的目标�
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
-msgstr ""
+msgstr "<b/><i/>"
 
 #. module: project
 #. openerp-web
@@ -287,7 +318,7 @@ msgstr "<b>通过电子邮件</b>邀请同事。<br/> <i>每行发送一个电�
 #: code:addons/project/static/src/js/tour.js:69
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.rating_index
@@ -307,7 +338,7 @@ msgstr "<i class=\"fa fa-envelope\"/> 邮件:"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/>"
 
 #. module: project
 #: code:addons/project/models/project.py:126
@@ -342,7 +373,7 @@ msgstr ""
 msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -431,7 +462,7 @@ msgstr "添加描述"
 msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
-msgstr ""
+msgstr "<b/><br/><i/>"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -619,7 +650,7 @@ msgstr "取消"
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #. openerp-web
@@ -803,7 +834,7 @@ msgstr "任务的当前阶段"
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "目前，未计划任何活动。"
 
 #. module: project
 #: code:addons/project/models/project.py:897
@@ -1398,7 +1429,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
 msgid "My Next Activities"
-msgstr ""
+msgstr "我的下一个活动"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -1474,7 +1505,7 @@ msgstr "便签"
 #: code:addons/project/static/src/js/tour.js:42
 #, python-format
 msgid "Now that the project is set up, <b>create a few tasks</b>."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
@@ -1869,19 +1900,19 @@ msgstr "搜索项目"
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "在全部范围内搜索"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:94
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "在客户中搜索"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:93
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "在消息中搜索"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:95
@@ -2398,7 +2429,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:100
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -2430,7 +2461,7 @@ msgstr "关注中客户可见"
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
+msgstr "<i/><b/>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_cc

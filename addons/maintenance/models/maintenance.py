@@ -31,7 +31,7 @@ class MaintenanceEquipmentCategory(models.Model):
         self.fold = False if self.equipment_count else True
 
     name = fields.Char('Category Name', required=True, translate=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True,
+    company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.user.company_id)
     technician_user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.uid, oldname='user_id')
     color = fields.Integer('Color Index')
@@ -122,7 +122,7 @@ class MaintenanceEquipment(models.Model):
         return recs.name_get()
 
     name = fields.Char('Equipment Name', required=True, translate=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True,
+    company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
     technician_user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='user_id')
@@ -218,15 +218,6 @@ class MaintenanceEquipment(models.Model):
         return super(MaintenanceEquipment, self).write(vals)
 
     @api.model
-    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
-        """ mail.thread override so user_id which has no special access allowance is not
-            automatically subscribed.
-        """
-        if auto_follow_fields is None:
-            auto_follow_fields = []
-        return super(MaintenanceEquipment, self)._message_get_auto_subscribe_fields(updated_fields, auto_follow_fields)
-
-    @api.model
     def _read_group_category_ids(self, categories, domain, order):
         """ Read group customization in order to display all the categories in
             the kanban view, even if they are empty.
@@ -282,10 +273,14 @@ class MaintenanceRequest(models.Model):
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
-        return self.env['maintenance.team'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).id
+        MT = self.env['maintenance.team']
+        team = MT.search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        if not team:
+            team = MT.search([], limit=1)
+        return team.id
 
     name = fields.Char('Subjects', required=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True,
+    company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.user.company_id)
     description = fields.Text('Description')
     request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today,
@@ -341,6 +336,7 @@ class MaintenanceRequest(models.Model):
             request._add_followers()
         if request.equipment_id and not request.maintenance_team_id:
             request.maintenance_team_id = request.equipment_id.maintenance_team_id
+        request.activity_update()
         return request
 
     @api.multi
@@ -354,7 +350,30 @@ class MaintenanceRequest(models.Model):
             self._add_followers()
         if self.stage_id.done and 'stage_id' in vals:
             self.write({'close_date': fields.Date.today()})
+            self.activity_feedback(['maintenance.mail_act_maintenance_request'])
+        if 'schedule_date' in vals:
+            self.activity_update()
         return res
+
+    def activity_update(self):
+        """ Update maintenance activities based on current record set state.
+        It reschedule, unlink or create maintenance request activities. """
+        self.filtered(lambda request: not request.schedule_date).activity_unlink(['maintenance.mail_act_maintenance_request'])
+        for request in self.filtered(lambda request: request.schedule_date):
+            date_dl = fields.Datetime.from_string(request.schedule_date).date()
+            updated = request.activity_reschedule(
+                ['maintenance.mail_act_maintenance_request'],
+                date_deadline=date_dl)
+            if not updated:
+                if request.equipment_id:
+                    note = _('Request planned for <a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>') % (
+                        request.equipment_id._name, request.equipment_id.id, request.equipment_id.display_name)
+                else:
+                    note = False
+                request.activity_schedule(
+                    'maintenance.mail_act_maintenance_request',
+                    fields.Datetime.from_string(request.schedule_date).date(),
+                    note=note, user_id=request.technician_user_id.id or request.owner_user_id.id or self.env.uid)
 
     def _add_followers(self):
         for request in self:
@@ -376,7 +395,7 @@ class MaintenanceTeam(models.Model):
 
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True,
+    company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.user.company_id)
     member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
     color = fields.Integer("Color Index", default=0)

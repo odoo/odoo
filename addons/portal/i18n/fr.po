@@ -4,13 +4,13 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Florian Hatat, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Kévin R. <realrom@hotmail.fr>, 2016
+# Kévin R., 2016
 # Richard Mathot <rim@odoo.com>, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
 # Jean-Marc Dupont <jmd@6it.fr>, 2017
@@ -23,13 +23,15 @@
 # Micky Jault <micky037@hotmail.fr>, 2017
 # Frédéric LIETART <stuff@tifred.fr>, 2017
 # Fabri Yohann <psn@fabri.pw>, 2017
+# e2f <projects@e2f.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Fabri Yohann <psn@fabri.pw>, 2017\n"
+"Last-Translator: fr trans <e2ffr05@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +66,10 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"<p></p><p></p><p></p><ul></ul><p></p><ul><li><a "
+"href=\"${object.user_id.signup_url}\"></a></li></ul><p><li></li><li><a "
+"href=\"${&apos;portal_url&apos; in ctx and ctx[&apos;portal_url&apos;] or "
+"&apos;&apos;}\"></a></li><li/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -112,7 +118,7 @@ msgstr "Effacer"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Cliquez ici pour consulter votre document."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -124,7 +130,7 @@ msgstr "Nom de la société"
 msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -165,7 +171,7 @@ msgstr "Créé le"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URl du portail client"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -196,7 +202,7 @@ msgstr "Discussion par email"
 #: code:addons/portal/wizard/portal_wizard.py:130
 #, python-format
 msgid "Group %s is not a portal"
-msgstr ""
+msgstr "Le groupe %s n'est pas un portail"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -278,6 +284,8 @@ msgstr "Suivante"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Oups ! Un problème est survenu. Essayez de recharger la page et de vous "
+"identifier."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -303,7 +311,7 @@ msgstr "Gestion de l'accès au portail"
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URl d'accès au portail"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -320,7 +328,7 @@ msgstr "Préc."
 #: code:addons/portal/static/src/js/portal_chatter.js:101
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Publié sur %s"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -393,7 +401,7 @@ msgstr "Le portail auquel les utilisateurs peuvent être ajoutés ou enlevés."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "Il n'y a aucun commentaire pour le moment."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -586,7 +594,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Vos coordonnées"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
@@ -597,7 +605,7 @@ msgstr "Vos détails"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Vos documents"
 
 #. module: portal
 #. openerp-web
@@ -622,7 +630,7 @@ msgstr "Code postal"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "Avatar"
 
 #. module: portal
 #. openerp-web

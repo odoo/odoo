@@ -251,8 +251,6 @@
                             <group>
                                 <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
                                 <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
-                                <field name="email_from" invisible="1"/>
-                                <field name="phone" invisible="1"/>
                                 <field name="partner_name" invisible="1"/>
                                 <field name="street" invisible="1"/>
                                 <field name="street2" invisible="1"/>
@@ -274,6 +272,20 @@
                             <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
                             <button string="Discard" class="btn-default" special="cancel"/>
                         </footer>
+                        <field name="partner_name" invisible="1"/>
+                        <field name="contact_name" invisible="1"/>
+                        <field name="title" invisible="1"/>
+                        <field name="street" invisible="1"/>
+                        <field name="street2" invisible="1"/>
+                        <field name="city" invisible="1"/>
+                        <field name="state_id" invisible="1"/>
+                        <field name="country_id" invisible="1"/>
+                        <field name="email_from" invisible="1"/>
+                        <field name="phone" invisible="1"/>
+                        <field name="mobile" invisible="1"/>
+                        <field name="zip" invisible="1"/>
+                        <field name="function" invisible="1"/>
+                        <field name="website" invisible="1"/>
                     </sheet>
                 </form>
             </field>
@@ -297,7 +309,9 @@
                     <group>
                         <field name="name"/>
                         <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
-                        <field name="planned_revenue"/>
+                        <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                        <field name="company_currency" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
                         <field name="priority" nolabel="1" widget="priority"/>
                     </group>
                 </form>
@@ -448,8 +462,8 @@
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False),('probability', '&lt;', 100)]}"/>
-                        <field name="stage_id" widget="statusbar" clickable="True"
-                            options="{'fold_field': 'fold'}"
+                        <field name="stage_id" widget="statusbar"
+                            options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
@@ -679,13 +693,6 @@
                             domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
                             help="Opportunities with a date of Expected Closing which is in the past"/>
 
-                    <filter string="To Close Today" name="close_today"
-                            domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="To Close This Week" name="close_this_week" domain="[
-                                '&amp;',
-                                ('date_deadline', '&gt;=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
-                                ('date_deadline', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),
-                            ]"/>
                     <filter string="To Close This Month" name="close_this_month" domain="[
                                 '&amp;',
                                 ('date_deadline', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),

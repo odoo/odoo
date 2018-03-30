@@ -11,17 +11,6 @@ class StockPicking(models.Model):
     purchase_id = fields.Many2one('purchase.order', related='move_lines.purchase_line_id.order_id',
         string="Purchase Orders", readonly=True)
 
-    @api.model
-    def _create_backorder(self, backorder_moves=[]):
-        res = super(StockPicking, self)._create_backorder(backorder_moves)
-        for picking in self:
-            if picking.picking_type_id.code == 'incoming':
-                for backorder in self.search([('backorder_id', '=', picking.id)]):
-                    backorder.message_post_with_view('mail.message_origin_link',
-                        values={'self': backorder, 'origin': backorder.purchase_id},
-                        subtype_id=self.env.ref('mail.mt_note').id)
-        return res
-
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -34,14 +23,14 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
-        distinct_fields.append('purchase_line_id')
+        distinct_fields += ['purchase_line_id', 'created_purchase_line_id']
         return distinct_fields
 
     @api.model
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
         keys_sorted = super(StockMove, self)._prepare_merge_move_sort_method(move)
-        keys_sorted.append(move.purchase_line_id.id)
+        keys_sorted += [move.purchase_line_id.id, move.created_purchase_line_id.id]
         return keys_sorted
 
     @api.multi
@@ -60,6 +49,24 @@ class StockMove(models.Model):
                 price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
             return price_unit
         return super(StockMove, self)._get_price_unit()
+
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+        """ Overridden from stock_account to support amount_currency on valuation lines generated from po
+        """
+        self.ensure_one()
+
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id)
+
+        if self.purchase_line_id:
+            purchase_currency = self.purchase_line_id.currency_id
+            if purchase_currency != self.company_id.currency_id:
+                purchase_price_unit = self.purchase_line_id.price_unit
+                currency_move_valuation = purchase_currency.round(purchase_price_unit * qty)
+                rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+                rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+                rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+                rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+        return rslt
 
     def _prepare_extra_move_vals(self, qty):
         vals = super(StockMove, self)._prepare_extra_move_vals(qty)
@@ -88,6 +95,13 @@ class StockMove(models.Model):
             return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+
+    def _get_related_invoices(self):
+        """ Overridden to return the vendor bills related to this stock move.
+        """
+        rslt = super(StockMove, self)._get_related_invoices()
+        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
+        return rslt
 
 
 class StockWarehouse(models.Model):
@@ -181,3 +195,19 @@ class Orderpoint(models.Model):
         for poline in self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)]):
             res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
         return res
+
+    def action_view_purchase(self):
+        """ This function returns an action that display existing
+        purchase orders of given orderpoint.
+        """
+        action = self.env.ref('purchase.purchase_rfq')
+        result = action.read()[0]
+
+        # Remvove the context since the action basically display RFQ and not PO.
+        result['context'] = {}
+        order_line_ids = self.env['purchase.order.line'].search([('orderpoint_id', '=', self.id)])
+        purchase_ids = order_line_ids.mapped('order_id')
+
+        result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
+
+        return result

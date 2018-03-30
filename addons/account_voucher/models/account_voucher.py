@@ -23,11 +23,20 @@ class AccountVoucher(models.Model):
         ]
         return self.env['account.journal'].search(domain, limit=1)
 
+    @api.model
+    def _default_payment_journal(self):
+        company_id = self._context.get('company_id', self.env.user.company_id.id)
+        domain = [
+            ('type', 'in', ('bank', 'cash')),
+            ('company_id', '=', company_id),
+        ]
+        return self.env['account.journal'].search(domain, limit=1)
+
     voucher_type = fields.Selection([
         ('sale', 'Sale'),
         ('purchase', 'Purchase')
         ], string='Type', readonly=True, states={'draft': [('readonly', False)]}, oldname="type")
-    name = fields.Char('Payment Reference',
+    name = fields.Char('Payment Memo',
         readonly=True, states={'draft': [('readonly', False)]}, default='')
     date = fields.Date("Bill Date", readonly=True,
         index=True, states={'draft': [('readonly', False)]},
@@ -37,9 +46,11 @@ class AccountVoucher(models.Model):
         help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal',
         required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
+    payment_journal_id = fields.Many2one('account.journal', string='Payment Method', readonly=True,
+        states={'draft': [('readonly', False)]}, domain="[('type', 'in', ['cash', 'bank'])]", default=_default_payment_journal)
     account_id = fields.Many2one('account.account', 'Account',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
-        domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or voucher_type == 'purchase' and 'payable' or 'receivable'))]")
+        domain="[('deprecated', '=', False), ('internal_type','=', (voucher_type == 'purchase' and 'payable' or 'receivable'))]")
     line_ids = fields.One2many('account.voucher.line', 'voucher_id', 'Voucher Lines',
         readonly=True, copy=True,
         states={'draft': [('readonly', False)]})
@@ -122,30 +133,22 @@ class AccountVoucher(models.Model):
             voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
-    @api.one
-    @api.depends('account_pay_now_id', 'account_pay_later_id', 'pay_now')
-    def _get_account(self):
-        self.account_id = self.account_pay_now_id if self.pay_now == 'pay_now' else self.account_pay_later_id
-
     @api.onchange('date')
     def onchange_date(self):
         self.account_date = self.date
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
-        if self.pay_now == 'pay_now':
-            liq_journal = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))], limit=1)
-            self.account_id = liq_journal.default_debit_account_id \
-                if self.voucher_type == 'sale' else liq_journal.default_credit_account_id
+        pay_journal_domain = [('type', 'in', ['cash', 'bank'])]
+        if self.partner_id:
+            self.account_id = self.partner_id.property_account_receivable_id \
+                if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
         else:
-            if self.partner_id:
-                self.account_id = self.partner_id.property_account_receivable_id \
-                    if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
+            if self.voucher_type == 'purchase':
+                pay_journal_domain.append(('outbound_payment_method_ids', '!=', False))
             else:
-                account_type = self.voucher_type == 'purchase' and 'payable' or 'receivable'
-                domain = [('deprecated', '=', False), ('internal_type', '=', account_type)]
-
-                self.account_id = self.env['account.account'].search(domain, limit=1)
+                pay_journal_domain.append(('inbound_payment_method_ids', '!=', False))
+        return {'domain': {'payment_journal_id': pay_journal_domain}}
 
     @api.multi
     def proforma_voucher(self):
@@ -187,13 +190,12 @@ class AccountVoucher(models.Model):
                 'account_id': self.account_id.id,
                 'move_id': move_id,
                 'journal_id': self.journal_id.id,
-                'partner_id': self.partner_id.id,
+                'partner_id': self.partner_id.commercial_partner_id.id,
                 'currency_id': company_currency != current_currency and current_currency or False,
                 'amount_currency': (sign * abs(self.amount)  # amount < 0 for refunds
                     if company_currency != current_currency else 0.0),
                 'date': self.account_date,
                 'date_maturity': self.date_due,
-                'payment_id': self._context.get('payment_id'),
             }
         return move_line
 
@@ -234,20 +236,27 @@ class AccountVoucher(models.Model):
 
     @api.multi
     def voucher_pay_now_payment_create(self):
-        payment_methods = self.journal_id.outbound_payment_method_ids
+        if self.voucher_type == 'sale':
+            payment_methods = self.journal_id.inbound_payment_method_ids
+            payment_type = 'inbound'
+            partner_type = 'customer'
+            sequence_code = 'account.payment.customer.invoice'
+        else:
+            payment_methods = self.journal_id.outbound_payment_method_ids
+            payment_type = 'outbound'
+            partner_type = 'supplier'
+            sequence_code = 'account.payment.supplier.invoice'
         return {
-            'payment_type': 'outbound',
+            'payment_type': payment_type,
             'payment_method_id': payment_methods and payment_methods[0].id or False,
-            'partner_type': 'supplier',
-            'partner_id': self.partner_id.id,
+            'partner_type': partner_type,
+            'partner_id': self.partner_id.commercial_partner_id.id,
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'payment_date': self.date,
-            'journal_id': self.journal_id.id,
+            'journal_id': self.payment_journal_id.id,
             'company_id': self.company_id.id,
             'communication': self.name,
-            'name': self.name,
-            'state': 'reconciled',
         }
 
     @api.multi
@@ -278,7 +287,7 @@ class AccountVoucher(models.Model):
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
-                'partner_id': self.partner_id.id,
+                'partner_id': self.partner_id.commercial_partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'quantity': 1,
@@ -309,9 +318,6 @@ class AccountVoucher(models.Model):
             ctx = local_context.copy()
             ctx['date'] = voucher.account_date
             ctx['check_move_validity'] = False
-            # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
-            if self.pay_now == 'pay_now' and self.amount > 0:
-                ctx['payment_id'] = self.env['account.payment'].create(self.voucher_pay_now_payment_create()).id
             # Create the account move record.
             move = self.env['account.move'].create(voucher.account_move_get())
             # Get the name of the account_move just created
@@ -324,6 +330,15 @@ class AccountVoucher(models.Model):
                 line_total = line_total + voucher._convert_amount(voucher.tax_amount)
             # Create one move line per voucher line where amount is not 0.0
             line_total = voucher.with_context(ctx).voucher_move_line_create(line_total, move.id, company_currency, current_currency)
+
+            # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
+            if self.pay_now == 'pay_now':
+                payment_id = self.env['account.payment'].create(self.voucher_pay_now_payment_create())
+                payment_id.post()
+
+                # Reconcile the receipt with the payment
+                lines_to_reconcile = (payment_id.move_line_ids + move.line_ids).filtered(lambda l: l.account_id == self.account_id)
+                lines_to_reconcile.reconcile()
 
             # Add tax correction to move line if any tax correction specified
             if voucher.tax_correction != 0.0:

@@ -71,6 +71,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     updateState: function (state, params) {
         this._processColumns(params.columnInvisibleFields || {});
+        this.selection = [];
         return this._super.apply(this, arguments);
     },
 
@@ -202,9 +203,11 @@ var ListRenderer = BasicRenderer.extend({
                 var field = self.state.fields[column.attrs.name];
                 var value = aggregateValues[column.attrs.name].value;
                 var help = aggregateValues[column.attrs.name].help;
-                var formattedValue = field_utils.format[field.type](value, field, {
-                    escape: true,
-                });
+                var formatFunc = field_utils.format[column.attrs.widget];
+                if (!formatFunc) {
+                    formatFunc = field_utils.format[field.type];
+                }
+                var formattedValue = formatFunc(value, field, {escape: true});
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -630,7 +633,6 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = [];
 
         var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
-        this.$el.toggleClass('o_view_nocontent_container', displayNoContentHelper);
         // display the no content helper if there is no data to display
         if (displayNoContentHelper) {
             this.$el.html(this._renderNoContentHelper());

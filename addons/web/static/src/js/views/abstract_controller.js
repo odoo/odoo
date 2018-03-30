@@ -14,11 +14,11 @@ odoo.define('web.AbstractController', function (require) {
 
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
-var Widget = require('web.Widget');
+var AbstractAction = require('web.AbstractAction');
 
 var QWeb = core.qweb;
 
-var AbstractController = Widget.extend(ControlPanelMixin, {
+var AbstractController = AbstractAction.extend(ControlPanelMixin, {
     custom_events: {
         open_record: '_onOpenRecord',
         switch_view: '_onSwitchView',
@@ -102,11 +102,30 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * Called each time the controller is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        this.renderer.on_attach_callback();
+    },
+    /**
+     * Called each time the controller is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        this.renderer.on_detach_callback();
+    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    canBeRemoved: function () {
+        // AAB: get rid of this option when on_hashchange mechanism is improved
+        return this.discardChanges(undefined, {readonlyIfRealDiscard: true});
+    },
     /**
      * Discards the changes made on the record associated to the given ID, or
      * all changes made by the current controller if no recordID is given. For
@@ -166,15 +185,6 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
      */
     reload: function (params) {
         return this.update(params || {});
-    },
-    /**
-     * Renders the buttons to append, in most cases, to the control panel (in
-     * the bottom left corner). When the view is rendered in a dialog, those
-     * buttons might be moved to the dialog's footer.
-     *
-     * @param {jQuery Node} $node
-     */
-    renderButtons: function ($node) {
     },
     /**
      * For views that require a pager, this method will be called to allow the
@@ -320,7 +330,7 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
         if (this.searchView) {
             _.extend(cpContent, {
                 $searchview: this.searchView.$el,
-                $searchview_buttons: this.searchView.$buttons.contents(),
+                $searchview_buttons: this.searchView.$buttons,
             });
         }
         this.update_control_panel({

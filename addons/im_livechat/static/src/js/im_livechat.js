@@ -1,9 +1,9 @@
 odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
+var bus = require('bus.bus').bus;
 var config = require('web.config');
 var core = require('web.core');
-var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -33,11 +33,7 @@ if (!_.contains(url_history, page)) {
     utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(url_history), 60*60*24); // 1 day cookie
 }
 
-/**
- * In order to handle services like ajax in the external lib,
- * The parent of Livechat, LivechatButton, is set as a service provider
- */
-var LivechatButton = Widget.extend(ServiceProviderMixin, {
+var LivechatButton = Widget.extend({
     className:"openerp o_livechat_button hidden-print",
 
     events: {
@@ -56,7 +52,7 @@ var LivechatButton = Widget.extend(ServiceProviderMixin, {
         this.chat_window = null;
         this.messages = [];
         this.server_url = server_url;
-        this.busBus = this.call('bus_service', 'getBus');
+        this.busBus = bus;
     },
 
     willStart: function () {
@@ -64,17 +60,19 @@ var LivechatButton = Widget.extend(ServiceProviderMixin, {
         var cookie = utils.get_cookie('im_livechat_session');
         var ready;
         if (!cookie) {
-            ready = session.rpc("/im_livechat/init", {channel_id: this.options.channel_id}).then(function (result) {
-                if (!result.available_for_me) {
-                    return $.Deferred().reject();
-                }
-                self.rule = result.rule;
-            });
+            ready = session.rpc("/im_livechat/init", {channel_id: this.options.channel_id})
+                .then(function (result) {
+                    if (!result.available_for_me) {
+                        return $.Deferred().reject();
+                    }
+                    self.rule = result.rule;
+                });
         } else {
             var channel = JSON.parse(cookie);
-            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100}).then(function (history) {
-                self.history = history;
-            });
+            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100})
+                .then(function (history) {
+                    self.history = history;
+                });
         }
         return ready.then(this.load_qweb_template.bind(this));
     },
@@ -87,7 +85,8 @@ var LivechatButton = Widget.extend(ServiceProviderMixin, {
         } else if (!config.device.isMobile && this.rule.action === 'auto_popup') {
             var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
             if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
-                this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
+                this.auto_popup_timeout =
+                    setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
             }
         }
         this.busBus.on('notification', this, function (notifications) {
@@ -156,8 +155,8 @@ var LivechatButton = Widget.extend(ServiceProviderMixin, {
                 self.send_welcome_message();
                 self.render_messages();
 
-                this.busBus.add_channel(channel.uuid);
-                this.busBus.start_polling();
+                self.busBus.add_channel(channel.uuid);
+                self.busBus.start_polling();
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
                 utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);

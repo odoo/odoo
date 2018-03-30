@@ -5,6 +5,7 @@ var base = require('web_editor.base');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
+var utils = require('web.utils');
 var weContext = require("web_editor.context");
 
 var QWeb = core.qweb;
@@ -206,13 +207,16 @@ var ImageWidget = MediaWidget.extend({
 
         this.IMAGES_PER_PAGE = this.IMAGES_PER_ROW * this.IMAGES_ROWS;
 
+        this.options = options;
         this.accept = options.accept || (options.document ? '*/*' : 'image/*');
-        this.domain = options.domain
-            || [
-                '|',
-                ['mimetype', '=', false],
-                ['mimetype', options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]
-            ];
+        if (options.res_id) {
+            this.domain = ['|',
+                '&', ['res_model', '=', options.res_model], ['res_id', '=', options.res_id],
+                ['res_model', '=', 'ir.ui.view']];
+        } else {
+            this.domain = [['res_model', '=', 'ir.ui.view']];
+        }
+
         this.multiImages = options.multiImages;
 
         this.firstFilters = options.firstFilters || [];
@@ -279,32 +283,55 @@ var ImageWidget = MediaWidget.extend({
      * @override
      */
     save: function () {
+        var self = this;
         if (this.multiImages) {
             return this.images;
         }
 
         var img = this.images[0];
-        if (!img.isDocument) {
-            if (!this.$media.is('img')) {
-                this._replaceMedia($('<img/>'));
-            }
-            this.$media.attr('src', img.src);
-        } else {
-            if (!this.$media.is('a')) {
-                $('.note-control-selection').hide();
-                this._replaceMedia($('<a/>'));
-            }
-            this.$media.attr('href', '/web/content/' + img.id + '?unique=' + img.checksum + '&download=true');
-            this.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+        var def = $.when();
+        if (!img.access_token) {
+            def = this._rpc({
+                model: 'ir.attachment',
+                method: 'generate_access_token',
+                args: [[img.id]]
+            }).then(function (access_token) {
+                img.access_token = access_token[0];
+            });
         }
 
-        this.$media.attr('alt', img.alt);
-        var style = this.style;
-        if (style) {
-            this.$media.css(style);
-        }
+        return def.then(function () {
+            if (!img.isDocument) {
+                if (img.access_token && self.options.res_model !== 'ir.ui.view') {
+                    img.src += _.str.sprintf('?access_token=%s', img.access_token);
+                }
+                if (!self.$media.is('img')) {
+                    self._replaceMedia($('<img/>'));
+                }
+                self.$media.attr('src', img.src);
 
-        return this.media;
+            } else {
+                if (!self.$media.is('a')) {
+                    $('.note-control-selection').hide();
+                    self._replaceMedia($('<a/>'));
+                }
+                var href = '/web/content/' + img.id + '?';
+                if (img.access_token && self.options.res_model !== 'ir.ui.view') {
+                    href += _.str.sprintf('access_token=%s&', img.access_token);
+                }
+                href += 'unique=' + img.checksum + '&download=true';
+                self.$media.attr('href', href);
+                self.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+            }
+
+            self.$media.attr('alt', img.alt);
+            var style = self.style;
+            if (style) {
+                self.$media.css(style);
+            }
+
+            return self.media;
+        });
     },
     /**
      * @override
@@ -314,7 +341,7 @@ var ImageWidget = MediaWidget.extend({
         if (!noRender) {
             this.$('input.url').val('').trigger('input').trigger('change');
         }
-        var domain = [['res_model', '=', 'ir.ui.view']].concat(this.domain);
+        var domain = this.domain.concat(['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]]);
         if (needle && needle.length) {
             domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
         }
@@ -324,7 +351,7 @@ var ImageWidget = MediaWidget.extend({
             args: [],
             kwargs: {
                 domain: domain,
-                fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'type'],
+                fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'],
                 order: [{name: 'id', asc: false}],
                 context: weContext.get(),
             },
@@ -354,7 +381,7 @@ var ImageWidget = MediaWidget.extend({
                 .value();
 
             _.each(self.records, function (record) {
-                record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, record.name); // Name is added for SEO purposes
+                record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name));  // Name is added for SEO purposes
                 record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
             });
             if (!noRender) {
@@ -1143,11 +1170,15 @@ var MediaDialog = Dialog.extend({
      */
     save: function () {
         var self = this;
+        var args = arguments;
+        var _super = this._super;
         if (this.multiImages) {
             // In the case of multi images selection we suppose this was not to
             // replace an old media, so we only retrieve the images and save.
-            this.final_data = this.active.save();
-            return this._super.apply(this, arguments);
+            return $.when(this.active.save()).then(function (data) {
+                self.final_data = data;
+                return _super.apply(self, args);
+            });
         }
 
         if (this.rte) {
@@ -1164,28 +1195,29 @@ var MediaDialog = Dialog.extend({
                 }
             });
         }
-        var media = this.active.save();
-        if (!this.media) {
-            this.range.insertNode(media, true);
-        }
-        this.media = media;
-        this.$media = $(media);
 
-        this.final_data = this.media;
-        $(this.final_data).trigger('input').trigger('save');
-        $(document.body).trigger("media-saved", this.final_data); // TODO get rid of this
-
-        // Update editor bar after image edition (in case the image change to icon or other)
-        _.defer(function () {
-            if (!self.media.parentNode) {
-                return;
+        return $.when(this.active.save()).then(function (media) {
+            if (!self.media) {
+                self.range.insertNode(media, true);
             }
-            range.createFromNode(self.media).select();
-            simulateMouseEvent(self.media, 'mousedown');
-            simulateMouseEvent(self.media, 'mouseup');
-        });
+            self.media = media;
+            self.$media = $(media);
 
-        return this._super.apply(this, arguments);
+            self.final_data = self.media;
+            $(self.final_data).trigger('input').trigger('save');
+            $(document.body).trigger("media-saved", self.final_data); // TODO get rid of this
+
+            // Update editor bar after image edition (in case the image change to icon or other)
+            _.defer(function () {
+                if (!self.media.parentNode) {
+                    return;
+                }
+                range.createFromNode(self.media).select();
+                simulateMouseEvent(self.media, 'mousedown');
+                simulateMouseEvent(self.media, 'mouseup');
+            });
+            return _super.apply(self, args);
+        });
     },
 
     //--------------------------------------------------------------------------

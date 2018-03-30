@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Florian Hatat, 2016
 # Frédéric LIETART <stuff@tifred.fr>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
@@ -14,13 +14,13 @@
 # Lucas Deliege <lud@odoo.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Clo <clo@odoo.com>, 2016
-# Cyrille de Lambert <cdelambert@teclib.com>, 2016
+# Cyrille de Lambert <cdelambert@auguria.net>, 2016
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Hamid Darabi, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Fabri Yohann <psn@fabri.pw>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
@@ -38,13 +38,14 @@
 # Xavier Symons <xsy@openerp.com>, 2017
 # fr trans <e2ffr05@hotmail.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,12 +61,12 @@ msgstr "&amp;nbsp;"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "/shop/cart"
-msgstr ""
+msgstr "/shop/cart"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "/shop/payment"
-msgstr ""
+msgstr "/shop/payment"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
@@ -113,6 +114,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"\n"
+" \n"
+" VOTRE PANIER CONTIENT UN ARTICLE.\n"
+" Voulez-vous finaliser votre achat ?<div style=\"margin:auto;width:100%;\"><img src=\"/web/image/res.company/${user.company_id.id}/logo\" style=\"height: auto; width: 80px; margin-top:30px;\" alt=\"${user.company_id.name}\"/><h1 style=\"color:#A9A9A9;\"></h1> \n"
+" % if object.order_line:\n"
+" % for line in object.order_line:\n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" ${line.product_id.display_name} ${line.name}\n"
+" \n"
+" \n"
+" ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+" \n"
+" \n"
+" \n"
+" % endfor\n"
+" \n"
+" % endif\n"
+" \n"
+" \n"
+" Reprendre la commande \n"
+" Merci de faire vos achats chez ${user.company_id.name} ! \n"
+" \n"
+" \n"
+"<p></p><br/><br/><hr/><table width=\"100%\"><tr><td style=\"padding: 10px; width:150px;\"><img src=\"/web/image/product.product/${line.product_id.id}/image\" height=\"100px\" width=\"100px\"/></td><td><strong></strong><br/></td><td width=\"100px\" align=\"right\"></td></tr></table><hr/><br/><br/><center><a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\"></a><br/><br/><br/><p><b></b></p></center></div>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -127,6 +159,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add payment acquirers"
 msgstr ""
+"<i aria-hidden=\"true\" class=\"fa fa-arrow-right\"/>Ajouter des acquéreurs "
+"de paiement"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
@@ -183,7 +217,7 @@ msgstr "<small><i class=\"fa fa-trash-o\"/> Supprimer</small>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
 msgid "<span class=\"col-xs-6 text-right h4 mt0\">Total:</span>"
-msgstr ""
+msgstr "<span class=\"col-xs-6 text-right h4 mt0\">Total :</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
@@ -250,21 +284,24 @@ msgid ""
 "                                        <span class=\"visible-xs-inline\">Checkout</span>\n"
 "                                        <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"<span class=\"hidden-xs\">Procéder au</span> règlement\n"
+" <span class=\"visible-xs-inline\">Paiement</span>\n"
+"<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "<span> &amp; Shipping</span>"
-msgstr ""
+msgstr "<span>et expédition</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "<span>Billing</span>"
-msgstr ""
+msgstr "<span>Facturation</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Confirmed</span>"
-msgstr ""
+msgstr "<span>Confirmé</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -274,12 +311,12 @@ msgstr "<span>Suivant </span><span class=\"fa fa-long-arrow-right\"/>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
-msgstr ""
+msgstr "<span>Commande</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "<span>Review Order</span>"
-msgstr ""
+msgstr "<span>Réviser la commande</span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
@@ -303,12 +340,12 @@ msgstr "<strong>Détails de la commande:</strong>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<strong>Payment Acquirer:</strong>"
-msgstr ""
+msgstr "<strong>Acquéreur de paiement :</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<strong>Payment Information:</strong>"
-msgstr ""
+msgstr "<strong>Information de paiement:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -322,6 +359,10 @@ msgid ""
 "This should the country in which your company is headquartered or the "
 "country from which you operate your web site and mobile app."
 msgstr ""
+"Une <b>clause Droit applicable</b> informe les utilisateurs des lois qui "
+"régissent le contrat. Il doit s'agir du pays où votre entreprise a son siège"
+" ou du pays depuis lequel vous exploitez votre site Web et votre application"
+" mobile."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -331,6 +372,11 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
+"<b>Une clause de Limitation</b> indique aux utilisateurs qu'en acceptant "
+"d'utiliser votre service, ils s'engagent également à ne pas effectuer "
+"certaines actions. Cela peut s'inscrire dans une liste très longue et "
+"approfondie dans vos Conditions générales afin d'englober un maximum "
+"d'utilisations déconseillées."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -341,6 +387,11 @@ msgid ""
 " agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
 " of these third parties."
 msgstr ""
+"Une clause <b>Liens vers d'autres sites Web</b> informe les utilisateurs que"
+" vous n'êtes pas responsable des sites Web tiers vers lesquels vous "
+"redirigez. Ce type de clause vise généralement à informer les utilisateurs "
+"qu'ils sont tenus de lire et d'accepter (ou non) les Conditions générales ou"
+" les Politiques de confidentialité de ces tierces parties."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -350,11 +401,15 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
+"Une clause <b>Résiliation</b> précise que les comptes utilisateurs sur votre"
+" site Web et application mobile ou l'accès des utilisateurs à votre site Web"
+" et application mobile (si les utilisateurs ne peuvent pas s'inscrire) "
+"peuvent être résiliés en cas d'abus ou à votre seule discrétion."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "A document to provide"
-msgstr ""
+msgstr "Un document à fournir"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -392,12 +447,12 @@ msgstr "Paniers abandonnés"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
 msgid "Abandoned Carts to Recover"
-msgstr ""
+msgstr "Paniers abandonnés à récupérer"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_abandoned_delay
 msgid "Abandoned Delay"
-msgstr ""
+msgstr "Délai d'abandon"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product_accessory_product_ids
@@ -460,7 +515,7 @@ msgstr "Alternatives"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
-msgstr ""
+msgstr "Nombre de paniers abandonnés"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.coupon_form
@@ -503,7 +558,7 @@ msgstr "Caractéristiques"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "Facture automatique"
 
 #. module: website_sale
 #. openerp-web
@@ -545,14 +600,14 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_can_directly_mark_as_paid
 msgid "Can be directly marked as paid"
-msgstr ""
+msgstr "Peut être directement marqué comme payé"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:14
 #, python-format
 msgid "Capture order payments when the delivery is completed."
-msgstr ""
+msgstr "Capturez le paiement des commandes une fois la livraison effectuée."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_quantity
@@ -562,17 +617,17 @@ msgstr "Quantité du panier"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_cart_recovery_mail_template
 msgid "Cart Recovery Email"
-msgstr ""
+msgstr "E-mail de récupération du panier"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Cart are considered abandoned after"
-msgstr ""
+msgstr "Les paniers sont considérés comme abandonnés au bout de"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_cart_recovery_email_sent
 msgid "Cart recovery email already sent"
-msgstr ""
+msgstr "E-mail de récupération du panier déjà envoyé"
 
 #. module: website_sale
 #. openerp-web
@@ -590,12 +645,12 @@ msgstr "Catalogue"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: High to Low"
-msgstr ""
+msgstr "Prix catalogue : décroissant"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: Low to High"
-msgstr ""
+msgstr "Prix catalogue : croissant"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -627,6 +682,8 @@ msgid ""
 "Checked if the sales order can directly be marked as paid, i.e. if the quotation\n"
 "                is sent or confirmed and if the payment acquire is of the type transfer or manual"
 msgstr ""
+"Coché si le bon de commande peut directement être marqué comme payé, c'est-à-dire si le devis\n"
+" est envoyé ou confirmé et si l'acquéreur de paiement est de type transfert ou manuel"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_child_id
@@ -690,32 +747,32 @@ msgstr "Nom de la société"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Calculer les frais de port et expédier avec DHL"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Calculer les frais de port et expédier avec FedEx"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Calculer les frais de port et expédier avec UPS"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Calculer les frais de port et expédier avec USPS"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Calculer les frais de port et expédier avec bpost"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr ""
+msgstr "Calculer les frais de port des commandes"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -737,7 +794,7 @@ msgstr "Confirmez la commande <span class=\"fa fa-long-arrow-right\"/>"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:6
 #, python-format
 msgid "Confirm orders when you get paid."
-msgstr ""
+msgstr "Confirmez les commandes lorsque vous êtes payé."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -752,7 +809,7 @@ msgstr "Confirmation<span class=\"chevron\"/>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed Orders"
-msgstr ""
+msgstr "Commandes confirmées"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -765,7 +822,7 @@ msgstr "Contact"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:97
 #, python-format
 msgid "Conversion"
-msgstr ""
+msgstr "Conversion"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -800,7 +857,7 @@ msgstr "Devises"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Customer Experience"
-msgstr ""
+msgstr "Expérience client"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -831,11 +888,12 @@ msgstr "Taxes à la vente par défaut"
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default recovery email to send when a cart is abandoned"
 msgstr ""
+"E-mail de récupération par défaut à envoyer quand un panier est abandonné"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default sales tax applied to local transactions"
-msgstr ""
+msgstr "Taxe de vente par défaut appliquée aux transactions locales"
 
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
@@ -876,7 +934,7 @@ msgstr "Affichez un carousel d'images sur les pages d'article"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display crossed-out public prices"
-msgstr ""
+msgstr "Afficher les prix publics barrés"
 
 #. module: website_sale
 #. openerp-web
@@ -920,7 +978,7 @@ msgstr "Assistant de composition d'emails"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Email for Abandoned carts"
-msgstr ""
+msgstr "E-mail concernant les paniers abandonnés"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_order_mail_template
@@ -930,7 +988,7 @@ msgstr "Courriel envoyé au client à la fin du processus de commande"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Email sent to the customer after the checkout"
-msgstr ""
+msgstr "E-mail envoyé au client après le paiement"
 
 #. module: website_sale
 #. openerp-web
@@ -985,12 +1043,12 @@ msgstr "Depuis le site web"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:10
 #, python-format
 msgid "Generate an invoice from orders ready for invoicing."
-msgstr ""
+msgstr "Générez une facture à partir de commandes prêtes pour la facturation."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Generate the invoice automatically when the order is confirmed"
-msgstr ""
+msgstr "Générer la facture automatiquement lorsque la commande est confirmée"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -1020,7 +1078,7 @@ msgstr "Routage HTTP"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "Have a promo code? Fill in this field and apply."
-msgstr ""
+msgstr "Vous avez un code promo ? Remplissez ce champ et validez."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute_value_html_color
@@ -1083,6 +1141,14 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
+"Si votre site Web ou vos applications mobiles permettent aux utilisateurs de"
+" créer du contenu et de le mettre à disposition des autres utilisateurs, un "
+"article <b>Contenu</b> informe les utilisateurs qu'ils détiennent les droits"
+" relatifs au contenu créé par leurs soins.<br/> La clause « Contenu » "
+"mentionne généralement que les utilisateurs doivent accorder au développeur "
+"du site Web ou de l'application mobile le droit de partager ce contenu sur "
+"leur site Web/application mobile pour le mettre à la disposition d'autres "
+"utilisateurs.<br/> "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_image
@@ -1105,7 +1171,7 @@ msgstr "Images"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_module_website_sale_stock
 msgid "Installs *e-Commerce Inventory*"
-msgstr ""
+msgstr "Installation d'*e-Commerce Inventory*"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:501
@@ -1133,13 +1199,15 @@ msgstr "Facturation"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr ""
+msgstr "Émettre des factures aux clients"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:157
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status"
 msgstr ""
+"Il est interdit de modifier un bon de commande qui n'a pas le statut de "
+"brouillon"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image___last_update
@@ -1157,7 +1225,7 @@ msgstr "Le mois dernier"
 #: model:ir.model.fields,field_description:website_sale.field_res_partner_last_website_so_id
 #: model:ir.model.fields,field_description:website_sale.field_res_users_last_website_so_id
 msgid "Last Online Sales Order"
-msgstr ""
+msgstr "Dernier bon de commande en ligne"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_write_uid
@@ -1199,7 +1267,7 @@ msgstr "Laissez le client entrer une adresse de livraison"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:15
 #, python-format
 msgid "Let's create your first product."
-msgstr ""
+msgstr "Créons votre premier produit."
 
 #. module: website_sale
 #. openerp-web
@@ -1209,16 +1277,18 @@ msgid ""
 "Let's now take a look at your administration dashboard to get your eCommerce"
 " website ready in no time."
 msgstr ""
+"Jetons maintenant un œil à votre tableau de bord administrateur pour que "
+"votre site Web d'e-commerce soit prêt en un rien de temps."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Log In"
-msgstr ""
+msgstr "Connexion"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage availability of products"
-msgstr ""
+msgstr "Gérer la disponibilité des produits"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1228,7 +1298,7 @@ msgstr "Gérer les promotions et campagnes de bons de réduction"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Mark as Paid"
-msgstr ""
+msgstr "Marquer comme payé"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_image_medium
@@ -1268,12 +1338,12 @@ msgstr "Nom"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Name - A to Z"
-msgstr ""
+msgstr "Nom : de A à Z"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Name - Z to A"
-msgstr ""
+msgstr "Nom : de Z à A"
 
 #. module: website_sale
 #. openerp-web
@@ -1287,7 +1357,7 @@ msgstr "Nouvel article"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Suivant<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
@@ -1307,7 +1377,7 @@ msgstr "Pas de site web"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Now to Follow Your Order"
-msgstr ""
+msgstr "Maintenant pour suivre votre commande"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_count
@@ -1327,6 +1397,9 @@ msgid ""
 "Once activated, discounted prices can be applied from Pricelists setup form "
 "(Discount policy field)."
 msgstr ""
+"Une fois cette option activée, les tarifs réduits peuvent être appliqués "
+"depuis le formulaire de configuration des listes de prix (champ Politique de"
+" remise)."
 
 #. module: website_sale
 #. openerp-web
@@ -1352,7 +1425,7 @@ msgstr "Services seulement"
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:68
 #, python-format
 msgid "Open your website app here."
-msgstr ""
+msgstr "Ouvrez l'application de votre site Web ici."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_options
@@ -1444,14 +1517,14 @@ msgstr "Paiement<span class=\"chevron\"/>"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.payment_transaction_action_payments_to_capture
 msgid "Payments To Capture"
-msgstr ""
+msgstr "Paiements à capturer"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:15
 #, python-format
 msgid "Payments to Capture"
-msgstr ""
+msgstr "Paiements à capturer"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -1461,7 +1534,7 @@ msgstr "Téléphone"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Please proceed your current cart."
-msgstr ""
+msgstr "Continuez avec votre panier actuel."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:108
@@ -1533,7 +1606,7 @@ msgstr "Catalogue d'articles"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_comparison
 msgid "Product Comparison Tool"
-msgstr ""
+msgstr "Outil de comparaison des produits"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1602,6 +1675,10 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
+"Fournissez aux clients des liens ou du contenu téléchargeable spécifiques "
+"aux produits sur la page de confirmation de la procédure de paiement si ce "
+"dernier aboutit. Pour ce faire, joignez des fichiers à un produit en "
+"utilisant le nouveau bouton Fichiers et publiez-les."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -1686,7 +1763,7 @@ msgstr "Raison de l'évaluation"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Recovery Email to Send"
-msgstr ""
+msgstr "E-mail de récupération à envoyer"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_product_tmpl_id
@@ -1716,7 +1793,7 @@ msgstr "Vente"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Report"
-msgstr ""
+msgstr "Rapport de vente"
 
 #. module: website_sale
 #. openerp-web
@@ -1741,7 +1818,7 @@ msgstr "Equipe de vente"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Report"
-msgstr ""
+msgstr "Rapport de ventes"
 
 #. module: website_sale
 #. openerp-web
@@ -1749,7 +1826,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:44
 #, python-format
 msgid "Sales Since Last"
-msgstr ""
+msgstr "Ventes depuis"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_salesperson_id
@@ -1779,6 +1856,8 @@ msgid ""
 "Select optional products from the configuration form of your main products "
 "(in Sales tab)."
 msgstr ""
+"Sélectionnez des produits optionnels depuis le formulaire de configuration "
+"de vos produits principaux (dans l'onglet Ventes)."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
@@ -1793,7 +1872,7 @@ msgstr "Sélectionnable"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell content to download or URL links"
-msgstr ""
+msgstr "Vendre du contenu à télécharger ou des liens URL"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1803,12 +1882,12 @@ msgstr "Vendez en plusieurs devises"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr ""
+msgstr "Envoyer un e-mail de récupération du panier"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr ""
+msgstr "Envoyer un e-mail de récupération"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1821,6 +1900,8 @@ msgstr ""
 #, python-format
 msgid "Send a recovery email to visitors who haven't completed their order."
 msgstr ""
+"Envoyez un e-mail de récupération aux visiteurs qui n'ont pas terminé leur "
+"commande."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_sequence
@@ -1879,7 +1960,7 @@ msgstr "Magasin- Confirmé"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Acquirer"
-msgstr ""
+msgstr "Boutique – Sélectionner l'acquéreur de paiement"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -2062,6 +2143,8 @@ msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
 msgstr ""
+"Le mode sélectionné ici s'applique en tant que politique de facturation de "
+"tout nouveau produit créé, mais pas pour les produits existants."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:258
@@ -2070,13 +2153,15 @@ msgid ""
 "The quote should be sent and the payment acquirer type should be manual or "
 "wire transfer"
 msgstr ""
+"Le devis doit être envoyé et l'acquéreur de paiement doit être manuel ou de "
+"type virement bancaire"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:51
 #, python-format
 msgid "There is no recent confirmed order."
-msgstr ""
+msgstr "Aucune commande confirmée récemment."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2087,7 +2172,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Cette combinaison n'existe pas."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category_image
@@ -2101,7 +2186,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
-msgstr ""
+msgstr "Voici votre panier actuel."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.coupon_form
@@ -2111,7 +2196,7 @@ msgstr "Ce code promotionnel n'est pas disponible"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
-msgstr ""
+msgstr "Cette taxe s'applique à tout nouveau produit créé dans le catalogue."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
@@ -2158,14 +2243,14 @@ msgstr "Commandes non payées"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:75
 #, python-format
 msgid "Untaxed Total Sold"
-msgstr ""
+msgstr "Vente totale hors taxes"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale_tour_shop.js:42
 #, python-format
 msgid "Upload an image from your local library."
-msgstr ""
+msgstr "Importez une image de votre bibliothèque locale."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2235,7 +2320,7 @@ msgstr "Prix web"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price_difference
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price_difference
 msgid "Website price difference"
-msgstr ""
+msgstr "Différence de prix sur le site  Web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
@@ -2251,12 +2336,12 @@ msgstr "Sites web"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_crm_team_website_ids
 msgid "Websites using this sales channel"
-msgstr ""
+msgstr "Sites web utilisant ce canal de vente"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings_module_website_sale_wishlist
 msgid "Wishlists"
-msgstr ""
+msgstr "Listes d'envies"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2265,6 +2350,9 @@ msgid ""
 "(from Sales tab). With the second one, you set prices and computation rules "
 "from Pricelists."
 msgstr ""
+"Avec le premier mode, vous pouvez définir plusieurs prix dans le formulaire "
+"de configuration produit (onglet Ventes). Avec le deuxième, vous fixez les "
+"prix et les règles de calcul depuis les listes de prix."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -2276,12 +2364,12 @@ msgstr "Vous n'avez pas de commande confirmée sur le site web."
 #: model:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website."
-msgstr ""
+msgstr "Vous n'avez passé aucune commande sur le site Web."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.payment_transaction_action_payments_to_capture
 msgid "You don't have any payments to capture from the website."
-msgstr ""
+msgstr "Vous n'avez pas de paiements à capturer depuis le site Web."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
@@ -2291,7 +2379,7 @@ msgstr "Vous n'avez pas de commande impayée sur le site web."
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart."
-msgstr ""
+msgstr "Vous avez laissé des articles dans votre panier."
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -2326,7 +2414,7 @@ msgstr "Votre panier est vide !"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
-msgstr ""
+msgstr "Votre précédent panier a déjà été réglé."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -2336,7 +2424,7 @@ msgstr "Code postal"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
-msgstr ""
+msgstr "bpost"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.coupon_form
@@ -2354,7 +2442,7 @@ msgstr "eCommerce"
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Categories"
-msgstr ""
+msgstr "Catégories d'e-commerce"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.search count
@@ -2370,6 +2458,7 @@ msgstr "heures"
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
 msgstr ""
+"si vous voulez fusionner votre précédent panier et votre panier actuel."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
@@ -2377,6 +2466,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
+"si vous voulez restaurer votre précédent panier. Votre panier actuel sera "
+"remplacé par votre précédent panier."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2386,7 +2477,7 @@ msgstr "articles)"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings_cart_abandoned_delay
 msgid "number of hours after which the cart is considered abandoned"
-msgstr ""
+msgstr "nombre d'heures au bout duquel le panier est réputé abandonné"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute_value

@@ -13,7 +13,7 @@ from odoo.addons import decimal_precision as dp
 class HrExpense(models.Model):
 
     _name = "hr.expense"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense"
     _order = "date desc, id desc"
 
@@ -23,7 +23,7 @@ class HrExpense(models.Model):
 
     @api.model
     def _default_product_uom_id(self):
-        return self.env['product.uom'].search([], limit=1, order='id')
+        return self.env['uom.uom'].search([], limit=1, order='id')
 
     @api.model
     def _default_account_id(self):
@@ -33,7 +33,7 @@ class HrExpense(models.Model):
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id)
     product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
-    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Price'))
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Unit of Measure'), default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
@@ -137,10 +137,9 @@ class HrExpense(models.Model):
                 link = "<a id='o_mail_test' href='mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32'>%(email)s</a>" % {
                     'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
                 }
-                return '<p class="oe_view_nocontent_create">%s<br/>%s</p>%s' % (
-                    _('Click to add a new expense,'),
-                    _('or send receipts by email to %s.') % (link,),
-                    help_message)
+                return '<p class="oe_view_nocontent_smiling_face">%s</p><p>%s</p>' % (
+                    _('Add a new expense,'),
+                    _('or send receipts by email to %s.') % (link),)
         return super(HrExpense, self).get_empty_list_help(help_message)
 
     # ----------------------------------------
@@ -417,7 +416,8 @@ class HrExpense(models.Model):
             product = default_product
         else:
             expense_description = expense_description.replace(product_code.group(), '')
-            product = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            products = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            product = products.filtered(lambda p: p.default_code == product_code.group(1)) or products[0]
 
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
@@ -450,7 +450,7 @@ class HrExpense(models.Model):
 class HrExpenseSheet(models.Model):
 
     _name = "hr.expense.sheet"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense Report"
     _order = "accounting_date desc, id desc"
 
@@ -506,7 +506,7 @@ class HrExpenseSheet(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.address_id = self.employee_id.address_home_id
+        self.address_id = self.employee_id.sudo().address_home_id
         self.department_id = self.employee_id.department_id
         self.user_id = self.employee_id.expense_manager_id
 
@@ -529,6 +529,7 @@ class HrExpenseSheet(models.Model):
     def create(self, vals):
         self._create_set_followers(vals)
         sheet = super(HrExpenseSheet, self).create(vals)
+        sheet.activity_update()
         return sheet
 
     @api.multi
@@ -554,14 +555,10 @@ class HrExpenseSheet(models.Model):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
             return 'hr_expense.mt_expense_approved'
-        elif 'state' in init_values and self.state == 'submit':
-            return 'hr_expense.mt_expense_confirmed'
         elif 'state' in init_values and self.state == 'cancel':
             return 'hr_expense.mt_expense_refused'
         elif 'state' in init_values and self.state == 'done':
             return 'hr_expense.mt_expense_paid'
-        elif 'user_id' in init_values:
-            return 'hr_expense.mt_expense_responsible'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
     def _get_users_to_subscribe(self, employee=False):
@@ -592,10 +589,13 @@ class HrExpenseSheet(models.Model):
         MailFollowers = self.env['mail.followers']
         for partner in users.mapped('partner_id'):
             values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {partner.id: None}, {})[0]
-        
-        if values.get('user_id') and values.get('user_id') != employee.user_id.id:
+
+        if values.get('user_id') and values.get('user_id') != employee.user_id.id and values.get('user_id') != self.env.uid:
             resp_partner = self.env['res.users'].browse(values['user_id'])
-            values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {resp_partner.partner_id.id: None}, {})[0]
+            # Parsing ORM command to avoid adding several times the same partner
+            # TDE note: a better implementation should come in saas 11.3 or 11.4, allowing to normally remove that code
+            if resp_partner.partner_id.id not in (x[2].get('partner_id') for x in values['message_follower_ids'] if len(x) == 3):
+                values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {resp_partner.partner_id.id: None}, {})[0]
 
     # --------------------------------------------
     # Actions
@@ -620,6 +620,7 @@ class HrExpenseSheet(models.Model):
             self.write({'state': 'post'})
         else:
             self.write({'state': 'done'})
+        self.activity_update()
         return res
 
     @api.multi
@@ -648,6 +649,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("Only HR Officers can approve expenses"))
         responsible_id = self.user_id.id or self.env.user.id
         self.write({'state': 'approve', 'user_id': responsible_id})
+        self.activity_update()
 
     @api.multi
     def paid_expense_sheets(self):
@@ -660,8 +662,28 @@ class HrExpenseSheet(models.Model):
         self.write({'state': 'cancel'})
         for sheet in self:
             sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': self.name})
+        self.activity_update()
 
     @api.multi
     def reset_expense_sheets(self):
         self.mapped('expense_line_ids').write({'is_refused': False})
-        return self.write({'state': 'submit'})
+        self.write({'state': 'submit'})
+        self.activity_update()
+        return True
+
+    def _get_responsible_for_approval(self):
+        if self.user_id:
+            return self.user_id
+        elif self.employee_id.parent_id.user_id:
+            return self.employee_id.parent_id.user_id
+        elif self.employee_id.department_id.manager_id.user_id:
+            return self.employee_id.department_id.manager_id.user_id
+        return self.env.user
+
+    def activity_update(self):
+        for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
+            self.activity_schedule(
+                'hr_expense.mail_act_expense_approval', fields.Date.today(),
+                user_id=expense_report._get_responsible_for_approval().id)
+        self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
+        self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])

@@ -4,28 +4,29 @@
 # 
 # Translators:
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
-# Andi <flimflam@salasar.de>, 2017
+# Andi, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Niki Waibel, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Wolfgang Taferner, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Gab_Odoo <gab@odoo.com>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # Pascal Künzli <p.kuenzli@pk-its.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: Pascal Künzli <p.kuenzli@pk-its.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +97,7 @@ msgstr "Mindestens ein Eingang"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Mindestens ein Ausgang"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:78
@@ -162,6 +163,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Wählen Sie diese Option, wenn Sie für Rechnungen und Gutschriften aus diesem"
+" Journal nicht den gleichen Nummernkreis verwenden wollen"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -217,12 +220,12 @@ msgstr "Erstellt am"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr ""
+msgstr "Eingabesequenz Gutschrift"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr ""
+msgstr "Gutschriften: Nächste Zahl"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -237,7 +240,7 @@ msgstr "Abbuchungsmethoden"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "Fest zugeordnete Gutschrift-Sequenz"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -374,12 +377,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "Kanban Übersicht"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "Kanban grafische Ansicht"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
@@ -411,6 +414,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Manuell: Lassen Sie sich per Bargeld, Scheck oder über eine andere Methode außerhalb von Odoo bezahlen.\n"
+"Elektronisch: Lassen Sie sich automatisch durch einen Zahlungs-Akquierer bezahlen, indem Sie eine Transaktion auf einer Karte anfordern, die vom Kunden gespeichert wird, wenn dieser online einen Kauf oder ein Abonnement tätigt (Zahlungs-Token).\n"
+"Batch Deposit: Über ein Batch Deposit, das an Ihre Bank gesendet wird, können Sie mehrere Kunden-Schecks auf einmal entgegennehmen. Wenn Sie den Bankauszug auf Odoo kodieren, sollten Sie die Transaktion mit dem Batch Deposit abgleichen. Diese Option aktivieren Sie aus den Einstellungen."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -419,6 +425,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Manuell: Bezahlen Sie die Rechnung per Bargeld oder über eine andere Methode außerhalb von Odoo.\n"
+"Scheck: Bezahlen Sie die Rechnung per Scheck und drucken Sie das Ganze in Odoo aus.\n"
+"SEPA-Überweisung: Bezahlen Sie die Rechnung über eine SEPA-Überweisungsdatei, die Sie Ihrer Bank übermitteln. Diese Option aktivieren Sie aus den Einstellungen."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
@@ -473,6 +482,8 @@ msgstr "Reihenfolge"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
+"Deaktivieren Sie die Option, um das Journal Tag auszublenden, ohne es zu "
+"entfernen."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
@@ -488,6 +499,8 @@ msgstr "Journal im Dashboard anzeigen"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Technical field used in the special view for the setup bar step."
 msgstr ""
+"Technisches Feld, das für die spezielle Ansicht des Einrichtungsleisten-"
+"Schrittes verwendet wird."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -533,12 +546,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr ""
+msgstr "Die nächste Sequenznummer wird für die nächste Gutschrift verwendet."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "Die nächste Sequenznummer wird für die nächste Rechnung verwendet."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
@@ -546,6 +559,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"In diesem Feld finden Sie Angaben zum Nummernkreis, der für die Nummerierung"
+" der Posten in dieser Gutschrift verwendet wird."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id

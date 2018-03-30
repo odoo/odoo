@@ -60,7 +60,7 @@ class MrpProduction(models.Model):
         readonly=True, required=True, track_visibility='onchange',
         states={'confirmed': [('readonly', False)]})
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     picking_type_id = fields.Many2one(
@@ -298,6 +298,17 @@ class MrpProduction(models.Model):
         location = self.env.ref('stock.stock_location_stock')
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
+
+    @api.multi
+    def write (self, vals):
+        res = super(MrpProduction, self).write(vals)
+        if 'date_planned_start' in vals:
+            moves = (self.mapped('move_raw_ids') + self.mapped('move_finished_ids')).filtered(
+                lambda r: r.state not in ['done', 'cancel'])
+            moves.write({
+                'date_expected': vals['date_planned_start'],
+            })
+        return res
 
     @api.model
     def create(self, values):

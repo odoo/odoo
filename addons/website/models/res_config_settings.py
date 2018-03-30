@@ -80,6 +80,6 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def open_template_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
-        action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('auth_signup.template_user_id', 'False'))
+        action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action

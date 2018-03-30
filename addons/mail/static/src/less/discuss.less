@@ -67,19 +67,19 @@
         .o_mail_chat_channel_item {
             .o-flex-display();
             width: 100%;
-            padding: 2px @odoo-horizontal-padding 2px (@odoo-horizontal-padding + 23px); // compensate icon
+            padding: 2px @odoo-horizontal-padding 2px (@odoo-horizontal-padding + 12px); // compensate icon
 
             .o_channel_name {
                 .o-flex(1, 1, auto);
                 .o-text-overflow();
             }
-            .o_mail_sidebar_needaction, .o_mail_partner_unpin {
+            .o_mail_sidebar_needaction, .o_mail_partner_unpin, .o_mail_channel_settings {
                 .o-flex(0, 0, auto);
             }
             .o_mail_sidebar_needaction {
                 margin: 0 0 0 5px;
             }
-            .o_mail_partner_unpin {
+            .o_mail_partner_unpin, .o_mail_channel_settings {
                 padding: 2px 6px;
             }
             i.fa-envelope-o {
@@ -164,7 +164,7 @@
             &:hover {
                 background-color: darken(@gray-dark,2%);
 
-                .o_mail_partner_unpin {
+                .o_mail_partner_unpin, .o_mail_channel_settings {
                     opacity: @sidebar-icon-opacity;
                 }
             }
@@ -178,7 +178,7 @@
                 opacity: 0.6
             }
 
-            .o_mail_partner_unpin {
+            .o_mail_partner_unpin, .o_mail_channel_settings {
                 .o-hover-opacity(@default-opacity: 0, @hover-opacity: 1);
             }
             &.o_unread_message {
@@ -321,14 +321,10 @@
 
         .o_mail_chat_content {
             .o-flex(1, 0, 0);
-            margin-left: 0;
+            margin-left: 10px;
+            margin-right: 10px;
             background-color: transparent;
-            .o_mail_no_content {
-                .o-position-absolute(@top: 30%);
-                text-align: center;
-            }
         }
-
 
         .o_mail_chat_tab_pane {
             overflow-x: scroll;
@@ -395,7 +391,7 @@
         .o_channel_title {
             .o-flex-display();
             .o_channel_name {
-                .o-flex(0, 1, auto);
+                .o-flex(1, 1, auto);
                 .o-text-overflow();
             }
             .o_channel_counter {
@@ -427,6 +423,27 @@
                 .o_last_message_date {
                     color: @odoo-brand-optional;
                 }
+            }
+        }
+    }
+}
+
+.o_reminder.o_mail_channel_preview {
+    background-color: white;
+    .o_reminder_input {
+        border: none;
+    }
+    .o_reminder_datetime {
+        .o_datepicker {
+            .o_datepicker_input {
+                float: right;
+                text-align: right;
+                border: none;
+                font-size: 11px;
+                width: 50%;
+            }
+            .o_datepicker_button {
+                display: none;
             }
         }
     }

@@ -7,7 +7,7 @@ var core = require('web.core');
 var time = require('web.time');
 var Widget = require('web.Widget');
 var local_storage = require('web.local_storage');
-var websiteRootInstance = require('website.WebsiteRoot.instance');
+require('root.widget');
 
 var _t = core._t;
 var page_widgets = {};
@@ -109,11 +109,12 @@ var page_widgets = {};
         },
     });
 
-    $('iframe').ready(function() {
+    $('iframe.o_wslides_iframe_viewer').ready(function() {
         // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
         // still now set (the pdf is still loading)
-        var max_page = $('iframe').contents().find('#page_count').val();
-        new SlideSocialEmbed($(this), max_page).setElement($('.oe_slide_js_embed_code_widget'));
+        var $iframe = $(this);
+        var max_page = $iframe.contents().find('#page_count').val();
+        new SlideSocialEmbed($iframe, max_page).setElement($('.oe_slide_js_embed_code_widget'));
     });
 
 

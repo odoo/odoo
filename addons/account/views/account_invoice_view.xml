@@ -44,7 +44,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
-                    <field name="uom_id" groups="product.group_uom"/>
+                    <field name="uom_id" groups="uom.group_uom"/>
                     <field name="price_unit"/>
                     <field name="discount" groups="base.group_no_one"/>
                     <field name="price_subtotal"/>
@@ -65,7 +65,7 @@
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
-                                <field name="uom_id" class="oe_inline" groups="product.group_uom"/>
+                                <field name="uom_id" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <field name="price_unit"/>
                             <field name="discount" groups="base.group_no_one"/>
@@ -256,7 +256,7 @@
                         <group>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
                             <field name="date_invoice" string="Bill Date"/>
-                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state','=','paid')]}" force_save="1"/>
+                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state', 'in', ['open', 'paid'])]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
@@ -278,7 +278,7 @@
                                         context="{'default_partner_id': parent.partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="base.group_no_one"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
@@ -303,7 +303,7 @@
                                                 <field name="amount"/>
                                                 <field name="amount_rounding" invisible="1"/>
                                                 <field name="amount_total" invisible="1"/>
-                                                <field name="currency_id" invisible="1"/>
+                                                <field name="currency_id" invisible="1" force_save="1"/>
                                             </tree>
                                         </field>
                                     </div>
@@ -339,12 +339,6 @@
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="date" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="is_recurrency_enabled" string="Recurring Bills" help="Tick this box to generate recurring bills. The recurring bills will only be generated if this bill is validated." groups="account.group_allow_recurring" attrs="{'invisible': [('type', '!=', 'in_invoice')]}"/>
-                                    <label for="recurrency_interval" attrs="{'invisible': [('is_recurrency_enabled', '=', False)]}" groups="account.group_allow_recurring"/>
-                                    <div class="o_row" attrs="{'invisible': [('is_recurrency_enabled', '=', False)]}" groups="account.group_allow_recurring">
-                                        <field name="recurrency_interval" help="Define the recurrency of the vendor bill." attrs="{'required': [('is_recurrency_enabled', '=', True)]}"/>
-                                        <field name="recurrency_type" attrs="{'required': [('is_recurrency_enabled', '=', True)]}"/>
-                                    </div>
                                 </group>
                             </group>
                         </page>
@@ -407,7 +401,7 @@
                         </group>
                         <group>
                             <field name="date_invoice"/>
-                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state','=','paid')]}" force_save="1"/>
+                            <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state', 'in', ['open', 'paid'])]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
                             <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
@@ -435,7 +429,7 @@
                                         context="{'default_partner_id': parent.partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="base.group_no_one"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
@@ -447,7 +441,7 @@
                                     <field name="product_id"/>
                                     <field name="price_subtotal"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -510,7 +504,7 @@
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="amount_rounding" invisible="1"/>
                                     <field name="amount_total"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1" force_save="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -541,10 +535,8 @@
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" />
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
-                    <filter name="invoices" string="Invoices" domain="['&amp;', ('state','in',['draft','open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
-                    <filter name="refunds" string="Credit Notes" domain="['&amp;', ('state','in',['draft','open','paid']),('type','in',('out_refund','in_refund'))]"/>
-                    <separator/>
-                    <filter name="unpaid" string="Not Paid" domain="[('state','=','open')]"/>
+                    <filter name="unpaid" string="Open" domain="[('state', '=', 'open')]"/>
+                    <filter name="paid" string="Paid" domain="[('state', '=', 'paid')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
@@ -573,40 +565,6 @@
                         <filter string="Due Date" name="duedate" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
-            </field>
-        </record>
-
-        <record id="view_account_invoice_filter_inherit_invoices" model="ir.ui.view">
-            <field name="name">account.invoice.select.invoices</field>
-            <field name="model">account.invoice</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="view_account_invoice_filter"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="filter[@name='invoices']" position="attributes">
-                        <attribute name="string">Not Draft</attribute>
-                    </xpath>
-                    <xpath expr="filter[@name='myinvoices']" position="after">
-                        <filter domain="[('is_recurrency_enabled','=',True)]" name="is_recurrency_enabled" help="Bills Generating Recurring Bills" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
-                        <filter domain="[('is_recurring_document','=',True)]" name="is_recurring_document" help="Bills Generated Automatically" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
-                    </xpath>
-                    <filter name="refunds" position="replace"/>
-                </data>
-            </field>
-        </record>
-
-        <record id="view_account_invoice_filter_inherit_credit_notes" model="ir.ui.view">
-            <field name="name">account.invoice.select.credit.notes</field>
-            <field name="model">account.invoice</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="view_account_invoice_filter"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="filter[@name='refunds']" position="attributes">
-                        <attribute name="string">Not Draft</attribute>
-                    </xpath>
-                    <filter name="invoices" position="replace"/>
-                </data>
             </field>
         </record>
 
@@ -677,7 +635,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_invoices"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a customer invoice
@@ -712,7 +670,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type': 'out_refund', 'type': 'out_refund', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_credit_notes"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a credit note
@@ -750,7 +708,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_invoices"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Record a new vendor bill
@@ -786,7 +744,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter_inherit_credit_notes"/>
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a vendor credit note

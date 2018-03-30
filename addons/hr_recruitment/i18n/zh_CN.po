@@ -668,6 +668,9 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
+"申请人及其简历附件将在发送电子邮件时自动创建。\n"
+" 如果您安装了文件管理模块，所有简历将自动检索，\n"
+" 这样便可通过简历内容轻松搜索。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -766,7 +769,7 @@ msgstr "申请人类别"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr ""
+msgstr "点击此处创建新职位。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -848,7 +851,7 @@ msgstr "创建"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create & Edit"
-msgstr ""
+msgstr "创建和编辑"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -870,7 +873,7 @@ msgstr "生产别名"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
-msgstr ""
+msgstr "创建一些用于跟踪申请人来自何处的别名。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -903,7 +906,7 @@ msgstr "创建周"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "目前，未计划任何活动。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_close
@@ -1163,7 +1166,7 @@ msgstr "HR 部门"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "人力资源主管"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1209,7 +1212,7 @@ msgstr "初步评价"
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_hr_recruitment_survey
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr ""
+msgstr "面试表单"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_job.py:94
@@ -1222,12 +1225,12 @@ msgstr "工作"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Job Application Confirmation: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "职位申请确认：${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Job Applications"
-msgstr ""
+msgstr "职位申请"
 
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
@@ -1275,12 +1278,12 @@ msgstr "工作岗位"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
-msgstr ""
+msgstr "职位发布"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "具体职位"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1370,12 +1373,12 @@ msgstr "我的活动"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My Applications"
-msgstr ""
+msgstr "我的申请"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_activity
 msgid "My Next Activities"
-msgstr ""
+msgstr "我的下一个活动"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_name
@@ -1449,7 +1452,7 @@ msgstr "无主题"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet."
-msgstr ""
+msgstr "还没有文件。"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1464,7 +1467,7 @@ msgstr "附件数量"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "要关闭的天数"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1483,7 +1486,7 @@ msgstr "Odoo帮助您在招聘过程跟踪申请人及跟进所有操作：会�
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Offer"
-msgstr ""
+msgstr "录取通知书"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -1496,6 +1499,8 @@ msgid ""
 "Once a job position is created, you can track related applications\n"
 "              and manage the recruitment process."
 msgstr ""
+"职位一经创建，您便可以跟踪相关申请\n"
+" 并管理招聘流程。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
@@ -1504,17 +1509,19 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
+"职位一经创建，您便可以跟踪申请人\n"
+" 并管理与职位相关的招聘流程。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
-msgstr ""
+msgstr "正在进行"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_website_hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
-msgstr ""
+msgstr "在线发布"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1552,7 +1559,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_hr_responsible_id
 msgid "Person responsible of validating the employee's contracts."
-msgstr ""
+msgstr "确认员工合同的负责人。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
@@ -1590,7 +1597,7 @@ msgstr "薪酬标准"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr ""
+msgstr "在网站上发布现有职位"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1766,7 +1773,7 @@ msgstr "应聘者来源"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
-msgstr ""
+msgstr "使用此阶段的具体职位。其他职位将不使用此阶段。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1884,7 +1891,7 @@ msgstr ""
 msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
-msgstr ""
+msgstr "这些别名可以是电子邮件或每个来源的 url。当申请人通过上述两种方式之一到这里时，您便会知道他来自哪里。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1932,7 +1939,7 @@ msgstr "今天的活动"
 msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
-msgstr ""
+msgstr "尝试向此地址发送电子邮件，它会自动创建申请。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1955,7 +1962,7 @@ msgstr "更新日期"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
-msgstr ""
+msgstr "在招聘流程中使用面试表单"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1963,7 +1970,7 @@ msgid ""
 "Use interview forms tailored to each job position during the recruitment "
 "process. Select the form to use in the job position detail form. This relies"
 " on Survey app."
-msgstr ""
+msgstr "在招聘流程中使用针对每个职位定制的面试表单。选择要在职位详细信息表单中使用的表单。具体取决于“调查”应用。"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1997,7 +2004,7 @@ msgstr "关注者的电子邮件"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "欢迎 ${object.name}"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -2021,7 +2028,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "您的职位申请：${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

@@ -228,7 +228,7 @@ var utils = {
      * @returns {boolean}
      */
     is_bin_size: function (v) {
-        return (/^\d+(\.\d*)? \w+$/).test(v);
+        return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
      * @param {any} node
@@ -299,37 +299,6 @@ var utils = {
             mod += 1;
         }
         return fn(mod, Math.floor(x));
-    },
-    /**
-     * Topological sort of nodes
-     *
-     * @param {Object} nodes where key is name of node, and value is list of
-     *                       names of dependent nodes.
-     * @param {string[]} nodes[name] list of named dependencies of node having
-     *                       'name' as its name.
-     * @return {string[]} topological sort of nodes by their names.
-     * @throws {Error} if there is at least one circular
-     *                       dependency between nodes
-     */
-    topologicalSort: function (nodes) {
-        var sorted = [];
-        var unresolved = nodes;
-        while (!_.isEmpty(unresolved)) {
-            // Get all nodes that have no dependency
-            var resolvable = _.pick(unresolved, function (dependencies, name) {
-                return _.isEmpty(_.difference(dependencies, sorted));
-            });
-            if (_.isEmpty(resolvable)) {
-                throw new Error("Circular dependency detected");
-            }
-            // Append them to sorted
-            sorted = _.union(sorted, _.keys(resolvable));
-            // Remove these nodes from unresolved
-            _.each(resolvable, function (dependencies, name) {
-                unresolved = _.omit(unresolved, name);
-            });
-        }
-        return sorted;
     },
     /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
@@ -423,6 +392,23 @@ var utils = {
         array[i2] = elem1;
         array[i1] = elem2;
     },
+
+    /**
+     * @param {string} value
+     * @param {boolean} allow_mailto
+     * @returns boolean
+     */
+    is_email: function (value, allow_mailto) {
+        // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
+        var re;
+        if (allow_mailto) {
+            re = /^(mailto:)?(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        } else {
+            re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        }
+        return re.test(value);
+    },
+
     /**
      * @param {any} str
      * @param {any} elseValues

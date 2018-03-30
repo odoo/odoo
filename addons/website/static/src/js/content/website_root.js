@@ -1,4 +1,4 @@
-odoo.define('website.WebsiteRoot.instance', function (require) {
+odoo.define('root.widget', function (require) {
 'use strict';
 
 require('web.dom_ready');
@@ -242,6 +242,7 @@ var WebsiteRoot = BodyManager.extend({
         })
         .done(function (result) {
             $data.toggleClass("css_unpublished css_published");
+            $(".ribbon-publish.ribbon-wrapper").toggleClass("css_unpublished css_published");
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
         })

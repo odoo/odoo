@@ -13,13 +13,11 @@ class Category(models.Model):
     _order = 'name'
     _parent_store = True
     _parent_name = 'parent'
-    _parent_order = 'name'
 
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
-    parent_left = fields.Integer("Left Parent", index=True)
-    parent_right = fields.Integer("Right Parent", index=True)
+    parent_path = fields.Char(index=True)
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
     dummy = fields.Char(store=False)
@@ -326,6 +324,9 @@ class Related(models.Model):
     related_name = fields.Char(related='name', string='A related on Name')
     related_related_name = fields.Char(related='related_name', string='A related on a related on Name')
 
+    message = fields.Many2one('test_new_api.message')
+    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
+    message_currency = fields.Many2one(related="message.author", string='Message Author')
 
 class ComputeProtected(models.Model):
     _name = 'test_new_api.compute.protected'
@@ -337,7 +338,6 @@ class ComputeProtected(models.Model):
     def _compute_bar(self):
         for record in self:
             record.bar = record.foo
-
 
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'

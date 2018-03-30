@@ -20,9 +20,10 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
         'click div:first h1.statement_name': '_onClickStatementName',
-        'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
+        'blur .statement_name_edition > input': '_onValidateName',
+        'keyup .statement_name_edition > input': '_onKeyupInput'
     },
     /**
      * @override
@@ -63,9 +64,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             defs.push(def);
         }
 
-        this.$('h1.statement_name').text(this._initialState.title);
-
-        delete this._initialState;
+        this.$('h1.statement_name').text(this._initialState.title || _t('No Title'));
 
         this.enterHandler = function (e) {
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
@@ -134,7 +133,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             this._renderNotifications(state.notifications);
         }
 
-        this.$('h1.statement_name').text(state.title);
+        this.$('.statement_name, .statement_name_edition').toggle();
+        this.$('h1.statement_name').text(state.title || _t('No Title'));
     },
 
     //--------------------------------------------------------------------------
@@ -171,7 +171,10 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onClickStatementName: function () {
-        this.$('.statement_name, .statement_name_edition').toggle();
+        if (this._initialState.bank_statement_id) {
+            this.$('.statement_name, .statement_name_edition').toggle();
+            this.$('.statement_name_edition input').focus();
+        }
     },
     /**
      * @private
@@ -233,9 +236,19 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onValidateName: function () {
-        var name = this.model.get(this.handleNameRecord).data.name;
+        var name = this.$('.statement_name_edition input').val().trim();
         this.trigger_up('change_name', {'data': name});
-        this.$('.statement_name, .statement_name_edition').toggle();
+    },
+    /**
+     * Save title on enter key pressed
+     *
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _onKeyupInput: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            this.$('.statement_name_edition input').blur();
+        }
     },
 });
 
@@ -426,20 +439,24 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 this._renderCreate(state);
             }
             var data = this.model.get(this.handleCreateRecord).data;
-
-            this.model.notifyChanges(this.handleCreateRecord, state.createForm);
-            this.model.notifyChanges(this.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}});
-            _.each(state.createForm.analytic_tag_ids, function (tag) {
-                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}});
-            });
-
-            var record = this.model.get(this.handleCreateRecord);
-            _.each(this.fields, function (field, fieldName) {
-                if (self._avoidFieldUpdate[fieldName]) return;
-                if (fieldName === "partner_id") return;
-                if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                    field.reset(record);
-                }
+            this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
+                // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
+                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
+                    var defs = [];
+                    _.each(state.createForm.analytic_tag_ids, function (tag) {
+                        defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
+                    });
+                    $.when.apply($, defs).then(function () {
+                        var record = self.model.get(self.handleCreateRecord);
+                        _.each(self.fields, function (field, fieldName) {
+                            if (self._avoidFieldUpdate[fieldName]) return;
+                            if (fieldName === "partner_id") return;
+                            if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                                field.reset(record);
+                            }
+                        });
+                    });
+                });
             });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
@@ -496,14 +513,17 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.journal',
             type: 'many2one',
             name: 'journal_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.tax',
             type: 'many2one',
             name: 'tax_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.analytic.account',
             type: 'many2one',
@@ -637,8 +657,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
     /**
      * @private
+     * @param {input event} event
      */
-    _onFilterChange: function () {
+    _onFilterChange: function (event) {
         this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
     },
     /**
@@ -651,7 +672,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             return;
         }
         if(event.keyCode === 13) {
-            if (_.findWhere(this.model.lines, {mode: 'create'}).balance.amount) {
+            var created_lines = _.findWhere(this.model.lines, {mode: 'create'});
+            if (created_lines && created_lines.balance.amount) {
                 this._onCreateProposition();
             }
             return;
@@ -688,7 +710,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectMoveLine: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('add_proposition', {'data': moveLineId});
@@ -698,7 +720,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectProposition: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('remove_proposition', {'data': moveLineId});

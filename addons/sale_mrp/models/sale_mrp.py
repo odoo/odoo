@@ -36,7 +36,7 @@ class SaleOrderLine(models.Model):
             if components.get(product, False):
                 if uom.id != components[product]['uom']:
                     from_uom = uom
-                    to_uom = self.env['product.uom'].browse(components[product]['uom'])
+                    to_uom = self.env['uom.uom'].browse(components[product]['uom'])
                     qty = from_uom._compute_quantity(qty, to_uom)
                 components[product]['qty'] += qty
             else:

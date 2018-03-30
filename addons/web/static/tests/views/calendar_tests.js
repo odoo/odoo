@@ -5,6 +5,7 @@ var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
 var Dialog = require('web.Dialog');
 var fieldUtils = require('web.field_utils');
+var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 
@@ -14,7 +15,7 @@ CalendarRenderer.include({
     getAvatars: function () {
         var res = this._super.apply(this, arguments);
         for (var k in res) {
-            res[k] = res[k].replace(/src="([^"]+)"/, 'src="#test:\$1"');
+            res[k] = res[k].replace(/src="([^"]+)"/, 'data-src="\$1"');
         }
         return res;
     }
@@ -200,6 +201,52 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Ok)').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
         calendar.destroy();
+    });
+
+    QUnit.test('breadcrumbs are updated with the displayed period', function (assert) {
+        assert.expect(3);
+
+        var archs = {
+            'event,1,calendar': '<calendar date_start="start" date_stop="stop" all_day="allday">' +
+                '<field name="name"/>' +
+            '</calendar>',
+            'event,false,search': '<search></search>',
+        };
+
+        var actions = [{
+            id: 1,
+            flags: {
+                initialDate: initialDate,
+            },
+            name: 'Meetings Test',
+            res_model: 'event',
+            type: 'ir.actions.act_window',
+            views: [[1, 'calendar']],
+        }];
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+
+        // displays month mode by default
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
+
+        // switch to day mode
+        actionManager.controlPanel.$('.o_calendar_button_day').click();
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (December 12, 2016)', "should display the current day");
+
+        // switch to month mode
+        actionManager.controlPanel.$('.o_calendar_button_month').click();
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (December 2016)', "should display the current month");
+
+        actionManager.destroy();
     });
 
     QUnit.test('create and change events', function (assert) {
@@ -1548,7 +1595,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('set event as all day when field is date', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         this.data.event.records[0].start_date = "2016-12-14";
 
@@ -1572,9 +1619,16 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+            session: {
+                getTZOffset: function () {
+                    return -480;
+                }
+            },
         });
         assert.strictEqual(calendar.$('.fc-day-grid .fc-event-container').length, 1,
             "should be one event in the all day row");
+        assert.strictEqual(calendar.model.data.data[0].r_start.date(), 14,
+            "the date should be 14");
         calendar.destroy();
     });
 
@@ -1627,6 +1681,63 @@ QUnit.module('Views', {
             "should create only one event");
 
         calendar.destroy();
+    });
+
+    QUnit.test('check if the view destroys all widgets and instances', function (assert) {
+        assert.expect(1);
+
+        var instanceNumber = 0;
+        testUtils.patch(mixins.ParentedMixin, {
+            init: function () {
+                instanceNumber++;
+                return this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                if (!this.isDestroyed()) {
+                    instanceNumber--;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        var params = {
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start_date" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'attendee="partner_ids" '+
+                'color="partner_id">'+
+                    '<field name="name"/>'+
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        };
+
+        var calendar = createView(params);
+        calendar.destroy();
+
+        var initialInstanceNumber = instanceNumber;
+        instanceNumber = 0;
+
+        calendar = createView(params);
+
+        // call destroy function of controller to ensure that it correctly destroys everything
+        calendar.__destroy();
+
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
+
+        calendar.destroy();
+
+        testUtils.unpatch(mixins.ParentedMixin);
     });
 
     QUnit.test('create an event (async dialog) [REQUIRE FOCUS]', function (assert) {
@@ -1713,7 +1824,6 @@ QUnit.module('Views', {
         assert.ok(!$groupBy.is(':visible'), 'groupby menu should not be visible');
         actionManager.destroy();
     });
-
 });
 
 });

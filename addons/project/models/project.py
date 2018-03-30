@@ -68,7 +68,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['mail.alias.mixin', 'mail.thread', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
     _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
@@ -293,6 +293,7 @@ class Project(models.Model):
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -317,7 +318,11 @@ class Project(models.Model):
 
     @api.multi
     def write(self, vals):
-        res = super(Project, self).write(vals)
+        # directly compute is_favorite to dodge allow write access right
+        if 'is_favorite' in vals:
+            vals.pop('is_favorite')
+            self._fields['is_favorite'].determine_inverse(self)
+        res = super(Project, self).write(vals) if vals else True
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
@@ -370,17 +375,6 @@ class Project(models.Model):
         """ Unsubscribe from all tasks when unsubscribing from a project """
         self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
         return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
-
-    @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Project, self)._notification_recipients(message, groups)
-
-        for group_name, group_method, group_data in groups:
-            if group_name in ['customer', 'portal']:
-                continue
-            group_data['has_button_access'] = True
-
-        return groups
 
     # ---------------------------------------------------
     #  Actions
@@ -439,9 +433,9 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin', 'rating.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
-    _order = "priority desc, sequence, date_start, name, id"
+    _order = "priority desc, sequence, id desc"
 
     @api.model
     def default_get(self, fields_list):
@@ -498,7 +492,7 @@ class Task(models.Model):
     index=True, copy=False)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False)
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, track_visibility='onchange')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         default=fields.Datetime.now,
         index=True,
@@ -511,8 +505,8 @@ class Task(models.Model):
         track_visibility='onchange',
         change_default=True)
     notes = fields.Text(string='Notes')
-    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.')
-    subtask_planned_hours = fields.Float("Subtask Planned Hours", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
+    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',track_visibility='onchange')
+    subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
@@ -534,7 +528,7 @@ class Task(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True, related_sudo=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
-    parent_id = fields.Many2one('project.task', string='Parent Task')
+    parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
@@ -545,6 +539,8 @@ class Task(models.Model):
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
     working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
+    # customer portal: include comment and incoming emails in communication history
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
 
     _constraints = [(models.BaseModel._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
 
@@ -618,16 +614,12 @@ class Task(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project(self):
-        default_partner_id = self.env.context.get('default_partner_id')
-        default_partner = self.env['res.partner'].browse(default_partner_id) if default_partner_id else self.env['res.partner']
         if self.project_id:
-            if not self.parent_id and not self.partner_id:
-                self.partner_id = self.project_id.partner_id or default_partner
+            if not self.parent_id and self.project_id.partner_id:
+                self.partner_id = self.project_id.partner_id
             if self.project_id not in self.stage_id.project_ids:
                 self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
-            if not self.parent_id:
-                self.partner_id = default_partner
             self.stage_id = False
 
     @api.onchange('user_id')
@@ -642,6 +634,7 @@ class Task(models.Model):
                 raise ValidationError(_('Task %s can not have a parent task and subtasks. Only one subtask level is allowed.' % (task.name,)))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -665,7 +658,7 @@ class Task(models.Model):
         # this should be safe (no context passed to avoid side-effects)
         obj_tm = self.env.user.company_id.project_time_mode_id
         # using get_object to get translation value
-        uom_hour = self.env.ref('product.product_uom_hour', False)
+        uom_hour = self.env.ref('uom.product_uom_hour', False)
         if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
             return res
 
@@ -862,8 +855,6 @@ class Task(models.Model):
             return 'project.mt_task_blocked'
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return 'project.mt_task_ready'
-        elif 'user_id' in init_values and self.user_id:  # assigned -> new
-            return 'project.mt_task_new'
         elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
             return 'project.mt_task_new'
         elif 'stage_id' in init_values:
@@ -871,26 +862,25 @@ class Task(models.Model):
         return super(Task, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        """ Handle project users and managers recipients that can convert assign
-        tasks and create new one directly from notification emails. """
-        groups = super(Task, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Handle project users and managers recipients that can assign
+        tasks and create new one directly from notification emails. Also give
+        access button to portal users and portal customers. If they are notified
+        they should probably have access to the document. """
+        groups = super(Task, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
-        if not self.user_id:
-            take_action = self._notification_link_helper('assign')
+        if not self.user_id and not self.stage_id.fold:
+            take_action = self._notify_get_action_link('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
-        else:
-            project_actions = []
+            new_group = (
+                'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                    'actions': project_actions,
+                })
+            groups = [new_group] + groups
 
-        new_group = (
-            'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
-                'actions': project_actions,
-            })
-
-        groups = [new_group] + groups
         for group_name, group_method, group_data in groups:
-            if group_name in ['customer', 'portal']:
+            if group_name in ('customer'):
                 continue
             group_data['has_button_access'] = True
 
@@ -943,23 +933,6 @@ class Task(models.Model):
     @api.multi
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
-        if update_vals is None:
-            update_vals = {}
-        maps = {
-            'cost': 'planned_hours',
-        }
-        for line in msg['body'].split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res:
-                match = res.group(1).lower()
-                field = maps.get(match)
-                if field:
-                    try:
-                        update_vals[field] = float(res.group(2).lower())
-                    except (ValueError, TypeError):
-                        pass
-
         email_list = self.email_split(msg)
         partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
         self.message_subscribe(partner_ids)
@@ -992,7 +965,7 @@ class Task(models.Model):
         res['headers'] = repr(headers)
         return res
 
-    def _message_post_after_hook(self, message, values, notif_layout):
+    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -1003,7 +976,7 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message, values, notif_layout)
+        return super(Task, self)._message_post_after_hook(message, values, notif_layout, notif_values)
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})
@@ -1038,11 +1011,8 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
 
-    def rating_get_parent_model_name(self, vals):
-        return 'project.project'
-
-    def rating_get_parent_id(self):
-        return self.project_id.id
+    def rating_get_parent(self):
+        return 'project_id'
 
 
 class ProjectTags(models.Model):

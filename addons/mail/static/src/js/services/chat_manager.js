@@ -16,11 +16,11 @@ var _lt = core._lt;
 
 var LIMIT = 30; // max number of fetched messages from the server
 var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
-var ODOOBOT_ID = "ODOOBOT"; // default author_id for messages 
+var ODOOBOT_ID = "ODOOBOT"; // default author_id for messages
 
 /**
  * This service handles everything about chat channels and messages.
- * 
+ *
  * There are basically two points of entry:
  *
  *      1. Calling a public method by means of 'this.call'
@@ -29,6 +29,7 @@ var ODOOBOT_ID = "ODOOBOT"; // default author_id for messages
 var ChatManager =  AbstractService.extend({
     name: 'chat_manager',
     dependencies: ['ajax', 'bus_service'],
+    CHANNEL_SEEN_THROTTLE: 3000,
     /**
      * @override
      */
@@ -54,13 +55,13 @@ var ChatManager =  AbstractService.extend({
         this.pinnedDmPartners = [];  // partner_ids we have a pinned DM with
         this.discussOpen = false;
 
-        this.chatBus = new Bus();
+        this.chatBus = new Bus(this);
         this.busBus = this.call('bus_service', 'getBus');
 
         this.chatBus.on('discuss_open', null, function (open) {
             self.discussOpen = open;
         });
-        
+
         this.busBus.on('notification', this, this._onNotification);
         this.busBus.on('window_focus', this, this._onWindowFocus);
 
@@ -73,16 +74,16 @@ var ChatManager =  AbstractService.extend({
                 }, {
                     shadow: true
                 });
-        }, 3000);
+        }, self.CHANNEL_SEEN_THROTTLE);
 
         this._isReady = this._initMessaging();
 
+        // Add static channels
         this._addChannel({
             id: "channel_inbox",
             name: _lt("Inbox"),
             type: "static",
         }, { displayNeedactions: true });
-
         this._addChannel({
             id: "channel_starred",
             name: _lt("Starred"),
@@ -181,7 +182,7 @@ var ChatManager =  AbstractService.extend({
      * Returns a channel corresponding to the given id.
      *
      * @param  {string|integer} id e.g. 'channel_inbox', 'channel_starred'
-     * @return {Object|undefined} channel
+     * @return {Object|undefined} the channel, if it exists
      */
     getChannel: function (id) {
         return _.findWhere(this.channels, {id: id});
@@ -189,7 +190,7 @@ var ChatManager =  AbstractService.extend({
     /**
      * Returns a list of channels
      *
-     * @return {Object[]}
+     * @return {Object[]} list of channels
      */
     getChannels: function () {
         return _.clone(this.channels);
@@ -282,12 +283,13 @@ var ChatManager =  AbstractService.extend({
      * Show the list of available commands next to a message (e.g. star)
      *
      * @param  {Object} channel
-     * @return {Array}
+     * @return {Array} list of commands
      */
     getCommands: function (channel) {
-        return _.filter(this.commands, function (command) {
+        var commands = _.filter(this.commands, function (command) {
             return !command.channel_types || _.contains(command.channel_types, channel.server_type);
         });
+        return commands;
     },
     /**
      * Returns the record id of ir.ui.menu for Discuss
@@ -309,7 +311,7 @@ var ChatManager =  AbstractService.extend({
     /**
      * Returns list of emojis Objects
      *
-     * @return {Object[]}
+     * @return {Object[]} list of emojis
      * ['id', 'source', 'unicode_source', 'substitution', 'description']
      */
     getEmojis: function () {
@@ -319,9 +321,10 @@ var ChatManager =  AbstractService.extend({
      * Get the last seen message for a given channel
      *
      * @param  {Object} channel
-     * @return {Object} Message Object
+     * @return {Object|undefined} last seen Message Object (if any)
      */
     getLastSeenMessage: function (channel) {
+        var result;
         if (channel.last_seen_message_id) {
             var messages = channel.cache['[]'].messages;
             var msg = _.findWhere(messages, {id: channel.last_seen_message_id});
@@ -332,9 +335,10 @@ var ChatManager =  AbstractService.extend({
                         msg = messages[i];
                         i++;
                 }
-                return msg;
+                result = msg;
             }
         }
+        return result;
     },
     /**
      * Get all listeners of a channel.
@@ -349,7 +353,6 @@ var ChatManager =  AbstractService.extend({
      *              => list containing a list of members (cached by chat_manager)
      */
     getMentionPartnerSuggestions: function (channel) {
-        var self = this;
         if (!channel) {
             return this.mentionPartnerSuggestions;
         }
@@ -362,14 +365,7 @@ var ChatManager =  AbstractService.extend({
                     shadow: true
                 })
                 .then(function (members) {
-                    var suggestions = [];
-                    _.each(self.mentionPartnerSuggestions, function (partners) {
-                        suggestions.push(_.filter(partners, function (partner) {
-                            return !_.findWhere(members, { id: partner.id });
-                        }));
-                    });
-
-                    return [suggestions];
+                    return [members];
                 });
         }
         return channel.membersDeferred;
@@ -378,29 +374,29 @@ var ChatManager =  AbstractService.extend({
      * Gets message from its id
      *
      * @param  {integer} msgID
-     * @return {Object|undefined} Message Object
+     * @return {Object|undefined} Message Object (if any)
      */
     getMessage: function (msgID) {
         return _.findWhere(this.messages, {id: msgID});
     },
     /**
      * Gets messages from channel or ids or record (model and res_id):
-     * 
+     *
      *      1. From channel if we have 'channelID' in options
      *      2. From ids if we have 'ids' in options
      *      3. From model if we have 'model' and 'res_id' in options
-     * 
+     *
      * Rule of precedence:
-     * 
+     *
      *      'channelID' < 'ids' < 'model' and 'res_id'
-     * 
+     *
      * If we have none of the cases above, we return an empty list.
      *
      * @param  {Object} [options]
      * @param  {integer|string} [options.channelID]
      * @param  {Array} [options.domain]
      * @param  {integer[]} [options.ids]
-     * @param  {boolean} [options.load_more]
+     * @param  {boolean} [options.loadMore]
      * @param  {string} [options.model]
      * @param  {integer} [options.res_id]
      * @return {$.Promise<Object[]>} list of messages
@@ -409,8 +405,8 @@ var ChatManager =  AbstractService.extend({
         var channel;
         var self = this;
 
-        if ('channelID' in options && options.load_more) {
-            // get channel messages, force load_more
+        if ('channelID' in options && options.loadMore) {
+            // get channel messages, force load more
             channel = this.getChannel(options.channelID);
             return this._fetchFromChannel(channel, {domain: options.domain || {}, loadMore: true});
         }
@@ -451,7 +447,7 @@ var ChatManager =  AbstractService.extend({
      * Returns the number of messages received from followed channels
      * + all messages where the current user is notified.
      *
-     * @return {integer}
+     * @return {integer} needaction counter
      */
     getNeedactionCounter: function () {
         return this.needactionCounter;
@@ -459,7 +455,7 @@ var ChatManager =  AbstractService.extend({
     /**
      * Gets the number of starred message
      *
-     * @return {integer}
+     * @return {integer} starred counter
      */
     getStarredCounter: function () {
         return this.starredCounter;
@@ -467,7 +463,7 @@ var ChatManager =  AbstractService.extend({
     /**
      * Gets the number of conversation which contains unread messages
      *
-     * @return {integer}
+     * @return {integer} unread conversation counter
      */
     getUnreadConversationCounter: function () {
         return this.unreadConversationCounter;
@@ -491,7 +487,7 @@ var ChatManager =  AbstractService.extend({
     /**
      * join an existing channel
      * See @createChannel to join a new channel
-     * 
+     *
      * @param  {integer} channelID
      * @param  {Object} [options]
      * @return {$.Promise<Object>} resolved with channel object
@@ -593,7 +589,7 @@ var ChatManager =  AbstractService.extend({
     },
     /**
      * Open the channel:
-     * 
+     *
      *      1. If discuss is opened, asks discuss to open the channel
      *      2. Otherwise, asks the chat_window_manager to detach the channel
      *
@@ -604,14 +600,14 @@ var ChatManager =  AbstractService.extend({
     },
     /**
      * Prepares and sends a message to the server:
-     * 
+     *
      *      1. Either the message is posted on a channel
      *      2. Or the message is posted in a model's record (chatter)
      *
      * Rule of precedence:
-     * 
+     *
      *      'channelID' < 'model' & 'res_id'
-     * 
+     *
      * If options as none of these parameters, do nothing and return
      * a promise no resolved item.
      *
@@ -856,7 +852,7 @@ var ChatManager =  AbstractService.extend({
      * @param  {string} [data.state] e.g. 'open', 'folded'
      * @param  {Object|integer} [options=undefined]
      * @param  {boolean} [options.silent]
-     * @return {Object} the newly or already exisiting channel
+     * @return {Object} the newly or already existing channel
      */
     _addChannel: function (data, options) {
         options = typeof options === "object" ? options : {};
@@ -909,7 +905,7 @@ var ChatManager =  AbstractService.extend({
      * @param  {Object} data message data
      * @param  {integer} data.id
      * @param  {Object} [options]
-     * @param  {Array} [options.domain] 
+     * @param  {Array} [options.domain]
      * @param  {boolean} [options.increment_unread] whether we should increment
      *      the unread_counter of channel.
      * @param  {boolean} [options.silent] whether it should inform in the chatBus
@@ -1031,7 +1027,7 @@ var ChatManager =  AbstractService.extend({
      * @param  {integer|string} channel.id string for static channels, e.g. 'channel_inbox'
      * @param  {Object} [option={}]
      * @param  {Array} [options.domain] filter on the messages of the channel
-     * @param  {boolean} [options.load_more] Whether it should load more message
+     * @param  {boolean} [options.loadMore] Whether it should load more message
      * @return {$.Promise<Object[]>} resolved with list of messages
      */
     _fetchFromChannel: function (channel, options) {
@@ -1134,6 +1130,7 @@ var ChatManager =  AbstractService.extend({
                     }
                 }
             });
+
             self.busBus.start_polling();
         });
     },
@@ -1466,7 +1463,7 @@ var ChatManager =  AbstractService.extend({
         }
     },
     /**
-     * Updates channel_inbox when a message has marked as read. 
+     * Updates channel_inbox when a message has marked as read.
      *
      * @private
      * @param  {Object} data
@@ -1638,7 +1635,7 @@ var ChatManager =  AbstractService.extend({
             web_client.set_title_part("_chat", tabTitle);
         }
 
-        this._sendNotification(web_client, title, content);
+        this.call('bus_service', 'sendNotification', web_client, title, content);
     },
     /**
      * Removes channel
@@ -1745,6 +1742,8 @@ var ChatManager =  AbstractService.extend({
     },
 
 });
+
+core.serviceRegistry.add('chat_manager', ChatManager);
 
 return ChatManager;
 

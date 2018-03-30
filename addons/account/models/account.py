@@ -203,7 +203,7 @@ class AccountAccount(models.Model):
             result.append((account.id, name))
         return result
 
-    @api.one
+    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
@@ -310,13 +310,11 @@ class AccountAccount(models.Model):
 
 class AccountGroup(models.Model):
     _name = "account.group"
-
     _parent_store = True
     _order = 'code_prefix'
 
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade')
-    parent_left = fields.Integer('Left Parent', index=True)
-    parent_right = fields.Integer('Right Parent', index=True)
+    parent_path = fields.Char(index=True)
     name = fields.Char(required=True)
     code_prefix = fields.Char()
 
@@ -412,8 +410,9 @@ class AccountJournal(models.Model):
     belongs_to_company = fields.Boolean('Belong to the user\'s current company', compute="_belong_to_company", search="_search_company_journals",)
 
     # Bank journals fields
-    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_id)]")
-    bank_statements_source = fields.Selection([('undefined', 'Undefined Yet'),('manual', 'Record Manually')], string='Bank Feeds', default='undefined')
+    company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
+    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id)]")
+    bank_statements_source = fields.Selection([('undefined', 'Undefined'),('manual', 'Record Manually')], string='Bank Feeds', default='undefined')
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
@@ -443,7 +442,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.sequence_id and journal.sequence_number_next:
                 sequence = journal.sequence_id._get_current_sequence()
-                sequence.number_next = journal.sequence_number_next
+                sequence.sudo().number_next = journal.sequence_number_next
 
     @api.multi
     # do not depend on 'refund_sequence_id.date_range_ids', because
@@ -510,7 +509,7 @@ class AccountJournal(models.Model):
         bank_accounts.unlink()
         return ret
 
-    @api.one
+    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
@@ -522,9 +521,16 @@ class AccountJournal(models.Model):
     @api.multi
     def write(self, vals):
         for journal in self:
+            company = journal.company_id
             if ('company_id' in vals and journal.company_id.id != vals['company_id']):
                 if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its company.'))
+                company = self.env['res.company'].browse(vals['company_id'])
+                if self.bank_account_id.company_id and self.bank_account_id.company_id != company:
+                    self.bank_account_id.write({
+                        'company_id': company.id,
+                        'partner_id': company.partner_id.id,
+                    })
             if ('code' in vals and journal.code != vals['code']):
                 if self.env['account.move'].search([('journal_id', 'in', self.ids)], limit=1):
                     raise UserError(_('This journal already contains items, therefore you cannot modify its short name.'))
@@ -538,8 +544,16 @@ class AccountJournal(models.Model):
                     self.default_debit_account_id.currency_id = vals['currency_id']
                 if not 'default_credit_account_id' in vals and self.default_credit_account_id:
                     self.default_credit_account_id.currency_id = vals['currency_id']
-            if 'bank_account_id' in vals and not vals.get('bank_account_id'):
-                raise UserError(_('You cannot empty the bank account once set.'))
+                if self.bank_account_id:
+                    self.bank_account_id.currency_id = vals['currency_id']
+            if 'bank_account_id' in vals:
+                if not vals.get('bank_account_id'):
+                    raise UserError(_('You cannot remove the bank account from the journal once set.'))
+                else:
+                    bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
+                    if bank_account.partner_id != company.partner_id:
+                        raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
+
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
@@ -795,11 +809,17 @@ class AccountTax(models.Model):
         oldname='use_cash_basis',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
-    cash_basis_account = fields.Many2one(
+    cash_basis_account_id = fields.Many2one(
         'account.account',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
+        oldname='cash_basis_account',
         help='Account used as counterpart for the journal entry, for taxes eligible based on payments.')
+    cash_basis_base_account_id = fields.Many2one(
+        'account.account',
+        domain=[('deprecated', '=', False)],
+        string='Base Tax Received Account',
+        help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -811,7 +831,7 @@ class AccountTax(models.Model):
         if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
             raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
-    @api.one
+    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)

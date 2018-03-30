@@ -14,8 +14,7 @@ class Location(models.Model):
     _description = "Inventory Locations"
     _parent_name = "location_id"
     _parent_store = True
-    _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'complete_name'
     _rec_name = 'complete_name'
 
     @api.model
@@ -55,8 +54,7 @@ class Location(models.Model):
     posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
     posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
     posz = fields.Integer('Height (Z)', default=0, help="Optional localization details, for information purpose only")
-    parent_left = fields.Integer('Left Parent', index=True)
-    parent_right = fields.Integer('Right Parent', index=True)
+    parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('stock.location'), index=True,
@@ -119,9 +117,8 @@ class Location(models.Model):
     @api.returns('stock.warehouse', lambda value: value.id)
     def get_warehouse(self):
         """ Returns warehouse id of warehouse that contains location """
-        return self.env['stock.warehouse'].search([
-            ('view_location_id.parent_left', '<=', self.parent_left),
-            ('view_location_id.parent_right', '>=', self.parent_left)], limit=1)
+        domain = [('view_location_id', 'parent_of', self.ids)]
+        return self.env['stock.warehouse'].search(domain, limit=1)
 
     def should_bypass_reservation(self):
         self.ensure_one()

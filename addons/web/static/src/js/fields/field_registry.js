@@ -35,6 +35,7 @@ registry
     .add('url', basic_fields.UrlWidget)
     .add('image', basic_fields.FieldBinaryImage)
     .add('binary', basic_fields.FieldBinaryFile)
+    .add('pdf_viewer', basic_fields.FieldPdfViewer)
     .add('monetary', basic_fields.FieldMonetary)
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)

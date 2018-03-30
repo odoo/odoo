@@ -45,6 +45,9 @@ msgid ""
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
+"*“显示按钮”在页面上显示聊天按钮。\n"
+"*“自动弹出”显示按钮并自动打开对话窗口。\n"
+"*“隐藏按钮”在页面上隐藏聊天按钮。"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -216,7 +219,7 @@ msgstr "已复制 !"
 #: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:12
 #, python-format
 msgid "Copy Text"
-msgstr ""
+msgstr "复制文本"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -283,7 +286,7 @@ msgstr "客户点评"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
 msgid "Customer ratings on livechat session."
-msgstr ""
+msgstr "Livechat 会话"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
@@ -296,7 +299,7 @@ msgid ""
 "Delay (in seconds) to automatically open the conversation window. Note: the "
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
-msgstr ""
+msgstr "自动打开对话窗口的延迟（以秒计）。注意：所选操作必须为“自动弹出”，否则将不会考虑此参数。"
 
 #. module: im_livechat
 #. openerp-web
@@ -350,6 +353,8 @@ msgid ""
 " Then go to Website Admin &gt; Configuration &gt; Settings and select the "
 "Website Live Chat Channel you want to add on your website."
 msgstr ""
+"对于使用 Odoo CMS 构建的网站，请安装 website_livechat 模块。然后转到“网站管理器 > 配置 > "
+"设置”，并选择您要在网站上添加的网站实时聊天频道。"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
@@ -514,7 +519,7 @@ msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
-msgstr ""
+msgstr "实时聊天支持频道统计允许您轻松检查和分析公司实时聊天会话的表现。提取关于错过的会话、观众、会话持续时间等的信息"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -573,7 +578,7 @@ msgstr "名称"
 #: code:addons/im_livechat/models/mail_channel.py:125
 #, python-format
 msgid "No history found"
-msgstr ""
+msgstr "未找到历史记录"
 
 #. module: im_livechat
 #. openerp-web
@@ -641,7 +646,7 @@ msgstr ""
 msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
-msgstr ""
+msgstr "在 Odoo 中未显示任何活动超过 30 分钟的操作人员将被视为已断开连接。"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -665,33 +670,33 @@ msgstr "评级"
 #: code:addons/im_livechat/static/src/js/im_livechat.js:344
 #, python-format
 msgid "Rating: :rating_%d"
-msgstr ""
+msgstr "评价：:rating_%d"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Bad"
-msgstr ""
+msgstr "评价：糟糕"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Great"
-msgstr ""
+msgstr "评价：非常好"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Okay"
-msgstr ""
+msgstr "评价：好"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
 msgid "Ratings for livechat channel"
-msgstr ""
+msgstr "实时聊天频道的评价"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
-msgstr ""
+msgstr "指定此规则将在网页上应用的正则表达式。"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -724,7 +729,7 @@ msgstr "搜索报表"
 #: code:addons/im_livechat/models/mail_channel.py:113
 #, python-format
 msgid "See 15 last visited pages"
-msgstr ""
+msgstr "查看最后访问的 15 个页面"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -799,6 +804,8 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"该规则将仅适用于这些国家/地区。示例：如果您选择“比利时”和“美国”，然后将操作设置为“隐藏按钮”，将会对位于这两个国家/地区的访客的指定 URL "
+"隐藏聊天按钮。此功能的使用需要在服务器上安装 GeoIP。"
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -813,7 +820,7 @@ msgstr "用户能够加入服务支持频道。"
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
 msgid "There is no rating for this channel at the moment."
-msgstr ""
+msgstr "目前没有关于此频道的评价。"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image
@@ -896,6 +903,8 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"您可以为每个想要\n"
+" 集成网站实时聊天小工具的网站创建频道，这样您的网站访客便能够与操作人员实时交流。"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action

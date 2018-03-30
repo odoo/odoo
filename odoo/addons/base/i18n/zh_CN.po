@@ -194,6 +194,72 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+" 多米尼加共和国的本地化模块 \n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República 多米尼亚， 兼容 para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+" - ITBIS para compras y ventas\n"
+" - Retenciones de ITBIS\n"
+" - Retenciones de ISR\n"
+" - Grupos de Impuestos y Retenciones:\n"
+" - Telecomunicaiones\n"
+" - Proveedores de Materiales de Construcción\n"
+" - Personas Físicas Proveedoras de Servicios\n"
+" - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+" - Facturas con Valor Fiscal (para Ventas)\n"
+" - Facturas para Consumidores Finales\n"
+" -Notas de Débito y Crédito\n"
+" - Registro de Proveedores Informales\n"
+" - Registro de Ingreso Único\n"
+" - Registro de Gastos Menores\n"
+" - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+" - Cambios de Impuestos a Exenciones (Ej.Ventas al Estado)\n"
+" - Cambios de Impuestos a Retenciones (Ej.Compra Servicios al Exterior)\n"
+" - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital **6**- Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- 资本审计\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de 市长：cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- 资本社会的\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -241,6 +307,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+" 税收确认\n"
+"====================\n"
+" 管理产品销售的税收确认。\n"
+" 记录税收确认的分期付款情况，并创建相应的日记帐分录。\n"
+"\n"
+"\\"
 
 #. module: base
 #: code:addons/base/models/res_config.py:315
@@ -263,6 +337,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Channel for the point of sale to be able to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+" 此模块会为销售点添加自定义销售渠道，以便能够更轻松地查看和管理销售点的销售情况。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -275,6 +352,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+" 本模块会为销售点添加几项饭店功能：\n"
+"- 账单打印： 可在订单支付之前打印收据\n"
+"- 账单拆分：可将一个订单拆分成几个不同的订单\n"
+"- 厨房订单打印：可打印订单更新至厨房或条形打印机\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -285,6 +369,10 @@ msgid ""
 "sale discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+" 此模块使收银员能够快速地向客户提供销售折扣百分比。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -296,6 +384,11 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+" 此模板支持在销售点上定义客户忠诚度计划，客户可从中赚取忠诚积分\n"
+" 和奖励。\n"
+"\n"
 
 #. module: base
 #: code:addons/model.py:136
@@ -384,6 +477,9 @@ msgid ""
 "        - Track timesheet for task from ticket\n"
 "    "
 msgstr ""
+"\n"
+" - 支持设置帮助中心团队项目\n"
+" - 从工单中跟踪工作任务时间表\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -442,6 +538,10 @@ msgid ""
 "        Also add DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+" 德国财务报告\n"
+" 包含财务状况表、损益、 增值税及合作伙伴增值税报告\n"
+" 另外可将达泰税务导出选项添加至总账\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_reports
@@ -555,6 +655,8 @@ msgid ""
 "        Allow to make call from next activities or with click-to-dial.\n"
 "    "
 msgstr ""
+"\n"
+" 支持从下次活动中调用或通过单击进行调用。\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_python
@@ -572,6 +674,8 @@ msgid ""
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+" 在帮助中心工单上注册的账单时间表。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -599,6 +703,8 @@ msgid ""
 "        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
 "    "
 msgstr ""
+"\n"
+" 根据在美国的客户地址，使用 TaxCloud 自动计算营业税。\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -610,6 +716,11 @@ msgid ""
 "        DIOT Report\n"
 "    "
 msgstr ""
+"\n"
+" 电子财务报告\n"
+" - COA\n"
+" - 试算表\n"
+" DIOT 报告\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -627,6 +738,8 @@ msgid ""
 "        Enable the SEPA features in the payments of expenses\n"
 "    "
 msgstr ""
+"\n"
+" 在费用开支中启用 SEPA 功能\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa
@@ -638,6 +751,11 @@ msgid ""
 "        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+" 生成 SEPA 规范所推荐的付款订单，多亏 pain.001 消息。支持的 pain 版本（国家/地区）是 pain.001.001.03 （通用）、 pain.001.001.03.ch.02 （瑞士）和 pain.001.003.03（德国）。然后，可将生成的  XML 文件上载至银行。\n"
+"\n"
+" 本模块遵循欧洲支付理事会所颁发的实施指南。\n"
+" 有关 SEPA  标准的详细信息： http://www.iso20022.org/ 和 http://www.europeanpaymentscouncil.eu/\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -645,6 +763,8 @@ msgid ""
 "\n"
 "        Make Call from all modules using the VOIP system."
 msgstr ""
+"\n"
+" 使用 VOIP 系统从所有模块中调用。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_quote_subscription
@@ -662,6 +782,8 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+" 针对开支情况发行的检查打印份数（以文字形式）\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -673,6 +795,11 @@ msgid ""
 "        fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 "    "
 msgstr ""
+"\n"
+" 此模块的目的为执行“分散”字段，例如，字段\n"
+" 这些字段多数情况下为空值。此项操作规避了对表中列数的 PostgreSQL\n"
+" 限制。所有分散\n"
+" 字段的值均以 JSON 映射的形式存储于“连续的”字段中。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_barcode
@@ -681,6 +808,8 @@ msgid ""
 "        This module adds support for barcodes scanning to the delivery packages.\n"
 "    "
 msgstr ""
+"\n"
+" 此模块为送货包裹添加了条码扫描功能。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -727,6 +856,12 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+" This module enables the generation of SEPA Direct Debit (SDD)-compliant XML files (consistent\n"
+" with pain.008.001.02 specification) to send to your bank in order to\n"
+" collect a set of payments.\n"
+"\n"
+" To be elligible for this payment method,"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -754,6 +889,8 @@ msgid ""
 "        This module provides the core of the Odoo Mobile App.\n"
 "        "
 msgstr ""
+"\n"
+" 此模块会为您提供 Odoo 移动应用的核心。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -806,6 +943,9 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+" 开具工时表发票时，可以开具 \n"
+" 链接至 SO 的所有工时表发票，也可以仅开具已验证的工时表发票\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -887,6 +1027,10 @@ msgid ""
 "    PayUmoney payment gateway supports only INR currency.\n"
 "    "
 msgstr ""
+"\n"
+" 印度的 PayuMoney 付款收单方。\n"
+"\n"
+" PayUmoney 支付网关仅支持 INR 货币。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -895,6 +1039,8 @@ msgid ""
 "    Resource management for Project\n"
 "    "
 msgstr ""
+"\n"
+" 项目资源管理\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -912,6 +1058,8 @@ msgid ""
 "* Automatically enables forecasting on projects created from sales orders\n"
 "    "
 msgstr ""
+"\n"
+"* 自动启用对销售订单中创建的项目的预测\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -921,6 +1069,9 @@ msgid ""
 "* Activate grid view for timesheets\n"
 "    "
 msgstr ""
+"\n"
+"* 工时表提交和验证\n"
+"* 激活工时表网格视图\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -1104,6 +1255,9 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+" 卢森堡会计报告\n"
+"=================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_reports
@@ -1279,6 +1433,10 @@ msgid ""
 "-------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+" 支持客户通过您的网站进行计划预约\n"
+"-------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -1344,6 +1502,21 @@ msgid ""
 "\n"
 "Be careful with this module as it has audit implications. Cancelling accounting entries is not authorized in all countries.\n"
 msgstr ""
+"\n"
+" 支持取消会计分录。\n"
+"====================================\n"
+"\n"
+" 此模块会在会计日记账上添加复选框以支持取消日记账分录。\n"
+"\n"
+" 只有在调试模式为活动状态时，此复选框才在会计日记账中可见。\n"
+"\n"
+" 如果将此复选框设置为“真”，其允许用户取消日记账分录。\n"
+"\n"
+" 然后，可修改、转发或删除所去取消的会计分录。 \n"
+"\n"
+" 其也会对发票、银行对账单、支付等进行操作\n"
+"\n"
+" 此模块具有审计意义，因此请注意使用。不是所有国家/地区均已授权取消会计分录。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -1383,6 +1556,11 @@ msgid ""
 "\n"
 "* Cost structure report\n"
 msgstr ""
+"\n"
+" MRP 中的分析会计\n"
+"==========================\n"
+"\n"
+"* 成本结构报告\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -1493,6 +1671,11 @@ msgid ""
 "GST Reporting for Australian Accounting.\n"
 "    "
 msgstr ""
+"\n"
+" 澳大利亚会计报表\n"
+"=============================\n"
+"\n"
+" 澳大利亚会计的 GST 报表。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat_autocomplete
@@ -1504,6 +1687,11 @@ msgid ""
 "    This module requires the python library stdnum to work.\n"
 "    "
 msgstr ""
+"\n"
+" 基于增值税号的自动完成地址esses based on VAT numbers\n"
+"============================================\n"
+"\n"
+" This module requires the python library stdnum to work.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_gengo
@@ -1689,6 +1877,19 @@ msgid ""
 "    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...\n"
 "    "
 msgstr ""
+"\n"
+" 比利时薪资规则。\n"
+"======================\n"
+"\n"
+" * 员工详细信息\n"
+" * 员工合约\n"
+" * 基于护照的合同\n"
+" * 补贴/扣除\n"
+" * 允许配置基本/毛/净薪资\n"
+" * 员工工资单\n"
+" * 每月工资表登记\n"
+" * 与休假管理相整合\n"
+" * 薪资 管理、 社会保险局、须扣税款、子女补贴 ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -1712,6 +1913,27 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+" 已注册的比利时收银机\n"
+"================================\n"
+"\n"
+" 此模块将销售点模块变成已认证的比利时收银机。\n"
+"\n"
+" 详细信息：\n"
+" * http://www.systemedecaisseenregistreuse.be/\n"
+" * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Legal\n"
+"-----\n"
+"**仅在 odoo.com SaaS 平台 \n"
+" 的版本 9.0. 上认证 pos_blackbox_be 源的使用。**\n"
+" 可能会在预置安装请求上and certified version of the pos_blackbox_be may be provided on\n"
+"requests for on-premise installations.\n"
+"No modified version is certified and supported by Odoo SA.\n"
+"\n"
+" n obfuscated and certified version of the pos_blackbox_be may be provided on\n"
+"requests for on-premise installations.\n"
+"No modified version is certified and supported by Odoo SA.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -1737,6 +1959,8 @@ msgid ""
 "Bridge module for rating on website stuff.\n"
 "        "
 msgstr ""
+"\n"
+" 网站物品评级连接模块。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_holidays
@@ -1749,6 +1973,12 @@ msgid ""
 "on leaves. Project and task can be configured company-wide.\n"
 "    "
 msgstr ""
+"\n"
+" 整合工时表中休假情况的连接模块\n"
+"================================================\n"
+"\n"
+" 此模块在员工\n"
+" 休假时允许自动记录工时。可在全公司配置项目和任务。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation_hr_contract
@@ -1758,6 +1988,9 @@ msgid ""
 "====================================================\n"
 "    "
 msgstr ""
+"\n"
+" 在自动操作中添加合同日历的连接\n"
+"====================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_phone_validation
@@ -1768,6 +2001,11 @@ msgid ""
 "\n"
 "This module allows for validate and format phone numbers for leads and contacts."
 msgstr ""
+"\n"
+" CRM 电话号码验证\n"
+"============================\n"
+"\n"
+" 此模块支持验证和格式化线索和联系方式的电话号码。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ve
@@ -1905,6 +2143,11 @@ msgid ""
 "This module allows to enforce users to choose the city of a partner inside a given list instead of a free text field.\n"
 "        "
 msgstr ""
+"\n"
+" 地址中的城市管理\n"
+"============================\n"
+"\n"
+" 此模块允许强制用户在特定的列表（而非自由文本字段）中选择合作伙伴的城市。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -1916,6 +2159,11 @@ msgid ""
 "In your project plan, you can compare your timesheets and your forecast to better schedule your resources.\n"
 "    "
 msgstr ""
+"\n"
+" 比较项目的时间表及预测情况。\n"
+"==================================================\n"
+"\n"
+" 在您的项目计划中，可通过比较时间表和预测情况来更好地计划资源。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_decimal_precision
@@ -1939,6 +2187,13 @@ msgid ""
 "- use the international format for all others\n"
 "        "
 msgstr ""
+"\n"
+" 网站上的联系方式验证\n"
+"====================================\n"
+"\n"
+" 验证联系（电话、手机）方式，并在线索和联系方式中将其规范化：\n"
+"- 为您的公司国家/地区使用国家格式\n"
+"- 其他则使用国际格式\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -1947,6 +2202,8 @@ msgid ""
 "Core mechanisms for the accounting modules. To display the menuitems, install the module account_invoicing.\n"
 "    "
 msgstr ""
+"\n"
+" 会计模块的核心机制。要显示菜单项，请安装模块 account_invoicing。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey
@@ -2001,6 +2258,18 @@ msgid ""
 "when you confirm your sales order it will automatically create a registration for\n"
 "this event.\n"
 msgstr ""
+"\n"
+" 创建销售订单登记记录。\n"
+"========================================\n"
+"\n"
+" 此模块允许您自动创建登记记录，并将创建登记记录与\n"
+" 主要的销售流程连接起来，以此来启用登记记录的开票功能。\n"
+"\n"
+" 它会定义新型服务产品，该产品为您提供选\n"
+" 选择与之相关联的事件类别的机会。当编码\n"
+"  该产品的销售订单时，您将可以选择该类别的现有事件，并且\n"
+" 当确认您的销售订单时，其将为\n"
+" 此事件自动创建登记记录。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -2079,6 +2348,8 @@ msgid ""
 "Design gorgeous mails\n"
 "    "
 msgstr ""
+"\n"
+" 设计美观大方的邮件\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de
@@ -2108,6 +2379,11 @@ msgid ""
 "German accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+" Dieses Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR04.\n"
+"==============================================================================\n"
+"\n"
+" 德国会计客户表及本地化。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter
@@ -2130,6 +2406,8 @@ msgid ""
 "\n"
 "Display orders to invoice in website dashboard.\n"
 msgstr ""
+"\n"
+" 在网站面板中显示订单发票。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum_doc
@@ -2153,6 +2431,12 @@ msgid ""
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 "    "
 msgstr ""
+"\n"
+" EDI 墨西哥本地化\n"
+"========================\n"
+" 允许用户生成墨西哥发票 EDI 文档。\n"
+"\n"
+" 此模块支持创建EDI 文档以及与墨西哥认证提供者 (PACs) 的交流，以签署/将其取消。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -2166,6 +2450,14 @@ msgid ""
 "that would need such functionality.\n"
 "\n"
 msgstr ""
+"\n"
+" ESC/POS 硬件驱动程序\n"
+"=======================\n"
+"\n"
+" 此模块允许 Odoo 使用 ESC/POS 兼容打印机进行打印并\n"
+" 在销售点以及\n"
+" 将需要此功能的其他模块中打开 ESC/POS 控制的现金箱。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_service
@@ -2341,6 +2633,14 @@ msgid ""
 "with the street name, the house number, and room number.\n"
 "        "
 msgstr ""
+"\n"
+" 扩展的地址管理\n"
+"=============================\n"
+"\n"
+" 此模块拥有管理e holds all extra fields one may need to manage accurately addresses.\n"
+"\n"
+"For example, in legal reports, some countries need to split the street into several fields,\n"
+"with the street name, the house number, and room number.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_blackbox_be
@@ -2356,6 +2656,16 @@ msgid ""
 "Belgian cash register. It allows the communication on with a certified Fiscal\n"
 "Data Module but will not modify the behaviour of the Point of Sale.\n"
 msgstr ""
+"\n"
+" 财政数据模块硬件驱动器\n"
+"==================================\n"
+"\n"
+" 此模块 允许销售点客户端与\n"
+" 相连的比利时财政数据模块进行交流。\n"
+"\n"
+" 此模块 **不会** 将 Odoo 销售点模块变为已认证的\n"
+" 比利时收银机。其允许有关已认证财政\n"
+" 数据模块方面的交流，但不能修改销售点的特性。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -2416,6 +2726,17 @@ msgid ""
 "\n"
 "Both goals and badges are flexibles and can be adapted to a large range of modules and actions. When installed, this module creates easy goals to help new users to discover Odoo and configure their user profile.\n"
 msgstr ""
+"\n"
+" 游戏化过程\n"
+"====================\n"
+" 游戏化模块会提供评估和激励 Odoo 用户的方法。\n"
+"\n"
+" 可使用要达到的目标和数值目标评估用户。\n"
+" 使用**挑战**分配**目标**以通过时间评估团队成员，并互相比较。\n"
+"\n"
+" 对于非数值成绩，可授予用户 **徽章**。对于杰出成绩的简单“感谢”而言，徽章是一种简单的方式，用以表达对用户出色工作的感激。\n"
+"\n"
+" 目标和徽章都是灵活的，并且可适用于大量的模块和操作。安装时，此模块会创建简单的目标以帮助新用户探索 Odoo 并配置其用户配置文件。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -2481,6 +2802,13 @@ msgid ""
 "**Configure your API keys from General Setting**\n"
 "    "
 msgstr ""
+"\n"
+" Googleoogle Firebase 消息整合\n"
+"=====================================\n"
+" 此模块支持为\n"
+" 聊天中的ows to send FCM push notification on registered mobilesfor every message in chatter.\n"
+"\n"
+"**Configure your API keys from General Setting**\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_proxy
@@ -2527,6 +2855,18 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+" 帮助中心 - 服务单管理应用\n"
+"================================\n"
+"\n"
+" 功能：\n"
+"\n"
+" - 通过不同阶段处理服务单以解决问题。\n"
+" - 添加属性、类型、描述和标签定义您的服务单。\n"
+" - 使用聊天程序交流其他信息，并在服务单上回应同事。\n"
+" - 使用已调整的面板和容易操作的看板视图处理您的服务单。\n"
+" -  通过报告菜单中的数据透视视图对服务单进行深入的分析。\n"
+" -"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -2563,6 +2903,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Including the following data in the Accounting Standards for Business Enterprises\n"
+"包含企业会计准则以下数据\n"
+"\n"
+"* Chart of Accounts\n"
+"* 科目表模板\n"
+"\n"
+"* Account templates\n"
+"* 科目模板\n"
+"\n"
+"* Tax templates\n"
+"* 税金模板\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -2609,6 +2962,16 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By OpenERP.\n"
 "  "
 msgstr ""
+"\n"
+" 印度会计：科目表Indian Accounting: Chart of Account.\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"Schedule VI chart of account for indian accounting.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
+"31st March, 2011."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -2630,6 +2993,21 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"\n"
+" 印度工资表薪资规则。\n"
+"============================\n"
+"\n"
+" - 印度本地化人事薪资配置\n"
+" - 所有印度工资表主要贡献计算规则。\n"
+" * 新工资单报告\n"
+" * 员工合同\n"
+" * 允许配置基本工资 / 总工资 / 净工资\n"
+" * 员工工资单\n"
+" *补贴 / 扣除\n"
+" * 整合休假管理\n"
+" * 医疗补贴、差旅补贴、育儿补贴 ...\n"
+" - Payroll Advice and Report\n"
+" - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_github
@@ -2641,6 +3019,11 @@ msgid ""
 "This Module integrates all post commits, pull requests and activity of github issue to channels in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+" 将 Github 整合至 Odoo 讨论。\n"
+"======================================\n"
+"\n"
+" 此模块会将所有的发布提交、pull 请求和 github 活动问题整合至 Odoo 的频道中。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
@@ -2652,6 +3035,12 @@ msgid ""
 "This module allows you to integrate google documents to any of your Odoo record quickly and easily using OAuth 2.0 for Installed Applications,\n"
 "You can configure your google Authorization Code from Settings > Configuration > General Settings by clicking on \"Generate Google Authorization Code\"\n"
 msgstr ""
+"\n"
+" 将谷歌文档整合至 Odoo 记录中。 \n"
+"============================================\n"
+"\n"
+" 此模块允许您使用已安装的 OAuth 2.0 应用程序快速且轻松地将谷歌文档整合至任何 Odoo 记录中，\n"
+" 您可以通过单击“生成谷歌授权码”从设置 > 配置 > 常规设置中配置您的谷歌授权码\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_invoicing
@@ -2699,6 +3088,15 @@ msgid ""
 "    - Assign lead to salesteams: define your own filters and sort automatically your leads by saleteam.\n"
 "    - Assign lead to salesmen: define filter by saleman and dispatch automatically your leads to the right saleman.\n"
 msgstr ""
+"\n"
+" 线索评分\n"
+"============\n"
+"\n"
+" 此模块允许您 ...\n"
+" - 跟踪网站上的特定页面视图。\n"
+" - 按线索分配分数：自动对线索进行排序，并优先考虑比较重要的线索。\n"
+" - 将线索分配至销售团队：定义自己的过滤器，并按照销售团队自动对线索进行排序。 \n"
+" - 将线索分配至销售人员：按照销售人员定义过滤器，并将线索自动发送给相应的销售人员。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_project
@@ -2710,6 +3108,11 @@ msgid ""
 "Link module to map leads to tasks\n"
 "        "
 msgstr ""
+"\n"
+" 任务线索\n"
+"=============\n"
+"\n"
+" 链接模块以将线索映射至任务\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -2742,6 +3145,15 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+" 支持在线客服\n"
+"==========================\n"
+"\n"
+"Allow to drop instant messaging widgets on any web page that will communicate\n"
+"with the current server and dispatch visitors request amongst several live\n"
+"chat operators.\n"
+"Help your customers with this chat, and analyse their feedback.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -2755,6 +3167,14 @@ msgid ""
 "* Equipments related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+" MRP 中的维护\n"
+"==================\n"
+"* 预防维护和修复维护 \n"
+"* 定义不同的维护请求阶段\n"
+"* 计划维护请求（也称定期预防维护）\n"
+"* 相关的工作中心设备\n"
+"* MTBF、 MTTR， ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_3way_match
@@ -2781,6 +3201,26 @@ msgid ""
 "    - Exception (Received and invoiced quantities differ)\n"
 "    "
 msgstr ""
+"\n"
+" 管理供应商账单上的 3 方匹配\n"
+"=====================================\n"
+"\n"
+" 在制造业中，\n"
+" 客户收到订购前通常都会先收到供应商账单，但他们不想在\n"
+" 发货前支付账单。\n"
+"\n"
+" 这种情况的解决方案是在收到供应商账单时\n"
+"（根据订购的数量）创建自己的供应商账单，但仅在已接收的\n"
+" 的数量（在采购订单行）与记录的供应商账单匹配时，才支付发票费用。\n"
+"\n"
+" 此模块引入了“发布支付”机制，它会标记每个供应商\n"
+" 账单（无论是否可支付）。\n"
+"\n"
+" 每个供应商账单都将收到以下三种状态中的一种：\n"
+"\n"
+" - 是（该订单可支付）\n"
+" - 否 （该订单不可支付，还未发货）\n"
+" - 例外情况（已收到的数量与发票数量不同）\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -2799,6 +3239,17 @@ msgid ""
 "internal transfer document is needed.\n"
 "\n"
 msgstr ""
+"\n"
+" 管理直销运货单\n"
+"===========================\n"
+"\n"
+" 此模块增加了预先配置直销送货操作类型\n"
+" 和采购路线，其允许您配置直销\n"
+"Shippin和g products and orders.\n"
+"\n"
+"When drop shipping is used the goods are directly transferred\n"
+"from vendors to customers (direct delivery) without\n"
+"going through the retailer's warehouse. shipping orders"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense
@@ -2858,6 +3309,11 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a leave request is accepted by setting up a type of meeting in Leave Type.\n"
 msgstr ""
+"\n"
+" 管理休假申请和假期分配\n"
+"=====================================\n"
+"\n"
+" 此应用程序会控制您公司的休假安排。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_management
@@ -2896,6 +3352,38 @@ msgid ""
 "* Monthly Turnover (Graph)\n"
 "    "
 msgstr ""
+"\n"
+" 管理销售报价和订单\n"
+"==================================\n"
+"\n"
+" 此应用程序允许您通过跟踪所有的销售订单和历史记录有效且高效地管理您的销售目标。\n"
+"\n"
+" 它会处理整个销售工作流：\n"
+"\n"
+"* **报价* -> **销售订单** -> **发票**\n"
+"\n"
+" 首选项（仅与已安装的仓库管理共同使用）\n"
+"------------------------------------------------------\n"
+"\n"
+" 如果也安装了仓库管理，则可以处理以下首选项： \n"
+"\n"
+"* 送货：选择立即交货或部分交货\n"
+"* 开具发票：选择发票的支付方式\n"
+"* 国际贸易术语解释通则：国际贸易术语\n"
+"\n"
+" 您可以选择灵活的开票方式：\n"
+"\n"
+"* *按需开票*：当需要时从销售订单中手动创建发票\n"
+"* *按交货顺序开票*：从拣货（交货）中生成发票 \n"
+"* *交货前*：在发货前创建草拟发票，且必须支付\n"
+"\n"
+" 通过此模块，您可以使用\n"
+" 类别、小计或分页符定制销售订单和发票报告。\n"
+"\n"
+" 销售经理面板将包含\n"
+"------------------------------------------------\n"
+"* 我的报价\n"
+"* 月营业额（图表）\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock
@@ -2946,6 +3434,11 @@ msgid ""
 "Bridge module adding UX requirements to ease mass mailing of event attendees.\n"
 "        "
 msgstr ""
+"\n"
+" 群发邮件活动参与者\n"
+"=========================\n"
+"\n"
+"Bridge module adding UX requirements to ease mass mailing of event attendees.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_event_track
@@ -2957,6 +3450,11 @@ msgid ""
 "Bridge module adding UX requirements to ease mass mailing of event track speakers.\n"
 "        "
 msgstr ""
+"\n"
+"Mass mail event track speakers\n"
+"==============================\n"
+"\n"
+"Bridge module adding UX requirements to ease mass mailing of event track speakers.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_mps
@@ -2976,6 +3474,19 @@ msgid ""
 "safety stock, min/max to supply and to manually override the amount you will\n"
 "procure.\n"
 msgstr ""
+"\n"
+" 主生产计划\n"
+"==========================\n"
+"\n"
+" 有时，您需要为\n"
+" 将在稍后创建的制造订单的组件创建采购订单。或为生产订单创建采购订单，\n"
+" 其中，您只能在稍后获得销售订单。解决方案为预计\n"
+" 您的销售预测，并且根据该预测，您将已创建一部分生产\n"
+" 订单或采购订单。\n"
+"\n"
+" 您需要选择希望添加到报告中的产品。您可以选择\n"
+" 报告的周期：日、周、月， ...也可定义\n"
+" 安全库存量，供应以及手动覆盖将\\ n 生产的产品数量的最小/最大库存。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -3000,6 +3511,15 @@ msgid ""
 ".. _SAT: http://www.sat.gob.mx/\n"
 "    "
 msgstr ""
+"\n"
+"Minimal accounting configuration for Mexico.\n"
+"============================================\n"
+"\n"
+"This Chart of account is a minimal proposal to be able to use OoB the\n"
+"accounting feature of Odoo.\n"
+"\n"
+"This doesn't pretend be all the localization for MX it is just the minimal\n"
+"data required to start"
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
@@ -3013,6 +3533,13 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+" 定义分析会计对象的模块。\n"
+"===============================================\n"
+"\n"
+" 在 Odoo 中，虽然将分析账户链接至总账，但是是\n"
+" 完全独立处理的。因此，您可以输入\n"
+" 在财务总账中无相应操作的各种不同的分析操作。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -3042,6 +3569,9 @@ msgid ""
 "Module holding mail improvements for website.\n"
 "It is responsible of comments moderation for published documents (forum, slides, blog, ...)\n"
 msgstr ""
+"\n"
+" 包含网站邮件改进的模块。\n"
+" 其负责对已发布文档cuments (forum, slides, blog, ...)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports_followup
@@ -3062,6 +3592,20 @@ msgid ""
 "of recall defined. You can define different policies for different companies. \n"
 "\n"
 msgstr ""
+"\n"
+" 使用多级别催款自动标记未支付发票。\n"
+"=========================================================================\n"
+"\n"
+" 您可以通过菜单定义您的多级别催款：\n"
+"---------------------------------------------------------------\n"
+" 配置 / 跟踪 / 跟踪级别\n"
+" \n"
+" 定义后，每天只需单击菜单即可自动打印催款：\n"
+"------------------------------------------------------------------------------------------------------\n"
+" Payment Follow-Up / Send Email and letters\n"
+"\n"
+"It will generate a PDF / send emails / set manual actions according to the the different levels \n"
+"of recall defined."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -3073,6 +3617,11 @@ msgid ""
 "Improve the import of bank statement feature to support the SEPA recommanded Cash Management format (CAMT.053).\n"
 "    "
 msgstr ""
+"\n"
+" 导入 CAMT 银行对账单的模块。\n"
+"======================================\n"
+"\n"
+" 改进导入银行对账单功能，以支持建议的 SEPA 现金管理格式 (CAMT.053)。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -3170,6 +3719,17 @@ msgid ""
 "Because of the CSV format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+" 导入 CSV 银行对账单的模块。\n"
+"======================================\n"
+"\n"
+" 此模块允许您在 Odoo 中导入 CSV 文件：以人类可读的格式对其进行解析，并将其存储于\n"
+" 会计\\银行和现金\\银行对账单中。\n"
+"\n"
+" 重要说明\n"
+"---------------------------------------------\n"
+" 由于 CSV 格式限制，我们无法确保不会重复导入相同的交易，或处理多种货币。\n"
+" 如果可能的话，您应使用更合适的文件格式，如 OFX。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -3209,6 +3769,17 @@ msgid ""
 "Because of the QIF format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+" 导入 QIF 银行对账单的模块。\n"
+"======================================\n"
+"\n"
+" 此模块允许您在 Odoo 中导入机器可读的 QIF 文件：以人类可读的格式对其进行解析，并将其存储于\n"
+" 会计\\银行和现金\\银行对账单中。\n"
+"\n"
+" 重要说明\n"
+"---------------------------------------------\n"
+" 由于 QIF 格式限制，我们无法确保不会重复导入相同的交易，或处理多种货币。\n"
+" 如果可能的话，您应使用更合适的文件格式，如 OFX。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_onsip
@@ -3217,6 +3788,8 @@ msgid ""
 "Module with the required configuration to connect to OnSIP.\n"
 "    "
 msgstr ""
+"\n"
+" 连接到 OnSIP 的具有所需配置的模块。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
@@ -3232,6 +3805,15 @@ msgid ""
 "    - sets up New Zealand taxes.\n"
 "    "
 msgstr ""
+"\n"
+" 新西兰会计模块\n"
+"=============================\n"
+"\n"
+" 新西兰会计基本图表和本地化。\n"
+"\n"
+" 另外：\n"
+" - 激活大量区域货币。\n"
+" - sets up New Zealand taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -3257,6 +3839,26 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+" 为 Odoo 导入的新可扩展文件\n"
+"======================================\n"
+"\n"
+" 重新引入 Odoo 的文件导入系统：\n"
+"\n"
+"* 服务器端，之前的系统将大多数逻辑强加到\n"
+" 客户端，此操作加倍了工作量（客户端之间），使没有客户端（直接的 RPC或\n"
+" 其他形式的自动化）的\n"
+" 导入系统更难使用，并且更难以（像通过\n"
+"  3 种以上不同项目进行知识传播那样）收集有关 \n"
+" 导入/导出系统的知识。\n"
+"\n"
+"* 因此，通过更多的可扩展方式，用户和合作伙伴可以创建其\n"
+" 自己的前端，以便从其他的文件格式中进行导入（例如，OpenDocument\n"
+" 文件），这使得其工作流程或\n"
+" 其数据生产源中的处理变得更简单。\n"
+"\n"
+"* 因此，在模块中，不\n"
+" 需要或不想要在线导入的 Odoo 管理员和用户可避免用户使用在线导入。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -3284,6 +3886,10 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+" Odoo 联系人表单\n"
+"=================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_customer
@@ -3319,6 +3925,10 @@ msgid ""
 "==================\n"
 "Adds stock limitations on products options.\n"
 msgstr ""
+"\n"
+" Odoo 电子商务\n"
+"==================\n"
+" 添加产品选项的库存限制。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -3330,6 +3940,11 @@ msgid ""
 "This module modifies the web addon to provide Enterprise design and responsiveness.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo 企业 Web 客户端\n"
+"===========================\n"
+"\n"
+" 此模块会修改 web 插件以提供企业设计和相应。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_editor
@@ -3357,6 +3972,10 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+" Odoo 邮件群组：邮件列表归档\n"
+"==========================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -3425,6 +4044,11 @@ msgid ""
 "It also will include the feedback tool for the livechat, and web pages to display your channel and its ratings on the website.\n"
 "        "
 msgstr ""
+"\n"
+" Odoo 网站在线聊天\n"
+"========================\n"
+" 对于Odoo CMS 的网站建设，此模块包括您网站上的聊天按钮，并且允许您的访客与您的合作者聊天。\n"
+" 其也包含了对聊天和网页的反馈工具，来显示你的频道和在网页上的评价。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_settings_dashboard
@@ -3504,6 +4128,12 @@ msgid ""
 "(N+1, N+2, direct subordinates)\n"
 "        "
 msgstr ""
+"\n"
+" Org 人力资源图表部件\n"
+"=======================\n"
+"\n"
+" 此模块会使用组织架构图扩展员工表单。\n"
+"（N+1、 N+2、直接下属）\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -3520,6 +4150,17 @@ msgid ""
 "* Manage your Events and Registrations\n"
 "* Use emails to automatically confirm and send acknowledgments for any event registration\n"
 msgstr ""
+"\n"
+" 活动的组织和管理。\n"
+"======================================\n"
+"\n"
+" 活动模块允许您有效地组织活动及所有相关任务：规划、登记跟踪、\n"
+" 出勤等。\n"
+"\n"
+" 关键功能\n"
+"------------\n"
+"* 管理您的活动和登记\n"
+"* 使用电子邮件自动确认，并向所有活动注册用户发送致谢信\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr
@@ -3558,6 +4199,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+" 巴拿马科目表和税务本地化。\n"
+"\n"
+" 计划 contable panameño e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"Con la Colaboración de\n"
+"- AHMNET CORP http://www.ahmnet.com\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
@@ -3592,6 +4241,22 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
+"\n"
+" 定期的员工评价\n"
+"==============================\n"
+"\n"
+" 使用此应用程序，您可以通过对员工绩效进行定期的评价来维护激励流程。人力资源的定期评估对员工和组织机构均有益。\n"
+"\n"
+" 可为每位员工指定一个评价方案。此方案会定义管理定期人员评价的频率和方式。\n"
+"\n"
+" 关键功能\n"
+"------------\n"
+"* 能够创建员工评价。\n"
+"* 评价可由员工经理创建，也可根据员工表单中所定义的方案自动创建。\n"
+"* 根据可创建各种调查的方案完成评价。由员工层级中的特定级别员工来完成每项调查。由经理完成最终的审查和评价。\n"
+"*经理、同事、合作者及员工自己均会收到做定期评价的邮件。\n"
+"* 每份评价表单均有员工、同事、合作者填写，可以 PDF 格式进行查看。\n"
+"* 根据员工评价自动创建会议请求。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -3627,6 +4292,15 @@ msgid ""
 "\n"
 "This module applies this feature to Leads and Contacts."
 msgstr ""
+"\n"
+" 电话号码验证\n"
+"========================\n"
+"\n"
+" 此模块会添加\n"
+" 根据目标国家/地区验证及格式化电话号码的功能。。其也会处理国内和国际\n"
+" 格式化问题。\n"
+"\n"
+" 此模块会将此功能应用于线索和联系人。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -3660,6 +4334,17 @@ msgid ""
 "regular Odoo interface anymore.\n"
 "\n"
 msgstr ""
+"\n"
+"PosBox Homepage\n"
+"===============\n"
+"\n"
+"This module overrides Odoo web interface to display a simple\n"
+"Homepage that explains what's the posbox and show the status,\n"
+"and where to find documentation.\n"
+"\n"
+"If you activate this module, you won't be able to access the \n"
+"regular Odoo interface anymore.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_upgrade
@@ -3673,6 +4358,14 @@ msgid ""
 "and should not be installed on regular Odoo servers.\n"
 "\n"
 msgstr ""
+"\n"
+" PosBox 软件升级程序\n"
+"========================\n"
+"\n"
+" 此模块支持远程升级 PosBox 软件\n"
+" 新版本。此模块专门针对于 PosBox 安装和环境，\n"
+" 不应该将其安装在常规的 Odoo 服务器上。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
@@ -3685,6 +4378,13 @@ msgid ""
 "* Different approval flows possible depending on the type of change order\n"
 "\n"
 msgstr ""
+"\n"
+" 产品寿命管理\n"
+"=======================\n"
+"\n"
+"* 物料清单和路线的版本管理\n"
+"* 不同的审批流程可能取决于不同的更改订单类型\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_extended
@@ -3705,6 +4405,9 @@ msgid ""
 "Proposes advanced routing options not available in web or base to keep\n"
 "base modules simple.\n"
 msgstr ""
+"\n"
+" 无法在 web 或 基础模块中使用建议的提议路线选项以简化\n"
+" 基础模块。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -3738,6 +4441,19 @@ msgid ""
 "\n"
 "  "
 msgstr ""
+"\n"
+" 在 eBay 上发布您的产品\n"
+"=============================\n"
+"\n"
+" eBay 集成程序会为您提供在 eBay 上管理 Odoo 产品的机会。\n"
+"\n"
+" 关键功能\n"
+"------------\n"
+"* 在 eBay 上发布产品\n"
+"* 在 eBay 上修订、重新提交、终止项目\n"
+"* 集成库存移动\n"
+"* 自动创建销售订单和发票\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -3753,6 +4469,16 @@ msgid ""
 "* Define your stages for the quality alerts\n"
 "\n"
 msgstr ""
+"\n"
+" 质量控制\n"
+"===============\n"
+"\n"
+"* 定义将在拣货、\n"
+" 制造订单或工作订单 (quality_mrp) 中生成质量检查的质量点\n"
+"* 可独立创建质量警报，也可创建与质量检查有关的警报\n"
+"* 可以添加具有最小/最大误差的质量检查测试\n"
+"* 定义质量警报阶段\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -3764,6 +4490,12 @@ msgid ""
 "Create some products for which you can re-invoice the costs.\n"
 "This module allow to reinvoice employee expense, by setting the SO directly on the expense.\n"
 msgstr ""
+"\n"
+" 重新开具员工费用发票\n"
+"==========================\n"
+"\n"
+" 创建一些可为其重新开具费用发票的产品。\n"
+" 此模块支持通过在费用上直接设置 SO 而重新开具员工费用发票。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
@@ -3797,6 +4529,12 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Retrieve incoming email on POP/IMAP servers.\n"
+"============================================\n"
+"\n"
+"Enter the parameters of your POP/IMAP account(s), and any incoming emails on\n"
+"these accounts will be automatically downloaded into your Odoo system."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -3809,6 +4547,13 @@ msgid ""
 "2) Analyse the subscriptions modifications by salesman and compute their value.\n"
 "    "
 msgstr ""
+"\n"
+" 销售订阅面板\n"
+"===========================\n"
+" 其会将面板添加至 :\n"
+"1) Analyse the recurrent revenue and other metrics for subscriptions\n"
+"2) Analyse the subscriptions modifications by salesman and compute their value.\n"
+"nSale"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_screen
@@ -3821,6 +4566,13 @@ msgid ""
 "installed screen. This module then displays this HTML using a web\n"
 "browser.\n"
 msgstr ""
+"\n"
+" 屏幕驱动程序\n"
+"=============\n"
+"\n"
+" 此模块允许 POS 客户端发送所呈现的 HTML 以远程\n"
+" 安装屏幕。之后，此模块会使用 web\n"
+" 游览器显示此 HTML。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -3844,6 +4596,14 @@ msgid ""
 "See: https://www.bpost.be/portal/goHome\n"
 "    "
 msgstr ""
+"\n"
+" 通过比利时邮政发货并进行在线跟踪\n"
+"=======================================================\n"
+"\n"
+" 位于比利时的公司可使用\n"
+" 本地邮政公司发货。\n"
+"\n"
+" 请参阅：https://www.bpost.be/portal/goHome\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -3964,6 +4724,18 @@ msgid ""
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 "    * Defines tax reports mod 111, 115 and 303\n"
 msgstr ""
+"\n"
+" 西班牙科目表 (PGCE 2008)。\n"
+"========================================\n"
+"\n"
+" * 定义以下科目表模板：\n"
+" *西班牙 2008 常规科目表\n"
+" * 西班牙 2008 中小型公司常规科目表\n"
+" * 西班牙 2008 协会科目表\n"
+" * 定义销售和采购增值税模板\n"
+" * 定义税务模板\n"
+" * 定义西班牙财政立法的财政状况\n"
+" * 定义税务报告模板 111、115 和 303\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -3980,6 +4752,17 @@ msgid ""
 "\n"
 "Note: Only the admin user is allowed to make those customizations.\n"
 msgstr ""
+"\n"
+" Studio - 自定义 Odoo\n"
+"=======================\n"
+"\n"
+" 此插件允许用户以\n"
+" 简单的图形方式自定义大多数用户界面元素。其具有两个主要功能：\n"
+"\n"
+"* 创建新的应用程序（添加模块、顶级菜单项和默认操作）\n"
+"* 自定义现有应用程序（编辑菜单、操作、视图、翻译， ...）\n"
+"\n"
+" 请注意：仅允许管理员用户执行这些自定义设置。 \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_studio
@@ -3992,6 +4775,13 @@ msgid ""
 "model. Furthermore, you can create a new website form or edit an existing one.\n"
 "\n"
 msgstr ""
+"\n"
+" Studio - 自定义 Odoo\n"
+"=======================\n"
+"\n"
+" 词插件允许用户显示所有链接至特定\n"
+" 模型的网站表单。此外，您可以创建新的网站表单或编辑现有的网站表单。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote_subscription
@@ -4003,6 +4793,11 @@ msgid ""
 "Categorize the lines per subscription template when an online quote contains subscription products.\n"
 "    "
 msgstr ""
+"\n"
+" 订阅集成在线报价\n"
+"-------------------------------------------\n"
+"\n"
+" 当在线报价中包含订阅产品时，对每个订阅模板行进行分类。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -4039,6 +4834,16 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.\n"
 "    "
 msgstr ""
+"\n"
+" 瑞士本地化\n"
+"==================\n"
+" 此模块会定义瑞士（瑞士 PME/KMU 2015）科目表、税收，并在打印发票或通过邮件进行发送时启生成 ISR 。\n"
+"\n"
+" 如果指定了其所需要的信息，则将会生成 ISR：\n"
+" - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
+" - Your invoice must have been set assigned a bank account to receive its payment\n"
+" (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+" -"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_yodlee
@@ -4064,6 +4869,11 @@ msgid ""
 "If you use the external timesheet application, this module alows you to synchronize timesheet entries between Odoo and the application.\n"
 "    "
 msgstr ""
+"\n"
+" 与外部工时表应用程序的工时表条目同步。\n"
+"=============================================================================\n"
+"\n"
+" 如果使用外部工时表应用程序，此模块允许您在 Odoo 和应用程序之间同步工时表条目。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_voucher
@@ -4087,6 +4897,23 @@ msgid ""
 "* Voucher Payment [Customer & Vendors]\n"
 "    "
 msgstr ""
+"\n"
+" 待办事项\n"
+"\n"
+" 旧描述：\n"
+"  按会计凭单及收据开具发票和付款\n"
+"=====================================================\n"
+" Odoo 中的特定且容易操作的开票系统允许您即使在不是会计师的情况下也可以跟踪您的财务状况。它会为您提供容易操作的方法来跟踪您的供应商和客户。 \n"
+"\n"
+" 如果您使用（外部）账户来管理账面并且还希望跟踪付款，则您可以使用此简化的会计方式。 \n"
+"\n"
+" 开票系统包括收据和凭单（一种跟踪销售和采购的简单方法）。它还会为您提供无需编码完整账户摘要的简单的登记付款方式。\n"
+"\n"
+" 此模块会管理：\n"
+"\n"
+"* 凭单条目\n"
+"* 凭单收据 [销售和采购]\n"
+"* 凭单支付[客户和供应商]\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -4104,6 +4931,18 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+" 宗旨为拥有更完整的模块以管理所有的产品修复。\n"
+"====================================================================\n"
+"\n"
+" 此模块涵盖\n"
+"------------------------------------------------------\n"
+" * Add/remove products in the reparation\n"
+" * Impact for stocks\n"
+" * Invoicing (products and/or services)\n"
+" * Warranty concept\n"
+" * Repair quotation report\n"
+" * Notes for the technician and for the final customer\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -4123,6 +4962,11 @@ msgid ""
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 "    "
 msgstr ""
+"\n"
+" 管理午餐的基础模块。\n"
+"================================\n"
+"\n"
+" 许多公司都会从常规供应商处订购"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -4131,6 +4975,9 @@ msgid ""
 "The kernel of Odoo, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
+"\n"
+" 所有安装均需要此 Odoo 的核心。\n"
+"===================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -4150,6 +4997,9 @@ msgid ""
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+" 此模块可能会添加在谷歌电子表格中实时显示 Odoo 数据的功能。\n"
+"=================================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -4159,6 +5009,9 @@ msgid ""
 "time it takes to load a POS session with a lot of products.\n"
 "    "
 msgstr ""
+"\n"
+" 这将创建每 POS 配置的产品高速缓存。这将大大减少\n"
+" 加载含有许多产品的 POS 会话所需的时间。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -4211,6 +5064,25 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理产品和价格表的基础模块。\n"
+"========================================================================\n"
+"\n"
+" 产品支持变量、不同的定价方式、供应商信息、=========\n"
+" 按库存/订单生产、不同的计量单位、包装和属性。\n"
+"\n"
+" 价格表支持：\n"
+"-------------------\n"
+" * 多级别折扣（按照产品、类别、数量）\n"
+" * 根据不同的条件计算价格：\n"
+" * 其他价格表\n"
+" * 成本价\n"
+" * 标价\n"
+" * 供应商价格\n"
+"\n"
+" 价格表优惠（按照产品和/或合作伙伴）。\n"
+"\n"
+"Print product labels with barcode.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -4245,6 +5117,34 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理比利时会计科目表的基础模块。\n"
+"==============================================================================\n"
+"\n"
+" 安装此模块后，将会启动会计配置向导。\n"
+" *我们具有有助于生成科目表的账户模板。\n"
+" * 在此特定向导中，系统将要求您传递公司名称、\n"
+" 所遵循的图表模板、所生成的数位数量、您的\n"
+" 账户及银行账户代码、创建日记账的货币。\n"
+"\n"
+" 因此，生成纯图表模板副本。\n"
+"\n"
+" 此模块提供的向导：\n"
+"--------------------------------\n"
+" * 合作伙伴内部增值税：应征合作伙伴及其相关增值税和开票\n"
+" 金额。准备 XML 文件格式。\n"
+" \n"
+" ** 访问路径：** 开具发票/报告/法定报告/比利时对账单/合作伙伴内部增值税\n"
+" * 定期增值税声明：准备\n"
+" 用户当前登录的主要公司的 XML 增值税声明文件。\n"
+" \n"
+" ** 访问路径：** 开具发票/报告/法定报告/比利时对账单/定期增值税声明\n"
+" * 应缴纳增值税的客户年度清单：根据\n"
+" 会计年度准备用户当前登录的主要公司的 XML 增值税\n"
+" 声明文件。\n"
+" \n"
+" ** 访问路径：** 开具发票/报告/法定报告/比利时对账单/应缴纳增值税的客户年度清单\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do_reports
@@ -4277,6 +5177,11 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"This is the base module to manage the accounting chart for Ecuador in Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Accounting chart and localization for Ecuador.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -4397,6 +5302,11 @@ msgid ""
 "Install some generic chart of accounts.\n"
 "    "
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理通用会计科目表的基础模块。\n"
+"==============================================================================\n"
+"\n"
+" 安装一些通用科目表。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -4409,6 +5319,13 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"\n"
+" 这是使用以下方式运行英国中小企业 Odoo 财务状况所需的最新英国 Odoo 本地化：\n"
+"=================================================================================================\n"
+" - CT600-准备科目表\n"
+" - 增值税 100-准备税收结构\n"
+" - InfoLogic 英国国家/地区列出\n"
+" - 几项其他调整"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -4421,6 +5338,12 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+" 这是管理科目表、增值税结构、财务头寸和税收映射的模块。\n"
+" 它也会在 Odoo 中添加罗马尼亚登记号。\n"
+"================================================================================================================\n"
+"\n"
+" 罗马尼亚科目表和本地化。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -4453,6 +5376,25 @@ msgid ""
 "position.\n"
 "    "
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理加拿大科目表的模块。\n"
+"===========================================================================================\n"
+"\n"
+" 加拿大科目表和本地化。\n"
+"\n"
+" 财务头寸\n"
+"----------------\n"
+"\n"
+" 考虑到适用的税收，指的是进行交货的省份。When considering taxes to be applied, it is the province where the delivery occurs that matters.\n"
+"Therefore we decided to implement the most common case in the fiscal positions: delivery is the\n"
+"responsibility of the vendor and done at the customer location.\n"
+"\n"
+"Some examples:\n"
+"\n"
+"1) You have a customer from another province and you deliver to his location.\n"
+"On the customer, set the fiscal position to his province.\n"
+"\n"
+"2) You have a customer from another province."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -4469,6 +5411,16 @@ msgid ""
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理波兰科目表和税收的模块。\n"
+"==================================================================================\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\n"
+"rejestrów podatkowych.Moduł ustawia też konta do kupna i sprzedaży towarów\n"
+"zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+"\n"
+"Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -4495,6 +5447,21 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理法国科目表的模块。\n"
+"========================================================================\n"
+"\n"
+" 此模块适用于法国大陆的所有公司。其不适用于\n"
+" 位于 DOM-TOM (Guadeloupe, Martinique, Guyane, Réunion, Mayotte) 的公司。\n"
+"\n"
+" 此本地化模块会为采购创建类型为‘含税’的增值税税收。\n"
+"（使用模块‘hr_expense’时，尤其需要此模块）。请注意，此\n"
+" 模块所提供的财政头寸不会管理这些\n"
+" ‘含税’增值税（因为很难在财政头寸中既管理‘排除税’，又管理‘含税’\n"
+" 场景）。\n"
+"\n"
+" 此模块不适合处理法国大陆\n"
+" 公司 DOMs."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -4510,6 +5477,16 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理越南科目表的模块。.\n"
+"=========================================================================\n"
+"\n"
+" 此模块适用于基于越南会计标准 (VAS)\n"
+"，且科目表位于 圆形 No. 200/2014/TT-BTC 中的公司\n"
+"\n"
+"**贷方：**\n"
+" - 常规解决方案。\n"
+" - Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -4522,6 +5499,13 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+" 这是在 Odoo 中管理越南会计报表的模块。\n"
+"=========================================================================\n"
+"\n"
+" 此模块适用于基于越南会计标准 (VAS) 的公司。\n"
+"\n"
+"**贷方：** 常规解决方案。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad_project
@@ -4551,6 +5535,16 @@ msgid ""
 "modules.\n"
 "    "
 msgstr ""
+"\n"
+" 此模块会在 CRM 的一个或多个商机案例中添加快捷方式。\n"
+"===========================================================================\n"
+"\n"
+" 此模块允许您生成基于所选案例的销售订单。\n"
+" 如果打开了不同的案例（列表），其会根据案例生成销售订单。\n"
+" 然后，关闭此案例，并将其链接至生成的销售订单。\n"
+"\n"
+" 如果您已安装了crm\n"
+" 模块，我们建议您安装此模块。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -4565,6 +5559,9 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
 msgstr ""
+"\n"
+" 此模块会为完全集成的客户门户添加所需的基础代码。\n"
+" 其包含基础控制器级别和基础模板"
 
 #. module: base
 #: model:ir.module.module,description:base.module_barcodes
@@ -4590,6 +5587,21 @@ msgid ""
 "- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
 "- Support for encodings EAN-13, EAN-8 and UPC-A\n"
 msgstr ""
+"\n"
+" 此模块会添加条形码扫描和解析支持。\n"
+"\n"
+" 扫描\n"
+"--------\n"
+" 为了在 Odoo 中使用条形码，请使用 USB 扫描器（模拟键盘输入）\n"
+" 必须配置扫描器以使用无前缀和客运返回或标签作为后缀。\n"
+" 每个字符输入之间的延迟必须小于或等于 50 毫秒。\n"
+" 大多数条形码扫描器科在方框外使用。\n"
+" 但是，请确保扫描器与其插入的设备使用相同的键盘布局。\n"
+" 可将设备的键盘布局设置为 US QWERTY （大多数读取器的缺省值）\n"
+" 或者更改扫描器的键盘布局（查看手册）\n"
+"\n"
+" 解析\n"
+"-------"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -17192,7 +18204,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr ""
+msgstr "SEPA 直接借记"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sms
@@ -17267,7 +18279,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
 msgid "Salary Package Configurator"
-msgstr ""
+msgstr "薪资包配置"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -18223,7 +19235,7 @@ msgstr "Stripe付款收单方"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
 msgid "Studio"
-msgstr ""
+msgstr "在线开发工具"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -20858,12 +21870,12 @@ msgstr "base.update.translations"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "binary"
-msgstr ""
+msgstr "二进制数据"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "boolean"
-msgstr ""
+msgstr "布尔型"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
@@ -20873,7 +21885,7 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "char"
-msgstr ""
+msgstr "字符型"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -20894,7 +21906,7 @@ msgstr "数据库标识"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "date"
-msgstr ""
+msgstr "日期"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
@@ -21304,7 +22316,7 @@ msgstr ""
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr ""
+msgstr "多对一"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0

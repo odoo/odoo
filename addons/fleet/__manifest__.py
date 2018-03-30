@@ -35,8 +35,10 @@ Main Features
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
         'views/fleet_board_view.xml',
+        'views/mail_activity_views.xml',
         'data/fleet_cars_data.xml',
         'data/fleet_data.xml',
+        'data/mail_data.xml',
     ],
 
     'demo': ['data/fleet_demo.xml'],

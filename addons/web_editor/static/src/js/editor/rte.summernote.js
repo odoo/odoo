@@ -1084,8 +1084,12 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             return;
         }
         data.__alreadyDone = true;
+
         var mediaDialog = new weWidgets.MediaDialog(this,
-            data.options || {},
+            _.extend({
+                res_model: data.$editable.data('oe-model'),
+                res_id: data.$editable.data('oe-id'),
+            }, data.options),
             data.$editable,
             data.media
         );

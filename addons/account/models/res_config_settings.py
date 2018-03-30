@@ -36,12 +36,12 @@ class ResConfigSettings(models.TransientModel):
     module_account_budget = fields.Boolean(string='Budget Management')
     module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
-    module_account_reports_followup = fields.Boolean("Enable payment followup management")
+    module_account_reports_followup = fields.Boolean("Follow-up Levels")
     module_account_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
         help='This allows you to group received checks before you deposit them to the bank.\n'
              '-This installs the module account_batch_deposit.')
-    module_account_sepa = fields.Boolean(string='Use SEPA payments')
+    module_account_sepa = fields.Boolean(string='SEPA Credit Transfer (SCT)')
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
     module_account_plaid = fields.Boolean(string="Plaid Connector")
     module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically")
@@ -49,7 +49,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
     module_account_bank_statement_import_camt = fields.Boolean("Import in CAMT.053 format")
-    module_currency_rate_live = fields.Boolean(string="Allow Currency Rate Live")
+    module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
     module_print_docsaway = fields.Boolean(string="Docsaway")
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
@@ -57,12 +57,10 @@ class ResConfigSettings(models.TransientModel):
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
-    group_allow_recurring = fields.Boolean(string="Recurring Vendor Bills", implied_group="account.group_allow_recurring")
 
     @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        self.env.ref('account.recurrent_vendor_bills_cron').write({'active': self.group_allow_recurring})
         if self.group_multi_currency:
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ install a chart of accounts for the given company (if required) """

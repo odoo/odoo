@@ -69,6 +69,7 @@
         <script type="text/javascript" src="/web/static/src/js/libs/jquery.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/collections.js"/>
         <script type="text/javascript" src="/web/static/src/js/core/translation.js"></script>
@@ -90,6 +91,9 @@
         <script type="text/javascript" src="/web/static/src/js/core/dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/session_storage.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session_storage_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
     </template>
 
@@ -149,12 +153,14 @@
 
         <script type="text/javascript" src="/web/static/src/js/core/domain.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/pyeval.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/abstract_action.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_act_window.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_report.js"/>
         <script type="text/javascript" src="/web/static/src/js/chrome/control_panel.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/root_widget.js"></script>
         <script type="text/javascript" src="/web/static/src/js/_deprecated/data.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/context.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
@@ -240,6 +246,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_quick_create.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/attach_document.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>
@@ -405,8 +412,8 @@
     </template>
 
     <template id="web.js_tests_assets">
-        <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.2.1.css"/>
-        <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.2.1.js"></script>
+        <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.3.0.css"/>
+        <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.3.0.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
 
         <t t-call-assets="web.assets_common" t-js="false"/>
@@ -421,7 +428,7 @@
         <script type="text/javascript" src="/web/static/lib/nvd3/d3.v3.js"></script>
         <script type="text/javascript" src="/web/static/lib/nvd3/nv.d3.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/nvd3.js"></script>
-        <script type="text/javascript" src="/web/static/lib/ace/ace.odoo-custom.js"></script>
+        <script type="text/javascript" src="/web/static/lib/ace/ace.js"></script>
         <script type="text/javascript" src="/web/static/lib/ace/mode-python.js"></script>
         <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
 
@@ -466,6 +473,8 @@
             <t t-set="head">
                 <t t-call="web.js_tests_assets"/>
 
+                <script type="text/javascript" src="/base/static/tests/base_settings_tests.js"></script>
+
                 <script type="text/javascript" src="/web/static/tests/fields/basic_fields_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/field_utils_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/relational_fields_tests.js"></script>
@@ -482,7 +491,6 @@
                 <script type="text/javascript" src="/web/static/tests/views/basic_model_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/kanban_model_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/view_dialogs_tests.js"></script>
-                <script type="text/javascript" src="/base/static/src/tests/base_setting_test.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/registry_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/pyeval_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/class_tests.js"></script>
@@ -540,7 +548,10 @@
                 <t t-call="web.js_tests_assets"/>
                 <script type="text/javascript" src="/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js"></script>
 
+                <script type="text/javascript" src="/base/static/tests/base_settings_mobile_tests.js"></script>
+
                 <script type="text/javascript" src="/web/static/tests/chrome/action_manager_mobile_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/calendar_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/kanban_mobile_tests.js"></script>
             </t>
 
@@ -554,8 +565,8 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Benchmarks</t>
             <t t-set="head">
-                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.2.1.css"/>
-                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.2.1.js"></script>
+                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.3.0.css"/>
+                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.3.0.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>

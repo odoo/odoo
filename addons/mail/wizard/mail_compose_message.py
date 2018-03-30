@@ -123,7 +123,7 @@ class MailComposer(models.TransientModel):
         domain="[('model', '=', model)]")
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
-    subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
+    subtype_id = fields.Many2one(default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
 
     @api.multi
     def check_access_rule(self, operation):
@@ -147,7 +147,7 @@ class MailComposer(models.TransientModel):
         return super(MailComposer, self).check_access_rule(operation)
 
     @api.multi
-    def _notify(self, force_send=False, user_signature=True):
+    def _notify(self, layout=False, force_send=False, send_after_commit=True, values=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -217,11 +217,6 @@ class MailComposer(models.TransientModel):
 
             Mail = self.env['mail.mail']
             ActiveModel = self.env[wizard.model if wizard.model else 'mail.thread']
-            if wizard.template_id:
-                # template user_signature is added when generating body_html
-                # mass mailing: use template auto_delete value -> note, for emails mass mailing only
-                Mail = Mail.with_context(mail_notify_user_signature=False)
-                ActiveModel = ActiveModel.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete)
             if not hasattr(ActiveModel, 'message_post'):
                 ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
             if wizard.composition_mode == 'mass_post':
@@ -244,7 +239,7 @@ class MailComposer(models.TransientModel):
             elif wizard.subtype_id:
                 subtype_id = wizard.subtype_id.id
             else:
-                subtype_id = self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id
+                subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
             for res_ids in sliced_res_ids:
                 batch_mails = Mail
@@ -257,6 +252,10 @@ class MailComposer(models.TransientModel):
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
                             notif_layout=notif_layout,
+                            notif_values={
+                                'add_sign': not bool(wizard.template_id),
+                                'mail_auto_delete': wizard.template_id.auto_delete if wizard.template_id else False,
+                            },
                             **mail_values)
 
                 if wizard.composition_mode == 'mass_mail':

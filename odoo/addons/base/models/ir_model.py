@@ -308,6 +308,8 @@ class IrModelFields(models.Model):
     relation = fields.Char(string='Object Relation',
                            help="For relationship fields, the technical name of the target model")
     relation_field = fields.Char(help="For one2many fields, the field on the target model that implement the opposite many2one relationship")
+    relation_field_id = fields.Many2one('ir.model.fields', compute='_compute_relation_field_id',
+                                        store=True, ondelete='cascade', string='Relation field')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade',
                                help="The model this field belongs to")
     field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
@@ -319,6 +321,8 @@ class IrModelFields(models.Model):
                                  "For example: [('blue','Blue'),('yellow','Yellow')]")
     copy = fields.Boolean(string='Copied', help="Whether the value is copied when duplicating a record.")
     related = fields.Char(string='Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
+    related_field_id = fields.Many2one('ir.model.fields', compute='_compute_related_field_id',
+                                       store=True, string="Related field", ondelete='cascade')
     required = fields.Boolean()
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
@@ -345,6 +349,19 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
+
+    @api.depends('relation', 'relation_field')
+    def _compute_relation_field_id(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.relation_field:
+                rec.relation_field_id = self._get(rec.relation, rec.relation_field)
+
+    @api.depends('related')
+    def _compute_related_field_id(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.related:
+                field = rec._related_field()
+                rec.related_field_id = self._get(field.model_name, field.name)
 
     @api.depends()
     def _in_modules(self):
@@ -746,39 +763,45 @@ class IrModelFields(models.Model):
         fields_data = self._existing_field_data(field.model_name)
         field_data = fields_data.get(field.name)
         params = self._reflect_field_params(field)
+        cr = self.env.cr
+        created = False
 
         if field_data is None:
-            cr = self.env.cr
-            # create an entry in this table
+            # does not exist, create an entry in this table
             query_insert(cr, self._table, params)
             record = self.browse(cr.fetchone())
             self.pool.post_init(record.modified, list(params))
-            # create a corresponding xml id
-            module = field._module or self._context.get('module')
-            if module:
-                model_name = field.model_name.replace('.', '_')
-                xmlid = 'field_%s__%s' % (model_name, field.name)
-                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
-                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
-                           (module, xmlid, record._name, record.id))
             # update fields_data (for recursive calls)
             fields_data[field.name] = dict(params, id=record.id)
-            return record
+            created = True
 
-        diff = {key for key, val in params.items() if field_data[key] != val}
-        if diff:
-            cr = self.env.cr
-            # update the entry in this table
+        elif any(field_data[key] != val for key, val in params.items()):
+            # exists, update the entry in this table
             query_update(cr, self._table, params, ['model', 'name'])
             record = self.browse(cr.fetchone())
-            self.pool.post_init(record.modified, diff)
+            names = [key for key, val in params.items() if field_data[key] != val]
+            self.pool.post_init(record.modified, names)
             # update fields_data (for recursive calls)
             field_data.update(params)
-            return record
 
         else:
-            # nothing to update, simply return the corresponding record
-            return self.browse(field_data['id'])
+            # exists, but nothing to update
+            record = self.browse(field_data['id'])
+
+        # generate xmlids if necessary, one per module defining the same field
+        module = self._context.get('module')
+        if module and (created or module in field._modules):
+            model_name = field.model_name.replace('.', '_')
+            xmlid = 'field_%s__%s' % (model_name, field.name)
+            cr.execute(
+                """
+                INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                SELECT %s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')
+                WHERE NOT EXISTS (SELECT id FROM ir_model_data WHERE module=%s AND name=%s)
+                """, (module, xmlid, record._name, record.id, module, xmlid)
+            )
+
+        return record
 
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """

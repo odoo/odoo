@@ -6,6 +6,7 @@ odoo.define('web.ReportService', function (require) {
  */
 
 var AbstractService = require('web.AbstractService');
+var core = require('web.core');
 
 var ReportService = AbstractService.extend({
     name: 'report',
@@ -27,6 +28,8 @@ var ReportService = AbstractService.extend({
         return this.wkhtmltopdfState;
     },
 });
+
+core.serviceRegistry.add('report', ReportService);
 
 return ReportService;
 

@@ -74,7 +74,7 @@
         name="Product Variants"
         parent="point_of_sale.pos_config_menu_catalog"
         action="product_product_action"
-        groups="product.group_product_variant"
+        groups="base.group_no_one"
         sequence="10"/>
     <menuitem id="pos_config_menu_action_product_pricelist"
         parent="point_of_sale.pos_config_menu_catalog"
@@ -83,9 +83,9 @@
         sequence="20"/>
 
     <record id="product_uom_categ_form_view" model="ir.ui.view">
-        <field name="name">product.uom.categ.form.inherit</field>
-        <field name="model">product.uom.categ</field>
-        <field name="inherit_id" ref="product.product_uom_categ_form_view"/>
+        <field name="name">uom.category.form.inherit</field>
+        <field name="model">uom.category</field>
+        <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="is_pos_groupable" groups="base.group_no_one"/>

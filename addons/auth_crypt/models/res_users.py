@@ -46,7 +46,7 @@ class ResUsers(models.Model):
     def _inverse_password(self):
         for user in self:
             user._set_password(user.password)
-            self.invalidate_cache()
+            self.invalidate_cache(['password'])
 
     @api.model
     def check_credentials(self, password):
@@ -96,3 +96,6 @@ class ResUsers(models.Model):
         internally
         """
         return default_crypt_context
+
+    def _get_session_token_fields(self):
+        return super(ResUsers, self)._get_session_token_fields() | {'password_crypt'}

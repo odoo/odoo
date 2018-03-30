@@ -913,15 +913,21 @@ range.WrappedRange.prototype.deleteContents = function (towrite) {
         return this;
     }
 
-    var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    var r;
+    var image = this.isOnImg();
+    if (image) {
+        // If the range matches/is in an image, then the image is to be removed
+        // and the cursor moved to its previous position
+        var parentNode = image.parentNode;
+        var index = _.indexOf(parentNode.childNodes, image);
+        parentNode.removeChild(image);
+        r = new range.WrappedRange(parentNode, index, parentNode, index);
+    } else {
+        r = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
+    }
 
-    $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
-    return new range.WrappedRange(
-      prevBP.sc,
-      prevBP.so,
-      prevBP.ec,
-      prevBP.eo
-    );
+    $(dom.node(r.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
+    return new range.WrappedRange(r.sc, r.so, r.ec, r.eo);
 };
 range.WrappedRange.prototype.clean = function (mergeFilter, all) {
     var node = dom.node(this.sc === this.ec ? this.sc : this.commonAncestor());
@@ -1258,7 +1264,7 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
 };
 
 function remove_table_content(r) {
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     if (dom.isText(r.sc)) {
         r.sc.textContent = r.sc.textContent.slice(0, r.so);
     }
@@ -1963,15 +1969,6 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
     return false;
 };
 
-$(document).on('click keyup', function () {
-    var $popover = $((range.create()||{}).sc).closest('[contenteditable]');
-    var popover_history = ($popover.data()||{}).NoteHistory;
-    if (!popover_history || popover_history === history) return;
-    var editor = $popover.parent('.note-editor');
-    $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
-    $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
-});
-
 eventHandler.modules.editor.undo = function ($popover) {
     if (!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
 };
@@ -2170,7 +2167,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     }
 
     // remove node without attributes (move content), and merge the same nodes
-    if (!dom.isImgFont(node)) {
      var className2, style, style2;
      for (i=0; i<nodes.length; i++) {
       node = nodes[i];
@@ -2211,7 +2207,6 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
         }
       }
      }
-    }
 
     range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset).select();
 };

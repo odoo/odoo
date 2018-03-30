@@ -17,18 +17,16 @@ class ProductCategory(models.Model):
     _description = "Product Category"
     _parent_name = "parent_id"
     _parent_store = True
-    _parent_order = 'name'
     _rec_name = 'complete_name'
-    _order = 'parent_left'
+    _order = 'complete_name'
 
     name = fields.Char('Name', index=True, required=True, translate=True)
     complete_name = fields.Char(
         'Complete Name', compute='_compute_complete_name',
         store=True)
     parent_id = fields.Many2one('product.category', 'Parent Category', index=True, ondelete='cascade')
+    parent_path = fields.Char(index=True)
     child_id = fields.One2many('product.category', 'parent_id', 'Child Categories')
-    parent_left = fields.Integer('Left Parent', index=1)
-    parent_right = fields.Integer('Right Parent', index=1)
     product_count = fields.Integer(
         '# Products', compute='_compute_product_count',
         help="The number of products under this category (Does not consider the children categories)")
@@ -176,7 +174,7 @@ class ProductProduct(models.Model):
     def _set_product_price(self):
         for product in self:
             if self._context.get('uom'):
-                value = self.env['product.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
+                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
             else:
                 value = product.price
             value -= product.price_extra
@@ -185,7 +183,7 @@ class ProductProduct(models.Model):
     def _set_product_lst_price(self):
         for product in self:
             if self._context.get('uom'):
-                value = self.env['product.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
+                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
             else:
                 value = product.lst_price
             value -= product.price_extra
@@ -205,7 +203,7 @@ class ProductProduct(models.Model):
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:
-            to_uom = self.env['product.uom'].browse([self._context['uom']])
+            to_uom = self.env['uom.uom'].browse([self._context['uom']])
 
         for product in self:
             if to_uom:
@@ -331,6 +329,7 @@ class ProductProduct(models.Model):
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         # TDE FIXME: clean context / variant brol
         if default is None:
@@ -501,7 +500,7 @@ class ProductProduct(models.Model):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
         if not uom and self._context.get('uom'):
-            uom = self.env['product.uom'].browse(self._context['uom'])
+            uom = self.env['uom.uom'].browse(self._context['uom'])
         if not currency and self._context.get('currency'):
             currency = self.env['res.currency'].browse(self._context['currency'])
 
@@ -591,7 +590,7 @@ class SupplierInfo(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom = fields.Many2one(
-        'product.uom', 'Vendor Unit of Measure',
+        'uom.uom', 'Vendor Unit of Measure',
         readonly="1", related='product_tmpl_id.uom_po_id',
         help="This comes from the product form.")
     min_qty = fields.Float(
@@ -611,7 +610,7 @@ class SupplierInfo(models.Model):
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        help="If not set, the vendor price will apply to all variants of this products.")
+        help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
         index=True, ondelete='cascade', oldname='product_id')

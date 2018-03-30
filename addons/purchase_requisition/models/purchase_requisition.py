@@ -73,7 +73,6 @@ class PurchaseRequisition(models.Model):
                               'Status', track_visibility='onchange', required=True,
                               copy=False, default='draft')
     state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
-    account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
@@ -82,16 +81,6 @@ class PurchaseRequisition(models.Model):
     @api.depends('state')
     def _set_state(self):
         self.state_blanket_order = self.state
-
-    @api.model
-    def create(self, vals):
-        rec = super(PurchaseRequisition, self).create(vals)
-        if rec.name == 'New':
-            if rec.is_quantity_copy != 'none':
-                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
-            else:
-                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
-        return rec
 
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
@@ -102,7 +91,7 @@ class PurchaseRequisition(models.Model):
         ])
         if any(requisitions):
             title = _("Warning for %s") % self.vendor_id.name
-            message = _("%s has already an ongoing blanket order") % self.vendor_id.name
+            message = _("There is already an open blanket order for this supplier. We suggest you to use to complete this open blanket order instead of creating a new one.")
             warning = {
                 'title': title,
                 'message': message
@@ -128,26 +117,33 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def action_in_progress(self):
+        self.ensure_one()
         if not all(obj.line_ids for obj in self):
             raise UserError(_('You cannot confirm agreement because there is no product line.'))
-        for requisition in self:
-            if requisition.type_id.quantity_copy == 'none' and requisition.vendor_id:
-                for requisition_line in requisition.line_ids:
-                    if requisition_line.price_unit <= 0.0:
-                        raise UserError(_('You cannot confirm the blanket order without price.'))
-                    if requisition_line.product_qty <= 0.0:
-                        raise UserError(_('You cannot confirm the blanket order without quantity.'))
-                    requisition_line.create_supplier_info()
-                self.write({'state': 'ongoing'})
+        if self.type_id.quantity_copy == 'none' and self.vendor_id:
+            for requisition_line in self.line_ids:
+                if requisition_line.price_unit <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without price.'))
+                if requisition_line.product_qty <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without quantity.'))
+                requisition_line.create_supplier_info()
+            self.write({'state': 'ongoing'})
+        else:
+            self.write({'state': 'in_progress'})
+        # Set the sequence number regarding the requisition type
+        if self.name == 'New':
+            if self.is_quantity_copy != 'none':
+                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
             else:
-                self.write({'state': 'in_progress'})
+                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
 
     @api.multi
     def action_open(self):
         self.write({'state': 'open'})
 
-    @api.multi
     def action_draft(self):
+        self.ensure_one()
+        self.name = 'New'
         self.write({'state': 'draft'})
 
     @api.multi
@@ -180,7 +176,7 @@ class PurchaseRequisition(models.Model):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
             raise UserError(_('You can only delete draft requisitions.'))
         # Draft requisitions could have some requisition lines.
-        self.mapped('requisition_line_ids').unlink()
+        self.mapped('line_ids').unlink()
         return super(PurchaseRequisition, self).unlink()
 
 class SupplierInfo(models.Model):
@@ -197,18 +193,19 @@ class PurchaseRequisitionLine(models.Model):
     _rec_name = 'product_id'
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
-    product_uom_id = fields.Many2one('product.uom', string='Product Unit of Measure')
+    product_uom_id = fields.Many2one('uom.uom', string='Product Unit of Measure')
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'))
     price_unit = fields.Float(string='Unit Price', digits=dp.get_precision('Product Price'))
     qty_ordered = fields.Float(compute='_compute_ordered_qty', string='Ordered Quantities')
     requisition_id = fields.Many2one('purchase.requisition', required=True, string='Purchase Agreement', ondelete='cascade')
     company_id = fields.Many2one('res.company', related='requisition_id.company_id', string='Company', store=True, readonly=True, default= lambda self: self.env['res.company']._company_default_get('purchase.requisition.line'))
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     schedule_date = fields.Date(string='Scheduled Date')
     move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
-    @api.multi
+    @api.model
     def create(self,vals):
         res = super(PurchaseRequisitionLine, self).create(vals)
         if res.requisition_id.state not in ['draft', 'cancel', 'done'] and res.requisition_id.is_quantity_copy == 'none':
@@ -218,12 +215,16 @@ class PurchaseRequisitionLine(models.Model):
             ])
             if not [s.requisition_id for s in supplier_infos]:
                 res.create_supplier_info()
+            if vals['price_unit'] <= 0.0:
+                raise UserError(_('You cannot confirm the blanket order without price.'))
         return res
 
     @api.multi
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
+            if vals['price_unit'] <= 0.0:
+                raise UserError(_('You cannot confirm the blanket order without price.'))
             # If the price is updated, we have to update the related SupplierInfo
             self.supplier_info_ids.write({'price': vals['price_unit']})
         return res
@@ -242,6 +243,7 @@ class PurchaseRequisitionLine(models.Model):
                 'product_id': self.product_id.id,
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,
                 'price': self.price_unit,
+                'currency_id': self.requisition_id.currency_id.id,
                 'purchase_requisition_id': purchase_requisition.id,
                 'purchase_requisition_line_id': self.id,
             })
@@ -264,8 +266,6 @@ class PurchaseRequisitionLine(models.Model):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id
             self.product_qty = 1.0
-        if not self.account_analytic_id:
-            self.account_analytic_id = self.requisition_id.account_analytic_id
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
@@ -282,6 +282,7 @@ class PurchaseRequisitionLine(models.Model):
             'taxes_id': [(6, 0, taxes_ids)],
             'date_planned': requisition.schedule_date or fields.Date.today(),
             'account_analytic_id': self.account_analytic_id.id,
+            'analytic_tag_ids': self.analytic_tag_ids.ids,
             'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or []
         }
 

@@ -30,6 +30,10 @@ var CalendarView = AbstractView.extend({
     },
     viewType: 'calendar',
     groupable: false,
+
+    /**
+     * @override
+     */
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
         var arch = this.arch;

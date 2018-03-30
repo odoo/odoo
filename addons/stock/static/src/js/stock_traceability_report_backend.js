@@ -1,8 +1,9 @@
 odoo.define('stock.stock_report_generic', function (require) {
 'use strict';
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var Widget = require('web.Widget');
+var session = require('web.session');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var session = require('web.session');
 var ReportWidget = require('stock.ReportWidget');
@@ -11,11 +12,11 @@ var crash_manager = require('web.crash_manager');
 
 var QWeb = core.qweb;
 
-var stock_report_generic = Widget.extend(ControlPanelMixin, {
+var stock_report_generic = AbstractAction.extend(ControlPanelMixin, {
     // Stores all the parameters of the action.
     init: function(parent, action) {
         this.actionManager = parent;
-        this.given_context = {};
+        this.given_context = session.user_context;
         this.controller_url = action.context.url;
         if (action.context.context) {
             this.given_context = action.context.context;

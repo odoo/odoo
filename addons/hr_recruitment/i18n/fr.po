@@ -691,6 +691,9 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
+"Les postulants et leur CV sont créés automatiquement lorsqu'un e-mail est envoyé. \n"
+"Si vous installez les modules de gestion des documents, tous les CV sont automatiquement indexés,\n"
+"ainsi vous pouvez parcourir facilement leur contenu."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -789,7 +792,7 @@ msgstr "Catégorie de candidat"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr ""
+msgstr "Cliquez ici pour créer un poste."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -872,7 +875,7 @@ msgstr "Créer"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create & Edit"
-msgstr ""
+msgstr "Créer et modifier"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -883,7 +886,7 @@ msgstr "Créer un employé"
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create a Job Position"
-msgstr ""
+msgstr "Créer un poste"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -894,7 +897,7 @@ msgstr "Créer un alias"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
-msgstr ""
+msgstr "Créez des alias pour connaître la provenance des candidats."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -1260,11 +1263,12 @@ msgstr "Poste"
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Job Application Confirmation: ${object.job_id.name | safe}"
 msgstr ""
+"Confirmation de la candidature à un poste : ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Job Applications"
-msgstr ""
+msgstr "Candidatures à un poste"
 
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
@@ -1274,7 +1278,7 @@ msgstr "Campagne d'offres "
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Job Email"
-msgstr ""
+msgstr "E-mail du poste"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
@@ -1317,7 +1321,7 @@ msgstr "Publication d'offres d'emploi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Détails du poste"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1501,7 +1505,7 @@ msgstr "Nombre de documents joints"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Nombre de jours pour clôturer"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1524,7 +1528,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Offer"
-msgstr ""
+msgstr "Offre"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -1537,6 +1541,8 @@ msgid ""
 "Once a job position is created, you can track related applications\n"
 "              and manage the recruitment process."
 msgstr ""
+"Une fois qu'un poste est créé, vous pouvez suivre les candidatures associées\n"
+"              et gérer le processus de recrutement."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
@@ -1597,7 +1603,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_hr_responsible_id
 msgid "Person responsible of validating the employee's contracts."
-msgstr ""
+msgstr "Responsable de la validation des contrats des employés."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
@@ -1702,7 +1708,7 @@ msgstr "Refusée"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Rouvrir la candidature"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1814,6 +1820,8 @@ msgstr "Origines des candidats"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Poste spécifique qui utilise cette étape. D'autres postes ne pourront pas "
+"utiliser cette étape."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1944,6 +1952,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Ces alias peuvent être des e-mails ou des URL pour chaque source. Lorsque le"
+" candidat arrive sur cette page via l'un de ces moyens, vous saurez d'où il "
+"vient."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1974,6 +1985,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Ce menu vous aide à parcourir des CV et des lettres de\n"
+"                motivation. Odoo indexe automatiquement les fichiers .PDF, .DOC, DOCX, .TXT\n"
+"                afin que vous puissiez rechercher des mots-clés depuis le contenu de ces\n"
+"                fichiers."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1997,6 +2012,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Essayez d'envoyer un e-mail à cette adresse. Cela créera automatiquement une"
+" application."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2028,6 +2045,10 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on Survey app."
 msgstr ""
+"Utilisez des formulaires d'entretien adaptés à chaque poste pendant le "
+"processus de recrutement. Sélectionnez le formulaire à utiliser dans le "
+"formulaire d'informations sur le poste. Cela dépend de l'application "
+"Enquêtes."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2085,12 +2106,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 msgid "Your Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Votre candidature : ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Votre candidature à un poste : ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

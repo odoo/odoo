@@ -27,8 +27,8 @@ class AccountAnalyticLine(models.Model):
     def write(self, values):
         result = super(AccountAnalyticLine, self).write(values)
         if 'so_line' not in values:  # allow to force a False value for so_line
-            self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no')._sale_determine_order_line()
-        return result
+            # only take the AAL from expense or vendor bill, meaning having a negative amount
+            self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no' and aal.amount <= 0)._sale_determine_order_line()
 
     # ----------------------------------------------------------
     # Vendor Bill / Expense : determine the Sale Order to reinvoice

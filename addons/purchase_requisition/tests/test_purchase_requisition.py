@@ -13,7 +13,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         super(TestPurchaseRequisition, self).setUp()
 
         self.product_09_id = self.ref('product.product_product_9')
-        self.product_09_uom_id = self.ref('product.product_uom_unit')
+        self.product_09_uom_id = self.ref('uom.product_uom_unit')
         self.product_13_id = self.ref('product.product_product_13')
         self.res_partner_1_id = self.ref('base.res_partner_1')
         self.res_company_id = self.ref('base.main_company')
@@ -50,7 +50,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
         product = self.env['product.product'].browse(self.product_13_id)
         product.write({'route_ids': [(4, self.ref('purchase.route_warehouse0_buy'))]})
-        self.env['procurement.group'].run(product, 14, self.env['product.uom'].browse(self.ref('product.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
+        self.env['procurement.group'].run(product, 14, self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
                                           {
                                             'warehouse_id': warehouse,
                                             'date_planned': date_planned,
@@ -61,7 +61,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         requisition = line[0].requisition_id
         self.assertEqual(requisition.date_end, date_planned, "End date does not correspond.")
         self.assertEqual(len(requisition.line_ids), 1, "Requisition Lines should be one.")
-        self.assertEqual(line.product_uom_id.id, self.ref('product.product_uom_unit'), "UOM is not correspond.")
+        self.assertEqual(line.product_uom_id.id, self.ref('uom.product_uom_unit'), "UOM is not correspond.")
 
         # Give access rights of Purchase Requisition User to open requisition
         # Set tender state to choose tendering line.
@@ -83,7 +83,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         # Create a pruchase requisition with type blanket order and two product
         line1 = (0, 0, {'product_id': self.product_09_id, 'product_qty': quantity, 'product_uom_id': self.product_09_uom_id, 'price_unit': price_product09})
 
-        self.product_13_uom_id = self.ref('product.product_uom_unit')
+        self.product_13_uom_id = self.ref('uom.product_uom_unit')
         line2 = (0, 0, {'product_id': self.product_13_id, 'product_qty': quantity, 'product_uom_id': self.product_13_uom_id, 'price_unit': price_product13})
 
         requisition_type = self.env['purchase.requisition.type'].create({
@@ -130,7 +130,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         """
 
         # Product creation
-        unit = self.ref("product.product_uom_unit")
+        unit = self.ref("uom.product_uom_unit")
         warehouse1 = self.env.ref('stock.warehouse0')
         route_buy = self.ref('purchase.route_warehouse0_buy')
         route_mto = warehouse1.mto_pull_id.route_id.id
@@ -204,7 +204,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         """
 
         # Product creation
-        unit = self.ref("product.product_uom_unit")
+        unit = self.ref("uom.product_uom_unit")
         warehouse1 = self.env.ref('stock.warehouse0')
         route_buy = self.ref('purchase.route_warehouse0_buy')
         route_mto = warehouse1.mto_pull_id.route_id.id

@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
-_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/]{3,}=*)([\'"])', re.I)
+_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])', re.I)
 
 
 class Message(models.Model):
@@ -412,10 +412,13 @@ class Message(models.Model):
         subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
         subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description','id'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
-        xml_comment_id = self.env.ref('mail.mt_comment').id
+
+        com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+        note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+
         for message in message_values:
-            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
-            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == xml_comment_id
+            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id
+            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
@@ -749,9 +752,10 @@ class Message(models.Model):
                         'datas_fname': name,
                         'res_model': 'mail.message',
                     })
+                    attachment.generate_access_token()
                     values['attachment_ids'].append((4, attachment.id))
-                    data_to_url[key] = '/web/image/%s' % attachment.id
-                return '%s%s alt="%s"' % (data_to_url[key], match.group(3), name)
+                    data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
+                return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
             values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
 
         # delegate creation of tracking after the create as sudo to avoid access rights issues
@@ -795,7 +799,7 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, layout=False, force_send=False, send_after_commit=True, user_signature=True):
+    def _notify(self, layout=False, force_send=False, send_after_commit=True, values=None):
         """ Compute recipients to notify based on specified recipients and document
         followers. Delegate notification to partners to send emails and bus notifications
         and to channels to broadcast messages on channels """
@@ -846,7 +850,7 @@ class Message(models.Model):
                 ('id', 'in', (partners_sudo - notif_partners).ids),
                 ('channel_ids', 'in', email_channels.ids),
                 ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
-            ])._notify(self, layout=layout, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+            ])._notify(self, layout=layout, force_send=force_send, send_after_commit=send_after_commit, values=values)
 
         notif_partners._notify_by_chat(self)
 
