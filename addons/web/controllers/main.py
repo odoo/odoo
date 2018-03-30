@@ -1250,7 +1250,7 @@ class Export(http.Controller):
     @http.route('/web/export/get_fields', type='json', auth="user")
     def get_fields(self, model, prefix='', parent_name= '',
                    import_compat=True, parent_field_type=None,
-                   exclude=None):
+                   parent_field=None, exclude=None):
 
         if import_compat and parent_field_type == "many2one":
             fields = {}
@@ -1261,6 +1261,10 @@ class Export(http.Controller):
             fields.pop('id', None)
         else:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
+
+        if parent_field:
+            parent_field['string'] = _('External ID')
+            fields['id'] = parent_field
 
         fields_sequence = sorted(fields.items(),
             key=lambda field: (field[0] not in ['id', '.id', 'display_name', 'name'], odoo.tools.ustr(field[1].get('string', ''))))
@@ -1290,7 +1294,7 @@ class Export(http.Controller):
             if len(name.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
                 record['value'] += '/id'
-                record['params'] = {'model': ref, 'prefix': id, 'name': name}
+                record['params'] = {'model': ref, 'prefix': id, 'name': name, 'parent_field': field}
 
                 if not import_compat or field['type'] == 'one2many':
                     # m2m field in import_compat is childless

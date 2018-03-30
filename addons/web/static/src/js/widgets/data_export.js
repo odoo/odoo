@@ -387,7 +387,8 @@ var DataExport = Dialog.extend({
                         parent_name: name,
                         import_compat: !!this.$import_compat_radios.filter(':checked').val(),
                         parent_field_type : record['field_type'],
-                        exclude: exclude_fields
+                        parent_field: record['params']['parent_field'],
+                        exclude: exclude_fields,
                     },
                 })
                 .done(function(results) {
