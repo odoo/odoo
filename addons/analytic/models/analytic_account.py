@@ -171,8 +171,8 @@ class AccountAnalyticLine(models.Model):
     user_id = fields.Many2one('res.users', string='User', default=_default_user)
     tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_line_tag_rel', 'line_id', 'tag_id', string='Tags', copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
-    currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True, store=True)
-    group_id = fields.Many2one('account.analytic.group', related='account_id.group_id', store=True, readonly=True)
+    currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True, store=True, compute_sudo=True)
+    group_id = fields.Many2one('account.analytic.group', related='account_id.group_id', store=True, readonly=True, compute_sudo=True)
 
     @api.multi
     @api.constrains('company_id', 'account_id')

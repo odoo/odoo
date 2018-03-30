@@ -18,7 +18,7 @@ class AccountAnalyticLine(models.Model):
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
     employee_id = fields.Many2one('hr.employee', "Employee")
-    department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True)
+    department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
 
     @api.onchange('project_id')
     def onchange_project_id(self):
