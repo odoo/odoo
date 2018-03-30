@@ -98,6 +98,7 @@ class Users(models.Model):
                 user_activities[activity['model']] = {
                     'name': model_names[activity['id']],
                     'model': activity['model'],
+                    'type': 'activity',
                     'icon': modules.module.get_module_icon(self.env[activity['model']]._original_module),
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }

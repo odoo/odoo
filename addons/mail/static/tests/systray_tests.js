@@ -20,6 +20,7 @@ QUnit.module('ActivityMenu', {
                 fields: {
                     name: { type: "char" },
                     model: { type: "char" },
+                    type: { type: "char" },
                     planned_count: { type: "integer"},
                     today_count: { type: "integer"},
                     overdue_count: { type: "integer"},
@@ -28,6 +29,7 @@ QUnit.module('ActivityMenu', {
                 records: [{
                         name: "Contact",
                         model: "res.partner",
+                        type: "activity",
                         planned_count: 0,
                         today_count: 1,
                         overdue_count: 0,
@@ -35,6 +37,7 @@ QUnit.module('ActivityMenu', {
                     },
                     {
                         name: "Task",
+                        type: "activity",
                         model: "project.task",
                         planned_count: 1,
                         today_count: 0,
@@ -43,6 +46,7 @@ QUnit.module('ActivityMenu', {
                     },
                     {
                         name: "Issue",
+                        type: "activity",
                         model: "project.issue",
                         planned_count: 1,
                         today_count: 1,

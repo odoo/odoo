@@ -69,7 +69,7 @@
                             <t t-esc="activity.name"/>
                         </span>
                     </div>
-                    <div>
+                    <div t-if="activity and activity.type == 'activity'">
                         <button t-if="activity.overdue_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='overdue'><t t-esc="activity.overdue_count"/> Late </button>
                         <span t-if="!activity.overdue_count" class="o_no_activity mr16">0 Late </span>
                         <button t-if="activity.today_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='today'> <t t-esc="activity.today_count"/> Today </button>

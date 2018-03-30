@@ -7,3 +7,4 @@ from . import res_partner
 from . import mail_message
 from . import calendar
 from . import mail_activity
+from . import res_users
