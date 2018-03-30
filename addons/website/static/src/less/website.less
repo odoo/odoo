@@ -540,3 +540,29 @@ div.carousel {
         }
     }
 }
+
+#wrapwrap.o_header_overlay {
+    > header:not(.o_header_affix) {
+        .o-position-absolute(0, 0, auto, 0);
+        z-index: @zindex-navbar; // child .navbar has this z-index but we need
+                                 // it here (see theme graphene for example).
+
+        > .navbar {
+            background-color: transparent;
+            border-color: transparent;
+
+            .nav > li {
+                > a {
+                    background-color: transparent;
+                    color: inherit;
+                }
+                &.open, &.active {
+                    > a {
+                        background-color: white;
+                        color: black;
+                    }
+                }
+            }
+        }
+    }
+}

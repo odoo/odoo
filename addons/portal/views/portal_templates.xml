@@ -21,7 +21,7 @@
             </t>
             <t t-set="head" t-value="head_website + (head or '')"/>
 
-            <div id="wrapwrap" t-att-class="pageName or ''">
+            <div id="wrapwrap" t-attf-class="#{pageName or ''}">
                 <header>
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
