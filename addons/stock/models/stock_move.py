@@ -656,9 +656,11 @@ class StockMove(models.Model):
             if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
-
-                quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
-                Quant.quants_reserve(quants, move)
+                if not float_is_zero(qty, precision_rounding=move.product_id.uom_id.rounding):
+                    quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
+                    Quant.quants_reserve(quants, move)
+                else:
+                    move.write({'state': 'assigned'})
 
         # force assignation of consumable products and incoming from supplier/inventory/production
         # Do not take force_assign as it would create pack operations
