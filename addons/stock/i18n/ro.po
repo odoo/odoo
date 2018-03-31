@@ -1882,6 +1882,11 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
+"Definiți locațiile pentru a reflecta structura și organizația depozitului. "
+"Odoo este capabil să gestioneze locațiile fizice (depozite, rafturi, bin "
+"etc.), locații partenere (clienți, furnizori) și locații virtuale care sunt "
+"contrapartida operațiunilor de stoc cum ar fi consumul de comenzi de "
+"producție, stocurile etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -3065,7 +3070,7 @@ msgstr "Linie Inventar"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
 msgid "Inventory Lines"
-msgstr ""
+msgstr "Linii inventar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -6306,6 +6311,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Operația solicitată nu poate fi procesată din cauza unei erori de programare"
+" care stabilește câmpul \"product_qty\" în loc de \"product_uom_qty\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:817
@@ -7306,6 +7313,12 @@ msgid "You cannot delete a scrap which is done."
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:103
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
@@ -7340,6 +7353,8 @@ msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
 msgstr ""
+"Nu puteți seta o cantitate negativă de produs într-o linie de inventar\n"
+"\t%s- cant:%s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:919
@@ -7359,6 +7374,8 @@ msgid ""
 "You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
 "                                to check if products are available."
 msgstr ""
+"Nu aveți produse rezervate pentru această ridicare. Faceți clic pe butonul "
+"\"Rezervă\" pentru a verifica dacă produsele sunt disponibile."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:800
@@ -7396,6 +7413,8 @@ msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
 "numbers by doing an inventory.  "
 msgstr ""
+"Aveți produse în stoc care nu au număr de lot. Puteți atribui numere de "
+"serie făcând un inventar."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:768
