@@ -393,6 +393,9 @@ msgid ""
 "                                        <strong>Accountant</strong> (Advanced access)\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Contabil</strong> (Acces avansat)\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -596,6 +599,8 @@ msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement import."
 msgstr ""
+"<strong>Interfaţă bancară:</strong> cu sincronizare în direct a contului "
+"bancar şi importul extrasului de cont."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -809,6 +814,8 @@ msgid ""
 "<strong>Reconcile with existing transaction</strong><br/>\n"
 "                                        In this case, Odoo should automatically match the bank statement with the previously recorded check transaction."
 msgstr ""
+"<strong>Reconcilierea cu tranzacția existentă</strong><br/>\n"
+"În acest caz, Odoo ar trebui să se potrivească automat cu extrasul bancar cu tranzacția înregistrată anterior."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1356,7 +1363,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_template_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tag_ids
 msgid "Account tag"
-msgstr ""
+msgstr "Etichetă contabilă"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1409,7 +1416,7 @@ msgstr "Configurarea Aplicatiei de Contabilitate"
 #. module: account
 #: model:web.planner,tooltip_planner:account.planner_account
 msgid "Accounting Configuration: a step-by-step guide."
-msgstr ""
+msgstr "Configurare contabilitate: ghid pas cu pas"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
@@ -2226,6 +2233,12 @@ msgstr "Mișcările reconciliate ale băncii prestabilite"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Extras bancă"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
