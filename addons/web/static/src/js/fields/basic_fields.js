@@ -1167,6 +1167,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             }
         }
         var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
+        // override css size attributes (could have been defined in css files)
+        // if specified on the widget
+        var width = this.nodeOptions.size ? this.nodeOptions.size[0] : this.attrs.width;
+        var height = this.nodeOptions.size ? this.nodeOptions.size[1] : this.attrs.height;
+        if (width) {
+            $img.attr('width', width);
+            $img.css('max-width', width + 'px');
+        }
+        if (height) {
+            $img.attr('height', height);
+            $img.css('max-height', height + 'px');
+        }
         this.$('> img').remove();
         this.$el.prepend($img);
         $img.on('error', function () {
@@ -2062,8 +2074,9 @@ var FieldToggleBoolean = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var className = this.value ? 'o_toggle_button_success' : 'text-muted';
-        this.$('i').addClass('fa fa-circle ' + className);
+        this.$('i')
+            .toggleClass('o_toggle_button_success', !!this.value)
+            .toggleClass('text-muted', !this.value);
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
     },

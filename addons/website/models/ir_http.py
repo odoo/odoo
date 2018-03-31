@@ -70,15 +70,15 @@ class Http(models.AbstractModel):
     @classmethod
     def _add_dispatch_parameters(cls, func):
 
-        context = dict(request.context)
-        if not context.get('tz'):
+        context = {}
+        if not request.context.get('tz'):
             context['tz'] = request.session.get('geoip', {}).get('time_zone')
 
         request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id
 
-        # bind modified context
-        request.context = context
+        # modify bound context
+        request.context = dict(request.context, **context)
 
         super(Http, cls)._add_dispatch_parameters(func)
 
@@ -116,7 +116,7 @@ class Http(models.AbstractModel):
         mypage = pages[0] if pages else False
         _, ext = os.path.splitext(req_page)
         if mypage:
-            return request.render(mypage.view_id.id, {
+            return request.render(mypage.get_view_identifier(), {
                 # 'path': req_page[1:],
                 'deletable': True,
                 'main_object': mypage,

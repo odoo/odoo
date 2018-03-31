@@ -62,7 +62,7 @@
 
     <template id="search count" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
         <xpath expr="//button[hasclass('oe_search_button')]" position="inside">
-            <span t-if='search and search_count' class='oe_search_found'> <small>(<t t-esc="search_count"/> found)</small></span>
+            <span t-if='search' class='oe_search_found'> <small>(<t t-esc="search_count"/> found)</small></span>
         </xpath>
     </template>
 
@@ -84,6 +84,7 @@
 
     <!-- Product item used by /shop and /shop/cart -->
     <template id="products_item" name="Products item">
+        <t t-set="product_href" t-value="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
         <form action="/shop/cart/update" method="post">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product">
@@ -91,7 +92,7 @@
                     <div class="ribbon btn btn-danger">Sale</div>
                 </div>
                 <div class="oe_product_image">
-                    <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
+                    <a itemprop="url" t-att-href="product_href">
                         <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
                     </a>
                 </div>
@@ -107,8 +108,9 @@
                 <section>
                     <h5>
                         <strong>
-                            <a itemprop="name" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" t-att-content="product.name" t-field="product.name" />
+                            <a itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         </strong>
+                        <a t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-default btn-xs btn-danger" title="This product is unpublished.">Unpublished</a>
                     </h5>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
@@ -174,7 +176,7 @@
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure" />
-                <div t-attf-class="container oe_website_sale #{'oe_website_sale_search' if search else None}">
+                <div class="container oe_website_sale">
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
@@ -211,6 +213,11 @@
                             <t t-if="not bins">
                                 <div class="text-center text-muted oe_product">
                                     <h3 class="css_editable_display">No product defined.</h3>
+                                    <t t-if="search">
+                                        <p>
+                                            No results found for "<strong t-esc='search'/>".
+                                        </p>
+                                    </t>
                                     <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                                 </div>
                             </t>
@@ -416,7 +423,7 @@
                         <div class="col-sm-7">
                             <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image'}" groups="!website_sale.group_website_multi_image"/>
                             <t groups="website_sale.group_website_multi_image">
-                                <t t-set="variant_img" t-value="product.product_variant_id.image_variant"/>
+                                <t t-set="variant_img" t-value="any(product.mapped('product_variant_ids.image_variant'))"/>
                                 <t t-set="image_ids"  t-value="product.product_image_ids"/>
                                 <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
                                   <div class="carousel-outer">
@@ -1156,14 +1163,14 @@
                                         <input type="tel" name="phone" class="form-control" t-att-value="'phone' in checkout and checkout['phone']" />
                                     </div>
                                     <div class="clearfix" />
-                                    <t t-if="mode == ('new', 'billing')">
+                                    <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
                                         <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-md-6">
                                             <label class="control-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                                            <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" />
+                                            <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                                         </div>
                                         <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-md-6 div_vat">
                                             <label class="control-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
-                                            <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" />
+                                            <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                                         </div>
                                     </t>
                                     <div class="clearfix" />
@@ -1234,7 +1241,7 @@
                                     <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
                                     <input type="hidden" name="callback" t-att-value="callback" />
                                     <!-- Example -->
-                                    <input type="hidden" name="field_required" t-att-value="mode[1] == 'billing' and 'phone,name' or ''" />
+                                    <input type="hidden" name="field_required" t-att-value="'phone,name'" />
 
                                     <div class="clearfix"/>
                                     <div style='padding: 0 15px'>
@@ -1429,11 +1436,14 @@
             <t t-set="additional_title">Shop - Confirmed</t>
             <div id="wrap">
                 <div class="container oe_website_sale">
+                    <div class='row'>
+                        <div class="col-md-12">
+                            <h1><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale'"><span>Confirmed</span></t></h1>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12 col-lg-8">
                             <div class="oe_cart">
-
-                                <h1 class="mb32"><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale'"><span>Confirmed</span></t></h1>
                                 <div class="thanks_msg mb32">
                                     <h2>Thank you for your order.
                                         <a class="btn btn-primary hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print</a>

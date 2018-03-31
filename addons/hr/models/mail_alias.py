@@ -14,7 +14,7 @@ class MailAlias(models.AbstractModel):
     _inherit = 'mail.alias.mixin'
 
     def _alias_check_contact_on_record(self, record, message, message_dict, alias):
-        if alias.alias_contact == 'employees' and record.ids:
+        if alias.alias_contact == 'employees':
             email_from = tools.decode_message_header(message, 'From')
             email_address = tools.email_split(email_from)[0]
             employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)

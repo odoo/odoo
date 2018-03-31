@@ -1,7 +1,7 @@
 odoo.define('website_sale_comparison.comparison', function (require) {
 "use strict";
 
-require('web.dom_ready')
+require('web.dom_ready');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var _t = core._t;
@@ -55,7 +55,11 @@ var ProductComparison = Widget.extend({
             if (self.comparelist_product_ids.length < self.product_compare_limit) {
                 var prod = $(this).data('product-product-id');
                 if (e.currentTarget.classList.contains('o_add_compare_dyn')) {
-                    prod = parseInt($(this).parent().find('.product_id').val());
+                    prod = $(this).parent().find('.product_id').val();
+                    if (!prod) { // case List View Variants
+                        prod = $(this).parent().find('input:checked').first().val();
+                    }
+                    prod = parseInt(prod, 10);
                 }
                 self.add_new_products(prod);
                 website_sale_utils.animate_clone($('#comparelist .o_product_panel_header'), $(this).closest('form'), -50, 10);
@@ -68,6 +72,12 @@ var ProductComparison = Widget.extend({
         $('body').on('click', '.comparator-popover .o_comparelist_products .o_remove', function (e){
             self.rm_from_comparelist(e);
         });
+        $('body').on('click', '.o_comparelist_remove', function (e){
+            self.rm_from_comparelist(e);
+            var new_link = '/shop/compare/?products=' + self.comparelist_product_ids.toString();
+            window.location = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
+        });
+
         $("#o_comparelist_table tr").click(function(){
             $($(this).data('target')).children().slideToggle(100);
             $(this).find('.fa-chevron-circle-down, .fa-chevron-circle-right').toggleClass('fa-chevron-circle-down fa-chevron-circle-right');

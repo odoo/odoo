@@ -341,7 +341,7 @@ class AccountReconciliation(models.AbstractModel):
         return rows
 
     @api.model
-    def process_move_lines(self, move_line_ids, data):
+    def process_move_lines(self, data):
         """ Used to validate a batch of reconciliations in a single call
             :param data: list of dicts containing:
                 - 'type': either 'partner' or 'account'

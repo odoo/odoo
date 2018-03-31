@@ -396,7 +396,7 @@ var ChatManager =  AbstractService.extend({
      * @param  {integer|string} [options.channelID]
      * @param  {Array} [options.domain]
      * @param  {integer[]} [options.ids]
-     * @param  {boolean} [options.load_more]
+     * @param  {boolean} [options.loadMore]
      * @param  {string} [options.model]
      * @param  {integer} [options.res_id]
      * @return {$.Promise<Object[]>} list of messages
@@ -405,8 +405,8 @@ var ChatManager =  AbstractService.extend({
         var channel;
         var self = this;
 
-        if ('channelID' in options && options.load_more) {
-            // get channel messages, force load_more
+        if ('channelID' in options && options.loadMore) {
+            // get channel messages, force load more
             channel = this.getChannel(options.channelID);
             return this._fetchFromChannel(channel, {domain: options.domain || {}, loadMore: true});
         }
@@ -1027,7 +1027,7 @@ var ChatManager =  AbstractService.extend({
      * @param  {integer|string} channel.id string for static channels, e.g. 'channel_inbox'
      * @param  {Object} [option={}]
      * @param  {Array} [options.domain] filter on the messages of the channel
-     * @param  {boolean} [options.load_more] Whether it should load more message
+     * @param  {boolean} [options.loadMore] Whether it should load more message
      * @return {$.Promise<Object[]>} resolved with list of messages
      */
     _fetchFromChannel: function (channel, options) {
@@ -1582,16 +1582,21 @@ var ChatManager =  AbstractService.extend({
                 message.is_starred = data.starred;
                 if (!message.is_starred) {
                     self._removeMessageFromChannel("channel_starred", message);
-                    self.starredCounter--;
                 } else {
                     self._addToCache(message, []);
                     var channelStarred = self.getChannel('channel_starred');
                     channelStarred.cache = _.pick(channelStarred.cache, "[]");
-                    self.starredCounter++;
                 }
                 self.chatBus.trigger('update_message', message);
             }
         });
+
+        if (data.starred) { // increase starred counter if message is marked as star
+            this.starredCounter += data.message_ids.length;
+        } else { // decrease starred counter if message is remove from star if unstar_all then it will set to 0.
+            this.starredCounter -= data.message_ids.length;
+        }
+
         this.chatBus.trigger('update_starred', this.starredCounter);
     },
     /**

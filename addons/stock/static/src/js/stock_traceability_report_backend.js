@@ -3,6 +3,7 @@ odoo.define('stock.stock_report_generic', function (require) {
 
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
+var session = require('web.session');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var session = require('web.session');
 var ReportWidget = require('stock.ReportWidget');
@@ -15,7 +16,7 @@ var stock_report_generic = AbstractAction.extend(ControlPanelMixin, {
     // Stores all the parameters of the action.
     init: function(parent, action) {
         this.actionManager = parent;
-        this.given_context = {};
+        this.given_context = session.user_context;
         this.controller_url = action.context.url;
         if (action.context.context) {
             this.given_context = action.context.context;

@@ -290,6 +290,31 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
+    def _write(self, values):
+        """ Override of private write method in order to generate activities
+        based in the invoice status. As the invoice status is a computed field
+        triggered notably when its lines and linked invoice status changes the
+        flow does not necessarily goes through write if the action was not done
+        on the SO itself. We hence override the _write to catch the computation
+        of invoice_status field. """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return super(SaleOrder, self)._write(values)
+
+        res = super(SaleOrder, self)._write(values)
+        if 'invoice_status' in values:
+            self.activity_unlink(['sale.mail_act_sale_upsell'])
+            if values['invoice_status'] == 'upselling':
+                for order in self:
+                    order.activity_schedule(
+                        'sale.mail_act_sale_upsell', fields.Date.today(),
+                        user_id=order.user_id.id,
+                        note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
+                            order._name, order.id, order.name,
+                            order.partner_id._name, order.partner_id.id, order.partner_id.display_name))
+
+        return res
+
+    @api.multi
     def copy_data(self, default=None):
         if default is None:
             default = {}
@@ -575,7 +600,7 @@ class SaleOrder(models.Model):
                 report_pages.append([])
             # Append category to current report page
             report_pages[-1].append({
-                'name': category and category.name or 'Uncategorized',
+                'name': category and category.name or _('Uncategorized'),
                 'subtotal': category and category.subtotal,
                 'pagebreak': category and category.pagebreak,
                 'lines': list(lines)
@@ -588,20 +613,16 @@ class SaleOrder(models.Model):
         self.ensure_one()
         res = {}
         for line in self.order_line:
-            base_tax = 0
+            price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+            taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=self.partner_shipping_id)['taxes']
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, {'amount': 0.0, 'base': 0.0})
                 # FORWARD-PORT UP TO SAAS-17
-                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-                taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=self.partner_shipping_id)['taxes']
                 for t in taxes:
-                    res[group]['amount'] += t['amount']
-                    res[group]['base'] += t['base']
-                if tax.include_base_amount:
-                    base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
-                                                partner=self.partner_shipping_id)['taxes'][0]['amount']
+                    if t['id'] == tax.id:
+                        res[group]['amount'] += t['amount']
+                        res[group]['base'] += t['base']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = [(l[0].name, l[1]['amount'], l[1]['base'], len(res)) for l in res]
         return res

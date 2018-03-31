@@ -333,11 +333,12 @@ class AccountChartTemplate(models.Model):
         # writing account values after creation of accounts
         company.transfer_account_id = account_template_ref[transfer_account_id.id]
         for key, value in generated_tax_res['account_dict'].items():
-            if value['refund_account_id'] or value['account_id'] or value['cash_basis_account']:
+            if value['refund_account_id'] or value['account_id'] or value['cash_basis_account_id'] or value['cash_basis_base_account_id']:
                 AccountTaxObj.browse(key).write({
                     'refund_account_id': account_ref.get(value['refund_account_id'], False),
                     'account_id': account_ref.get(value['account_id'], False),
-                    'cash_basis_account': account_ref.get(value['cash_basis_account'], False),
+                    'cash_basis_account_id': account_ref.get(value['cash_basis_account_id'], False),
+                    'cash_basis_base_account_id': account_ref.get(value['cash_basis_base_account_id'], False),
                 })
 
         # Create Journals - Only done for root chart template
@@ -533,11 +534,17 @@ class AccountTaxTemplate(models.Model):
         oldname='use_cash_basis',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
-    cash_basis_account = fields.Many2one(
+    cash_basis_account_id = fields.Many2one(
         'account.account.template',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
+        oldname='cash_basis_account',
         help='Account used as counterpart for the journal entry, for taxes eligible based on payments.')
+    cash_basis_base_account_id = fields.Many2one(
+        'account.account.template',
+        domain=[('deprecated', '=', False)],
+        string='Base Tax Received Account',
+        help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use, chart_template_id)', 'Tax names must be unique !'),
@@ -602,7 +609,8 @@ class AccountTaxTemplate(models.Model):
             todo_dict[new_tax] = {
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
-                'cash_basis_account': tax.cash_basis_account.id,
+                'cash_basis_account_id': tax.cash_basis_account_id.id,
+                'cash_basis_base_account_id': tax.cash_basis_base_account_id.id,
             }
 
         if any([tax.tax_exigibility == 'on_payment' for tax in self]):
@@ -738,6 +746,9 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 res.setdefault('domain', {})
                 res['domain']['sale_tax_id'] = repr(sale_tax_domain)
                 res['domain']['purchase_tax_id'] = repr(purchase_tax_domain)
+            else:
+                self.sale_tax_id = False
+                self.purchase_tax_id = False
             if self.chart_template_id.transfer_account_id:
                 self.transfer_account_id = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.code_digits:

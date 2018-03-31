@@ -293,5 +293,191 @@ QUnit.test('no crash focusout emoji button', function (assert) {
     });
 });
 
+QUnit.test('older messages are loaded on scroll', function (assert) {
+    assert.expect(4);
+    var done = assert.async();
+
+    // remove throttling
+    testUtils.patch(BasicComposer, {MENTION_THROTTLE: 0});
+    testUtils.patch(ChatManager, {CHANNEL_SEEN_THROTTLE: 0});
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+                static: true,
+            }],
+        },
+    };
+
+    var limit;
+    var loadDef = $.Deferred();
+    var loadedMessages;
+    var msgData = [];
+    for (var i = 0; i < 35; i++) {
+        msgData.push({
+            author_id: ['1', 'Me'],
+            body: '<p>test ' + i + '</p>',
+            channel_ids: [1],
+            id: i,
+        });
+    }
+    msgData.reverse();
+
+    createDiscuss({
+        context: {},
+        data: this.data,
+        params: {},
+        services: [ChatManager, createBusService()],
+        mockRPC: function (route, args) {
+            if (args.method === 'message_fetch') {
+                limit = args.kwargs.limit;
+                loadedMessages += limit;
+                var message = msgData.slice(0, loadedMessages);
+                if (loadedMessages >= msgData.length) {
+                    loadDef.resolve();
+                }
+                return $.when(message);
+            }
+            return this._super.apply(this, arguments);
+        },
+    }).then(function (discuss) {
+        var $general = discuss.$('.o_mail_chat_channel_item[data-channel-id=1]');
+        assert.strictEqual($general.length, 1,
+            "should have a channel item with id 1");
+
+        // switch to 'general'
+        loadedMessages = 0;
+        $general.click();
+
+        assert.ok(limit < 35, "there should be more messages than the limit");
+        assert.strictEqual(discuss.$('.o_thread_message').length, limit,
+            "should display the 'limit' first messages");
+
+        // simulate a scroll to top to load more messages
+        discuss.$('.o_mail_thread').scrollTop(0);
+
+        loadDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                assert.strictEqual(discuss.$('.o_thread_message').length, 35,
+                    "all messages should now be loaded");
+
+                // restore throttling
+                testUtils.unpatch(BasicComposer);
+                testUtils.unpatch(ChatManager);
+
+                discuss.destroy();
+                done();
+            });
+    });
+});
+
+QUnit.test('"Unstar all" button should reset the starred counter', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    var bus = new Bus();
+    var BusService = createBusService(bus);
+    var msgData = [];
+    _.each(_.range(1, 41), function (num) {
+        msgData.push({
+                id: num,
+                body: "<p>test" + num + "</p>",
+                author_id: ["1", "Me"],
+                channel_ids: [1],
+                starred: true,
+                starred_partner_ids: [1],
+            }
+        );
+    });
+
+    this.data = {
+        initMessaging: {
+            channel_slots: {
+                channel_channel: [{
+                    id: 1,
+                    channel_type: "channel",
+                    name: "general",
+                }],
+            },
+            starred_counter: msgData.length,
+        },
+        'mail.message': {
+            fields: {
+                body: {
+                    string: "Contents",
+                    type: 'html',
+                },
+                author_id: {
+                    string: "Author",
+                    relation: 'res.partner',
+                },
+                channel_ids: {
+                    string: "Channels",
+                    type: 'many2many',
+                    relation: 'mail.channel',
+                },
+                starred: {
+                    string: "Starred",
+                    type: 'boolean',
+                },
+                needaction: {
+                  string: "Need Action",
+                  type: 'boolean',
+              },
+              starred_partner_ids: {
+                  string: "partner ids",
+                  type: 'integer',
+              }
+            },
+            records: msgData,
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: [ChatManager, BusService],
+        mockRPC: function (route, args) {
+            if (args.method === 'unstar_all') {
+                var data = {
+                    message_ids: _.range(1, 41),
+                    starred: false,
+                    type: 'toggle_star',
+                };
+                var notification = [[false, 'res.partner'], data];
+                bus.trigger('notification', [notification]);
+                return $.when(42);
+            }
+            return this._super.apply(this, arguments);
+        },
+        session: {partner_id: 1},
+    })
+    .then(function (discuss) {
+        var $starred = discuss.$('.o_mail_chat_sidebar').find('.o_mail_chat_title_starred');
+        var $starredCounter = $('.o_mail_chat_title_starred > .o_mail_sidebar_needaction');
+
+        // Go to Starred channel
+        $starred.click();
+        // Test Initial Value
+        assert.strictEqual($starredCounter.text().trim(), "40", "40 messages should be starred");
+
+        // Unstar all and wait 'update_starred'
+        $('.o_control_panel .o_mail_chat_button_unstar_all').click();
+        $starredCounter = $('.o_mail_chat_title_starred > .o_mail_sidebar_needaction');
+        assert.strictEqual($starredCounter.text().trim(), "0",
+            "All messages should be unstarred");
+
+        discuss.destroy();
+        done();
+    });
+});
+
+
 });
 });

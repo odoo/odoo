@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class AccountInvoice(models.Model):
@@ -95,8 +95,11 @@ class AccountInvoice(models.Model):
                             if index+1 != len(no_zero_timesheet_revenue):
                                 price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.currency_id)
                                 price_subtotal_sol = timesheet_line.so_line.currency_id.compute(timesheet_line.so_line.price_subtotal, timesheet_line.currency_id)
-                                line_revenue = timesheet_line.timesheet_revenue * price_subtotal_inv / price_subtotal_sol
-                                total_revenue_per_currency[timesheet_line.currency_id.id] += line_revenue
+                                if not float_is_zero(price_subtotal_sol, precision_rounding=timesheet_line.currency_id.rounding):
+                                    line_revenue = timesheet_line.timesheet_revenue * price_subtotal_inv / price_subtotal_sol
+                                    total_revenue_per_currency[timesheet_line.currency_id.id] += line_revenue
+                                else:
+                                    total_revenue_per_currency[timesheet_line.currency_id.id] += timesheet_line.timesheet_revenue
                             else:  # last line: add the difference to avoid rounding problem
                                 last_price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.currency_id)
                                 total_revenue = sum([self.env['res.currency'].browse(currency_id).compute(amount, timesheet_line.currency_id) for currency_id, amount in total_revenue_per_currency.items()])
