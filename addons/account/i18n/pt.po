@@ -153,7 +153,7 @@ msgstr "5) Para configurar, vai precisar da seguinte informação:"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid ": General ledger"
-msgstr "Contabilidade Geral"
+msgstr ": Registo geral"
 
 #. module: account
 #: code:addons/account/models/account.py:539
@@ -513,7 +513,7 @@ msgstr "<span>Nova Fatura</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New</span>"
-msgstr ""
+msgstr "<span>Nova</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1181,7 +1181,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_template_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_currency_id
 msgid "Account Currency"
-msgstr ""
+msgstr "Moeda da Conta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_dest_id
@@ -1484,7 +1484,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr ""
+msgstr "Painel de Contabilidade"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
@@ -1511,12 +1511,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Accounting Settings"
-msgstr ""
+msgstr "Definições da Contabilidade"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting-related settings are managed on"
-msgstr ""
+msgstr "As definições relacionadas com a contabilidade são geridas no"
 
 #. module: account
 #: selection:account.account.tag,applicability:0
@@ -1628,7 +1628,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Configurações Avançadas"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -2261,7 +2261,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 #, python-format
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Contas Bancárias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_code_prefix
@@ -2308,6 +2308,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
 msgstr ""
 
 #. module: account
@@ -3217,14 +3223,14 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
@@ -3269,7 +3275,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "Parabéns, terminou!"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -3705,7 +3711,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_out_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_out_refund
 msgid "Customer Credit Notes"
-msgstr ""
+msgstr "Notas de Crédito do Cliente"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3770,7 +3776,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 #, python-format
 msgid "Dashboard"
-msgstr ""
+msgstr "Painel"
 
 #. module: account
 #. openerp-web
@@ -3796,7 +3802,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_account_opening_date
@@ -4198,7 +4204,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_payables_documents
 #: model:ir.ui.menu,name:account.menu_finance_receivables_documents
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4208,12 +4214,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
-msgstr ""
+msgstr "Transferir"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Download the"
-msgstr ""
+msgstr "Transferir "
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -4222,7 +4228,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Draft"
-msgstr ""
+msgstr "Rascunho"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -4810,7 +4816,7 @@ msgstr ""
 #: model:ir.actions.report,name:account.action_report_general_ledger
 #: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
-msgstr ""
+msgstr "Registo Geral"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -5937,12 +5943,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "Painel do Kanban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "Gráfico do Painel do Kanban"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6323,7 +6329,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:29
 #, python-format
 msgid "Load more"
-msgstr ""
+msgstr "Carregar mais"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_lock_date
@@ -7067,7 +7073,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:855
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Só os administradores podem alterar as configurações"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_period_lock_date
@@ -8342,7 +8348,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_user_id
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Responsible"
-msgstr ""
+msgstr "Responsável"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_deferred_revenue
@@ -8778,7 +8784,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Settings"
-msgstr ""
+msgstr "Configurações"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8818,7 +8824,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr ""
+msgstr "Mostrar diário no painel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_sign
@@ -8893,7 +8899,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_parent_state
@@ -9388,7 +9394,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_chart_template_id
 msgid "Template"
-msgstr ""
+msgstr "Modelo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
@@ -9929,6 +9935,8 @@ msgid ""
 "This allows you to group received checks before you deposit them to the bank.\n"
 "-This installs the module account_batch_deposit."
 msgstr ""
+"Isto permite-lhe agrupar os cheques recebidos antes de os depositar no banco.\n"
+"- Isto instala o módulo account_batch_deposit."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10605,7 +10613,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "Utilizado para ordenar os Diários na visualização do painel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_loss_account_id
@@ -10652,7 +10660,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
@@ -10673,7 +10681,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value_amount
 msgid "Value"
-msgstr ""
+msgstr "Valor"
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -10833,7 +10841,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Bem-vindo"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11430,7 +11438,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_generalledger
 msgid "report.account.report_generalledger"
-msgstr ""
+msgstr "report.account.report_generalledger"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
