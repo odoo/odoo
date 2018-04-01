@@ -2011,7 +2011,7 @@ var BasicModel = AbstractModel.extend({
             .then(function () {
                 return $.when(
                     self._fetchX2Manys(record, options),
-                    self._fetchReferences(record)
+                    self._fetchReferences(record, options)
                 ).then(function () {
                     return self._postprocess(record, options);
                 });
@@ -2058,10 +2058,10 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} record
      * @returns {Deferred}
      */
-    _fetchReferences: function (record) {
+    _fetchReferences: function (record, options) {
         var self = this;
         var defs = [];
-        var fieldNames = record.getFieldNames();
+        var fieldNames = options && options.fieldNames || record.getFieldNames();
         _.each(fieldNames, function (fieldName) {
             var field = record.fields[fieldName];
             if (field.type === 'reference') {
