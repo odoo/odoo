@@ -20,10 +20,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
@@ -46,8 +46,8 @@ msgstr ""
 "* L'état 'Annulé' est utilisé lorsque l'utilisateur annule le bon."
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_id
 msgid "Account"
 msgstr "Compte"
 
@@ -57,7 +57,7 @@ msgid "Account Date"
 msgstr "Date du compte"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_date
 msgid "Accounting Date"
 msgstr "Date comptable"
 
@@ -67,14 +67,19 @@ msgid "Accounting Voucher"
 msgstr "Justificatif comptable"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
 msgid "Amount"
 msgstr "Montant"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_analytic_id
 msgid "Analytic Account"
 msgstr "Compte analytique"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Étiquettes analytiques"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -83,7 +88,7 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Voulez-vous supprimer ce règlement ?"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
@@ -95,7 +100,7 @@ msgid "Bill Information"
 msgstr "Information de facturation"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__reference
 msgid "Bill Reference"
 msgstr "Référence de la facture"
 
@@ -115,48 +120,43 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:193
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Impossible de supprimer des règlements à l'état ouvert ou payé"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
-msgid "Click to create a sale receipt."
-msgstr "Cliquez pour créer un reçu de vente."
-
-#. module: account_voucher
-#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
-msgid "Click to register a purchase receipt."
-msgstr "Cliquez pour créer un reçu d'achat."
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__company_id
 msgid "Company"
 msgstr "Société"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__company_id
 msgid "Company related to this journal"
 msgstr "Société associée à ce journal"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Create a new sale receipt"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_date
 msgid "Created on"
 msgstr "Créé le"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__currency_id
 msgid "Currency"
 msgstr "Devise"
 
@@ -173,13 +173,13 @@ msgid "Date"
 msgstr "Date "
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__name
 msgid "Description"
 msgstr "Description"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__display_name
 msgid "Display Name"
 msgstr "Nom affiché"
 
@@ -199,17 +199,17 @@ msgid "Draft Vouchers"
 msgstr "Reçus brouillons"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
 msgid "Due Date"
 msgstr "Date d'échéance"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
 msgstr "Date effective pour les pièces comptables"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr "Donne la séquence de cette ligne lors de l'affichage du bon."
 
@@ -221,13 +221,13 @@ msgid "Group By"
 msgstr "Regrouper par"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
@@ -240,7 +240,7 @@ msgid "Internal Notes"
 msgstr "Notes internes"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__journal_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -248,7 +248,7 @@ msgid "Journal"
 msgstr "Journal"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__move_id
 msgid "Journal Entry"
 msgstr "Pièce comptable"
 
@@ -259,45 +259,57 @@ msgid "Journal Items"
 msgstr "Écritures comptables"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher____last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line____last_update
 msgid "Last Modified on"
 msgstr "Dernière Modification le"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_uid
 msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+#: code:addons/account_voucher/models/account_voucher.py:101
+#, python-format
+msgid "Missing Company"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:103
+#, python-format
+msgid "Missing Currency"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__narration
 msgid "Notes"
 msgstr "Notes"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__number
 msgid "Number"
 msgstr "Numéro"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__tax_ids
 msgid "Only for tax excluded from price"
 msgstr "Uniquement pour les taxes non comprises dans le prix"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__paid
 msgid "Paid"
 msgstr "Payé"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__partner_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
 msgstr "Partenaire"
@@ -313,23 +325,28 @@ msgid "Pay Later"
 msgstr "Régler plus tard"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__pay_now
 msgid "Payment"
 msgstr "Paiement"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
+msgid "Payment Method"
+msgstr "Mode de règlement"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
 msgid "Payment Reference"
 msgstr "Référence du paiement"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/models/account_voucher.py:230
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Veuillez activer la sequence du journal sélectionné"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:233
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Veuillez définir une séquence sur le journal."
@@ -355,7 +372,7 @@ msgid "Pro-forma"
 msgstr "Pro-forma"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__product_id
 msgid "Product"
 msgstr "Article"
 
@@ -381,9 +398,14 @@ msgid "Purchase Voucher"
 msgstr "Règlement fournisseur"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
 msgid "Quantity"
 msgstr "Quantité"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Register a new purchase receipt"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -414,7 +436,7 @@ msgid "Search Vouchers"
 msgstr "Chercher les justificatifs"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__sequence
 msgid "Sequence"
 msgstr "Séquence"
 
@@ -425,7 +447,7 @@ msgid "Set to Draft"
 msgstr "Marquer comme brouillon"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__state
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -443,32 +465,32 @@ msgid "Status changed"
 msgstr "Etat modifié"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__tax_ids
 msgid "Tax"
 msgstr "Taxe"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_amount
 msgid "Tax Amount"
 msgstr "Montant de la taxe"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_correction
 msgid "Tax Correction"
 msgstr "Correction de la taxe"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
 msgid "The Voucher has been totally paid."
 msgstr "Le reçu a été entièrement réglé."
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__account_id
 msgid "The income or expense account related to the selected product."
 msgstr "Le compte de revenu ou de dépense associé à l'article sélectionné."
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
 msgstr "La référence utilisée par le partenaire pour ce document."
 
@@ -478,7 +500,7 @@ msgid "To Review"
 msgstr "À vérifier"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__amount
 msgid "Total"
 msgstr "Total"
 
@@ -489,12 +511,12 @@ msgid "Total Amount"
 msgstr "Montant total"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__voucher_type
 msgid "Type"
 msgstr "Type"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_unit
 msgid "Unit Price"
 msgstr "Prix unitaire"
 
@@ -517,8 +539,8 @@ msgid "Vendor Voucher"
 msgstr "Paiement fournisseur"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: code:addons/account_voucher/models/account_voucher.py:108
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -535,7 +557,7 @@ msgstr "Saisie de justificatifs"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__line_ids
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
@@ -572,7 +594,7 @@ msgstr ""
 "paiement du client lié à ce reçu de vente."
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:377
+#: code:addons/account_voucher/models/account_voucher.py:445
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Vous devez d'abord choisir un partenaire!"

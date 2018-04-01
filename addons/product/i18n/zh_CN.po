@@ -11,15 +11,17 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Maie <m@maie.name>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# niulin lnc. <admin@niulin.net>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,13 +42,13 @@ msgid " Product Category"
 msgstr "产品类别"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
-#: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
 msgstr "# 产品变体"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_category_product_count
+#: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
 msgstr "# 产品"
 
@@ -63,7 +65,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% 折扣 及 %s 附加费"
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:353
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -90,6 +92,7 @@ msgid "<span>kg</span>"
 msgstr "<span>kg</span>"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>m³</span>"
 msgstr "<span>m³</span>"
@@ -131,8 +134,8 @@ msgid "A barcode can only be assigned to one product !"
 msgstr "一个条形码只能分配给一个产品！"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_description_sale
-#: model:ir.model.fields,help:product.field_product_template_description_sale
+#: model:ir.model.fields,help:product.field_product_product__description_sale
+#: model:ir.model.fields,help:product.field_product_template__description_sale
 msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
@@ -140,8 +143,8 @@ msgid ""
 msgstr "您想与客户沟通的产品说明。 此说明将被复制到每个销售订单，交货订单和客户发票/信用单"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_description_purchase
-#: model:ir.model.fields,help:product.field_product_template_description_purchase
+#: model:ir.model.fields,help:product.field_product_product__description_purchase
+#: model:ir.model.fields,help:product.field_product_template__description_purchase
 msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
@@ -149,8 +152,8 @@ msgid ""
 msgstr "您想要与供应商沟通的产品说明。 此说明将被复制到每个采购订单，收货和供应商账单/贷记通知单。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_description
-#: model:ir.model.fields,help:product.field_product_template_description
+#: model:ir.model.fields,help:product.field_product_product__description
+#: model:ir.model.fields,help:product.field_product_template__description
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
@@ -159,13 +162,13 @@ msgstr "产品的精确说明，仅用于内部备注。"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
-"A price list contains rules to be evaluated in order to compute\n"
-"                the sale price of the products."
-msgstr "价目表包含产品销售价格的计算规则。"
+"A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
+"                This is the perfect tool to handle several pricings, seasonal discounts, etc."
+msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_type
-#: model:ir.model.fields,help:product.field_product_template_type
+#: model:ir.model.fields,help:product.field_product_product__type
+#: model:ir.model.fields,help:product.field_product_template__type
 msgid ""
 "A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
 "A consumable product, on the other hand, is a product for which stock is not managed.\n"
@@ -178,13 +181,23 @@ msgstr ""
 "数字内容是您在线销售的非物质产品。 附在产品上的文件是在电子商务上销售的文件，例如电子书，音乐，图片等等。必须安装“数字产品”模块。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_active
-#: model:ir.model.fields,field_description:product.field_product_product_active
-#: model:ir.model.fields,field_description:product.field_product_template_active
-#: model:ir.model.fields,field_description:product.field_product_uom_active
+#: model:ir.model.fields,field_description:product.field_product_pricelist__active
+#: model:ir.model.fields,field_description:product.field_product_product__active
+#: model:ir.model.fields,field_description:product.field_product_template__active
+#: model:ir.model.fields,field_description:product.field_product_uom__active
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active"
 msgstr "有效"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid "Add a new unit of measure"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid "Add a new unit of measure category"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_all
@@ -203,7 +216,7 @@ msgid "All general settings about this product are managed on"
 msgstr "所有关于此产品的的通用设置管理都基于"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_res_config_settings_group_sale_pricelist
+#: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
@@ -216,7 +229,7 @@ msgid "Applicable On"
 msgstr "可应用于"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
 msgid "Apply On"
 msgstr "应用于"
 
@@ -228,13 +241,13 @@ msgid "Archived"
 msgstr "已归档"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
+#: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
 msgstr "将优先权分配给产品供应商列表。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_attribute_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__attribute_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__attribute_id
 msgid "Attribute"
 msgstr "属性"
 
@@ -245,25 +258,25 @@ msgid "Attribute Name"
 msgstr "属性名称"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__price_extra
 msgid "Attribute Price Extra"
 msgstr "属性额外价格"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_price_ids
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__price_ids
 msgid "Attribute Prices"
 msgstr "属性价格"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.variants_action
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_value_ids
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__value_ids
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
 msgstr "属性值"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
-#: model:ir.model.fields,field_description:product.field_product_product_attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_product__attribute_value_ids
 #: model:ir.ui.view,arch_db:product.product_attribute_value_view_tree
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -271,24 +284,24 @@ msgid "Attributes"
 msgstr "属性"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_variant
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 msgid "Attributes and Variants"
 msgstr "属性和病体"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_packaging_barcode
-#: model:ir.model.fields,field_description:product.field_product_product_barcode
-#: model:ir.model.fields,field_description:product.field_product_template_barcode
+#: model:ir.model.fields,field_description:product.field_product_packaging__barcode
+#: model:ir.model.fields,field_description:product.field_product_product__barcode
+#: model:ir.model.fields,field_description:product.field_product_template__barcode
 msgid "Barcode"
 msgstr "条码"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_packaging_barcode
+#: model:ir.model.fields,help:product.field_product_packaging__barcode
 msgid "Barcode used for packaging identification."
 msgstr "用于识别包装的条形码。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_base
+#: model:ir.model.fields,help:product.field_product_pricelist_item__base
 msgid ""
 "Base price for computation.\n"
 "Public Price: The base price will be the Sale/public Price.\n"
@@ -301,26 +314,26 @@ msgstr ""
 "其他价格表：基于另一个价格表计算基本价格。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_list_price
-#: model:ir.model.fields,help:product.field_product_template_list_price
-#: model:ir.model.fields,help:product.field_product_template_lst_price
+#: model:ir.model.fields,help:product.field_product_product__list_price
+#: model:ir.model.fields,help:product.field_product_template__list_price
+#: model:ir.model.fields,help:product.field_product_template__lst_price
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
 msgstr "计算客户报价的基准价格。也叫目录价格"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
 msgid "Based on"
 msgstr "基于"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_image
+#: model:ir.model.fields,field_description:product.field_product_product__image
 msgid "Big-sized image"
 msgstr "大尺寸图像"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom_factor_inv
+#: model:ir.model.fields,field_description:product.field_product_uom__factor_inv
 msgid "Bigger Ratio"
 msgstr "更大比率"
 
@@ -335,21 +348,21 @@ msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "基于价格表版本计算产品单位价格"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
-#: model:ir.model.fields,field_description:product.field_product_template_purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
+#: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Purchased"
 msgstr "采购"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_rental
-#: model:ir.model.fields,field_description:product.field_product_template_rental
+#: model:ir.model.fields,field_description:product.field_product_product__rental
+#: model:ir.model.fields,field_description:product.field_product_template__rental
 msgid "Can be Rent"
 msgstr "出租"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_sale_ok
-#: model:ir.model.fields,field_description:product.field_product_template_sale_ok
+#: model:ir.model.fields,field_description:product.field_product_product__sale_ok
+#: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Can be Sold"
 msgstr "销售"
@@ -360,7 +373,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_uom__category_id
 msgid "Category"
 msgstr "类别"
 
@@ -376,38 +389,14 @@ msgid "Category: %s"
 msgstr "类别：%s"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_attribute_create_variant
+#: model:ir.model.fields,help:product.field_product_attribute__create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr "如果要为此属性创建多个变体，请选中此项。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_category_child_id
+#: model:ir.model.fields,field_description:product.field_product_category__child_id
 msgid "Child Categories"
 msgstr "下级类别"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid "Click to add a new unit of measure category."
-msgstr "单击添加计量单位类别。"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid "Click to add a new unit of measure."
-msgstr "点击添加计量单位"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
-msgid "Click to create a pricelist."
-msgstr "点击创建价格表"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-#: model:ir.actions.act_window,help:product.product_normal_action_sell
-#: model:ir.actions.act_window,help:product.product_template_action
-#: model:ir.actions.act_window,help:product.product_template_action_all
-#: model:ir.actions.act_window,help:product.product_variant_action
-msgid "Click to define a new product."
-msgstr "单击去定义新产品."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -415,8 +404,8 @@ msgid "Codes"
 msgstr "代码"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_color
-#: model:ir.model.fields,field_description:product.field_product_template_color
+#: model:ir.model.fields,field_description:product.field_product_product__color
+#: model:ir.model.fields,field_description:product.field_product_template__color
 msgid "Color Index"
 msgstr "颜色索引"
 
@@ -431,22 +420,22 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_company_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
-#: model:ir.model.fields,field_description:product.field_product_product_company_id
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
-#: model:ir.model.fields,field_description:product.field_product_template_company_id
+#: model:ir.model.fields,field_description:product.field_product_price_history__company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__company_id
+#: model:ir.model.fields,field_description:product.field_product_product__company_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__company_id
+#: model:ir.model.fields,field_description:product.field_product_template__company_id
 msgid "Company"
 msgstr "公司"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_category_complete_name
+#: model:ir.model.fields,field_description:product.field_product_category__complete_name
 msgid "Complete Name"
 msgstr "完整名称"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__compute_price
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
 msgstr "计算价格"
@@ -464,12 +453,12 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_packaging_qty
+#: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_uom_category_id
+#: model:ir.model.fields,help:product.field_product_uom__category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -484,15 +473,15 @@ msgid ""
 msgstr "产品单位 %s 与默认单位 %s 无法转换，二者属于不同的类别！"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_cost
-#: model:ir.model.fields,field_description:product.field_product_product_standard_price
-#: model:ir.model.fields,field_description:product.field_product_template_standard_price
+#: model:ir.model.fields,field_description:product.field_product_price_history__cost
+#: model:ir.model.fields,field_description:product.field_product_product__standard_price
+#: model:ir.model.fields,field_description:product.field_product_template__standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
 msgstr "成本"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_standard_price
+#: model:ir.model.fields,help:product.field_product_product__standard_price
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
@@ -500,7 +489,7 @@ msgid ""
 msgstr "以标准价格进行股票估价所用的成本，并以平均/ fifo设定的第一个价格。 也用作价格表的基准价格。 以产品的默认度量单位表示。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_template_standard_price
+#: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "Cost used for stock valuation in standard price and as a first price to set "
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
@@ -513,69 +502,87 @@ msgid "Country Group"
 msgstr "国家群组"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_country_group_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
 msgid "Country Groups"
 msgstr "国家分组"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Create Variant"
 msgstr "创建变体"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_create_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_create_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_create_uid
-#: model:ir.model.fields,field_description:product.field_product_category_create_uid
-#: model:ir.model.fields,field_description:product.field_product_packaging_create_uid
-#: model:ir.model.fields,field_description:product.field_product_price_history_create_uid
-#: model:ir.model.fields,field_description:product.field_product_price_list_create_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_create_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_uid
-#: model:ir.model.fields,field_description:product.field_product_product_create_uid
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_uid
-#: model:ir.model.fields,field_description:product.field_product_template_create_uid
-#: model:ir.model.fields,field_description:product.field_product_uom_categ_create_uid
-#: model:ir.model.fields,field_description:product.field_product_uom_create_uid
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid "Create a new pricelist"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_template_action
+#: model:ir.actions.act_window,help:product.product_template_action_all
+msgid "Create a new product"
+msgstr "创建新产品"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_normal_action_sell
+#: model:ir.actions.act_window,help:product.product_variant_action
+msgid "Create a new product variant"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__create_uid
+#: model:ir.model.fields,field_description:product.field_product_category__create_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging__create_uid
+#: model:ir.model.fields,field_description:product.field_product_price_history__create_uid
+#: model:ir.model.fields,field_description:product.field_product_price_list__create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist__create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__create_uid
+#: model:ir.model.fields,field_description:product.field_product_product__create_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_uid
+#: model:ir.model.fields,field_description:product.field_product_template__create_uid
+#: model:ir.model.fields,field_description:product.field_product_uom__create_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_categ__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_create_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_create_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_create_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_create_date
-#: model:ir.model.fields,field_description:product.field_product_category_create_date
-#: model:ir.model.fields,field_description:product.field_product_packaging_create_date
-#: model:ir.model.fields,field_description:product.field_product_price_history_create_date
-#: model:ir.model.fields,field_description:product.field_product_price_list_create_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_create_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_date
-#: model:ir.model.fields,field_description:product.field_product_product_create_date
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_date
-#: model:ir.model.fields,field_description:product.field_product_template_create_date
-#: model:ir.model.fields,field_description:product.field_product_uom_categ_create_date
-#: model:ir.model.fields,field_description:product.field_product_uom_create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute__create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__create_date
+#: model:ir.model.fields,field_description:product.field_product_category__create_date
+#: model:ir.model.fields,field_description:product.field_product_packaging__create_date
+#: model:ir.model.fields,field_description:product.field_product_price_history__create_date
+#: model:ir.model.fields,field_description:product.field_product_price_list__create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist__create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__create_date
+#: model:ir.model.fields,field_description:product.field_product_product__create_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__create_date
+#: model:ir.model.fields,field_description:product.field_product_template__create_date
+#: model:ir.model.fields,field_description:product.field_product_uom__create_date
+#: model:ir.model.fields,field_description:product.field_product_uom_categ__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
-#: model:ir.model.fields,field_description:product.field_product_product_currency_id
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_currency_id
-#: model:ir.model.fields,field_description:product.field_product_template_currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__currency_id
+#: model:ir.model.fields,field_description:product.field_product_product__currency_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__currency_id
+#: model:ir.model.fields,field_description:product.field_product_template__currency_id
 msgid "Currency"
 msgstr "币种"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_partner_ref
+#: model:ir.model.fields,field_description:product.field_product_product__partner_ref
 msgid "Customer Ref"
 msgstr "客户单号"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_history_datetime
+#: model:ir.model.fields,field_description:product.field_product_price_history__datetime
 msgid "Date"
 msgstr "日期"
 
@@ -591,27 +598,27 @@ msgid "Default %(currency)s pricelist for %(company)s"
 msgstr "%(company)s 的默认 %(currency)s 价格表"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_uom_id
-#: model:ir.model.fields,help:product.field_product_template_uom_id
+#: model:ir.model.fields,help:product.field_product_product__uom_id
+#: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default Unit of Measure used for all stock operation."
 msgstr "所有库存作业的默认计量单位"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_uom_po_id
-#: model:ir.model.fields,help:product.field_product_template_uom_po_id
+#: model:ir.model.fields,help:product.field_product_product__uom_po_id
+#: model:ir.model.fields,help:product.field_product_template__uom_po_id
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr "采购单默认使用的计量单位。必须与默认计量单位位于同一类别。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
 msgstr "交货提前时间"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_description
-#: model:ir.model.fields,field_description:product.field_product_template_description
+#: model:ir.model.fields,field_description:product.field_product_product__description
+#: model:ir.model.fields,field_description:product.field_product_template__description
 msgid "Description"
 msgstr "说明"
 
@@ -621,28 +628,28 @@ msgid "Description for Customers"
 msgstr "客户描述"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_attribute_sequence
-#: model:ir.model.fields,help:product.field_product_attribute_value_sequence
+#: model:ir.model.fields,help:product.field_product_attribute__sequence
+#: model:ir.model.fields,help:product.field_product_attribute_value__sequence
 msgid "Determine the display order"
 msgstr "决定显示顺序"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_display_name
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_display_name
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_display_name
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_display_name
-#: model:ir.model.fields,field_description:product.field_product_category_display_name
-#: model:ir.model.fields,field_description:product.field_product_packaging_display_name
-#: model:ir.model.fields,field_description:product.field_product_price_history_display_name
-#: model:ir.model.fields,field_description:product.field_product_price_list_display_name
-#: model:ir.model.fields,field_description:product.field_product_pricelist_display_name
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_display_name
-#: model:ir.model.fields,field_description:product.field_product_product_display_name
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_display_name
-#: model:ir.model.fields,field_description:product.field_product_template_display_name
-#: model:ir.model.fields,field_description:product.field_product_uom_categ_display_name
-#: model:ir.model.fields,field_description:product.field_product_uom_display_name
-#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__display_name
+#: model:ir.model.fields,field_description:product.field_product_category__display_name
+#: model:ir.model.fields,field_description:product.field_product_packaging__display_name
+#: model:ir.model.fields,field_description:product.field_product_price_history__display_name
+#: model:ir.model.fields,field_description:product.field_product_price_list__display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist__display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:product.field_product_product__display_name
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:product.field_product_template__display_name
+#: model:ir.model.fields,field_description:product.field_product_uom__display_name
+#: model:ir.model.fields,field_description:product.field_product_uom_categ__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -652,26 +659,18 @@ msgid "Dozen(s)"
 msgstr "打"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
-msgid ""
-"Each rule include a set of applicability criteria (date range,\n"
-"                product category...) and a computation that easily helps to achieve\n"
-"                any kind of pricing."
-msgstr "每个规则包括：一套适用标准(日期范围，产品类别......)和计算，可以轻松地帮助实现任何一种定价。"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_end
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_end
 msgid "End Date"
 msgstr "结束日期"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
+#: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
 msgid "End date for this vendor price"
 msgstr "此供应商价格的结束日期"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
+#: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
 msgid "Ending valid for the pricelist item validation"
 msgstr "终结有效的价格表项验证"
 
@@ -710,7 +709,7 @@ msgid ""
 msgstr "错误！不能在价格表项目里指派这个主价格表作为其它价格表"
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:303
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -718,8 +717,8 @@ msgid ""
 msgstr "错误：默认计量单位和采购计量单位必须是相同的类别"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_name
-#: model:ir.model.fields,help:product.field_product_pricelist_item_price
+#: model:ir.model.fields,help:product.field_product_pricelist_item__name
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
 msgstr "价格表明细的详细规则名称"
 
@@ -729,12 +728,12 @@ msgid "Fix Price"
 msgstr "固定价格"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
 msgid "Fixed Price"
 msgstr "固定价格"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
+#: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
@@ -746,19 +745,24 @@ msgid "Formula"
 msgstr "公式"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Future Activities"
+msgstr "未来活动"
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
 msgstr "一般信息"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_packaging_ids
-#: model:ir.model.fields,help:product.field_product_template_packaging_ids
+#: model:ir.model.fields,help:product.field_product_product__packaging_ids
+#: model:ir.model.fields,help:product.field_product_template__packaging_ids
 msgid "Gives the different ways to package the same product."
 msgstr "对同一产品采取不同的打包方式"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_sequence
-#: model:ir.model.fields,help:product.field_product_template_sequence
+#: model:ir.model.fields,help:product.field_product_product__sequence
+#: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
 msgstr "显示产品列表时，给出序列号"
 
@@ -784,65 +788,65 @@ msgid "Hour(s)"
 msgstr "小时"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_uom_factor_inv
+#: model:ir.model.fields,help:product.field_product_uom__factor_inv
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr "这个度量单位的数量大于此类别中的参考度量单位：1 *（本单位）=比率*（参考单位）"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_uom_factor
+#: model:ir.model.fields,help:product.field_product_uom__factor
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
 msgstr "本类别计量单位和参考计量单位相比，大或者小的倍数。1 * (参考单位)=比率 *（本单位）"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_id
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_id
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_id
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_id
-#: model:ir.model.fields,field_description:product.field_product_category_id
-#: model:ir.model.fields,field_description:product.field_product_packaging_id
-#: model:ir.model.fields,field_description:product.field_product_price_history_id
-#: model:ir.model.fields,field_description:product.field_product_price_list_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_id
-#: model:ir.model.fields,field_description:product.field_product_product_id
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_id
-#: model:ir.model.fields,field_description:product.field_product_template_id
-#: model:ir.model.fields,field_description:product.field_product_uom_categ_id
-#: model:ir.model.fields,field_description:product.field_product_uom_id
-#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_attribute__id
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__id
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__id
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__id
+#: model:ir.model.fields,field_description:product.field_product_category__id
+#: model:ir.model.fields,field_description:product.field_product_packaging__id
+#: model:ir.model.fields,field_description:product.field_product_price_history__id
+#: model:ir.model.fields,field_description:product.field_product_price_list__id
+#: model:ir.model.fields,field_description:product.field_product_pricelist__id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:product.field_product_product__id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:product.field_product_template__id
+#: model:ir.model.fields,field_description:product.field_product_uom__id
+#: model:ir.model.fields,field_description:product.field_product_uom_categ__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
 msgid "ID"
 msgstr "ID"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
-"If not set, the vendor price will apply to all variants of this products."
-msgstr "如果未设置，供应商价格将适用于此产品的所有变种。"
+"If not set, the vendor price will apply to all variants of this product."
+msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_active
+#: model:ir.model.fields,help:product.field_product_pricelist__active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
 msgstr "如果不选中，允许你隐藏价格表而无需删除"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_active
-#: model:ir.model.fields,help:product.field_product_template_active
+#: model:ir.model.fields,help:product.field_product_product__active
+#: model:ir.model.fields,help:product.field_product_template__active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
 msgstr "如果不选中，允许你隐藏这个产品而无需删除。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_template_image
+#: model:ir.model.fields,field_description:product.field_product_template__image
 msgid "Image"
 msgstr "图像"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_image
+#: model:ir.model.fields,help:product.field_product_product__image
 msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
@@ -850,18 +854,23 @@ msgid ""
 msgstr "产品变体的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_image_medium
+#: model:ir.model.fields,help:product.field_product_product__image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
 msgstr "产品变体的图像(如果为Flase,采用产品模板的中尺寸图像)"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_image_small
+#: model:ir.model.fields,help:product.field_product_product__image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
 msgstr "产品变体的图像(如果为Flase,采用产品模板的小尺寸图像)"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "In which unit of measure do you manage your weights"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -869,14 +878,14 @@ msgid "Information about a product vendor"
 msgstr "有关产品的供应商信息。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_default_code
-#: model:ir.model.fields,field_description:product.field_product_template_default_code
+#: model:ir.model.fields,field_description:product.field_product_product__default_code
+#: model:ir.model.fields,field_description:product.field_product_template__default_code
 msgid "Internal Reference"
 msgstr "内部参考"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_barcode
-#: model:ir.model.fields,help:product.field_product_template_barcode
+#: model:ir.model.fields,help:product.field_product_product__barcode
+#: model:ir.model.fields,help:product.field_product_template__barcode
 msgid "International Article Number used for product identification."
 msgstr "国际物品编码用于产品标识"
 
@@ -886,70 +895,81 @@ msgid "Inventory"
 msgstr "库存"
 
 #. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Inventory Valuation"
-msgstr "库存计价"
+#: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
+#: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
+msgid "Is a product variant"
+msgstr "是产品变体"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute___last_update
-#: model:ir.model.fields,field_description:product.field_product_attribute_line___last_update
-#: model:ir.model.fields,field_description:product.field_product_attribute_price___last_update
-#: model:ir.model.fields,field_description:product.field_product_attribute_value___last_update
-#: model:ir.model.fields,field_description:product.field_product_category___last_update
-#: model:ir.model.fields,field_description:product.field_product_packaging___last_update
-#: model:ir.model.fields,field_description:product.field_product_price_history___last_update
-#: model:ir.model.fields,field_description:product.field_product_price_list___last_update
-#: model:ir.model.fields,field_description:product.field_product_pricelist___last_update
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item___last_update
-#: model:ir.model.fields,field_description:product.field_product_product___last_update
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo___last_update
-#: model:ir.model.fields,field_description:product.field_product_template___last_update
-#: model:ir.model.fields,field_description:product.field_product_uom___last_update
-#: model:ir.model.fields,field_description:product.field_product_uom_categ___last_update
-#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist___last_update
+#: selection:res.config.settings,product_weight_in_lbs:0
+msgid "Kilogram"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute____last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_line____last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_price____last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_value____last_update
+#: model:ir.model.fields,field_description:product.field_product_category____last_update
+#: model:ir.model.fields,field_description:product.field_product_packaging____last_update
+#: model:ir.model.fields,field_description:product.field_product_price_history____last_update
+#: model:ir.model.fields,field_description:product.field_product_price_list____last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist____last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item____last_update
+#: model:ir.model.fields,field_description:product.field_product_product____last_update
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo____last_update
+#: model:ir.model.fields,field_description:product.field_product_template____last_update
+#: model:ir.model.fields,field_description:product.field_product_uom____last_update
+#: model:ir.model.fields,field_description:product.field_product_uom_categ____last_update
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_write_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_write_uid
-#: model:ir.model.fields,field_description:product.field_product_attribute_write_uid
-#: model:ir.model.fields,field_description:product.field_product_category_write_uid
-#: model:ir.model.fields,field_description:product.field_product_packaging_write_uid
-#: model:ir.model.fields,field_description:product.field_product_price_history_write_uid
-#: model:ir.model.fields,field_description:product.field_product_price_list_write_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_uid
-#: model:ir.model.fields,field_description:product.field_product_pricelist_write_uid
-#: model:ir.model.fields,field_description:product.field_product_product_write_uid
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_uid
-#: model:ir.model.fields,field_description:product.field_product_template_write_uid
-#: model:ir.model.fields,field_description:product.field_product_uom_categ_write_uid
-#: model:ir.model.fields,field_description:product.field_product_uom_write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__write_uid
+#: model:ir.model.fields,field_description:product.field_product_category__write_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging__write_uid
+#: model:ir.model.fields,field_description:product.field_product_price_history__write_uid
+#: model:ir.model.fields,field_description:product.field_product_price_list__write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist__write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__write_uid
+#: model:ir.model.fields,field_description:product.field_product_product__write_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_uid
+#: model:ir.model.fields,field_description:product.field_product_template__write_uid
+#: model:ir.model.fields,field_description:product.field_product_uom__write_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_categ__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_write_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_write_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_write_date
-#: model:ir.model.fields,field_description:product.field_product_attribute_write_date
-#: model:ir.model.fields,field_description:product.field_product_category_write_date
-#: model:ir.model.fields,field_description:product.field_product_packaging_write_date
-#: model:ir.model.fields,field_description:product.field_product_price_history_write_date
-#: model:ir.model.fields,field_description:product.field_product_price_list_write_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_date
-#: model:ir.model.fields,field_description:product.field_product_pricelist_write_date
-#: model:ir.model.fields,field_description:product.field_product_product_write_date
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_date
-#: model:ir.model.fields,field_description:product.field_product_template_write_date
-#: model:ir.model.fields,field_description:product.field_product_uom_categ_write_date
-#: model:ir.model.fields,field_description:product.field_product_uom_write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute__write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__write_date
+#: model:ir.model.fields,field_description:product.field_product_category__write_date
+#: model:ir.model.fields,field_description:product.field_product_packaging__write_date
+#: model:ir.model.fields,field_description:product.field_product_price_history__write_date
+#: model:ir.model.fields,field_description:product.field_product_price_list__write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist__write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__write_date
+#: model:ir.model.fields,field_description:product.field_product_product__write_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__write_date
+#: model:ir.model.fields,field_description:product.field_product_template__write_date
+#: model:ir.model.fields,field_description:product.field_product_uom__write_date
+#: model:ir.model.fields,field_description:product.field_product_uom_categ__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_delay
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Late Activities"
+msgstr "后期的活动"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo__delay
 msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "receipt of the products in your warehouse. Used by the scheduler for "
@@ -957,7 +977,7 @@ msgid ""
 msgstr "提前时间是订单确认到仓库收到货物天数,使用于采购单自动计算规划调度"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_category_parent_left
+#: model:ir.model.fields,field_description:product.field_product_category__parent_left
 msgid "Left Parent"
 msgstr "左父项"
 
@@ -967,7 +987,7 @@ msgid "Length / Distance"
 msgstr "长度或距离"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
 msgid "Lines"
 msgstr "明细行"
 
@@ -1002,18 +1022,18 @@ msgid "Max. Margin"
 msgstr "最大毛利"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
 msgid "Max. Price Margin"
 msgstr "最大价格毛利"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_image_medium
-#: model:ir.model.fields,field_description:product.field_product_template_image_medium
+#: model:ir.model.fields,field_description:product.field_product_product__image_medium
+#: model:ir.model.fields,field_description:product.field_product_template__image_medium
 msgid "Medium-sized image"
 msgstr "中等尺寸图像"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_template_image_medium
+#: model:ir.model.fields,help:product.field_product_template__image_medium
 msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
@@ -1026,27 +1046,27 @@ msgid "Min. Margin"
 msgstr "最小毛利"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_min_margin
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_min_margin
 msgid "Min. Price Margin"
 msgstr "最小价格毛利"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_min_quantity
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
 msgid "Min. Quantity"
 msgstr "最小数量"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_min_qty
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
 msgid "Minimal Quantity"
 msgstr "最少数量"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_name
-#: model:ir.model.fields,field_description:product.field_product_category_name
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_name
-#: model:ir.model.fields,field_description:product.field_product_product_name
-#: model:ir.model.fields,field_description:product.field_product_template_name
-#: model:ir.model.fields,field_description:product.field_product_uom_categ_name
+#: model:ir.model.fields,field_description:product.field_product_attribute__name
+#: model:ir.model.fields,field_description:product.field_product_category__name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
+#: model:ir.model.fields,field_description:product.field_product_product__name
+#: model:ir.model.fields,field_description:product.field_product_template__name
+#: model:ir.model.fields,field_description:product.field_product_uom_categ__name
 msgid "Name"
 msgstr "名称"
 
@@ -1061,13 +1081,13 @@ msgid "Other Information"
 msgstr "其他信息"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
 #: selection:product.pricelist.item,base:0
 msgid "Other Pricelist"
 msgstr "其他价格表"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_packaging_name
+#: model:ir.model.fields,field_description:product.field_product_packaging__name
 msgid "Package Type"
 msgstr "包裹类型"
 
@@ -1081,7 +1101,7 @@ msgid "Packaging"
 msgstr "包装"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_category_parent_id
+#: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
 msgstr "上级类别"
 
@@ -1091,15 +1111,20 @@ msgid "Percentage (discount)"
 msgstr "百分比 ( 折扣 )"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
 msgstr "百分比价格"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
-#: model:ir.model.fields,field_description:product.field_product_product_price
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
-#: model:ir.model.fields,field_description:product.field_product_template_price
+#: selection:res.config.settings,product_weight_in_lbs:0
+msgid "Pound"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
+#: model:ir.model.fields,field_description:product.field_product_product__price
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
+#: model:ir.model.fields,field_description:product.field_product_template__price
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
@@ -1113,17 +1138,17 @@ msgid "Price Computation"
 msgstr "价格计算"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_discount
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
 msgid "Price Discount"
 msgstr "价格折扣"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_price_extra
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__price_extra
 msgid "Price Extra"
 msgstr "价格额外"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_attribute_value_price_extra
+#: model:ir.model.fields,help:product.field_product_attribute_value__price_extra
 msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
@@ -1139,12 +1164,12 @@ msgid "Price List"
 msgstr "价格表"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_round
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
 msgid "Price Rounding"
 msgstr "价格舍入"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_surcharge
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
 msgid "Price Surcharge"
 msgstr "价格附加费用"
 
@@ -1155,34 +1180,34 @@ msgid "Price:"
 msgstr "价格:"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_list_price_list
+#: model:ir.model.fields,field_description:product.field_product_price_list__price_list
 msgid "PriceList"
 msgstr "价格表"
 
 #. module: product
 #: model:ir.actions.report,name:product.action_report_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_pricelist_id
-#: model:ir.model.fields,field_description:product.field_product_product_pricelist_id
-#: model:ir.model.fields,field_description:product.field_product_template_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_product__pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_template__pricelist_id
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
 msgstr "价格表"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
+#: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_ids
 msgid "Pricelist Item"
 msgstr "价格表明细"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_applied_on
+#: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 msgid "Pricelist Item applicable on selected option"
 msgstr "适用于选定的选项价格表项目"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_ids
-#: model:ir.model.fields,field_description:product.field_product_product_item_ids
-#: model:ir.model.fields,field_description:product.field_product_template_item_ids
+#: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
+#: model:ir.model.fields,field_description:product.field_product_product__item_ids
+#: model:ir.model.fields,field_description:product.field_product_template__item_ids
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
@@ -1192,7 +1217,7 @@ msgid "Pricelist Items"
 msgstr "价格表项目"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist__name
 msgid "Pricelist Name"
 msgstr "价格表名称"
 
@@ -1203,7 +1228,7 @@ msgstr "价格表项目"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
-#: model:ir.model.fields,field_description:product.field_res_country_group_pricelist_ids
+#: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
 msgid "Pricelists"
 msgstr "价格表"
 
@@ -1230,11 +1255,11 @@ msgstr "打印"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
-#: model:ir.model.fields,field_description:product.field_product_packaging_product_id
-#: model:ir.model.fields,field_description:product.field_product_price_history_product_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_id
-#: model:ir.model.fields,field_description:product.field_product_product_product_variant_id
-#: model:ir.model.fields,field_description:product.field_product_template_product_variant_id
+#: model:ir.model.fields,field_description:product.field_product_packaging__product_id
+#: model:ir.model.fields,field_description:product.field_product_price_history__product_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_id
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
@@ -1253,7 +1278,7 @@ msgid "Product Attribute"
 msgstr "产品属性"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_value_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__value_id
 msgid "Product Attribute Value"
 msgstr "产品属性值"
 
@@ -1263,8 +1288,8 @@ msgid "Product Attribute and Values"
 msgstr "产品属性以及值"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_attribute_line_ids
-#: model:ir.model.fields,field_description:product.field_product_template_attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
+#: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
 msgstr "产品属性"
 
@@ -1277,9 +1302,9 @@ msgstr "产品类别"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_categ_id
-#: model:ir.model.fields,field_description:product.field_product_product_categ_id
-#: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
+#: model:ir.model.fields,field_description:product.field_product_product__categ_id
+#: model:ir.model.fields,field_description:product.field_product_template__categ_id
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Product Category"
 msgstr "产品种类"
@@ -1291,8 +1316,8 @@ msgid "Product Name"
 msgstr "产品名称"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
-#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_template__packaging_ids
 msgid "Product Packages"
 msgstr "产品包裹"
 
@@ -1303,25 +1328,25 @@ msgstr "产品包装"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
-#: model:ir.model.fields,field_description:product.field_res_config_settings_group_stock_packaging
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
 msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
-#: model:ir.model.fields,field_description:product.field_product_attribute_line_product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_attribute_price_product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_product_product_tmpl_id
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_line__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_price__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_tmpl_id
 #: model:ir.ui.view,arch_db:product.product_search_form_view
 msgid "Product Template"
 msgstr "产品模板"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_type
-#: model:ir.model.fields,field_description:product.field_product_template_type
+#: model:ir.model.fields,field_description:product.field_product_product__type
+#: model:ir.model.fields,field_description:product.field_product_template__type
 msgid "Product Type"
 msgstr "产品类型"
 
@@ -1336,7 +1361,7 @@ msgid "Product UoM Categories"
 msgstr "产品UoM 类别"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
@@ -1354,9 +1379,10 @@ msgstr "产品变体"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
 #: model:ir.actions.act_window,name:product.product_template_action_all
-#: model:ir.model.fields,field_description:product.field_product_product_product_variant_ids
-#: model:ir.model.fields,field_description:product.field_product_template_product_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_product__product_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template__product_variant_ids
 #: model:ir.ui.view,arch_db:product.product_template_search_view
+#: model:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Products"
 msgstr "产品"
 
@@ -1389,7 +1415,7 @@ msgid "Products: "
 msgstr "产品： "
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_template_lst_price
+#: model:ir.model.fields,field_description:product.field_product_template__lst_price
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "公开价格"
@@ -1410,49 +1436,49 @@ msgid "Purchase Bills"
 msgstr "采购账单"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_description_purchase
-#: model:ir.model.fields,field_description:product.field_product_template_description_purchase
+#: model:ir.model.fields,field_description:product.field_product_product__description_purchase
+#: model:ir.model.fields,field_description:product.field_product_template__description_purchase
 msgid "Purchase Description"
 msgstr "采购说明"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_uom_po_id
-#: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
+#: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit of Measure"
 msgstr "采购计量单位"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_list_qty1
+#: model:ir.model.fields,field_description:product.field_product_price_list__qty1
 msgid "Quantity-1"
 msgstr "数量-1"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_list_qty2
+#: model:ir.model.fields,field_description:product.field_product_price_list__qty2
 msgid "Quantity-2"
 msgstr "数量-2"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_list_qty3
+#: model:ir.model.fields,field_description:product.field_product_price_list__qty3
 msgid "Quantity-3"
 msgstr "数量-3"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_list_qty4
+#: model:ir.model.fields,field_description:product.field_product_price_list__qty4
 msgid "Quantity-4"
 msgstr "数量-4"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_price_list_qty5
+#: model:ir.model.fields,field_description:product.field_product_price_list__qty5
 msgid "Quantity-5"
 msgstr "数量-5"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom_factor
+#: model:ir.model.fields,field_description:product.field_product_uom__factor
 msgid "Ratio"
 msgstr "比例"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_code
+#: model:ir.model.fields,field_description:product.field_product_product__code
 msgid "Reference"
 msgstr "参照"
 
@@ -1462,7 +1488,7 @@ msgid "Reference Unit of Measure for this category"
 msgstr "这个类别的参考计量单位"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_category_parent_right
+#: model:ir.model.fields,field_description:product.field_product_category__parent_right
 msgid "Right Parent"
 msgstr "右父项"
 
@@ -1472,24 +1498,24 @@ msgid "Rounding Method"
 msgstr "舍入方法"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom_rounding
+#: model:ir.model.fields,field_description:product.field_product_uom__rounding
 msgid "Rounding Precision"
 msgstr "舍入精度"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_description_sale
-#: model:ir.model.fields,field_description:product.field_product_template_description_sale
+#: model:ir.model.fields,field_description:product.field_product_product__description_sale
+#: model:ir.model.fields,field_description:product.field_product_template__description_sale
 msgid "Sale Description"
 msgstr "销售说明"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_lst_price
+#: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sale Price"
 msgstr "标价"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
-#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "销售价格表"
 
@@ -1504,8 +1530,10 @@ msgid "Sales"
 msgstr "销售"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_list_price
-#: model:ir.model.fields,field_description:product.field_product_template_list_price
+#: model:ir.model.fields,field_description:product.field_product_product__list_price
+#: model:ir.model.fields,field_description:product.field_product_template__list_price
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Sales Price"
 msgstr "销售价格"
 
@@ -1515,19 +1543,19 @@ msgid "Sales Pricelists"
 msgstr "销售价格表"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_categ_id
-#: model:ir.model.fields,help:product.field_product_template_categ_id
+#: model:ir.model.fields,help:product.field_product_product__categ_id
+#: model:ir.model.fields,help:product.field_product_template__categ_id
 msgid "Select category for the current product"
 msgstr "为当前产品选择一个类别"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_sequence
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
-#: model:ir.model.fields,field_description:product.field_product_packaging_sequence
-#: model:ir.model.fields,field_description:product.field_product_pricelist_sequence
-#: model:ir.model.fields,field_description:product.field_product_product_sequence
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_sequence
-#: model:ir.model.fields,field_description:product.field_product_template_sequence
+#: model:ir.model.fields,field_description:product.field_product_attribute__sequence
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__sequence
+#: model:ir.model.fields,field_description:product.field_product_packaging__sequence
+#: model:ir.model.fields,field_description:product.field_product_pricelist__sequence
+#: model:ir.model.fields,field_description:product.field_product_product__sequence
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__sequence
+#: model:ir.model.fields,field_description:product.field_product_template__sequence
 msgid "Sequence"
 msgstr "序号"
 
@@ -1544,7 +1572,7 @@ msgid "Services"
 msgstr "服务"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_price_round
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_round
 msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
@@ -1555,12 +1583,12 @@ msgstr ""
 "要将价格设置为9.99结尾，设置舍入为10，附加费用为-0.001。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings_company_share_product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__company_share_product
 msgid "Share product to all companies"
 msgstr "分享产品 给所有公司"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_res_config_settings_company_share_product
+#: model:ir.model.fields,help:product.field_res_config_settings__company_share_product
 msgid ""
 "Share your product to all companies defined in your instance.\n"
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
@@ -1570,23 +1598,28 @@ msgstr ""
 "选择：产品队每个公司可见，即便是某个公司只针对某一个业务伙伴不选择：每个公司只能看到自己的产品（定义产品的公司）。但是没有关联到某一公司的产品对全部的公司都是可见的"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_pricelist
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Show all records which has next action date is before today"
+msgstr "显示所有下一个活动日期在今天之前的记录"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
 msgid "Show pricelists On Products"
 msgstr "显示产品的价目表"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings_group_pricelist_item
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_pricelist_item
 msgid "Show pricelists to customers"
 msgstr "给客户显示价目表"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_image_small
-#: model:ir.model.fields,field_description:product.field_product_template_image_small
+#: model:ir.model.fields,field_description:product.field_product_product__image_small
+#: model:ir.model.fields,field_description:product.field_product_template__image_small
 msgid "Small-sized image"
 msgstr "小尺寸图像"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_template_image_small
+#: model:ir.model.fields,help:product.field_product_template__image_small
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
@@ -1599,62 +1632,62 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "小于参考计量单位"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_categ_id
+#: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr "指定一个产品类别 ，规则只被应用在与这个类别以及它的下级类一致的产品上。其它情况留空"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_product_id
+#: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr "如果规则只适用一个产品，就指定一个产品，否则留空。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
+#: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr "如果这条规则只能用于一个产品模版，则指定一个模版。否则留空。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_sale_ok
-#: model:ir.model.fields,help:product.field_product_template_sale_ok
+#: model:ir.model.fields,help:product.field_product_product__sale_ok
+#: model:ir.model.fields,help:product.field_product_template__sale_ok
 msgid "Specify if the product can be selected in a sales order line."
 msgstr "如果产品能在销售单明细在被选择，则指定。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_price_surcharge
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
 msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr "指定固定金额来添加或减去(如果负)，用作折扣来计算金额。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_price_max_margin
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
 msgstr "指定基于基准价格的最大毛利"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_price_min_margin
+#: model:ir.model.fields,help:product.field_product_pricelist_item__price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "指定基于基准价格的最大毛利"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_start
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_start
 msgid "Start Date"
 msgstr "开始日期"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
+#: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
 msgid "Start date for this vendor price"
 msgstr "此供应商价格的开始日期"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
+#: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
 msgid "Starting date for the pricelist item validation"
 msgstr "价格表项验证开始日期"
 
@@ -1664,8 +1697,8 @@ msgid "Stockable Product"
 msgstr "可库存产品"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_pricelist_id
-#: model:ir.model.fields,help:product.field_product_template_pricelist_id
+#: model:ir.model.fields,help:product.field_product_product__pricelist_id
+#: model:ir.model.fields,help:product.field_product_template__pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr "技术字段。用于在价格表搜索，未存储在数据库中。"
@@ -1678,7 +1711,7 @@ msgid ""
 msgstr "计算的价格基于产品默认计量单位。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_uom_rounding
+#: model:ir.model.fields,help:product.field_product_uom__rounding
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
@@ -1690,12 +1723,12 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "计量单位的转换比率不能为 0！"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_packaging_sequence
+#: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
 msgstr "第一个序列中是默认的"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_min_qty
+#: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The minimal quantity to purchase from this vendor, expressed in the vendor "
 "Product Unit of Measure if not any, in the default unit of measure of the "
@@ -1703,7 +1736,7 @@ msgid ""
 msgstr "从供应商采购的最小数量的计量单位在产品的供应商信息中有维护，如果没有维护，那么计量单位就是产品中默认设置的"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_category_product_count
+#: model:ir.model.fields,help:product.field_product_category__product_count
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
@@ -1720,30 +1753,9 @@ msgstr ""
 "你正试图删除一个产品变体引用的属性值"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_price
+#: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
 msgstr "该价格购买产品"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-#: model:ir.actions.act_window,help:product.product_normal_action_sell
-#: model:ir.actions.act_window,help:product.product_variant_action
-msgid ""
-"The product form contains information to simplify the sale\n"
-"                process: price, notes in the quotation, accounting data,\n"
-"                procurement methods, etc."
-msgstr ""
-"产品表单中的信息可以简化销售流程:\n"
-"价格，询价单中的注释，会计信息，补货方式等等"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_template_action
-msgid ""
-"The product form contains information to simplify the sale process: price, "
-"notes in the quotation, accounting data, procurement methods, etc."
-msgstr ""
-"产品表单中的信息可以简化销售流程:\n"
-"价格，询价单中的注释，会计信息，补货方式等等"
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -1751,26 +1763,25 @@ msgid "The rounding precision must be greater than 0!"
 msgstr "舍入精度必须大于0！"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_lst_price
+#: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr "销售价格是由产品模板管理。点击“变体价格”按钮来设置附加属性的价格。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_packaging_qty
+#: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "The total number of products you can have per pallet or box."
 msgstr "每个托盘或箱子可以拥有的产品总数。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_volume
-#: model:ir.model.fields,help:product.field_product_template_volume
+#: model:ir.model.fields,help:product.field_product_product__volume
+#: model:ir.model.fields,help:product.field_product_template__volume
 msgid "The volume in m3."
 msgstr "这体积是m3"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_weight
-#: model:ir.model.fields,help:product.field_product_template_weight
+#: model:ir.model.fields,help:product.field_product_template__weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
 msgstr "以Kg(公斤)表示内容物重量，不包含任何包装等。"
 
@@ -1780,26 +1791,26 @@ msgid "This attribute value already exists !"
 msgstr "此属性值已经存在！"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "此处源自该产品表单。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_image_variant
+#: model:ir.model.fields,help:product.field_product_product__image_variant
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
 msgstr "该字段保存产品的图像，限制图像大小须小于 1024x1024px."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_template_image
+#: model:ir.model.fields,help:product.field_product_template__image
 msgid ""
 "This field holds the image used as image for the product, limited to "
 "1024x1024px."
 msgstr "该字段保存产品的图像，限制到  1024x1024px."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_product_price_extra
+#: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "这是所有属性额外价格的总和"
 
@@ -1809,34 +1820,39 @@ msgid "This note will show up on sales orders & invoices."
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
-#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr "这价格表将会被使用,取代默认值,用之出售给当前伙伴."
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr "打印询价单时，该供应商产品代码会被使用。保持空白就使用内部的那个。"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
+#: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
 msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr "打印询价单时，此供应商产品名称会被使用。保持空白就使用内部的那个。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_uom_uom_type
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Today Activities"
+msgstr "今天的活动"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_uom__uom_type
 msgid "Type"
 msgstr "类型"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_uom_active
+#: model:ir.model.fields,help:product.field_product_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr "取消选中活动字段以禁用度量单位，而不删除它。"
@@ -1847,9 +1863,9 @@ msgid "Unit"
 msgstr "单位"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_uom_id
-#: model:ir.model.fields,field_description:product.field_product_template_uom_id
-#: model:ir.model.fields,field_description:product.field_product_uom_name
+#: model:ir.model.fields,field_description:product.field_product_product__uom_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_id
+#: model:ir.model.fields,field_description:product.field_product_uom__name
 msgid "Unit of Measure"
 msgstr "计量单位"
 
@@ -1865,7 +1881,7 @@ msgstr "件"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.model.fields,field_description:product.field_res_config_settings_group_uom
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 #: model:ir.ui.view,arch_db:product.product_uom_tree_view
 msgid "Units of Measure"
@@ -1889,7 +1905,7 @@ msgstr ""
 "您将有以下计量单位：小时，天。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_config_settings_group_sale_pricelist
+#: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
 msgstr "为每个客户使用价格表来适配您的价格"
 
@@ -1899,24 +1915,24 @@ msgid "Validity"
 msgstr "验证"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__name
 msgid "Value"
 msgstr "值"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_ids
+#: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Values"
 msgstr "值"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_variant_count
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
 msgstr "变体计数"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_image_variant
+#: model:ir.model.fields,field_description:product.field_product_product__image_variant
 msgid "Variant Image"
 msgstr "变体图像"
 
@@ -1926,7 +1942,7 @@ msgid "Variant Information"
 msgstr "变体信息"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_price_extra
+#: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
 msgstr "变体价格额外"
 
@@ -1936,8 +1952,8 @@ msgid "Variant Prices"
 msgstr "变体价格"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_variant_seller_ids
-#: model:ir.model.fields,field_description:product.field_product_template_variant_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
 msgstr "变种卖家"
 
@@ -1949,14 +1965,14 @@ msgid "Variant Values"
 msgstr "变体值"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__product_ids
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
 msgstr "变体"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Vendor"
@@ -1974,44 +1990,69 @@ msgid "Vendor Pricelists"
 msgstr "供应商价格表"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
 msgid "Vendor Product Code"
 msgstr "供应商产品代码"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
 msgid "Vendor Product Name"
 msgstr "供应商产品名称"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom
 msgid "Vendor Unit of Measure"
 msgstr "供应商计量单位"
 
 #. module: product
-#: model:ir.model.fields,help:product.field_product_supplierinfo_name
+#: model:ir.model.fields,help:product.field_product_supplierinfo__name
 msgid "Vendor of this product"
 msgstr "这个产品的供应商"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
-#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_product__seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template__seller_ids
 msgid "Vendors"
 msgstr "供应商"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_volume
-#: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:ir.model.fields,field_description:product.field_product_product__volume
+#: model:ir.model.fields,field_description:product.field_product_template__volume
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "体积"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product_weight
-#: model:ir.model.fields,field_description:product.field_product_template_weight
+#: model:ir.model.fields,field_description:product.field_product_product__weight
+#: model:ir.model.fields,field_description:product.field_product_template__weight
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "重量"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__weight_uom_id
+#: model:ir.model.fields,field_description:product.field_product_template__weight_uom_id
+msgid "Weight Unit of Measure"
+msgstr "测量的重量单位"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__weight
+msgid ""
+"Weight of the product, packaging not included. The unit of measure can be "
+"changed in the general settings"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
+msgid "Weight unit of measure"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
+msgid "Weight unit of measure label"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2022,6 +2063,13 @@ msgstr "重量"
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "工作时间"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"You can assign pricelists to your customers or select one when creating a "
+"new sales quotation."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -2054,20 +2102,21 @@ msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
+#: model:ir.actions.act_window,help:product.product_template_action
+msgid ""
+"You must define a product for everything you purchase,\n"
+"                whether it's a physical product, a consumable or services."
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action_sell
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid ""
-"You must define a product for everything you sell, whether it's\n"
-"                a physical product, a consumable or a service you offer to\n"
-"                customers."
-msgstr "所有你要卖的东西都要定义为产品，不管是实体，消耗品或者你能提供给客户的服务"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_template_action
-msgid ""
-"You must define a product for everything you sell, whether it's a physical "
-"product, a consumable or a service you offer to customers."
-msgstr "您必须为销售的所有内容定义产品，无论是实体产品，消耗品还是为客户提供的服务。"
+"You must define a product for everything you sell, whether it's a physical product,\n"
+"                a consumable or a service you offer to customers.\n"
+"                The product form contains information to simplify the sale process:\n"
+"                price, notes in the quotation, accounting data, procurement methods, etc."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_template.py:29
@@ -2161,6 +2210,13 @@ msgstr "英里(s)"
 #: model:product.uom,name:product.product_uom_oz
 msgid "oz(s)"
 msgstr "盎司"
+
+#. module: product
+#: code:addons/product/models/product.py:559
+#: code:addons/product/models/product_template.py:479
+#, python-format
+msgid "product"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line

@@ -3,17 +3,16 @@
 # * note
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -23,10 +22,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_open
+#: model:ir.model.fields,field_description:note.field_note_note__open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "有效"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid "Add a new personal note"
+msgstr ""
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Add a new tag"
+msgstr ""
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -39,18 +48,8 @@ msgid "By sticky note Category"
 msgstr "即时贴类别"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
-msgid "Click to add a new tag."
-msgstr "点击来创建一个新的标签"
-
-#. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid "Click to add a personal note."
-msgstr "点击添加个人便签"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_color
-#: model:ir.model.fields,field_description:note.field_note_tag_color
+#: model:ir.model.fields,field_description:note.field_note_note__color
+#: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
 msgstr "颜色索引"
 
@@ -60,21 +59,21 @@ msgid "Configuration"
 msgstr "配置"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_create_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_create_uid
+#: model:ir.model.fields,field_description:note.field_note_note__create_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__create_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_date
-#: model:ir.model.fields,field_description:note.field_note_stage_create_date
-#: model:ir.model.fields,field_description:note.field_note_tag_create_date
+#: model:ir.model.fields,field_description:note.field_note_note__create_date
+#: model:ir.model.fields,field_description:note.field_note_stage__create_date
+#: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_date_done
+#: model:ir.model.fields,field_description:note.field_note_note__date_done
 msgid "Date done"
 msgstr "完成日期"
 
@@ -84,14 +83,14 @@ msgid "Delete"
 msgstr "刪除"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_display_name
-#: model:ir.model.fields,field_description:note.field_note_stage_display_name
-#: model:ir.model.fields,field_description:note.field_note_tag_display_name
+#: model:ir.model.fields,field_description:note.field_note_note__display_name
+#: model:ir.model.fields,field_description:note.field_note_stage__display_name
+#: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_fold
+#: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "默认折叠"
 
@@ -106,30 +105,30 @@ msgid "Group By"
 msgstr "分组"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_id
-#: model:ir.model.fields,field_description:note.field_note_stage_id
-#: model:ir.model.fields,field_description:note.field_note_tag_id
+#: model:ir.model.fields,field_description:note.field_note_note__id
+#: model:ir.model.fields,field_description:note.field_note_stage__id
+#: model:ir.model.fields,field_description:note.field_note_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note___last_update
-#: model:ir.model.fields,field_description:note.field_note_stage___last_update
-#: model:ir.model.fields,field_description:note.field_note_tag___last_update
+#: model:ir.model.fields,field_description:note.field_note_note____last_update
+#: model:ir.model.fields,field_description:note.field_note_stage____last_update
+#: model:ir.model.fields,field_description:note.field_note_tag____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_write_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_write_uid
+#: model:ir.model.fields,field_description:note.field_note_note__write_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__write_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_date
-#: model:ir.model.fields,field_description:note.field_note_stage_write_date
-#: model:ir.model.fields,field_description:note.field_note_tag_write_date
+#: model:ir.model.fields,field_description:note.field_note_note__write_date
+#: model:ir.model.fields,field_description:note.field_note_stage__write_date
+#: model:ir.model.fields,field_description:note.field_note_tag__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
@@ -139,7 +138,6 @@ msgid "Late Activities"
 msgstr "逾期活动"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "稍后"
@@ -162,7 +160,7 @@ msgid "Note"
 msgstr "便签"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_memo
+#: model:ir.model.fields,field_description:note.field_note_note__memo
 msgid "Note Content"
 msgstr "便签内容"
 
@@ -172,7 +170,7 @@ msgid "Note Stage"
 msgstr "便签阶段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_name
+#: model:ir.model.fields,field_description:note.field_note_note__name
 msgid "Note Summary"
 msgstr "便签摘要"
 
@@ -190,19 +188,19 @@ msgid "Notes"
 msgstr "便签"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_user_id
-#: model:ir.model.fields,field_description:note.field_note_stage_user_id
+#: model:ir.model.fields,field_description:note.field_note_note__user_id
+#: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
 msgstr "所有者"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_user_id
+#: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
 msgstr "便签阶段的所有者"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_sequence
-#: model:ir.model.fields,field_description:note.field_note_stage_sequence
+#: model:ir.model.fields,field_description:note.field_note_note__sequence
+#: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
 msgstr "序号"
 
@@ -212,13 +210,13 @@ msgid "Show all records which has next action date is before today"
 msgstr "显示在今天之前的下一个行动日期的所有记录"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_id
+#: model:ir.model.fields,field_description:note.field_note_note__stage_id
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
 msgstr "阶段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_name
+#: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
 msgstr "阶段名称"
 
@@ -240,12 +238,12 @@ msgid "Stages of Notes"
 msgstr "便签阶段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_ids
+#: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
 msgstr "用户的阶段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_tag_name
+#: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
 msgstr "标签名"
 
@@ -256,7 +254,7 @@ msgstr "标签名已存在!"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
-#: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
 #: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.note_tag_view_tree
@@ -270,7 +268,6 @@ msgid "This Week"
 msgstr "本周"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "今日"
@@ -279,11 +276,6 @@ msgstr "今日"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
 msgstr "今天的活动"
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "明天"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -299,7 +291,7 @@ msgstr ""
 "通过增加、删除或者修改列，你可以个性化你对便签和任务的处理。"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_sequence
+#: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "用于便签阶段排序"
 
