@@ -2030,7 +2030,7 @@ msgstr "Zaokrąglenie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
 msgid "Amount Signed"
-msgstr "Zaznaczona kwota"
+msgstr "Kwota ze znakiem"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_amount_type
@@ -2473,6 +2473,12 @@ msgstr "Ustawienia banku oznaczone jako wykonane"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Wyciąg bankowy"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -7559,13 +7565,13 @@ msgstr "Nieuregulowane transakcje"
 #: code:addons/account/models/account_invoice.py:128
 #, python-format
 msgid "Outstanding credits"
-msgstr "Nieuregulowane zobowiązania"
+msgstr "Nieuzgodnione zobowiązania"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:131
 #, python-format
 msgid "Outstanding debits"
-msgstr "Nieuregulowane należności"
+msgstr "Nieuzgodnione należności"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11948,7 +11954,7 @@ msgstr "o_manual_statement"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "outstanding debits"
-msgstr "nieuregulowane rozliczenia"
+msgstr "nieuzgodnione rozliczenia"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form

@@ -12,7 +12,6 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # zpq001 <zpq001@live.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
@@ -46,7 +45,7 @@ msgstr " (分组)"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
 msgid "# Asset Entries"
-msgstr "# 资产分录"
+msgstr "# 资产项目"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_nbr
@@ -381,13 +380,13 @@ msgstr "确认"
 #: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Asset Moves"
-msgstr "已创建资产移动"
+msgstr "资产凭证创建"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Revenue Moves"
-msgstr "创建的收入分录"
+msgstr "收入凭证创建"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_uid
@@ -460,7 +459,7 @@ msgstr "递延收入科目"
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
-msgstr "待摊收益类型"
+msgstr "递延收入类型"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -666,14 +665,14 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January / Start date of fiscal "
 "year"
-msgstr "表明第一次折旧从购买日期开始,而不是从年度第一个月开始."
+msgstr "表明此资产的第一次折旧从分录在购买日期开始，而不是用财政年度第一个月／开始日期"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_prorata
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
-msgstr "资产折旧的第一个凭证是从购买日开始而不是1月1日开始."
+msgstr "表示此资产折旧的第一个分录是从购买日开始而不是1月1日开始。"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -870,7 +869,7 @@ msgstr "即时按比例分配"
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
-msgstr "即时按比例分配仅能用于“折旧次数”的计时方式"
+msgstr "即时按比例分配仅能适用“折旧次数”的计时方式。"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -880,7 +879,7 @@ msgstr "采购"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr "采购月"
+msgstr "采购月份"
 
 #. module: account_asset
 #: selection:account.asset.category,type:0
@@ -1006,7 +1005,7 @@ msgstr "此折旧已连接到相应日记账条目！请提交或删除该条目
 msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
-msgstr "这个向导是将已选择月的分期付款/折旧过账.<br/>在资产/收益确认的期间内, 这将为所有的分期付款创建相应的日记账分录."
+msgstr "这个向导是将已选择月的分期付款/折旧过账。<br/>在资产/收益确认的期间内, 这将为所有的分期付款创建相应的日记账分录。"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1018,7 +1017,7 @@ msgstr "计时方法"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
-msgstr "时间方式基于"
+msgstr "计时方法基于"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_type
@@ -1054,8 +1053,8 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
 "资产创建后，其状态为“草稿”。\n"
-"若资产被确认，其状态变为“运行”，并且其折旧账目可以计入会计科目。\n"
-"当资产折旧期结束后，可以手工关闭。若最后折旧账目已经发生，该资产自动转至关闭状态。"
+"若资产被确认，其状态变为“运行”，并且其折旧行可以计入会计。\n"
+"当折旧结束后，你可以手工关闭资产。若最后折旧行已经过账，资产自动转至该状态。"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name

@@ -49,13 +49,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
-"* 当工资单创建时状态为“草稿“ \n"
+"* 当工资单创建时状态为“草稿” \n"
 " \n"
-" * 如果工资单待审批时, 状态为“等待中“。\n"
+" * 如果工资单待验证，状态为“正在等待”。\n"
 " \n"
-" * 如果工资单被确认后状态为 “已完成”。\n"
+" * 如果工资单被确认，状态设置为“完成”。\n"
 " \n"
-" * 当用户取消工资单时状态为”已拒绝“。"
+" * 当用户取消工资单时状态为“已拒绝”。"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -1330,7 +1330,7 @@ msgstr "薪资规则"
 #: code:addons/hr_payroll/models/hr_payslip.py:446
 #, python-format
 msgid "Salary Slip of %s for %s"
-msgstr "工资条：%s %s"
+msgstr "工资条为%s为 %s"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
@@ -1419,7 +1419,7 @@ msgstr "薪资结构"
 msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
-msgstr "薪资规则的代码可以被其他规则的计算公式引用，这样的话，它是区分大小写的。"
+msgstr "薪资规则的代码可以被其他规则的计算公式使用。这样的话，它是区分大小写的。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
@@ -1432,19 +1432,19 @@ msgstr "可以在薪资规则中使用的代码"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_select
 msgid "The computation method for the rule amount."
-msgstr "规则金额的计算方法."
+msgstr "规则金额的计算方法。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_contract_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_contract_id
 msgid "The contract for which applied this input"
-msgstr "符合这些输入的合同"
+msgstr "适用此输入的合同"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "The maximum amount, applied for this rule."
-msgstr "适用这个规则的最大金额."
+msgstr "适用这个规则的最大金额。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_min
@@ -1459,14 +1459,14 @@ msgid ""
 "This will be used to compute the % fields values; in general it is on basic,"
 " but you can also use categories code fields in lowercase as a variable "
 "names (hra, ma, lta, etc.) and the variable basic."
-msgstr "这个规则将用于计算%字段的值；一般来说是基数，你也可以用小写的类别代码作为一个变量名（hra，ma，lta等）作为可变的基数。"
+msgstr "这将用于计算%字段的值；一般来说是基数，但你也可以用小写的类别代码作为一个变量名（hra，ma，lta等）和可变的基数。"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid ""
 "This wizard will generate payslips for all selected employee(s) based on the"
 " dates and credit note specified on Payslips Run."
-msgstr "向导将基于工资单生成器指定的日期以及退款，为成所选员工生成工资单。"
+msgstr "向导将基于工资单生成器指定的日期以及退款单，为所有被选员工生成工资单。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
@@ -1538,7 +1538,7 @@ msgstr "薪资规则 %s (%s)百分比基数或者数量定义错误。"
 #: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr "薪资规则 %s (%s) Python代码定义错误."
+msgstr "薪资规则 %s (%s) Python代码定义错误。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:227
