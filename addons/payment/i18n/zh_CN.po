@@ -6,11 +6,11 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # Martin Trigaux, 2017
 # glovebx <ruinning@163.com>, 2017
 # Talway <9010446@qq.com>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # 钟小华 <mackz@sina.com>, 2017
 # fausthuang, 2017
 # waveyeung <waveyeung@qq.com>, 2017
@@ -216,7 +216,7 @@ msgstr "受让人"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr "受让人列表"
+msgstr "收单方列表"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -709,7 +709,7 @@ msgid ""
 "Medium-sized image of this provider. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "这个供应方的中等大小的图像。它被自动调整为128*128图像纵横比保存起来。通常在表单视图或者看板视图中用这个字段"
+msgstr "此供应方的中等大小图像。它被自动调整为128*128的图像，纵横比保存起来。通常在表单视图或者看板视图中用这个字段。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -1143,7 +1143,7 @@ msgid ""
 "Small-sized image of this provider. It is automatically resized as a 64x64px"
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
-msgstr "这个供应方的小尺寸图像。他会被自动调整为６４＊６４大小的图像被保存起来，任何地方用这个小图像字段是必要的"
+msgstr "此供应商的小尺寸图像。保持纵横比，自动缩放为64x64px的图像。用于任何需要小图像的字段。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
@@ -1245,7 +1245,7 @@ msgstr ""
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
-msgstr "在选择付款受让人后提供转账信息。"
+msgstr "在选择付款收单方后提供转账信息。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -1360,14 +1360,14 @@ msgstr "点击支付按钮后你将被重定向到 Adyen 网站。"
 msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
-msgstr "点击付款按钮后你将会被重定向到授权的网站"
+msgstr "点击付款按钮后你将会被重定向到授权网站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
-msgstr "在点击支付按钮后你将会被重定向到Buckaroo网站"
+msgstr "在点击支付按钮后你将会被重新定向到Buckaroo网站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
@@ -1404,7 +1404,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
-msgstr "ZIP"
+msgstr "邮编"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
@@ -1429,12 +1429,12 @@ msgstr "更多"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr "context:当前上下相关字典"
+msgstr "上下文：当前上下相关字典"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr "currency:交易币种浏览记录"
+msgstr "货币：交易币种浏览记录"
 
 #. module: payment
 #. openerp-web
@@ -1447,14 +1447,14 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr "partner:客户浏览历史(不完全)"
+msgstr "合作伙伴：客户浏览历史，不一定完全"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values:关于购买的运费需要参考具体的货运方法,如航空等"
+msgstr "合作伙伴_值：有关买家的特定值，例如来自货运单"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1469,14 +1469,14 @@ msgstr "参考：交易参考号码"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr "tx_url:交易后的形式的URL"
+msgstr "tx_url：交易后在表单上显示的网址"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr "tx_values:交易价值"
+msgstr "tx_values：交易价值"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr "user:当前用户浏览记录"
+msgstr "用户：当前用户浏览记录"

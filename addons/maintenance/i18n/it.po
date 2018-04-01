@@ -74,6 +74,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Un dizionario Python che verrà valutato per fornire valori predefiniti "
+"durante la creazione di nuovi record per questo alias."
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
@@ -156,7 +158,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Available"
-msgstr ""
+msgstr "A disposizione"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -462,7 +464,7 @@ msgstr ""
 #. module: maintenance
 #: selection:maintenance.request,priority:0
 msgid "High"
-msgstr ""
+msgstr "Alto"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id
@@ -479,6 +481,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID del record padre che contiene l’alias (esempio: progetto che contiene "
+"l’alias di creazione dell’attività)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -750,6 +754,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ID facoltativo di un thread (record) a cui verranno allegati tutti i "
+"messaggi in arrivo, anche se non hanno risposto ad esso. Se impostato, "
+"disabiliterà completamente la creazione di nuovi record."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -779,7 +786,7 @@ msgstr "Modello Genitore"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ID discussione record principale"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
@@ -788,6 +795,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Modello principale con alias. Il modello che contiene il riferimento alias "
+"non è necessariamente il modello fornito da alias_model_id (esempio: "
+"progetto (parent_model) e attività (modello))"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
@@ -802,6 +812,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Politica per pubblicare un messaggio sul documento utilizzando il mail gateway.\n"
+"- tutti: tutti possono postare\n"
+"- partner: solo partner autenticati\n"
+"- follower: solo follower del documento correlato o membri dei seguenti canali\n"
 
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
@@ -847,7 +861,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Registra ID discussione"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1049,6 +1063,10 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Il modello (Odoo Document Kind) a cui corrisponde questo alias. Qualsiasi "
+"messaggio di posta elettronica in arrivo che non risponde a un record "
+"esistente causerà la creazione di un nuovo record di questo modello (ad "
+"esempio un’attività di progetto)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_name
@@ -1056,6 +1074,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Il nome dell’alias email, ad es. “lavori” se vuoi prendere e-mail per "
+"<jobs@example.odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_user_id
@@ -1065,6 +1085,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Il proprietario dei record creati al ricevimento di e-mail su questo alias. "
+"Se questo campo non è impostato, il sistema tenterà di trovare il "
+"proprietario corretto in base all’indirizzo mittente (Da) o utilizzerà "
+"l’account Amministratore se nessun utente di sistema viene trovato per "
+"quell’indirizzo."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1091,7 +1116,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
-msgstr ""
+msgstr "Da fare"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search

@@ -6,20 +6,20 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Yuan Xulei <hi@yxl.name>, 2017
 # Martin Trigaux, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # Seven Floor <my7floor@gmail.com>, 2017
 # Dong Wei <fatfox21@gmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Luke <cialuo@qq.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # Joray <13637815@qq.com>, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
+# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # zpq001 <zpq001@live.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
@@ -803,7 +803,7 @@ msgstr "直运"
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Email撰写向导"
+msgstr "电邮撰写向导"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -884,7 +884,7 @@ msgstr "ID"
 msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
-msgstr "如果启用，激活三供应商账单配套：项目必须以支付发票收到。"
+msgstr "如果启用，激活三重供应商账单：项目必须收到才可以支付发票。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1043,7 +1043,7 @@ msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
-msgstr "供应商提前期的边际。当系统生成需求产品的采购订单，它们需要提前一些天被下单以应付不可预期的供应商交货延期"
+msgstr "供应商提前期的误差范围。当系统为采购产品生成采购订单，它们需要提前多天下单以应付不可预期的供应商交货延期。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_use_po_lead
@@ -1052,7 +1052,7 @@ msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
-msgstr "供应商提前期误差幅度。当系统生成重新订购产品的采购订单时，他们将提前几天调度，以应付意外的供应商延迟。"
+msgstr "供应商提前期误差幅度。当系统生成重新订购产品的采购订单时，它们将被调度提前几天以应付意外的供应商延迟。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1137,7 +1137,7 @@ msgstr "一旦确认，不允许编辑订单"
 msgid ""
 "Non-stored related field to allow portal user to see the image of the "
 "product he has ordered"
-msgstr "非存储的相关字段，允许门户用户查看他订购的产品的图像"
+msgstr "非存储的相关字段以允许门户用户查看他订购的产品之图像"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1379,7 +1379,7 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
-msgstr "采购需求能让你快捷的检查分析公司的采购记录和绩效。从这个菜单你可以追踪你的谈判绩效，以及客户的交货表现等等"
+msgstr "采购需求能让你快捷的检查分析公司的采购记录和绩效。从这个菜单你可以追踪你的谈判绩效，以及客户的交货表现等等。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
@@ -1418,7 +1418,7 @@ msgstr "采购订单"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation #"
-msgstr "采购订单确认"
+msgstr "采购订单确认号码"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1458,7 +1458,7 @@ msgstr "采购订单修改 *"
 msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
-msgstr "采购订单在订单确认后您想要采购订单时可以修改"
+msgstr "采购订单修改在订单确认后您想要采购订单时可以修改"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1487,12 +1487,12 @@ msgstr "采购订单统计"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr "已经开票的采购订单"
+msgstr "已经开票的采购订单。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that include lines not invoiced."
-msgstr "包含未开票明细的采购单"
+msgstr "包含未开票明细的采购单。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
@@ -1528,7 +1528,7 @@ msgstr "输入地址,如果你想直接把货直接从供应商发给客户。�
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr "供应商收取的数量"
+msgstr "供应商开具发票的数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1594,7 +1594,7 @@ msgstr "已接收数量"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
-msgstr "收货数量"
+msgstr "收货数量："
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
@@ -1607,7 +1607,7 @@ msgstr "接收"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Reference"
-msgstr "参照"
+msgstr "参考"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
@@ -1619,7 +1619,7 @@ msgstr "参考计量单位"
 msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
-msgstr "生成此采购订单请求的文档的引用（例如销售订单）"
+msgstr "生成此采购订单请求的文档的参考（例如：销售订单）"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1627,7 +1627,7 @@ msgid ""
 "Reference of the sales order or bid sent by the vendor. It's used to do the "
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
-msgstr "供应商会发送销售订单或投标的有关信息。这些信息是你收到货物后用来核对的."
+msgstr "供应商会发送销售订单或投标的参考。当你收到货物后，这是作为参考来匹配，而且它通常写在你的供应商发来的送货单。"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1667,7 +1667,7 @@ msgstr "保留"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Responsible"
-msgstr "负责人"
+msgstr "负责"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
@@ -1705,10 +1705,7 @@ msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
-msgstr ""
-"选择此“警告“选项，将通知用户此消息。\n"
-"选择“阻止消息“选项，将在流程受阻时将抛出一个消息。\n"
-"消息写入下一个字段。"
+msgstr "选择此“警告“选项，将通知用户此消息。选择“阻止消息“选项，将在流程受阻时将抛出一个例外消息并且阻止流动。消息要写入下一个字段。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1810,7 +1807,7 @@ msgstr "税："
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "字段用于显示直接发运地址"
+msgstr "于显示直接发运地址的技术字段"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1820,7 +1817,7 @@ msgstr "条款和条件"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_website_url
 msgid "The full URL to access the document through the website."
-msgstr "通过网站访问单据的完整URL。"
+msgstr "通过网站访问单据的完整网址。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1829,9 +1826,8 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
-"产品表格包含了改进的详细信息\n"
-"                 采购流程：价格，采购物流，会计数据，\n"
-"                 可用的供应商等"
+"产品表格包含了改进\n"
+"采购流程的详细信息：价格、采购物流、会计数据、可用的供应商等。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1840,8 +1836,9 @@ msgid ""
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
-"产品页中包含了详细的信息可以改进采购流程：\n"
-"价格，补货逻辑，会计信息，可用数量等等"
+"产品页中包含了详细的信息可以改进\n"
+"采购流程：\n"
+"价格、补货逻辑、会计信息、可用供应商等等。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:649
@@ -1867,7 +1864,9 @@ msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
-msgstr "询价单是采购流程的第一步。一旦转换为采购订单，你就能操作相关的收货单和供应商发票"
+msgstr ""
+"询价单是采购流程的第一步。一旦\n"
+"转换为采购订单，你就能操作相关的收货单和供应商发票。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:878
@@ -1882,7 +1881,7 @@ msgstr "没有供应商与产品%s相关联。 请为此产品定义一个供应
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
-msgstr "这个科目用来评估采购价格和会计成本的价格差异"
+msgstr "这个科目用来评估采购价格和会计成本的价格差异。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1901,7 +1900,7 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"这增加了一个直销路线来应用于产品，以请求您的供应商交付给您的客户。 一旦销售订单确认，产品将会产生报价的采购申请。 这是按需流量。 "
+"这增加一个直运路线来应用于产品，以请求您的供应商交付给您的客户。 一旦销售订单被确认，要直运的产品将会产生报价的采购申请。这是按需流量。 "
 "请求的送货地址将是客户送货地址，而不是您的仓库。"
 
 #. module: purchase
@@ -1915,7 +1914,7 @@ msgstr "这将所有订单行的预定日期更改为既定日期"
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr "对当前供应商的采购这种币种被用来替代默认的币种"
+msgstr "对当前供应商的采购将会使用这种货币，而不用默认币种"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_default_purchase_method
@@ -1923,7 +1922,7 @@ msgstr "对当前供应商的采购这种币种被用来替代默认的币种"
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
-msgstr "这个默认值是适用于任何新产品创造。这可以在产品细节形式改变。"
+msgstr "这个默认值是适用于任何新产品创造。这可以在产品细节形式中改变。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1940,12 +1939,12 @@ msgstr "该供应商帐单已经从：%s创建"
 #: code:addons/purchase/models/account_invoice.py:217
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr "此供应商帐单已从%s修改"
+msgstr "此供应商帐单已从%s修改："
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Click to create a new RfQ."
-msgstr "这个供应商没有采购订单，点击创建一张新的询价单"
+msgstr "这个供应商没有采购订单，点击创建一张新的询价单。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
@@ -1980,7 +1979,7 @@ msgstr "总价"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Total Untaxed amount"
-msgstr "不含金额合计"
+msgstr "不含税金额合计"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1998,7 +1997,7 @@ msgstr "调拨"
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
-msgstr "不能取消采购订单 %s，因为有相关的收货已经发生"
+msgstr "不能取消采购订单 %s因为有些收货已经完成。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:365
@@ -2021,7 +2020,7 @@ msgstr "计量单位类别"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr "单位"
+msgstr "测量单位"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2046,7 +2045,7 @@ msgstr "未含税金额"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Untaxed Amount:"
-msgstr "不含税金额"
+msgstr "不含税金额："
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -2056,10 +2055,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
-"使用此菜单来控制从您的发票收到\n"
-"            供应商。 注册新账单时，设置采购订单\n"
-"             Odoo会根据订单自动填写账单\n"
-"             或收到的数量。"
+"使用此菜单来控制您将从你的供应商所收到的发票。\n"
+"注册新账单时，设置采购订单而且\n"
+"Odoo会根据已经下达的订单\n"
+"或收到的数量自动填写账单。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -2069,8 +2068,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
-"用这个菜单搜索采购订单的相关的供应商，产品等等参照。对每一个采购订单，\n"
-"你可以追踪和供应商的讨论，控制产品的收货和供应商发票"
+"使用此菜单根据\n"
+"参考、供应商，产品等 来搜索你的采购订单。对每一个采购订单，\n"
+"你可以追踪与供应商的相关讨论，控制\n"
+"产品的收货和控制供应商账单。"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2127,8 +2128,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
-"供应商账单能通过采购单或者收货单预先生成。\n"
-"这能帮助你通过系统的草稿账单检查从供应商那边得到的账单"
+"供应商账单能通过采购\n"
+"单或者收货单预先生成。\n"
+"这能允许你通过Odoo的草稿\n"
+"文件控制从你的供应商收到的账单。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -2178,19 +2181,19 @@ msgstr "警告"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_website_url
 msgid "Website URL"
-msgstr "网站URL"
+msgstr "网站网址"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "当已购买产品后能够发运到此仓库。"
+msgstr "已购买产品后能够发运到此仓库。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
-msgstr "你可以根据采购订单（服务）或者实际收货数量（产品）控制发票的生成"
+msgstr "你可以根据采购订单（服务）或者收货数量（产品）来控制你的供应商的发票生成。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -2198,10 +2201,7 @@ msgid ""
 "You must define a product for everything you purchase, whether\n"
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
-msgstr ""
-"无论你购买什么，你都必须定义一个产品\n"
-"                 它是一种实物产品，您购买的消耗品或服务\n"
-"                分包商。"
+msgstr "无论你购买什么，你都必须定义一个产品，不管它是一种实物产品，您购买的消耗品或服务的分包商。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
