@@ -6,16 +6,16 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 # e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -25,9 +25,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
+#: model:ir.ui.view,arch_db:payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
 msgid "3D Secure HTML"
 msgstr "3D veilige HTML"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "<b>Amount:</b>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "<b>Reference:</b>"
+msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -50,67 +65,43 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr "<i class=\"fa fa-trash\"/> Verwijder"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:76
-#: code:addons/payment/static/src/js/payment_form.js:219
+#: code:addons/payment/models/payment_acquirer.py:113
 #, python-format
-msgid "<p>Please fill all the inputs required.</p>"
-msgstr "<p>U moet alle verplichte velden invullen.</p>"
+msgid "<i>Cancel,</i> Your payment has been cancelled."
+msgstr "<i>Annuleer,</i> Uw betaling is geannuleerd."
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:109
+#, python-format
+msgid ""
+"<i>Done,</i> Your online payment has been successfully processed. Thank you "
+"for your order."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:117
+#, python-format
+msgid ""
+"<i>Error,</i> Please be aware that an error occurred during the transaction."
+" The order has been confirmed but will not be paid. Do not hesitate to "
+"contact us if you have any questions on the status of your order."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:105
+#, python-format
+msgid ""
+"<i>Pending,</i> Your online payment has been successfully processed. But "
+"your order is not validated yet."
+msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:180
-#, python-format
-msgid "<p>Please select a payment method.</p>"
-msgstr "<p>Selecteer een betalingsmethode.</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:274
-#, python-format
-msgid "<p>Please select the option to add a new payment method.</p>"
-msgstr "<p>Selecteer deze optie om nieuwe betalingsmethode aan te maeken.</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:315
+#: code:addons/payment/static/src/js/payment_form.js:351
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
 msgstr ""
 "<p>Deze creditcard is momenteel verbonden aan de volgende gegevens:<p/>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:108
-#: code:addons/payment/static/src/js/payment_form.js:120
-#: code:addons/payment/static/src/js/payment_form.js:254
-#: code:addons/payment/static/src/js/payment_form.js:267
-#, python-format
-msgid "<p>We are not able to add your payment method at the moment.</p>"
-msgstr "<p>We konden de betaalmethode niet toevoegen op dit moment.</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:298
-#: code:addons/payment/static/src/js/payment_form.js:333
-#, python-format
-msgid "<p>We are not able to delete your payment method at the moment.</p>"
-msgstr "<p>We konden de betaalmethode niet verwijderen op dit moment.</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:155
-#: code:addons/payment/static/src/js/payment_form.js:161
-#, python-format
-msgid "<p>We are not able to redirect you to the payment form.</p>"
-msgstr "<p>We konden u niet doorverwijzen naar het betaalformulier.</p>"
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:169
-#, python-format
-msgid "<p>We're unable to process your payment.</p>"
-msgstr "<p>We konden uw betaling niet verwerken.</p>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -209,27 +200,27 @@ msgstr ""
 "<span><i>In afwachting</i>... De order wordt gevalideerd na betaling.</span>"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 msgid "Acquirer"
 msgstr "Verwerver"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
 msgstr "Account verwerver"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
+#: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
 msgstr "Verwerver Ref."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
 msgstr "Verwerver referentie"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
+#: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
 msgstr "Verwervers"
 
@@ -244,17 +235,17 @@ msgid "Activate"
 msgstr "Activeer"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_active
+#: model:ir.model.fields,field_description:payment.field_payment_token__active
 msgid "Active"
 msgstr "Actief"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
 msgstr "Voeg extra kosten toe"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
 msgstr "Adres"
@@ -271,15 +262,14 @@ msgid "Always"
 msgstr "Altijd"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
-#: model:ir.model.fields,help:payment.field_payment_transaction_amount
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__amount
+#: model:ir.model.fields,help:payment.field_payment_transaction__amount
 #: model:ir.ui.view,arch_db:payment.confirm
-#: model:ir.ui.view,arch_db:payment.pay
 msgid "Amount"
 msgstr "Bedrag"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
 msgid "Authorize Mechanism Supported"
 msgstr "Autorisatie mechanisme ondersteund"
 
@@ -307,34 +297,34 @@ msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_res_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Document ID"
 msgstr "Callback document ID"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_model_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
 msgstr "Callback document model"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_hash
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
 msgstr "Callback hash"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_method
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
 msgstr "Callback methode"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:323
+#: code:addons/payment/static/src/js/payment_form.js:359
 #, python-format
 msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Cancel Message"
 msgstr "Annuleringsbericht"
 
@@ -345,13 +335,19 @@ msgstr "Geannuleerd"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:168
+#: code:addons/payment/static/src/js/payment_form.js:189
 #, python-format
 msgid "Cannot set-up the payment"
 msgstr "Kan de betaling niet verwerken"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
+#: code:addons/payment/controllers/portal.py:110
+#, python-format
+msgid "Cannot setup the payment."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
 msgid "Capture Amount Manually"
 msgstr "Bepaal bedrag handmatig"
 
@@ -361,25 +357,15 @@ msgid "Capture Transaction"
 msgstr "Afvangen transactie"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_capture_manually
+#: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
 msgstr "Ontvang het aantal van Odoo wanneer de levering voltooid is."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
 msgstr "Gemeente"
-
-#. module: payment
-#: model:ir.actions.act_window,help:payment.action_payment_acquirer
-msgid "Click to create a payment acquirer."
-msgstr "Klik om een betalingsverwerker aan te maken."
-
-#. module: payment
-#: model:ir.actions.act_window,help:payment.action_payment_icon
-msgid "Click to create a payment icon."
-msgstr "Klik om een betalingsicoon aan te maken."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -388,7 +374,7 @@ msgid "Communication"
 msgstr "Communicatie"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__company_id
 msgid "Company"
 msgstr "Bedijf"
 
@@ -404,7 +390,7 @@ msgstr "Configureren"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:322
+#: code:addons/payment/static/src/js/payment_form.js:358
 #, python-format
 msgid "Confirm Deletion"
 msgstr "Bevestig verwijdering"
@@ -415,44 +401,64 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
 msgid "Corresponding Module"
 msgstr "Overeenkomende module"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
-#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
 msgstr "Antal betaaltokens"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
 msgid "Countries"
 msgstr "Landen"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
 msgstr "Land"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_icon_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_token_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
+#: model:ir.actions.act_window,help:payment.action_payment_acquirer
+msgid "Create a new payment acquirer"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,help:payment.action_payment_transaction
+msgid "Create a new payment transaction"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,help:payment.action_payment_icon
+msgid "Create a payment icon"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,help:payment.payment_token_action
+msgid "Create a saved payment data"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_icon__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
-#: model:ir.model.fields,field_description:payment.field_payment_icon_create_date
-#: model:ir.model.fields,field_description:payment.field_payment_token_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_icon__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
@@ -467,7 +473,7 @@ msgid "Credit card(s)"
 msgstr "Creditcard(s)"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
 msgstr "Valuta"
 
@@ -477,25 +483,25 @@ msgid "Custom"
 msgstr "Aangepast"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
 msgid "Customer"
 msgstr "Klant"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
 msgid "Description"
 msgstr "Omschrijving"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
+#: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Determine the display order"
 msgstr "Bepaal de weergave volgorde"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_icon_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_token_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_icon__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
@@ -505,7 +511,7 @@ msgid "Done"
 msgstr "Verwerkt"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
 msgstr "Gedaan bericht"
 
@@ -525,12 +531,12 @@ msgid "Electronic"
 msgstr "Digitaal"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 msgid "Email"
 msgstr "E-mail"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__environment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
 msgstr "Omgeving"
@@ -541,48 +547,48 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__error_msg
 msgid "Error Message"
 msgstr "Foutmelding"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:372
+#: code:addons/payment/static/src/js/payment_form.js:423
 #, python-format
 msgid "Error: "
 msgstr "Fout:"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
 msgid "Fees"
 msgstr "Vergoedingen"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
 msgid "Fees Computation Supported"
 msgstr "Vergoedingen berekening ondersteund"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_fees
+#: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr ""
 "Toeslagbedrag; ingesteld door het systeem omdat dit afhangt van de "
 "verwerver."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_state_message
+#: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "Field used to store error and/or validation messages for information"
 msgstr ""
 "Veld gebruikt om errors en/of validatieberichten voor informatie in op te "
 "slaan."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
 msgstr "Vaste huishoudelijke toeslagen"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
 msgstr "Vaste internationale vergoedingen"
 
@@ -592,7 +598,7 @@ msgid "Form"
 msgstr "Formulier"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
 msgstr "Van knop sjabloon"
 
@@ -612,20 +618,20 @@ msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
 msgid "Help Message"
 msgstr "Help berichten"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
-#: model:ir.model.fields,field_description:payment.field_payment_icon_id
-#: model:ir.model.fields,field_description:payment.field_payment_token_id
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment.field_payment_icon__id
+#: model:ir.model.fields,field_description:payment.field_payment_token__id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_specific_countries
+#: model:ir.model.fields,help:payment.field_payment_acquirer__specific_countries
 msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
@@ -633,13 +639,13 @@ msgstr ""
 "Indien u het leeg, is de betalingsverwerker beschikbaar in alle landen."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
-#: model:ir.model.fields,field_description:payment.field_payment_icon_image
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
+#: model:ir.model.fields,field_description:payment.field_payment_icon__image
 msgid "Image"
 msgstr "Afbeelding"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
+#: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
 msgstr "Afbeelding dat wordt weergegeven in het betaalformulier"
 
@@ -655,41 +661,41 @@ msgid "Install"
 msgstr "Installeren"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
 msgid "Installation State"
 msgstr "Installatie status"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_reference
+#: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
 msgstr "Interne referentie van de TX"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
 msgid "Language"
 msgstr "Taal"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_icon___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_token___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_icon____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_icon_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_icon__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_icon_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_token_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_icon__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
@@ -699,12 +705,12 @@ msgid "Let the customer decide"
 msgstr "Laat de klant beslissen"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_icon_acquirer_ids
+#: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
 msgstr "Lijst van betalingsverwerkers die dit betaling icoon ondersteunen."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
+#: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr "Maak deze betaalverwerver beschikbaar (Klant facturen, etc.)"
 
@@ -724,12 +730,12 @@ msgid "Manual Configuration"
 msgstr "Handmatige instellingen"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
 msgid "Medium-sized image"
 msgstr "Middelgrote afbeelding"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
+#: model:ir.model.fields,help:payment.field_payment_acquirer__image_medium
 msgid ""
 "Medium-sized image of this provider. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
@@ -740,39 +746,39 @@ msgstr ""
 "formulierweergaves en sommige kanban weergaves."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
 msgstr "Bericht"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__post_msg
 msgid "Message displayed after having done the payment process."
 msgstr "Bericht dat wordt weergegeven nadat het betalingsproces is voltooid."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
 msgstr ""
 "Bericht dat wordt weergegeven om uitleg te geven en te helpen bij het "
 "betalingsproces."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
 msgid "Message displayed, if error is occur during the payment process."
 msgstr ""
 "Bericht dat wordt getoond wanneer een fout optreed tijdens het "
 "betalingsproces."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
 "Bericht dat wordt getoond als een order geannuleerd is tijdens het "
 "betalingsproces."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
@@ -781,7 +787,7 @@ msgstr ""
 "betalingsproces."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
@@ -795,24 +801,16 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:395
+#: code:addons/payment/models/payment_acquirer.py:389
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
 msgstr ""
 "Ontbrekende relatie referentie bij het aanmaken van een nieuwe betaal token"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:75
-#: code:addons/payment/static/src/js/payment_form.js:218
-#, python-format
-msgid "Missing values"
-msgstr "Missende waardes"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
-#: model:ir.model.fields,field_description:payment.field_payment_icon_name
-#: model:ir.model.fields,field_description:payment.field_payment_token_name
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
+#: model:ir.model.fields,field_description:payment.field_payment_icon__name
+#: model:ir.model.fields,field_description:payment.field_payment_token__name
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -820,7 +818,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_token_name
+#: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "Name of the payment token"
 msgstr "Naam van het betalingstoken"
 
@@ -830,15 +828,20 @@ msgid "Never"
 msgstr "Nooit"
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "No payment acquirer found."
+msgstr ""
+
+#. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:179
-#: code:addons/payment/static/src/js/payment_form.js:273
+#: code:addons/payment/static/src/js/payment_form.js:200
+#: code:addons/payment/static/src/js/payment_form.js:309
 #, python-format
 msgid "No payment method selected"
 msgstr "Geen betalingsmethode geselecteerd"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
+#: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
@@ -848,7 +851,7 @@ msgstr ""
 "zijn."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_payment_flow
+#: model:ir.model.fields,help:payment.field_payment_acquirer__payment_flow
 msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
@@ -863,40 +866,34 @@ msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:376
+#: code:addons/payment/static/src/js/payment_form.js:427
 #, python-format
 msgid "Ok"
 msgstr "Ok"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:759
+#: code:addons/payment/models/payment_acquirer.py:754
 #, python-format
 msgid "Only transactions in the Authorized status can be captured."
 msgstr ""
 "Alleen transacties in de geautoriseerde fase kunnen worden vastgelegd."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:766
+#: code:addons/payment/models/payment_acquirer.py:761
 #, python-format
 msgid "Only transactions in the Authorized status can be voided."
 msgstr ""
 "Alleen transacties in de geautoriseerde fase kunnen worden vernietigd."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__partner_id
 msgid "Partner"
 msgstr "Relatie"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
 msgid "Partner Name"
 msgstr "Relatienaam"
-
-#. module: payment
-#: code:addons/payment/controllers/portal.py:39
-#, python-format
-msgid "Pay Now"
-msgstr "Betaal nu"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -924,6 +921,11 @@ msgid "Payment Acquirers"
 msgstr "Betaling verwervers"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
+msgid "Payment Flow"
+msgstr "Betaal flow"
+
+#. module: payment
 #: model:ir.model,name:payment.model_payment_icon
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
@@ -936,7 +938,7 @@ msgid "Payment Icons"
 msgstr "Betaal iconen"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
 msgid "Payment Journal"
 msgstr "Betaal dagboek"
 
@@ -946,13 +948,13 @@ msgid "Payment Methods"
 msgstr "Betaalwijzes"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_token_id
 msgid "Payment Token"
 msgstr "Betalingstoken"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
-#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_ids
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
@@ -961,14 +963,14 @@ msgstr "Betaal tokens"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_transaction_id
+#: model:ir.model.fields,field_description:payment.field_account_payment__payment_transaction_id
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
-#: model:ir.model.fields,field_description:payment.field_payment_token_payment_ids
+#: model:ir.model.fields,field_description:payment.field_payment_token__payment_ids
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
@@ -976,15 +978,22 @@ msgid "Payment Transactions"
 msgstr "Betalingstransacties"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
-msgid "Payment flow"
-msgstr "Betaal flow"
+#: selection:payment.acquirer,payment_flow:0
+msgid "Payment from Odoo"
+msgstr "Betaling van Odoo"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
 #, python-format
 msgid "Payment transaction failed (%s)"
 msgstr "Betalingstransactie mislukt (%s)"
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:129
+#: code:addons/payment/controllers/portal.py:133
+#, python-format
+msgid "Payment transaction failed."
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -994,7 +1003,7 @@ msgid "Payments"
 msgstr "Betalingen"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
+#: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid ""
 "Payments will be registered into this journal. If you get paid straight on your bank account,\n"
 "                select your bank account. If you get paid in batch for several transactions, create a specific\n"
@@ -1017,14 +1026,33 @@ msgid "Pending"
 msgstr "In afwachting"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
 msgstr "Bericht in afwachting"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
 msgid "Phone"
 msgstr "Telefoon"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "Please configure a payment acquirer."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:201
+#, python-format
+msgid "Please select a payment method."
+msgstr "Selecteer een betalingsmethode aub."
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:310
+#, python-format
+msgid "Please select the option to add a new payment method."
+msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -1040,7 +1068,6 @@ msgstr "Gelieve de ordernaam te gebruiken als communicatie referentie."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
-#: model:ir.ui.view,arch_db:payment.pay
 msgid "Processed by"
 msgstr "Verwerkt door"
 
@@ -1050,21 +1077,25 @@ msgid "Production"
 msgstr "Productie"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_provider
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
 msgstr "Provider"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
+#: selection:payment.acquirer,payment_flow:0
+msgid "Redirection to the acquirer website"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model:ir.ui.view,arch_db:payment.confirm
-#: model:ir.ui.view,arch_db:payment.pay
 msgid "Reference"
 msgstr "Referentie"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
+#: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
 msgstr "Referentie van de TX zoals opgeslagen in de verwervers database"
 
@@ -1084,12 +1115,12 @@ msgid "Required fields not filled"
 msgstr "Verplichte velden niet ingevuld"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
 msgstr "S2S formulier sjabloon"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
 msgid "Save Cards"
 msgstr "Creditcards opslaan"
 
@@ -1105,29 +1136,29 @@ msgid "Saved Payment Data"
 msgstr "Bewaarde betalingsdata"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
+#: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved payment token"
 msgstr "Bewaarde betalingstoken"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
 msgid "Saving Card Data supported"
 msgstr "Opslaan van kaartgegevens ondersteund"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
 msgid "Sequence"
 msgstr "Reeks"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:107
-#: code:addons/payment/static/src/js/payment_form.js:119
-#: code:addons/payment/static/src/js/payment_form.js:154
-#: code:addons/payment/static/src/js/payment_form.js:160
-#: code:addons/payment/static/src/js/payment_form.js:253
-#: code:addons/payment/static/src/js/payment_form.js:297
-#: code:addons/payment/static/src/js/payment_form.js:332
+#: code:addons/payment/static/src/js/payment_form.js:120
+#: code:addons/payment/static/src/js/payment_form.js:135
+#: code:addons/payment/static/src/js/payment_form.js:174
+#: code:addons/payment/static/src/js/payment_form.js:180
+#: code:addons/payment/static/src/js/payment_form.js:286
+#: code:addons/payment/static/src/js/payment_form.js:333
+#: code:addons/payment/static/src/js/payment_form.js:368
 #, python-format
 msgid "Server Error"
 msgstr "Server Error"
@@ -1139,13 +1170,13 @@ msgstr "Server naar server"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:266
+#: code:addons/payment/static/src/js/payment_form.js:301
 #, python-format
 msgid "Server error"
 msgstr "Server fout"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_short_name
+#: model:ir.model.fields,field_description:payment.field_payment_token__short_name
 msgid "Short name"
 msgstr "Korte naam"
 
@@ -1156,12 +1187,12 @@ msgid "Sips"
 msgstr "Sips"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_small
 msgid "Small-sized image"
 msgstr "Kleine afbeelding"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
+#: model:ir.model.fields,help:payment.field_payment_acquirer__image_small
 msgid ""
 "Small-sized image of this provider. It is automatically resized as a 64x64px"
 " image, with aspect ratio preserved. Use this field anywhere a small image "
@@ -1172,12 +1203,12 @@ msgstr ""
 "waar een kleine afbeelding benodigd is."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__specific_countries
 msgid "Specific Countries"
 msgstr "Specifieke landen"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_state
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state
 msgid "Status"
 msgstr "Status"
 
@@ -1188,12 +1219,12 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
 msgstr "Ondersteunde betaal iconen"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
+#: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
 msgid "Template for method registration"
 msgstr "Sjabloon voor methode registratie"
 
@@ -1203,28 +1234,18 @@ msgid "Test"
 msgstr "Test"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__post_msg
 msgid "Thanks Message"
 msgstr "Bedanktbericht"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:570
+#: code:addons/payment/models/payment_acquirer.py:561
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr "De %s betaalverwervers zijn niet toegestaan bij handmatige mode!"
 
 #. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer encode his payment details on the website."
-msgstr "De klant heeft zijn betaaldetails ingevoerd op de website."
-
-#. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer is redirected to the website of the acquirer."
-msgstr "De klant wordt doorverwezen naar de website van de betaalverwerker."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:563
+#: code:addons/payment/models/payment_acquirer.py:554
 #, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr "De referentie van de betalingstransactie moet uniek zijn!"
@@ -1240,7 +1261,7 @@ msgstr ""
 "Gebruik een token van een andere verwerver dan %s."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_icon_image
+#: model:ir.model.fields,help:payment.field_payment_icon__image
 msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
@@ -1249,7 +1270,7 @@ msgstr ""
 "deze betaling. Beperk het formaat op 1024x1024px."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_image
+#: model:ir.model.fields,help:payment.field_payment_acquirer__image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
@@ -1257,20 +1278,16 @@ msgstr ""
 "tot 1024x1024px."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
+#: model:ir.model.fields,help:payment.field_payment_acquirer__save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase.If you manage subscriptions (recurring "
-"invoicing), you need it to automatically charge the customer when you issue "
-"an invoice."
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
 msgstr ""
-"Deze optie staat het klanten toe om een credit card op te slaan als betaling"
-" token and het later opnieuw te gebruiken. Wanneer uw abonnementen beheert "
-"(terugkerende factuur), heeft u het nodig om klanten de factuur in rekening "
-"te brengen."
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
+#: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
 msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
@@ -1295,12 +1312,12 @@ msgstr ""
 "De betaalinformatie ontvangt u nadat u heeft gekozen voor de betaalwijze."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_type
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__type
 msgid "Type"
 msgstr "Soort"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__date_validate
 msgid "Validation Date"
 msgstr "Bevestigingsdatum"
 
@@ -1310,22 +1327,22 @@ msgid "Validation of the bank card"
 msgstr "Validatie van de bank rekening"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
 msgstr "Variabele binnenlandse kosten (in percentage)"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
 msgstr "Variabele internationale vergoedingen (in percentage)"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_verified
+#: model:ir.model.fields,field_description:payment.field_payment_token__verified
 msgid "Verified"
 msgstr "Geverifieerd"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__website_published
 msgid "Visible in Portal / Website"
 msgstr "Zichtbaar in portaal / website"
 
@@ -1336,10 +1353,53 @@ msgstr "Ongeldige transactie"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:318
+#: code:addons/payment/static/src/js/payment_form.js:354
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:136
+#, python-format
+msgid "We are not able to add your payment method at the moment."
+msgstr "We konden uw betaalmethode niet toevoegen op dit moment."
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:302
+#, python-format
+msgid "We are not able to add your payment method at the moment.</p>"
+msgstr "We konden uw betaalmethode niet toevoegen op dit moment.</p>"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:334
+#: code:addons/payment/static/src/js/payment_form.js:369
+#, python-format
+msgid "We are not able to delete your payment method at the moment."
+msgstr "We konden uw betaalmethode niet verwijderen op dit moment."
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:175
+#, python-format
+msgid "We are not able to redirect you to the payment form."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:181
+#, python-format
+msgid "We are not able to redirect you to the payment form.<"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:190
+#, python-format
+msgid "We're unable to process your payment."
+msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1349,8 +1409,8 @@ msgstr "Overschrijving"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
-msgid "You will be prompt with Stripe Payment page for payment information."
-msgstr "U wordt gevraagd om Stripe betalingspagina for betalingsinformatie."
+msgid "You will be prompted with Stripe Payment page for payment information."
+msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -1412,12 +1472,17 @@ msgstr ""
 "U wordt doorgestuurd naar de Sips website na het klikken op de betaal knop."
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Uw betaling is geauthoriseerd."
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
 msgstr "Postcode"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "Postcode"
 
@@ -1445,6 +1510,14 @@ msgstr "context: de huidige context dictionary"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
 msgstr "valuta: de transactie valuta browse record"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:121
+#: code:addons/payment/static/src/js/payment_form.js:287
+#, python-format
+msgid "e.g. Your credit card details are wrong. Please verify."
+msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

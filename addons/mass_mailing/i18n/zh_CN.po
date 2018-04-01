@@ -15,17 +15,17 @@
 # niulin lnc. <admin@niulin.net>, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # kevin lee <kevin80828@gmail.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,10 +55,10 @@ msgstr "<br/><strong/>"
 msgid ""
 "%<br/>\n"
 "                                                <strong>Replied</strong>"
-msgstr "<br/><strong/>"
+msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:541
+#: code:addons/mass_mailing/models/mass_mailing.py:551
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -179,7 +179,7 @@ msgstr "<small/>"
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 msgid "<span class=\"fa fa-copyright\"/> 2016 All Rights Reserved"
-msgstr "<span class=\"fa fa-copyright\"/>"
+msgstr "<span class=\"fa fa-copyright\"/> 版权所有2016"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
@@ -207,6 +207,11 @@ msgid "<strong>Opened</strong>"
 msgstr "<strong>打开的</strong>"
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_form
+msgid "<strong>This email could not be sent.</strong>"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "<strong>Total</strong> management"
 msgstr "<strong/>"
@@ -222,7 +227,7 @@ msgid "A unique value"
 msgstr "唯一值"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_ab_pc
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__contact_ab_pc
 msgid "A/B Testing percentage"
 msgstr "A/B 测试百分比"
 
@@ -232,13 +237,18 @@ msgid "ALL DAY"
 msgstr "全天"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_active
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__active
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__active
 msgid "Active"
 msgstr "有效"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
+#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
+msgid "Add a new tag"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__unique_ab_testing
 msgid "Allow A/B Testing"
 msgstr "支持 A/B 测试"
 
@@ -253,7 +263,7 @@ msgid "Apps That Help You Grow Your Business!"
 msgstr "帮助提升业务的应用!"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_archive_src_lists
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__archive_src_lists
 msgid "Archive source mailing lists"
 msgstr ""
 
@@ -269,7 +279,7 @@ msgid "Attach a file"
 msgstr "附加一个文件"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_attachment_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__attachment_ids
 msgid "Attachments"
 msgstr "附件"
 
@@ -284,16 +294,16 @@ msgid "Basic management"
 msgstr "基础管理"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_body_html
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__body_html
 msgid "Body"
 msgstr "正文"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_bounced
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_bounced
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_bounced
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_bounce
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_bounced
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__bounced
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__bounced
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__bounced
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_bounce
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__bounced
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: selection:mail.mail.statistics,state:0
@@ -301,19 +311,19 @@ msgid "Bounced"
 msgstr "被退回"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_bounced_ratio
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_bounced_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__bounced_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__bounced_ratio
 msgid "Bounced Ratio"
 msgstr "被退回的比率"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3618
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__campaign_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr "营销"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__name
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Campaign Name"
 msgstr "营销名称"
@@ -362,35 +372,7 @@ msgid "Choose"
 msgstr "选择"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
-msgid "Click here to create a new mailing list."
-msgstr "点击这里创建新的邮件列表"
-
-#. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
-#: model:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
-msgid "Click here to create a new mailing."
-msgstr "点击此处创建新的邮件"
-
-#. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
-msgid "Click to add a new tag."
-msgstr "点击来创建一个新的标签"
-
-#. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
-msgid "Click to create a recipient."
-msgstr "点击创建一个收件人"
-
-#. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
-msgid "Click to define a new mass mailing campaign."
-msgstr "点击定义一个新的群发邮件活动"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_clicked
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__clicked
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Clicked"
 msgstr "点击率"
@@ -403,9 +385,9 @@ msgid "Clicks"
 msgstr "点击"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_color
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_color
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_color
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__color
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__color
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__color
 msgid "Color Index"
 msgstr "颜色索引"
 
@@ -425,17 +407,12 @@ msgid "Column title"
 msgstr "专栏标题"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_test_email_to
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_test__email_to
 msgid "Comma-separated list of email addresses."
 msgstr "邮件地址列表中email地址之间以逗号隔开。"
 
 #. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_res_company
-msgid "Companies"
-msgstr "公司"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_company_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__company_name
 msgid "Company Name"
 msgstr "公司名称"
 
@@ -447,65 +424,96 @@ msgstr "配置"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form_simplified
 msgid "Contact List"
 msgstr "联系人列表"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
-#: model:ir.ui.menu,name:mass_mailing.mass_mailing_contact_menu
-#: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_contacts
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_graph
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_pivot
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_tree
-msgid "Contacts"
-msgstr "联系人"
-
-#. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_bounce
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_bounce
 msgid "Counter of the number of bounced emails for this contact."
 msgstr "这个联系人的退回邮件数量的计数器"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_country_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__country_id
 msgid "Country"
 msgstr "国家"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
-msgid ""
-"Create a campaign to structure mass mailing and get analysis from email "
-"status."
-msgstr "创建一个活动构建群发邮件并且从欧诺个邮件状态分析"
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form_simplified
+msgid "Create"
+msgstr "创建"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_create_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_create_uid
+#: model:ir.actions.act_window,name:mass_mailing.open_create_mass_mailing_list
+msgid "Create a Mass Mailing List"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
+msgid ""
+"Create a campaign to structure mailing and get analysis from email status."
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
+msgid "Create a contact in your address book"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
+msgid "Create a new mailing"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
+msgid "Create a new mailing campaign"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
+msgid "Create a new mailing list"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_stages
+msgid "Create a new mass mailing stage"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
+msgid "Create a new recipient"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__create_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_create_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__create_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__create_date
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Creation Date"
 msgstr "创建日期"
@@ -533,50 +541,51 @@ msgid "DEFAULT"
 msgstr "默认"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_exception
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__exception
 msgid "Date of technical error leading to the email not being sent"
 msgstr "导致邮件发送失败的技术错误日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_clicked
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__clicked
 msgid "Date when customer clicked on at least one tracked link"
 msgstr "客户点击至少一个跟踪链接的日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_scheduled
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__scheduled
 msgid "Date when the email has been created"
 msgstr "邮件创建日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_opened
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__opened
 msgid "Date when the email has been opened the first time"
 msgstr "邮件的首次打开日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_sent
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__sent
 msgid "Date when the email has been sent"
 msgstr "邮件发送日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_replied
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__replied
 msgid "Date when this email has been replied for the first time."
 msgstr "此邮件首次回复日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_bounced
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__bounced
 msgid "Date when this email has bounced."
 msgstr "此邮件退回的日期"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
 msgid "Delete"
 msgstr "刪除"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_delivered
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_delivered
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_delivered
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__delivered
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__delivered
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__delivered
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "已送货"
@@ -592,41 +601,46 @@ msgid "Design"
 msgstr "设计"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_dest_list_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__dest_list_id
 msgid "Destination Mailing List"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_display_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_display_name
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form_simplified
+msgid "Discard"
+msgstr "摒弃"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__display_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_res_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__res_id
 msgid "Document ID"
 msgstr "文档ID"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_model
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__model
 msgid "Document model"
 msgstr "单据模型"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_domain
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mailing_domain
 msgid "Domain"
 msgstr "领域"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:549
+#: code:addons/mass_mailing/models/mass_mailing.py:559
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
 #, python-format
@@ -639,12 +653,12 @@ msgid "Duplicate"
 msgstr "复制"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing_list
-msgid "EMails Sent"
-msgstr "已发送的电子邮件"
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_kanban
+msgid "Edit"
+msgstr "编辑"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_email
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__email
 msgid "Email"
 msgstr "Email"
 
@@ -670,13 +684,14 @@ msgid "Email composition wizard"
 msgstr "Email撰写向导"
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing_list
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Emails Sent"
 msgstr "发出去的邮件"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_statistics_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__statistics_ids
 msgid "Emails Statistics"
 msgstr "邮件统计"
 
@@ -691,7 +706,7 @@ msgid "Enjoy,"
 msgstr "尽情享受吧，"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_exception
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__exception
 #: selection:mail.mail.statistics,state:0
 msgid "Exception"
 msgstr "异常"
@@ -717,24 +732,20 @@ msgid "FROM YOUR NEXT ORDER!"
 msgstr "从您的下一个订单开始！"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_facebook
-msgid "Facebook Account"
-msgstr "Facebook账号"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_failed
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_failed
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__failed
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__failed
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Failed"
 msgstr "失败的"
 
 #. module: mass_mailing
-#: selection:mail.mass_mailing,reply_to_mode:0
-msgid "Followers of leads/applicants"
-msgstr "线索的跟踪者/应用"
+#: model:ir.model,name:mass_mailing.model_ir_model_fields
+msgid "Fields"
+msgstr "字段"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_email_from
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_email_from
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__email_from
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__email_from
 msgid "From"
 msgstr "从"
 
@@ -744,16 +755,6 @@ msgid ""
 "Get your inside sales (CRM) fully integrated with online sales (eCommerce), "
 "in-store sales (Point of Sale) and marketplaces like eBay and Amazon."
 msgstr "将内部销售 (CRM) 与网上销售（电子商务）、店内销售（销售点）和市场（如 eBay 和 Amazon）完全集成。"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_github
-msgid "GitHub Account"
-msgstr "GitHub账号"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_googleplus
-msgid "Google+ Account"
-msgstr "Google+账号"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -770,21 +771,21 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__id
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__id
 msgid "ID"
 msgstr "ID"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_mail_mail_id_int
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__mail_mail_id_int
 msgid ""
 "ID of the related mail_mail. This field is an integer field because the "
 "related mail_mail can be deleted separately from its statistics. However the"
@@ -793,7 +794,7 @@ msgstr ""
 "相关 mail_mail 的 ID。此字段为整数字段，因为可单独将相关 mail_mail 从其统计数据中删除。但是，若干操作和控制器均需要使用 ID。"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign__unique_ab_testing
 msgid ""
 "If checked, recipients will be mailed only once for the whole campaign. This"
 " lets you send different mailings to randomly selected recipients and test "
@@ -802,7 +803,7 @@ msgstr ""
 "选中后，在整个营销活动期间，将只向收件人发送一次邮件。这将允许您向随机选择的收件人发送不同邮件，并测试邮件的有效性，而不会导致出现重复的消息。"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:549
+#: code:addons/mass_mailing/models/mass_mailing.py:559
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
@@ -816,7 +817,7 @@ msgid ""
 msgstr "<strong/>"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_keep_archives
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__keep_archives
 msgid "Keep Archives"
 msgstr "归档"
 
@@ -826,16 +827,16 @@ msgid "LOGIN"
 msgstr "登录"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report___last_update
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge___last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report____last_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
@@ -845,43 +846,38 @@ msgid "Last State Update"
 msgstr "最新的状态更新"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_write_uid
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__write_uid
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_write_date
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__write_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics_state_update
+#: model:ir.model.fields,help:mass_mailing.field_mail_mail_statistics__state_update
 msgid "Last state update of the mail"
 msgstr "邮件的最新更新状态"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_linkedin
-msgid "LinkedIn Account"
-msgstr "LinkedIn账号"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_links_click_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__links_click_ids
 msgid "Links click"
 msgstr "点击链接"
 
@@ -896,16 +892,7 @@ msgid "List Unsubscription"
 msgstr "取消订阅的列表"
 
 #. module: mass_mailing
-#: model:ir.ui.view,arch_db:mass_mailing.theme_basic_template
-msgid ""
-"Lorem ipsum dolor sit amet, <br/><br/>consectetur adipisicing elit, sed do "
-"eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim"
-" veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
-"commodo consequat."
-msgstr "<br/><br/>"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mail_mail_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mail_mail_id
 msgid "Mail"
 msgstr "邮件"
 
@@ -915,14 +902,14 @@ msgid "Mail Body"
 msgstr "邮件内容"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mail_mail_id_int
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mail_mail_id_int
 msgid "Mail ID (tech)"
 msgstr "邮件ID（技术）"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click_mail_stat_id
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mail_stat_id
 #: model:ir.ui.menu,name:mass_mailing.menu_email_statistics
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_graph
@@ -932,31 +919,66 @@ msgid "Mail Statistics"
 msgstr "邮件统计"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__mass_mailing_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 msgid "Mailing"
 msgstr "邮件"
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+msgid "Mailing Campaign"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_campaigns
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_tree
+msgid "Mailing Campaigns"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mailing_list_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_name
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mailing_list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__name
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mailing_list_ids
 msgid "Mailing List"
 msgstr "邮件列表"
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
+#: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_contacts
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_graph
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_pivot
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_tree
+msgid "Mailing List Contacts"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_ids_3630
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_src_list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__contact_list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__list_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__contact_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__src_list_ids
+#: model:ir.ui.menu,name:mass_mailing.mass_mailing_mailing_list_menu
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_lists
 #: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_tree
 msgid "Mailing Lists"
 msgstr "邮件列表"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__user_id
+msgid "Mailing Manager"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_stages
+msgid "Mailing Stages"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_tree
@@ -969,20 +991,26 @@ msgid "Mailing Test"
 msgstr "邮件测试"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
-msgid ""
-"Mailing lists allows you to to manage customers and\n"
-"                    contacts easily and to send to mailings in a single click."
-msgstr "邮件列表能让你管理客户并且更容易联系，点击一次鼠标就可以发送所有的邮件"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total_mailings
+#: model:ir.actions.act_window,name:mass_mailing.action_create_ab_mass_mailings_from_campaign
+#: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings
+#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings_from_campaign
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__total_mailings
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu
+#: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailings
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_stage_search
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_stage_tree
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Mailings"
 msgstr "邮件"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+msgid "Mailings that are assigned to me"
+msgstr ""
 
 #. module: mass_mailing
 #: model:res.groups,name:mass_mailing.group_mass_mailing_campaign
@@ -995,28 +1023,24 @@ msgid "Manage campaigns of mass emails with process stages"
 msgstr "通过进程阶段管理邮件群发的营销活动"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__name
 msgid "Mass Mail"
 msgstr "群发邮件"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_campaign
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__campaign
 msgid "Mass Mail Campaign"
 msgstr "群发邮件营销"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click_mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_name
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker__mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 msgid "Mass Mailing"
 msgstr "群发邮件"
 
@@ -1027,13 +1051,12 @@ msgstr "群发邮件"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_campaign
-#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click_mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message_mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message_mass_mailing_campaign_id
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker__mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mass_mailing_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_campaign_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
 msgstr "群发邮件营销"
@@ -1044,10 +1067,7 @@ msgid "Mass Mailing Campaign Stage"
 msgstr "群发邮件营销阶段"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_campaigns
-#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings_group_mass_mailing_campaign
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_tree
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__group_mass_mailing_campaign
 msgid "Mass Mailing Campaigns"
 msgstr "群发邮件营销"
 
@@ -1057,9 +1077,10 @@ msgid "Mass Mailing Contact"
 msgstr "群发邮件联系人"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_stages
-msgid "Mass Mailing Stages"
-msgstr "群发邮件阶段"
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_name
+#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_name
+msgid "Mass Mailing Name"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_statistics_report
@@ -1092,32 +1113,13 @@ msgid "Mass Mailing: Process queue"
 msgstr "邮件群发：进程队列"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,name:mass_mailing.action_create_ab_mass_mailings_from_campaign
-#: model:ir.actions.act_window,name:mass_mailing.action_create_mass_mailings_from_campaign
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings
-#: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings_from_campaign
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_mass_mailing_ids
-#: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailings
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_stage_search
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_stage_tree
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__mass_mailing_ids
 msgid "Mass Mailings"
 msgstr "群发邮件"
 
 #. module: mass_mailing
-#: model:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
-#: model:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
-#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
-msgid ""
-"Mass mailing allows you to to easily design and send mass mailings to your "
-"contacts, customers or leads using mailing lists."
-msgstr "群发邮件能让你便捷的设计并且给所有的联系人，客户或者使用邮件列表的线索批量发送邮件"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_medium_id
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_medium_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__medium_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__medium_id
 msgid "Medium"
 msgstr "普通"
 
@@ -1137,7 +1139,7 @@ msgid "Merge Mass Mailing Lists"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_merge_options
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__merge_options
 msgid "Merge Option"
 msgstr ""
 
@@ -1157,7 +1159,7 @@ msgid "Merge into an existing mailing list"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_message_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__message_id
 msgid "Message-ID"
 msgstr "消息ID"
 
@@ -1182,9 +1184,14 @@ msgid "My Company"
 msgstr "我的公司"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_name
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag_name
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
+msgid "My Mailings"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_tag__name
 msgid "Name"
 msgstr "名称"
 
@@ -1194,7 +1201,7 @@ msgid "Name / Email"
 msgstr "姓名/电子邮件"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge_new_list_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_list_merge__new_list_name
 msgid "New Mailing List Name"
 msgstr ""
 
@@ -1204,17 +1211,28 @@ msgid "No customization"
 msgstr "没有定制"
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
+msgid ""
+"No need of importing your mailing lists, you can easily\n"
+"                send emails to any contact saved in other Odoo apps."
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "No support"
 msgstr "不支持"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_clicks_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__clicks_ratio
 msgid "Number of Clicks"
 msgstr "点击数"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_nbr
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__contact_nbr
 msgid "Number of Contacts"
 msgstr "联系人人数"
 
@@ -1229,7 +1247,7 @@ msgid "Number of bounced email."
 msgstr "已退回电子邮件的数量。"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_clicks_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__clicks_ratio
 msgid "Number of clicks"
 msgstr "点击数"
 
@@ -1249,6 +1267,11 @@ msgid "Odoo Presents"
 msgstr "Odoo 出品"
 
 #. module: mass_mailing
+#: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
+msgid "Odoo helps you to easily track all activities related to a customer."
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
 msgid "Omnichannel sales"
 msgstr "全渠道销售"
@@ -1259,10 +1282,10 @@ msgid "Open Date"
 msgstr "启用日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_opened
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_opened
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_opened
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_opened
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__opened
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__opened
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__opened
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__opened
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1272,13 +1295,13 @@ msgid "Opened"
 msgstr "已开启"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_opened_ratio
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_opened_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__opened_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__opened_ratio
 msgid "Opened Ratio"
 msgstr "打开比例"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_opt_out
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__opt_out
 msgid "Opt Out"
 msgstr "退出"
 
@@ -1308,20 +1331,20 @@ msgid "PRO"
 msgstr "Pro"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_ab_pc
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__contact_ab_pc
 msgid ""
 "Percentage of the contacts that will be mailed. Recipients will be taken "
 "randomly."
 msgstr "联系人被发送邮件的百分比。随机选择联系人。"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:731
+#: code:addons/mass_mailing/models/mass_mailing.py:742
 #, python-format
 msgid "Please select recipients."
 msgstr "请选择收件人"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_reply_to
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__reply_to
 msgid "Preferred Reply-To Address"
 msgstr "希望得到回信的地址"
 
@@ -1341,36 +1364,41 @@ msgid "Received"
 msgstr "已接收"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_received_ratio
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_received_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__received_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__received_ratio
 msgid "Received Ratio"
 msgstr "已接收比例"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_recipient
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__recipient
 msgid "Recipient"
 msgstr "收件人"
 
 #. module: mass_mailing
+#: selection:mail.mass_mailing,reply_to_mode:0
+msgid "Recipient Followers"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts_from_list
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_email_to
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test__email_to
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
 msgid "Recipients"
 msgstr "收件人"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_model_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mailing_model_id
 msgid "Recipients Model"
 msgstr "收件人模型"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_model_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mailing_model_name
 msgid "Recipients Model Name"
 msgstr "收件人模型"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_model_real
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mailing_model_real
 msgid "Recipients Real Model"
 msgstr "收件人实物模型"
 
@@ -1395,10 +1423,10 @@ msgid "Related Mailings"
 msgstr "相关邮件"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_replied
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_replied
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_replied
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_replied
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__replied
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__replied
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__replied
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__replied
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1408,8 +1436,8 @@ msgid "Replied"
 msgstr "已回复"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_replied_ratio
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_replied_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__replied_ratio
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__replied_ratio
 msgid "Replied Ratio"
 msgstr "回复比例"
 
@@ -1419,12 +1447,12 @@ msgid "Reply Date"
 msgstr "回复日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_reply_to
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__reply_to
 msgid "Reply To"
 msgstr "回复"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_reply_to_mode
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__reply_to_mode
 msgid "Reply-To Mode"
 msgstr "回复模式"
 
@@ -1434,7 +1462,7 @@ msgid "Reporting"
 msgstr "报告"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_user_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__user_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Responsible"
 msgstr "负责人"
@@ -1455,19 +1483,20 @@ msgid "Schedule"
 msgstr "安排"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_schedule_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__schedule_date
 msgid "Schedule in the Future"
 msgstr "在将来计划"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_scheduled
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_scheduled
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_scheduled
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__scheduled
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__scheduled
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__scheduled
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Scheduled"
 msgstr "安排"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_scheduled_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__scheduled_date
 msgid "Scheduled Date"
 msgstr "预定交货日期"
 
@@ -1477,7 +1506,7 @@ msgid "Scheduled Month"
 msgstr "月计划"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_next_departure
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__next_departure
 msgid "Scheduled date"
 msgstr "安排的日期"
 
@@ -1515,13 +1544,13 @@ msgstr "向上列邮件地址发送本邮件列表的示例邮件，以便进行
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
-msgid "Send new A/B Testing Mass Mailing"
-msgstr "发送新的A/B测试群发邮件"
+msgid "Send new A/B Testing Mailing"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
-msgid "Send new Mass Mailing"
-msgstr "发送新的群发邮件"
+msgid "Send new Mailing"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1529,17 +1558,18 @@ msgid "Send to All"
 msgstr "发给全体"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:549
+#: code:addons/mass_mailing/models/mass_mailing.py:559
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "Sending"
 msgstr "发送"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:549
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
+#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__sent
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__sent
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__sent
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
 #: selection:mail.statistics.report,state:0
@@ -1554,12 +1584,12 @@ msgid "Sent By"
 msgstr "发送者"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__sent_date
 msgid "Sent Date"
 msgstr "发送日期"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_sent
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__sent
 msgid "Sent Emails"
 msgstr "发送邮件"
 
@@ -1569,7 +1599,7 @@ msgid "Sent Month"
 msgstr "发出月"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage_sequence
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__sequence
 msgid "Sequence"
 msgstr "序号"
 
@@ -1581,17 +1611,12 @@ msgid "Settings"
 msgstr "设置"
 
 #. module: mass_mailing
-#: model:ir.ui.view,arch_db:mass_mailing.view_company_form_inherit_mass_mailing
-msgid "Social Media"
-msgstr "社交媒体"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_source_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__source_id
 msgid "Source"
 msgstr "来源"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_name
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__name
 msgid "Source Name"
 msgstr "来源名称"
 
@@ -1601,25 +1626,25 @@ msgid "Specified Email Address"
 msgstr "指定的邮件地址"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_stage_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__stage_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_search
 msgid "Stage"
 msgstr "阶段"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_state
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__state
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "State"
 msgstr "状态"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_state_update
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__state_update
 msgid "State Update"
 msgstr "状态更新"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__statistics_ids
 msgid "Statistics"
 msgstr "统计信息"
 
@@ -1630,14 +1655,14 @@ msgid "Statistics of Clicks"
 msgstr "点击分析"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_state
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_state
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__state
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__state
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Status"
 msgstr "状态"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_source_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__source_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Subject"
 msgstr "主题"
@@ -1648,13 +1673,13 @@ msgid "Tag name already exists !"
 msgstr "标签名已存在!"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_tag_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_tag_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__tag_ids
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__tag_ids
 msgid "Tags"
 msgstr "标签"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:604
+#: code:addons/mass_mailing/models/mass_mailing.py:615
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -1676,7 +1701,7 @@ msgid "That way, Odoo evolves much faster than any other solution."
 msgstr "采用这种方式，Odoo 比其他解决方案发展更快。"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_opt_out
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__opt_out
 msgid "The contact has chosen not to receive mails anymore from this list"
 msgstr "该联系人选择不再接受本邮件列表的邮件"
 
@@ -1698,27 +1723,27 @@ msgid ""
 msgstr "Odoo 的开源模式已允许我们利用数以千计的开发人员和商务专家，在短短数年内打造数百款应用。"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_medium_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_medium_id
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__medium_id
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign__medium_id
 msgid "This is the delivery method, e.g. Postcard, Email, or Banner Ad"
 msgstr "这是交付方式，例如，明信片、电子邮件或横幅广告"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_source_id
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__source_id
 msgid ""
 "This is the link source, e.g. Search Engine, another domain, or name of "
 "email list"
 msgstr "这是链接源，例如，搜索引擎、其他域名或电子邮件列表名称"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_source_id
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign__source_id
 msgid ""
 "This is the link source, e.g. Search Engine, another domain,or name of email"
 " list"
 msgstr "这是链接源，例如，搜索引擎、其他域名或电子邮件列表名称"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_res_config_settings_group_mass_mailing_campaign
+#: model:ir.model.fields,help:mass_mailing.field_res_config_settings__group_mass_mailing_campaign
 msgid ""
 "This is useful if your marketing campaigns are composed of several emails"
 msgstr "如果您的市场营销活动由多个电子邮件组成，则此工具十分有用"
@@ -1731,12 +1756,12 @@ msgstr "如果您的市场营销活动由多个电子邮件组成，则此工具
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "This mass mailing is scheduled for"
-msgstr "计划此邮件群发以便"
+msgid "This mailing is scheduled for"
+msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3618
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__campaign_id
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign__campaign_id
 msgid ""
 "This name helps you tracking your different campaign efforts, e.g. "
 "Fall_Drive, Christmas_Special"
@@ -1756,30 +1781,20 @@ msgid ""
 msgstr "这将发送电子邮件给所有收件人。是否仍要继续？"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_title_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__title_id
 msgid "Title"
 msgstr "称谓"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__total
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__total
 msgid "Total"
 msgstr "总计"
-
-#. module: mass_mailing
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_search
-msgid "Tracked Link"
-msgstr "追踪链接"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Tracking"
 msgstr "追踪"
-
-#. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_twitter
-msgid "Twitter Account"
-msgstr "Twitter账号"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
@@ -1788,7 +1803,7 @@ msgid "Unsubscribe"
 msgstr "退订"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_unsubscription_date
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "取消订阅日期"
 
@@ -1897,22 +1912,18 @@ msgid ""
 msgstr "您的平台已准备就绪。它将帮助您降低数字标牌成本、吸引新客户以及提高销售额。"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_res_company_social_youtube
-msgid "Youtube Account"
-msgstr "Youtube账号"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "and save $20 on your next order!"
 msgstr "并在完成下一个订单时节省 20 美元！"
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__campaign_id
 msgid "campaign_id"
 msgstr "campaign_id"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_form_simplified
 msgid "e.g. Consumer Newsletter"
 msgstr "例如客户新闻邮件"
 
@@ -1923,13 +1934,13 @@ msgstr "例如 John Smith"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "emails are in queue and will be sent soon."
-msgstr "邮件已经进入发送队列，即将发送"
+msgid "email(s) are in queue and will be sent soon."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-msgid "emails could not be sent."
-msgstr "不能发送邮件"
+msgid "email(s) could not be sent."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker

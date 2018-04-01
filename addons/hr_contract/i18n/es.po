@@ -3,7 +3,7 @@
 # * hr_contract
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
@@ -17,7 +17,7 @@
 # José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 # e2f_EPV Translator <e2f_EPV@outlook.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
+# Gustavo Valverde, 2017
 # Jesus Zapata <jesus@vauxoo.com>, 2017
 # Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
 # Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2017
@@ -25,10 +25,10 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgid "<span>/ month</span>"
 msgstr "<span>/ mes</span>"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
 msgid "Advantages"
 msgstr "Complementos"
 
@@ -63,19 +63,19 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Click here to create new contracts."
-msgstr "Haga click para crear un nuevo contrato."
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_company_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_id
 msgid "Company"
 msgstr "Compañía"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
 msgid "Company Vehicle"
 msgstr "Vehículo de la compañía"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
+msgid "Contract Count"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -83,7 +83,7 @@ msgid "Contract Details"
 msgstr "Detalles del contrato"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
 msgstr "Referencia contrato"
@@ -95,8 +95,8 @@ msgstr "Términos del Contrato"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6036
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
@@ -135,8 +135,7 @@ msgstr "Contrato a renovar"
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_ids
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contracts_count
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
@@ -145,24 +144,29 @@ msgid "Contracts"
 msgstr "Contratos"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_uid
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Create a new contract"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_date
 msgid "Created on"
 msgstr "Creado el"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_currency_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
 msgid "Currency"
 msgstr "Moneda"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
@@ -179,13 +183,13 @@ msgid "Delete"
 msgstr "Suprimir"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__department_id
 msgid "Department"
 msgstr "Departamento"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__display_name
 msgid "Display Name"
 msgstr "Nombre a mostrar"
 
@@ -196,7 +200,7 @@ msgstr "Editar Contrato"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_employee_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
 msgstr "Empleado"
@@ -207,34 +211,34 @@ msgid "Employee Contract"
 msgstr "Contrato de empleado"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 msgid "Employee's monthly gross wage."
 msgstr "Salario bruto mensual por empleado."
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_resource_calendar_id
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Employee's working schedule."
 msgstr "Plan de trabajo del empleado."
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
 msgid "End Date"
 msgstr "Fecha finalización"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_end
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
 msgstr ""
 "fecha de finalización del contrato (si es un contrato por tiempo "
 "determinado)."
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_trial_date_end
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
 msgid "End date of the trial period (if there is one)."
 msgstr "Fecha de finalización del periodo de prueba (si existe)."
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
 msgid "End of Trial Period"
 msgstr "Fin del periodo de prueba"
 
@@ -245,7 +249,7 @@ msgid "Expired"
 msgstr "Expirado"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
 msgid "Gives the sequence when displaying a list of Contract."
 msgstr "Da la secuencia cuando se muestra una lista de Contrato."
 
@@ -262,13 +266,13 @@ msgid "HR Contract: update state"
 msgstr "Contrato laboral: actualizar estado"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle_distance
 msgid "Home-Work Dist."
 msgstr "Distancia casa-trabajo"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__id
 msgid "ID"
 msgstr "ID"
 
@@ -278,12 +282,12 @@ msgid "Important Messages"
 msgstr "Mensajes importantes"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__vehicle_distance
 msgid "In kilometers"
 msgstr "En kilómetros."
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__manager
 msgid "Is a Manager"
 msgstr "Es un director"
 
@@ -293,30 +297,30 @@ msgid "Job"
 msgstr "Puesto"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
 msgid "Job Position"
 msgstr "Puesto de trabajo"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type___last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Latest contract of the employee"
 msgstr "Último contrato del empleado."
 
@@ -326,7 +330,7 @@ msgid "Medical Exam"
 msgstr "Examen médico"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__medic_exam
 msgid "Medical Examination Date"
 msgstr "Fecha del examen médico"
 
@@ -341,18 +345,18 @@ msgid "New"
 msgstr "Nuevo"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_notes
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
 msgstr "Notas"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__children
 msgid "Number of Children"
 msgstr "Número de hijos"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__place_of_birth
 msgid "Place of Birth"
 msgstr "Lugar de nacimiento"
 
@@ -377,18 +381,18 @@ msgid "Search Contract Type"
 msgstr "Buscar tipo contrato"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__sequence
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
 msgid "Start Date"
 msgstr "Fecha de inicio"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_start
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_start
 msgid "Start date of the contract."
 msgstr "Fecha de comienzo del contrato"
 
@@ -398,12 +402,12 @@ msgid "State"
 msgstr "Estado"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
 msgid "Status"
 msgstr "Estado"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_state
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__state
 msgid "Status of the contract"
 msgstr "Estado del contrato"
 
@@ -415,26 +419,26 @@ msgid "To Renew"
 msgstr "Para renovar"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire
 msgid "Visa Expire Date"
 msgstr "Fecha expiración visado"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
 msgid "Visa No"
 msgstr "Número de Visado"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
 msgid "Wage"
 msgstr "Salario"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "Número de permiso de trabajo"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Working Schedule"
 msgstr "Planificación de trabajo"
