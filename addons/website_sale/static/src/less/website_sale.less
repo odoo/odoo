@@ -792,6 +792,7 @@ a.no-decoration {
 
     .carousel-control {
         background-image: none !important;
+        height: 400px;
     }
 
     .carousel-indicators {
@@ -829,11 +830,24 @@ a.no-decoration {
 }
 
 .ecom-zoomable {
-    img[data-zoom] {
-        cursor: zoom-in;
+    &:not(.ecom-autozoom) {
+        img[data-zoom][data-can-zoom] {
+            cursor: zoom-in;
+        }
+    }
+    &.ecom-autozoom {
+        img[data-zoom][data-can-zoom] {
+            cursor: crosshair;
+        }
     }
     .o_editable img[data-zoom] {
         cursor: pointer;
+    }
+    .zoomodoo-flyout {
+        box-shadow: 2px 2px 4px lightgrey;
+    }
+    #o-carousel-product + div.zoomodoo-flyout {
+        max-height: 400px;
     }
 }
 
