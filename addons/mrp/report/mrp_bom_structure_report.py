@@ -9,6 +9,13 @@ class BomStructureReport(models.AbstractModel):
 
     @staticmethod
     def _get_child_vals(record, level, qty, uom):
+        """Get bom.line values.
+
+        :param record: mrp.bom.line record
+        :param level: level of recursion
+        :param qty: quantity of the product
+        :param uom: unit of measurement of a product
+        """
         child = {
             'pname': record.product_id.name_get()[0][1],
             'pcode': record.product_id.default_code,
@@ -27,11 +34,11 @@ class BomStructureReport(models.AbstractModel):
             child['pqty'] = (record.product_qty * qty)
         return child
 
-    def get_children(self, object, level=0):
+    def get_children(self, records, level=0):
         result = []
 
-        def _get_rec(object, level, qty=1.0, uom=False):
-            for l in object:
+        def _get_rec(records, level, qty=1.0, uom=False):
+            for l in records:
                 child = self._get_child_vals(l, level, qty, uom)
                 result.append(child)
                 if l.child_line_ids:
@@ -47,7 +54,7 @@ class BomStructureReport(models.AbstractModel):
                         level -= 1
             return result
 
-        children = _get_rec(object, level)
+        children = _get_rec(records, level)
 
         return children
 
