@@ -827,6 +827,13 @@ class Partner(models.Model):
             'company_name', 'state_id.code', 'state_id.name',
         ]
 
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Customers'),
+            'template': '/base/static/xls/res_partner.xls'
+        }]
+
 
 class ResPartnerIndustry(models.Model):
     _description = 'Industry'

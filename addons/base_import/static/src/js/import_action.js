@@ -109,6 +109,19 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         action.display_name = _t('Import a File'); // Displayed in the breadcrumbs
         this.do_not_change_match = false;
     },
+    /**
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        return this._rpc({
+            model: this.res_model,
+            method: 'get_import_templates',
+            context: this.parent_context,
+        }).then(function (result) {
+            self.importTemplates = result;
+        });
+    },
     start: function () {
         var self = this;
         this.setup_separator_picker();
@@ -121,7 +134,6 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                 self.$('input[name=import_id]').val(id);
 
                 self.renderButtons();
-                self.renderImportLink();
                 var status = {
                     cp_content: {$buttons: self.$buttons},
                 };
@@ -150,12 +162,6 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
             e.preventDefault();
             self.exit();
         });
-    },
-    renderImportLink: function() {
-        if (this.res_model == 'res.partner') {
-            this.$(".import-link").prop({"text": _t(" Import Template for Customers"), "href": "/base_import/static/csv/res.partner.csv"});
-            this.$(".template-import").removeClass("hidden");
-        }
     },
     setup_separator_picker: function () {
         this.$('input.oe_import_separator').select2({

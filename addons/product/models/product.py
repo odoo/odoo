@@ -630,3 +630,10 @@ class SupplierInfo(models.Model):
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Vendor Pricelists'),
+            'template': '/product/static/xls/product_supplierinfo.xls'
+        }]

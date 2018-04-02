@@ -46,6 +46,18 @@ EXTENSIONS = {
     for mime, (ext, handler, req) in FILE_TYPE_DICT.items()
 }
 
+class Base(models.AbstractModel):
+    _inherit = 'base'
+
+    @api.model
+    def get_import_templates(self):
+        """
+        Get the import templates label and path.
+
+        :return a list(dict) containing label and template path
+                like [{'label': 'foo', 'template': 'path'}]
+        """
+        return []
 
 class ImportMapping(models.Model):
     """ mapping of previous column:field selections """
