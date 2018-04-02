@@ -1366,7 +1366,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view, editable, without data', function (assert) {
-        assert.expect(11);
+        assert.expect(13);
 
         this.data.foo.records = [];
 
@@ -1416,11 +1416,15 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody tr:eq(0) td:eq(1)').text().trim(), "",
             "the date field td should not have any content");
 
+        assert.strictEqual(list.$('tr.o_selected_row .o_list_record_selector input').prop('disabled'), true,
+            "record selector checkbox should be disabled while the record is not yet created");
         assert.strictEqual(list.$('.o_list_button button').prop('disabled'), true,
             "buttons should be disabled while the record is not yet created");
 
         list.$buttons.find('.o_list_button_save').click();
 
+        assert.strictEqual(list.$('tbody tr:eq(0) .o_list_record_selector input').prop('disabled'), false,
+            "record selector checkbox should not be disabled once the record is created");
         assert.strictEqual(list.$('.o_list_button button').prop('disabled'), false,
             "buttons should not be disabled once the record is created");
 
