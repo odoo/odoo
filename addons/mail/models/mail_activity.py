@@ -134,7 +134,7 @@ class MailActivity(models.Model):
     def _onchange_recommended_activity_type_id(self):
         if self.recommended_activity_type_id:
             self.activity_type_id = self.recommended_activity_type_id
-        else:
+        elif not self.activity_type_id:
             activity = self.env['mail.activity.type'].search([('res_model_id', '=', self.res_model_id.id)],
                                                              order="sequence", limit=1)
             if not activity:
