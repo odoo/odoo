@@ -426,12 +426,14 @@
                     <notebook colspan="4">
                         <page string="Invoice Lines">
                             <field name="invoice_line_ids" nolabel="1" widget="one2many_list" mode="tree,kanban" context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}">
-                                <tree string="Invoice Lines" editable="bottom">
+                                <tree string="Invoice Lines"
+                                    decoration-danger="line_type == 'section'" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" domain="[('sale_ok','=',True)]"/>
                                     <field name="origin" invisible="1"/>
                                     <field name="is_rounding_line" invisible="1"/>
-                                    <field name="name"/>
+                                    <field name="name" class="product_name"/>
+                                    <field name="line_type" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>

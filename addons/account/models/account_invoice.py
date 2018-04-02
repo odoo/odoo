@@ -1575,8 +1575,7 @@ class AccountInvoiceLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
-    account_id = fields.Many2one('account.account', string='Account',
-        required=True, domain=[('deprecated', '=', False)],
+    account_id = fields.Many2one('account.account', string='Account', domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
@@ -1604,6 +1603,8 @@ class AccountInvoiceLine(models.Model):
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False)
     company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True, related_sudo=False)
     is_rounding_line = fields.Boolean(string='Rounding Line', help='Is a rounding line in case of cash rounding.')
+
+    line_type = fields.Selection([('section', 'Section'), ('note', 'Note'), ('product', 'Product')], default="product")
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

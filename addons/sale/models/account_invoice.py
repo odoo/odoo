@@ -69,23 +69,25 @@ class AccountInvoice(models.Model):
     @api.multi
     def order_lines_layouted(self):
         """
-        Returns this sales order lines ordered by sale_layout_category sequence. Used to render the report.
+        Returns this account invoice line classified by section with subtotal.
+        Used to render the report.
         """
         self.ensure_one()
-        report_pages = [[]]
-        for category, lines in groupby(self.invoice_line_ids, lambda l: l.layout_category_id):
-            # If last added category induced a pagebreak, this one will be on a new page
-            if report_pages[-1] and report_pages[-1][-1]['pagebreak']:
-                report_pages.append([])
-            # Append category to current report page
-            report_pages[-1].append({
-                'name': category and category.name or 'Uncategorized',
-                'subtotal': category and category.subtotal,
-                'pagebreak': category and category.pagebreak,
-                'lines': list(lines)
-            })
-
-        return report_pages
+        result = []
+        empty_line = self.env['account.invoice.line']
+        for line in self.invoice_line_ids:
+            if line.line_type == 'section':
+                result.append({
+                    'section': line.name,
+                    'lines': empty_line
+                })
+            elif len(result):
+                result[-1]['lines'] = result[-1]['lines'] + line
+            else:
+                result = [{'section': _('Uncategorized'),
+                           'lines': line,
+                           }]
+        return result
 
     @api.multi
     def get_delivery_partner_id(self):
@@ -97,13 +99,11 @@ class AccountInvoice(models.Model):
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
-    _order = 'invoice_id, layout_category_id, sequence, id'
+    _order = 'invoice_id, sequence, id'
 
     sale_line_ids = fields.Many2many(
         'sale.order.line',
         'sale_order_line_invoice_rel',
         'invoice_line_id', 'order_line_id',
         string='Sales Order Lines', readonly=True, copy=False)
-    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(string='Layout Sequence')
-    # TODO: remove layout_category_sequence in master or make it work properly
+

@@ -1,10 +1,11 @@
-div[name='order_line'] {
+div[name='order_line'],
+div[name='invoice_line_ids'] {
     tr.o_data_row.text-danger {
         td:not(.product_name):not(.o_handle_cell):not(.o_list_record_remove) {
             visibility: hidden;
         }
     }
-    tr.o_data_row.text-danger td.product_name {
+    tr.o_data_row.text-danger td.product_name,{
         position: absolute;
         left: 22px;
         width: 95%;
