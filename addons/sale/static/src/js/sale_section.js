@@ -73,6 +73,12 @@ ListRenderer.include({
         this.sectionLine = params.arch.attrs.section_line;
         this.formViewRef = params.arch.attrs.form_view_ref;
     },
+    // Disable sorting for section
+    _onSortColumn: function (event) {
+        if (!this.sectionLine) {
+            this._super.apply(this, arguments);
+        }
+    },
     _renderRows: function () {
         var self = this;
         var $rows = this._super.apply(this, arguments);

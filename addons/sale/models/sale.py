@@ -1157,6 +1157,11 @@ class SaleOrderLine(models.Model):
 
         return result
 
+    @api.onchange('line_type')
+    def product_line_type_change(self):
+        if not self.id:
+            self.sequence = max(self.order_id.order_line.mapped('sequence')) + 1
+
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
         if not self.product_uom or not self.product_id:
