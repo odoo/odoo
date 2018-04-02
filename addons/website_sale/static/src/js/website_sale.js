@@ -505,7 +505,7 @@ odoo.define('website_sale.website_sale', function (require) {
             getImageSize($img, function(width, height) {
             // enable zoom only if image is bigger than 500 x 500 pixels
                 if (Math.min(width, height) >= 500) {
-                    $img.zoomOdoo({event: autoZooom ? 'mouseenter' : 'click', attach: '#o-carousel-product'});
+                    $img.attr('data-can-zoom', 1).zoomOdoo({event: autoZooom ? 'mouseenter' : 'click', attach: '#o-carousel-product'});
                 }
             });
         });

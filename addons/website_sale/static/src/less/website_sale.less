@@ -831,21 +831,24 @@ a.no-decoration {
 
 .ecom-zoomable {
     &:not(.ecom-autozoom) {
-        img[data-zoom] {
+        img[data-zoom][data-can-zoom] {
             cursor: zoom-in;
         }
     }
     &.ecom-autozoom {
-        img[data-zoom] {
+        img[data-zoom][data-can-zoom] {
             cursor: crosshair;
         }
     }
     .o_editable img[data-zoom] {
         cursor: pointer;
     }
-    // #o-carousel-product + div.zoomodoo-flyout {
-    //     max-height: 400px;
-    // }
+    .zoomodoo-flyout {
+        box-shadow: 2px 2px 4px lightgrey;
+    }
+    #o-carousel-product + div.zoomodoo-flyout {
+        max-height: 400px;
+    }
 }
 
 .break-word {
