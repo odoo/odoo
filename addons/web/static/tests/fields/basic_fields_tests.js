@@ -2092,10 +2092,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('.o_datepicker_input').click();
+        form.$('.o_datepicker').click();
         assert.strictEqual(form.$('.o_datepicker_input').val(), '', "date field's input should be empty on first click");
         $('.day:contains(22)').click();
-        form.$('.o_datepicker_input').click(); // Open Datepicker second time
+        form.$('.o_datepicker').click(); // Open Datepicker second time
         assert.strictEqual($('.day.active').text(), '22', 'datepicker should be highlight with 22nd day of month');
         form.destroy();
     });
@@ -2133,8 +2133,8 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/03/2017',
             'the date should be correct in edit mode');
 
-        // click on the input and select another value
-        form.$('.o_datepicker_input').click();
+        // click on the datetime field and select another value
+        form.$('.o_datepicker').click();
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         assert.strictEqual($('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
@@ -2217,8 +2217,8 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').val(), '02/03/2017',
             'the date should be correct in edit mode');
 
-        // click on the input and select another value
-        list.$('input.o_datepicker_input').click();
+        // click on the datetime field and select another value
+        list.$('div.o_datepicker').click();
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
@@ -2335,8 +2335,8 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('.o_datepicker_input').val(), expectedDateString,
             'the datetime should be correct in edit mode');
-        // click on the input and select 22 February at 8:23:33
-        form.$('.o_datepicker_input').click();
+        // click on the datetime field and select 22 February at 8:23:33
+        form.$('.o_datepicker').click();
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
@@ -2402,8 +2402,8 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('input.o_datepicker_input').val(), expectedDateString,
             'the date should be correct in edit mode');
 
-        // click on the input and select 22 February at 8:23:33
-        list.$('input.o_datepicker_input').click();
+        // click on the datetime field and select 22 February at 8:23:33
+        list.$('div.o_datepicker').click();
         assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
