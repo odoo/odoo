@@ -392,7 +392,7 @@ class Slide(models.Model):
         if not self.user_has_groups('website.group_website_publisher'):
             values['website_published'] = False
         slide = super(Slide, self).create(values)
-        slide.channel_id.message_subscribe_users()
+        slide.channel_id.message_subscribe(partner_ids=self.env.user.partner_id.ids)
         slide._post_publication()
         return slide
 

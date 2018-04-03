@@ -32,7 +32,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         _body, _body_alt, _subject = '<p>Test Body</p>', 'Test Body', 'Test Subject'
 
         # subscribe second employee to the group to test notifications
-        self.test_record.message_subscribe_users(user_ids=[self.user_admin.id])
+        self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
         msg = self.test_record.sudo(self.user_employee).message_post(
             body=_body, subject=_subject,
@@ -61,7 +61,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notifications_keep_emails(self):
-        self.test_record.message_subscribe_users(user_ids=[self.user_admin.id])
+        self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
         msg = self.test_record.sudo(self.user_employee).message_post(
             body='Test', subject='Test',

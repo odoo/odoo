@@ -17,8 +17,7 @@ class NewLeadNotification(TestCrmCases):
         })
 
         subtype = self.env.ref("crm.mt_salesteam_lead")
-        sales_team_1.message_subscribe(partner_ids=[self.crm_salesman.partner_id.id], subtype_ids=[subtype.id])
-        sales_team_1.message_subscribe(channel_ids=[channel_listen.id], subtype_ids=[subtype.id])
+        sales_team_1.message_subscribe(partner_ids=[self.crm_salesman.partner_id.id], channel_ids=[channel_listen.id], subtype_ids=[subtype.id])
 
         # Imitate what happens in the controller when somebody creates a new
         # lead from the website form

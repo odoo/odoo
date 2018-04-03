@@ -25,9 +25,9 @@ class TestPortalProject(TestPortalProjectBase):
         self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_noone).search, [('project_id', '=', pigs.id)])
 
         # Data: task follower
-        pigs.sudo(self.user_projectmanager).message_subscribe_users(user_ids=[self.user_portal.id])
-        self.task_1.sudo(self.user_projectuser).message_subscribe_users(user_ids=[self.user_portal.id])
-        self.task_3.sudo(self.user_projectuser).message_subscribe_users(user_ids=[self.user_portal.id])
+        pigs.sudo(self.user_projectmanager).message_subscribe(partner_ids=[self.user_portal.partner_id.id])
+        self.task_1.sudo(self.user_projectuser).message_subscribe(partner_ids=[self.user_portal.partner_id.id])
+        self.task_3.sudo(self.user_projectuser).message_subscribe(partner_ids=[self.user_portal.partner_id.id])
         # Do: Chell reads project -> ok (portal ok public)
         pigs.sudo(self.user_portal).read(['user_id'])
         # Do: Donovan reads project -> ko (public ko portal)
@@ -35,5 +35,5 @@ class TestPortalProject(TestPortalProjectBase):
         # Test: no access right to project.task
         self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_public).search, [])
         # Data: task follower cleaning
-        self.task_1.sudo(self.user_projectuser).message_unsubscribe_users(user_ids=[self.user_portal.id])
-        self.task_3.sudo(self.user_projectuser).message_unsubscribe_users(user_ids=[self.user_portal.id])
+        self.task_1.sudo(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_portal.partner_id.id])
+        self.task_3.sudo(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_portal.partner_id.id])

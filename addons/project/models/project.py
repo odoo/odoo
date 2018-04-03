@@ -358,16 +358,14 @@ class Project(models.Model):
         return super(Project, self).get_access_action(access_uid)
 
     @api.multi
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         """ Subscribe to all existing active tasks when subscribing to a project """
-        res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, force=force)
-        if not subtype_ids or any(subtype.parent_id.res_model == 'project.task' for subtype in self.env['mail.message.subtype'].browse(subtype_ids)):
-            for partner_id in partner_ids or []:
-                self.mapped('tasks').filtered(lambda task: not task.stage_id.fold and partner_id not in task.message_partner_ids.ids).message_subscribe(
-                    partner_ids=[partner_id], channel_ids=None, subtype_ids=None, force=False)
-            for channel_id in channel_ids or []:
-                self.mapped('tasks').filtered(lambda task: not task.stage_id.fold and channel_id not in task.message_channel_ids.ids).message_subscribe(
-                    partner_ids=None, channel_ids=[channel_id], subtype_ids=None, force=False)
+        res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+        project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
+        task_subtypes = project_subtypes.mapped('parent_id').ids if project_subtypes else None
+        if not subtype_ids or task_subtypes:
+            self.mapped('tasks').message_subscribe(
+                partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
         return res
 
     @api.multi
