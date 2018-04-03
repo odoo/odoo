@@ -99,7 +99,8 @@ class AccountInvoice(models.Model):
                                     line_revenue = timesheet_line.timesheet_revenue * price_subtotal_inv / price_subtotal_sol
                                     total_revenue_per_currency[timesheet_line.company_currency_id.id] += line_revenue
                                 else:
-                                    total_revenue_per_currency[timesheet_line.company_currency_id.id] += timesheet_line.timesheet_revenue
+                                    line_revenue = timesheet_line.timesheet_revenue
+                                    total_revenue_per_currency[timesheet_line.company_currency_id.id] += line_revenue
                             else:  # last line: add the difference to avoid rounding problem
                                 last_price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.company_currency_id)
                                 total_revenue = sum([self.env['res.currency'].browse(currency_id).compute(amount, timesheet_line.company_currency_id) for currency_id, amount in total_revenue_per_currency.items()])
