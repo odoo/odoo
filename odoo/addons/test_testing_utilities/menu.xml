@@ -104,4 +104,25 @@
             </form>
         </field>
     </record>
+
+    <record id="m2o_onchange_view" model="ir.ui.view">
+        <field name="name">Dynamic Onchange Test View</field>
+        <field name="model">test_testing_utilities.onchange_parent</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <notebook>
+                        <page>
+                            <field name="line_ids" widget="one2many_list" context="{'line_ids': line_ids}">
+                                <tree editable="bottom">
+                                    <field name="dummy"/>
+                                    <field name="flag" invisible="1" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
 </odoo>

@@ -955,7 +955,6 @@ class Form(object):
 
         # marks any onchange source as changed (default_get or explicit set)
         self._changed.update(fields)
-
         result = self._model.onchange(
             self._onchange_values(),
             fields,
@@ -1070,6 +1069,25 @@ class O2MForm(Form):
 
         # FIXME: should be called when performing on change => value needs to be serialised into parent every time?
         proxy._parent._perform_onchange([proxy._field])
+
+    def _values_to_save(self):
+        """ Validates values and returns only fields modified since
+        load/save
+        """
+        values = {}
+        for f in self._view['fields']:
+            v = self._values[f]
+            if self._get_modifier(f, 'required'):
+                assert v is not False, "{} is a required field".format(f)
+
+            # skip unmodified fields
+            if f not in self._changed:
+                continue
+            # if self._get_modifier(f, 'readonly'):
+            #     continue
+            # TODO: filter out (1, _, {}) from o2m values
+            values[f] = v
+        return values
 
 class X2MProxy(object):
     _parent = None

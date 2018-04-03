@@ -393,6 +393,17 @@ class TestO2M(TransactionCase):
         with self.assertRaises(AssertionError):
             f.subs.remove(index=0)
 
+    def test_o2m_dyn_onchange(self):
+        f = Form(self.env['test_testing_utilities.onchange_parent'], view='test_testing_utilities.m2o_onchange_view')
+
+        with f.line_ids.new() as new_line:
+            new_line.dummy = 42
+            self.assertTrue(new_line.flag)
+
+        with f.line_ids.edit(index=0) as new_line:
+            self.assertTrue(new_line.flag)
+
+
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
     post-save (we already have it) and it's easier to see what bits act on
