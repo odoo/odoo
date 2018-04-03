@@ -68,7 +68,7 @@ class AccountInvoiceLine(models.Model):
         if not self.account_analytic_id:
             rec = self.env['account.analytic.default'].account_get(
                 self.product_id.id, self.invoice_id.commercial_partner_id.id, self.env.uid,
-                fields.Date.today(), company_id=self.company_id.id)
+                fields.Date.today(), company_id=invoice.company_id.id)
             if rec:
                 self.account_analytic_id = rec.analytic_id.id
         super(AccountInvoiceLine, self)._set_additional_fields(invoice)
