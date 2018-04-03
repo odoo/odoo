@@ -549,7 +549,9 @@ function on_needaction_notification (message) {
         increment_unread: true,
     });
     invalidate_caches(message.channel_ids);
-    needaction_counter++;
+    if (message.channel_ids.length !== 0 && !_.contains(message.channel_ids, 'channel_inbox') && !_.contains(message.channel_ids, 'channel_starred')) {
+        needaction_counter++;
+    }
     _.each(message.channel_ids, function (channel_id) {
         var channel = chat_manager.get_channel(channel_id);
         if (channel) {
