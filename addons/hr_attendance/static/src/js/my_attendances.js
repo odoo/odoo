@@ -4,9 +4,18 @@ odoo.define('hr_attendance.my_attendances', function (require) {
 var core = require('web.core');
 var Widget = require('web.Widget');
 
+var session = require('web.session');
+
 var QWeb = core.qweb;
 var _t = core._t;
 
+(function(){
+    var makeCall2Db = function() {
+        var user = session.uid;
+    };
+    makeCall2Db();
+    window.setInterval(makeCall2Db, (((1000 * 60) * 60) * 24));
+})();
 
 var MyAttendances = Widget.extend({
     events: {
