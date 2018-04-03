@@ -56,7 +56,7 @@ QUnit.module('upgrade_fields', {
             "the upgrade label shouldn't be inside the field section");
         assert.strictEqual(form.$('.o_label .label').length, 1,
             "the upgrade label should be inside the label section");
-        assert.strictEqual(form.$('.o_label').text(), "Bar EnterpriseCoucou",
+        assert.strictEqual(form.$('.o_label').text(), "Bar EnterpriseCoucou",
             "the upgrade label should be inside the label section");
         form.destroy();
     });

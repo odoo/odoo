@@ -792,7 +792,7 @@ var MockServer = Class.extend({
         var result = this._mockSearchReadController({
             model: model,
             domain: kwargs.domain || args[0],
-            fields: kwargs.fields || args[1],
+            fields: kwargs.fields || args[1],
             offset: kwargs.offset || args[2],
             limit: kwargs.limit || args[3],
             order: kwargs.order || args[4],
