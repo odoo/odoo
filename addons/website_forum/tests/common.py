@@ -81,6 +81,7 @@ class TestForumCommon(common.SavepointCase):
             'karma_gen_answer_accept': 9999,
             'karma_gen_answer_accepted': 9999,
             'karma_gen_answer_flagged': KARMA['gen_ans_flag'],
+            'website_published': True,
         })
         cls.post = Post.create({
             'name': 'TestQuestion',

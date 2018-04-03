@@ -24,6 +24,7 @@ Ask questions, get answers, no distractions
         'views/website_forum.xml',
         'views/ir_qweb.xml',
         'security/ir.model.access.csv',
+        'security/website_forum_security.xml',
         'data/badges_question.xml',
         'data/badges_answer.xml',
         'data/badges_participation.xml',
