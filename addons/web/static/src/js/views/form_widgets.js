@@ -1504,6 +1504,17 @@ var FieldMonetary = FieldFloat.extend({
     format_value: function(val, def) {
         return formats.format_value(val, {type: "float", digits: this.get_digits_precision()}, def);
     },
+    /*Funcion agregada por Trescloud con el fin de evitar que se disparen los
+    onchange de los campos monetary si haber cambiado su valor*/
+    internal_set_value: function(value_) {
+        var digits = this.get_digits_precision();
+        if (_.isArray(digits)) {
+            if (utils.float_is_zero(value_ - this.get("value"), digits[1])) {
+                return;
+            }
+        }
+        return this._super.apply(this, arguments);
+    },
 });
 
 /**
