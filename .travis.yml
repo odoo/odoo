@@ -19,7 +19,7 @@ python:
   - "2.7"
 
 env:
-  - VERSION="9.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" EXTRA_EXCLUDE="theme_bootswatch"
+  - VERSION="9.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
 
 virtualenv:
   system_site_packages: true
@@ -31,13 +31,10 @@ before_install:
 install:
   - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
-  - pip install -r ${HOME}/maintainer-quality-tools/travis/requirements.txt
-  - pip install -q QUnitSuite flake8 coveralls pylint
-  - ln -s `which nodejs` $HOME/maintainer-quality-tools/travis/node
-  - npm install less less-plugin-clean-css
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - travis_install_nightly
   - export INCLUDE=$(getaddons.py -m ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons)
-  - export EXCLUDE=hw_scanner,hw_escpos,$EXTRA_EXCLUDE
+  - export EXCLUDE=hw_scanner,hw_escpos,theme_bootswatch
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
