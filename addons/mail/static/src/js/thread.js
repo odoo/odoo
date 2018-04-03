@@ -132,6 +132,13 @@ var Thread = Widget.extend({
             } else {
                 msg.display_author = !options.squash_close_messages;
             }
+            if (msg.attachment_ids) {
+                var sortedAttachments = _.partition(msg.attachment_ids, function (att) {
+                    return att.mimetype && att.mimetype.split('/')[0] === 'image';
+                });
+                msg.images = sortedAttachments[0];
+                msg.others = sortedAttachments[1];
+            }
             prev_msg = msg;
         });
 
