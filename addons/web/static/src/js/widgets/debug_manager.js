@@ -178,6 +178,7 @@ var DebugManager = Widget.extend({
                     })
                     .then(function (views) {
                         var view = views[0];
+                        view.type = view.type === 'tree' ? 'list' : view.type; // ignore tree view
                         self.do_action({
                             type: 'ir.actions.act_window',
                             name: view.name,
