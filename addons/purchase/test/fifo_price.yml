@@ -3,7 +3,7 @@
 -
   !python {model: res.company}: |
     company = self.browse(cr, uid, ref('base.main_company'))
-    company.currency_id = company.env['res.currency'].browse(ref('base.EUR'))
+    cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [ref('base.EUR'), company.id])
 -
   Set a product as using fifo price
 -
