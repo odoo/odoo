@@ -80,21 +80,21 @@ class TestEquipmentMulticompany(TransactionCase):
 
         # create equipment category for equipment manager
         category_1 = Category.sudo(equipment_manager).create({
-            'name': 'Monitors',
+            'name': 'CPU',
             'company_id': company_b.id,
             'technician_user_id': equipment_manager.id,
         })
 
         # create equipment category for equipment manager
         Category.sudo(equipment_manager).create({
-            'name': 'Computers',
+            'name': 'Laptop',
             'company_id': company_b.id,
             'technician_user_id': equipment_manager.id,
         })
 
         # create equipment category for equipment user
         Category.sudo(equipment_manager).create({
-            'name': 'Phones',
+            'name': 'Smartphones',
             'company_id': company_a.id,
             'technician_user_id': equipment_manager.id,
         })
