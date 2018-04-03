@@ -142,7 +142,7 @@ class SaleOrderLine(models.Model):
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
 
     @api.multi
-    @api.depends('product_id.type', 'product_id.service_type')
+    @api.depends('product_id')
     def _compute_qty_delivered_method(self):
         """ Sale Timesheet module compute delivered qty for product [('type', 'in', ['service']), ('service_type', '=', 'timesheet')] """
         super(SaleOrderLine, self)._compute_qty_delivered_method()
@@ -167,12 +167,12 @@ class SaleOrderLine(models.Model):
         return [('project_id', '!=', False)]
 
     @api.multi
-    @api.depends('product_id.type')
+    @api.depends('product_id')
     def _compute_is_service(self):
         for so_line in self:
             so_line.is_service = so_line.product_id.type == 'service'
 
-    @api.depends('product_id.type')
+    @api.depends('product_id')
     def _compute_product_updatable(self):
         for line in self:
             if line.product_id.type == 'service' and line.state == 'sale':
