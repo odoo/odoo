@@ -286,7 +286,7 @@ class Department(models.Model):
         department = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals)
         manager = self.env['hr.employee'].browse(vals.get("manager_id"))
         if manager.user_id:
-            department.message_subscribe_users(user_ids=manager.user_id.ids)
+            department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
         return department
 
     @api.multi
@@ -303,7 +303,7 @@ class Department(models.Model):
                 manager = self.env['hr.employee'].browse(manager_id)
                 # subscribe the manager user
                 if manager.user_id:
-                    self.message_subscribe_users(user_ids=manager.user_id.ids)
+                    self.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
         return super(Department, self).write(vals)

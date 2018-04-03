@@ -208,13 +208,13 @@ class MaintenanceEquipment(models.Model):
     def create(self, vals):
         equipment = super(MaintenanceEquipment, self).create(vals)
         if equipment.owner_user_id:
-            equipment.message_subscribe_users(user_ids=[equipment.owner_user_id.id])
+            equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
         return equipment
 
     @api.multi
     def write(self, vals):
         if vals.get('owner_user_id'):
-            self.message_subscribe_users(user_ids=[vals['owner_user_id']])
+            self.message_subscribe(partner_ids=self.env['res.users'].browse(vals['owner_user_id']).partner_id.ids)
         return super(MaintenanceEquipment, self).write(vals)
 
     @api.model
@@ -377,8 +377,8 @@ class MaintenanceRequest(models.Model):
 
     def _add_followers(self):
         for request in self:
-            user_ids = (request.owner_user_id + request.technician_user_id).ids
-            request.message_subscribe_users(user_ids=user_ids)
+            partner_ids = (request.owner_user_id.partner_id + request.technician_user_id.partner_id).ids
+            request.message_subscribe(partner_ids=partner_ids)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
