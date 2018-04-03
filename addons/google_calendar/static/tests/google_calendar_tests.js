@@ -27,8 +27,8 @@ QUnit.module('Google Calendar', {
                     type: {string: "type", type: "integer"},
                 },
                 records: [
-                    {id: 5, user_id: 4, partner_id: 4, name: "event 1", start: "2016-12-13 15:55:05", stop: "2016-12-15 18:55:05", allday: false, partner_ids: [], type: 2},
-                    {id: 6, user_id: 4, partner_id: 4, name: "event 2", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [], type: 3}
+                    {id: 5, user_id: 4, partner_id: 4, name: "event 1", start: "2016-12-13 15:55:05", stop: "2016-12-15 18:55:05", allday: false, partner_ids: [], type: 2},
+                    {id: 6, user_id: 4, partner_id: 4, name: "event 2", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [], type: 3}
                 ],
                 check_access_rights: function () {
                     return $.when(true);

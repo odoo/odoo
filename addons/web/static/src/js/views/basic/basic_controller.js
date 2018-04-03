@@ -306,7 +306,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _disableButtons: function () {
+    _disableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').attr('disabled', true);
         }
@@ -352,7 +352,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _enableButtons: function () {
+    _enableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').removeAttr('disabled');
         }
