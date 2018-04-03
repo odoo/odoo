@@ -85,16 +85,8 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def action_open_product_moves(self):
-        self.ensure_one()
-        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
-        action['domain'] = [('product_tmpl_id', '=', self.id)]
-        action['context'] = {
-            'search_default_outgoing': True,
-            'search_default_incoming': True,
-            'search_default_done': True,
-            'is_avg': self.cost_method == 'average',
-        }
-        return action
+        # TODO: remove me in master
+        pass
 
     @api.multi
     def get_product_accounts(self, fiscal_pos=None):
@@ -270,16 +262,8 @@ class ProductProduct(models.Model):
 
     @api.multi
     def action_open_product_moves(self):
-        self.ensure_one()
-        action = self.env.ref('stock_account.stock_move_valuation_action').read()[0]
-        action['domain'] = [('product_id', '=', self.id)]
-        action['context'] = {
-            'search_default_outgoing': True,
-            'search_default_incoming': True,
-            'search_default_done': True,
-            'is_avg': self.cost_method == 'average',
-        }
-        return action
+        #TODO: remove me in master
+        pass
 
     @api.model
     def _anglo_saxon_sale_move_lines(self, name, product, uom, qty, price_unit, currency=False, amount_currency=False, fiscal_position=False, account_analytic=False, analytic_tags=False):
