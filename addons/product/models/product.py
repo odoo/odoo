@@ -366,7 +366,14 @@ class ProductProduct(models.Model):
         if self._context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super(ProductProduct, self).search(args, offset=offset, limit=limit, order=order, count=count)
-
+    
+    #El siguiente metodo fue agregado por Trescloud
+    def get_name(self, code, name):
+        '''
+            Hook se utilizara en un metodo superior, para intercambiar el orden de los valores del name_get.
+        '''
+        return '[%s] %s' % (code,name)
+    
     @api.multi
     def name_get(self):
         # TDE: this could be cleaned a bit I think
@@ -375,7 +382,8 @@ class ProductProduct(models.Model):
             name = d.get('name', '')
             code = self._context.get('display_default_code', True) and d.get('default_code', False) or False
             if code:
-                name = '[%s] %s' % (code,name)
+                #la siguiente linea fue modificada por Trescloud, para realizar un hook y alterar el name_get.
+                name = self.get_name(code, name) 
             return (d['id'], name)
 
         partner_id = self._context.get('partner_id')
