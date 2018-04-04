@@ -46,7 +46,7 @@
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
-                        <td>
+                        <td id="tx_status">
                             <t t-if="invoice.state == 'open'">
                                 <span class="label label-info"><i class="fa fa-fw fa-clock-o"></i><span class="hidden-xs"> Waiting for Payment</span></span>
                             </t>
