@@ -19,7 +19,8 @@ class FleetVehicle(models.Model):
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     active = fields.Boolean('Active', default=True, track_visibility="onchange")
     company_id = fields.Many2one('res.company', 'Company')
-    license_plate = fields.Char(required=True, help='License plate number of the vehicle (i = plate number for a car)')
+    license_plate = fields.Char(required=True, track_visibility="onchange",
+        help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
     driver_id = fields.Many2one('res.partner', 'Driver', help='Driver of the vehicle', copy=False)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle')
@@ -74,7 +75,7 @@ class FleetVehicle(models.Model):
         ('driver_id_unique', 'UNIQUE(driver_id)', 'Only one car can be assigned to the same employee!')
     ]
 
-    @api.depends('model_id', 'license_plate')
+    @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
             record.name = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + (record.license_plate or _('No Plate'))

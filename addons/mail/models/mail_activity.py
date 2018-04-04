@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
+import pytz
 
 from odoo import api, exceptions, fields, models, _
 
@@ -108,8 +109,15 @@ class MailActivity(models.Model):
 
     @api.depends('date_deadline')
     def _compute_state(self):
-        today = date.today()
+        today_default = date.today()
+
         for record in self.filtered(lambda activity: activity.date_deadline):
+            today = today_default
+            if record.user_id.tz:
+                today_utc = pytz.UTC.localize(datetime.utcnow())
+                today_tz = today_utc.astimezone(pytz.timezone(record.user_id.tz))
+                today = date(year=today_tz.year, month=today_tz.month, day=today_tz.day)
+
             date_deadline = fields.Date.from_string(record.date_deadline)
             diff = (date_deadline - today)
             if diff.days == 0:
