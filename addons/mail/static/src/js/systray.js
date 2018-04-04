@@ -308,5 +308,6 @@ SystrayMenu.Items.push(ActivityMenu);
 // to test activity menu in qunit test cases we need it
 return {
     ActivityMenu: ActivityMenu,
+    MessagingMenu: MessagingMenu,
 };
 });
