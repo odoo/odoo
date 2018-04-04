@@ -42,6 +42,11 @@ var Dialog = Widget.extend({
      * @param {boolean} [options.technical=true]
      *        If set to false, the modal will have the standard frontend style
      *        (use this for non-editor frontend features)
+     * @param {integer} [options.zIndex=undefined] if provided, the dialog will
+     * be on top of any element at or below this z-index. Otherwise, it will
+     * use the default settings for z-index.
+     * This is useful in order to have a dialogs that could either prevent or
+     * allow interactions with the chat windows.
      */
     init: function (parent, options) {
         this._super(parent);
@@ -63,6 +68,7 @@ var Dialog = Widget.extend({
         this.size = options.size;
         this.buttons = options.buttons;
         this.technical = options.technical;
+        this._zIndex = options.zIndex;
     },
     /**
      * Wait for XML dependencies and instantiate the modal structure (except
@@ -155,6 +161,10 @@ var Dialog = Widget.extend({
         this.appendTo($('<div/>')).then(function () {
             self.$modal.find(".modal-body").replaceWith(self.$el);
             self.$modal.modal('show');
+            if (self._zIndex) {
+                $('.modal-backdrop').css('z-index', self._zIndex);
+                self.$modal.css('z-index', self._zIndex + 11);
+            }
             self._opened.resolve();
         });
 
