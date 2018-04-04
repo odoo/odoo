@@ -616,11 +616,12 @@ var SearchView = Widget.extend({
      * @todo: the way it is done could be improved, but the actual state of the
      * searchview doesn't allow to do much better.
 
-     * @param {Array[Object]} list of filters to add, described by objects with
-     *   keys domain (the domain as an Array), and help (the text to display in
-     *   the facet)
-     * @param {Array[Object]} list of filters to remove (previously added ones)
-     * @returns {Array[Object]} list of added filters (to pass as filtersToRemove
+     * @param {Array<Object>} newFilters list of filters to add, described by
+     *   objects with keys domain (the domain as an Array), and help (the text
+     *   to display in the facet)
+     * @param {Array<Object>} filtersToRemove list of filters to remove
+     *   (previously added ones)
+     * @returns {Array<Object>} list of added filters (to pass as filtersToRemove
      *   for a further call to this function)
      */
     updateFilters: function (newFilters, filtersToRemove) {
@@ -643,7 +644,7 @@ var SearchView = Widget.extend({
 
         this.query.trigger('reset');
 
-        return addedFilters
+        return addedFilters;
     },
 
     //--------------------------------------------------------------------------
