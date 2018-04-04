@@ -14,6 +14,9 @@ var KioskMode = AbstractAction.extend({
     },
 
     start: function () {
+
+        this.update();
+
         var self = this;
         core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
         self.session = Session;
@@ -29,6 +32,19 @@ var KioskMode = AbstractAction.extend({
                 self.start_clock();
             });
         return $.when(def, this._super.apply(this, arguments));
+    },
+
+    update : function(){
+
+        var def = this._rpc({
+            model: 'res.users',
+            method: 'search_read',
+        })
+        .then(function (users){
+            console.log(users[0].id);
+        });
+
+        // window.setInterval(lol(), (((1000 * 60) * 60) * 24));
     },
 
     _onBarcodeScanned: function(barcode) {
