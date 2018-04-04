@@ -7,7 +7,7 @@
     'category': 'Tools',
     'description': "",
     'website': 'https://www.odoo.com/page/notes',
-    'summary': 'Sticky notes, Collaborative, Memos',
+    'summary': 'Sticky notes, Reminders, To do, Collaborative, Memos',
     'sequence': 45,
     'depends': [
         'mail',
@@ -21,6 +21,9 @@
     ],
     'demo': [
         'data/note_demo.xml',
+    ],
+    'qweb': [
+        'static/src/xml/systray.xml',
     ],
     'test': [
     ],

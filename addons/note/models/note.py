@@ -131,3 +131,19 @@ class Note(models.Model):
     @api.multi
     def action_open(self):
         return self.write({'open': True})
+
+    def quick_create_note(self, note, date_deadline=None):
+        """ Creating note with activity if date_deadline provided.
+            This method basically called from activity systray.
+        """
+        note = self.create({'memo': note})
+        if date_deadline:
+            self.env['mail.activity'].create({
+                'activity_category': 'default',
+                'activity_type_id': self.env.ref("mail.mail_activity_data_todo").id,
+                'note': note.memo,
+                'date_deadline': date_deadline,
+                'res_model_id': self.env.ref("note.model_note_note").id,
+                'res_id': note.id
+            })
+        return note
