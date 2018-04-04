@@ -375,11 +375,12 @@ var BasicModel = AbstractModel.extend({
     duplicateRecord: function (recordID) {
         var self = this;
         var record = this.localData[recordID];
+        var context = this._getContext(record);
         return this._rpc({
                 model: record.model,
                 method: 'copy',
                 args: [record.data.id],
-                context: this._getContext(record),
+                context: context,
             })
             .then(function (res_id) {
                 var index = record.res_ids.indexOf(record.res_id);
@@ -391,6 +392,7 @@ var BasicModel = AbstractModel.extend({
                     res_id: res_id,
                     res_ids: record.res_ids.slice(0),
                     viewType: record.viewType,
+                    context: context,
                 });
             });
     },
