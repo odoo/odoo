@@ -5,12 +5,15 @@
         font-family: inherit !important;
         line-height: initial !important;
         color: initial !important;
-        p {
+        p, div {
             font-family: 'Lucida Grande', Helvetica, Verdana, Arial, sans-serif;
             font-size: 13px;
         }
         a, a:hover {
             color: initial;
+        }
+        ul > li > p {
+            margin: 0px;
         }
     }
     .o_readonly {
@@ -20,6 +23,9 @@
         padding: 0;
         border: 0;
         word-wrap: break-word;
+        ul > li > p {
+            margin: 0px;
+        }
     }
 }
 .oe_form_field_html iframe {
