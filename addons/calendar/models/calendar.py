@@ -543,7 +543,7 @@ class Meeting(models.Model):
 
     _name = 'calendar.event'
     _description = "Event"
-    _order = "id desc"
+    _order = "start_date asc, id desc"
     _inherit = ["mail.thread"]
 
     @api.model

@@ -295,11 +295,13 @@
                 <filter string="My Events" name="myevents" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Upcoming" name="upcomings_events" domain="[('start','>=', datetime.datetime.today())]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Availability" name="availability" domain="[]" context="{'group_by':'show_as'}"/>
                     <filter string="Privacy" name="privacy" domain="[]" context="{'group_by':'privacy'}"/>
+                    <filter string="Month" name="group_start" context="{'group_by':'start'}"/>
                 </group>
             </search>
         </field>
@@ -311,6 +313,7 @@
         <field name="view_mode">calendar,tree,form</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
+        <field name="context">{'search_default_group_start': 1, 'search_default_upcomings_events' : 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Schedule a new meeting
