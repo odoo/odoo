@@ -701,9 +701,10 @@ var MockServer = Class.extend({
             for (var i = 0; i < aggregatedFields.length; i++) {
                 type = fields[aggregatedFields[i]].type;
                 if (type === 'float' || type === 'integer') {
-                    group[aggregatedFields[i]] = 0;
+                    group[aggregatedFields[i]] = null;
                     for (var j = 0; j < records.length; j++) {
-                        group[aggregatedFields[i]] += records[j][aggregatedFields[i]];
+                        var value = group[aggregatedFields[i]] || 0;
+                        group[aggregatedFields[i]] = value + records[j][aggregatedFields[i]];
                     }
                 }
             }
