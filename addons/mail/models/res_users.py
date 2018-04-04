@@ -70,35 +70,23 @@ class Users(models.Model):
 
     @api.model
     def activity_user_count(self):
-        # Reminders don't having any model so here we assign 'mail.activity' as reminder's model.
-        query = """SELECT m.id, count(*), act.res_model AS model,
+        query = """SELECT m.id, count(*), act.res_model as model,
                         CASE
                             WHEN now()::date - act.date_deadline::date = 0 Then 'today'
                             WHEN now()::date - act.date_deadline::date > 0 Then 'overdue'
                             WHEN now()::date - act.date_deadline::date < 0 Then 'planned'
                         END AS states
                     FROM mail_activity AS act
-                    LEFT OUTER JOIN ir_model AS m ON act.res_model_id = m.id
-                    WHERE user_id = %s AND active = TRUE
+                    JOIN ir_model AS m ON act.res_model_id = m.id
+                    WHERE user_id = %s
                     GROUP BY m.id, states, act.res_model;
                     """
         self.env.cr.execute(query, [self.env.uid])
         activity_data = self.env.cr.dictfetchall()
         model_ids = [a['id'] for a in activity_data]
-        model_names = {n[0]:n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
+        model_names = {n[0]: n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
 
-        # always add default entry for reminders
-        user_activities = {
-            None: {
-                'name': _("Reminder"),
-                'model': None,
-                'icon': '/mail/static/src/img/reminder.png',
-                'total_count': 0,
-                'today_count': 0,
-                'overdue_count': 0,
-                'planned_count': 0
-            }
-        }
+        user_activities = {}
         for activity in activity_data:
             if not user_activities.get(activity['model']):
                 user_activities[activity['model']] = {
