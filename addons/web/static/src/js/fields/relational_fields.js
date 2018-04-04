@@ -699,6 +699,9 @@ var FieldX2Many = AbstractField.extend({
      */
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
+        this.nodeOptions = _.defaults(this.nodeOptions, {
+            create_text: _t('Add'),
+        });
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
         this.view = this.attrs.views[this.attrs.mode];
@@ -1309,16 +1312,6 @@ var FieldOne2Many = FieldX2Many.extend({
 var FieldMany2Many = FieldX2Many.extend({
     className: 'o_field_many2many',
     supportedFieldTypes: ['many2many'],
-
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.nodeOptions = _.defaults(this.nodeOptions, {
-            create_text: _t('Add'),
-        });
-    },
 
     //--------------------------------------------------------------------------
     // Handlers

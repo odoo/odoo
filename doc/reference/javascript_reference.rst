@@ -1782,6 +1782,14 @@ Relational fields
 
     - Supported field types: *one2many*
 
+    Options:
+
+    - create_text: a string that is used to customize the 'Add' label/text.
+
+    .. code-block:: xml
+
+        <field name="turtles" options="{\'create_text\': \'Add turtle\'}">
+
 - statusbar (FieldStatus)
     This is a really specialized widget for the form views. It is the bar on top
     of many forms which represent a flow, and allow selecting a specific state.

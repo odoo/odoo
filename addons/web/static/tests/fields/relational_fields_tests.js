@@ -4017,7 +4017,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many kanban: edition', function (assert) {
-        assert.expect(14);
+        assert.expect(15);
 
         this.data.partner.records[0].p = [2];
         var form = createView({
@@ -4067,6 +4067,8 @@ QUnit.module('relational_fields', {
             'delete icon should be visible in edit');
         assert.ok(form.$('.o_field_one2many .o-kanban-button-new').length,
             '"Create" button should be visible in edit');
+        assert.strictEqual(form.$('.o_field_one2many .o-kanban-button-new').text().trim(), "Add",
+            'Create button should have "Add" label');
 
         // edit existing subrecord
         form.$('.oe_kanban_global_click').click();
@@ -4104,6 +4106,36 @@ QUnit.module('relational_fields', {
             'should contain 1 records');
         assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new subrecord 3',
             'the remaining subrecord should be "new subrecord 3"');
+        form.destroy();
+    });
+
+    QUnit.test('one2many kabnan(editable): properly handle create_text node option', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles" options="{\'create_text\': \'Add turtle\'}" mode="kanban">' +
+                        '<kanban>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_details">' +
+                                        '<field name="display_name"/>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o-kanban-button-new').text().trim(),
+            "Add turtle", "In O2M Kanban, Add button should have 'Add turtle' label");
+
         form.destroy();
     });
 
@@ -8713,7 +8745,7 @@ QUnit.module('relational_fields', {
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
-        assert.expect(28);
+        assert.expect(29);
 
         this.data.partner.records[0].timmy = [12, 14];
         this.data.partner_type.records.push({id: 15, display_name: "red", color: 6});
@@ -8794,6 +8826,8 @@ QUnit.module('relational_fields', {
             'delete icon should be visible in edit');
         assert.ok(form.$('.o_field_many2many .o-kanban-button-new').length,
             '"Add" button should be visible in edit');
+        assert.strictEqual(form.$('.o_field_many2many .o-kanban-button-new').text().trim(), "Add",
+            'Create button should have "Add" label');
 
         // edit existing subrecord
         form.$('.oe_kanban_global_click:first()').click();
@@ -8849,6 +8883,38 @@ QUnit.module('relational_fields', {
 
         // save the record
         form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
+    QUnit.test('many2many kanban(editable): properly handle create_text node option', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" options="{\'create_text\': \'Add timmy\'}" mode="kanban">' +
+                        '<kanban>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_details">' +
+                                        '<field name="display_name"/>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_many2many[name="timmy"] .o-kanban-button-new').text().trim(),
+            "Add timmy", "In M2M Kanban, Add button should have 'Add timmy' label");
+
         form.destroy();
     });
 
