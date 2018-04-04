@@ -2014,6 +2014,7 @@ class MailThread(models.AbstractModel):
             'parent_id': parent_id,
             'subtype_id': subtype_id,
             'partner_ids': [(4, pid) for pid in partner_ids],
+            'channel_ids': kwargs.get('channel_ids', []),
             'add_sign': add_sign
         })
         if notif_layout:
@@ -2033,16 +2034,23 @@ class MailThread(models.AbstractModel):
         self._message_post_after_hook(new_message, values, model_description=model_description, mail_auto_delete=mail_auto_delete)
         return new_message
 
-    def _message_post_after_hook(self, message, values, model_description=False, mail_auto_delete=True):
+    def _message_post_after_hook(self, message, msg_vals, model_description=False, mail_auto_delete=True):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
         # Notify recipients of the newly-created message (Inbox / Email + channels)
-        if values.get('moderation_status') != 'pending_moderation':
-            message._notify(force_send=self.env.context.get('mail_notify_force_send', True), model_description=model_description, mail_auto_delete=mail_auto_delete)
+        if msg_vals.get('moderation_status') != 'pending_moderation':
+            message._notify(
+                self, msg_vals,
+                force_send=self.env.context.get('mail_notify_force_send', True),
+                send_after_commit=True,
+                model_description=model_description,
+                mail_auto_delete=mail_auto_delete,
+            )
+
             # Post-process: subscribe author
-            if values['author_id'] and values['model'] and self.ids and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-                self._message_subscribe([values['author_id']])
+            if msg_vals['author_id'] and msg_vals['model'] and self.ids and msg_vals['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
+                self._message_subscribe([msg_vals['author_id']])
         else:
             message._notify_pending_by_chat()
 
