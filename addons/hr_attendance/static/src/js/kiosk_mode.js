@@ -14,12 +14,9 @@ var KioskMode = AbstractAction.extend({
     },
 
     start: function () {
-
-        this.update();
-
         var self = this;
         core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
-        self.session = Session;
+        this.session = Session;
         var def = this._rpc({
                 model: 'res.company',
                 method: 'search_read',
@@ -31,20 +28,8 @@ var KioskMode = AbstractAction.extend({
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
+        this._interval = window.setInterval(this.call2Db.bind(this), (((1000 * 60) * 60) * 24));
         return $.when(def, this._super.apply(this, arguments));
-    },
-
-    update : function(){
-
-        var def = this._rpc({
-            model: 'res.users',
-            method: 'search_read',
-        })
-        .then(function (users){
-            console.log(users[0].id);
-        });
-
-        // window.setInterval(lol(), (((1000 * 60) * 60) * 24));
     },
 
     _onBarcodeScanned: function(barcode) {
@@ -71,8 +56,16 @@ var KioskMode = AbstractAction.extend({
 
     destroy: function () {
         core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
+        clearInterval(this._interval);
         clearInterval(this.clock_start);
         this._super.apply(this, arguments);
+    },
+
+    call2Db: function () {
+        return this._rpc({
+               model: 'res.users',
+               method: 'search_read',
+           });
     },
 });
 
