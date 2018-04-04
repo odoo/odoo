@@ -644,7 +644,13 @@ class Import(models.TransientModel):
                             try:
                                 line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index]), user_format), server_format)
                             except ValueError as e:
-                                raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
+                                try:
+                                    # Allow to import date in datetime fields
+                                    if field['type'] == 'datetime':
+                                        user_format = pycompat.to_native(options.get('date_format'))
+                                        line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index]), user_format), server_format)
+                                except ValueError as e:
+                                    raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
                             except Exception as e:
                                 raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, e))
             # Check if the field is in import_field and is a relational (followed by /)
