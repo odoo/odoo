@@ -11,6 +11,8 @@ This module contains all the common features of Sales Management and eCommerce.
     """,
     'depends': ['sales_team', 'account', 'portal'],
     'data': [
+        'security/sale_security.xml',
+        'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'data/sale_data.xml',
         'report/sale_report.xml',
@@ -19,8 +21,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'report/sale_report_templates.xml',
         'report/invoice_report_templates.xml',
         'report/report_all_channels_sales_views.xml',
-        'security/sale_security.xml',
-        'security/ir.model.access.csv',
         'wizard/sale_make_invoice_advance_views.xml',
         'views/sale_views.xml',
         'views/account_invoice_views.xml',
