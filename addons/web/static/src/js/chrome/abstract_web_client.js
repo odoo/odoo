@@ -19,6 +19,7 @@ var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
+var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 var Loading = require('web.Loading');
 var NotificationManager = require('web.NotificationManager');
 var RainbowMan = require('web.RainbowMan');
@@ -29,7 +30,8 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var qweb = core.qweb;
 
-var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
+var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMixin, {
+    events: _.extend(KeyboardNavigationMixin.events, {}),
     custom_events: {
         clear_uncommitted_changes: function (e) {
             this.clear_uncommitted_changes().then(e.data.callback);
@@ -95,6 +97,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
         this.client_options = {};
         this._super(parent);
         ServiceProviderMixin.init.call(this);
+        KeyboardNavigationMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
         this.menu_dm = new concurrency.DropMisordered();
@@ -134,6 +137,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
                 core.bus.trigger('web_client_ready');
             });
     },
+
     bind_events: function () {
         var self = this;
         $('.oe_systray').show();
@@ -161,12 +165,14 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
                 }
             }, 0);
         });
+        window.addEventListener('blur', function (e) { self._hideAccessKeyOverlay(); });
         core.bus.on('click', this, function (ev) {
             $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
                 $(this.el.getElementsByClassName('oe_dropdown_menu oe_opened')).removeClass('oe_opened');
                 $(this.el.getElementsByClassName('oe_dropdown_toggle oe_opened')).removeClass('oe_opened');
             }
+            this._hideAccessKeyOverlay();
         });
         core.bus.on('connection_lost', this, this.on_connection_lost);
         core.bus.on('connection_restored', this, this.on_connection_restored);
@@ -242,7 +248,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
      * Sets the first part of the title of the window, dedicated to the current action.
     */
     set_title: function (title) {
-       this.set_title_part("action", title);
+        this.set_title_part("action", title);
     },
     /**
      * Sets an arbitrary part of the title of the window. Title parts are

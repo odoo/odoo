@@ -427,6 +427,14 @@
         </div>
     </div>
 </t>
+<t t-name="FormButton.tooltip">
+    <div class="oe_tooltip_string">
+        <div class="tooltip-inner">
+            Hit ENTER to 
+            <t t-esc="title"></t>
+        </div>
+    </div>
+</t>
 <form t-name="FormView.set_default">
     <t t-set="args" t-value="widget.args"/>
     <table style="width: 100%">
@@ -1009,7 +1017,7 @@
 <div t-name="SearchView" class="o_searchview">
     <span class="o_searchview_more fa" title="Advanced Search..."/>
 </div>
-<input t-name="SearchView.InputView" type="text" class="o_searchview_input" placeholder="Search..."/>
+<input t-name="SearchView.InputView" type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..."/>
 <div t-name="SearchView.FacetView" tabindex="0" class="o_searchview_facet">
     <span t-if="widget.model.has('icon')" t-att-class="'fa ' + widget.model.get('icon') + ' o_searchview_facet_label'"/>
     <span t-if="!widget.model.has('icon')" class="o_searchview_facet_label">
