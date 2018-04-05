@@ -765,14 +765,6 @@ class PurchaseOrderLine(models.Model):
         self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
 
-        product_lang = self.product_id.with_context(
-            lang=self.partner_id.lang,
-            partner_id=self.partner_id.id,
-        )
-        self.name = product_lang.display_name
-        if product_lang.description_purchase:
-            self.name += '\n' + product_lang.description_purchase
-
         fpos = self.order_id.fiscal_position_id
         if self.env.uid == SUPERUSER_ID:
             company_id = self.env.user.company_id.id
@@ -781,6 +773,15 @@ class PurchaseOrderLine(models.Model):
             self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
 
         self._suggest_quantity()
+
+        product_lang = self.product_id.with_context(
+            lang=self.partner_id.lang,
+            partner_id=self.partner_id.id,
+        )
+        self.name = product_lang.display_name
+        if product_lang.description_purchase:
+            self.name += '\n' + product_lang.description_purchase
+
         self._onchange_quantity()
 
         return result
