@@ -9,7 +9,7 @@
 Move the cash basis lines to another account.
     """,
     'category': 'Accounting',
-    'depends': ['account_tax_cash_basis'],
+    'depends': ['account'],
     'data': [
         'views/account_tax_views.xml',
     ],
