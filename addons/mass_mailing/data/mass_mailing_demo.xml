@@ -62,7 +62,7 @@
         <record id="mass_mail_1" model="mail.mass_mailing">
             <field name="name">First Newsletter</field>
             <field name="state">done</field>
-            <field name="sent_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="sent_date" eval="datetime.today() - datetime.relativedelta(days=5)"/>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
             <field name="mailing_model_id" ref="base.model_res_partner"/>
             <field name="mailing_domain">[('customer', '=', True)]</field>
@@ -86,33 +86,33 @@
         <record id="mass_mail_email_1" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111000@OpenERP.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="replied" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="sent" eval="datetime.today() - datetime.relativedelta(days=5)"/>
+            <field name="opened" eval="datetime.today() - datetime.relativedelta(days=2)"/>
+            <field name="replied" eval="datetime.today() - datetime.relativedelta(days=1)"/>
         </record>
         <record id="mass_mail_email_2" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111001@OpenERP.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="sent" eval="datetime.today() - datetime.relativedelta(days=5)"/>
+            <field name="opened" eval="datetime.today() - datetime.relativedelta(days=2)"/>
+            <field name="replied" eval="datetime.today() - datetime.relativedelta(days=0)"/>
         </record>
         <record id="mass_mail_email_3" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111002@OpenERP.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="sent" eval="datetime.today() - datetime.relativedelta(days=5)"/>
+            <field name="opened" eval="datetime.today() - datetime.relativedelta(days=1)"/>
         </record>
         <record id="mass_mail_email_4" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111003@OpenERP.com</field>
-            <field name="exception" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="exception" eval="datetime.today() - datetime.relativedelta(days=5)"/>
         </record>
         <record id="mass_mail_email_5" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
             <field name="message_id">1111004@OpenERP.com</field>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="sent" eval="datetime.today() - datetime.relativedelta(days=5)"/>
+            <field name="bounced" eval="datetime.today() - datetime.relativedelta(days=3)"/>
         </record>
 
         <record id="base.main_company" model="res.company">

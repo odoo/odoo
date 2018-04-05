@@ -4,7 +4,6 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError
 
 
@@ -72,7 +71,7 @@ class ProcurementRule(models.Model):
         seller = product_id._select_seller(
             partner_id=partner,
             quantity=product_qty,
-            date=fields.Date.to_string(schedule_date),
+            date=schedule_date,
             uom_id=product_uom)
 
         return schedule_date - relativedelta(days=int(seller.delay))
@@ -124,7 +123,7 @@ class ProcurementRule(models.Model):
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 
-        date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po)
 
         return {
             'name': name,
@@ -156,7 +155,7 @@ class ProcurementRule(models.Model):
             'dest_address_id': values.get('partner_dest_id', False) and values['partner_dest_id'].id,
             'origin': origin,
             'payment_term_id': partner.with_context(force_company=values['company_id'].id).property_supplier_payment_term_id.id,
-            'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'date_order': purchase_date,
             'fiscal_position_id': fpos,
             'group_id': group
         }

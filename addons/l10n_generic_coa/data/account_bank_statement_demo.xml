@@ -5,7 +5,7 @@
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
-            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date" eval="datetime.today().start_of('year')"/>
             <field name="name">BNK/2014/001</field>
             <field name="balance_end_real">8998.2</field>
             <field name="balance_start">5103.0</field>
@@ -20,7 +20,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">1175.0</field>
-            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date" eval="datetime.today().start_of('year')"/>
             <field name="partner_id" ref="base.res_partner_2"/>
         </record>
 
@@ -33,7 +33,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">-32.58</field>
-            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date" eval="datetime.today().start_of('year')"/>
         </record>
 
         <record id="demo_bank_statement_line_3" model="account.bank.statement.line">
@@ -45,7 +45,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">650.0</field>
-            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date" eval="datetime.today().start_of('year')"/>
             <field name="partner_id" ref="base.res_partner_12"/>
         </record>
 
@@ -58,7 +58,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">2000.0</field>
-            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date" eval="datetime.today().start_of('year')"/>
             <field name="partner_id" ref="base.res_partner_12"/>
         </record>
 
@@ -71,7 +71,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">102.78</field>
-            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date" eval="datetime.today().start_of('year')"/>
         </record>
 
         <record id="demo_bank_statement_line_6" model="account.bank.statement.line">

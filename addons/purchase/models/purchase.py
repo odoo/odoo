@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.misc import formatLang
+from odoo.tools.datetime import date, datetime, relativedelta
 from odoo.addons import decimal_precision as dp
 
 
@@ -501,7 +498,7 @@ class PurchaseOrderLine(models.Model):
         """
         date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            return datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
@@ -512,7 +509,7 @@ class PurchaseOrderLine(models.Model):
             return result
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.date_planned = datetime.today()
         self.price_unit = self.product_qty = 0.0
         self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
@@ -570,7 +567,7 @@ class PurchaseOrderLine(models.Model):
             params=params)
 
         if seller or not self.date_planned:
-            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            self.date_planned = self._get_date_planned(seller)
 
         if not seller:
             return

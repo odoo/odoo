@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import datetime
 
 
 class Department(models.Model):
@@ -25,9 +23,7 @@ class Department(models.Model):
     def _compute_leave_count(self):
         Requests = self.env['hr.leave']
         Allocations = self.env['hr.leave.allocation']
-        today_date = datetime.datetime.utcnow().date()
-        today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
+        today_date = datetime.date.today()
 
         leave_data = Requests.read_group(
             [('department_id', 'in', self.ids),
@@ -39,7 +35,7 @@ class Department(models.Model):
             ['department_id'], ['department_id'])
         absence_data = Requests.read_group(
             [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
-             ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
+             ('date_from', '<=', today_date), ('date_to', '>=', today_date)],
             ['department_id'], ['department_id'])
 
         res_leave = dict((data['department_id'][0], data['department_id_count']) for data in leave_data)
@@ -192,14 +188,12 @@ class Employee(models.Model):
 
     @api.multi
     def _compute_absent_employee(self):
-        today_date = datetime.datetime.utcnow().date()
-        today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
+        today_date = datetime.date.today()
         data = self.env['hr.leave'].read_group([
             ('employee_id', 'in', self.ids),
             ('state', 'not in', ['cancel', 'refuse']),
-            ('date_from', '<=', today_end),
-            ('date_to', '>=', today_start)
+            ('date_from', '<=', today_date),
+            ('date_to', '>=', today_date)
         ], ['employee_id'], ['employee_id'])
         result = dict.fromkeys(self.ids, False)
         for item in data:
@@ -210,14 +204,12 @@ class Employee(models.Model):
 
     @api.multi
     def _search_absent_employee(self, operator, value):
-        today_date = datetime.datetime.utcnow().date()
-        today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
-        today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
+        today_date = datetime.date.today()
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
             ('state', 'not in', ['cancel', 'refuse']),
-            ('date_from', '<=', today_end),
-            ('date_to', '>=', today_start)
+            ('date_from', '<=', today_date),
+            ('date_to', '>=', today_date)
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]
 

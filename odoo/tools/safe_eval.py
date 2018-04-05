@@ -29,6 +29,7 @@ from .misc import ustr
 from . import pycompat
 
 import odoo
+from odoo.tools import datetime
 
 unsafe_eval = eval
 
@@ -275,6 +276,7 @@ _BUILTINS = {
     'bool': bool,
     'int': int,
     'float': float,
+    'datetime': datetime.DatetimeContext,
     'enumerate': enumerate,
     'dict': dict,
     'list': list,
@@ -339,6 +341,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         globals_dict = {}
 
     globals_dict['__builtins__'] = _BUILTINS
+    globals_dict['datetime'] = datetime.DatetimeContext
     if locals_builtins:
         if locals_dict is None:
             locals_dict = {}

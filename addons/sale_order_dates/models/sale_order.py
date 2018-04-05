@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 from odoo import api, fields, models, _
+from odoo.tools.datetime import timedelta
 
 
 class SaleOrder(models.Model):
@@ -27,13 +27,13 @@ class SaleOrder(models.Model):
         """Compute the expected date"""
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state == 'sale' else fields.Datetime.now())
+            confirm_date = order.confirmation_date if order.state == 'sale' else fields.Datetime.now()
             for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
             if dates_list:
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
-                order.expected_date = fields.Datetime.to_string(expected_date)
+                order.expected_date = expected_date
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
@@ -62,8 +62,8 @@ class SaleOrderLine(models.Model):
     def _prepare_procurement_values(self, group_id):
         vals = super(SaleOrderLine, self)._prepare_procurement_values(group_id=group_id)
         for line in self.filtered("order_id.commitment_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
+            date_planned = line.order_id.commitment_date - timedelta(days=line.order_id.company_id.security_lead)
             vals.update({
-                'date_planned': fields.Datetime.to_string(date_planned),
+                'date_planned': date_planned,
             })
         return vals

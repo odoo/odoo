@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
 
 from odoo import fields
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo import tools
+from odoo.tools.datetime import timedelta
 from odoo.modules.module import get_module_resource
 
 
@@ -13,7 +13,7 @@ class TestPurchase(TestStockCommon):
         ProcurementGroup = self.env['procurement.group']
         order_values = {
             'warehouse_id': self.warehouse_1,
-            'date_planned': date_planned or fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+            'date_planned': date_planned or fields.datetime.now() + timedelta(days=10),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
             'group_id': self.env['procurement.group'],
         }
         return ProcurementGroup.run(product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id, product.name, '/', order_values)

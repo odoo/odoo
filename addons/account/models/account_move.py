@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import time
 from collections import OrderedDict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.tools import float_is_zero, float_compare
+from odoo.tools.datetime import date as datelib
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons import decimal_precision as dp
 from lxml import etree
@@ -205,10 +205,14 @@ class AccountMove(models.Model):
     @api.multi
     def _check_lock_date(self):
         for move in self:
-            lock_date = max(move.company_id.period_lock_date or '0000-00-00', move.company_id.fiscalyear_lock_date or '0000-00-00')
+            if move.company_id.period_lock_date and move.company_id.fiscalyear_lock_date:
+                lock_date = max(move.company_id.period_lock_date, move.company_id.fiscalyear_lock_date)
+            else:
+                lock_date = move.company_id.period_lock_date or move.company_id.fiscalyear_lock_date
+
             if self.user_has_groups('account.group_account_manager'):
                 lock_date = move.company_id.fiscalyear_lock_date
-            if move.date <= (lock_date or '0000-00-00'):
+            if lock_date and move.date <= lock_date:
                 if self.user_has_groups('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (lock_date)
                 else:
@@ -590,12 +594,11 @@ class AccountMoveLine(models.Model):
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
-        maxdate = '0000-00-00'
         to_balance = {}
         for aml in amls:
             total_debit += aml.debit
             total_credit += aml.credit
-            maxdate = max(aml.date, maxdate)
+            maxdate = max(aml.date, datelib.max)
             total_amount_currency += aml.amount_currency
             # Convert in currency if we only have one currency and no amount_currency
             if not aml.amount_currency and currency:
@@ -799,7 +802,7 @@ class AccountMoveLine(models.Model):
             total = 0
             total_currency = 0
             writeoff_lines = []
-            date = time.strftime('%Y-%m-%d')
+            date = datelib.today()
             for vals in lines:
                 # Check and complete vals
                 if 'account_id' not in vals or 'journal_id' not in vals:
@@ -807,7 +810,7 @@ class AccountMoveLine(models.Model):
                 if ('debit' in vals) ^ ('credit' in vals):
                     raise UserError(_("Either pass both debit and credit or none."))
                 if 'date' not in vals:
-                    vals['date'] = self._context.get('date_p') or time.strftime('%Y-%m-%d')
+                    vals['date'] = self._context.get('date_p') or datelib.today()
                     if vals['date'] < date:
                         date = vals['date']
                 if 'name' not in vals:
@@ -1220,8 +1223,8 @@ class AccountPartialReconcile(models.Model):
     def _compute_max_date(self):
         for rec in self:
             rec.max_date = max(
-                fields.Datetime.from_string(rec.debit_move_id.date),
-                fields.Datetime.from_string(rec.credit_move_id.date)
+                rec.debit_move_id.date,
+                rec.credit_move_id.date
             )
 
     @api.model
@@ -1385,7 +1388,7 @@ class AccountPartialReconcile(models.Model):
                                 'partner_id': line.partner_id.id,
                             })
             if newly_created_move:
-                if move_date > (self.company_id.period_lock_date or '0000-00-00') and newly_created_move.date != move_date:
+                if (not self.company_id.period_lock_date or move_date > self.company_id.period_lock_date) and newly_created_move.date != move_date:
                     # The move date should be the maximum date between payment and invoice (in case
                     # of payment in advance). However, we should make sure the move date is not
                     # recorded before the period lock date as the tax statement for this period is
@@ -1462,6 +1465,6 @@ class AccountFullReconcile(models.Model):
         # The move date should be the maximum date between payment and invoice
         # (in case of payment in advance). However, we should make sure the
         # move date is not recorded after the end of year closing.
-        if move_date > (company.fiscalyear_lock_date or '0000-00-00'):
+        if not company.fiscalyear_lock_date or move_date > company.fiscalyear_lock_date:
             res['date'] = move_date
         return res

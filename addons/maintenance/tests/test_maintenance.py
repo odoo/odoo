@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
 
 from odoo.tests.common import TransactionCase
-from dateutil import relativedelta
-import datetime
+from odoo.tools.datetime import date, datetime, relativedelta
 
 class TestEquipment(TransactionCase):
     """ Test used to check that when doing equipment/maintenance_request/equipment_category creation."""
@@ -46,7 +44,7 @@ class TestEquipment(TransactionCase):
             'category_id': self.ref('maintenance.equipment_monitor'),
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
-            'assign_date': time.strftime('%Y-%m-%d'),
+            'assign_date': date.today(),
             'serial_no': 'MT/127/18291015',
             'model': 'NP355E5X',
             'color': 3,
@@ -85,7 +83,7 @@ class TestEquipment(TransactionCase):
             'category_id': self.ref('maintenance.equipment_monitor'),
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
-            'assign_date': time.strftime('%Y-%m-%d'),
+            'assign_date': date.today(),
             'period': 7,
             'color': 3,
         })
@@ -93,7 +91,7 @@ class TestEquipment(TransactionCase):
         maintenance_request_cron = self.maintenance_request.create({
             'name': 'Need a special calibration',
             'technician_user_id': self.user.id,
-            'request_date': (datetime.datetime.now() + relativedelta.relativedelta(days=7)).strftime('%Y-%m-%d'),
+            'request_date': datetime.now() + relativedelta(days=7),
             'maintenance_type': 'preventive',
             'owner_user_id': self.user.id,
             'equipment_id': equipment_cron.id,
@@ -118,7 +116,7 @@ class TestEquipment(TransactionCase):
             'category_id': self.ref('maintenance.equipment_monitor'),
             'technician_user_id': self.ref('base.user_root'),
             'owner_user_id': self.user.id,
-            'assign_date': time.strftime('%Y-%m-%d'),
+            'assign_date': date.today(),
             'period': 7,
             'color': 3,
             'maintenance_team_id': team_test.id,

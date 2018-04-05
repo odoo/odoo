@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import datetime
 import json
 import os
 import logging
@@ -20,6 +19,7 @@ from odoo.tools import pycompat, OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
 from odoo.addons.portal.controllers.portal import pager as portal_pager
+from odoo.tools import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +138,7 @@ class Website(Home):
         sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             # Check if stored version is still valid
-            create_date = fields.Datetime.from_string(sitemap.create_date)
+            create_date = sitemap.create_date
             delta = datetime.datetime.now() - create_date
             if delta < SITEMAP_CACHE_TIME:
                 content = base64.b64decode(sitemap.datas)

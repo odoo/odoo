@@ -68,7 +68,7 @@ class AlarmManager(models.AbstractModel):
                     if found and not last_found:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
-                event_start = fields.Datetime.from_string(event.start)
+                event_start = event.start
                 for alert in self.do_check_alarm_for_one_date(event_start, event, max_delta, 0, 'sms', after=last_sms_cron, missing=True):
                     event.browse(alert['event_id'])._do_sms_reminder()
         self.env['ir.config_parameter'].set_param('calendar_sms.last_sms_cron', now)

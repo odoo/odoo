@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, timedelta
 from hashlib import sha256
 from json import dumps
-import pytz
 
 from odoo import models, api, fields
 from odoo.fields import Datetime
 from odoo.tools.translate import _
+from odoo.tools.datetime import datetime, timedelta
 from odoo.exceptions import UserError
 
 
 def ctx_tz(record, field):
     res_lang = None
     ctx = record._context
-    tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz)
-    timestamp = Datetime.from_string(record[field])
+    tz_name = ctx.get('tz') or record.env.user.tz
+    timestamp = record[field]
     if ctx.get('lang'):
         res_lang = record.env['res.lang'].search([('code', '=', ctx['lang'])], limit=1)
     if res_lang:
-        timestamp = pytz.utc.localize(timestamp, is_dst=False)
+        timestamp = timestamp.to_utc()
         return datetime.strftime(timestamp.astimezone(tz_name), res_lang.date_format + ' ' + res_lang.time_format)
     return Datetime.context_timestamp(record, timestamp)
 
@@ -42,7 +41,7 @@ class pos_session(models.Model):
     def _check_session_timing(self):
         self.ensure_one()
         date_today = datetime.utcnow()
-        session_start = Datetime.from_string(self.start_at)
+        session_start = self.start_at
         if not date_today - timedelta(hours=24) <= session_start:
             raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.") % self.name)
         return True

@@ -4,11 +4,11 @@
 from collections import OrderedDict
 
 import json
-import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons import decimal_precision as dp
+from odoo.tools import datetime
 
 
 class LunchOrder(models.Model):
@@ -123,8 +123,8 @@ class LunchOrder(models.Model):
         """
         Prevents the user to create an order in the past
         """
-        date_order = datetime.datetime.strptime(self.date, '%Y-%m-%d')
-        date_today = datetime.datetime.strptime(fields.Date.context_today(self), '%Y-%m-%d')
+        date_order = self.date
+        date_today = fields.Date.context_today(self)
         if (date_order < date_today):
             raise ValidationError(_('The date of your order is in the past.'))
 

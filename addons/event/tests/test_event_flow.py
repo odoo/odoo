@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-from dateutil.relativedelta import relativedelta
-
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tools import mute_logger
 from odoo.fields import Datetime
+from odoo.tools import datetime
 try:
     from unittest.mock import patch
 except ImportError:
@@ -22,8 +20,8 @@ class TestEventFlow(TestEventCommon):
         test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEvent',
             'auto_confirm': True,
-            'date_begin': datetime.datetime.now() + relativedelta(days=-1),
-            'date_end': datetime.datetime.now() + relativedelta(days=1),
+            'date_begin': datetime.datetime.now() + datetime.relativedelta(days=-1),
+            'date_end': datetime.datetime.now() + datetime.relativedelta(days=1),
             'seats_max': 2,
             'seats_availability': 'limited',
         })
@@ -72,8 +70,8 @@ class TestEventFlow(TestEventCommon):
         # EventUser creates a new event: ok
         test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEvent',
-            'date_begin': datetime.datetime.now() + relativedelta(days=-1),
-            'date_end': datetime.datetime.now() + relativedelta(days=1),
+            'date_begin': datetime.datetime.now() + datetime.relativedelta(days=-1),
+            'date_end': datetime.datetime.now() + datetime.relativedelta(days=1),
             'seats_max': 10,
         })
         self.assertEqual(
@@ -94,8 +92,8 @@ class TestEventFlow(TestEventCommon):
         with self.assertRaises(AccessError):
             self.Event.sudo(self.user_eventuser).create({
                 'name': 'TestEvent',
-                'date_begin': datetime.datetime.now() + relativedelta(days=-1),
-                'date_end': datetime.datetime.now() + relativedelta(days=1),
+                'date_begin': datetime.datetime.now() + datetime.relativedelta(days=-1),
+                'date_end': datetime.datetime.now() + datetime.relativedelta(days=1),
                 'seats_max': 10,
             })
         with self.assertRaises(AccessError):
@@ -120,7 +118,7 @@ class TestEventFlow(TestEventCommon):
         self.patcher = patch('odoo.addons.event.models.event.fields.Datetime', wraps=Datetime)
         self.mock_datetime = self.patcher.start()
 
-        self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 31, 12, 0))
+        self.mock_datetime.now.return_value = datetime.datetime(2015, 12, 31, 12, 0)
 
         self.event_0.registration_ids.event_begin_date = datetime.datetime(2015, 12, 31, 18, 0)
         self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'today')
@@ -131,7 +129,7 @@ class TestEventFlow(TestEventCommon):
         self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 2, 6, 0)
         self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'in 2 days')
 
-        self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 10, 12, 0))
+        self.mock_datetime.now.return_value = datetime.datetime(2015, 12, 10, 12, 0)
         self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 25, 6, 0)
         self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'next month')
 

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
 
-from odoo import _, fields, http
+from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo import release
+from odoo.tools.datetime import datetime, timedelta
 
 class WebSettingsDashboard(http.Controller):
 
@@ -50,7 +50,7 @@ class WebSettingsDashboard(http.Controller):
 
         # See update.py for this computation
         limit_date = datetime.now() - timedelta(15)
-        enterprise_users = request.env['res.users'].search_count([("login_date", ">=", fields.Datetime.to_string(limit_date)), ('share', '=', False)])
+        enterprise_users = request.env['res.users'].search_count([("login_date", ">=", limit_date), ('share', '=', False)])
 
         expiration_date = request.env['ir.config_parameter'].sudo().get_param('database.expiration_date')
         return {

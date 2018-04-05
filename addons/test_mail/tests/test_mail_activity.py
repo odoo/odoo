@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
-from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 
@@ -10,6 +8,7 @@ from odoo import exceptions
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
+from odoo.tools.datetime import date, relativedelta
 
 
 class TestMailActivity(BaseFunctionalTest):

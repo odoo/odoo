@@ -19,7 +19,7 @@
                     <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
                     <separator/>
-                    <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                    <filter name="today" string="Today" domain="[('date','=',datetime.today())]"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_order_id" string="By Order" context="{'group_by':'order_id'}"/>

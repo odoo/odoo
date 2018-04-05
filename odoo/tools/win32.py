@@ -3,7 +3,7 @@
 
 import locale
 import time
-import datetime
+from odoo.tools import datetime
 
 if not hasattr(locale, 'D_FMT'):
     locale.D_FMT = 1

@@ -3,12 +3,12 @@
 
 import logging
 import time
-from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models, _, exceptions
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.datetime import date, datetime, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -213,7 +213,7 @@ class Goal(models.Model):
             return {}
 
         delta_max = timedelta(days=self.remind_update_delay)
-        last_update = fields.Date.from_string(self.last_update)
+        last_update = self.last_update
         if date.today() - last_update < delta_max:
             return {}
 

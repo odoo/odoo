@@ -30,8 +30,8 @@
             <field name="model">im_livechat.report.operator</field>
             <field name="arch" type="xml">
                 <search string="Search report">
-                    <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d') )]"/>
-                    <filter name="last_week" string="Last Week" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(weeks=1)).strftime('%%Y-%%m-%%d') )]"/>
+                    <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', context_today() - datetime.timedelta(days=1))]"/>
+                    <filter name="last_week" string="Last Week" domain="[('start_date','&gt;', context_today() - datetime.timedelta(weeks=1))]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter name="group_by_operator" string="Operator" domain="[('partner_id','!=', False)]" context="{'group_by':'partner_id'}"/>

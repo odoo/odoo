@@ -8,10 +8,8 @@ import re
 import sys
 import time
 
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from odoo.tools import datetime
 
-import pytz
 from lxml import etree, builder
 
 import odoo
@@ -52,13 +50,12 @@ class RecordDictWrapper(dict):
 def _get_idref(self, env, model_str, idref):
     idref2 = dict(idref,
                   time=time,
-                  DateTime=datetime,
-                  datetime=datetime,
-                  timedelta=timedelta,
-                  relativedelta=relativedelta,
+                  DateTime=datetime.datetime,
+                  datetime=datetime.datetime,
+                  timedelta=datetime.timedelta,
+                  relativedelta=datetime.relativedelta,
                   version=odoo.release.major_version,
-                  ref=self.id_get,
-                  pytz=pytz)
+                  ref=self.id_get)
     if model_str:
         idref2['obj'] = env[model_str].browse
     return idref2
@@ -833,14 +830,15 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         raise Exception(_('Module loading %s failed: file %s could not be processed:\n %s') % (module, fname, warning_msg))
 
 def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=False, report=None):
-    doc = etree.parse(xmlfile)
-    relaxng = etree.RelaxNG(
-        etree.parse(os.path.join(config['root_path'],'import_xml.rng' )))
     try:
+        relaxng = None
+        doc = etree.parse(xmlfile)
+        relaxng = etree.RelaxNG(etree.parse(os.path.join(config['root_path'],'import_xml.rng' )))
         relaxng.assert_(doc)
     except Exception:
         _logger.info("The XML file '%s' does not fit the required schema !", xmlfile.name, exc_info=True)
-        _logger.info(ustr(relaxng.error_log.last_error))
+        if relaxng:
+            _logger.info(ustr(relaxng.error_log.last_error))
         raise
 
     if idref is None:

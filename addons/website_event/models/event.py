@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import pytz
 import werkzeug
 
-from datetime import datetime
+from odoo.tools.datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 _logger = logging.getLogger(__name__)
 
@@ -150,9 +148,9 @@ class Event(models.Model):
 
             if not event.date_begin or not event.date_end:
                 raise UserError(_("No date has been specified for the event, no file will be generated."))
-            cal_event.add('created').value = fields.Datetime.from_string(fields.Datetime.now()).replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtstart').value = fields.Datetime.from_string(event.date_begin).replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtend').value = fields.Datetime.from_string(event.date_end).replace(tzinfo=pytz.timezone('UTC'))
+            cal_event.add('created').value = fields.Datetime.now()
+            cal_event.add('dtstart').value = event.date_begin
+            cal_event.add('dtend').value = event.date_end
             cal_event.add('summary').value = event.name
             if event.address_id:
                 cal_event.add('location').value = event.sudo().address_id.contact_address
@@ -165,8 +163,8 @@ class Event(models.Model):
         return result
 
     def _get_event_resource_urls(self, attendees):
-        url_date_start = datetime.strptime(self.date_begin, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
-        url_date_stop = datetime.strptime(self.date_end, DEFAULT_SERVER_DATETIME_FORMAT).strftime('%Y%m%dT%H%M%SZ')
+        url_date_start = self.date_begin.to_event_url()
+        url_date_stop = self.date_end.to_event_url()
         params = werkzeug.url_encode({
             'action': 'TEMPLATE',
             'text': self.name,

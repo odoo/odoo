@@ -7,12 +7,12 @@ import math
 import re
 import uuid
 
-from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import pycompat, misc
+from odoo.tools.datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -312,7 +312,7 @@ class Post(models.Model):
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
         if self.create_date:
-            days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+            days = (datetime.today() - self.create_date).days
             self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
         else:
             self.relevancy = 0
@@ -592,7 +592,7 @@ class Post(models.Model):
         self.write({
             'state': 'close',
             'closed_uid': self._uid,
-            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+            'closed_date': datetime.today(),
             'closed_reason_id': reason_id,
         })
         return True
@@ -650,7 +650,7 @@ class Post(models.Model):
         self.write({
             'state': 'offensive',
             'moderator_id': self.env.user.id,
-            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+            'closed_date': datetime.today(),
             'closed_reason_id': reason_id,
             'active': False,
         })
@@ -672,7 +672,7 @@ class Post(models.Model):
         """ Bump a question: trigger a write_date by writing on a dummy bump_date
         field. One cannot bump a question more than once every 10 days. """
         self.ensure_one()
-        if self.forum_id.allow_bump and not self.child_ids and (datetime.today() - datetime.strptime(self.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9:
+        if self.forum_id.allow_bump and not self.child_ids and (datetime.today() - self.write_date).days > 9:
             # write through super to bypass karma; sudo to allow public user to bump any post
             return self.sudo().write({'bump_date': fields.Datetime.now()})
         return False

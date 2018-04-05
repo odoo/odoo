@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from odoo.tools.datetime import timedelta
 from odoo import fields
 from odoo.tests import common
 
@@ -46,13 +46,13 @@ class TestSaleExpectedDate(common.TransactionCase):
 
         # if Shipping Policy is set to `direct`(when SO is in draft state) then expected date should be
         # current date + shortest lead time from all of it's order lines
-        expected_date = fields.Datetime.to_string(fields.Datetime.from_string(fields.Datetime.now()) + timedelta(days=5))
+        expected_date = fields.Datetime.now() + timedelta(days=5)
         self.assertEquals(expected_date, sale_order.expected_date, "Wrong expected date on sale order!")
 
         # if Shipping Policy is set to `one`(when SO is in draft state) then expected date should be
         # current date + longest lead time from all of it's order lines
         sale_order.write({'picking_policy': 'one'})
-        expected_date = fields.Datetime.to_string(fields.Datetime.from_string(fields.Datetime.now()) + timedelta(days=15))
+        expected_date = fields.Datetime.now() + timedelta(days=15)
         self.assertEquals(expected_date, sale_order.expected_date, "Wrong expected date on sale order!")
 
         sale_order.action_confirm()
@@ -64,13 +64,13 @@ class TestSaleExpectedDate(common.TransactionCase):
 
         # if Shipping Policy is set to `one`(when SO is confirmed) then expected date should be
         # SO confirmation date + longest lead time from all of it's order lines
-        expected_date = fields.Datetime.to_string(confirm_date + timedelta(days=15))
+        expected_date = confirm_date + timedelta(days=15)
         self.assertEquals(expected_date, sale_order.expected_date, "Wrong expected date on sale order!")
 
         # if Shipping Policy is set to `direct`(when SO is confirmed) then expected date should be
         # SO confirmation date + shortest lead time from all of it's order lines
         sale_order.write({'picking_policy': 'direct'})
-        expected_date = fields.Datetime.to_string(confirm_date + timedelta(days=5))
+        expected_date = confirm_date + timedelta(days=5)
         self.assertEquals(expected_date, sale_order.expected_date, "Wrong expected date on sale order!")
 
         # Check effective date, it should be date on which the first shipment successfully delivered to customer

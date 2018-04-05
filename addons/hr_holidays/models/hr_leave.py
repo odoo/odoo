@@ -5,12 +5,12 @@
 
 import logging
 import math
-from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.translate import _
+from odoo.tools.datetime import timedelta
 
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
 
@@ -170,7 +170,7 @@ class HolidaysRequest(models.Model):
 
         # No date_to set so far: automatically compute one 8 hours later
         if date_from and not date_to:
-            date_to_with_delta = fields.Datetime.from_string(date_from) + timedelta(hours=HOURS_PER_DAY)
+            date_to_with_delta = date_from + timedelta(hours=HOURS_PER_DAY)
             self.date_to = str(date_to_with_delta)
 
         # Compute and update the number of days
@@ -218,8 +218,8 @@ class HolidaysRequest(models.Model):
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
-        from_dt = fields.Datetime.from_string(date_from)
-        to_dt = fields.Datetime.from_string(date_to)
+        from_dt = date_from
+        to_dt = date_to
 
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
@@ -253,12 +253,12 @@ class HolidaysRequest(models.Model):
     def _check_leave_type_validity(self):
         for leave in self:
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
-                vstart = fields.Datetime.from_string(leave.holiday_status_id.validity_start)
-                vstop  = fields.Datetime.from_string(leave.holiday_status_id.validity_stop)
-                dfrom  = fields.Datetime.from_string(leave.date_from)
-                dto    = fields.Datetime.from_string(leave.date_to)
+                vstart = leave.holiday_status_id.validity_start
+                vstop  = leave.holiday_status_id.validity_stop
+                dfrom  = leave.date_from
+                dto    = leave.date_to
 
-                if dfrom and dto and (dfrom < vstart or dto > vstop):
+                if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
                     raise UserError(_('You can take %s only between %s and %s') % (leave.holiday_status_id.display_name, \
                                                                                   leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
 

@@ -2,15 +2,14 @@
 import hashlib
 import hmac
 import logging
-from datetime import datetime
 import pprint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
+from odoo.tools.datetime import datetime
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 from odoo import api, SUPERUSER_ID
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
@@ -698,7 +697,7 @@ class PaymentTransaction(models.Model):
         if any(trans.state != 'draft' for trans in self):
             raise ValidationError(_('Only draft transaction can be processed.'))
 
-        self.write({'state': 'pending', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self.write({'state': 'pending', 'date': datetime.now()})
         self._log_payment_transaction_received()
 
     @api.multi
@@ -707,7 +706,7 @@ class PaymentTransaction(models.Model):
         if any(trans.state != 'draft' for trans in self):
             raise ValidationError(_('Only draft transaction can be authorized.'))
 
-        self.write({'state': 'authorized', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self.write({'state': 'authorized', 'date': datetime.now()})
         self._log_payment_transaction_received()
 
     @api.multi
@@ -735,7 +734,7 @@ class PaymentTransaction(models.Model):
             trans.payment_id = payment
         payments.post()
 
-        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self.write({'state': 'done', 'date': datetime.now()})
         self._log_payment_transaction_received()
 
     @api.multi
@@ -747,7 +746,7 @@ class PaymentTransaction(models.Model):
         # Cancel the existing payments.
         self.mapped('payment_id').cancel()
 
-        self.write({'state': 'cancel', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self.write({'state': 'cancel', 'date': datetime.now()})
         self._log_payment_transaction_received()
 
     @api.model

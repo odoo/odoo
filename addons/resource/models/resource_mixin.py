@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import timedelta
-from pytz import utc
+from odoo.tools.datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.tools import float_utils
@@ -69,9 +68,9 @@ class ResourceMixin(models.AbstractModel):
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
+            from_datetime = from_datetime.replace(tzinfo='UTC')
         if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+            to_datetime = to_datetime.replace(tzinfo='UTC')
 
         # total hours per day: retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
@@ -117,9 +116,9 @@ class ResourceMixin(models.AbstractModel):
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
+            from_datetime = from_datetime.replace(tzinfo='UTC')
         if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+            to_datetime = to_datetime.replace(tzinfo='UTC')
 
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
@@ -163,9 +162,9 @@ class ResourceMixin(models.AbstractModel):
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
+            from_datetime = from_datetime.replace(tzinfo='UTC')
         if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+            to_datetime = to_datetime.replace(tzinfo='UTC')
 
         intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
         result = defaultdict(float)
@@ -189,9 +188,9 @@ class ResourceMixin(models.AbstractModel):
 
         # naive datetimes are made explicit in UTC
         if not from_datetime.tzinfo:
-            from_datetime = from_datetime.replace(tzinfo=utc)
+            from_datetime = from_datetime.replace(tzinfo='UTC')
         if not to_datetime.tzinfo:
-            to_datetime = to_datetime.replace(tzinfo=utc)
+            to_datetime = to_datetime.replace(tzinfo='UTC')
 
         attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
         leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)

@@ -7,9 +7,8 @@ try:
 except ImportError:
     from mock import patch
 
-from odoo.fields import Datetime, Date
 from odoo.tests import tagged
-from datetime import datetime, timedelta
+from odoo.tools.datetime import date as datelib, datetime, timedelta
 import logging
 
 
@@ -22,79 +21,79 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
     def setUp(self):
         super(TestTheoreticalAmount, self).setUp()
         #create the budgetary position
-        user_type_id = self.ref('account.data_account_type_revenue')
-        tag_id = self.ref('account.account_tag_operating')
-        account_rev = self.env['account.account'].create({
-            'code': 'Y2020',
-            'name': 'Budget - Test Revenue Account',
-            'user_type_id': user_type_id,
-            'tag_ids': [(4, tag_id, 0)]
-        })
-        buget_post = self.env['account.budget.post'].create({
-            'name': 'Sales',
-            'account_ids': [(4, account_rev.id, 0)],
-        })
-        #create the budget and budget lines
-        first_january = datetime.now().replace(day=1, month=1)
-        self.last_day_of_budget = first_january + timedelta(days=364)  # will be 30th of December or 31th in case of leap year
+        with patch.object(datetime, 'now', lambda tzinfo=None: datetime(2018, 10, 30, 10, 0)), \
+             patch.object(datelib, 'today', lambda tzinfo=None: datelib(2018, 10, 30)):
+            user_type_id = self.ref('account.data_account_type_revenue')
+            tag_id = self.ref('account.account_tag_operating')
+            account_rev = self.env['account.account'].create({
+                'code': 'Y2020',
+                'name': 'Budget - Test Revenue Account',
+                'user_type_id': user_type_id,
+                'tag_ids': [(4, tag_id)]
+            })
+            buget_post = self.env['account.budget.post'].create({
+                'name': 'Sales',
+                'account_ids': [(4, account_rev.id)],
+            })
+            #create the budget and budget lines
+            first_january = datetime(2018, 1, 1)
+            self.last_day_of_budget = first_january + timedelta(days=364)  # will be 30th of December or 31th in case of leap year
 
-        crossovered_budget = self.env['crossovered.budget'].create({
-            'name': 'test budget name',
-            'date_from': str(first_january.date()),
-            'date_to': str(self.last_day_of_budget.date()),
-        })
-        crossovered_budget_line_obj = self.env['crossovered.budget.lines']
-        self.line = crossovered_budget_line_obj.create({
-            'crossovered_budget_id': crossovered_budget.id,
-            'general_budget_id': buget_post.id,
-            'date_from': str(first_january.date()),
-            'date_to': str(self.last_day_of_budget.date()),
-            'planned_amount': -364,
-        })
-        self.paid_date_line = crossovered_budget_line_obj.create({
-            'crossovered_budget_id': crossovered_budget.id,
-            'general_budget_id': buget_post.id,
-            'date_from': str(first_january.date()),
-            'date_to': str(self.last_day_of_budget.date()),
-            'planned_amount': -364,
-            'paid_date': str(datetime.now().year) + '-09-09',
-        })
-
-        self.patcher = patch('odoo.addons.account_budget.models.account_budget.fields.Date', wraps=Date)
-        self.mock_date = self.patcher.start()
+            crossovered_budget = self.env['crossovered.budget'].create({
+                'name': 'test budget name',
+                'date_from': first_january.date(),
+                'date_to': self.last_day_of_budget.date(),
+            })
+            crossovered_budget_line_obj = self.env['crossovered.budget.lines']
+            self.line = crossovered_budget_line_obj.create({
+                'crossovered_budget_id': crossovered_budget.id,
+                'general_budget_id': buget_post.id,
+                'date_from': first_january.date(),
+                'date_to': self.last_day_of_budget.date(),
+                'planned_amount': -364,
+            })
+            self.paid_date_line = crossovered_budget_line_obj.create({
+                'crossovered_budget_id': crossovered_budget.id,
+                'general_budget_id': buget_post.id,
+                'date_from': first_january.date(),
+                'date_to': self.last_day_of_budget.date(),
+                'planned_amount': -364,
+                'paid_date': datelib(2018, 9, 9),
+            })
 
     def test_theoritical_amount_without_paid_date(self):
         test_list = [
-            (str(datetime.now().year) + '-01-01', 0),
-            (str(datetime.now().year) + '-01-02', -1),
-            (str(datetime.now().year) + '-01-03', -2),
-            (str(datetime.now().year) + '-01-11', -10),
-            (str(datetime.now().year) + '-02-20', -50),
-            (str(self.last_day_of_budget.date()), -364),
+            (datetime(2018, 1, 1), 0),
+            (datetime(2018, 1, 2), -1),
+            (datetime(2018, 1, 3), -2),
+            (datetime(2018, 1, 11), -10),
+            (datetime(2018, 2, 20), -50),
+            (self.last_day_of_budget, -364),
         ]
         for date, expected_amount in test_list:
-            _logger.info("Checking theoritical amount for the date: " + date)
-            self.mock_date.today.return_value = date
-            self.assertAlmostEqual(self.line.theoritical_amount, expected_amount)
-            #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
-            self.line.invalidate_cache()
+            _logger.info("Checking theoritical amount for the date: " + str(date))
+            with patch.object(datetime, 'now', lambda tzinfo=None: date), \
+                 patch.object(datelib, 'today', lambda tzinfo=None: date.date()):
+                self.assertAlmostEqual(self.line.theoritical_amount, expected_amount)
+                #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
+                self.line.invalidate_cache()
 
     def test_theoritical_amount_with_paid_date(self):
         test_list = [
-            (str(datetime.now().year) + '-01-01', 0),
-            (str(datetime.now().year) + '-01-02', 0),
-            (str(datetime.now().year) + '-09-08', 0),
-            (str(datetime.now().year) + '-09-09', -364),
-            (str(datetime.now().year) + '-09-10', -364),
-            (str(self.last_day_of_budget.date()), -364),
+            (datetime(2018, 1, 1), 0),
+            (datetime(2018, 1, 2), 0),
+            (datetime(2018, 9, 8), 0),
+            (datetime(2018, 9, 9), -364),
+            (datetime(2018, 9, 10), -364),
+            (self.last_day_of_budget, -364),
         ]
         for date, expected_amount in test_list:
-            _logger.info("Checking theoritical amount for the date: " + date)
-            self.mock_date.today.return_value = date
-            self.assertAlmostEqual(self.paid_date_line.theoritical_amount, expected_amount)
-            #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
-            self.paid_date_line.invalidate_cache()
+            _logger.info("Checking theoritical amount for the date: " + str(date))
+            with patch.object(datetime, 'now', lambda tzinfo=None: date), \
+                 patch.object(datelib, 'today', lambda tzinfo=None: date.date()):
+                self.assertAlmostEqual(self.paid_date_line.theoritical_amount, expected_amount)
+                #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
+                self.paid_date_line.invalidate_cache()
 
     def tearDown(self):
-        self.patcher.stop()
         super(TestTheoreticalAmount, self).tearDown()

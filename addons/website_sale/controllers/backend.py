@@ -2,11 +2,10 @@
 
 import babel
 
-from datetime import datetime, timedelta, time
-
 from odoo import fields, http, _
 from odoo.addons.website.controllers.backend import WebsiteBackend
 from odoo.http import request
+from odoo.tools.datetime import datetime, timedelta, time
 
 
 class WebsiteSaleBackend(WebsiteBackend):
@@ -58,8 +57,8 @@ class WebsiteSaleBackend(WebsiteBackend):
         # Sale-based results computation
         sale_order_domain = [
             ('team_id', 'in', request.env['crm.team'].search([('team_type', '=', 'website')]).ids),
-            ('date_order', '>=', fields.Datetime.to_string(datetime_from)),
-            ('date_order', '<=', fields.Datetime.to_string(datetime_to))]
+            ('date_order', '>=', datetime_from),
+            ('date_order', '<=', datetime_to)]
         so_group_data = request.env['sale.order'].read_group(sale_order_domain, fields=['state'], groupby='state')
         for res in so_group_data:
             if res.get('state') == 'sent':

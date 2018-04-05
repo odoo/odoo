@@ -18,9 +18,7 @@ import os
 import re
 import hashlib
 
-import pytz
 import requests
-from dateutil import parser
 from lxml import etree, html
 from PIL import Image as I
 from werkzeug import urls
@@ -30,6 +28,7 @@ import odoo.modules
 from odoo import api, models, fields
 from odoo.tools import ustr, pycompat
 from odoo.tools import html_escape as escape
+from odoo.tools.datetime import parse, UTC
 from odoo.addons.base.models import ir_qweb
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
@@ -225,16 +224,13 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        dt = parser.parse(value)
+        dt = parse(value)
 
         # convert back from user's timezone to UTC
         tz_name = self.env.context.get('tz') or self.env.user.tz
         if tz_name:
             try:
-                user_tz = pytz.timezone(tz_name)
-                utc = pytz.utc
-
-                dt = user_tz.localize(dt).astimezone(utc)
+                dt = dt.astimezone(tz_name).astimezone(UTC)
             except Exception:
                 logger.warn(
                     "Failed to convert the value for a field of the model"

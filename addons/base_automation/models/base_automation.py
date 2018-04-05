@@ -1,28 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import logging
 import time
 import traceback
 from collections import defaultdict
 
-import dateutil
-from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.modules.registry import Registry
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools import datetime
 
 _logger = logging.getLogger(__name__)
 
 DATE_RANGE_FUNCTION = {
-    'minutes': lambda interval: relativedelta(minutes=interval),
-    'hour': lambda interval: relativedelta(hours=interval),
-    'day': lambda interval: relativedelta(days=interval),
-    'month': lambda interval: relativedelta(months=interval),
-    False: lambda interval: relativedelta(0),
+    'minutes': lambda interval: datetime.relativedelta(minutes=interval),
+    'hour': lambda interval: datetime.relativedelta(hours=interval),
+    'day': lambda interval: datetime.relativedelta(days=interval),
+    'month': lambda interval: datetime.relativedelta(months=interval),
+    False: lambda interval: datetime.relativedelta(0),
 }
 
 
@@ -145,8 +142,7 @@ class BaseAutomation(models.Model):
             :returns: dict -- evaluation context given to safe_eval
         """
         return {
-            'datetime': datetime,
-            'dateutil': dateutil,
+            'datetime': datetime.DatetimeContext,
             'time': time,
             'uid': self.env.uid,
             'user': self.env.user,
@@ -344,7 +340,7 @@ class BaseAutomation(models.Model):
         # retrieve all the action rules to run based on a timed condition
         eval_context = self._get_eval_context()
         for action in self.with_context(active_test=True).search([('trigger', '=', 'on_time')]):
-            last_run = fields.Datetime.from_string(action.last_run) or datetime.datetime.utcfromtimestamp(0)
+            last_run = action.last_run or datetime.datetime.utcfromtimestamp(0)
 
             # retrieve all the records that satisfy the action's condition
             domain = []
@@ -372,7 +368,7 @@ class BaseAutomation(models.Model):
                     except Exception:
                         _logger.error(traceback.format_exc())
 
-            action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+            action.write({'last_run': now})
 
             if automatic:
                 # auto-commit for batch processing

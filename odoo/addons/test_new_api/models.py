@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
-
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import pycompat
-
+from odoo.tools import datetime
 
 class Category(models.Model):
     _name = 'test_new_api.category'
@@ -315,6 +313,16 @@ class Bar(models.Model):
         for bar in self:
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
 
+class TestDateTime(models.Model):
+    """
+    Test date and datetime fields.
+    """
+    _name = 'test_new_api.testdatetime'
+
+    startday = fields.Date(default='1955-11-5')
+    startdt = fields.Datetime(default=datetime.datetime(1985, 10, 26, 1, 20, 0))
+    endday = fields.Date(default=fields.Date.today)
+    enddt = fields.Datetime(default=fields.Datetime.now)
 
 class Related(models.Model):
     _name = 'test_new_api.related'

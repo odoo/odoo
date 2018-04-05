@@ -5,7 +5,6 @@
 import ast
 import collections
 import contextlib
-import datetime
 import functools
 import hashlib
 import hmac
@@ -48,6 +47,7 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique
+from .tools.datetime import datetime
 
 from .modules.module import module_manifest
 
@@ -1598,8 +1598,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     if isinstance(mtime, str):
         try:
-            server_format = odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            mtime = datetime.datetime.strptime(mtime.split('.')[0], server_format)
+            mtime = datetime.from_string(mtime.split('.')[0])
         except Exception:
             mtime = None
     if mtime is not None:

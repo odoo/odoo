@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time
-from dateutil.relativedelta import relativedelta
-
-from odoo import fields
+from odoo.tools.datetime import datetime, relativedelta
 
 from odoo.tests import common
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestTimesheet
@@ -85,7 +82,7 @@ class TestTimesheetHolidays(TestTimesheet):
             'number_of_days_temp': number_of_days,
         })
         holiday.sudo().action_validate()
-        self.assertEquals(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
+        self.assertEquals(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (self.leave_start_datetime, self.leave_end_datetime))
 
         # manager refuse the leave
         holiday.sudo().action_refuse()
