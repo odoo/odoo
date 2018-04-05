@@ -1124,6 +1124,153 @@ Possible children of the diagram view are:
 
 .. _reference/views/search:
 
+Dashboard
+=========
+
+Like pivot and graph view, The dashboard view is used to display aggregate data.
+However, the dashboard can embed sub views, which makes it possible to have a
+more complete and interesting look on a given dataset.
+
+.. warning::
+
+   The Dashboard view is only available in Odoo Enterprise.
+
+The dashboard view can display sub views, aggregates for some fields (over a
+domain), or even *formulas* (expressions which involves one or more aggregates).
+For example, here is a very simple dashboard:
+
+.. code-block:: xml
+
+    <dashboard>
+        <view type="graph" ref="sale_report.view_order_product_graph"/>
+        <group string="Sale">
+            <aggregate name="price_total" field="price_total" widget="monetary"/>
+            <aggregate name="order_id" field="order_id" string="Orders"/>
+            <formula name="price_average" string="Price Average"
+                value="record.price_total / record.order_id" widget="percentage"/>
+        </group>
+        <view type="pivot" ref="sale_report.view_order_product_pivot"/>
+    </dashboard>
+
+The root element of the Dashboard view is <dashboard>, it does not accept any
+attributes.
+
+There are 5 possible type of tags in a dashboard view:
+
+``view``
+    declares a sub view.
+
+    Possible attributes are:
+
+    ``type`` the type of the sub view.  For example, *graph* or *pivot*.
+
+    ``ref`` (optional)
+        an xml id for a view. If not given, the default view for the model will
+        be used.
+
+    ``name`` (optional)
+        a string which identifies this element.  It is mostly
+        useful to be used as a target for an xpath.
+
+``group``
+    defines a column layout.  This is actually very similar to the group element
+    in a form view.
+
+    Possible attributes are:
+
+    ``string`` (optional)
+        A description which will be displayed as a group title.
+
+    ``colspan`` (optional)
+        The number of subcolumns in this group tag. By default, 6.
+
+    ``col`` (optional)
+        The number of columns spanned by this group tag (only makes sense inside
+        another group). By default, 6.
+
+
+``aggregate``
+    declares an aggregate.  This is the value of an aggregate for a given field
+    over the current domain.
+
+    Note that aggregates are supposed to be used inside a group tag (otherwise
+    the style will not be properly applied).
+
+    Attributes are:
+
+    - ``field``
+        The field name to use for computing the aggregate. Possible field types
+        are:
+
+        - ``integer`` (default group operator is sum)
+        - ``float``  (default group operator is sum)
+        - ``many2one`` (default group operator is count distinct)
+
+    - ``name``
+        A string to identify this aggregate (useful for formulas)
+
+    - ``string`` (optional)
+        A short description that will be displayed above the value. If not
+        given, it will fall back to the field string.
+
+    - ``domain`` (optional)
+        An additional restriction on the set of records that we want to aggregate.
+        This domain will be combined with the current domain.
+
+    - ``domain_label`` (optional)
+        When the user clicks on an aggregate with a domain, it will be added to
+        the search view as a facet.  The string displayed for this facet can
+        be customized with this attribute.
+
+    ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+    ``widget`` (optional)
+        A widget to format the value (like the widget attribute for fields).
+        For example, monetary.
+
+``formula``
+    declares a derived value.  Formulas are values computed from other aggregates.
+
+    Note that like aggregates, formulas are supposed to be used inside a group
+    tag (otherwise the style will not be properly applied).
+
+    Possible attributes are:
+
+    - ``value``
+        A string expression that will be evaluated, with the builtin python
+        evaluator (in the web client).  Every aggregate can be used in the
+        context, in the ``record`` variable.  For example,
+        ``record.price_total / record.order_id``.
+
+    - ``string``
+        A short description that will be displayed above the formula.
+
+    - ``name`` (optional)
+        A string to identify this aggregate
+
+    ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+    ``widget`` (optional)
+        A widget to format the value (like the widget attribute for fields).
+        For example, monetary. By default, it is 'float'.
+
+``widget``
+    Declares a specialized widget to be used to display the information. This is
+    a mechanism similar to the widgets in the form view.
+
+    - ``name``
+        A string to identify which widget should be instantiated. The view will
+        look into the ``widget_registry`` to get the proper class.
+
+    ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+
 Search
 ======
 
