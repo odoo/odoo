@@ -435,7 +435,7 @@ ActionManager.include({
             var View = view_registry.get(key || viewType);
             if (View) {
                 views.push({
-                    accessKey: View.prototype.accessKey,
+                    accessKey: View.prototype.accessKey || View.prototype.accesskey,
                     fieldsView: fieldsView,
                     icon: View.prototype.icon,
                     isMobileFriendly: View.prototype.mobile_friendly,
