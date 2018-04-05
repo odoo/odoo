@@ -482,16 +482,22 @@ odoo.define('website_sale.website_sale', function (require) {
         }
     });
 
+    function onImageLoaded(img, callback) {
+        $(img).on('load', function() { callback(); });
+        if (img.complete) {
+            $(img).off('load');
+            callback();
+        }
+    }
+
     // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
     if (!config.device.isMobile) {
-
         var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
         factorZoom = parseFloat($('.ecom-zoomable').data('ecom-zoom-factor')) || 1.5,
         attach = '#o-carousel-product';
         _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
-            var $img = $(el);
-            $img.load(function(e) {
-                var el = e.currentTarget;
+            onImageLoaded(el, function() {
+                var $img = $(el);
                 if (!_.str.endsWith(el.src, el.dataset.zoomImage) || // if zoom-img != img
                     el.naturalWidth >= $(attach).width() * factorZoom || el.naturalHeight >= $(attach).height() * factorZoom) {
                     $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
@@ -502,4 +508,5 @@ odoo.define('website_sale.website_sale', function (require) {
             });
         });
     }
+
 });
