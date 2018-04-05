@@ -17,6 +17,7 @@ QUnit.module('Views', {
                     bar: {string: "bar", type: "boolean"},
                     date: {string: "Date", type: "date", store: true},
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
+                    other_product_id: {string: "Other Product", type: "many2one", relation: 'product', store: true},
                     non_stored_m2o: {string: "Non Stored M2O", type: "many2one", relation: 'product'},
                     customer: {string: "Customer", type: "many2one", relation: 'customer', store: true},
                 },
@@ -965,4 +966,82 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
+
+    QUnit.test('pivot view with many2one field as a measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('table tbody tr').text().trim(), "Total2112",
+            "should display product_id count as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('m2o as measure, drilling down into data', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</pivot>',
+        });
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+        // click on date by day
+        pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a[data-interval="month"]').click();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '2211',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with same many2one field as a measure and grouped by', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="row"/>' +
+                '</pivot>',
+        });
+
+        pivot.$buttons.find('li[data-field=product_id] a').click();
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '421131',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with same many2one field as a measure and grouped by (and drill down)', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</pivot>',
+        });
+
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+
+        pivot.$('ul.o_pivot_field_menu > li[data-field="product_id"] a').click();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '211',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
 });});

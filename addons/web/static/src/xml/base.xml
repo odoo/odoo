@@ -527,7 +527,7 @@
         </button>
         <ul class="dropdown-menu o_pivot_measures_list">
             <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
-                <a href="#"><t t-esc="measure[1].string"/></a>
+                <a href="#"><t t-esc="measure[1].string"/><t t-if="measure[1].type === 'many2one'"> (count)</t></a>
             </li>
             <li class="divider"></li>
             <li data-field="__count"><a href="#">Count</a></li>

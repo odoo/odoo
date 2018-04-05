@@ -73,7 +73,15 @@ var PivotModel = AbstractModel.extend({
 
         var other_root = header.root.other_root;
         var other_groupbys = header.root.other_root.groupbys;
-        var fields = [].concat(field, other_groupbys, this.data.measures);
+
+        var measures = _.map(this.data.measures, function(measure) {
+            var type = self.fields[measure].type;
+            return (type === 'many2one') ? measure + ":count_distinct" : measure;
+        });
+        var fields = _.map(other_groupbys, function (field) {
+            return field.split(':')[0];
+        });
+
         var groupbys = [];
 
         for (var i = 0; i <= other_groupbys.length; i++) {
@@ -86,7 +94,7 @@ var PivotModel = AbstractModel.extend({
                     method: 'read_group',
                     context: self.data.context,
                     domain: header.domain.length ? header.domain : self.data.domain,
-                    fields: _.map(fields, function (field) { return field.split(':')[0]; }),
+                    fields: [].concat(field, fields, measures),
                     groupBy: groupBy,
                     lazy: false,
                 });
@@ -113,7 +121,19 @@ var PivotModel = AbstractModel.extend({
                         continue;
                     }
                     for (cell_value = {}, l=0; l < self.data.measures.length; l++) {
-                        cell_value[self.data.measures[l]] = datapt[self.data.measures[l]];
+                        var _value = datapt[self.data.measures[l]];
+                        if (_value instanceof Array) {
+                            // when a many2one field is used as a measure AND as
+                            // a grouped field, bad things happen.  The server
+                            // will only return the grouped value and will not
+                            // aggregate it.  Since there is a nameclash, we are
+                            // then in the situation where this value is an
+                            // array.  Fortunately, if we group by a field,
+                            // then we can say for certain that the group contains
+                            // exactly one distinct value for that field.
+                            _value = 1;
+                        }
+                        cell_value[self.data.measures[l]] =_value;
                     }
                     // cell_value.__count = attrs.length;
                     if (!self.data.cells[row.id]) {
@@ -523,7 +543,17 @@ var PivotModel = AbstractModel.extend({
         var groupBys = [];
         var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
-        var fields = [].concat(rowGroupBys, colGroupBys, this.data.measures);
+        var measures = _.map(this.data.measures, function(measure) {
+            if (self.fields[measure].type === 'many2one') {
+                return measure + ":count_distinct";
+            }
+            else {
+                return measure;
+            }
+        });
+        var fields = _.map(rowGroupBys.concat(colGroupBys), function (field) {
+                        return field.split(':')[0];
+                    }).concat(measures);
 
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
@@ -537,7 +567,7 @@ var PivotModel = AbstractModel.extend({
                     method: 'read_group',
                     context: self.data.context,
                     domain: self.data.domain,
-                    fields: _.map(fields, function (field) { return field.split(':')[0]; }),
+                    fields: fields,
                     groupBy: groupBy,
                     lazy: false,
                 });
@@ -633,7 +663,19 @@ var PivotModel = AbstractModel.extend({
                     }
                     if (!this.data.cells[row.id]) this.data.cells[row.id] = [];
                     for (cell_value = {}, m=0; m < this.data.measures.length; m++) {
-                        cell_value[this.data.measures[m]] = datapt[this.data.measures[m]];
+                        var _value = datapt[this.data.measures[m]];
+                        if (_value instanceof Array) {
+                            // when a many2one field is used as a measure AND as
+                            // a grouped field, bad things happen.  The server
+                            // will only return the grouped value and will not
+                            // aggregate it.  Since there is a nameclash, we are
+                            // then in the situation where this value is an
+                            // array.  Fortunately, if we group by a field,
+                            // then we can say for certain that the group contains
+                            // exactly one distinct value for that field.
+                            _value = 1;
+                        }
+                        cell_value[this.data.measures[m]] = _value;
                     }
                     this.data.cells[row.id][col.id] = cell_value;
                 }

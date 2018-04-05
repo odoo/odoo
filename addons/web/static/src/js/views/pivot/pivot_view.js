@@ -45,7 +45,7 @@ var PivotView = AbstractView.extend({
         this.fields.__count = {string: _t("Count"), type: "integer"};
         _.each(this.fields, function (field, name) {
             if ((name !== 'id') && (field.store === true)) {
-                if (_.contains(['integer', 'float', 'monetary'], field.type)) {
+                if (_.contains(['integer', 'float', 'monetary', 'many2one'], field.type)) {
                     measures[name] = field;
                 }
                 if (_.contains(GROUPABLE_TYPES, field.type)) {

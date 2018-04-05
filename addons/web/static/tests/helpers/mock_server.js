@@ -679,8 +679,18 @@ var MockServer = Class.extend({
         }
         var self = this;
         var fields = this.data[model].fields;
-        var aggregatedFields = _.map(kwargs.fields, function (field) {
-            return field.split(":")[0];
+        var aggregatedFields = [];
+        _.each(kwargs.fields, function (field) {
+            var split = field.split(":");
+            var fieldName = split[0];
+            if (kwargs.groupby.indexOf(fieldName) > 0) {
+                // grouped fields are not aggregated
+                return;
+            }
+            if (fields[fieldName] && (fields[fieldName].type === 'many2one') && split[1] !== 'count_distinct') {
+                return;
+            }
+            aggregatedFields.push(fieldName);
         });
         var groupBy = [];
         if (kwargs.groupby.length) {
@@ -689,7 +699,7 @@ var MockServer = Class.extend({
         var records = this._getRecords(model, kwargs.domain);
 
         // if no fields have been given, the server picks all stored fields
-        if (aggregatedFields.length === 0) {
+        if (kwargs.fields.length === 0) {
             aggregatedFields = _.keys(this.data[model].fields);
         }
 
