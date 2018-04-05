@@ -57,7 +57,8 @@ class Followers(models.Model):
         if 'res_model' in vals or 'res_id' in vals:
             self._invalidate_documents()
         res = super(Followers, self).write(vals)
-        self._invalidate_documents()
+        if any(x in vals for x in ['res_model', 'res_id', 'partner_id']):
+            self._invalidate_documents()
         return res
 
     @api.multi
