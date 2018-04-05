@@ -679,7 +679,9 @@ var MockServer = Class.extend({
         }
         var self = this;
         var fields = this.data[model].fields;
-        var aggregatedFields = _.clone(kwargs.fields);
+        var aggregatedFields = _.map(kwargs.fields, function (field) {
+            return field.split(":")[0];
+        });
         var groupBy = [];
         if (kwargs.groupby.length) {
             groupBy = kwargs.lazy ? [kwargs.groupby[0]] : kwargs.groupby;
@@ -691,9 +693,13 @@ var MockServer = Class.extend({
             aggregatedFields = _.keys(this.data[model].fields);
         }
 
+        var groupByFieldNames = _.map(groupBy, function (groupByField) {
+            return groupByField.split(":")[0];
+        });
+
         // filter out non existing fields
         aggregatedFields = _.filter(aggregatedFields, function (name) {
-            return name in self.data[model].fields;
+            return name in self.data[model].fields && !(_.contains(groupByFieldNames,name));
         });
 
         function aggregateFields(group, records) {
@@ -706,6 +712,10 @@ var MockServer = Class.extend({
                         var value = group[aggregatedFields[i]] || 0;
                         group[aggregatedFields[i]] = value + records[j][aggregatedFields[i]];
                     }
+                }
+                if (type === 'many2one') {
+                    var ids = _.pluck(records, aggregatedFields[i]); 
+                    group[aggregatedFields[i]] = _.uniq(ids).length || null;
                 }
             }
         }

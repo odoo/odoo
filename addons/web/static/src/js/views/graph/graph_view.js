@@ -57,7 +57,7 @@ var GraphView = AbstractView.extend({
         var measures = {__count__: {string: _t("Count"), type: "integer"}};
         _.each(this.fields, function (field, name) {
             if (name !== 'id' && field.store === true) {
-                if (field.type === 'integer' || field.type === 'float' || field.type === 'monetary') {
+                if (field.type === 'integer' || field.type === 'float' || field.type === 'monetary' || field.type === 'many2one') {
                     measures[name] = field;
                 }
             }
