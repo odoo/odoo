@@ -355,6 +355,13 @@ class MaintenanceRequest(models.Model):
             self.activity_update()
         return res
 
+    def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
+        res = super(MaintenanceRequest, self)._message_auto_subscribe_followers(updated_values, subtype_ids)
+        if updated_values.get('technician_user_id'):
+            technician_user = self.env['res.users'].browse(updated_values['technician_user_id'])
+            res.append((technician_user.partner_id.id, subtype_ids, 'maintenance.message_maintenance_responsible_assigned'))
+        return res
+
     def activity_update(self):
         """ Update maintenance activities based on current record set state.
         It reschedule, unlink or create maintenance request activities. """
