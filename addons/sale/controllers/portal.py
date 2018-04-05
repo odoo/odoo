@@ -200,16 +200,11 @@ class CustomerPortal(CustomerPortal):
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
-    def _portal_quote_user_can_accept(self, order_id):
-        return request.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') in ('pay', 'sign')
+    def _portal_quote_user_can_accept(self, order):
+        return order.company_id.portal_confirmation_sign or order.company_id.portal_confirmation_pay
 
     @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
-        if not self._portal_quote_user_can_accept(res_id):
-            return {'error': _('Operation not allowed')}
-        if not signature:
-            return {'error': _('Signature is missing.')}
-
         try:
             order_sudo = self._order_check_access(res_id, access_token=access_token)
         except AccessError:
@@ -217,15 +212,29 @@ class CustomerPortal(CustomerPortal):
         if order_sudo.state != 'sent':
             return {'error': _('Order is not in a state requiring customer validation.')}
 
-        order_sudo.action_confirm()
+        if not self._portal_quote_user_can_accept(order_sudo):
+            return {'error': _('Operation not allowed')}
+        if not signature:
+            return {'error': _('Signature is missing.')}
 
+        success_message = _('Your order has been signed but still needs to be paid to be confirmed.')
+
+        if not order_sudo.has_to_be_paid():
+            order_sudo.action_confirm()
+            success_message = _('Your order has been confirmed.')
+
+        order_sudo.signature = signature
+        order_sudo.signed_by = partner_name
+
+        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
         _message_post_helper(
             res_model='sale.order',
             res_id=order_sudo.id,
             message=_('Order signed by %s') % (partner_name,),
-            attachments=[('signature.png', base64.b64decode(signature))] if signature else [],
+            attachments=[('%s.pdf' % order_sudo.name, pdf)],
             **({'token': access_token} if access_token else {}))
+
         return {
-            'success': _('Your Order has been confirmed.'),
+            'success': success_message,
             'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),
         }
