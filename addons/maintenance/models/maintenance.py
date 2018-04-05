@@ -235,7 +235,7 @@ class MaintenanceEquipment(models.Model):
             'equipment_id': self.id,
             'maintenance_type': 'preventive',
             'owner_user_id': self.owner_user_id.id,
-            'technician_user_id': self.technician_user_id.id,
+            'user_id': self.technician_user_id.id,
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
             })
@@ -256,7 +256,7 @@ class MaintenanceEquipment(models.Model):
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Maintenance Requests'
+    _description = 'Maintenance Request'
     _order = "id desc"
 
     @api.returns('self')
@@ -289,7 +289,7 @@ class MaintenanceRequest(models.Model):
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
                                    ondelete='restrict', index=True)
-    technician_user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='user_id')
+    user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='technician_user_id')
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', track_visibility='onchange',
                                group_expand='_read_group_stage_ids', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
@@ -318,22 +318,22 @@ class MaintenanceRequest(models.Model):
     @api.onchange('equipment_id')
     def onchange_equipment_id(self):
         if self.equipment_id:
-            self.technician_user_id = self.equipment_id.technician_user_id if self.equipment_id.technician_user_id else self.equipment_id.category_id.technician_user_id
+            self.user_id = self.equipment_id.technician_user_id if self.equipment_id.technician_user_id else self.equipment_id.category_id.technician_user_id
             self.category_id = self.equipment_id.category_id
             if self.equipment_id.maintenance_team_id:
                 self.maintenance_team_id = self.equipment_id.maintenance_team_id.id
 
     @api.onchange('category_id')
     def onchange_category_id(self):
-        if not self.technician_user_id or not self.equipment_id or (self.technician_user_id and not self.equipment_id.technician_user_id):
-            self.technician_user_id = self.category_id.technician_user_id
+        if not self.user_id or not self.equipment_id or (self.user_id and not self.equipment_id.technician_user_id):
+            self.user_id = self.category_id.technician_user_id
 
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
         self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
-        if request.owner_user_id or request.technician_user_id:
+        if request.owner_user_id or request.user_id:
             request._add_followers()
         if request.equipment_id and not request.maintenance_team_id:
             request.maintenance_team_id = request.equipment_id.maintenance_team_id
@@ -347,12 +347,12 @@ class MaintenanceRequest(models.Model):
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
         res = super(MaintenanceRequest, self).write(vals)
-        if vals.get('owner_user_id') or vals.get('technician_user_id'):
+        if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
         if self.stage_id.done and 'stage_id' in vals:
             self.write({'close_date': fields.Date.today()})
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
-        if vals.get('technician_user_id') or vals.get('schedule_date'):
+        if vals.get('user_id') or vals.get('schedule_date'):
             self.activity_update()
         if vals.get('equipment_id'):
             # need to change description of activity also so unlink old and create new activity
@@ -369,7 +369,7 @@ class MaintenanceRequest(models.Model):
             updated = request.activity_reschedule(
                 ['maintenance.mail_act_maintenance_request'],
                 date_deadline=date_dl,
-                new_user_id=request.technician_user_id.id or request.owner_user_id.id or self.env.uid)
+                new_user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
             if not updated:
                 if request.equipment_id:
                     note = _('Request planned for <a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>') % (
@@ -379,11 +379,11 @@ class MaintenanceRequest(models.Model):
                 request.activity_schedule(
                     'maintenance.mail_act_maintenance_request',
                     fields.Datetime.from_string(request.schedule_date).date(),
-                    note=note, user_id=request.technician_user_id.id or request.owner_user_id.id or self.env.uid)
+                    note=note, user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
 
     def _add_followers(self):
         for request in self:
-            partner_ids = (request.owner_user_id.partner_id + request.technician_user_id.partner_id).ids
+            partner_ids = (request.owner_user_id.partner_id + request.user_id.partner_id).ids
             request.message_subscribe(partner_ids=partner_ids)
 
     @api.model
