@@ -1029,7 +1029,7 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this.trigger_up('freeze_order', {id: this.value.id});
+        this.trigger_up('edited_list', { id: this.value.id });
         var editedRecord = this.value.data[ev.data.index];
         this.renderer.setRowMode(editedRecord.id, 'edit')
             .done(ev.data.onSuccess);
@@ -1117,7 +1117,7 @@ var FieldX2Many = AbstractField.extend({
     _onResequence: function (event) {
         event.stopPropagation();
         var self = this;
-        this.trigger_up('freeze_order', {id: this.value.id});
+        this.trigger_up('edited_list', { id: this.value.id });
         var rowIDs = event.data.rowIDs.slice();
         var rowID = rowIDs.pop();
         var defs = _.map(rowIDs, function (rowID, index) {
@@ -1261,7 +1261,7 @@ var FieldOne2Many = FieldX2Many.extend({
                 }
             } else if (!this.creatingRecord) {
                 this.creatingRecord = true;
-                this.trigger_up('freeze_order', {id: this.value.id});
+                this.trigger_up('edited_list', { id: this.value.id });
                 this._setValue({
                     operation: 'CREATE',
                     position: this.editable,
