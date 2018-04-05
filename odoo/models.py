@@ -1888,7 +1888,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         select_terms = []
 
         for fspec in fields:
-            if fspec == 'sequence' or fspec in groupby_fields:
+            if fspec == 'sequence':
                 continue
 
             match = regex_field_agg.match(fspec)
@@ -1912,6 +1912,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     continue
                 func, fname = field.group_operator, name
 
+            if fname in groupby_fields:
+                continue
             if name in aggregated_fields:
                 raise UserError(_("Output name %r is used twice.") % name)
             aggregated_fields.append(name)
