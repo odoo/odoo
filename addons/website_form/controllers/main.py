@@ -3,15 +3,13 @@
 
 import base64
 import json
-import pytz
 
-from datetime import datetime
 from psycopg2 import IntegrityError
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
+from odoo.tools.datetime import date, datetime
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 
@@ -70,14 +68,13 @@ class WebsiteForm(http.Controller):
 
     def date(self, field_label, field_input):
         lang = request.env['ir.qweb.field'].user_lang()
-        return datetime.strptime(field_input, lang.date_format).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        return date.from_string(field_input, lang.date_format)
 
     def datetime(self, field_label, field_input):
         lang = request.env['ir.qweb.field'].user_lang()
         strftime_format = (u"%s %s" % (lang.date_format, lang.time_format))
-        user_tz = pytz.timezone(request.context.get('tz') or request.env.user.tz or 'UTC')
-        dt = user_tz.localize(datetime.strptime(field_input, strftime_format)).astimezone(pytz.utc)
-        return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        user_tz = request.context.get('tz') or request.env.user.tz
+        return datetime.from_string(field_input, strftime_format).replace(tzinfo=user_tz).to_utc()
 
     def binary(self, field_label, field_input):
         return base64.b64encode(field_input.read())

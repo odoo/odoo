@@ -2,13 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import random
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.datetime import datetime, relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -47,14 +46,14 @@ class SaleOrder(models.Model):
     @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
         abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
-        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
             domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
 
     def _search_abandoned_cart(self, operator, value):
         abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
-        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         abandoned_domain = expression.normalize_domain([
             ('date_order', '<=', abandoned_datetime),
             ('team_id.team_type', '=', 'website'),

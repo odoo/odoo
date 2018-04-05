@@ -6,7 +6,6 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
 from odoo.tools.float_utils import float_round
-from datetime import datetime
 import operator as py_operator
 
 OPERATORS = {
@@ -93,6 +92,8 @@ class Product(models.Model):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
         dates_in_the_past = False
+        from_date = fields.Date.from_string(from_date)
+        to_date = fields.Date.from_string(to_date)
         if to_date and to_date < fields.Datetime.now(): #Only to_date as to_date will correspond to qty_available
             dates_in_the_past = True
 

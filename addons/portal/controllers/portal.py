@@ -122,8 +122,8 @@ class CustomerPortal(Controller):
             dates, label = group[groupby]
             date_begin, date_end = dates.split('/')
             groups.append({
-                'date_begin': odoo_fields.Date.to_string(odoo_fields.Date.from_string(date_begin)),
-                'date_end': odoo_fields.Date.to_string(odoo_fields.Date.from_string(date_end)),
+                'date_begin': odoo_fields.Date.from_string(date_begin),
+                'date_end': odoo_fields.Date.from_string(date_end),
                 'name': label,
                 'item_count': group[groupby + '_count']
             })

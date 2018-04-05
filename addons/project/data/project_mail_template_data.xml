@@ -10,7 +10,7 @@
             <field name="lang">${user.lang}</field>
             <field name="model_id" ref="base.model_ir_module_module"/>
             <field name="auto_delete" eval="True"/>
-            <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M')}</field>
+            <field name="scheduled_date">${datetime.now() + datetime.relativedelta(days=3)}</field>
             <field name="body_html" ><![CDATA[
             <div style="margin: 10px auto;">
             % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order="create_date desc")[0]

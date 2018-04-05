@@ -4,10 +4,10 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_is_zero, pycompat
 from odoo.tools import float_compare, float_round, float_repr
+from odoo.tools.datetime import datetime
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError
 
-import time
 import math
 
 class AccountCashboxLine(models.Model):
@@ -246,7 +246,7 @@ class AccountBankStatement(models.Model):
             if moves:
                 moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
-        statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
+        statements.write({'state': 'confirm', 'date_done': datetime.now()})
 
     @api.multi
     def button_journal_entries(self):

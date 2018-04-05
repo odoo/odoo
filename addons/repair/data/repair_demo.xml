@@ -2,7 +2,7 @@
 <odoo>
     <record id="repair_r1" model="repair.order">
         <field name="address_id" ref="base.res_partner_address_1"/>
-        <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
+        <field name="guarantee_limit" eval="datetime.today()"/>
         <field name="invoice_method">none</field>
         <field name="product_id" ref="product.product_product_3"/>
         <field name="product_uom" ref="uom.product_uom_unit"/>
@@ -33,7 +33,7 @@
         <field name="product_id" ref="product.product_product_5"/>
         <field name="product_uom" ref="uom.product_uom_unit"/>
         <field name="address_id" ref="base.res_partner_address_1"/>
-        <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
+        <field name="guarantee_limit" eval="datetime.today()"/>
         <field name="invoice_method">after_repair</field>
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
@@ -62,7 +62,7 @@
         <field name="product_id" ref="product.product_product_6"/>
         <field name="product_uom" ref="uom.product_uom_unit"/>
         <field name="address_id" ref="base.res_partner_address_1"/>
-        <field name="guarantee_limit" eval="datetime.today().strftime('%Y-%m-%d')"/>
+        <field name="guarantee_limit" eval="datetime.today()"/>
         <field name="invoice_method">b4repair</field>
         <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
         <field name="location_id" ref="stock.stock_location_14"/>

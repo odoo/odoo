@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCase
 from odoo.tests import tagged
+from odoo.tools.datetime import date
 
 
 @tagged('post_install', '-at_install')
@@ -53,7 +52,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'currency_id': self.currency_two.id,
             'name': 'customer invoice',
             'type': 'out_invoice',
-            'date_invoice': time.strftime('%Y') + '-12-22',
+            'date_invoice': date.today().replace(month=12, day=22),
             'account_id': self.account_receivable.id,
             'invoice_line_ids': [(0, 0, {
                 'name': 'test line',

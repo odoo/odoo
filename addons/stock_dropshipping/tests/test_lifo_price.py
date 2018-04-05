@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, tools
+
 from odoo.modules.module import get_module_resource
 from odoo.tests import common, Form
+from odoo.tools.datetime import date
 
 
 class TestLifoPrice(common.TransactionCase):

@@ -1,6 +1,6 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
-import datetime
 from odoo.tests import tagged
+from odoo.tools import datetime
 
 
 @tagged('post_install', '-at_install')

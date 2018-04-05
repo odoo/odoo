@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import logging
 
 import requests
@@ -14,6 +13,7 @@ from odoo.exceptions import UserError
 from odoo.models import AbstractModel
 from odoo.tools.translate import _
 from odoo.tools import config, misc, ustr
+from odoo.tools import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class PublisherWarrantyContract(AbstractModel):
         db_create_date = IrParamSudo.get_param('database.create_date')
         limit_date = datetime.datetime.now()
         limit_date = limit_date - datetime.timedelta(15)
-        limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
+        limit_date_str = limit_date
         nbr_users = Users.search_count([('active', '=', True)])
         nbr_active_users = Users.search_count([("login_date", ">=", limit_date_str), ('active', '=', True)])
         nbr_share_users = 0

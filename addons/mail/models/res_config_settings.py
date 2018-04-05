@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
-
 from werkzeug import urls
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+from odoo.tools import datetime
 
 
 class ResConfigSettings(models.TransientModel):
@@ -25,7 +24,7 @@ class ResConfigSettings(models.TransientModel):
 
         res.update(
             fail_counter=self.env['mail.mail'].sudo().search_count([
-                ('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
+                ('date', '>=', previous_date),
                 ('state', '=', 'exception')]),
         )
 

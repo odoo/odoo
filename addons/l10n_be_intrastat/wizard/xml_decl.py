@@ -19,10 +19,10 @@ class XmlDeclaration(models.TransientModel):
     _description = 'Intrastat XML Declaration'
 
     def _default_get_month(self):
-        return fields.Date.from_string(fields.Date.context_today(self)).strftime('%m')
+        return fields.Date.context_today(self).strftime('%m')
 
     def _default_get_year(self):
-        return fields.Date.from_string(fields.Date.context_today(self)).strftime('%Y')
+        return fields.Date.context_today(self).strftime('%Y')
 
     name = fields.Char(string='File Name', default='intrastat.xml')
     month = fields.Selection([('01', 'January'), ('02', 'February'), ('03', 'March'),

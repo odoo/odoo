@@ -2,7 +2,6 @@
 from werkzeug import urls
 
 from .authorize_request import AuthorizeAPI
-from datetime import datetime
 import hashlib
 import hmac
 import logging
@@ -14,6 +13,7 @@ from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
+from odoo.tools.datetime import datetime
 
 _logger = logging.getLogger(__name__)
 

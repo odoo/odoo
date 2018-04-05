@@ -2,10 +2,9 @@
 
 from ast import literal_eval
 from operator import itemgetter
-import time
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.datetime import datetime
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
@@ -362,7 +361,7 @@ class ResPartner(models.Model):
     @api.multi
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().with_context(company_id=self.env.user.company_id.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        return self.sudo().with_context(company_id=self.env.user.company_id.id).write({'last_time_entries_checked': datetime.now()})
 
     @api.one
     def _get_company_currency(self):

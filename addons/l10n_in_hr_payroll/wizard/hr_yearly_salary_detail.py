@@ -9,12 +9,10 @@ class YearlySalaryDetail(models.TransientModel):
     _description = 'Hr Salary Employee By Category Report'
 
     def _get_default_date_from(self):
-        year = fields.Date.from_string(fields.Date.today()).strftime('%Y')
-        return '{}-01-01'.format(year)
+        return fields.Date.today().start_of('year')
 
     def _get_default_date_to(self):
-        date = fields.Date.from_string(fields.Date.today())
-        return date.strftime('%Y') + '-' + date.strftime('%m') + '-' + date.strftime('%d')
+        return fields.Date.today()
 
     employee_ids = fields.Many2many('hr.employee', 'payroll_emp_rel', 'payroll_id', 'employee_id', string='Employees', required=True)
     date_from = fields.Date(string='Start Date', required=True, default=_get_default_date_from)

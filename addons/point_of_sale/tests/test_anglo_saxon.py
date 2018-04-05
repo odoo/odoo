@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import openerp
-import time
 from openerp import fields
 
 from openerp.tests import common
+from odoo.tools.datetime import date
 
 
 class TestAngloSaxonCommon(common.TransactionCase):
@@ -52,7 +52,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.pos_statement = self.Statement.create({
             'balance_start': 0.0,
             'balance_end_real': 0.0,
-            'date': time.strftime('%Y-%m-%d'),
+            'date': date.today(),
             'journal_id': self.cash_journal.id,
             'company_id': self.company.id,
             'name': 'pos session test',

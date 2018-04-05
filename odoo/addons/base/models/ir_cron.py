@@ -4,13 +4,11 @@ import logging
 import threading
 import time
 import psycopg2
-import pytz
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.datetime import datetime, timedelta, relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -143,7 +141,7 @@ class ir_cron(models.Model):
                 if not numbercall:
                     addsql = ', active=False'
                 cron_cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s",
-                                (fields.Datetime.to_string(nextcall.astimezone(pytz.UTC)), numbercall, job['id']))
+                                (nextcall.astimezone('UTC'), numbercall, job['id']))
                 cron.invalidate_cache()
 
         finally:

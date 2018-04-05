@@ -4,11 +4,12 @@
 import babel
 from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
-from pytz import timezone
 
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.datetime import datetime, relativedelta, date
+from odoo.tools.datetime import time as datetime_time
 
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
@@ -27,9 +28,9 @@ class HrPayslip(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, readonly=True,
         states={'draft': [('readonly', False)]})
     date_from = fields.Date(string='Date From', readonly=True, required=True,
-        default=lambda self: fields.Date.to_string(date.today().replace(day=1)), states={'draft': [('readonly', False)]})
+        default=lambda self: date.today().start_of('month'), states={'draft': [('readonly', False)]})
     date_to = fields.Date(string='Date To', readonly=True, required=True,
-        default=lambda self: fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()),
+        default=lambda self: datetime.now().end_of('year').date(),
         states={'draft': [('readonly', False)]})
     # this is chaos: 4 states are defined, 3 are used ('verify' isn't) and 5 exist ('confirm' seems to have existed)
     state = fields.Selection([
@@ -174,7 +175,7 @@ class HrPayslip(models.Model):
             # compute leave days
             leaves = {}
             calendar = contract.resource_calendar_id
-            tz = timezone(calendar.tz)
+            tz = calendar.tz
             day_leave_intervals = contract.employee_id.list_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
             for day, hours, leave in day_leave_intervals:
                 holiday = leave.holiday_id
@@ -396,7 +397,7 @@ class HrPayslip(models.Model):
         }
         if (not employee_id) or (not date_from) or (not date_to):
             return res
-        ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
+        ttyme = date_from
         employee = self.env['hr.employee'].browse(employee_id)
         locale = self.env.context.get('lang') or 'en_US'
         res['value'].update({
@@ -448,7 +449,7 @@ class HrPayslip(models.Model):
         date_to = self.date_to
         contract_ids = []
 
-        ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
+        ttyme = datetime.fromtimestamp(time.mktime(date_from))
         locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
@@ -568,10 +569,10 @@ class HrPayslipRun(models.Model):
         ('close', 'Close'),
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
     date_start = fields.Date(string='Date From', required=True, readonly=True,
-        states={'draft': [('readonly', False)]}, default=lambda self: fields.Date.to_string(date.today().replace(day=1)))
+        states={'draft': [('readonly', False)]}, default=lambda self: date.today().start_of('month'))
     date_end = fields.Date(string='Date To', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
-        default=lambda self: fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()))
+        default=lambda self: datetime.now().end_of('year').date())
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
         states={'draft': [('readonly', False)]},
         help="If its checked, indicates that all payslips generated from here are refund payslips.")

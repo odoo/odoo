@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from odoo import api, fields, models
+from odoo.tools.datetime import date
 
 
 class ProductProduct(models.Model):
@@ -83,8 +82,8 @@ class ProductProduct(models.Model):
             field_names = []
         for val in self:
             res[val.id] = {}
-            date_from = self.env.context.get('date_from', time.strftime('%Y-01-01'))
-            date_to = self.env.context.get('date_to', time.strftime('%Y-12-31'))
+            date_from = self.env.context.get('date_from', date.today().start_of('year'))
+            date_to = self.env.context.get('date_to', date.today().end_of('year'))
             invoice_state = self.env.context.get('invoice_state', 'open_paid')
             res[val.id]['date_from'] = date_from
             res[val.id]['date_to'] = date_to

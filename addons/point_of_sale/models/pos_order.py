@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-from datetime import timedelta
 from functools import partial
 
 import psycopg2
-import pytz
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.addons import decimal_precision as dp
+from odoo.tools.datetime import timedelta, UTC
 
 _logger = logging.getLogger(__name__)
 
@@ -156,7 +155,6 @@ class PosOrder(models.Model):
 
     def _create_account_move(self, dt, ref, journal_id, company_id):
         date_tz_user = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(dt))
-        date_tz_user = fields.Date.to_string(date_tz_user)
         return self.env['account.move'].sudo().create({'ref': ref, 'journal_id': journal_id, 'date': date_tz_user})
 
     def _prepare_invoice(self):
@@ -1032,9 +1030,7 @@ class ReportSaleDetails(models.AbstractModel):
         if not configs:
             configs = self.env['pos.config'].search([])
 
-        user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
-        today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
-        today = today.astimezone(pytz.timezone('UTC'))
+        today = fields.Datetime.context_today(self)
         if date_start:
             date_start = fields.Datetime.from_string(date_start)
         else:
@@ -1050,9 +1046,6 @@ class ReportSaleDetails(models.AbstractModel):
 
         # avoid a date_stop smaller than date_start
         date_stop = max(date_stop, date_start)
-
-        date_start = fields.Datetime.to_string(date_start)
-        date_stop = fields.Datetime.to_string(date_stop)
 
         orders = self.env['pos.order'].search([
             ('date_order', '>=', date_start),

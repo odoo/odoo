@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.tests import common
+from odoo.tools.datetime import datetime
 
 
 class TestEmptyDate(common.TransactionCase):
@@ -41,19 +42,27 @@ class TestEmptyDate(common.TransactionCase):
     def test_mixed(self):
         self.Model.create({'date': False, 'value': 1})
         self.Model.create({'date': False, 'value': 2})
-        self.Model.create({'date': '1916-12-18', 'value': 3})
-        self.Model.create({'date': '1916-12-18', 'value': 4})
+        self.Model.create({'date': datetime(1916, 12, 18), 'value': 3})
+        self.Model.create({'date': datetime(1916, 12, 18), 'value': 4})
 
         gb = self.Model.read_group([], ['date', 'value'], ['date'], lazy=False)
+        gb = sorted(gb, key=lambda r: r['date'] or '')
 
-        self.assertSequenceEqual(sorted(gb, key=lambda r: r['date'] or ''), [{
-            '__count': 2,
-            '__domain': [('date', '=', False)],
-            'date': False,
-            'value': 3,
-        }, {
-            '__count': 2,
-            '__domain': ['&', ('date', '>=', '1916-12-01'), ('date', '<', '1917-01-01')],
-            'date': 'December 1916',
-            'value': 7,
-        }])
+        self.assertEqual(len(gb), 2)
+        self.assertTrue(gb[0]['__count'], gb[1]['__count'] == 2)
+        self.assertEqual(gb[0]['__domain'], [('date', '=', False)])
+        self.assertEqual(len(gb[1]['__domain']), 3)
+        self.assertEqual(gb[1]['__domain'][0], '&')
+        self.assertEqual(len(gb[1]['__domain'][1]), 3)
+
+        # Do this stuff because timezone is completly random...
+        self.assertEqual(gb[1]['__domain'][1][0], 'date')
+        self.assertEqual(gb[1]['__domain'][1][1], '>=')
+        self.assertEqual(gb[1]['__domain'][1][2].strftime('%Y%m%d%H%M%S'), '19161201000000')
+        self.assertEqual(gb[1]['__domain'][2][0], 'date')
+        self.assertEqual(gb[1]['__domain'][2][1], '<')
+        self.assertEqual(gb[1]['__domain'][2][2].strftime('%Y%m%d%H%M%S'), '19170101000000')
+        self.assertEqual(gb[0]['date'], False)
+        self.assertEqual(gb[1]['date'], 'December 1916')
+        self.assertEqual(gb[0]['value'], 3)
+        self.assertEqual(gb[1]['value'], 7)

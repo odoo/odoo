@@ -17,7 +17,7 @@
             <field name="lang">${user.lang}</field>
             <field name="model_id" ref="base.model_ir_module_module"/>
             <field name="auto_delete" eval="True"/>
-            <field name="scheduled_date">${(datetime.datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')}</field>
+            <field name="scheduled_date">${datetime.now() + datetime.relativedelta(days=1)}</field>
             <field name="body_html" ><![CDATA[
             <div style="margin: 10px auto;">
             <table cellspacing="0" cellpadding="0" style="width:100%;">

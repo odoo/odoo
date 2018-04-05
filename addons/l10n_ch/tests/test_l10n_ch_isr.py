@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
+from odoo.tools.datetime import date
 
 
 @tagged('post_install', '-at_install')
@@ -26,7 +25,7 @@ class ISRTest(AccountingTestCase):
             'name': 'invoice to client',
             'account_id': account_receivable.id,
             'type': 'out_invoice',
-            'date_invoice': time.strftime('%Y') + '-12-22',
+            'date_invoice': date.today().replace(day=22, month=12),
         })
 
         self.env['account.invoice.line'].create({

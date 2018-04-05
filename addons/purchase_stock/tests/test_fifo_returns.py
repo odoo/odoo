@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import time
-
+from odoo.tools.datetime import date
 from .common import TestPurchase
-
 
 class TestFifoReturns(TestPurchase):
 
@@ -38,7 +36,7 @@ class TestFifoReturns(TestPurchase):
                 'product_qty': 10.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
-                'date_planned': time.strftime('%Y-%m-%d'),
+                'date_planned': date.today(),
             })],
         })
 
@@ -51,7 +49,7 @@ class TestFifoReturns(TestPurchase):
                 'product_qty': 30.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
-                'date_planned': time.strftime('%Y-%m-%d'),
+                'date_planned': date.today(),
             })],
         })
 

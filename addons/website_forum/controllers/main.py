@@ -8,13 +8,12 @@ import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 
-from datetime import datetime
-
 from odoo import http, modules, SUPERUSER_ID, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import binary_content
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.http import request
+from odoo.tools.datetime import datetime
 
 
 class WebsiteForum(http.Controller):
@@ -256,7 +255,7 @@ class WebsiteForum(http.Controller):
         values.update({
             'main_object': question,
             'question': question,
-            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - datetime.strptime(question.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9),
+            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - question.write_date).days > 9),
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,

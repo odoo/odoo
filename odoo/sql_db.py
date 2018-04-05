@@ -63,7 +63,7 @@ if pv(psycopg2.__version__) < pv('2.7'):
     for type_ in pycompat.string_types:
         psycopg2.extensions.register_adapter(type_, adapt_string)
 
-from datetime import timedelta
+from odoo.tools.datetime import timedelta
 import threading
 from inspect import currentframe
 

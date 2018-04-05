@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import datetime
 import random
 import re
 import string
@@ -13,6 +12,7 @@ from werkzeug import urls, utils
 
 from odoo import models, fields, api, _
 from odoo.tools import ustr
+from odoo.tools import datetime
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 

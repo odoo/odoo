@@ -537,9 +537,9 @@
         <field name="arch" type="xml">
             <search string="Operations">
                 <field name="workcenter_id"/>
-                <filter string="Today" name="today" domain="[('date_start','&gt;=',time.strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="This Month" name="thismonth" domain="[('date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
-                <filter string="This Year" name="thisyear" domain="[('date_start','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="Today" name="today" domain="[('date_start','&gt;=',datetime.today())]"/>
+                <filter string="This Month" name="thismonth" domain="[('date_start','&gt;=',datetime.today())]"/>
+                <filter string="This Year" name="thisyear" domain="[('date_start','&gt;=',datetime.today())]"/>
                 <separator/>
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
