@@ -4,7 +4,7 @@ from __future__ import division
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.addons.l10n_us_check_printing.report import print_check
 from odoo.tests import tagged
-import time
+from odoo.tools.datetime import date
 
 import math
 
@@ -36,7 +36,7 @@ class TestPrintCheck(AccountingTestCase):
             'name': is_refund and "Supplier Refund" or "Supplier Invoice",
             'type': is_refund and "in_refund" or "in_invoice",
             'account_id': self.account_payable.id,
-            'date_invoice': time.strftime('%Y') + '-06-26',
+            'date_invoice': date.today().replace(month=6, day=26),
         })
         self.invoice_line_model.create({
             'product_id': self.product.id,
@@ -54,7 +54,7 @@ class TestPrintCheck(AccountingTestCase):
             'active_model': 'account.invoice',
             'active_ids': invoices.ids
         }).create({
-            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_date': date.today().replace(month=7, day=15),
             'journal_id': self.bank_journal.id,
             'payment_method_id': self.payment_method_check.id,
         })

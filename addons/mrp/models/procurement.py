@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.datetime import relativedelta
 
 
 class ProcurementRule(models.Model):
@@ -51,7 +50,7 @@ class ProcurementRule(models.Model):
             'location_src_id': self.location_src_id.id or location_id.id,
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
-            'date_planned_start': fields.Datetime.to_string(self._get_date_planned(product_id, values)),
+            'date_planned_start': self._get_date_planned(product_id, values),
             'date_planned_finished': values['date_planned'],
             'procurement_group_id': values.get('group_id').id if values.get('group_id', False) else False,
             'propagate': self.propagate,

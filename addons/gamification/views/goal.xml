@@ -100,14 +100,14 @@
                             ('state', '=', 'inprogress'),
                             '&amp;',
                                 ('state', 'in', ('done', 'failed')),
-                                ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
+                                ('end_date', '>=', context_today())
                     ]"/>
                 <filter name="closed" string="Done"
                     domain="[
                         ('state', 'in', ('reached', 'failed')),
                         '|',
                             ('end_date', '=', False),
-                            ('end_date', '&lt;', context_today().strftime('%%Y-%%m-%%d'))
+                            ('end_date', '&lt;', context_today())
                     ]"/>
                 <separator/>
 

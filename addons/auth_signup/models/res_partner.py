@@ -5,7 +5,7 @@ import random
 import werkzeug.urls
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from odoo.tools.datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
 
@@ -18,8 +18,7 @@ def random_token():
     return ''.join(random.SystemRandom().choice(chars) for _ in range(20))
 
 def now(**kwargs):
-    dt = datetime.now() + timedelta(**kwargs)
-    return fields.Datetime.to_string(dt)
+    return datetime.now() + timedelta(**kwargs)
 
 
 class ResPartner(models.Model):

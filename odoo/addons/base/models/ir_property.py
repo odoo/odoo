@@ -114,9 +114,7 @@ class Property(models.Model):
         elif self.type == 'datetime':
             return self.value_datetime
         elif self.type == 'date':
-            if not self.value_datetime:
-                return False
-            return fields.Date.to_string(fields.Datetime.from_string(self.value_datetime))
+            return self.value_datetime and self.value_datetime.date()
         return False
 
     @api.model

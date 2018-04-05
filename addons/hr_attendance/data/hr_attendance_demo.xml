@@ -12,74 +12,74 @@
         </record>
 
         <record id="attendance_root1" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d 08:00')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d 12:00')" name="check_out"/>
+            <field eval="datetime.today().replace(hour=8) + datetime.relativedelta(days=-1)" name="check_in"/>
+            <field eval="datetime.today().replace(hour=12) + datetime.relativedelta(days=-1)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_root"/>
         </record>
 
         <record id="attendance_root2" model="hr.attendance">
-            <field eval="(datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d 13:00')" name="check_in"/>
-            <field eval="(datetime.now()+relativedelta(days=-1)).strftime('%Y-%m-%d 18:00')" name="check_out"/>
+            <field eval="datetime.today().replace(hour=13) + datetime.relativedelta(days=-1)" name="check_in"/>
+            <field eval="datetime.today().replace(hour=18) + datetime.relativedelta(days=-1)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_root"/>
         </record>
 
         <record id="attendance1" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-01 08:21')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-01 11:51')" name="check_out"/>
+            <field eval="datetime.today().replace(day=1, hour=8, minute=21)" name="check_in"/>
+            <field eval="datetime.today().replace(day=1, hour=11, minute=51)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance2" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-02 12:47')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-02 19:53')" name="check_out"/>
+            <field eval="datetime.today().replace(day=2, hour=12, minute=47)" name="check_in"/>
+            <field eval="datetime.today().replace(day=2, hour=19, minute=53)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance3" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-03 07:32')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-03 12:32')" name="check_out"/>
+            <field eval="datetime.today().replace(day=3, hour=7, minute=32)" name="check_in"/>
+            <field eval="datetime.today().replace(day=3, hour=12, minute=32)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance4" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-04 14:01')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-04 17:21')" name="check_out"/>
+            <field eval="datetime.today().replace(day=4, hour=14, minute=1)" name="check_in"/>
+            <field eval="datetime.today().replace(day=4, hour=17, minute=21)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance5" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-05 09:10')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-05 12:42')" name="check_out"/>
+            <field eval="datetime.today().replace(day=5, hour=9, minute=10)" name="check_in"/>
+            <field eval="datetime.today().replace(day=5, hour=12, minute=42)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance6" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-06 13:10')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-06 18:34')" name="check_out"/>
+            <field eval="datetime.today().replace(day=6, hour=13, minute=10)" name="check_in"/>
+            <field eval="datetime.today().replace(day=6, hour=18, minute=34)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance7" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-07 08:21')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-07 18:21')" name="check_out"/>
+            <field eval="datetime.today().replace(day=7, hour=8, minute=21)" name="check_in"/>
+            <field eval="datetime.today().replace(day=7, hour=18, minute=21)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance8" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-08 08:21')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-08 12:54')" name="check_out"/>
+            <field eval="datetime.today().replace(day=8, hour=8, minute=21)" name="check_in"/>
+            <field eval="datetime.today().replace(day=8, hour=12, minute=54)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance9" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-09 13:32')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-09 19:31')" name="check_out"/>
+            <field eval="datetime.today().replace(day=9, hour=13, minute=32)" name="check_in"/>
+            <field eval="datetime.today().replace(day=9, hour=19, minute=31)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
 
         <record id="attendance10" model="hr.attendance">
-            <field eval="time.strftime('%Y-%m-10 08:00')" name="check_in"/>
-            <field eval="time.strftime('%Y-%m-10 09:00')" name="check_out"/>
+            <field eval="datetime.today().replace(day=10, hour=8)" name="check_in"/>
+            <field eval="datetime.today().replace(day=10, hour=9)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
         </record>
     </data>

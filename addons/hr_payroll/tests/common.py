@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
 from odoo.fields import Date
 from odoo.tests.common import TransactionCase
+from odoo.tools.datetime import relativedelta
 
 
 class TestPayslipBase(TransactionCase):
@@ -41,7 +40,7 @@ class TestPayslipBase(TransactionCase):
 
         # I create a contract for "Richard"
         self.env['hr.contract'].create({
-            'date_end': Date.to_string((datetime.now() + timedelta(days=365))),
+            'date_end': Date.today() + relativedelta(years=1),
             'date_start': Date.today(),
             'name': 'Contract for Richard',
             'wage': 5000.0,

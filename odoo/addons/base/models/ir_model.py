@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import datetime
-import dateutil
 import logging
 import time
 from collections import defaultdict
@@ -12,6 +10,7 @@ from odoo.modules.registry import Registry
 from odoo.osv import expression
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -20,8 +19,7 @@ MODULE_UNINSTALL_FLAG = '_force_unlink'
 
 # base environment for doing a safe_eval
 SAFE_EVAL_BASE = {
-    'datetime': datetime,
-    'dateutil': dateutil,
+    'datetime': datetime.DatetimeContext,
     'time': time,
 }
 
@@ -344,7 +342,7 @@ class IrModelFields(models.Model):
                                "Iterate on the recordset 'self' and assign the field's value:\n\n"
                                "    for record in self:\n"
                                "        record['size'] = len(record.name)\n\n"
-                               "Modules time, datetime, dateutil are available.")
+                               "Modules time, datetime, are available.")
     depends = fields.Char(string='Dependencies', help="Dependencies of compute method; "
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")

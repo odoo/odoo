@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-
-import time
+from odoo.tools.datetime import datetime, date
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCase
 from odoo.tests import tagged
@@ -51,7 +49,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'currency_id': self.currency_two.id,
             'name': 'vendor bill',
             'type': 'in_invoice',
-            'date_invoice': time.strftime('%Y') + '-12-22',
+            'date_invoice': date.today().replace(month=12, day=22),
             'account_id': account_receivable.id,
         })
         rslt.purchase_order_change()

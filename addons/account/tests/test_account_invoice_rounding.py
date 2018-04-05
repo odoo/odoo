@@ -4,7 +4,7 @@ from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
-import time
+from odoo.tools.datetime import date
 
 
 @tagged('post_install', '-at_install')
@@ -40,7 +40,7 @@ class TestAccountInvoiceRounding(AccountingTestCase):
             'name': 'invoice test rounding',
             'account_id': self.account_receivable.id,
             'type': 'out_invoice',
-            'date_invoice': time.strftime('%Y') + '-06-26',
+            'date_invoice': date.today().replace(month=6, day=26),
         })
         if tax_amount:
             self.fixed_tax.amount = tax_amount

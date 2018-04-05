@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from lxml import etree
 from odoo.tools.misc import file_open
+from odoo.tools.datetime import date
 from odoo.exceptions import UserError
 
 def check_with_xsd(tree_or_str, stream):
@@ -34,6 +35,8 @@ def create_xml_node_chain(first_parent_node, nodes_list, last_node_value=None):
         res.append(current_node)
 
     if last_node_value is not None:
+        if isinstance(last_node_value, date):
+            last_node_value = last_node_value.to_string()
         current_node.text = last_node_value
     return res
 
@@ -44,4 +47,5 @@ def create_xml_node(parent_node, node_name, node_value=None):
     :param node_name: string
     :param node_value: string
     """
+    node_value = node_value.to_string() if isinstance(node_value, date) else node_value
     return create_xml_node_chain(parent_node, [node_name], node_value)[0]

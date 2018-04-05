@@ -3,12 +3,11 @@
 
 from collections import namedtuple
 import json
-import time
 
 from itertools import groupby
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.datetime import datetime
 from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from operator import itemgetter
@@ -82,7 +81,7 @@ class PickingType(models.Model):
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
             'count_picking_ready': [('state', '=', 'assigned')],
             'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed'))],
-            'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed'))],
+            'count_picking_late': [('scheduled_date', '<', datetime.now()), ('state', 'in', ('assigned', 'waiting', 'confirmed'))],
             'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
         }
         for field in domains:

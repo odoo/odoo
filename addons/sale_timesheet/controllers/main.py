@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import babel
-from dateutil.relativedelta import relativedelta
 
 from odoo import http, fields, _
 from odoo.http import request
 from odoo.tools import float_round
+from odoo.tools.datetime import relativedelta
 
 DEFAULT_MONTH_RANGE = 3
 

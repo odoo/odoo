@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_is_zero, float_compare
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.misc import formatLang
+from odoo.tools.datetime import date, datetime, relativedelta
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.addons import decimal_precision as dp
 
@@ -816,7 +813,7 @@ class PurchaseOrderLine(models.Model):
         """
         date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            return datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
@@ -833,7 +830,7 @@ class PurchaseOrderLine(models.Model):
             return result
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.date_planned = datetime.today()
         self.price_unit = self.product_qty = 0.0
         self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         result['domain'] = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
@@ -891,7 +888,7 @@ class PurchaseOrderLine(models.Model):
             params=params)
 
         if seller or not self.date_planned:
-            self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            self.date_planned = self._get_date_planned(seller)
 
         if not seller:
             return
@@ -986,7 +983,7 @@ class ProcurementRule(models.Model):
         seller = product_id._select_seller(
             partner_id=partner,
             quantity=product_qty,
-            date=fields.Date.to_string(schedule_date),
+            date=schedule_date,
             uom_id=product_uom)
 
         return schedule_date - relativedelta(days=int(seller.delay))
@@ -1038,7 +1035,7 @@ class ProcurementRule(models.Model):
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 
-        date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po)
 
         return {
             'name': name,
@@ -1070,7 +1067,7 @@ class ProcurementRule(models.Model):
             'dest_address_id': values.get('partner_dest_id', False) and values['partner_dest_id'].id,
             'origin': origin,
             'payment_term_id': partner.property_supplier_payment_term_id.id,
-            'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'date_order': purchase_date,
             'fiscal_position_id': fpos,
             'group_id': group
         }

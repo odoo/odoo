@@ -2,13 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 import logging
-from datetime import date, timedelta
-
-from dateutil.relativedelta import relativedelta, MO
 
 from odoo import api, models, fields, _, exceptions
 from odoo.tools import ustr
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.datetime import date, timedelta, relativedelta, MO
 
 _logger = logging.getLogger(__name__)
 
@@ -18,11 +16,12 @@ MAX_VISIBILITY_RANKING = 3
 def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today
 
-    :param str default_start_date: string date in DEFAULT_SERVER_DATE_FORMAT format
-    :param str default_end_date: string date in DEFAULT_SERVER_DATE_FORMAT format
+    :param str default_start_date: odoo date or string date in DEFAULT_SERVER_DATE_FORMAT format
+    :param str default_end_date: odoo date or string date in DEFAULT_SERVER_DATE_FORMAT format
 
-    :return: (start_date, end_date), dates in string format, False if the period is
-    not defined or unknown"""
+    :return: (start_date, end_date), where dates in odoo date or string format,
+        possibly False if the period is not defined or unknown
+    """
     today = date.today()
     if period == 'daily':
         start_date = today
@@ -40,9 +39,7 @@ def start_end_date_for_period(period, default_start_date=False, default_end_date
         start_date = default_start_date  # for manual goal, start each time
         end_date = default_end_date
 
-        return (start_date, end_date)
-
-    return fields.Datetime.to_string(start_date), fields.Datetime.to_string(end_date)
+    return start_date, end_date
 
 class Challenge(models.Model):
     """Gamification challenge
@@ -141,11 +138,11 @@ class Challenge(models.Model):
         report period.
         """
         for challenge in self:
-            last = fields.Datetime.from_string(challenge.last_report_date).date()
+            last = challenge.last_report_date
             offset = self.REPORT_OFFSETS.get(challenge.report_message_frequency)
 
             if offset:
-                challenge.next_report_date = fields.Date.to_string(last + offset)
+                challenge.next_report_date = last + offset
             else:
                 challenge.next_report_date = False
 
@@ -242,7 +239,7 @@ class Challenge(models.Model):
 
         # include yesterday goals to update the goals that just ended
         # exclude goals for users that did not connect since the last update
-        yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
+        yesterday = date.today() - timedelta(days=1)
         self.env.cr.execute("""SELECT gg.id
                         FROM gamification_goal as gg,
                              gamification_challenge as gc,
@@ -345,10 +342,10 @@ class Challenge(models.Model):
                 query_params = [line.id]
                 if start_date:
                     date_clause += "AND g.start_date = %s"
-                    query_params.append(start_date)
+                    query_params.append(str(start_date))
                 if end_date:
-                    date_clause += "AND g.end_date = %s"
-                    query_params.append(end_date)
+                    date_clause += " AND g.end_date = %s"
+                    query_params.append(str(end_date))
             
                 query = """SELECT u.id AS user_id
                              FROM res_users u
@@ -615,7 +612,7 @@ class Challenge(models.Model):
             yesterday = date.today() - timedelta(days=1)
 
             rewarded_users = self.env['res.users']
-            challenge_ended = force or end_date == fields.Date.to_string(yesterday)
+            challenge_ended = force or end_date == yesterday
             if challenge.reward_id and (challenge_ended or challenge.reward_realtime):
                 # not using start_date as intemportal goals have a start date but no end_date
                 reached_goals = self.env['gamification.goal'].read_group([

@@ -3,8 +3,7 @@
 
 from odoo.tests import common
 from odoo import fields
-from datetime import datetime
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.datetime import datetime
 
 
 class TestPurchaseRequisition(common.TransactionCase):
@@ -286,7 +285,7 @@ class TestPurchaseRequisition(common.TransactionCase):
                 'product_qty': 5.0,
                 'product_uom': product_2.uom_po_id.id,
                 'price_unit': 0,
-                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'date_planned': datetime.today(),
             })
         ]})
         order_line = self.env['purchase.order.line'].search([

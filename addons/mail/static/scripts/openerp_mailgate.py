@@ -6,7 +6,6 @@
 """
 
 import cgitb
-import time
 import optparse
 import sys
 try:
@@ -19,6 +18,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
 from email import Encoders
+from odoo.tools.datetime import datetime
 
 class DefaultConfig(object):
     """
@@ -171,7 +171,7 @@ def main():
             '%s' % (cgitb.text(sys.exc_info())),
         ])
 
-        subject = '[Odoo]:ERROR: Mailgateway - %s' % time.strftime('%Y-%m-%d %H:%M:%S')
+        subject = '[Odoo]:ERROR: Mailgateway - %s' % datetime.now()
         send_mail(
             config.MAIL_ERROR,
             config.MAIL_ADMINS,

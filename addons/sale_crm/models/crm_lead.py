@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models
+from odoo.tools.datetime import date, relativedelta
 
 
 class CrmLead(models.Model):
@@ -48,7 +47,7 @@ class CrmLead(models.Model):
 
         for invoice in invoice_data:
             if invoice['date_invoice']:
-                invoice_date = fields.Date.from_string(invoice['date_invoice'])
+                invoice_date = invoice['date_invoice']
                 if invoice_date <= date_today and invoice_date >= date_today.replace(day=1):
                     res['invoiced']['this_month'] += invoice['amount_untaxed_signed']
                 elif invoice_date < date_today.replace(day=1) and invoice_date >= date_today.replace(day=1) - relativedelta(months=+1):

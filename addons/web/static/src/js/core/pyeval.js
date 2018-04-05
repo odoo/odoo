@@ -523,6 +523,9 @@ datetime.date = py.type('date', null, {
     fromJSON: function (year, month, day) {
         return py.PY_call(datetime.date, [year, month, day]);
     },
+    toJSON: function () {
+        return _.str.sprintf('%04d-%02d-%02d', this.year, this.month, this.day);
+    },
     today: py.classmethod.fromJSON(function () {
         var d = new Date ();
         return py.PY_call(datetime.date, [
@@ -540,6 +543,8 @@ function context_today() {
     return py.PY_call(
         datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
 }
+
+datetime.context_today = context_today;
 
 datetime.time = py.type('time', null, {
     __init__: function () {
@@ -737,6 +742,8 @@ var relativedelta = py.type('relativedelta', null, {
         });
     }
 });
+
+datetime.relativedelta = relativedelta;
 
 // recursively wraps JS objects passed into the context to attributedicts
 // which jsonify back to JS objects
@@ -953,13 +960,13 @@ function eval_groupbys(contexts, evaluation_context) {
 
 
 function pycontext() {
+    datetime.current_date = py.PY_call(time.strftime, [py.str.fromJSON('%Y-%m-%d')]);
     return {
         datetime: datetime,
         context_today: context_today,
         time: time,
         relativedelta: relativedelta,
-        current_date: py.PY_call(
-            time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
+        current_date: datetime.current_date,
     };
 }
 

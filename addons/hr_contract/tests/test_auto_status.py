@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from odoo.tools.datetime import datetime, relativedelta
 from odoo.tests.common import TransactionCase
-from dateutil.relativedelta import relativedelta
 
 
 class TestHrContracts(TransactionCase):

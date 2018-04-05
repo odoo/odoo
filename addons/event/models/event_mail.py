@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+from odoo.tools.datetime import relativedelta
 
 
 _INTERVALS = {
@@ -92,7 +90,7 @@ class EventMailScheduler(models.Model):
             else:
                 date, sign = self.event_id.date_end, 1
 
-            self.scheduled_date = datetime.strptime(date, tools.DEFAULT_SERVER_DATETIME_FORMAT) + _INTERVALS[self.interval_unit](sign * self.interval_nbr)
+            self.scheduled_date = date + _INTERVALS[self.interval_unit](sign * self.interval_nbr)
 
     @api.one
     def execute(self):
@@ -116,7 +114,7 @@ class EventMailScheduler(models.Model):
 
     @api.model
     def run(self, autocommit=False):
-        schedulers = self.search([('done', '=', False), ('scheduled_date', '<=', datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))])
+        schedulers = self.search([('done', '=', False), ('scheduled_date', '<=', fields.datetime.now())])
         for scheduler in schedulers:
             scheduler.execute()
             if autocommit:
@@ -146,7 +144,7 @@ class EventMailRegistration(models.Model):
     def _compute_scheduled_date(self):
         if self.registration_id:
             date_open = self.registration_id.date_open
-            date_open_datetime = date_open and datetime.strptime(date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT) or fields.datetime.now()
+            date_open_datetime = date_open or fields.datetime.now()
             self.scheduled_date = date_open_datetime + _INTERVALS[self.scheduler_id.interval_unit](self.scheduler_id.interval_nbr)
         else:
             self.scheduled_date = False

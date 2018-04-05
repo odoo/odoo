@@ -140,8 +140,8 @@
         <record id="hr_contract_firstcontract1" model="hr.contract">
             <field name="name">Marketing Executive Contract</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
-            <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
-            <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
+            <field name="date_start" eval="datetime.today().start_of('month')"/>
+            <field name="date_end" eval="datetime.today().end_of('year')"/>
             <field name="struct_id" ref="hr_payroll.structure_001"/>
             <field name="employee_id" ref="hr_employee_payroll"/>
             <field name="notes">Default contract for marketing executives</field>
@@ -151,8 +151,8 @@
         <record id="hr_contract_gilles_gravie" model="hr.contract">
             <field name="name">Contract For Gilles Gravie</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
-            <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
-            <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
+            <field name="date_start" eval="datetime.today().start_of('month')"/>
+            <field name="date_end" eval="datetime.today().end_of('year')"/>
             <field name="struct_id" ref="hr_payroll.structure_002"/>
             <field name="employee_id" ref="hr.employee_qdp"/>
             <field name="notes">This is Gilles Gravie's contract</field>

@@ -4,8 +4,6 @@
 import babel
 import base64
 import copy
-import datetime
-import dateutil.relativedelta as relativedelta
 import logging
 
 import functools
@@ -15,6 +13,7 @@ from werkzeug import urls
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
+from odoo.tools.datetime import datetime, relativedelta, DatetimeContext
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +29,7 @@ def format_date(env, date, pattern=False):
 
 def format_tz(env, dt, tz=False, format=False):
     record_user_timestamp = env.user.sudo().with_context(tz=tz or env.user.sudo().tz or 'UTC')
-    timestamp = datetime.datetime.strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+    timestamp = datetime.from_string(dt)
 
     ts = fields.Datetime.context_timestamp(record_user_timestamp, timestamp)
 
@@ -98,7 +97,7 @@ try:
         'str': str,
         'quote': urls.url_quote,
         'urlencode': urls.url_encode,
-        'datetime': datetime,
+        'datetime': DatetimeContext,
         'len': len,
         'abs': abs,
         'min': min,
@@ -112,7 +111,7 @@ try:
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
         # is needed, apparently.
-        'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
+        'relativedelta': lambda *a, **kw : relativedelta(*a, **kw),
     })
     mako_safe_template_env = copy.copy(mako_template_env)
     mako_safe_template_env.autoescape = False

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
+from odoo.tools.datetime import datetime
 from odoo.exceptions import UserError
 
 AVAILABLE_PRIORITIES = [
@@ -161,13 +160,13 @@ class Applicant(models.Model):
     @api.one
     def _compute_day(self):
         if self.date_open:
-            date_create = datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            date_open = datetime.strptime(self.date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            date_create = self.create_date
+            date_open = self.date_open
             self.day_open = (date_open - date_create).total_seconds() / (24.0 * 3600)
 
         if self.date_closed:
-            date_create = datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            date_closed = datetime.strptime(self.date_closed, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            date_create = self.create_date
+            date_closed = self.date_closed
             self.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
             self.delay_close = self.day_close - self.day_open
 

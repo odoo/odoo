@@ -30,7 +30,7 @@
         <field name="arch" type="xml">
             <search string="Sales Analysis">
                 <field name="date"/>
-                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', datetime.today().end_of('year')),('date','&gt;=',datetime.today().start_of('year'))]"/>
                 <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
                 <filter name="Sales" string="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>

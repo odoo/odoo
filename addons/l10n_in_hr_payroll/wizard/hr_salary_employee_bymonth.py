@@ -13,12 +13,10 @@ class HrSalaryEmployeeBymonth(models.TransientModel):
         return self.env['hr.salary.rule.category'].search([('code', '=', 'NET')], limit=1)
 
     def _get_default_start_date(self):
-        year = fields.Date.from_string(fields.Date.today()).strftime('%Y')
-        return '{}-01-01'.format(year)
+        return fields.Date.today().start_of('year')
 
     def _get_default_end_date(self):
-        date = fields.Date.from_string(fields.Date.today())
-        return date.strftime('%Y') + '-' + date.strftime('%m') + '-' + date.strftime('%d')
+        return fields.Date.today()
 
     start_date = fields.Date(string='Start Date', required=True, default=_get_default_start_date)
     end_date = fields.Date(string='End Date', required=True, default=_get_default_end_date)

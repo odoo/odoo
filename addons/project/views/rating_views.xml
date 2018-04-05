@@ -12,7 +12,7 @@
                 <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
             </xpath>
             <xpath expr="/search" position="inside">
-                <filter string="Last 30 days" name="rating_last_30_days" domain="[('create_date', '>=', (context_today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 30 days" name="rating_last_30_days" domain="[('create_date', '>=', context_today()-datetime.timedelta(days=30))]"/>
                 <separator/>
             </xpath>
         </field>

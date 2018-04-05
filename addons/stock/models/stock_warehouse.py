@@ -2,13 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import namedtuple
-from datetime import datetime
-from dateutil import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.datetime import datetime, relativedelta
 
 import logging
 
@@ -815,10 +813,10 @@ class Orderpoint(models.Model):
             # These days will be substracted when creating the PO
             days += self.product_id._select_seller(
                 quantity=product_qty,
-                date=fields.Date.to_string(start_date),
+                date=start_date,
                 uom_id=self.product_uom).delay or 0.0
-        date_planned = start_date + relativedelta.relativedelta(days=days)
-        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_planned = start_date + relativedelta(days=days)
+        return date_planned
 
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
         """ Prepare specific key for moves or other components that will be created from a procurement rule

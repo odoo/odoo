@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Printing Date:</strong>
-                            <p t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}"/>
+                            <p t-esc="datetime.today()" t-options="{'widget': 'date'}"/>
                         </div>
                     </div>
 

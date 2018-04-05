@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import logging
 import string
 import re
@@ -17,6 +16,7 @@ except ImportError:
 from odoo import api, models, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
+from odoo.tools import datetime
 
 _eu_country_vat = {
     'GR': 'EL'

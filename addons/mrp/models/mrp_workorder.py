@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
+from odoo.tools.datetime import datetime, relativedelta
 
 
 class MrpWorkorder(models.Model):
@@ -451,7 +449,7 @@ class MrpWorkorder(models.Model):
                     not_productive_timelines += timeline
                 timeline.write({'date_end': fields.Datetime.now()})
             else:
-                maxdate = fields.Datetime.from_string(timeline.date_start) + relativedelta(minutes=wo.duration_expected - wo.duration)
+                maxdate = timeline.date_start + relativedelta(minutes=wo.duration_expected - wo.duration)
                 enddate = datetime.now()
                 if maxdate > enddate:
                     timeline.write({'date_end': enddate})
