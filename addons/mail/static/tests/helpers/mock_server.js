@@ -46,12 +46,15 @@ MockServer.include({
      * @return {Object}
      */
     _mockMessageFetch: function (args) {
-        args.kwargs.offset = Math.max(this.data['mail.message'].records.length - args.kwargs.limit, 0);
-
-        return this._mockSearchRead('mail.message', [
-            args.args[0],
-            _.keys(this.data['mail.message'].fields),
-        ], args.kwargs);
+        var domain = args.args[0];
+        var model = args.model;
+        var messages = this._getRecords(model, domain);
+        // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
+        messages.sort(function (m1, m2) {
+            return m1.id < m2.id ? 1 : -1;
+        });
+        // pick at most 'limit' messages
+        return $.when(messages.slice(0, args.kwargs.limit));
     },
 
     /**
