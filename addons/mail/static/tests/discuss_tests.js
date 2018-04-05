@@ -2,14 +2,12 @@ odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
 var ChatManager = require('mail.ChatManager');
-var Composers = require('mail.composer');
 var mailTestUtils = require('mail.testUtils');
 
 var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
 var testUtils = require('web.test_utils');
 
-var BasicComposer = Composers.BasicComposer;
 var createBusService = mailTestUtils.createBusService;
 var createDiscuss = mailTestUtils.createDiscuss;
 var patchWindowGetSelection = testUtils.patchWindowGetSelection;
@@ -18,13 +16,50 @@ QUnit.module('mail', {}, function () {
 
 QUnit.module('Discuss client action', {
     beforeEach: function () {
+        // patch _.debounce and _.throttle to be fast and synchronous
+        this.underscoreDebounce = _.debounce;
+        this.underscoreThrottle = _.throttle;
+        _.debounce = _.identity;
+        _.throttle = _.identity;
+
         this.data = {
             'mail.message': {
-                fields: {},
+                fields: {
+                    body: {
+                        string: "Contents",
+                        type: 'html',
+                    },
+                    author_id: {
+                        string: "Author",
+                        relation: 'res.partner',
+                    },
+                    channel_ids: {
+                        string: "Channels",
+                        type: 'many2many',
+                        relation: 'mail.channel',
+                    },
+                    starred: {
+                        string: "Starred",
+                        type: 'boolean',
+                    },
+                    needaction: {
+                      string: "Need Action",
+                      type: 'boolean',
+                  },
+                  starred_partner_ids: {
+                      string: "partner ids",
+                      type: 'integer',
+                  }
+                },
             },
         };
         this.services = [ChatManager, createBusService()];
     },
+    afterEach: function () {
+        // unpatch _.debounce and _.throttle
+        _.debounce = this.underscoreDebounce;
+        _.throttle = this.underscoreThrottle;
+    }
 });
 
 QUnit.test('basic rendering', function (assert) {
@@ -64,12 +99,6 @@ QUnit.test('basic rendering', function (assert) {
 QUnit.test('@ mention in channel', function (assert) {
     assert.expect(34);
     var done = assert.async();
-
-    // Remove throttles to speed up the test
-    var channelThrottle = ChatManager.prototype.CHANNEL_SEEN_THROTTLE;
-    var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
-    ChatManager.prototype.CHANNEL_SEEN_THROTTLE = 1;
-    BasicComposer.prototype.MENTION_THROTTLE = 1;
 
     var bus = new Bus();
     var BusService = createBusService(bus);
@@ -234,9 +263,7 @@ QUnit.test('@ mention in channel', function (assert) {
                         assert.strictEqual(discuss.$('.o_thread_message_content a').text(),
                             "@Admin", "should have correct mention link in the message content");
 
-                        // Restore throttles and window.getSelection
-                        BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
-                        ChatManager.prototype.CHANNEL_SEEN_THROTTLE = channelThrottle;
+                        // Restore window.getSelection
                         unpatchWindowGetSelection();
                         discuss.destroy();
                         done();
@@ -248,10 +275,6 @@ QUnit.test('@ mention in channel', function (assert) {
 QUnit.test('no crash focusout emoji button', function (assert) {
     assert.expect(3);
     var done = assert.async();
-
-    // Remove channel throttle to speed up the test
-    var channelThrottle = ChatManager.prototype.CHANNEL_SEEN_THROTTLE;
-    ChatManager.prototype.CHANNEL_SEEN_THROTTLE = 1;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -285,8 +308,6 @@ QUnit.test('no crash focusout emoji button', function (assert) {
             discuss.$('.o_composer_button_emoji').focusout();
             assert.ok(true, "should not crash on focusout of emoji button");
         } finally {
-            // Restore throttle
-            ChatManager.prototype.CHANNEL_SEEN_THROTTLE = channelThrottle;
             discuss.destroy();
             done();
         }
@@ -294,12 +315,20 @@ QUnit.test('no crash focusout emoji button', function (assert) {
 });
 
 QUnit.test('older messages are loaded on scroll', function (assert) {
-    assert.expect(4);
+    assert.expect(3);
     var done = assert.async();
 
-    // remove throttling
-    testUtils.patch(BasicComposer, {MENTION_THROTTLE: 0});
-    testUtils.patch(ChatManager, {CHANNEL_SEEN_THROTTLE: 0});
+    var fetchCount = 0;
+    var loadMoreDef = $.Deferred();
+    var msgData = [];
+    for (var i = 0; i < 35; i++) {
+        msgData.push({
+            author_id: ['1', 'Me'],
+            body: '<p>test ' + i + '</p>',
+            channel_ids: [1],
+            id: i,
+        });
+    }
 
     this.data.initMessaging = {
         channel_slots: {
@@ -311,20 +340,7 @@ QUnit.test('older messages are loaded on scroll', function (assert) {
             }],
         },
     };
-
-    var limit;
-    var loadDef = $.Deferred();
-    var loadedMessages;
-    var msgData = [];
-    for (var i = 0; i < 35; i++) {
-        msgData.push({
-            author_id: ['1', 'Me'],
-            body: '<p>test ' + i + '</p>',
-            channel_ids: [1],
-            id: i,
-        });
-    }
-    msgData.reverse();
+    this.data['mail.message'].records = msgData;
 
     createDiscuss({
         context: {},
@@ -333,13 +349,13 @@ QUnit.test('older messages are loaded on scroll', function (assert) {
         services: [ChatManager, createBusService()],
         mockRPC: function (route, args) {
             if (args.method === 'message_fetch') {
-                limit = args.kwargs.limit;
-                loadedMessages += limit;
-                var message = msgData.slice(0, loadedMessages);
-                if (loadedMessages >= msgData.length) {
-                    loadDef.resolve();
+                fetchCount++;
+                // 1st fetch: inbox initial fetch
+                // 2nd fetch: general initial fetch
+                // 3rd fetch: general load more
+                if (fetchCount === 3) {
+                    loadMoreDef.resolve();
                 }
-                return $.when(message);
             }
             return this._super.apply(this, arguments);
         },
@@ -349,25 +365,19 @@ QUnit.test('older messages are loaded on scroll', function (assert) {
             "should have a channel item with id 1");
 
         // switch to 'general'
-        loadedMessages = 0;
         $general.click();
 
-        assert.ok(limit < 35, "there should be more messages than the limit");
-        assert.strictEqual(discuss.$('.o_thread_message').length, limit,
-            "should display the 'limit' first messages");
+        assert.strictEqual(discuss.$('.o_thread_message').length, 30,
+            "should display the 30 messages");
 
         // simulate a scroll to top to load more messages
         discuss.$('.o_mail_thread').scrollTop(0);
 
-        loadDef
+        loadMoreDef
             .then(concurrency.delay.bind(concurrency, 0))
             .then(function () {
                 assert.strictEqual(discuss.$('.o_thread_message').length, 35,
                     "all messages should now be loaded");
-
-                // restore throttling
-                testUtils.unpatch(BasicComposer);
-                testUtils.unpatch(ChatManager);
 
                 discuss.destroy();
                 done();
@@ -394,8 +404,7 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
         );
     });
 
-    this.data = {
-        initMessaging: {
+    this.data.initMessaging = {
             channel_slots: {
                 channel_channel: [{
                     id: 1,
@@ -404,38 +413,8 @@ QUnit.test('"Unstar all" button should reset the starred counter', function (ass
                 }],
             },
             starred_counter: msgData.length,
-        },
-        'mail.message': {
-            fields: {
-                body: {
-                    string: "Contents",
-                    type: 'html',
-                },
-                author_id: {
-                    string: "Author",
-                    relation: 'res.partner',
-                },
-                channel_ids: {
-                    string: "Channels",
-                    type: 'many2many',
-                    relation: 'mail.channel',
-                },
-                starred: {
-                    string: "Starred",
-                    type: 'boolean',
-                },
-                needaction: {
-                  string: "Need Action",
-                  type: 'boolean',
-              },
-              starred_partner_ids: {
-                  string: "partner ids",
-                  type: 'integer',
-              }
-            },
-            records: msgData,
-        },
     };
+    this.data['mail.message'].records = msgData;
 
     createDiscuss({
         id: 1,
