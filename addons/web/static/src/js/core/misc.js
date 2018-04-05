@@ -132,6 +132,14 @@ core.action_registry.add("reload", Reload);
 
 
 /**
+ * Client action to do nothing.
+ *
+ * This is useful in order to not perform a windows_close
+ * action, which is the fallback client action.
+ */
+core.action_registry.add("noop", function () {});
+
+/**
  * Client action to go back home.
  */
 function Home (parent, action) {
