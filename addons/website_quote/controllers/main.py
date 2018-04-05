@@ -24,11 +24,10 @@ class CustomerPortal(CustomerPortal):
                 return request.redirect('/quote/%s/%s' % (order, access_token or ''))
         return super(CustomerPortal, self).portal_order_page(order=order, access_token=access_token, **kw)
 
-    def _portal_quote_user_can_accept(self, order_id):
-        result = super(CustomerPortal, self)._portal_quote_user_can_accept(order_id)
-        order_sudo = request.env['sale.order'].sudo().browse(order_id)
+    def _portal_quote_user_can_accept(self, order):
+        result = super(CustomerPortal, self)._portal_quote_user_can_accept(order)
         # either use quote template settings or fallback on default behavior
-        return not order_sudo.require_payment if order_sudo.template_id else result
+        return order.require_signature if order.template_id else result
 
 
 class sale_quote(http.Controller):
@@ -85,7 +84,7 @@ class sale_quote(http.Controller):
             'partner_id': order_sudo.partner_id.id,
         }
 
-        if order_sudo.require_payment or values['need_payment']:
+        if order_sudo.has_to_be_paid() or values['need_payment']:
             domain = expression.AND([
                 ['&', ('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)],
                 ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]

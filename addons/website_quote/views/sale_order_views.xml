@@ -37,7 +37,8 @@
                 </div>
             </xpath>
             <xpath expr="//field[@name='client_order_ref']" position="after">
-                <field name="require_payment" widget="radio"/>
+                <field name="require_signature" attrs="{'invisible': [('template_id', '=', False)]}"/>
+                <field name="require_payment" attrs="{'invisible': [('template_id', '=', False)]}"/>
                 <field name="website_description" invisible="1"/>
             </xpath>
         </field>
