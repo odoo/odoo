@@ -1,6 +1,6 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
-import time
+from odoo.tools.datetime import date
 
 
 @tagged('post_install', '-at_install')
@@ -59,7 +59,7 @@ class TestProductIdChange(AccountingTestCase):
             'name': 'invoice to client',
             'account_id': self.account_receivable.id,
             'type': 'out_invoice',
-            'date_invoice': time.strftime('%Y') + '-06-26',
+            'date_invoice': date.today().replace(day=26, month=6),
             'fiscal_position_id': fp.id,
         })
         out_line = self.invoice_line_model.create({
@@ -77,7 +77,7 @@ class TestProductIdChange(AccountingTestCase):
             'name': 'invoice to supplier',
             'account_id': self.account_receivable.id,
             'type': 'in_invoice',
-            'date_invoice': time.strftime('%Y') + '-06-26',
+            'date_invoice': date.today().replace(day=26, month=6),
             'fiscal_position_id': fp.id,
         })
         in_line = self.invoice_line_model.create({

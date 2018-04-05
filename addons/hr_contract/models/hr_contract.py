@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
-from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools.datetime import date, relativedelta
 
 
 class Employee(models.Model):
@@ -105,11 +104,11 @@ class Contract(models.Model):
             ('state', '=', 'open'),
             '|',
             '&',
-            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=7))),
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            ('date_end', '<=', date.today() + relativedelta(days=7)),
+            ('date_end', '>=', date.today() + relativedelta(days=1)),
             '&',
-            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=60))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            ('visa_expire', '<=', date.today() + relativedelta(days=60)),
+            ('visa_expire', '>=', date.today() + relativedelta(days=1)),
         ]).write({
             'state': 'pending'
         })
@@ -117,8 +116,8 @@ class Contract(models.Model):
         self.search([
             ('state', 'in', ('open', 'pending')),
             '|',
-            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
-            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            ('date_end', '<=', date.today() + relativedelta(days=1)),
+            ('visa_expire', '<=', date.today() + relativedelta(days=1)),
         ]).write({
             'state': 'close'
         })

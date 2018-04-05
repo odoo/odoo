@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, timedelta
 import logging
-import pytz
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.datetime import datetime, date, timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -194,11 +193,11 @@ class IrSequence(models.Model):
             return (s % d) if s else ''
 
         def _interpolation_dict():
-            now = range_date = effective_date = datetime.now(pytz.timezone(self._context.get('tz') or 'UTC'))
+            now = range_date = effective_date = datetime.now(self._context.get('tz') or 'UTC')
             if self._context.get('ir_sequence_date'):
-                effective_date = datetime.strptime(self._context.get('ir_sequence_date'), '%Y-%m-%d')
+                effective_date = date.from_string(self._context.get('ir_sequence_date'))
             if self._context.get('ir_sequence_date_range'):
-                range_date = datetime.strptime(self._context.get('ir_sequence_date_range'), '%Y-%m-%d')
+                range_date = date.from_string(self._context.get('ir_sequence_date_range'))
 
             sequences = {
                 'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
@@ -230,12 +229,10 @@ class IrSequence(models.Model):
         date_to = '{}-12-31'.format(year)
         date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '>=', date), ('date_from', '<=', date_to)], order='date_from desc', limit=1)
         if date_range:
-            date_to = datetime.strptime(date_range.date_from, '%Y-%m-%d') + timedelta(days=-1)
-            date_to = date_to.strftime('%Y-%m-%d')
+            date_to = date_range.date_from + timedelta(days=-1)
         date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_to', '>=', date_from), ('date_to', '<=', date)], order='date_to desc', limit=1)
         if date_range:
-            date_from = datetime.strptime(date_range.date_to, '%Y-%m-%d') + timedelta(days=1)
-            date_from = date_from.strftime('%Y-%m-%d')
+            date_from = date_range.date_to + timedelta(days=1)
         seq_date_range = self.env['ir.sequence.date_range'].sudo().create({
             'date_from': date_from,
             'date_to': date_to,
@@ -250,7 +247,7 @@ class IrSequence(models.Model):
         # date mode
         dt = fields.Date.today()
         if self._context.get('ir_sequence_date'):
-            dt = self._context.get('ir_sequence_date')
+            dt = date.from_string(self._context.get('ir_sequence_date'))
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)

@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import closing
-from datetime import datetime, timedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
+from odoo.tools.datetime import datetime, timedelta
 
 
 class StockQuant(TransactionCase):
@@ -731,8 +731,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 1)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        from odoo.fields import Datetime
-        self.assertEqual(quant.in_date, Datetime.to_string(in_date1))
+        self.assertEqual(quant.in_date, in_date1)
 
         in_date2 = datetime.now() - timedelta(days=5)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date2)
@@ -744,4 +743,4 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 2)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        self.assertEqual(quant.in_date, Datetime.to_string(in_date2))
+        self.assertEqual(quant.in_date, in_date2)

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import logging
 import re
 import uuid
@@ -12,6 +11,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import datetime
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
 
@@ -590,10 +590,9 @@ class SurveyQuestion(models.Model):
         if answer and self.validation_required:
             # Answer is not in the right range
             try:
-                date_from_string = fields.Date.from_string
-                dateanswer = date_from_string(answer)
-                min_date = date_from_string(self.validation_min_date)
-                max_date = date_from_string(self.validation_max_date)
+                dateanswer = fields.Date.from_string(answer)
+                min_date = self.validation_min_date
+                max_date = self.validation_max_date
 
                 if min_date and max_date and not (min_date <= dateanswer <= max_date):
                     # If Minimum and Maximum Date are entered
@@ -735,7 +734,7 @@ class SurveyUserInput(models.Model):
         """ Remove empty user inputs that have been created manually
             (used as a cronjob declared in data/survey_cron.xml)
         """
-        an_hour_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
+        an_hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)
         self.search([('type', '=', 'manually'), ('state', '=', 'new'),
                     ('date_create', '<', an_hour_ago)]).unlink()
 

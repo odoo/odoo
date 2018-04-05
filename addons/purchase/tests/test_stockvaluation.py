@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-from datetime import datetime
-
 from odoo import fields
 from odoo.tests.common import TransactionCase
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.datetime import date, datetime
 
 
 class TestStockValuation(TransactionCase):
@@ -59,7 +56,7 @@ class TestStockValuation(TransactionCase):
                     'product_qty': 10.0,
                     'product_uom': self.product1.uom_po_id.id,
                     'price_unit': 100.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': date.today(),
                 }),
             ],
         })
@@ -106,7 +103,7 @@ class TestStockValuation(TransactionCase):
                     'product_qty': 10.0,
                     'product_uom': self.product1.uom_po_id.id,
                     'price_unit': 11.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': date.today(),
                 }),
             ],
         })
@@ -158,7 +155,7 @@ class TestStockValuation(TransactionCase):
                     'product_qty': 10.0,
                     'product_uom': self.product1.uom_po_id.id,
                     'price_unit': 100.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': date.today(),
                 }),
             ],
         })
@@ -178,7 +175,7 @@ class TestStockValuation(TransactionCase):
 
         # change the rate of the currency
         self.env['res.currency.rate'].create({
-            'name': time.strftime('%Y-%m-%d'),
+            'name': date.today(),
             'rate': 2.0,
             'currency_id': eur_currency.id,
             'company_id': po1.company_id.id,
@@ -218,7 +215,7 @@ class TestStockValuation(TransactionCase):
                     'product_qty': 10.0,
                     'product_uom': self.product1.uom_po_id.id,
                     'price_unit': 100.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today(),
                 }),
             ],
         })
@@ -252,7 +249,7 @@ class TestStockValuation(TransactionCase):
                     'product_qty': 10.0,
                     'product_uom': self.product1.uom_po_id.id,
                     'price_unit': 100.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today(),
                 }),
             ],
         })

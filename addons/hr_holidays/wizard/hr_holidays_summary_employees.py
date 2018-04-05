@@ -3,6 +3,7 @@
 import time
 
 from odoo import api, fields, models
+from odoo.tools.datetime import date
 
 
 class HolidaysSummaryEmployee(models.TransientModel):
@@ -10,7 +11,7 @@ class HolidaysSummaryEmployee(models.TransientModel):
     _name = 'hr.holidays.summary.employee'
     _description = 'HR Leaves Summary Report By Employee'
 
-    date_from = fields.Date(string='From', required=True, default=lambda *a: time.strftime('%Y-%m-01'))
+    date_from = fields.Date(string='From', required=True, default=lambda *a: date.today().start_of('month'))
     emp = fields.Many2many('hr.employee', 'summary_emp_rel', 'sum_id', 'emp_id', string='Employee(s)')
     holiday_type = fields.Selection([
         ('Approved', 'Approved'),

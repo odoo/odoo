@@ -62,7 +62,7 @@
         </record>
 
         <record id="project_project_1" model="project.project">
-            <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
+            <field name="date_start" eval="datetime.today().replace(day=1, hour=10)"/>
             <field name="name">Website for Sales &amp; WMS</field>
             <field name="color">3</field>
             <field name="user_id" ref="base.user_demo"/>
@@ -143,7 +143,7 @@
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Budget Planning</field>
-            <field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
+            <field name="date_deadline" eval="datetime.today().replace(day=24)"/>
             <field name="stage_id" ref="project_stage_2"/>
             <field name="color">4</field>
         </record>
@@ -154,7 +154,7 @@
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Develop module for Sale Management</field>
             <field name="description">Use the account_budget module</field>
-            <field name="date_deadline" eval="time.strftime('%Y-%m-19')"/>
+            <field name="date_deadline" eval="datetime.today().replace(day=19)"/>
             <field name="color">5</field>
             <field name="stage_id" ref="project_stage_1"/>
             <field name="tag_ids" eval="[(6, 0, [
@@ -168,7 +168,7 @@
             <field name="name">Develop module for Warehouse</field>
             <field name="kanban_state">done</field>
             <field name="priority">0</field>
-            <field name="date_deadline" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="date_deadline" eval="datetime.today()"/>
             <field name="stage_id" ref="project_stage_1"/>
             <field name="tag_ids" eval="[(6, 0, [
                     ref('project_tags_01')])]"/>

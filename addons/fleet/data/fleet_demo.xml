@@ -674,7 +674,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
           <field name="driver_id" ref="base.user_demo_res_partner" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="acquisition_date" eval="datetime.today().replace(hour=2)" />
           <field name="state_id" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
@@ -689,7 +689,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_25" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="acquisition_date" eval="datetime.today().replace(hour=2)" />
           <field name="state_id" ref="vehicle_state_inactive"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">16000</field>
@@ -704,7 +704,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_17" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="acquisition_date" eval="datetime.today().replace(hour=2)" />
           <field name="state_id" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
@@ -719,7 +719,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_16" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="acquisition_date" eval="datetime.today().replace(hour=2)" />
           <field name="state_id" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
@@ -734,7 +734,7 @@
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_15" />
-          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="acquisition_date" eval="datetime.today().replace(hour=2)" />
           <field name="state_id" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">18000</field>
@@ -1399,9 +1399,9 @@
         <field name="cost_generated">20</field>
         <field name="cost_frequency">daily</field>
         <field name="cost_subtype_id" ref="type_contract_leasing"/>
-        <field name="date" eval="time.strftime('%Y-01-01')" />
-        <field name="start_date" eval="time.strftime('%Y-01-01')" />
-        <field name="expiration_date" eval="(DateTime.now() + timedelta(5)).strftime('%Y-%m-%d')" />
+        <field name="date" eval="datetime.today().start_of('year')" />
+        <field name="start_date" eval="datetime.today().start_of('year')" />
+        <field name="expiration_date" eval="datetime.now() + datetime.timedelta(5)" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Daily leasing contract</field>
@@ -1437,9 +1437,9 @@
         <field name="cost_generated">150</field>
         <field name="cost_frequency">weekly</field>
         <field name="cost_subtype_id" ref="type_contract_leasing"/>
-        <field name="date" eval="time.strftime('%Y-01-01')" />
-        <field name="start_date" eval="time.strftime('%Y-01-01')" />
-        <field name="expiration_date" eval="(DateTime.now() + timedelta(-1)).strftime('%Y-%m-%d')" />
+        <field name="date" eval="datetime.today().start_of('year')" />
+        <field name="start_date" eval="datetime.today().start_of('year')" />
+        <field name="expiration_date" eval="datetime.today() + datetime.timedelta(-1)" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Weekly leasing contract</field>
@@ -1475,9 +1475,9 @@
         <field name="cost_generated">400</field>
         <field name="cost_frequency">monthly</field>
         <field name="cost_subtype_id" ref="type_contract_leasing"/>
-        <field name="date" eval="time.strftime('%Y-01-01')"/>
-        <field name="start_date" eval="time.strftime('%Y-01-01')" />
-        <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
+        <field name="date" eval="datetime.today().start_of('year')"/>
+        <field name="start_date" eval="datetime.today().start_of('year')" />
+        <field name="expiration_date" eval="datetime.today().end_of('year')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Monthly leasing contract</field>
@@ -1513,9 +1513,9 @@
         <field name="cost_generated">4000</field>
         <field name="cost_frequency">yearly</field>
         <field name="cost_subtype_id" ref="type_contract_leasing"/>
-        <field name="date" eval="time.strftime('%Y-01-01')" />
-        <field name="start_date" eval="time.strftime('%Y-01-01')" />
-        <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
+        <field name="date" eval="datetime.today().start_of('year')" />
+        <field name="start_date" eval="datetime.today().start_of('year')" />
+        <field name="expiration_date" eval="datetime.today().end_of('year')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Yearly leasing contract</field>
@@ -1551,9 +1551,9 @@
         <field name="cost_generated">0</field>
         <field name="cost_frequency">no</field>
         <field name="cost_subtype_id" ref="type_contract_leasing"/>
-        <field name="date" eval="time.strftime('2012-01-01')" />
-        <field name="start_date" eval="time.strftime('2012-01-01')" />
-        <field name="expiration_date" eval="time.strftime('2016-12-31')" />
+        <field name="date" eval="datetime.date(2012, 1, 1)" />
+        <field name="start_date" eval="datetime.date(2012, 1, 1)" />
+        <field name="expiration_date" eval="datetime.date(2016, 12, 31)" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Unique leasing contract</field>

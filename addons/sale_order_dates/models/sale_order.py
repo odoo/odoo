@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 from odoo import api, fields, models, _
+from odoo.tools.datetime import timedelta
 
 
 class SaleOrder(models.Model):
@@ -32,22 +32,22 @@ class SaleOrder(models.Model):
         """Compute the commitment date"""
         for order in self:
             dates_list = []
-            order_datetime = fields.Datetime.from_string(order.date_order)
+            order_datetime = order.date_order
             for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
                 dt = order_datetime + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
             if dates_list:
                 commit_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
-                order.commitment_date = fields.Datetime.to_string(commit_date)
+                order.commitment_date = commit_date
 
     def _compute_picking_ids(self):
         super(SaleOrder, self)._compute_picking_ids()
         for order in self:
             dates_list = []
             for pick in order.picking_ids:
-                dates_list.append(fields.Datetime.from_string(pick.date))
+                dates_list.append(pick.date)
             if dates_list:
-                order.effective_date = fields.Datetime.to_string(min(dates_list))
+                order.effective_date = min(dates_list)
 
     @api.onchange('requested_date')
     def onchange_requested_date(self):
@@ -69,8 +69,8 @@ class SaleOrderLine(models.Model):
     def _prepare_procurement_values(self, group_id):
         vals = super(SaleOrderLine, self)._prepare_procurement_values(group_id=group_id)
         for line in self.filtered("order_id.requested_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.requested_date) - timedelta(days=line.order_id.company_id.security_lead)
+            date_planned = line.order_id.requested_date - timedelta(days=line.order_id.company_id.security_lead)
             vals.update({
-                'date_planned': fields.Datetime.to_string(date_planned),
+                'date_planned': date_planned,
             })
         return vals

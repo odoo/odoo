@@ -4,7 +4,7 @@
 
         <!-- Casual leave -->
         <record id="holiday_status_cl" model="hr.leave.type">
-            <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="name" eval="'Legal Leaves %d' % datetime.today().year"/>
             <field name="limit" eval="False"/>
             <field name="color_name">black</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>

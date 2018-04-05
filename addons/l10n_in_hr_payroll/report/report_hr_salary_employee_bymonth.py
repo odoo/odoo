@@ -1,10 +1,9 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
-
 from odoo import api, models, _
 from odoo.exceptions import UserError
+from odoo.tools.datetime import date
 
 
 class ReportHrSalaryEmployeeBymonth(models.AbstractModel):

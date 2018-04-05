@@ -72,7 +72,7 @@ class AccountInvoice(models.Model):
             if reference_type == 'bba':
                 if algorithm == 'date':
                     if not self.check_bbacomm(reference):
-                        date = fields.Date.from_string(fields.Date.today())
+                        date = fields.Date.today()
                         doy = date.strftime('%j')
                         year = date.strftime('%Y')
                         seq = '001'

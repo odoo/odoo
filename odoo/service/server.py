@@ -1,7 +1,6 @@
 #-----------------------------------------------------------
 # Threaded, Gevent and Prefork Servers
 #-----------------------------------------------------------
-import datetime
 import errno
 import logging
 import os
@@ -41,6 +40,7 @@ from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from odoo.tools.datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -234,7 +234,7 @@ class ThreadedServer(CommonServer):
         # Force call to strptime just before starting the cron thread
         # to prevent time.strptime AttributeError within the thread.
         # See: http://bugs.python.org/issue7980
-        datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
+        datetime.from_string('2012-01-01')
         for i in range(odoo.tools.config['max_cron_threads']):
             def target():
                 self.cron_thread(i)

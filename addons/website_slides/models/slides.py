@@ -4,7 +4,6 @@ import requests
 from PIL import Image
 
 import base64
-import datetime
 import io
 import json
 import re
@@ -15,6 +14,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import image
 from odoo.tools.translate import html_translate
+from odoo.tools import datetime
 from odoo.exceptions import Warning
 
 

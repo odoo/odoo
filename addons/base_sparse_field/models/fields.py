@@ -3,16 +3,7 @@
 import json
 
 from odoo import fields
-
-
-def monkey_patch(cls):
-    """ Return a method decorator to monkey-patch the given class. """
-    def decorate(func):
-        name = func.__name__
-        func.super = getattr(cls, name, None)
-        setattr(cls, name, func)
-        return func
-    return decorate
+from odoo.tools.func import monkey_patch
 
 
 #

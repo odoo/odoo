@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from .common import TestPurchase
+from odoo.tools.datetime import date
 
 
 class TestAveragePrice(TestPurchase):
@@ -41,7 +40,7 @@ class TestAveragePrice(TestPurchase):
                 'product_qty': 10.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 60.0,
-                'date_planned': time.strftime('%Y-%m-%d'),
+                'date_planned': date.today(),
             })]
         })
 
@@ -68,7 +67,7 @@ class TestAveragePrice(TestPurchase):
                 'product_qty': 30.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
-                'date_planned': time.strftime('%Y-%m-%d'),
+                'date_planned': date.today(),
             })]
         })
 
@@ -112,7 +111,7 @@ class TestAveragePrice(TestPurchase):
                 'product_qty': 500.0,
                 'product_uom': self.ref('uom.product_uom_gram'),
                 'price_unit': 0.2,
-                'date_planned': time.strftime('%Y-%m-%d'),
+                'date_planned': date.today(),
             })]
         })
 

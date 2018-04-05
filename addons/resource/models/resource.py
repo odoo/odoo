@@ -1,20 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import math
-import pytz
-
-from collections import namedtuple
-from datetime import timedelta
-from dateutil import rrule
-from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from collections import namedtuple
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.datetime import timedelta, rrule, relativedelta, datetime, time, DAILY
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -23,24 +18,12 @@ HOURS_PER_DAY = 8
 
 
 def float_to_time(float_hour):
-    return datetime.time(int(math.modf(float_hour)[1]), int(60 * math.modf(float_hour)[0]), 0)
+    return time(int(math.modf(float_hour)[1]), int(60 * math.modf(float_hour)[0]), 0)
 
 
-def to_naive_user_tz(datetime, record):
+def to_user_tz(datetime, record):
     tz_name = record._context.get('tz') or record.env.user.tz
-    tz = tz_name and pytz.timezone(tz_name) or pytz.UTC
-    return pytz.UTC.localize(datetime.replace(tzinfo=None), is_dst=False).astimezone(tz).replace(tzinfo=None)
-
-
-def to_naive_utc(datetime, record):
-    tz_name = record._context.get('tz') or record.env.user.tz
-    tz = tz_name and pytz.timezone(tz_name) or pytz.UTC
-    return tz.localize(datetime.replace(tzinfo=None), is_dst=False).astimezone(pytz.UTC).replace(tzinfo=None)
-
-
-def to_tz(datetime, tz_name):
-    tz = pytz.timezone(tz_name) if tz_name else pytz.UTC
-    return pytz.UTC.localize(datetime.replace(tzinfo=None), is_dst=False).astimezone(tz).replace(tzinfo=None)
+    return datetime.astimezone(tz_name)
 
 
 class ResourceCalendar(models.Model):
@@ -64,6 +47,9 @@ class ResourceCalendar(models.Model):
         if not res.get('name') and res.get('company_id'):
             res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
         return res
+
+    def _get_tz(self):
+        return self._context.get('tz') or self.env.user.tz
 
     def _get_default_attendance_ids(self):
         return [
@@ -249,8 +235,8 @@ class ResourceCalendar(models.Model):
         for attendance in self.attendance_ids.filtered(
             lambda att:
                 int(att.dayofweek) == weekday and
-                not (att.date_from and fields.Date.from_string(att.date_from) > day_date) and
-                not (att.date_to and fields.Date.from_string(att.date_to) < day_date)):
+                not (att.date_from and att.date_from > day_date) and
+                not (att.date_to and att.date_to < day_date)):
             if start_time and float_to_time(attendance.hour_to) < start_time:
                 continue
             if end_time and float_to_time(attendance.hour_from) > end_time:
@@ -296,7 +282,7 @@ class ResourceCalendar(models.Model):
         and on a start and end datetime.
 
         Leaves are encoded from a given timezone given by their tz field. COnverting
-        them in naive user timezone require to use the leave timezone, not the current
+        them in user timezone require to use the leave timezone, not the current
         user timezone. For example people managing leaves could be from different
         timezones and the correct one is the one used when encoding them.
 
@@ -307,11 +293,11 @@ class ResourceCalendar(models.Model):
         else:
             search_domain = [('resource_id', '=', False)]
         if start_datetime:
-            # domain += [('date_to', '>', fields.Datetime.to_string(to_naive_utc(start_datetime, self.env.user)))]
-            search_domain += [('date_to', '>', fields.Datetime.to_string(start_datetime + timedelta(days=-1)))]
+            # domain += [('date_to', '>', start_datetime)]
+            search_domain += [('date_to', '>', start_datetime + timedelta(days=-1))]
         if end_datetime:
-            # domain += [('date_from', '<', fields.Datetime.to_string(to_naive_utc(end_datetime, self.env.user)))]
-            search_domain += [('date_from', '<', fields.Datetime.to_string(end_datetime + timedelta(days=1)))]
+            # domain += [('date_from', '<', end_datetime)]
+            search_domain += [('date_from', '<', end_datetime + timedelta(days=1))]
         if domain:
             search_domain += domain
         if domain is None:
@@ -321,18 +307,18 @@ class ResourceCalendar(models.Model):
         filtered_leaves = self.env['resource.calendar.leaves']
         for leave in leaves:
             if start_datetime:
-                leave_date_to = to_tz(fields.Datetime.from_string(leave.date_to), leave.tz)
+                leave_date_to = leave.date_to.astimezone(leave.tz)
                 if not leave_date_to >= start_datetime:
                     continue
             if end_datetime:
-                leave_date_from = to_tz(fields.Datetime.from_string(leave.date_from), leave.tz)
+                leave_date_from = leave.date_from.astimezone(leave.tz)
                 if not leave_date_from <= end_datetime:
                     continue
             filtered_leaves += leave
 
         return [self._interval_new(
-            to_tz(fields.Datetime.from_string(leave.date_from), leave.tz),
-            to_tz(fields.Datetime.from_string(leave.date_to), leave.tz),
+            leave.date_from.astimezone(leave.tz),
+            leave.date_to.astimezone(leave.tz),
             {'leaves': leave}) for leave in filtered_leaves]
 
     def _iter_day_attendance_intervals(self, day_date, start_time, end_time):
@@ -341,8 +327,8 @@ class ResourceCalendar(models.Model):
             from_time = float_to_time(calendar_working_day.hour_from)
             to_time = float_to_time(calendar_working_day.hour_to)
 
-            dt_f = datetime.datetime.combine(day_date, max(from_time, start_time))
-            dt_t = datetime.datetime.combine(day_date, min(to_time, end_time))
+            dt_f = datetime.combine(day_date, max(from_time, start_time), tzinfo=self._get_tz())
+            dt_t = datetime.combine(day_date, min(to_time, end_time), tzinfo=self._get_tz())
 
             yield self._interval_new(dt_f, dt_t, {'attendances': calendar_working_day})
 
@@ -350,7 +336,7 @@ class ResourceCalendar(models.Model):
     def _get_day_work_intervals(self, day_date, start_time=None, end_time=None, compute_leaves=False, resource_id=None, domain=None):
         """ Get the working intervals of the day given by day_date based on
         current calendar. Input should be given in current user timezone and
-        output is given in naive UTC, ready to be used by the orm or webclient.
+        output is given in UTC, ready to be used by the orm or webclient.
 
         :param time start_time: time object that is the beginning hours in user TZ
         :param time end_time: time object that is the ending hours in user TZ
@@ -364,9 +350,9 @@ class ResourceCalendar(models.Model):
         self.ensure_one()
 
         if not start_time:
-            start_time = datetime.time.min
+            start_time = time.min
         if not end_time:
-            end_time = datetime.time.max
+            end_time = time.max
 
         working_intervals = [att_interval for att_interval in self._iter_day_attendance_intervals(day_date, start_time, end_time)]
 
@@ -374,8 +360,8 @@ class ResourceCalendar(models.Model):
         if compute_leaves:
             leaves = self._get_leave_intervals(
                 resource_id=resource_id,
-                start_datetime=datetime.datetime.combine(day_date, start_time),
-                end_datetime=datetime.datetime.combine(day_date, end_time),
+                start_datetime=datetime.combine(day_date, start_time, tzinfo=self._get_tz()),
+                end_datetime=datetime.combine(day_date, end_time, tzinfo=self._get_tz()),
                 domain=domain)
             working_intervals = [
                 sub_interval
@@ -384,14 +370,14 @@ class ResourceCalendar(models.Model):
 
         # adapt tz
         return [self._interval_new(
-            to_naive_utc(interval[0], self.env.user),
-            to_naive_utc(interval[1], self.env.user),
+            interval[0],
+            interval[1],
             interval[2]) for interval in working_intervals]
 
     def _get_day_leave_intervals(self, day_date, start_time, end_time, resource_id, domain=None):
         """ Get the leave intervals of the day given by day_date based on current
         calendar. Input should be given in current user timezone and
-        output is given in naive UTC, ready to be used by the orm or webclient.
+        output is given in UTC, ready to be used by the orm or webclient.
 
         :param time start_time: time object that is the beginning hours in user TZ
         :param time end_time: time object that is the ending hours in user TZ
@@ -402,16 +388,16 @@ class ResourceCalendar(models.Model):
         self.ensure_one()
 
         if not start_time:
-            start_time = datetime.time.min
+            start_time = time.min
         if not end_time:
-            end_time = datetime.time.max
+            end_time = time.max
 
         working_intervals = [att_interval for att_interval in self._iter_day_attendance_intervals(day_date, start_time, end_time)]
 
         leaves_intervals = self._get_leave_intervals(
             resource_id=resource_id,
-            start_datetime=datetime.datetime.combine(day_date, start_time),
-            end_datetime=datetime.datetime.combine(day_date, end_time),
+            start_datetime=datetime.combine(day_date, start_time, tzinfo=self._get_tz()),
+            end_datetime=datetime.combine(day_date, end_time, tzinfo=self._get_tz()),
             domain=domain)
 
         final_intervals = [i for i in
@@ -421,8 +407,8 @@ class ResourceCalendar(models.Model):
 
         # adapt tz
         return [self._interval_new(
-            to_naive_utc(interval[0], self.env.user),
-            to_naive_utc(interval[1], self.env.user),
+            interval[0],
+            interval[1],
             interval[2]) for interval in final_intervals]
 
     # --------------------------------------------------
@@ -432,21 +418,21 @@ class ResourceCalendar(models.Model):
     def _iter_work_intervals(self, start_dt, end_dt, resource_id, compute_leaves=True, domain=None):
         """ Lists the current resource's work intervals between the two provided
         datetimes (inclusive) expressed in UTC, for each worked day. """
+        start_dt = to_user_tz(start_dt, self.env.user)
+        end_dt = to_user_tz(end_dt, self.env.user)
+
         if not end_dt:
-            end_dt = datetime.datetime.combine(start_dt.date(), datetime.time.max)
+            end_dt = datetime.combine(start_dt.date(), time.max, tzinfo=self._get_tz())
 
-        start_dt = to_naive_user_tz(start_dt, self.env.user)
-        end_dt = to_naive_user_tz(end_dt, self.env.user)
-
-        for day in rrule.rrule(rrule.DAILY,
-                               dtstart=start_dt,
-                               until=end_dt,
-                               byweekday=self._get_weekdays()):
-            start_time = datetime.time.min
+        for day in rrule(DAILY,
+                         dtstart=start_dt,
+                         until=end_dt,
+                         byweekday=self._get_weekdays()):
+            start_time = time.min
             if day.date() == start_dt.date():
                 start_time = start_dt.time()
-            end_time = datetime.time.max
-            if day.date() == end_dt.date() and end_dt.time() != datetime.time():
+            end_time = time.max
+            if day.date() == end_dt.date() and end_dt.time() != time():
                 end_time = end_dt.time()
 
             intervals = self._get_day_work_intervals(
@@ -462,21 +448,21 @@ class ResourceCalendar(models.Model):
     def _iter_leave_intervals(self, start_dt, end_dt, resource_id, domain=None):
         """ Lists the current resource's leave intervals between the two provided
         datetimes (inclusive) expressed in UTC. """
+        start_dt = to_user_tz(start_dt, self.env.user)
+        end_dt = to_user_tz(end_dt, self.env.user)
+
         if not end_dt:
-            end_dt = datetime.datetime.combine(start_dt.date(), datetime.time.max)
+            end_dt = datetime.combine(start_dt.date(), time.max, tzinfo=self._get_tz())
 
-        start_dt = to_naive_user_tz(start_dt, self.env.user)
-        end_dt = to_naive_user_tz(end_dt, self.env.user)
-
-        for day in rrule.rrule(rrule.DAILY,
-                               dtstart=start_dt,
-                               until=end_dt,
-                               byweekday=self._get_weekdays()):
-            start_time = datetime.time.min
+        for day in rrule(DAILY,
+                         dtstart=start_dt,
+                         until=end_dt,
+                         byweekday=self._get_weekdays()):
+            start_time = time.min
             if day.date() == start_dt.date():
                 start_time = start_dt.time()
-            end_time = datetime.time.max
-            if day.date() == end_dt.date() and end_dt.time() != datetime.time():
+            end_time = time.max
+            if day.date() == end_dt.date() and end_dt.time() != time():
                 end_time = end_dt.time()
 
             intervals = self._get_day_leave_intervals(
@@ -491,7 +477,9 @@ class ResourceCalendar(models.Model):
 
     def _iter_work_hours_count(self, from_datetime, to_datetime, resource_id, domain=None):
         """ Lists the current resource's work hours count between the two provided
-        datetime expressed in naive UTC. """
+        datetime expressed in UTC. """
+        from_datetime = to_user_tz(from_datetime, self.env.user)
+        to_datetime = to_user_tz(to_datetime, self.env.user)
 
         for interval in self._iter_work_intervals(from_datetime, to_datetime, resource_id, domain=domain):
             td = timedelta()
@@ -501,20 +489,20 @@ class ResourceCalendar(models.Model):
 
     def _iter_work_days(self, from_date, to_date, resource_id, domain=None):
         """ Lists the current resource's work days between the two provided
-        dates (inclusive) expressed in naive UTC.
+        dates (inclusive) expressed in UTC.
 
         Work days are the company or service's open days (as defined by the
         resource.calendar) minus the resource's own leaves.
 
-        :param datetime.date from_date: start of the interval to check for
+        :param date from_date: start of the interval to check for
                                         work days (inclusive)
-        :param datetime.date to_date: end of the interval to check for work
+        :param date to_date: end of the interval to check for work
                                       days (inclusive)
-        :rtype: list(datetime.date)
+        :rtype: list(date)
         """
         for interval in self._iter_work_intervals(
-                datetime.datetime(from_date.year, from_date.month, from_date.day),
-                datetime.datetime(to_date.year, to_date.month, to_date.day),
+                datetime(from_date.year, from_date.month, from_date.day),
+                datetime(to_date.year, to_date.month, to_date.day),
                 resource_id, domain=domain):
             yield interval[0][0].date()
 
@@ -522,7 +510,7 @@ class ResourceCalendar(models.Model):
     def _is_work_day(self, date, resource_id):
         """ Whether the provided date is a work day for the subject resource.
 
-        :type date: datetime.date
+        :type date: date
         :rtype: bool """
         return bool(next(self._iter_work_days(date, date, resource_id), False))
 
@@ -554,13 +542,13 @@ class ResourceCalendar(models.Model):
                                 > 0 date is the starting date. If days is < 0
                                 date is the ending date.
 
-        :return list intervals: list of time intervals in naive UTC """
+        :return list intervals: list of time intervals in UTC """
         self.ensure_one()
         backwards = (hours < 0)
         intervals = []
         remaining_hours, iterations = abs(hours * 1.0), 0
 
-        day_dt_tz = to_naive_user_tz(day_dt, self.env.user)
+        day_dt_tz = to_user_tz(day_dt, self.env.user)
         current_datetime = day_dt_tz
 
         call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id, domain=domain)
@@ -584,9 +572,9 @@ class ResourceCalendar(models.Model):
                 intervals = intervals + new_working_intervals if not backwards else new_working_intervals + intervals
             # get next day
             if backwards:
-                current_datetime = datetime.datetime.combine(self._get_previous_work_day(current_datetime), datetime.time(23, 59, 59))
+                current_datetime = datetime.combine(self._get_previous_work_day(current_datetime), time(23, 59, 59), tzinfo=self._get_tz())
             else:
-                current_datetime = datetime.datetime.combine(self._get_next_work_day(current_datetime), datetime.time())
+                current_datetime = datetime.combine(self._get_next_work_day(current_datetime), time(), tzinfo=self._get_tz())
             # avoid infinite loops
             iterations += 1
 
@@ -616,12 +604,12 @@ class ResourceCalendar(models.Model):
                             date is the starting date. If days is < 0 date is the
                             ending date.
 
-        :return list intervals: list of time intervals in naive UTC """
+        :return list intervals: list of time intervals in UTC """
         backwards = (days < 0)
         intervals = []
         planned_days, iterations = 0, 0
 
-        day_dt_tz = to_naive_user_tz(day_dt, self.env.user)
+        day_dt_tz = to_user_tz(day_dt, self.env.user)
         current_datetime = day_dt_tz.replace(hour=0, minute=0, second=0, microsecond=0)
 
         while planned_days < abs(days) and iterations < 100:

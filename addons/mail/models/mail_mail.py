@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import datetime
 import logging
 import psycopg2
 import threading
@@ -14,6 +13,7 @@ from odoo import _, api, fields, models
 from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools import datetime
 
 _logger = logging.getLogger(__name__)
 

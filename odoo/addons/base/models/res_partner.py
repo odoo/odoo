@@ -2,9 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import datetime
 import hashlib
-import pytz
 import threading
 
 from email.utils import formataddr
@@ -17,6 +15,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import datetime
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock 
@@ -36,7 +35,7 @@ def _lang_get(self):
 @api.model
 def _tz_get(self):
     # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
-    return [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+    return [(tz, tz) for tz in sorted(datetime.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
 
 class FormatAddressMixin(models.AbstractModel):
@@ -243,7 +242,7 @@ class Partner(models.Model):
     @api.depends('tz')
     def _compute_tz_offset(self):
         for partner in self:
-            partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
+            partner.tz_offset = datetime.datetime.now(partner.tz or 'GMT').strftime('%z')
 
     @api.depends('user_ids.share')
     def _compute_partner_share(self):

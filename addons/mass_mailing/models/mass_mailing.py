@@ -519,7 +519,7 @@ class MassMailing(models.Model):
         cron_time = str2dt(cron_next_call)
         for mass_mailing in self:
             if mass_mailing.schedule_date:
-                schedule_date = str2dt(mass_mailing.schedule_date)
+                schedule_date = mass_mailing.schedule_date
                 mass_mailing.next_departure = max(schedule_date, cron_time)
             else:
                 mass_mailing.next_departure = cron_time

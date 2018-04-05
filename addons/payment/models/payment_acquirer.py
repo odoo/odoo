@@ -2,11 +2,11 @@
 import hashlib
 import hmac
 import logging
-import datetime
 import pprint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
+from odoo.tools import datetime
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
 

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.product.tests import common
+from odoo.tools.datetime import datetime
 
 
 class TestCreatePicking(common.TestProductCommon):
@@ -32,7 +31,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'product_qty': 5.0,
                     'product_uom': self.product_id_1.uom_po_id.id,
                     'price_unit': 500.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today(),
                 })],
         }
 
@@ -68,7 +67,7 @@ class TestCreatePicking(common.TestProductCommon):
                 'product_qty': 5.0,
                 'product_uom': self.product_id_2.uom_po_id.id,
                 'price_unit': 250.0,
-                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'date_planned': datetime.today(),
                 })]})
         self.assertEqual(self.po.picking_count, 2, 'New picking should be created')
         moves = self.po.order_line.mapped('move_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -156,7 +155,7 @@ class TestCreatePicking(common.TestProductCommon):
                     'product_qty': 100.0,
                     'product_uom': product.uom_po_id.id,
                     'price_unit': 11.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today(),
                 })],
         })
         self.assertTrue(purchase, 'RFQ should be created')

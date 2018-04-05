@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-from dateutil.relativedelta import relativedelta
-
-from odoo import fields, tools
+from odoo import fields
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.tools import mute_logger
+from odoo.tools import datetime
 
 
 class TestMailSchedule(TestEventCommon):
@@ -14,8 +12,8 @@ class TestMailSchedule(TestEventCommon):
     def test_00_event_mail_schedule(self):
         """ Test mail scheduling for events """
         now = fields.datetime.now()
-        event_date_begin = now + relativedelta(days=1)
-        event_date_end = now + relativedelta(days=3)
+        event_date_begin = now + datetime.relativedelta(days=1)
+        event_date_end = now + datetime.relativedelta(days=3)
 
         test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEventMail',
@@ -56,7 +54,7 @@ class TestMailSchedule(TestEventCommon):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(schedulers[0].mail_registration_ids), 2, 'event: incorrect number of mail scheduled date')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'registration'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
+        mails = self.env['mail.mail'].search([('subject', 'ilike', 'registration'), ('date', '>=', now)], order='date DESC', limit=3)
         self.assertEqual(len(mails), 2, 'event: wrong number of registration mail sent')
 
         for registration in schedulers[0].mail_registration_ids:
@@ -65,7 +63,7 @@ class TestMailSchedule(TestEventCommon):
         # check before event scheduler
         schedulers = self.EventMail.search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
         self.assertEqual(len(schedulers), 1, 'event: wrong scheduler creation')
-        self.assertEqual(schedulers[0].scheduled_date, datetime.datetime.strftime(event_date_begin + relativedelta(days=-1), tools.DEFAULT_SERVER_DATETIME_FORMAT), 'event: incorrect scheduled date')
+        self.assertEqual(schedulers[0].scheduled_date, event_date_begin + datetime.relativedelta(days=-1), 'event: incorrect scheduled date')
 
         # execute event reminder scheduler explicitly
         schedulers[0].execute()
@@ -73,7 +71,7 @@ class TestMailSchedule(TestEventCommon):
         self.assertTrue(schedulers[0].mail_sent, 'event: reminder scheduler should have sent an email')
         self.assertTrue(schedulers[0].done, 'event: reminder scheduler should be done')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'TestEventMail'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
+        mails = self.env['mail.mail'].search([('subject', 'ilike', 'TestEventMail'), ('date', '>=', now)], order='date DESC', limit=3)
         self.assertEqual(len(mails), 3, 'event: wrong number of reminders in outgoing mail queue')
 
 

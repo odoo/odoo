@@ -2,6 +2,7 @@ from . import test_acl
 from . import test_api
 from . import test_base
 from . import test_basecase
+from . import test_datetime
 from . import test_db_cursor
 from . import test_expression
 from . import test_float

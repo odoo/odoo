@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
+from odoo.tools.datetime import datetime
 
 
 @tagged('post_install', '-at_install')
@@ -43,7 +43,7 @@ class TestRepair(AccountingTestCase):
             'product_id': product_to_repair.id,
             'product_uom': product_to_repair.uom_id.id,
             'address_id': partner.id,
-            'guarantee_limit': datetime.today().strftime('%Y-%m-%d'),
+            'guarantee_limit': datetime.today(),
             'invoice_method': invoice_method,
             'partner_invoice_id': partner.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,

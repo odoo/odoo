@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
 from odoo import api, fields, models
+from odoo.tools.datetime import datetime, timedelta
 
 
 class ProductWishlist(models.Model):
@@ -83,7 +83,7 @@ class ProductWishlist(models.Model):
     def _garbage_collector(self, *args, **kwargs):
         """Remove wishlists for unexisting sessions."""
         self.search([
-            ("create_date", "<", fields.Datetime.to_string(datetime.now() - timedelta(weeks=kwargs.get('wishlist_week', 5)))),
+            ("create_date", "<", datetime.now() - timedelta(weeks=kwargs.get('wishlist_week', 5))),
             ("partner_id", "=", False),
         ]).unlink()
 

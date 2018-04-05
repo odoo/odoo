@@ -24,7 +24,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(days=5)"/>
         </record>
         <record id="mail_message_channel_1_2" model="mail.message">
             <field name="model">mail.channel</field>
@@ -33,7 +33,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="date" eval="(DateTime.today() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(days=4)"/>
         </record>
         <record id="mail_message_channel_1_2_1" model="mail.message">
             <field name="model">mail.channel</field>
@@ -43,7 +43,7 @@
             <field name="parent_id" ref="mail_message_channel_1_2"/>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(days=3)"/>
         </record>
 
         <!-- Pushed to all employees -->
@@ -60,7 +60,7 @@
 ]]></field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(minutes=22)"/>
         </record>
         <record id="mail_message_channel_whole_2" model="mail.message">
             <field name="model">mail.channel</field>
@@ -69,7 +69,7 @@
 <p>This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(hours=1)"/>
         </record>
         <record id="mail_message_channel_whole_2_1" model="mail.message">
             <field name="model">mail.channel</field>
@@ -78,7 +78,7 @@
             <field name="parent_id" ref="mail_message_channel_whole_2"/>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=34)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(minutes=34)"/>
         </record>
         <record id="mail_message_channel_whole_2_2" model="mail.message">
             <field name="model">mail.channel</field>
@@ -87,7 +87,7 @@
             <field name="parent_id" ref="mail_message_channel_whole_2"/>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(minutes=22)"/>
         </record>
 
         <!-- Board messages -->
@@ -148,7 +148,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="datetime.today() - datetime.timedelta(days=3)"/>
         </record>
 
     </data>

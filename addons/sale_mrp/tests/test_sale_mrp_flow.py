@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
-
 
 class TestSaleMrpFlow(common.TransactionCase):
 

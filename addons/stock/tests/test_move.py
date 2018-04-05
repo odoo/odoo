@@ -3,6 +3,7 @@
 
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
+from odoo.tools.datetime import datetime, timedelta
 
 
 class StockMove(TransactionCase):
@@ -3133,7 +3134,6 @@ class StockMove(TransactionCase):
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
         ])
-        from datetime import datetime, timedelta
         initial_in_date_lot1 = datetime.now() - timedelta(days=5)
         quant_lot1.in_date = initial_in_date_lot1
 
@@ -3157,8 +3157,7 @@ class StockMove(TransactionCase):
         # As lot1 has an older date and FIFO is set by default, it's the one that should be
         # in pack.
         self.assertEqual(len(quant_in_pack), 1)
-        from odoo.fields import Datetime
-        self.assertEqual(quant_in_pack.in_date, Datetime.to_string(initial_in_date_lot1))
+        self.assertEqual(quant_in_pack.in_date, initial_in_date_lot1)
         self.assertEqual(quant_in_pack.lot_id, lot1)
 
         # Now, edit the move line and actually move the other lot
@@ -3171,7 +3170,7 @@ class StockMove(TransactionCase):
             ('lot_id', '=', lot1.id),
         ])
         self.assertEqual(quant_lot1.location_id, self.stock_location)
-        self.assertEqual(quant_lot1.in_date, Datetime.to_string(initial_in_date_lot1))
+        self.assertEqual(quant_lot1.in_date, initial_in_date_lot1)
 
         # Check that lo2 is in pack with is right in_date
         quant_lot2 = self.env['stock.quant'].search([
@@ -3238,7 +3237,6 @@ class StockMove(TransactionCase):
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
         ])
-        from datetime import datetime, timedelta
         initial_in_date_lot1 = datetime.now() - timedelta(days=5)
         quant_lot1.in_date = initial_in_date_lot1
 
@@ -3272,10 +3270,9 @@ class StockMove(TransactionCase):
             ('product_id', '=', self.product3.id),
         ])
         self.assertEqual(len(quants), 2)
-        from odoo.fields import Datetime
         for quant in quants:
             if quant.lot_id == lot1:
-                self.assertEqual(quant.in_date, Datetime.to_string(initial_in_date_lot1))
+                self.assertEqual(quant.in_date, initial_in_date_lot1)
             elif quant.lot_id == lot2:
                 self.assertEqual(quant.in_date, initial_in_date_lot2)
 

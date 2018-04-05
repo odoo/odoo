@@ -4,7 +4,6 @@
 import json
 import werkzeug
 import itertools
-import pytz
 import babel.dates
 from collections import OrderedDict
 
@@ -35,11 +34,11 @@ class WebsiteBlog(http.Controller):
             group['date_end'] = end
 
             locale = request.context.get('lang') or 'en_US'
-            start = pytz.UTC.localize(fields.Datetime.from_string(start))
-            tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
+            tzinfo = request.context.get('tz', 'UTC') or 'UTC'
+            start = fields.Datetime.from_string(start).astimezone(tzinfo)
 
-            group['month'] = babel.dates.format_datetime(start, format='MMMM', tzinfo=tzinfo, locale=locale)
-            group['year'] = babel.dates.format_datetime(start, format='YYYY', tzinfo=tzinfo, locale=locale)
+            group['month'] = babel.dates.format_datetime(start, format='MMMM', locale=locale)
+            group['year'] = babel.dates.format_datetime(start, format='YYYY', locale=locale)
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 

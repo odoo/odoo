@@ -42,7 +42,7 @@
         <field name="category_id" ref="equipment_monitor"/>
         <field name="owner_user_id" ref="base.user_root"/>
         <field name="technician_user_id" ref="base.user_root"/>
-        <field name="assign_date" eval="time.strftime('%Y-%m-10')"/>
+        <field name="assign_date" eval="datetime.today().replace(day=10)"/>
         <field name="serial_no">MT/122/11112222</field>
         <field name="model">NP300E5X</field>
     </record>
@@ -51,7 +51,7 @@
         <field name="category_id" ref="equipment_monitor"/>
         <field name="owner_user_id" ref="base.user_root"/>
         <field name="technician_user_id" ref="base.user_root"/>
-        <field name="assign_date" eval="time.strftime('%Y-01-01')"/>
+        <field name="assign_date" eval="datetime.today().start_of('year')"/>
         <field name="serial_no">MT/125/22778837</field>
         <field name="model">NP355E5X</field>
     </record>
@@ -60,7 +60,7 @@
         <field name="category_id" ref="equipment_monitor"/>
         <field name="owner_user_id" ref="base.user_demo"/>
         <field name="technician_user_id" ref="base.user_demo"/>
-        <field name="assign_date" eval="time.strftime('%Y-02-01')"/>
+        <field name="assign_date" eval="datetime.today().replace(month=2, day=1)"/>
         <field name="serial_no">MT/127/18291018</field>
         <field name="model">NP355E5X</field>
         <field name="color">3</field>
@@ -70,7 +70,7 @@
         <field name="category_id" ref="equipment_computer"/>
         <field name="owner_user_id" ref="base.user_demo"/>
         <field name="technician_user_id" ref="base.user_root"/>
-        <field name="assign_date" eval="time.strftime('%Y-03-08')"/>
+        <field name="assign_date" eval="datetime.today().replace(month=3, day=8)"/>
         <field name="serial_no">LP/203/19281928</field>
         <field name="model">NE56R</field>
      </record>
@@ -79,7 +79,7 @@
         <field name="category_id" ref="equipment_computer"/>
         <field name="owner_user_id" ref="base.user_root"/>
         <field name="technician_user_id" ref="base.user_demo"/>
-        <field name="assign_date" eval="time.strftime('%Y-04-08')"/>
+        <field name="assign_date" eval="datetime.today().replace(month=4, day=8)"/>
         <field name="serial_no">LP/205/12928291</field>
         <field name="model">V5131</field>
      </record>
@@ -88,7 +88,7 @@
         <field name="category_id" ref="equipment_computer"/>
         <field name="owner_user_id" ref="base.user_root"/>
         <field name="technician_user_id" ref="base.user_demo"/>
-        <field name="assign_date" eval="time.strftime('%Y-%m-11')"/>
+        <field name="assign_date" eval="datetime.today().replace(day=11)"/>
         <field name="serial_no">LP/303/28292090</field>
         <field name="model">17-j059nr</field>
      </record>
@@ -97,7 +97,7 @@
         <field name="category_id" ref="equipment_computer"/>
         <field name="owner_user_id" ref="base.user_demo"/>
         <field name="technician_user_id" ref="base.user_demo"/>
-        <field name="assign_date" eval="time.strftime('%Y-05-01')"/>
+        <field name="assign_date" eval="datetime.today().replace(month=5, day=1)"/>
         <field name="serial_no">LP/305/17281718</field>
      </record>
      <record id="equipment_printer1" model="maintenance.equipment">

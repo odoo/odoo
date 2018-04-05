@@ -11,7 +11,7 @@
         <record id="rateUSDbis" model="res.currency.rate">
             <field name="rate">1.5289</field>
             <field name="currency_id" ref="USD"/>
-            <field eval="time.strftime('%Y-06-06')" name="name"/>
+            <field eval="datetime.today().replace(day=6, month=6)" name="name"/>
         </record>
 
         <record forcecreate="0" id="rateVEF" model="res.currency.rate">

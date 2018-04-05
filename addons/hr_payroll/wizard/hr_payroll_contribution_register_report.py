@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil import relativedelta
-
 from odoo import api, fields, models
+from odoo.tools.datetime import date
 
 
 class PayslipLinesContributionRegister(models.TransientModel):
@@ -12,9 +10,9 @@ class PayslipLinesContributionRegister(models.TransientModel):
     _description = 'PaySlip Lines by Contribution Registers'
 
     date_from = fields.Date(string='Date From', required=True,
-        default=datetime.now().strftime('%Y-%m-01'))
+        default=date.today().start_of('month'))
     date_to = fields.Date(string='Date To', required=True,
-        default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10])
+        default=date.today().end_of('month'))
 
     @api.multi
     def print_report(self):

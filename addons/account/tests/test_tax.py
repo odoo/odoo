@@ -1,7 +1,7 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
-import time
 from odoo.tests import tagged
 
+from odoo.tools.datetime import date
 
 @tagged('post_install', '-at_install')
 class TestTax(AccountTestUsers):
@@ -136,7 +136,7 @@ class TestTax(AccountTestUsers):
         self.fixed_tax.include_base_amount = True
         company_id = self.env['res.users'].browse(self.env.uid).company_id.id
         vals = {
-            'date': time.strftime('%Y-01-01'),
+            'date': date.today().start_of('year'),
             'journal_id': self.bank_journal.id,
             'name': 'Test move',
             'line_ids': [(0, 0, {
@@ -149,7 +149,7 @@ class TestTax(AccountTestUsers):
                     'account_id': self.expense_account.id,
                     'debit': 0,
                     'credit': 200,
-                    'date': time.strftime('%Y-01-01'),
+                    'date': date.today().start_of('year'),
                     'name': 'Bank Fees',
                     'partner_id': False,
                     'tax_ids': [(4, self.group_tax.id), (4, self.fixed_tax_bis.id)]

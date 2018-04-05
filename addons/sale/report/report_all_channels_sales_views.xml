@@ -17,7 +17,7 @@
         <field name="arch" type="xml">
             <search string="Sales by Channel Analysis">
                 <field name="date_order"/>
-                <filter string="Current Year Sales" name="current_year" domain="[('date_order','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="Current Year Sales" name="current_year" domain="[('date_order','&gt;=',datetime.today().start_of('year'))]"/>
                 <group expand="1" string="Group By">
                     <filter string="Sales Channel" name="team_id" context="{'group_by':'team_id'}"/>
                 </group>

@@ -3,12 +3,11 @@
 
 import werkzeug
 
-from datetime import datetime
-from dateutil import relativedelta
 
-from odoo import http, fields, tools, _
+from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.tools.datetime import date, datetime, relativedelta
 
 
 class MailGroup(http.Controller):
@@ -33,19 +32,16 @@ class MailGroup(http.Controller):
         """ date is (of course) a datetime so start and end are datetime
         strings, but we just want date strings
         """
-        return (datetime
-            .strptime(dt, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            .date() # may be unnecessary?
-            .strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
+        return date.from_string(dt)
 
     @http.route("/groups", type='http', auth="public", website=True)
     def view(self, **post):
         groups = request.env['mail.channel'].search([('alias_id.alias_name', '!=', False)])
 
         # compute statistics
-        month_date = datetime.today() - relativedelta.relativedelta(months=1)
+        month_date = datetime.today() - relativedelta(months=1)
         messages = request.env['mail.message'].read_group(
-            [('model', '=', 'mail.channel'), ('date', '>=', fields.Datetime.to_string(month_date)), ('message_type', '!=', 'notification')],
+            [('model', '=', 'mail.channel'), ('date', '>=', month_date), ('message_type', '!=', 'notification')],
             [], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
