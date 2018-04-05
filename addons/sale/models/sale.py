@@ -163,6 +163,9 @@ class SaleOrder(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
     team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
 
+    signature = fields.Binary('Signature', help='Signature received through the portal.', copy=False, attachment=True)
+    signed_by = fields.Char('Signed by', help='Name of the person that signed the SO.', copy=False)
+
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
 
     def _compute_portal_url(self):
@@ -488,6 +491,8 @@ class SaleOrder(models.Model):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
         return orders.write({
             'state': 'draft',
+            'signature': False,
+            'signed_by': False,
         })
 
     @api.multi
@@ -673,7 +678,18 @@ class SaleOrder(models.Model):
         return self.get_share_url()
 
     def get_portal_confirmation_action(self):
-        return self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none')
+        if self.company_id.portal_confirmation_sign and not self.signature:
+            return 'sign'
+        if self.company_id.portal_confirmation_pay:
+            return 'pay'
+
+        return 'none'
+
+    def has_to_be_signed(self):
+        return self.company_id.portal_confirmation_sign
+
+    def has_to_be_paid(self):
+        return self.company_id.portal_confirmation_pay
 
     @api.multi
     def _notify_get_groups(self, message, groups):

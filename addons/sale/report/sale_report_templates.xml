@@ -202,6 +202,19 @@
                 <strong>Fiscal Position Remark:</strong>
                 <span t-field="doc.fiscal_position_id.note"/>
             </p>
+
+            <div t-if="doc.signature" class="row mt32" name="signature">
+                <div class="col-xs-offset-8 col-xs-4">
+                    <strong>Signature</strong>
+                </div>
+                <div class="col-xs-offset-8 col-xs-4">
+                    <img t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+                </div>
+                <div class="col-xs-offset-8 col-xs-4 text-center">
+                    <p t-field="doc.signed_by"/>
+                </div>
+            </div>
+
             <div class="oe_structure"/>
         </div>
     </t>

@@ -18,12 +18,9 @@ class ResConfigSettings(models.TransientModel):
     module_sale_margin = fields.Boolean("Margins")
     group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
     group_warning_sale = fields.Boolean("Sale Order Warnings", implied_group='sale.group_warning_sale')
-    portal_confirmation = fields.Boolean('Online Signature & Payment')
-    portal_confirmation_options = fields.Selection([
-        ('sign', 'Signature'),
-        ('pay', 'Payment')], string="Online Signature & Payment options",
-        config_parameter='sale.sale_portal_confirmation_options')
-    module_sale_payment = fields.Boolean("Sale Payment", help='Technical field implied by user choice of online_confirmation')
+    portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Digital Signature')
+    portal_confirmation_pay = fields.Boolean(related='company_id.portal_confirmation_pay', string='Electronic Payment')
+    module_sale_payment = fields.Boolean("Sale Payment", help='Technical field implied by user choice of portal_confirmation_pay.')
     module_website_quote = fields.Boolean("Quotations Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     multi_sales_price = fields.Boolean("Multiple Sales Prices per Product")
@@ -124,16 +121,9 @@ class ResConfigSettings(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
-    @api.onchange('portal_confirmation')
-    def _onchange_portal_confirmation(self):
-        if not self.portal_confirmation:
-            self.portal_confirmation_options = False
-        elif not self.portal_confirmation_options:
-            self.portal_confirmation_options = 'sign'
-
-    @api.onchange('portal_confirmation_options')
-    def _onchange_portal_confirmation_options(self):
-        if self.portal_confirmation_options == 'pay':
+    @api.onchange('portal_confirmation_pay')
+    def _onchange_portal_confirmation_pay(self):
+        if self.portal_confirmation_pay:
             self.module_sale_payment = True
 
     @api.model
@@ -145,6 +135,5 @@ class ResConfigSettings(models.TransientModel):
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,
             sale_pricelist_setting=sale_pricelist_setting,
-            portal_confirmation=ICPSudo.get_param('sale.sale_portal_confirmation_options', default=False) in ('pay', 'sign'),
         )
         return res

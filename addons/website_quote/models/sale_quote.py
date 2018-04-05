@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.translate import html_translate
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError
 
 
 class SaleQuoteTemplate(models.Model):
@@ -17,18 +18,20 @@ class SaleQuoteTemplate(models.Model):
     options = fields.One2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True)
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
-    require_payment = fields.Selection([
-        (0, 'Online Signature'),
-        (1, 'Online Payment')], default=0, string='Confirmation Mode',
-        help="Choose how you want to confirm an order to launch the delivery process. You can either "
-             "request a digital signature or an upfront payment. With a digital signature, you can "
-             "request the payment when issuing the invoice.")
+    require_signature = fields.Boolean('Digital Signature', default=True, help='Request a digital signature to the customer in order to confirm orders automatically.')
+    require_payment = fields.Boolean('Electronic Payment', help='Request an electronic payment to the customer in order to confirm orders automatically.')
     mail_template_id = fields.Many2one(
         'mail.template', 'Confirmation Mail',
         domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
-    
+
+    @api.constrains('require_signature', 'require_payment')
+    def _check_confirmation(self):
+        for template in self:
+            if not template.require_signature and not template.require_payment:
+                raise ValidationError(_('Please select a confirmation mode in Confirmation: Digital Signature, Electronic Payment or both.'))
+
     @api.multi
     def open_template(self):
         self.ensure_one()

@@ -145,6 +145,20 @@
       </section>
   </template>
 
+  <template id="signature" name="Signature">
+      <div t-if="quotation.signature" class="row mt64" name="signature">
+          <div class="col-xs-offset-8 col-xs-4">
+              <strong>Signature</strong>
+          </div>
+          <div class="col-xs-offset-8 col-xs-4">
+              <img t-att-src="'data:image/png;base64,%s' % to_text(quotation.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+          </div>
+          <div class="col-xs-offset-8 col-xs-4 text-center">
+              <p t-field="quotation.signed_by"/>
+          </div>
+      </div>
+  </template>
+
   <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group oe_website_spinner">
@@ -202,11 +216,11 @@
                   <div class="col-md-3 hidden-print">
                       <div class="bs-sidebar">
                           <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
-                              <a t-if="order_valid and not quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                              <a t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <i class="fa fa-check"></i> Accept Order
                               </a>
-                              <a t-if="order_valid and quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"></i> Accept &amp; Pay
+                              <a t-elif="order_valid and quotation.has_to_be_paid()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                                  <i class="fa fa-check"></i> <t t-if="not quotation.signature">Accept &amp; </t>Pay
                               </a>
                               <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                   <strong>This offer expired!</strong><br/>
@@ -218,7 +232,7 @@
                                   </a>
                               </div>
                           </div>
-                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
+                          <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
                               <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <i class="fa fa-check"></i> Pay Now
                               </a>
@@ -301,7 +315,7 @@
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
                       <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog" t-if="not quotation.require_payment and not need_payment">
+                        <div class="modal-dialog" t-if="not quotation.signature and quotation.has_to_be_signed()">
                            <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="modal-header">
@@ -326,7 +340,7 @@
                           </form>
                         </div>
 
-                        <div class="modal-dialog modal-content" t-if="quotation.require_payment or need_payment">
+                        <div class="modal-dialog modal-content" t-if="not (quotation.has_to_be_signed() and not quotation.signature) and (quotation.has_to_be_paid() or need_payment)">
                           <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
                             <h4 class="modal-title">Validate Order</h4>
@@ -386,17 +400,17 @@
                       <t t-call="website_quote.so_quotation_content"/>
 
                       <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.require_payment">
+                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.has_to_be_paid()">
                               <i class="fa fa-check"></i> Accept
                           </a>
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.require_payment">
+                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.has_to_be_paid()">
                               <i class="fa fa-check"></i> Accept &amp; Pay
                           </a>
                           <a class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
                               <i class="fa fa-times"></i> Reject
                           </a>
                       </div>
-                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
+                      <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
                           <a class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
                               <i class="fa fa-check"></i> Pay Now
                           </a>
@@ -538,6 +552,8 @@
       <div class="oe_structure"/>
       <!-- Pricing -->
       <t t-call="website_quote.pricing"/>
+      <!-- Signature -->
+      <t t-call="website_quote.signature"/>
       <!-- Options -->
       <t t-call="website_quote.optional_products"/>
   </template>
