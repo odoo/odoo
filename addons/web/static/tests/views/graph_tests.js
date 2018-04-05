@@ -476,6 +476,59 @@ QUnit.module('Views', {
             });
         });
     });
+
+    QUnit.test('use a many2one as a measure should work (without groupBy)', function (assert) {
+        assert.expect(3);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id" type="measure"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+                        "should contain a div with a svg element");
+
+            assert.strictEqual(graph.renderer.state.mode, "bar",
+                "should be in bar chart mode by default");
+            assert.strictEqual(graph.model.chart.data[0].value, 2,
+                "should have a datapoint with value 2");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure should work (with groupBy)', function (assert) {
+        assert.expect(4);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="bar" type="row"/>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+                        "should contain a div with a svg element");
+
+            assert.strictEqual(graph.renderer.state.mode, "bar",
+                "should be in bar chart mode by default");
+            assert.strictEqual(graph.model.chart.data[0].value, 1,
+                "should have first datapoint with value 2");
+            assert.strictEqual(graph.model.chart.data[1].value, 2,
+                "should have second datapoint with value 2");
+            graph.destroy();
+            done();
+        });
+    });
 });
 
 });

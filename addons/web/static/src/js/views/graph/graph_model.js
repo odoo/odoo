@@ -125,7 +125,12 @@ return AbstractModel.extend({
             return groupBy.split(':')[0];
         });
         if (this.chart.measure !== '__count__') {
-            fields = fields.concat(this.chart.measure);
+            if (this.fields[this.chart.measure].type === 'many2one') {
+                fields = fields.concat(this.chart.measure + ":count_distinct");
+            }
+            else {
+                fields = fields.concat(this.chart.measure);
+            }
         }
         return this._rpc({
                 model: this.modelName,
