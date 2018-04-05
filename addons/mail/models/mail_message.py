@@ -717,8 +717,14 @@ class Message(models.Model):
     def _invalidate_documents(self):
         """ Invalidate the cache of the documents followed by ``self``. """
         for record in self:
-            if record.model and record.res_id:
-                self.env[record.model].invalidate_cache(ids=[record.res_id])
+            if record.model and record.res_id and 'message_ids' in self.env[record.model]:
+                self.env[record.model].invalidate_cache(fnames=[
+                    'message_ids',
+                    'message_unread',
+                    'message_unread_counter',
+                    'message_needaction',
+                    'message_needaction_counter',
+                ], ids=[record.res_id])
 
     @api.model
     def create(self, values):
@@ -764,7 +770,8 @@ class Message(models.Model):
         if tracking_values_cmd:
             message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
-        message._invalidate_documents()
+        if values.get('model') and values.get('res_id'):
+            message._invalidate_documents()
 
         return message
 
@@ -780,7 +787,8 @@ class Message(models.Model):
         if 'model' in vals or 'res_id' in vals:
             self._invalidate_documents()
         res = super(Message, self).write(vals)
-        self._invalidate_documents()
+        if 'notification_ids' in vals or 'model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
         return res
 
     @api.multi
