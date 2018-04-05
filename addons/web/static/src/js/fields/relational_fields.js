@@ -2266,6 +2266,26 @@ var FieldReference = FieldMany2One.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        if (this.mode === 'edit') {
+            if (this.$('select').val()) {
+                return this.$('.o_input_dropdown');
+            }
+            else {
+                return this.$('select');
+            }
+        }
+        return this.$el;
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
