@@ -157,15 +157,24 @@ class BlogPost(models.Model):
     visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
+
     @api.multi
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
+        lang = self._context.get('lang')
+        def _get_teaser(content, lang):
+            # words are not split by spaces for following languages
+            if lang in ['ja_JP', 'zh_HK', 'zh_TW', 'zh_CN', 'ko_KP', 'ko_KR']:
+                res = content[:150] + '...'
+            else:
+                res = ' '.join(filter(None, content.split(' '))[:50]) + '...'
+            return res
         for blog_post in self:
             if blog_post.teaser_manual:
                 blog_post.teaser = blog_post.teaser_manual
             else:
                 content = html2plaintext(blog_post.content).replace('\n', ' ')
-                blog_post.teaser = ' '.join(filter(None, content.split(' '))[:50]) + '...'
+                blog_post.teaser = _get_teaser(content, lang)
 
     @api.multi
     def _set_teaser(self):
