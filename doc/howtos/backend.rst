@@ -1708,12 +1708,21 @@ server with the library ``xmlrpc.client``::
 JSON-RPC Library
 ----------------
 
+.. danger::
+    For this example to work on your Odoo server you need to have the App ``Productivity (note)`` enabled
+
 The following example is a Python 3 program that interacts with an Odoo server
 with the standard Python libraries ``urllib.request`` and ``json``::
 
     import json
     import random
     import urllib.request
+
+    HOST = 'localhost'
+    PORT = 8069
+    DB = 'openacademy'
+    USER = 'admin'
+    PASS = 'admin'
 
     def json_rpc(url, method, params):
         data = {
@@ -1725,7 +1734,7 @@ with the standard Python libraries ``urllib.request`` and ``json``::
         req = urllib.request.Request(url=url, data=json.dumps(data).encode(), headers={
             "Content-Type":"application/json",
         })
-        reply = json.load(urllib.request.urlopen(req))
+        reply = json.loads(urllib.request.urlopen(req).read().decode('UTF-8'))
         if reply.get("error"):
             raise Exception(reply["error"])
         return reply["result"]
