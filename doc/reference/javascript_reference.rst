@@ -1,5 +1,9 @@
 :banner: banners/javascript.jpg
 
+.. highlight:: javascript
+
+.. default-domain:: js
+
 =====================
 Javascript Reference
 =====================
@@ -1644,19 +1648,13 @@ order.
 Relational fields
 -----------------
 
-- selection (FieldSelection)
-    The FieldSelection widget is a simple select tag with a dropdown menu to
-    allow the selection of a range of values.  It is designed to work with fields
-    of type 'selection' and 'many2one'. When working with a many2one, it does
-    not allow the creation/edition of relational data.  This is the default field
-    for selection fields.
+.. autoclass:: web.relational_fields.FieldSelection
 
-    - Supported field types: *selection, many2one*
+    Supported field types: *selection*, *many2one*
 
-    Attributes:
+    .. attribute:: placeholder
 
-    - placeholder: a string which is used to display some info when no value is
-      selected
+        a string which is used to display some info when no value is selected
 
     .. code-block:: xml
 
