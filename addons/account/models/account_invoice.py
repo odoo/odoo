@@ -1418,6 +1418,7 @@ class AccountInvoiceTax(models.Model):
     base = fields.Monetary(string='Base', compute='_compute_base_amount', store=True)
 
     # DO NOT FORWARD-PORT!!! ONLY FOR v10
+    @api.model
     def create(self, vals):
         inv_tax = super(AccountInvoiceTax, self).create(vals)
         # Workaround to make sure the tax amount is rounded to the currency precision since the ORM
