@@ -13,9 +13,12 @@ class AccountAnalyticAccount(models.Model):
     project_ids = fields.One2many('project.project', 'analytic_account_id', string='Projects')
     project_count = fields.Integer("Project Count", compute='_compute_project_count')
 
+    @api.multi
     def _compute_project_count(self):
+        project_data = self.env['project.project'].read_group([('analytic_account_id', 'in', self.ids)], ['analytic_account_id'], ['analytic_account_id'])
+        mapping = {m['analytic_account_id'][0]: m['analytic_account_id_count'] for m in project_data}
         for account in self:
-            account.project_count = len(account.with_context(active_test=False).project_ids)
+            account.project_count = mapping.get(account.id, 0)
 
     @api.multi
     def unlink(self):
@@ -25,18 +28,9 @@ class AccountAnalyticAccount(models.Model):
             raise UserError(_('Please remove existing tasks in the project linked to the accounts you want to delete.'))
         return super(AccountAnalyticAccount, self).unlink()
 
-    @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
-        if args is None:
-            args = []
-        if self.env.context.get('current_model') == 'project.project':
-            return self.search(args + [('name', operator, name)], limit=limit).name_get()
-
-        return super(AccountAnalyticAccount, self).name_search(name, args=args, operator=operator, limit=limit)
-
     @api.multi
-    def projects_action(self):
-        projects = self.with_context(active_test=False).mapped('project_ids')
+    def action_view_projects(self):
+        projects = self.mapped('project_ids')
         result = {
             "type": "ir.actions.act_window",
             "res_model": "project.project",

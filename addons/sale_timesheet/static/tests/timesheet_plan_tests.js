@@ -26,7 +26,7 @@ function createPlan(params) {
 QUnit.module('Timesheet Plan', {
     beforeEach: function () {
         this.data = {
-            'account.analytic.line': {
+            'project.project': {
                 fields: {
                     account_id: {string: "Analytic account", type: "many2one", relation: "account.analytic.account"},
                 },
@@ -41,7 +41,7 @@ QUnit.module('Timesheet Plan', {
 
         var plan = createPlan({
             archs: {
-                'account.analytic.line,false,search': '<search></search>',
+                'project.project,false,search': '<search></search>',
             },
             data: this.data,
             action: {},
@@ -61,7 +61,7 @@ QUnit.module('Timesheet Plan', {
             },
         });
         assert.verifySteps([
-            "/web/dataset/call_kw/account.analytic.line",
+            "/web/dataset/call_kw/project.project",
             "/timesheet/plan"
         ]);
         assert.strictEqual(plan.$el.text(), 'Banach-Tarski', 'should have rendered html content');
@@ -75,7 +75,7 @@ QUnit.module('Timesheet Plan', {
 
         var plan = createPlan({
             archs: {
-                'account.analytic.line,false,search': '<search></search>',
+                'project.project,false,search': '<search></search>',
             },
             data: this.data,
             action: {name: 'Fibonacci'},
