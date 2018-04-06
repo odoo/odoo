@@ -1,31 +1,100 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
-from odoo.exceptions import UserError
-from odoo.tools.translate import _
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class Project(models.Model):
     _inherit = "project.project"
 
     allow_timesheets = fields.Boolean("Allow timesheets", default=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", ondelete='set null',
+        help="Link this project to an analytic account if you need financial management on projects. "
+             "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.")
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        domain = []
+        if self.partner_id:
+            domain = [('partner_id', '=', self.partner_id.id)]
+        return {'domain': {'analytic_account_id': domain}}
+
+    @api.constrains('allow_timesheets', 'analytic_account_id')
+    def _check_allow_timesheet(self):
+        for project in self:
+            if project.allow_timesheets and not project.analytic_account_id:
+                raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.' % (project.name,)))
+
+    @api.model
+    def name_create(self, name):
+        """ Create a project with name_create should generate analytic account creation """
+        values = {
+            'name': name,
+            'allow_timesheets': True,
+        }
+        return self.create(values).name_get()[0]
+
+    @api.model
+    def create(self, values):
+        """ Create an analytic account if project allow timesheet and don't provide one """
+        allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
+        if allow_timesheets and not values.get('analytic_account_id'):
+            analytic_account = self._create_analytic_account(values)
+            values['analytic_account_id'] = analytic_account.id
+        return super(Project, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        result = super(Project, self).write(values)
+        if values.get('allow_timesheets'):
+            for project in self:
+                if not project.analytic_account_id:
+                    analytic_account = project._create_analytic_account({
+                        'name': project.name,
+                        'company_id': project.company_id.id,
+                        'partner_id': project.partner_id.id,
+                    })
+                    project.write({'analytic_account_id': analytic_account.id})
+        return result
+
+    @api.multi
+    def unlink(self):
+        """ Delete the empty related analytic account """
+        analytic_accounts_to_delete = self.env['account.analytic.account']
+        for project in self:
+            if project.analytic_account_id and not project.analytic_account_id.line_ids:
+                analytic_accounts_to_delete |= project.analytic_account_id
+        result = super(Project, self).unlink()
+        analytic_accounts_to_delete.unlink()
+        return result
+
+    def _create_analytic_account(self, values):
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': values.get('name', _('Unkwon Analytic Account')),
+            'company_id': values.get('company_id', self.env.user.company_id.id),
+            'partner_id': values.get('partner_id'),
+            'active': True,
+        })
+        return analytic_account
 
 
 class Task(models.Model):
     _inherit = "project.task"
 
-    remaining_hours = fields.Float("Remaining Hours", compute='_compute_progress_hours', inverse='_inverse_remaining_hours', store=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", related='project_id.analytic_account_id', readonly=True)
+    allow_timesheets = fields.Boolean("Allow timesheets", compute='_compute_allow_timesheets', help="Timesheets can be logged on this task.")
+    remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', inverse='_inverse_remaining_hours', help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
-    total_hours_spent = fields.Float("Total Hours", compute='_compute_progress_hours', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
+    total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)", oldname='children_hours')
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
-    @api.onchange('remaining_hours')
-    def _inverse_remaining_hours(self):
+    @api.depends('project_id.allow_timesheets', 'project_id.analytic_account_id')
+    def _compute_allow_timesheets(self):
         for task in self:
-            task.planned_hours = task.remaining_hours + task.effective_hours + task.subtask_effective_hours
+            task.allow_timesheets = task.project_id.allow_timesheets and task.project_id.analytic_account_id.active
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
@@ -44,7 +113,19 @@ class Task(models.Model):
             else:
                 task.progress = 0.0
 
+    @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
+    def _compute_remaining_hours(self):
+        for task in self:
             task.remaining_hours = task.planned_hours - task.effective_hours - task.subtask_effective_hours
+
+    @api.onchange('remaining_hours')
+    def _inverse_remaining_hours(self):
+        for task in self:
+            task.planned_hours = task.remaining_hours + task.effective_hours + task.subtask_effective_hours
+
+    @api.depends('effective_hours', 'subtask_effective_hours')
+    def _compute_total_hours_spent(self):
+        for task in self:
             task.total_hours_spent = task.effective_hours + task.subtask_effective_hours
 
     @api.depends('child_ids.effective_hours', 'child_ids.subtask_effective_hours')
