@@ -39,17 +39,6 @@ class AcquirerPaypal(models.Model):
     fees_int_var = fields.Float(default=3.9)
 
     def _get_feature_support(self):
-        """Get advanced feature support by provider.
-
-        Each provider should add its technical in the corresponding
-        key for the following features:
-            * fees: support payment fees computations
-            * authorize: support authorizing payment (separates
-                         authorization and capture)
-            * tokenize: support saving payment data in a payment.tokenize
-                        object
-            * s2s: support s2s payment flow (directly on Odoo)
-        """
         res = super(AcquirerPaypal, self)._get_feature_support()
         res['fees'].append('paypal')
         res['s2s'].append('paypal')

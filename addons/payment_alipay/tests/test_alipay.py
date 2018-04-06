@@ -34,7 +34,7 @@ class AlipayTest(PaymentAcquirerCommon):
         form_values = {
             '_input_charset': 'utf-8',
             'notify_url': urls.url_join(base_url, AlipayController._notify_url),
-            'out_trade_no': self.alipay.get_trade_no(),
+            'out_trade_no': self.alipay._get_trade_no(),
             'partner': self.alipay.alipay_merchant_partner_id,
             'return_url': urls.url_join(base_url, AlipayController._return_url) + "?redirect_url=None",
             'subject': 'test_ref0',
@@ -53,7 +53,7 @@ class AlipayTest(PaymentAcquirerCommon):
                 'seller_email': self.alipay.alipay_seller_email,
                 'service': 'create_direct_pay_by_user'
             })
-        sign = self.alipay.build_sign(form_values)
+        sign = self.alipay._build_sign(form_values)
 
         form_values.update({'sign': sign, 'sign_type': 'MD5'})
         # check form result
@@ -111,7 +111,7 @@ class AlipayTest(PaymentAcquirerCommon):
                 'seller_email': self.alipay.alipay_seller_email,
             })
 
-        alipay_post_data['sign'] = self.alipay.build_sign(alipay_post_data)
+        alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
             self.env['payment.transaction'].form_feedback(alipay_post_data, 'alipay')
@@ -140,7 +140,7 @@ class AlipayTest(PaymentAcquirerCommon):
             alipay_post_data['trade_status'] = 'TRADE_FINISHED'
         else:
             alipay_post_data['trade_status'] = 'TRADE_SUCCESS'
-        alipay_post_data['sign'] = self.alipay.build_sign(alipay_post_data)
+        alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
         # validate tx
         tx.form_feedback(alipay_post_data, 'alipay')
         # check tx

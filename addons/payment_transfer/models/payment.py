@@ -54,16 +54,6 @@ class TransferPaymentAcquirer(models.Model):
         return super(TransferPaymentAcquirer, self).write(values)
 
     def _get_feature_support(self):
-        """Get advanced feature support by provider.
-
-        Each provider should add its technical in the corresponding
-        key for the following features:
-            * fees: support payment fees computations
-            * authorize: support authorizing payment (separates
-                         authorization and capture)
-            * md5 decryption : support saving payment data by md5 decryption
-            * s2s: support s2s payment flow (directly on Odoo)
-        """
         res = super(TransferPaymentAcquirer, self)._get_feature_support()
         res['s2s'].append('transfer')
         return res
