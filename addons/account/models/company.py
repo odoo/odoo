@@ -100,7 +100,8 @@ Best Regards,'''))
                 'record': fiscalyear,
             }
 
-        date_from, date_to = date_utils.get_fiscal_year(current_date, self.fiscalyear_last_day, self.fiscalyear_last_month)
+        date_from, date_to = date_utils.get_fiscal_year(
+            current_date, day=self.fiscalyear_last_day, month=self.fiscalyear_last_month)
 
         date_from_str = date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)
         date_to_str = date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
