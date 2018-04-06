@@ -82,10 +82,6 @@
         <field name="name">Special consumption tax</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_foreign_import" model="account.account.tag">
-        <field name="name">Import tax</field>
-        <field name="applicability">taxes</field>
-    </record>
 
     <record id="tax_tag_sale_exemption" model="account.account.tag">
         <field name="name">Sales VAT Exemption</field>
@@ -95,8 +91,60 @@
         <field name="name">Special consumption tax</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_foreign_export" model="account.account.tag">
-        <field name="name">Export tax</field>
+
+    <!-- Fixed assets tags -->
+    <record id="tax_tag_purchase_fix_asset_0" model="account.account.tag">
+        <field name="name">Deductible Fixed Assets VAT 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_purchase_fix_asset_5" model="account.account.tag">
+        <field name="name">Deductible Fixed Assets VAT 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_purchase_fix_asset_10" model="account.account.tag">
+        <field name="name">Deductible Fixed Assets VAT 10%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <!-- Import tags -->
+    <record id="tax_tag_import_0" model="account.account.tag">
+        <field name="name">Import VAT 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_import_5" model="account.account.tag">
+        <field name="name">Import VAT 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_import_10" model="account.account.tag">
+        <field name="name">Import VAT 10%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <!-- Foreign import tags -->
+    <record id="tax_tag_foreign_import_0" model="account.account.tag">
+        <field name="name">Import tax 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_foreign_import_5" model="account.account.tag">
+        <field name="name">Import tax 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_foreign_import_10" model="account.account.tag">
+        <field name="name">Import tax 10%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <!-- Foreign export tags -->
+    <record id="tax_tag_foreign_export_0" model="account.account.tag">
+        <field name="name">Export tax 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_foreign_export_5" model="account.account.tag">
+        <field name="name">Export tax 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tax_tag_foreign_export_10" model="account.account.tag">
+        <field name="name">Export tax 10%</field>
         <field name="applicability">taxes</field>
     </record>
 
@@ -186,7 +234,7 @@
         <field name="account_id" ref="chart1332"/>
         <field name="refund_account_id" ref="chart1332"/>
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_09'),ref('tag_vn_05')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_fix_asset_10')])]"/>
         <field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="tax_fixed_assets_purchase_vat5" model="account.tax.template">
@@ -198,7 +246,7 @@
         <field name="account_id" ref="chart1332" />
         <field name="refund_account_id" ref="chart1332" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_08'),ref('tag_vn_04')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_fix_asset_5')])]"/>
         <field name="tax_group_id" ref="tax_group_5"/>
     </record>
     <record id="tax_fixed_assets_purchase_vat0" model="account.tax.template">
@@ -210,7 +258,7 @@
         <field name="account_id" ref="chart1332" />
         <field name="refund_account_id" ref="chart1332" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_07')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_fix_asset_0')])]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>
     <record id="tax_purchase_vat_exemption" model="account.tax.template">
@@ -245,7 +293,7 @@
         <field name="account_id" ref="chart33312" />
         <field name="refund_account_id" ref="chart33312" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_07')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_import_10')])]"/>
         <field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="tax_importing_vat5" model="account.tax.template">
@@ -257,7 +305,7 @@
         <field name="account_id" ref="chart33312" />
         <field name="refund_account_id" ref="chart33312" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_08'),ref('tag_vn_04')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_import_5')])]"/>
         <field name="tax_group_id" ref="tax_group_5"/>
     </record>
     <record id="tax_importing_vat0" model="account.tax.template">
@@ -269,7 +317,7 @@
         <field name="account_id" ref="chart33312" />
         <field name="refund_account_id" ref="chart33312" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_vn_07')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_import_0')])]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>
     <!-- for sales -->
@@ -280,7 +328,7 @@
         <field name="amount" eval="0" />
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exemption')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_exemption'),ref('tax_tag_sale_exemption')])]"/>
         <field name="tax_group_id" ref="tax_group_exemption"/>
     </record>
     <record id="tax_sale_special_consumption_10" model="account.tax.template">
@@ -305,7 +353,7 @@
         <field name="account_id" ref="chart3333" />
         <field name="refund_account_id" ref="chart3333" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_import')])]" />
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_import_10')])]" />
         <field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="tax_foreign_import_5" model="account.tax.template">
@@ -317,7 +365,7 @@
         <field name="account_id" ref="chart3333" />
         <field name="refund_account_id" ref="chart3333" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_import')])]" />
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_import_5')])]" />
         <field name="tax_group_id" ref="tax_group_5"/>
     </record>
     <record id="tax_foreign_import_0" model="account.tax.template">
@@ -329,7 +377,7 @@
         <field name="account_id" ref="chart3333" />
         <field name="refund_account_id" ref="chart3333" />
         <field name="type_tax_use">purchase</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_import')])]" />
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_import_0')])]" />
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>
     <!-- for foreign export -->
@@ -342,7 +390,7 @@
         <field name="account_id" ref="chart3333" />
         <field name="refund_account_id" ref="chart3333" />
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_export')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_export_10')])]"/>
         <field name="tax_group_id" ref="tax_group_10"/>
     </record>
     <record id="tax_foreign_export_5" model="account.tax.template">
@@ -354,7 +402,7 @@
         <field name="account_id" ref="chart3333" />
         <field name="refund_account_id" ref="chart3333" />
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_export')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_export_5')])]"/>
         <field name="tax_group_id" ref="tax_group_5"/>
     </record>
     <record id="tax_foreign_export_0" model="account.tax.template">
@@ -366,7 +414,7 @@
         <field name="account_id" ref="chart3333" />
         <field name="refund_account_id" ref="chart3333" />
         <field name="type_tax_use">sale</field>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_export')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_foreign_export_0')])]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>
 </odoo>
