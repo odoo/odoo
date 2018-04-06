@@ -881,7 +881,10 @@ class AccountTax(models.Model):
         if self.amount_type == 'percent' and self.price_include:
             return base_amount - (base_amount / (1 + self.amount / 100))
         if self.amount_type == 'division' and not self.price_include:
-            return base_amount / (1 - self.amount / 100) - base_amount
+            if not base_amount:
+                return 0.0
+            else:
+                return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.multi
     def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None):
