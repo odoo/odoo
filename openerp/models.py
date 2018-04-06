@@ -3435,7 +3435,7 @@ class BaseModel(object):
                         res2 = self._columns[f].get(cr, self._model, ids, f, user, context=context, values=result)
                         for vals in result:
                             if res2:
-                                vals[f] = res2[vals['id']]
+                                vals[f] = res2.get(vals.get('id'))
                             else:
                                 vals[f] = []
 
