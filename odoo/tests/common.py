@@ -207,15 +207,16 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         if self.warm:
             login = self.env.user.login
             expected = counters.get(login, default)
+            tolerance = expected + round(expected * 0.1)   # allow a 10% tolerance
             count0 = self.cr.sql_log_count
             yield
             count = self.cr.sql_log_count - count0
-            if not count <= expected:
-                msg = "Query count for user %s: got %d instead of %d"
+            if count > tolerance:
+                msg = "Too much queries for user %s: %d > %d queries"
                 self.fail(msg % (login, count, expected))
             elif count < expected:
                 logger = logging.getLogger(type(self).__module__)
-                msg = "Query count for user %s: got %d instead of %d"
+                msg = "Nice job, %s! Got %d queries instead of %d"
                 logger.info(msg, login, count, expected)
         else:
             yield
