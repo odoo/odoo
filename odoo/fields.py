@@ -739,6 +739,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     @property
     def _description_searchable(self):
@@ -1158,8 +1159,6 @@ class Integer(Field):
         'group_operator': 'sum',
     }
 
-    _description_group_operator = property(attrgetter('group_operator'))
-
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
 
@@ -1224,7 +1223,6 @@ class Float(Field):
 
     _related__digits = property(attrgetter('_digits'))
     _description_digits = property(attrgetter('digits'))
-    _description_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         result = float(value or 0.0)
@@ -1267,7 +1265,6 @@ class Monetary(Field):
 
     _related_currency_field = property(attrgetter('currency_field'))
     _description_currency_field = property(attrgetter('currency_field'))
-    _description_group_operator = property(attrgetter('group_operator'))
 
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
