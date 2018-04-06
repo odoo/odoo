@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_tax_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='cash_basis_account']" position="after">
-                    <field name="cash_basis_base_account_id" attrs="{'invisible': [('use_cash_basis', '=', False)]}"/>
+                    <field name="cash_basis_base_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')]}"/>
                 </xpath>
             </field>
         </record>
