@@ -498,7 +498,7 @@ class RepairLine(models.Model):
     _name = 'repair.line'
     _description = 'Repair Line'
 
-    name = fields.Char('Description', required=True)
+    name = fields.Text('Description', required=True)
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade')
@@ -585,6 +585,8 @@ class RepairLine(models.Model):
                 self.name = self.product_id.with_context(lang=partner.lang).display_name
             else:
                 self.name = self.product_id.display_name
+            if self.product_id.description_sale:
+                self.name += '\n' + self.product_id.description_sale
             self.product_uom = self.product_id.uom_id.id
         if self.type != 'remove':
             if partner and self.product_id:
@@ -615,7 +617,7 @@ class RepairFee(models.Model):
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade', required=True)
-    name = fields.Char('Description', index=True, required=True)
+    name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True)
@@ -646,6 +648,8 @@ class RepairFee(models.Model):
         if self.product_id:
             self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
+            if self.product_id.description_sale:
+                self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:
