@@ -611,6 +611,17 @@ class TestExpression(TransactionCase):
         not_be = Partner.with_context(lang='fr_FR').search([('country_id', '!=', 'Belgique')])
         self.assertNotIn(agrolait, not_be)
 
+    def test_or_with_implicit_and(self):
+        # Check that when using expression.OR on a list of domains with at least one
+        # implicit '&' the returned domain is the expected result.
+        # from #24038
+        d1 = [('foo', '=', 1), ('bar', '=', 1)]
+        d2 = ['&', ('foo', '=', 2), ('bar', '=', 2)]
+
+        expected = ['|', '&', ('foo', '=', 1), ('bar', '=', 1),
+                         '&', ('foo', '=', 2), ('bar', '=', 2)]
+        self.assertEqual(expression.OR([d1, d2]), expected)
+
 
 class TestAutoJoin(TransactionCase):
 
