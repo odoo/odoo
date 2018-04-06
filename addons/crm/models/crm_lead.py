@@ -1104,17 +1104,17 @@ class Lead(models.Model):
                 {'url': lost_action, 'title': _('Lost')}]
 
         new_group = (
-            'group_sale_salesman', lambda partner: bool(partner.user_ids) and any(user.has_group('sales_team.group_sale_salesman') for user in partner.user_ids), {
+            'group_sale_salesman', lambda pid, rdata: rdata[2] == 'user' and any(user.has_group('sales_team.group_sale_salesman') for user in self.env['res.partner'].sudo().browse(pid).user_ids), {
                 'actions': salesman_actions,
             })
 
         return [new_group] + groups
 
     @api.model
-    def _notify_get_reply_to(self, res_ids, default=None):
-        leads = self.sudo().browse(res_ids)
-        aliases = self.env['crm.team']._notify_get_reply_to(leads.mapped('team_id').ids, default=default)
-        return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
+    def _notify_get_reply_to(self, records, default=None, company=None, doc_names=None):
+        """ Override to set alias of lead and opportunities to their sales team """
+        aliases = self.env['crm.team']._notify_get_reply_to(records.mapped('team_id'), default=default, company=company, doc_names=None)
+        return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in records}
 
     @api.multi
     def get_formview_id(self, access_uid=None):

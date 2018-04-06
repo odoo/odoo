@@ -572,7 +572,7 @@ class Challenge(models.Model):
                 # send message only to users, not on the challenge
                 self.env['gamification.challenge'].message_post(
                     body=body_html,
-                    partner_ids=[(4, user.partner_id.id)],
+                    partner_ids=[user.partner_id.id],
                     subtype='mail.mt_comment'
                 )
                 if challenge.report_message_group_id:

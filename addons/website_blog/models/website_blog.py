@@ -244,12 +244,9 @@ class BlogPost(models.Model):
         return groups
 
     @api.multi
-    def message_get_message_notify_values(self, message, message_values):
+    def _notify_create_notifications(self, message, recipient_data):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
-        if message.message_type == 'comment':
-            return {
-                'needaction_partner_ids': [],
-            }
-        return {}
+        if message.message_type != 'comment':
+            self.env['res.partner']._notify_udpate_notifications(message, self, recipient_data)

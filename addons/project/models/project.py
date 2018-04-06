@@ -861,7 +861,7 @@ class Task(models.Model):
             take_action = self._notify_get_action_link('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group = (
-                'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'group_project_user', lambda pid, rdata: rdata[2] == 'user' and any(user.has_group('project.group_project_user') for user in self.env['res.partner'].sudo().browse(pid).user_ids), {
                     'actions': project_actions,
                 })
             groups = [new_group] + groups
@@ -874,12 +874,10 @@ class Task(models.Model):
         return groups
 
     @api.model
-    def _notify_get_reply_to(self, res_ids, default=None):
+    def _notify_get_reply_to(self, records, default=None, company=None, doc_names=None):
         """ Override to get the reply_to of the parent project. """
-        tasks = self.sudo().browse(res_ids)
-        project_ids = tasks.mapped('project_id').ids
-        aliases = self.env['project.project']._notify_get_reply_to(project_ids, default=default)
-        return {task.id: aliases.get(task.project_id.id, False) for task in tasks}
+        aliases = self.env['project.project']._notify_get_reply_to(records.mapped('project_id'), default=default, company=company, doc_names=None)
+        return {task.id: aliases.get(task.project_id.id, False) for task in records}
 
     @api.multi
     def email_split(self, msg):

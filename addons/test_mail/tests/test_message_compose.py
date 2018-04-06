@@ -78,6 +78,27 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         pass
         # we should check _notification_groups behavior, for emails and buttons
 
+    def test_post_notifications_channels(self):
+        silent_listener = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
+            'name': 'Internal',
+            'email_send': False,
+        })
+        mail_listener = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
+            'name': 'Mailing',
+            'email_send': True,
+        })
+
+        self.test_record.message_subscribe(
+            partner_ids=[self.user_admin.partner_id.id],
+            channel_ids=[silent_listener.id, mail_listener.id],
+        )
+
+        msg = self.test_record.sudo(self.user_employee).message_post(
+            body='<p>Test Body</p>', subject='Test Subject',
+            message_type='comment', subtype='mt_comment',
+            partner_ids=[self.partner_1.id, self.partner_2.id]
+        )
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_attachments(self):
         _attachments = [
@@ -218,7 +239,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         new_notification = self.env['mail.thread'].message_notify(
             subject='This should be a subject',
             body='<p>You have received a notification</p>',
-            partner_ids=[(4, self.partner_1.id), (4, self.user_employee.partner_id.id)],
+            partner_ids=[self.partner_1.id, self.user_employee.partner_id.id],
         )
 
         self.assertEqual(new_notification.subtype_id, self.env.ref('mail.mt_note'))
