@@ -265,7 +265,7 @@ class TestUi(odoo.tests.HttpCase):
         # euro's. this will cause issues as the sales journal is in
         # USD, because of this all products would have a different
         # price
-        cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [env.ref('base.USD').id, main_company.id])
+        main_company.currency_id = env.ref('base.USD')
 
         test_sale_journal = journal_obj.create({'name': 'Sales Journal - Test',
                                                 'code': 'TSJ',
