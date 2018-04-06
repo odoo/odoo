@@ -11272,6 +11272,78 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many with extra field from server not in form', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p" >' +
+                        '<tree>' +
+                            '<field name="datetime"/>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner,false,form': '<form>' +
+                                        '<field name="display_name"/>' +
+                                    '</form>'},
+            mockRPC: function(route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    args.args[1].p[0][2].datetime = '2018-04-05 12:00:00';
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var x2mList = form.$('.o_field_x2many_list[name=p]');
+
+        // Add a record in the list
+        x2mList.find('.o_field_x2many_list_row_add a').click();
+
+        var modal = $('.modal-dialog.modal-lg');
+
+        var nameInput = modal.find('input.o_input[name=display_name]');
+        nameInput.val('michelangelo').trigger('input');
+
+        // Save the record in the modal (though it is still virtual)
+        modal.find('.btn-primary').first().click();
+
+        assert.equal(x2mList.find('.o_data_row').length, 1,
+            'There should be 1 records in the x2m list');
+
+        var newlyAdded = x2mList.find('.o_data_row').eq(0);
+
+        assert.equal(newlyAdded.find('.o_data_cell').first().text(), '',
+            'The create_date field should be empty');
+        assert.equal(newlyAdded.find('.o_data_cell').eq(1).text(), 'michelangelo',
+            'The display name field should have the right value');
+
+        // Save the whole thing
+        form.$buttons.find('.o_form_button_save').click();
+
+        x2mList = form.$('.o_field_x2many_list[name=p]');
+
+        // Redo asserts in RO mode after saving
+        assert.equal(x2mList.find('.o_data_row').length, 1,
+            'There should be 1 records in the x2m list');
+
+        newlyAdded = x2mList.find('.o_data_row').eq(0);
+
+        assert.equal(newlyAdded.find('.o_data_cell').first().text(), '04/05/2018 12:00:00',
+            'The create_date field should have the right value');
+        assert.equal(newlyAdded.find('.o_data_cell').eq(1).text(), 'michelangelo',
+            'The display name field should have the right value');
+
+        form.destroy();
+    });
+
     QUnit.test('one2many invisible depends on parent field', function (assert) {
         assert.expect(4);
 
