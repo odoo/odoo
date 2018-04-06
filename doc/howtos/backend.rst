@@ -1001,7 +1001,7 @@ behavior:
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
     (``font-style: italic``), or any `bootstrap contextual color
-    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
+    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 
     .. code-block:: xml

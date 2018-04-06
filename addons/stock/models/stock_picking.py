@@ -315,7 +315,7 @@ class Picking(models.Model):
         for picking in self:
             if self.env.context.get('force_detailed_view'):
                 picking.show_operations = True
-                break
+                continue
             if picking.picking_type_id.show_operations:
                 if (picking.state == 'draft' and not self.env.context.get('planned_picking')) or picking.state != 'draft':
                     picking.show_operations = True

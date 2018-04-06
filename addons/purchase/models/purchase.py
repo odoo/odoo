@@ -353,8 +353,8 @@ class PurchaseOrder(models.Model):
     def button_approve(self, force=False):
         self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
-        if self.company_id.po_lock == 'lock':
-            self.write({'state': 'done'})
+        self.filtered(
+            lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
     @api.multi
@@ -396,6 +396,7 @@ class PurchaseOrder(models.Model):
                         siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
                         if all(state in ('done', 'cancel') for state in siblings_states):
                             order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
+                            order_line.move_dest_ids._recompute_state()
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()

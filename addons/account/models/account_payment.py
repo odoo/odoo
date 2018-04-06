@@ -325,7 +325,7 @@ class account_payment(models.Model):
     def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
         domain = []
-        if self.currency_id.is_zero(self.amount):
+        if self.currency_id.is_zero(self.amount) and self.has_invoices:
             # In case of payment with 0 amount, allow to select a journal of type 'general' like
             # 'Miscellaneous Operations' and set this journal by default.
             journal_type = ['general']
@@ -367,6 +367,12 @@ class account_payment(models.Model):
                 self.destination_account_id = self.partner_id.property_account_receivable_id.id
             else:
                 self.destination_account_id = self.partner_id.property_account_payable_id.id
+        elif self.partner_type == 'customer':
+            default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+            self.destination_account_id = default_account.id
+        elif self.partner_type == 'supplier':
+            default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+            self.destination_account_id = default_account.id
 
     @api.onchange('partner_type')
     def _onchange_partner_type(self):

@@ -10,6 +10,7 @@ class HrContract(models.Model):
     car_id = fields.Many2one('fleet.vehicle', string='Company Car',
         domain=lambda self: self._get_available_cars_domain(),
         default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
+        track_visibility="onchange",
         help="Employee's company car.")
     car_atn = fields.Float(compute='_compute_car_atn_and_costs', string='ATN Company Car', store=True)
     company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs', store=True)
@@ -18,7 +19,10 @@ class HrContract(models.Model):
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     max_unused_cars = fields.Integer(compute='_compute_max_unused_cars')
 
-    @api.depends('car_id', 'new_car', 'new_car_model_id')
+    @api.depends('car_id', 'new_car', 'new_car_model_id', 'car_id.total_depreciated_cost',
+        'car_id.atn', 'new_car_model_id.default_atn', 'new_car_model_id.default_total_depreciated_cost',
+        'car_id.co2_fee', 'car_id.log_contracts', 'car_id.log_contracts.state', # YTI TODO: Store total_depreciated_costs on
+        'car_id.log_contracts.recurring_cost_amount_depreciated') # the fleet vehicle to avoid these dependencies
     def _compute_car_atn_and_costs(self):
         for contract in self:
             if not contract.new_car and contract.car_id:
