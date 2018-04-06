@@ -4,7 +4,7 @@
         <div>
             <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
             <input type="hidden" name="_input_charset" t-att-value="_input_charset"/>
-            <input t-if="product_code" type="hidden" name="currency" t-att-value="currency"/>
+            <input t-if="service == 'create_forex_trade'" type="hidden" name="currency" t-att-value="currency"/>
             <input type="hidden" name="notify_url" t-att-value="notify_url"/>
             <input type="hidden" name="out_trade_no" t-att-value="out_trade_no"/>
             <input type="hidden" name="partner" t-att-value="partner"/>

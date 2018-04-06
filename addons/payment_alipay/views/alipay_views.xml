@@ -13,12 +13,6 @@
                     <field name="alipay_md5_signature_key"/>
                 </group>
             </xpath>
-            <field name="payment_flow" position="replace">
-                <field name="payment_flow" attrs="{'invisible': [('provider', '=', 'alipay')]}"/>
-            </field>
-            <field name="registration_view_template_id" position="replace">
-                <field name="registration_view_template_id" attrs="{'invisible': [('provider', '=', 'alipay')]}"/>
-            </field>
         </field>
     </record>
 

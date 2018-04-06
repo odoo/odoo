@@ -33,15 +33,6 @@ class PaymentAcquirer(models.Model):
     alipay_seller_email = fields.Char(string='Alipay Seller Email', groups='base.group_user')
 
     def _get_feature_support(self):
-        """Get advanced feature support by provider.
-
-        Each provider should add its technical in the corresponding
-        key for the following features:
-            * fees: support payment fees computations
-            * authorize: support authorizing payment (separates
-                         authorization and capture)
-            * md5 decryption : support saving payment data by md5 decryption
-        """
         res = super(PaymentAcquirer, self)._get_feature_support()
         res['fees'].append('alipay')
         return res
@@ -75,12 +66,18 @@ class PaymentAcquirer(models.Model):
             fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
-    def get_trade_no(self):
+    def _get_trade_no(self):
         return str(uuid.uuid4())
 
     @api.multi
-    def build_sign(self, val):
-        data_string = '&'.join(["{}={}".format(k, v) for k, v in sorted(val.items()) if k not in ['sign', 'sign_type', 'reference']]) + self.alipay_md5_signature_key
+    def _build_sign(self, val):
+        # Rearrange parameters in the data set alphabetically
+        data_to_sign = sorted(val.items())
+        # Exclude parameters that should not be signed
+        data_to_sign = ["{}={}".format(k, v) for k, v in data_to_sign if k not in ['sign', 'sign_type', 'reference']]
+        # And connect rearranged parameters with &
+        data_string = '&'.join(data_to_sign)
+        data_string += self.alipay_md5_signature_key
         return md5(data_string.encode('utf-8')).hexdigest()
 
     @api.multi
@@ -91,9 +88,9 @@ class PaymentAcquirer(models.Model):
         alipay_tx_values = ({
             '_input_charset': 'utf-8',
             'notify_url': urls.url_join(base_url, AlipayController._notify_url),
-            'out_trade_no': tx.out_trade_no or self.get_trade_no(),
+            'out_trade_no': tx.out_trade_no or self._get_trade_no(),
             'partner': self.alipay_merchant_partner_id,
-            'return_url': urls.url_join(base_url, AlipayController._return_url) + "?redirect_url=" + str(values.get('return_url')),
+            'return_url': urls.url_join(base_url, AlipayController._return_url) + '?' + urls.url_encode({'redirect_url': values.get('return_url')}),
             'subject': values.get('reference'),
             'total_fee': values.get('amount') + values.get('fees'),
         })
@@ -110,7 +107,7 @@ class PaymentAcquirer(models.Model):
                 'payment_type': 1,
                 'seller_email': self.alipay_seller_email,
             })
-        sign = self.build_sign(alipay_tx_values)
+        sign = self._build_sign(alipay_tx_values)
         alipay_tx_values.update({
             'sign_type': 'MD5',
             'sign': sign,
@@ -131,7 +128,37 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     out_trade_no = fields.Char(string='Trade Number', readonly=True)
-    provider = fields.Selection(related='acquirer_id.provider')
+
+    def _is_valid_alipay_configuration(self, vals):
+        acquirer_id = vals.get('acquirer_id')
+        if acquirer_id:
+            acquirer = self.env['payment.acquirer'].sudo().browse(acquirer_id)
+            if acquirer and acquirer.provider == 'alipay' and acquirer.alipay_payment_method == 'express_checkout':
+                currency_id = vals.get('currency_id')
+                if currency_id:
+                    currency = self.env['res.currency'].sudo().browse(currency_id)
+                    if currency and currency.name != 'CNY':
+                        return False
+        return True
+
+    @api.model
+    def write(self, vals):
+        acquirer_id = self.acquirer_id
+        if acquirer_id and acquirer_id.provider == 'alipay' and acquirer_id.alipay_payment_method == 'express_checkout':
+            currency_id = self.currency_id
+            if currency_id and currency_id.name != 'CNY':
+                error = _("Only CNY currency is allowed for Alipay Express Checkout")
+                _logger.info(error)
+                raise ValidationError(error)
+        return super(PaymentTransaction, self).write(vals)
+
+    @api.model
+    def create(self, vals):
+        if not self._is_valid_alipay_configuration(vals):
+            error = _("Only CNY currency is allowed for Alipay Express Checkout")
+            _logger.info(error)
+            raise ValidationError(error)
+        return super(PaymentTransaction, self).create(vals)
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -156,7 +183,7 @@ class PaymentTransaction(models.Model):
             raise ValidationError(error_msg)
 
         # verify sign
-        sign_check = txs.acquirer_id.build_sign(data)
+        sign_check = txs.acquirer_id._build_sign(data)
         if sign != sign_check:
             error_msg = _('Alipay: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data)
             _logger.info(error_msg)

@@ -17,6 +17,7 @@
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
                     <field name="authorize_implemented" invisible="1"/>
+                    <field name="s2s_implemented" invisible="1"/>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
@@ -111,9 +112,9 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <field name="registration_view_template_id" groups="base.group_no_one"/>
+                                    <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('s2s_implemented', '=', False)]}"/>
                                     <field name="payment_icon_ids" widget="many2many_tags"/>
-                                    <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                    <field name="payment_flow" widget="radio" attrs="{'invisible': [('s2s_implemented', '=', False)]}"/>
                                 </group>
                             </page>
                         </notebook>

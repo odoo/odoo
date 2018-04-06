@@ -135,6 +135,7 @@ class PaymentAcquirer(models.Model):
              "issue an invoice.")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
     authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
+    s2s_implemented = fields.Boolean('S2S Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
     fees_active = fields.Boolean('Add Extra Fees')
     fees_dom_fixed = fields.Float('Fixed domestic fees')
@@ -179,6 +180,7 @@ class PaymentAcquirer(models.Model):
             acquirer.fees_implemented = acquirer.provider in feature_support['fees']
             acquirer.authorize_implemented = acquirer.provider in feature_support['authorize']
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
+            acquirer.s2s_implemented = acquirer.provider in feature_support['s2s']
 
     @api.multi
     def _check_required_if_provider(self):
@@ -203,8 +205,9 @@ class PaymentAcquirer(models.Model):
                          authorization and capture)
             * tokenize: support saving payment data in a payment.tokenize
                         object
+            * s2s: support s2s payment flow (directly on Odoo)
         """
-        return dict(authorize=[], tokenize=[], fees=[])
+        return dict(authorize=[], tokenize=[], fees=[], s2s=[])
 
     @api.multi
     def _prepare_account_journal_vals(self):

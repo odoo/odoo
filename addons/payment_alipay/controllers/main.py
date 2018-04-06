@@ -17,7 +17,6 @@ class AlipayController(http.Controller):
     _return_url = '/payment/alipay/return'
 
     def _alipay_validate_data(self, **post):
-        res = False
         resp = post.get('trade_status')
         if resp:
             if resp in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
@@ -28,8 +27,8 @@ class AlipayController(http.Controller):
                 _logger.warning('Alipay: unrecognized alipay answer, received %s instead of TRADE_FINISHED/TRADE_SUCCESS and TRADE_CLOSED' % (post['trade_status']))
         if post.get('out_trade_no') and post.get('trade_no'):
             post['reference'] = request.env['payment.transaction'].sudo().search([('out_trade_no', '=', post['out_trade_no'])]).reference
-            res = request.env['payment.transaction'].sudo().form_feedback(post, 'alipay')
-        return res
+            return request.env['payment.transaction'].sudo().form_feedback(post, 'alipay')
+        return False
 
     def _alipay_validate_notification(self, **post):
         if post.get('out_trade_no'):
@@ -46,6 +45,7 @@ class AlipayController(http.Controller):
         _logger.info('Validate alipay Notification %s' % response.text)
         # After program is executed, the page must print “success” (without quote). If not, Alipay server would keep re-sending notification, until over 24 hour 22 minutes Generally, there are 8 notifications within 25 hours (Frequency: 2m,10m,15m,1h,2h,6h,15h)
         if response.text == 'true':
+            self._alipay_validate_data(**post)
             return 'success'
         return ""
 

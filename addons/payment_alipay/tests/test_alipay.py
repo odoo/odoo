@@ -16,6 +16,10 @@ class AlipayTest(PaymentAcquirerCommon):
     def setUp(self):
         super(AlipayTest, self).setUp()
 
+        self.currency_yuan = self.env['res.currency'].search([('name', '=', 'CNY'),
+                                                              '|',
+                                                              ('active', '=', True),
+                                                              ('active', '=', False)], limit=1)
         self.alipay = self.env.ref('payment.payment_acquirer_alipay')
 
     def test_10_alipay_form_render(self):
@@ -34,9 +38,9 @@ class AlipayTest(PaymentAcquirerCommon):
         form_values = {
             '_input_charset': 'utf-8',
             'notify_url': urls.url_join(base_url, AlipayController._notify_url),
-            'out_trade_no': self.alipay.get_trade_no(),
+            'out_trade_no': self.alipay._get_trade_no(),
             'partner': self.alipay.alipay_merchant_partner_id,
-            'return_url': urls.url_join(base_url, AlipayController._return_url) + "?redirect_url=None",
+            'return_url': urls.url_join(base_url, AlipayController._return_url) + '?' + urls.url_encode({'redirect_url': None}),
             'subject': 'test_ref0',
             'total_fee': '0.01',
         }
@@ -53,7 +57,7 @@ class AlipayTest(PaymentAcquirerCommon):
                 'seller_email': self.alipay.alipay_seller_email,
                 'service': 'create_direct_pay_by_user'
             })
-        sign = self.alipay.build_sign(form_values)
+        sign = self.alipay._build_sign(form_values)
 
         form_values.update({'sign': sign, 'sign_type': 'MD5'})
         # check form result
@@ -95,14 +99,19 @@ class AlipayTest(PaymentAcquirerCommon):
 
     @mute_logger('odoo.addons.payment_alipay.models.payment', 'ValidationError')
     def test_20_alipay_form_management(self):
+        self.alipay.alipay_payment_method = 'standard_checkout'
+        self._test_20_alipay_form_management()
+        self.alipay.alipay_payment_method = 'express_checkout'
+        self._test_20_alipay_form_management()
+
+    def _test_20_alipay_form_management(self):
         self.assertEqual(self.alipay.environment, 'test', 'test without test environment')
 
         # typical data posted by alipay after client has successfully paid
         alipay_post_data = {
             'trade_no': '2017112321001003690200384552',
-            'reference': 'test_ref_2',
+            'reference': 'test_ref_' + self.alipay.alipay_payment_method,
             'total_fee': 1.95,
-            'currency': 'EUR',
             'trade_status': 'TRADE_CLOSED',
         }
 
@@ -110,18 +119,27 @@ class AlipayTest(PaymentAcquirerCommon):
             alipay_post_data.update({
                 'seller_email': self.alipay.alipay_seller_email,
             })
+        else:
+            alipay_post_data.update({
+                'currency': 'EUR',
+            })
 
-        alipay_post_data['sign'] = self.alipay.build_sign(alipay_post_data)
+        alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
             self.env['payment.transaction'].form_feedback(alipay_post_data, 'alipay')
+
+        if self.alipay.alipay_payment_method == 'express_checkout':
+            currency = self.currency_yuan
+        else:
+            currency = self.currency_euro
 
         # create tx
         tx = self.env['payment.transaction'].create({
             'amount': 1.95,
             'acquirer_id': self.alipay.id,
-            'currency_id': self.currency_euro.id,
-            'reference': 'test_ref_2',
+            'currency_id': currency.id,
+            'reference': 'test_ref_' + self.alipay.alipay_payment_method,
             'partner_name': 'Norbert Buyer',
             'partner_country_id': self.country_france.id
         })
@@ -140,9 +158,28 @@ class AlipayTest(PaymentAcquirerCommon):
             alipay_post_data['trade_status'] = 'TRADE_FINISHED'
         else:
             alipay_post_data['trade_status'] = 'TRADE_SUCCESS'
-        alipay_post_data['sign'] = self.alipay.build_sign(alipay_post_data)
+        alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
         # validate tx
         tx.form_feedback(alipay_post_data, 'alipay')
         # check tx
         self.assertEqual(tx.state, 'done', 'alipay: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
+
+    @mute_logger('odoo.addons.payment_alipay.models.payment', 'ValidationError')
+    def test_30_alipay_bad_configuration(self):
+        self.alipay.alipay_payment_method = 'express_checkout'
+
+        # should raise error since `express_checkout` must only be used with CNY currency
+        with self.assertRaises(ValidationError):
+            # create tx
+            tx = self.env['payment.transaction'].create({
+                'acquirer_id': self.alipay.id,
+                'currency_id': self.currency_euro.id,
+            })
+
+        tx = self.env['payment.transaction'].create({
+            'acquirer_id': self.alipay.id,
+            'amount': 4,
+            'currency_id': self.currency_yuan.id,
+            'reference': 'test_ref_2',
+        })
