@@ -17,14 +17,14 @@
         </record>
 
         <record id="report_configuration_tree_view" model="ir.ui.view">
-            <field name="name">report.configuration.form.view</field>
+            <field name="name">report.configuration.tree.view</field>
             <field name="model">sale.layout_category</field>
             <field name="arch" type="xml">
                 <tree string="Report Configuration">
+                        <field name="sequence" widget="handle"/>
                         <field name="name"/>
                         <field name="subtotal"/>
                         <field name="pagebreak"/>
-                        <field name="sequence"/>
                 </tree>
             </field>
         </record>
