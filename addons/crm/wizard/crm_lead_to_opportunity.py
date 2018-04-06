@@ -225,7 +225,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
         if self.name == 'convert' and self.deduplicate:
             merged_lead_ids = set()
             remaining_lead_ids = set()
-            lead_selected = self._context.get('active_ids', [])
+            lead_selected = self.env['crm.lead'].get_active_records().ids
             for lead_id in lead_selected:
                 if lead_id not in merged_lead_ids:
                     lead = self.env['crm.lead'].browse(lead_id)
@@ -234,7 +234,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
                         lead = duplicated_leads.merge_opportunity()
                         merged_lead_ids.update(duplicated_leads.ids)
                         remaining_lead_ids.add(lead.id)
-            active_ids = set(self._context.get('active_ids', {}))
+            active_ids = set(lead_selected)
             active_ids = (active_ids - merged_lead_ids) | remaining_lead_ids
 
             self = self.with_context(active_ids=list(active_ids))  # only update active_ids when there are set
