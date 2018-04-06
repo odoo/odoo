@@ -58,6 +58,9 @@ rpc_response = logging.getLogger(__name__ + '.rpc.response')
 # 1 week cache for statics as advised by Google Page Speed
 STATIC_CACHE = 60 * 60 * 24 * 7
 
+# To remove when corrected in Babel
+babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
+
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------

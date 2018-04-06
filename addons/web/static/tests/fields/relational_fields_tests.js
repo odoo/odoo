@@ -1150,12 +1150,12 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('list in form: discard newly added element with empty required field', function (assert) {
+    QUnit.test('list in form: discard newly added element with empty required field (default_get)', function (assert) {
         // This test simulates discarding a record that has been created with
         // one of its required field that is empty. When we discard the changes
         // on this empty field, it should not assume that this record should be
         // abandonned, since it has been added (even though it is a new record).
-        assert.expect(6);
+        assert.expect(8);
 
         var form = createView({
             View: FormView,
@@ -1173,7 +1173,7 @@ QUnit.module('relational_fields', {
                 '</form>',
             mockRPC: function (route, args) {
                 if (args.method === 'default_get') {
-                    return $.when({p: [[0, 0, {display_name: 'new record', trululu: false}]]});
+                    return $.when({ p: [[0, 0, { display_name: 'new record', trululu: false }]] });
                 }
                 return this._super.apply(this, arguments);
             },
@@ -1181,6 +1181,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($('tr.o_data_row').length, 1,
             "should have created the new record in the o2m");
+        assert.strictEqual($('td.o_data_cell').first().text(), "new record",
+            "should have the correct displayed name");
 
         var requiredElement = $('td.o_data_cell.o_required_modifier');
         assert.strictEqual(requiredElement.length, 1,
@@ -1194,6 +1196,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($('tr.o_data_row').length, 1,
             "should still have the record in the o2m");
+        assert.strictEqual($('td.o_data_cell').first().text(), "new record",
+            "should still have the correct displayed name");
 
         // update selector of required field element
         requiredElement = $('td.o_data_cell.o_required_modifier');
@@ -1201,6 +1205,72 @@ QUnit.module('relational_fields', {
             "should still have the required field on this record");
         assert.strictEqual(requiredElement.text(), "",
             "should still have empty string in the required field on this record");
+        form.destroy();
+    });
+
+    QUnit.test('list in form: discard newly added element with empty required field (onchange)', function (assert) {
+        assert.expect(8);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                if (obj.product_id === 37) {
+                    obj.p = [[0, 0, { display_name: "entry", trululu: false }]];
+                }
+            },
+            trululu: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                '<field name="product_id"/>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                            '<field name="trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        // check no record in list
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "should have no row in the editable list");
+
+        // select product_id to force on_change in editable list
+        form.$('.o_field_widget[name="product_id"] .o_input').click();
+        $('.ui-menu-item').first().click();
+
+        // check that there is a record in the editable list with empty string as required field
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should have a row in the editable list");
+        assert.strictEqual($('td.o_data_cell').first().text(), "entry",
+            "should have the correct displayed name");
+        var requiredField = $('td.o_data_cell.o_required_modifier');
+        assert.strictEqual(requiredField.length, 1,
+            "should have a required field on this record");
+        assert.strictEqual(requiredField.text(), "",
+            "should have empty string in the required field on this record");
+
+        // click on empty required field in editable list record
+        requiredField.click();
+        // click off so that the required field still stay empty
+        $('body').click();
+
+        // record should not be dropped
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should not have droppped record in the editable list");
+        assert.strictEqual($('td.o_data_cell').first().text(), "entry",
+            "should still have the correct displayed name");
+            assert.strictEqual($('td.o_data_cell.o_required_modifier').text(), "",
+            "should still have empty string in the required field");
+
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
         form.destroy();
     });
 
@@ -10944,6 +11014,99 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.module('FieldReference');
+
+    QUnit.test('Reference field in modal readonly mode', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].trululu = 1;
+        this.data.partner.records[1].reference = 'product,41';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="reference"/>' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form><field name="reference"/></form>',
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+            },
+            res_id: 1,
+        });
+
+        // Cuurent Form
+        assert.equal(form.$('.o_form_uri.o_field_widget[name=reference]').text(), 'xphone',
+            'the field reference of the form should have the right value');
+
+        var $cell_o2m = form.$('.o_data_cell');
+        assert.equal($cell_o2m.text(), 'second record',
+            'the list should have one record');
+
+        $cell_o2m.click();
+
+        // In modal
+        var $modal = $('.modal-dialog.modal-lg');
+        assert.equal($modal.length, 1,
+            'there should be one modal opened');
+
+        assert.equal($modal.find('.o_form_uri.o_field_widget[name=reference]').text(), 'xpad',
+            'The field reference in the modal should have the right value');
+
+        $modal.find('.o_form_button_cancel').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('Reference field in modal write mode', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].trululu = 1;
+        this.data.partner.records[1].reference = 'product,41';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="reference"/>' +
+                    '<field name="p"/>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form><field name="reference"/></form>',
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+            },
+            res_id: 1,
+        });
+
+        // current form
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var $fieldRef = form.$('.o_field_widget.o_field_many2one[name=reference]');
+        assert.equal($fieldRef.find('option:selected').text(), 'Product',
+            'The reference field\'s model should be Product');
+        assert.equal($fieldRef.find('.o_input.ui-autocomplete-input').val(), 'xphone',
+            'The reference field\'s record should be xphone');
+
+        form.$('.o_data_cell').click();
+
+        // In modal
+        var $modal = $('.modal-dialog.modal-lg');
+        assert.equal($modal.length, 1,
+            'there should be one modal opened');
+
+        var $fieldRefModal = $modal.find('.o_field_widget.o_field_many2one[name=reference]');
+
+        assert.equal($fieldRefModal.find('option:selected').text(), 'Product',
+            'The reference field\'s model should be Product');
+        assert.equal($fieldRefModal.find('.o_input.ui-autocomplete-input').val(), 'xpad',
+            'The reference field\'s record should be xpad');
+
+        form.destroy();
+    });
 
     QUnit.test('reference in form view', function (assert) {
         assert.expect(15);

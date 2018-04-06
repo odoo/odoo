@@ -375,11 +375,12 @@ var BasicModel = AbstractModel.extend({
     duplicateRecord: function (recordID) {
         var self = this;
         var record = this.localData[recordID];
+        var context = this._getContext(record);
         return this._rpc({
                 model: record.model,
                 method: 'copy',
                 args: [record.data.id],
-                context: this._getContext(record),
+                context: context,
             })
             .then(function (res_id) {
                 var index = record.res_ids.indexOf(record.res_id);
@@ -391,6 +392,7 @@ var BasicModel = AbstractModel.extend({
                     res_id: res_id,
                     res_ids: record.res_ids.slice(0),
                     viewType: record.viewType,
+                    context: context,
                 });
             });
     },
@@ -567,10 +569,15 @@ var BasicModel = AbstractModel.extend({
         return _t("New");
     },
     /**
-     * Returns true if a record can be abandoned from a list datapoint.
+     * Returns true if a record can be abandoned.
      *
-     * A record cannot be abandonned if it has been registered as "added"
-     * in the parent's savepoint, otherwise it can be abandonned.
+     * A record can be abandonned if it is a new record, except if
+     * this datapoint has been specifically tagged as "do not abandon".
+     *
+     * Example:
+     *
+     *  - Discard record from "Add an item" => "New" record => abandon
+     *  - Discard record from `default_get`/`onchange` => do not abandon
      *
      * This is useful when discarding changes on this record, as it means that
      * we must keep the record even if some fields are invalids (e.g. required
@@ -580,15 +587,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     canBeAbandoned: function (id) {
-        var data = this.localData[id];
-        var parent = this.localData[data.parentID];
-        var abandonable = true;
-        if (parent) {
-            abandonable = !_.some(parent._savePoint, function (entry) {
-                return entry.operation === 'ADD' && entry.id === id;
-            });
-        }
-        return abandonable;
+        return !this.localData[id]._noAbandon && this.isNew(id);
     },
     /**
      * Returns true if a record is dirty. A record is considered dirty if it has
@@ -949,11 +948,11 @@ var BasicModel = AbstractModel.extend({
      * @returns {Deferred}
      *   Resolved with the list of field names (whose value has been modified)
      */
-    save: function (record_id, options) {
+    save: function (recordID, options) {
         var self = this;
         return this.mutex.exec(function () {
             options = options || {};
-            var record = self.localData[record_id];
+            var record = self.localData[recordID];
             if (options.savePoint) {
                 self._visitChildren(record, function (rec) {
                     var newValue = rec._changes || rec.data;
@@ -971,7 +970,7 @@ var BasicModel = AbstractModel.extend({
                 });
             }
             var shouldReload = 'reload' in options ? options.reload : true;
-            var method = self.isNew(record_id) ? 'create' : 'write';
+            var method = self.isNew(recordID) ? 'create' : 'write';
             if (record._changes) {
                 // id never changes, and should not be written
                 delete record._changes.id;
@@ -1536,6 +1535,7 @@ var BasicModel = AbstractModel.extend({
                             list._cache[rec.res_id] = rec.id;
                         }
 
+                        rec._noAbandon = true;
                         list._changes.push({operation: 'ADD', id: rec.id});
                         if (command[0] === 1) {
                             list._changes.push({operation: 'UPDATE', id: rec.id});
@@ -2012,7 +2012,7 @@ var BasicModel = AbstractModel.extend({
             .then(function () {
                 return $.when(
                     self._fetchX2Manys(record, options),
-                    self._fetchReferences(record)
+                    self._fetchReferences(record, options)
                 ).then(function () {
                     return self._postprocess(record, options);
                 });
@@ -2059,10 +2059,10 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} record
      * @returns {Deferred}
      */
-    _fetchReferences: function (record) {
+    _fetchReferences: function (record, options) {
         var self = this;
         var defs = [];
-        var fieldNames = record.getFieldNames();
+        var fieldNames = options && options.fieldNames || record.getFieldNames();
         _.each(fieldNames, function (fieldName) {
             var field = record.fields[fieldName];
             if (field.type === 'reference') {
@@ -3573,6 +3573,7 @@ var BasicModel = AbstractModel.extend({
                     parentID: x2manyList.id,
                     viewType: viewType,
                 });
+                r._noAbandon = true;
                 x2manyList._changes.push({operation: 'ADD', id: r.id});
                 x2manyList._cache[r.res_id] = r.id;
 

@@ -2300,6 +2300,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('datetime field in form view', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
+        this.data.partner.fields.datetime.required = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="datetime"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M',
+            },
+        });
+        testUtils.patch(basicFields.FieldDate, {
+            _setValue: function () {
+                throw "The time format of the language must be taken into account."
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_create').click();
+        var expectedDateString = "08/02/2017 12:00"; // 10:00:00 without timezone
+        assert.strictEqual(form.$('.o_field_date input').val(), expectedDateString,
+            'the datetime should be correctly displayed in readonly');
+
+        testUtils.unpatch(basicFields.FieldDate);
+        form.destroy();
+    });
+
     QUnit.test('datetime field in editable list view', function (assert) {
         assert.expect(8);
 

@@ -11,7 +11,8 @@
                         <field name="name" invisible="1"/>
                         <field name="model" invisible="1"/>
                         <h3 colspan="2">Body</h3>
-                        <field name="body_html" nolabel="1" colspan="2" widget='text' />
+                        <field name="body_html" nolabel="1" colspan="2" widget="html"
+                            options="{'style-inline': true}" />
                         <field name="attachment_ids" nolabel="1" colspan="2"
                             widget="many2many_binary"/>
                     </group>

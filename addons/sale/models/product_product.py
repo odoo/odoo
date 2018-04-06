@@ -23,3 +23,6 @@ class ProductProduct(models.Model):
         return r
 
     sales_count = fields.Integer(compute='_sales_count', string='# Sales')
+
+    def _get_invoice_policy(self):
+        return self.invoice_policy
