@@ -48,9 +48,11 @@ class AcquirerPaypal(models.Model):
                          authorization and capture)
             * tokenize: support saving payment data in a payment.tokenize
                         object
+            * s2s: support s2s payment flow (directly on Odoo)
         """
         res = super(AcquirerPaypal, self)._get_feature_support()
         res['fees'].append('paypal')
+        res['s2s'].append('paypal')
         return res
 
     @api.model

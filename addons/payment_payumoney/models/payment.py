@@ -79,6 +79,22 @@ class PaymentAcquirerPayumoney(models.Model):
         self.ensure_one()
         return self._get_payumoney_urls(self.environment)['payumoney_form_url']
 
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+            * s2s: support s2s payment flow (directly on Odoo)
+        """
+        res = super(PaymentAcquirerPayumoney, self)._get_feature_support()
+        res['s2s'].append('payumoney')
+        return res
+
 
 class PaymentTransactionPayumoney(models.Model):
     _inherit = 'payment.transaction'

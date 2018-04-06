@@ -105,6 +105,22 @@ class AcquirerBuckaroo(models.Model):
     def buckaroo_get_form_action_url(self):
         return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
 
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+            * s2s: support s2s payment flow (directly on Odoo)
+        """
+        res = super(AcquirerBuckaroo, self)._get_feature_support()
+        res['s2s'].append('buckaroo')
+        return res
+
 
 class TxBuckaroo(models.Model):
     _inherit = 'payment.transaction'

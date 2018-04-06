@@ -41,6 +41,7 @@ class PaymentAcquirer(models.Model):
             * authorize: support authorizing payment (separates
                          authorization and capture)
             * md5 decryption : support saving payment data by md5 decryption
+            * s2s: support s2s payment flow (directly on Odoo)
         """
         res = super(PaymentAcquirer, self)._get_feature_support()
         res['fees'].append('alipay')

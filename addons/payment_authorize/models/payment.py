@@ -34,10 +34,12 @@ class PaymentAcquirerAuthorize(models.Model):
                          authorization and capture)
             * tokenize: support saving payment data in a payment.tokenize
                         object
+            * s2s: support s2s payment flow (directly on Odoo)
         """
         res = super(PaymentAcquirerAuthorize, self)._get_feature_support()
         res['authorize'].append('authorize')
         res['tokenize'].append('authorize')
+        res['s2s'].append('authorize')
         return res
 
     def _get_authorize_urls(self, environment):

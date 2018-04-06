@@ -160,6 +160,21 @@ class AcquirerAdyen(models.Model):
     def adyen_get_form_action_url(self):
         return self._get_adyen_urls(self.environment)['adyen_form_url']
 
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * md5 decryption : support saving payment data by md5 decryption
+            * s2s: support s2s payment flow (directly on Odoo)
+        """
+        res = super(AcquirerAdyen, self)._get_feature_support()
+        res['s2s'].append('adyen')
+        return res
+
 
 class TxAdyen(models.Model):
     _inherit = 'payment.transaction'

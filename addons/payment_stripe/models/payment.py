@@ -94,9 +94,11 @@ class PaymentAcquirerStripe(models.Model):
                          authorization and capture)
             * tokenize: support saving payment data in a payment.tokenize
                         object
+            * s2s: support s2s payment flow (directly on Odoo)
         """
         res = super(PaymentAcquirerStripe, self)._get_feature_support()
         res['tokenize'].append('stripe')
+        res['s2s'].append('stripe')
         return res
 
 

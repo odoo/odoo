@@ -46,6 +46,7 @@ class AlipayController(http.Controller):
         _logger.info('Validate alipay Notification %s' % response.text)
         # After program is executed, the page must print “success” (without quote). If not, Alipay server would keep re-sending notification, until over 24 hour 22 minutes Generally, there are 8 notifications within 25 hours (Frequency: 2m,10m,15m,1h,2h,6h,15h)
         if response.text == 'true':
+            self._alipay_validate_data(**post)
             return 'success'
         return ""
 
