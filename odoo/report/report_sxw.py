@@ -220,7 +220,8 @@ class rml_parse(object):
                 date = datetime(*value.timetuple()[:6])
             if date_time:
                 # Convert datetime values to the expected client/context timezone
-                record = self.env['base'].with_context(self.localcontext)
+                env = odoo.api.Environment(self.cr, self.uid, {})
+                record = env['base'].with_context(self.localcontext)
                 date = fields.Datetime.context_timestamp(record, date)
             return date.strftime(date_format.encode('utf-8'))
 
