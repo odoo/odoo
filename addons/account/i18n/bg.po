@@ -11,6 +11,7 @@
 # Turhan Aydn <taydin@unionproject.eu>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 # Anton Vassilev, 2016
+# Boyan Rabchev <boyan.rabchev@plana.solutions>, 2016
 # Bernard <bernard@abv.bg>, 2016
 # cs uzt <ilcho.kavkazov@gmail.com>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
@@ -442,12 +443,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Баланс по ГК</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "<span title=\"Последно Извлечение\"></span>"
+msgstr "<span title=\"Последно Извлечение\">Последно извлечение</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
@@ -691,7 +692,7 @@ msgstr "<strong>Дневник:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Journals:</strong>"
-msgstr ""
+msgstr "<strong>Дневници:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2341,7 +2342,7 @@ msgstr "Може ли да се вижда?"
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Cancel"
-msgstr "Откажи"
+msgstr "Отказ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2762,7 +2763,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
 msgid "Color Index"
-msgstr "Индекс на Цветовете."
+msgstr "Индекс на цветовете"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_label_filter
@@ -2793,7 +2794,7 @@ msgstr "Комуникация"
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr "Предприятия"
+msgstr "Фирми"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_ref_company_ids
@@ -3052,7 +3053,7 @@ msgstr "Държава"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_group_id
 msgid "Country Group"
-msgstr "Група Държави"
+msgstr "Група държави"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
@@ -3770,7 +3771,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_display_name
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Име за показване на екран"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -4404,7 +4405,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form2
 msgid "General Information"
-msgstr "Обща информация"
+msgstr "Основна информация"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
@@ -4533,7 +4534,7 @@ msgstr "Брутно тегло"
 #: model:ir.ui.view,arch_db:account.view_account_template_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Group By"
-msgstr "Групиране по"
+msgstr "Групирай по"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group_invoice_lines
@@ -5610,7 +5611,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move___last_update
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последна корекция на"
 
 #. module: account
 #. openerp-web
@@ -5680,7 +5681,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно обновен от"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_write_date
@@ -5743,7 +5744,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно обновен на"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -6775,7 +6776,7 @@ msgstr "Частично ебединяване"
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_commercial_partner_id
@@ -7293,7 +7294,7 @@ msgstr "Продукт"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_categ_id
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "Категория на продукта"
+msgstr "Категория на продукт"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
@@ -7303,7 +7304,7 @@ msgstr "Количество на продукт"
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr "Шаблон за продукт"
+msgstr "Шаблон на продукт"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:170
@@ -8229,7 +8230,7 @@ msgstr "Изходен документ"
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_from
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_from_cmp
 msgid "Start Date"
-msgstr "Начална дата"
+msgstr "Стартова дата"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_start
@@ -9869,7 +9870,7 @@ msgstr "Доставчици"
 #. module: account
 #: selection:account.financial.report,type:0
 msgid "View"
-msgstr "Изглед"
+msgstr "Виж"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
