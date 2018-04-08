@@ -63,7 +63,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080302"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
@@ -77,7 +77,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080302"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
             <field eval="1" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
@@ -89,9 +89,9 @@
             <field name="description">18%</field>
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="account_id" ref="do_niif_11080102"/>
-            <field name="refund_account_id" ref="do_niif_11080302"/>
+            <field name="refund_account_id" ref="do_niif_11080102"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
@@ -103,9 +103,9 @@
             <field name="description">18%</field>
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="account_id" ref="do_niif_11080102"/>
-            <field name="refund_account_id" ref="do_niif_11080302"/>
+            <field name="refund_account_id" ref="do_niif_11080102"/>
             <field eval="1" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
@@ -117,23 +117,23 @@
             <field name="description">18%</field>
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="account_id" ref="do_niif_11080103"/>
-            <field name="refund_account_id" ref="do_niif_11080302"/>
+            <field name="refund_account_id" ref="do_niif_11080103"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_IMP_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
         <record id="tax_18_of_10" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">20</field>
+            <field name="sequence">11</field>
             <field name="name">18% ITBIS sobre el 10% del Monto Total</field>
             <field name="description">18% del 10%</field>
             <field name="amount">1.8</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_11080101"/>
-            <field name="refund_account_id" ref="do_niif_11080302"/>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="do_niif_21030102"/>
+            <field name="refund_account_id" ref="do_niif_21030102"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
@@ -157,7 +157,7 @@
             <field name="description">ISC</field>
             <field name="amount">10</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="account_id" ref="do_niif_52020200"/>
             <field name="refund_account_id" ref="do_niif_52020200"/>
             <field eval="0" name="price_include"/>
@@ -171,7 +171,7 @@
             <field name="description">CDT</field>
             <field name="amount">2</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="account_id" ref="do_niif_52020200"/>
             <field name="refund_account_id" ref="do_niif_52020200"/>
             <field eval="0" name="price_include"/>
@@ -190,9 +190,9 @@
         </record>
         <record id="ret_100_tax_nonprofit" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ITBIS 100% a No Lucrativas (Servicios)</field>
-            <field name="description">100% del ITBIS</field>
+            <field name="sequence">41</field>
+            <field name="name">Retención ITBIS 100% Servicios No Lucrativas (N01-11)</field>
+            <field name="description">100% ITBIS</field>
             <field name="amount">-18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -204,9 +204,9 @@
         </record>
         <record id="ret_100_tax_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ITBIS 100% a Persona Física</field>
-            <field name="description">100% del ITBIS</field>
+            <field name="sequence">42</field>
+            <field name="name">Retención ITBIS 100% Servicios a Físicas (R293-11)</field>
+            <field name="description">100% ITBIS</field>
             <field name="amount">-18</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -218,9 +218,9 @@
         </record>
         <record id="ret_30_tax_moral" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ITBIS 30% a Persona Jurídica (Construcción)</field>
-            <field name="description">30% del ITBIS</field>
+            <field name="sequence">43</field>
+            <field name="name">Retención ITBIS 30% Servicios a Jurídicas (N02-05)</field>
+            <field name="description">30% ITBIS</field>
             <field name="amount">-5.4</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -231,22 +231,22 @@
         </record>
         <record id="ret_30_tax_freelance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ITBIS 30% a Profesionales Liberales (Servicios)</field>
-            <field name="description">30% del ITBIS</field>
+            <field name="sequence">43</field>
+            <field name="name">Retención ITBIS 30% Servicios Profesionales (N02-05)</field>
+            <field name="description">30% ITBIS</field>
             <field name="amount">-5.4</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
-            <field name="account_id" ref="do_niif_21030204"/>
-            <field name="refund_account_id" ref="do_niif_21030204"/>
+            <field name="type_tax_use">none</field>
+            <field name="account_id" ref="do_niif_21030201"/>
+            <field name="refund_account_id" ref="do_niif_21030201"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
         <record id="ret_75_tax_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ITBIS 75% a Proveedores Informales (Bienes)</field>
-            <field name="description">75% del ITBIS</field>
+            <field name="sequence">44</field>
+            <field name="name">Retención ITBIS 75% Bienes a Informales (N08-10)</field>
+            <field name="description">75% ITBIS</field>
             <field name="amount">-13.5</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -258,90 +258,90 @@
         <record id="ret_10_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">40</field>
-            <field name="name">Retención ISR 10% Honorarios a Persona Física (Servicios)</field>
+            <field name="name">Retención ISR 10% Servicios a Físicas</field>
             <field name="description">10% ISR</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="account_id" ref="do_niif_21030301"/>
-            <field name="refund_account_id" ref="do_niif_11080303"/>
+            <field name="refund_account_id" ref="do_niif_21030301"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="tax_group_retencion_10"/>
         </record>
         <record id="ret_10_income_rent" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ISR 10% a Persona Física (Alquiler)</field>
+            <field name="sequence">50</field>
+            <field name="name">Retención ISR 10% Alquileres a Físicas</field>
             <field name="description">10% ISR</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="do_niif_21030302"/>
-            <field name="refund_account_id" ref="do_niif_11080303"/>
+            <field name="refund_account_id" ref="do_niif_21030302"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="tax_group_retencion_10"/>
         </record>
         <record id="ret_10_income_dividend" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ISR 10% por Dividendos</field>
+            <field name="sequence">51</field>
+            <field name="name">Retención ISR 10% por Dividendos (L253-12)</field>
             <field name="description">10% ISR</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="do_niif_21030303"/>
-            <field name="refund_account_id" ref="do_niif_11080303"/>
+            <field name="refund_account_id" ref="do_niif_21030303"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_10')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="tax_group_retencion_10"/>
         </record>
         <record id="ret_2_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
+            <field name="sequence">52</field>
             <field name="name">Retención ISR 2% a Persona Física (Servicios)</field>
-            <field name="description">2% ISR (N 07-07)</field>
+            <field name="description">2% ISR (N07-07)</field>
             <field name="amount">-2</field>
             <field name="amount_type">percent</field>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">none</field>
             <field name="account_id" ref="do_niif_21030308"/>
-            <field name="refund_account_id" ref="do_niif_11080303"/>
+            <field name="refund_account_id" ref="do_niif_21030308"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_2')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="tax_group_retencion_2"/>
         </record>
         <record id="ret_2_income_transfer" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
+            <field name="sequence">53</field>
             <field name="name">Retención ISR 2% por Transferencia de Títulos</field>
             <field name="description">2% ISR</field>
             <field name="amount">-2</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="do_niif_21030306"/>
-            <field name="refund_account_id" ref="do_niif_11080303"/>
+            <field name="refund_account_id" ref="do_niif_21030306"/>
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_R_ISR_2')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="tax_group_retencion_2"/>
         </record>
         <record id="ret_27_income_remittance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">40</field>
-            <field name="name">Retención ISR 27% por Remesas al Exterior</field>
+            <field name="sequence">49</field>
+            <field name="name">Retención ISR 27% por Remesas al Exterior (L253-12)</field>
             <field name="description">27% ISR</field>
             <field name="amount">-27</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="account_id" ref="do_niif_21030307"/>
-            <field name="refund_account_id" ref="do_niif_11080303"/>
+            <field name="refund_account_id" ref="do_niif_21030307"/>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="tax_group_retencion_27"/>
         </record>
         <record id="tax_group_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">60</field>
-            <field name="name">Retención a Proveedores Informales (Bienes)</field>
+            <field name="name">Proveedores Informales de Bienes</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
@@ -354,8 +354,7 @@
             <field name="name">Retención a Persona Física (Servicios Construcción con Materiales)</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
-            <field name="type_tax_use">purchase</field>
-            <field eval="[(6, 0, [ref('tax_18_of_10'), ref('ret_2_income_person'), ref('ret_100_tax_person')])]" name="children_tax_ids"/>
+            <field name="type_tax_use">none</field>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
         <record id="tax_group_moral_construction" model="account.tax.template">
@@ -364,18 +363,17 @@
             <field name="name">Retención a Jurídica (Servicios Construcción con Materiales)</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
-            <field name="type_tax_use">purchase</field>
-            <field eval="[(6, 0, [ref('ret_30_tax_moral'), ref('tax_18_of_10')])]" name="children_tax_ids"/>
+            <field name="type_tax_use">none</field>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
         <record id="tax_group_person_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">60</field>
-            <field name="name">Retención a Persona Física por Servicios Profesionales</field>
+            <field name="name">Retención a Física por Servicios Profesionales</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
-            <field eval="[(6, 0, [ref('ret_2_income_person'), ref('ret_100_tax_person')])]" name="children_tax_ids"/>
+            <field eval="[(6, 0, [ref('ret_100_tax_person'), ref('ret_2_income_person')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
     </data>

@@ -4,29 +4,6 @@
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Templates     -->
         <!-- = = = = = = = = = = = = = = = -->
-        <!-- Proveedor Moral Construcción -->
-        <record id="position_construction_moral" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Fiscal (Construcción)</field>
-        </record>
-        <record id="fiscal_position_tax_8" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_18_purch"/>
-            <field name="position_id" ref="position_construction_moral"/>
-            <field name="tax_dest_id" ref="tax_group_moral_construction"/>
-        </record>
-
-
-        <!-- Persona Física Construcción -->
-        <record id="position_construction_person" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Persona Física (Construcción)</field>
-        </record>
-        <record id="fiscal_position_tax_7" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_18_purch"/>
-            <field name="position_id" ref="position_construction_person"/>
-            <field name="tax_dest_id" ref="tax_group_person_construction"/>
-        </record>
-
 
         <!-- Persona Física>-->
         <record id="position_person" model="account.fiscal.position.template">
@@ -128,8 +105,7 @@
         </record>
 
 
-        <!-- Principal Fiscal Position for Dominican Republic internally -->
-        <!-- DEPRECATED - REMOVE in V12 -->
+        <!-- DEPRECATED in V11 - REMOVE in V12 -->
         <record id="position_buyer_final" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">Consumidor Final</field>
@@ -148,6 +124,16 @@
         <record id="position_expenses" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">Gastos Menores</field>
+        </record>
+
+        <record id="position_construction_moral" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Proveedor Fiscal (Construcción)</field>
+        </record>
+
+        <record id="position_construction_person" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Persona Física (Construcción)</field>
         </record>
 
     </data>
