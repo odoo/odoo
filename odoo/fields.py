@@ -1021,7 +1021,8 @@ class Field(MetaField('DummyField', (object,), {})):
             # this is a stored field or an old-style function field
             if self.compute:
                 # this is a stored computed field, check for recomputation
-                recs = record._recompute_check(self)
+                recs = record._in_cache_without(self)
+                recs = recs.with_prefetch(record._prefetch)
                 if recs:
                     # recompute the value (only in cache)
                     self.compute_value(recs)
