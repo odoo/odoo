@@ -1021,10 +1021,13 @@ class Field(MetaField('DummyField', (object,), {})):
             # this is a stored field or an old-style function field
             if self.compute:
                 if not (env.recompute or env.context.get('recompute', True)):
+                    # case of use with self.env.norecompute():
+                    # it doesn't make sens to check with _recompute_check
                     recs = record._in_cache_without(self)
                     recs = recs.with_prefetch(record._prefetch)
-                    self.compute_value(recs)
-                    return
+                    if recs:
+                        self.compute_value(recs)
+                        return
 
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
