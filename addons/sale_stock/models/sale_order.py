@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
     @api.model
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
-        if line.state == 'sale':
+        if line.order_id.state == 'sale':
             line._action_launch_procurement_rule()
         return line
 
