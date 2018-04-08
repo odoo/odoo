@@ -8,13 +8,14 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Martin Trigaux, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
+"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr "<i>Annuleer,</i> Uw betaling is geannuleerd."
 msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
-msgstr ""
+msgstr "Gelukt,</i> Uw online betaling is geslaagd. bedankt voor uw opdracht."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -69,6 +70,10 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Fout,</i> Houd er rekening mee dat er tijdens de transactie een fout is "
+"opgetreden. De bestelling is bevestigd maar is niet als betaald gemarkeerd. "
+"Aarzel niet om contact met ons op te nemen als u vragen heeft over de status"
+" van uw bestelling."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:104
@@ -77,6 +82,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>In afwachting,</i> Uw online betaling is succesvol verwerkt. Maar uw "
+"bestelling is nog niet gevalideerd.."
 
 #. module: payment
 #. openerp-web
@@ -975,6 +982,10 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"Betalingen worden geregistreerd in dit dagboek. Als u rechtstreeks op uw bankrekening wordt betaald,\n"
+"                selecteer dan uw bankrekening. Als u voor meerdere transacties batchgewijs betaald krijgt, maakt u een specifiek\n"
+"                dagboek hiervoor om het afletteren later eenvoudiger te maken. U boekt het bedrag naar een tussenrekening (die automatisch wordt aangemaakt bij het creeren van een dagboek)\n"
+"                Wanneer u dan de betaling ontvangt van uw betalingsprovider,kun u het bedrag afletteren tegen de tussenrekening. U kun sjablonen maken om dit proces te vereenvoudigen."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1009,7 +1020,7 @@ msgstr "Selecteer een betalingsmethode aub."
 #: code:addons/payment/static/src/js/payment_form.js:308
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "Selecteer de optie om een nieuwe betaalmethode toe te voegen."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -1044,7 +1055,7 @@ msgstr "Provider"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Doorverwijzing naar de website van de betalingsprovider."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
@@ -1244,6 +1255,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Met deze optie kunnen klanten hun creditcard opslaan als een betaalmethode "
+"en deze opnieuw gebruiken voor een latere aankoop. Als u abonnementen "
+"beheert (periodieke facturering), hebt u deze nodig om de klant automatisch "
+"in rekening te brengen bij het bevestigen van een factuur."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
@@ -1344,21 +1359,21 @@ msgstr "We konden uw betaalmethode niet verwijderen op dit moment."
 #: code:addons/payment/static/src/js/payment_form.js:173
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "We kunnen u niet omleiden naar het betalingsformulier."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:179
 #, python-format
 msgid "We are not able to redirect you to the payment form.<"
-msgstr ""
+msgstr "We kunnen u niet omleiden naar het betalingsformulier..<"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:188
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "We kunnen uw betaling niet verwerken."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1477,7 +1492,7 @@ msgstr "valuta: de transactie valuta browse record"
 #: code:addons/payment/static/src/js/payment_form.js:285
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
-msgstr ""
+msgstr "bijv. Uw creditcardgegevens zijn verkeerd. Aub controleren."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

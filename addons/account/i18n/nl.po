@@ -15,13 +15,14 @@
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 # Julia van Orsouw <julia@odooexperts.nl>, 2017
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-12 15:37+0000\n"
 "PO-Revision-Date: 2018-03-12 15:37+0000\n"
-"Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2017\n"
+"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -188,6 +189,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data>Beste ${object.partner_id.name},</p>\n"
+"<p>Bedankt voor de betaling.<br/>Hierbij sturen wij u het afschrift van de betaling <strong>${(object.name or '').replace('/','-')}</strong> voor het bedrag van <strong>${format_amount(object.amount, object.currency_id)}</strong> van ${object.company_id.name}.</p>\n"
+"<p>Wanneer u nog vragen heeft, neemt u dan contact op.</p>\n"
+"<p>Met vriendelijke groet,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -372,6 +383,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Beste ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>In de bijlage sturen wij uw \n"
+"% if object.number:\n"
+"factuur <strong>${object.number}</strong>\n"
+"% else:\n"
+"factuur\n"
+"% endif\n"
+"% if object.origin:\n"
+"(uw referentie: ${object.origin})\n"
+"% endif\n"
+"voor een totaalbedrag van <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"van ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Bekijk factuur</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Deze factuur is reeds voldaan.</p>\n"
+"% else:\n"
+"    <p>Wij stellen het op prijs wanneer u deze factuur z.s.m. betaald, doch uiterlijk op de vervaldatum.</p>\n"
+"% endif\n"
+"\n"
+"<p>Dank u vriendelijk,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2485,7 +2540,7 @@ msgstr "Bankafschrift"
 #: code:addons/account/models/account_bank_statement.py:935
 #, python-format
 msgid "Bank Statement %s"
-msgstr ""
+msgstr "Bankafschrift %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -2883,7 +2938,7 @@ msgstr "Kas afrondingen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Statements"
-msgstr "Betaalbewijsen"
+msgstr "Betaalbewijzen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_ids
@@ -11711,6 +11766,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
+"Het is niet mogelijk de valuta van het bedrijf te wijzigen omdat er al "
+"financiële boekingen zijn gemaakt."
 
 #. module: account
 #: code:addons/account/models/account.py:235
