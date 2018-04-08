@@ -1022,6 +1022,9 @@ class Field(MetaField('DummyField', (object,), {})):
             if self.compute:
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
+                # if value is in cache don't need to recompute when use with self.env.norecompute()
+                if recs and not (recs.env.recompute and recs.env.context.get('recompute', True)):
+                    recs = recs._in_cache_without(self)
                 if recs:
                     # recompute the value (only in cache)
                     self.compute_value(recs)
