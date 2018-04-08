@@ -1035,6 +1035,7 @@ class Field(MetaField('DummyField', (object,), {})):
                             except MissingError as exc:
                                 target._cache.set_failed(target._fields, exc)
                     # the result is saved to database by BaseModel.recompute()
+                    recs._recompute_done(self)
                     return
 
             # read the field from database
