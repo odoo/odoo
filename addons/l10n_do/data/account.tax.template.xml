@@ -4,7 +4,7 @@
         <!-- Chart template for Taxes -->
         <record id="tax_0_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">50</field>
+            <field name="sequence">4</field>
             <field name="name">Exento ITBIS Ventas</field>
             <field name="description">Exento</field>
             <field name="amount">0</field>
@@ -16,7 +16,7 @@
         </record>
         <record id="tax_0_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">50</field>
+            <field name="sequence">10</field>
             <field name="name">Exento ITBIS Compras</field>
             <field name="description">Exento</field>
             <field name="amount">0</field>
@@ -42,7 +42,7 @@
         </record>
         <record id="tax_18_sale_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">10</field>
+            <field name="sequence">2</field>
             <field name="name">18% ITBIS Incl. Ventas</field>
             <field name="description">18% Incl</field>
             <field name="amount">18</field>
@@ -54,10 +54,23 @@
             <field eval="[(6,0,[ref('tag_V_ITBIS_18')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
         </record>
+        <record id="tax_tip_sale" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">3</field>
+            <field name="name">10% Propina Legal</field>
+            <field name="description">10%</field>
+            <field name="amount">10</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="do_niif_21030503"/>
+            <field name="refund_account_id" ref="do_niif_21030503"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_tip"/>
+        </record>
         <record id="tax_18_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">18% ITBIS Compras</field>
-            <field name="sequence">2</field>
+            <field name="sequence">11</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
@@ -70,7 +83,7 @@
         </record>
         <record id="tax_18_purch_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">20</field>
+            <field name="sequence">12</field>
             <field name="name">18% ITBIS Incl. Compras</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
@@ -81,6 +94,97 @@
             <field eval="1" name="price_include"/>
             <field eval="[(6,0,[ref('tag_C_ITBIS_18_Incluido')])]" name="tag_ids"/>
             <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        <record id="tax_16_purch" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">16% ITBIS Compras</field>
+            <field name="sequence">13</field>
+            <field name="description">16%</field>
+            <field name="amount">16</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_11080101"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        <record id="tax_16_purch_incl" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">16% ITBIS Incl. Compras</field>
+            <field name="sequence">14</field>
+            <field name="description">16%</field>
+            <field name="amount">16</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_11080101"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
+            <field eval="1" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        <record id="tax_9_purch" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">9% ITBIS Compras</field>
+            <field name="sequence">15</field>
+            <field name="description">9% (L690-16)</field>
+            <field name="amount">9</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_11080101"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        <record id="tax_9_purch_incl" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">9% ITBIS Incl. Compras</field>
+            <field name="sequence">16</field>
+            <field name="description">9% (L690-16)</field>
+            <field name="amount">9</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_11080101"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
+            <field eval="1" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        <record id="tax_8_purch" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">8% ITBIS Compras</field>
+            <field name="sequence">17</field>
+            <field name="description">8% (L690-16)</field>
+            <field name="amount">8</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_11080101"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        <record id="tax_8_purch_incl" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">8% ITBIS Incl. Compras</field>
+            <field name="sequence">18</field>
+            <field name="description">8% (L690-16)</field>
+            <field name="amount">8</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_11080101"/>
+            <field name="refund_account_id" ref="do_niif_11080101"/>
+            <field eval="1" name="price_include"/>
+            <field name="tax_group_id" ref="group_itbis"/>
+        </record>
+        <record id="tax_tip_purch" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">19</field>
+            <field name="name">10% Propina Legal</field>
+            <field name="description">10%</field>
+            <field name="amount">10</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_52080900"/>
+            <field name="refund_account_id" ref="do_niif_52080900"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="tax_group_tip"/>
         </record>
         <record id="tax_18_purch_serv" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -126,7 +230,7 @@
         </record>
         <record id="tax_18_of_10" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">11</field>
+            <field name="sequence">20</field>
             <field name="name">18% ITBIS sobre el 10% del Monto Total</field>
             <field name="description">18% del 10%</field>
             <field name="amount">1.8</field>
@@ -187,6 +291,19 @@
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_10_telco'), ref('tax_2_telco')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="tax_group_isc"/>
+        </record>
+        <record id="ret_100_tax_security" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
+            <field name="name">Retención ITBIS 100% Servicios de Seguridad (N07-09)</field>
+            <field name="description">100% ITBIS</field>
+            <field name="amount">-18</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_21030201"/>
+            <field name="refund_account_id" ref="do_niif_21030201"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_ret"/>
         </record>
         <record id="ret_100_tax_nonprofit" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -350,7 +467,7 @@
         </record>
         <record id="tax_group_person_construction" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">60</field>
+            <field name="sequence">61</field>
             <field name="name">Retención a Persona Física (Servicios Construcción con Materiales)</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
@@ -359,7 +476,7 @@
         </record>
         <record id="tax_group_moral_construction" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">60</field>
+            <field name="sequence">62</field>
             <field name="name">Retención a Jurídica (Servicios Construcción con Materiales)</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
@@ -368,7 +485,7 @@
         </record>
         <record id="tax_group_person_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">60</field>
+            <field name="sequence">63</field>
             <field name="name">Retención a Física por Servicios Profesionales</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
@@ -376,5 +493,26 @@
             <field eval="[(6, 0, [ref('ret_100_tax_person'), ref('ret_2_income_person')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
+        <record id="tax_group_restaurant_sale" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">64</field>
+            <field name="name">Ventas del Restaurante</field>
+            <field name="amount_type">group</field>
+            <field eval="0" name="amount"/>
+            <field name="type_tax_use">sale</field>
+            <field eval="[(6, 0, [ref('tax_18_sale'), ref('tax_tip_sale')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="group_ret"/>
+        </record>
+        <record id="tax_group_restaurant_purch" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">65</field>
+            <field name="name">Compras a Restaurantes</field>
+            <field name="amount_type">group</field>
+            <field eval="0" name="amount"/>
+            <field name="type_tax_use">purchase</field>
+            <field eval="[(6, 0, [ref('tax_18_purch'), ref('tax_tip_purch')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="group_ret"/>
+        </record>
+
     </data>
 </odoo>
