@@ -15,13 +15,14 @@
 # Volluta <volluta@tutanota.com>, 2017
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:42+0000\n"
 "PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
+"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3004,7 +3005,7 @@ msgstr "Importeer met de knop links bovenaan in"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
 msgid "In Entire Package"
-msgstr ""
+msgstr "In het hele pakket"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6481,6 +6482,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
+"De waarde 'Handmatige bewerking' zorgt voor een aanvullende mutatie na de "
+"huidige. Met 'Automatisch - geen stap toegevoegd' wordt de locatie in de "
+"oorspronkelijke mutatie vervangen."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6923,12 +6927,16 @@ msgid ""
 "Those are the entire packages of a picking shown in the view of detailed "
 "operations"
 msgstr ""
+"Dat zijn de volledige pakketten van een levering/picking die worden getoond "
+"in de weergave details "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
 msgid ""
 "Those are the entire packages of a picking shown in the view of operations"
 msgstr ""
+"Dat zijn de volledige pakketten van een levering/picking die worden getoond "
+"in de weergave details "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
@@ -7796,6 +7804,10 @@ msgid ""
 "lot. Please first validate the first inventory adjustement with this product"
 " before creating another one."
 msgstr ""
+"U kunt niet twee voorraadaanpassingen in de status 'in uitvoering' hebben "
+"met hetzelfde product (%s), dezelfde locatie (%s), hetzelfde pakket, "
+"dezelfde eigenaar en dezelfde partij. Voer eerst de eerste "
+"voorraadaanpassing met dit product uit voordat u een nieuwe maakt."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:159
