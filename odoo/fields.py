@@ -1017,14 +1017,11 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Determine the value of ``self`` for ``record``. """
         env = record.env
 
-        if self.store and not (self.compute and env.in_onchange):
+        if self.store and not (self.compute and env.in_onchange) and not (self.compute and not env.recompute):
             # this is a stored field or an old-style function field
             if self.compute:
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
-                # if value is in cache don't need to recompute when use with self.env.norecompute()
-                if recs and not (recs.env.recompute and recs.env.context.get('recompute', True)):
-                    recs = recs._in_cache_without(self)
                 if recs:
                     # recompute the value (only in cache)
                     self.compute_value(recs)
