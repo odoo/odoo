@@ -1634,7 +1634,7 @@ QUnit.module('Views', {
                         '<field name="foo"/>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {sidebar: true, context: {hey: 'hoy'}},
+            viewOptions: {hasSidebar: true, context: {hey: 'hoy'}},
             mockRPC: function (route, args) {
                 if (args.method === 'read') {
                     // should have 2 read, one for initial load, second for
