@@ -540,6 +540,9 @@ QUnit.module('Views', {
             arch: '<graph string="Partners">' +
                         '<field name="product_id" type="row"/>' +
                 '</graph>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
         });
         var done = assert.async();
         return concurrency.delay(0).then(function () {
@@ -552,6 +555,49 @@ QUnit.module('Views', {
             assert.strictEqual(graph.model.chart.data[1].value, 1,
                 "should have second datapoint with value 1");
 
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('not use a many2one as a measure by default', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.notOk(graph.measures.product_id,
+                "should not have product_id as measure");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure if set as additional fields', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.ok(graph.measures.product_id,
+                "should have product_id as measure");
             graph.destroy();
             done();
         });

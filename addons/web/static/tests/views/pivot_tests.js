@@ -967,6 +967,43 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('not use a many2one as a measure by default', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+        });
+        assert.notOk(pivot.measures.product_id,
+            "should not have product_id as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('use a many2one as a measure with specified additional measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        assert.ok(pivot.measures.product_id,
+            "should have product_id as measure");
+        pivot.destroy();
+    });
+
     QUnit.test('pivot view with many2one field as a measure', function (assert) {
         assert.expect(1);
 
@@ -1015,6 +1052,9 @@ QUnit.module('Views', {
             arch: '<pivot>' +
                         '<field name="product_id" type="row"/>' +
                 '</pivot>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
         });
 
         pivot.$buttons.find('li[data-field=product_id] a').click();
