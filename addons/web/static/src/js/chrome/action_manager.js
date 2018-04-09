@@ -175,7 +175,6 @@ var ActionManager = Widget.extend({
                                         options.clear_breadcrumbs;
 
             self._preprocessAction(action, options);
-
             return self._handleAction(action, options).then(function () {
                 // now that the action has been executed, force its 'pushState'
                 // flag to 'true', as we don't want to prevent its controller

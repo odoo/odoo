@@ -1005,6 +1005,7 @@ class Picking(models.Model):
 
     def button_scrap(self):
         self.ensure_one()
+        view = self.env.ref('stock.stock_scrap_form_view2')
         products = self.env['product.product']
         for move in self.move_lines:
             if move.state not in ('draft', 'cancel') and move.product_id.type in ('product', 'consu'):
@@ -1014,7 +1015,8 @@ class Picking(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.scrap',
-            'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
+            'view_id': view.id,
+            'views': [(view.id, 'form')],
             'type': 'ir.actions.act_window',
             'context': {'default_picking_id': self.id, 'product_ids': products.ids},
             'target': 'new',
