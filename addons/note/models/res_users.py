@@ -14,7 +14,7 @@ class Users(models.Model):
         user = super(Users, self).create(values)
         # for new employee, create his own 5 base note stages
         if user.has_group('base.group_user'):
-            for num in range(5):
+            for num in range(4):
                 stage = self.env.ref('note.note_stage_%02d' % (num,), raise_if_not_found=False)
                 if stage:
                     stage.sudo().copy(default={'user_id': user.id})
