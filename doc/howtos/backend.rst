@@ -1708,6 +1708,10 @@ server with the library ``xmlrpc.client``::
 JSON-RPC Library
 ----------------
 
+.. note::
+    For this example to work on your Odoo server you need to have the App
+    ``Productivity (note)`` enabled
+
 The following example is a Python 3 program that interacts with an Odoo server
 with the standard Python libraries ``urllib.request`` and ``json``. This
 example assumes the **Productivity** app (``note``) is installed::
