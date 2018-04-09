@@ -105,6 +105,11 @@ class AcquirerBuckaroo(models.Model):
     def buckaroo_get_form_action_url(self):
         return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
 
+    def _get_feature_support(self):
+        res = super(AcquirerBuckaroo, self)._get_feature_support()
+        res['s2s'].append('buckaroo')
+        return res
+
 
 class TxBuckaroo(models.Model):
     _inherit = 'payment.transaction'

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_acquirer_view_form_inherit_payment_alipay" model="ir.ui.view">
+        <field name="name">payment.acquirer.view.form.inherit.payment.alipay</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='after'>
+                <group attrs="{'invisible': [('provider', '!=', 'alipay')]}">
+                    <field name="alipay_payment_method" widget="radio"/>
+                    <field name="alipay_seller_email" attrs="{'invisible': [('alipay_payment_method', '=', 'standard_checkout')], 'required': [('provider', '=', 'alipay'), ('alipay_payment_method', '=', 'express_checkout')]}"/>
+                    <field name="alipay_merchant_partner_id"/>
+                    <field name="alipay_md5_signature_key"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="payment_transaction_view_form_inherit_payment_alipay" model="ir.ui.view">
+        <field name="name">payment.transaction.view.form.inherit.payment.alipay</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.transaction_form"/>
+        <field name="arch" type="xml">
+            <field name="date_validate" position="after">
+                <field name="provider" invisible="1"/>
+                <field name="out_trade_no"  attrs="{'invisible': [('provider', '!=', 'alipay')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

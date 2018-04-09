@@ -110,6 +110,11 @@ class AcquirerSips(models.Model):
         self.ensure_one()
         return self.environment == 'prod' and self.sips_prod_url or self.sips_test_url
 
+    def _get_feature_support(self):
+        res = super(AcquirerSips, self)._get_feature_support()
+        res['s2s'].append('sips')
+        return res
+
 
 class TxSips(models.Model):
     _inherit = 'payment.transaction'

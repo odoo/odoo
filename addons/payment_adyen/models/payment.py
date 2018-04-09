@@ -160,6 +160,11 @@ class AcquirerAdyen(models.Model):
     def adyen_get_form_action_url(self):
         return self._get_adyen_urls(self.environment)['adyen_form_url']
 
+    def _get_feature_support(self):
+        res = super(AcquirerAdyen, self)._get_feature_support()
+        res['s2s'].append('adyen')
+        return res
+
 
 class TxAdyen(models.Model):
     _inherit = 'payment.transaction'

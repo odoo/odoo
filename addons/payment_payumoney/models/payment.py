@@ -79,6 +79,11 @@ class PaymentAcquirerPayumoney(models.Model):
         self.ensure_one()
         return self._get_payumoney_urls(self.environment)['payumoney_form_url']
 
+    def _get_feature_support(self):
+        res = super(PaymentAcquirerPayumoney, self)._get_feature_support()
+        res['s2s'].append('payumoney')
+        return res
+
 
 class PaymentTransactionPayumoney(models.Model):
     _inherit = 'payment.transaction'

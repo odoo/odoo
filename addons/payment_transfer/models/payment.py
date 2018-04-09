@@ -53,6 +53,11 @@ class TransferPaymentAcquirer(models.Model):
             values['post_msg'] = self._format_transfer_data()
         return super(TransferPaymentAcquirer, self).write(values)
 
+    def _get_feature_support(self):
+        res = super(TransferPaymentAcquirer, self)._get_feature_support()
+        res['s2s'].append('transfer')
+        return res
+
 
 class TransferPaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
