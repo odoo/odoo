@@ -5,7 +5,6 @@ from datetime import date, datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
-from odoo.tools import html2plaintext
 
 
 class MailActivityType(models.Model):
@@ -46,7 +45,7 @@ class MailActivityType(models.Model):
         'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
         string='Preceding Activities')
     category = fields.Selection([
-        ('default', 'Other'), ('reminder', 'Reminder')], default='default',
+        ('default', 'Other')], default='default',
         string='Category',
         help='Categories may trigger specific behavior like opening calendar view')
 
@@ -70,10 +69,10 @@ class MailActivity(models.Model):
         return res
 
     # owner
-    res_id = fields.Integer('Related Document ID', index=True)
+    res_id = fields.Integer('Related Document ID', index=True, required=True)
     res_model_id = fields.Many2one(
         'ir.model', 'Document Model',
-        index=True, ondelete='cascade')
+        index=True, ondelete='cascade', required=True)
     res_model = fields.Char(
         'Related Document Model',
         index=True, related='res_model_id.model', store=True, readonly=True)
@@ -90,9 +89,6 @@ class MailActivity(models.Model):
     note = fields.Html('Note')
     feedback = fields.Html('Feedback')
     date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.today)
-    active = fields.Boolean(
-        'Open', default=True,
-        help='Done reminders should be archived instead of marked as done.')
     automated = fields.Boolean(
         'Automated activity', readonly=True,
         help='Indicates this activity has been created automatically and not by any user.')
@@ -122,8 +118,7 @@ class MailActivity(models.Model):
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
         for activity in self:
-            if activity.res_model and activity.res_id:
-                activity.res_name = self.env[activity.res_model].browse(activity.res_id).name_get()[0][1]
+            activity.res_name = self.env[activity.res_model].browse(activity.res_id).name_get()[0][1]
 
     @api.depends('date_deadline')
     def _compute_state(self):
@@ -173,14 +168,7 @@ class MailActivity(models.Model):
         doc_operation = 'read' if operation == 'read' else 'write'
         activity_to_documents = dict()
         for activity in self.sudo():
-            if activity.res_model and activity.res_id:
-                activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
-            else:
-                if (operation != 'create' and self.env.user.id != activity.user_id.id):
-                    raise exceptions.AccessError(_("You can only access your own records."))
-                elif operation == 'create' and not self.env.user.has_group('base.group_user'):
-                    raise exceptions.AccessError(_("Only employee can create reminder."))
-
+            activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
         for model, res_ids in activity_to_documents.items():
             self.env[model].check_access_rights(doc_operation, raise_exception=True)
             try:
@@ -196,19 +184,11 @@ class MailActivity(models.Model):
         values_w_defaults = self.default_get(self._fields.keys())
         values_w_defaults.update(values)
 
-        # Reminder have no summary (for display name) It will add first line of note to summary.
-        if 'res_model_id' not in values and 'summary' not in values:
-            values_w_defaults['summary'] = self._compute_summary_from_note(values.get('note', _('Reminder')))
-
         # continue as sudo because activities are somewhat protected
         activity = super(MailActivity, self.sudo()).create(values_w_defaults)
         activity_user = activity.sudo(self.env.user)
         activity_user._check_access('create')
-
-        # subscribe to document if any
-        if activity.res_id and activity.res_model:
-            self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[activity_user.user_id.partner_id.id])
-
+        self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[activity_user.user_id.partner_id.id])
         if activity.date_deadline <= fields.Date.today():
             self.env['bus.bus'].sendone(
                 (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
@@ -218,28 +198,13 @@ class MailActivity(models.Model):
     @api.multi
     def write(self, values):
         self._check_access('write')
-        if not self.env.user._is_admin() and any(field in values.keys() for field in ['res_model', 'res_id', 'res_model_id']):
-            raise exceptions.AccessError(_("You cannot re-attach a reminder to another record."))
-
         if values.get('user_id'):
             pre_responsibles = self.mapped('user_id.partner_id')
-
-        reminders = self.filtered(lambda a: not a.res_id and not a.res_model) if 'note' in values and 'summary' not in values else self.env['mail.activity']
-        activities = self - reminders
-        res = True
-        if activities:
-            res &= super(MailActivity, activities.sudo()).write(values)
-        if reminders:  # if we have reminder, note is set and summary is not set. We need to update summary
-            upd_values = dict(
-                values,
-                summary=self._compute_summary_from_note(values['note'])
-            )
-            res &= super(MailActivity, reminders.sudo()).write(upd_values)
+        res = super(MailActivity, self.sudo()).write(values)
 
         if values.get('user_id'):
             for activity in self:
-                if activity.res_id and activity.res_model:  # subscribe to document if any
-                    self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+                self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
                 if activity.date_deadline <= fields.Date.today():
                     self.env['bus.bus'].sendone(
                         (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
@@ -261,29 +226,6 @@ class MailActivity(models.Model):
                     (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
                     {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self.sudo()).unlink()
-
-    @api.multi
-    def toggle_active(self):
-        """ Override model-method to send bus notification about (un)archived reminders """
-        res = super(MailActivity, self).toggle_active()
-        for activity in self:
-            if activity.active:
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_created': True})
-            else:
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_deleted': True})
-        return res
-
-    def _compute_summary_from_note(self, note):
-        """ Returns the first line of html note """
-        if note:
-            summary = html2plaintext(note).strip().replace('*', '').split("\n")[0]
-        else:
-            summary = _('Reminder')
-        return summary or _('Reminder')
 
     @api.multi
     def action_done(self):

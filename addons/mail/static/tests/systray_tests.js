@@ -23,7 +23,6 @@ QUnit.module('ActivityMenu', {
                     today_count: { type: "integer"},
                     overdue_count: { type: "integer"},
                     total_count: { type: "integer"},
-                    active: { type: "boolean"}
                 },
                 records: [{
                         name: "Contact",
@@ -48,13 +47,6 @@ QUnit.module('ActivityMenu', {
                         today_count: 1,
                         overdue_count: 1,
                         total_count: 3,
-                    },
-                    {
-                        model: null,
-                        planned_count: 1,
-                        today_count: 1,
-                        overdue_count: 0,
-                        total_count: 2,
                     }],
                 },
             };
@@ -79,8 +71,8 @@ QUnit.test('activity menu widget: menu with no records', function (assert) {
     activityMenu.destroy();
 });
 
-QUnit.test('activity menu widget: activity menu with 4 records', function (assert) {
-    assert.expect(17);
+QUnit.test('activity menu widget: activity menu with 3 records', function (assert) {
+    assert.expect(10);
     var self = this;
     var activityMenu = new systray.ActivityMenu();
     testUtils.addMockEnvironment(activityMenu, {
@@ -89,16 +81,6 @@ QUnit.test('activity menu widget: activity menu with 4 records', function (asser
             if (args.method === 'activity_user_count') {
                 return $.when(self.data['mail.activity.menu']['records']);
             }
-            if (route === '/mail/activity/new') {
-                assert.deepEqual(args, {'note': 'New Reminder'}, 'Create reminder should get proper value');
-                _.each(self.data['mail.activity.menu'].records, function (record) {
-                    if (record.model == null) {
-                        record.today_count += 1;
-                        record.total_count += 1;
-                    }
-                });
-                return $.when();
-            }
             return this._super(route, args);
         },
     });
@@ -106,7 +88,7 @@ QUnit.test('activity menu widget: activity menu with 4 records', function (asser
     assert.ok(activityMenu.$el.hasClass('o_mail_navbar_item'), 'should be the instance of widget');
     assert.ok(activityMenu.$('.o_mail_channel_preview').hasClass('o_mail_channel_preview'), "should instance of widget");
     assert.ok(activityMenu.$('.o_notification_counter').hasClass('o_notification_counter'), "widget should have notification counter");
-    assert.strictEqual(parseInt(activityMenu.el.innerText), 7, "widget should have 7 notification counter");
+    assert.strictEqual(parseInt(activityMenu.el.innerText), 5, "widget should have 5 notification counter");
 
     var context = {};
     testUtils.intercept(activityMenu, 'do_action', function(event) {
@@ -140,20 +122,6 @@ QUnit.test('activity menu widget: activity menu with 4 records', function (asser
     };
     activityMenu.$('.dropdown-toggle').click();
     activityMenu.$(".o_mail_navbar_dropdown_channels > div[data-model_name='Issue']").click();
-
-    // toggle quick create for reminder
-    activityMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(activityMenu.$('.o_reminder_show').hasClass("hidden"), false, 'ActivityMenu should have Add new reminder CTA');
-    activityMenu.$('.o_reminder_show').click();
-    assert.strictEqual(activityMenu.$('.o_reminder_show').hasClass("hidden"), true, 'ActivityMenu should hide CTA when entering a new reminder');
-    assert.strictEqual(activityMenu.$('.o_reminder').hasClass("hidden"), false, 'ActivityMenu should display input for new reminder');
-
-    // creating quick reminder
-    activityMenu.$("input.o_reminder_input").val("New Reminder");
-    activityMenu.$(".o_reminder_save").click();
-    assert.strictEqual(parseInt(activityMenu.el.innerText), 8, "widget should have 9 notifications (8 base + 1 new reminder)");
-    assert.strictEqual(activityMenu.$('.o_reminder_show').hasClass("hidden"), false, 'ActivityMenu add reminder button should be displayed');
-    assert.strictEqual(activityMenu.$('.o_reminder').hasClass("hidden"), true, 'ActivityMenu add reminder input should be hidden');
 
     activityMenu.destroy();
 });

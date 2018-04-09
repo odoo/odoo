@@ -3,14 +3,61 @@
     text-decoration: line-through;
 }
 
-.openerp .oe_form {
-    .oe_pad.oe_memo {
-        width: auto;
+.o_note_form_view.o_form_view {
+    .o_form_statusbar {
+        margin-bottom: 0;
     }
     .oe_form_field.oe_memo {
-        margin: 0;
+        margin: 0 (@padding-large-horizontal * -1);
         padding: 0;
-        width: 100%;
         min-height: 200px;
+
+        .note-editor {
+            border: none;
+        }
+    }
+    &.o_form_readonly {
+        .oe_memo {
+            padding: @padding-large-horizontal;
+            border-bottom: 1px solid @legend-border-color;
+        }
+    }
+}
+
+// Quick create notes from systray
+.o_note.o_mail_channel_preview {
+    background-color: white;
+    .o_channel_info {
+        .o_channel_title {
+            .o_channel_name {
+                .o-flex(1, 1, 100%);
+            }
+        }
+        .o_note_input_box {
+            .o-flex-display();
+            p {
+                .o-flex(1, 1, auto);
+            }
+        }
+        .o_note_save {
+            font-size: 11px;
+            font-weight: bold;
+        }
+    }
+    .o_note_input {
+        border: none;
+    }
+    .o_note_datetime {
+        .o_datepicker {
+            .o_datepicker_input {
+                float: right;
+                text-align: right;
+                border: none;
+                font-size: 11px;
+            }
+            .o_datepicker_button {
+                display: none;
+            }
+        }
     }
 }
