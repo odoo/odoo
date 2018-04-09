@@ -116,6 +116,7 @@ class ProductTemplate(models.Model):
     def onchange_deferred_revenue(self):
         if self.deferred_revenue_category_id:
             self.property_account_income_id = self.deferred_revenue_category_id.account_asset_id
+            self.company_id = self.deferred_revenue_category_id.company_id
 
     @api.onchange('asset_category_id')
     def onchange_asset(self):
