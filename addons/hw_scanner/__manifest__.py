@@ -18,4 +18,5 @@ point of sale module.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['evdev']},
+    'installable': False,
 }

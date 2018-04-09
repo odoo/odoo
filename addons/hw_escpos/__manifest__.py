@@ -20,4 +20,5 @@ that would need such functionality.
     'external_dependencies': {
         'python' : ['usb.core','serial','qrcode'],
     },
+    'installable': False,
 }
