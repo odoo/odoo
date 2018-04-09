@@ -280,6 +280,78 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'number_of_days_temp': 1,
             })
 
+        hol41 = HolidaysEmployeeGroup.create({
+            'name': 'Hol41',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_status_1.id,
+            'date_from': (datetime.today() + relativedelta(days=9)).strftime('%Y-%m-%d %H:%M'),
+            'date_to': (datetime.today() + relativedelta(days=10)),
+            'number_of_days_temp': 1,
+        })
+
+        # A simple user should be able to reset it's own leave
+        hol41.action_draft()
+        hol41.unlink()
+
+        hol42 = Requests.sudo(self.user_hrmanager_id).create({
+            'name': 'Hol41',
+            'employee_id': self.employee_hrmanager_id,
+            'holiday_status_id': self.holidays_status_1.id,
+            'date_from': (datetime.today() + relativedelta(days=9)).strftime('%Y-%m-%d %H:%M'),
+            'date_to': (datetime.today() + relativedelta(days=10)),
+            'number_of_days_temp': 1,
+        })
+
+        # But not someone else's leave
+        with self.assertRaises(AccessError):
+            hol42.sudo(self.user_employee_id).action_draft()
+
+        # An officer should not be able to reset someone else's leave
+        with self.assertRaises(UserError):
+            hol42.sudo(self.user_hruser_id).action_draft()
+
+        # A manager should be able to reset someone else's leave
+        hol42.action_draft()
+        hol42.unlink()
+
+        # Officer should not be able to approve it's own leave
+        hol50 = HolidaysEmployeeGroup.sudo(self.user_hruser_id).create({
+            'name': 'Hol50',
+            'employee_id': self.employee_hruser_id,
+            'holiday_status_id': self.holidays_status_1.id,
+            'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
+            'date_to': (datetime.today() + relativedelta(days=16)),
+            'number_of_days_temp': 1,
+        })
+
+        with self.assertRaises(UserError):
+            hol50.action_approve()
+
+        # Manager should not be able to approve it's own leave
+        hol51 = HolidaysEmployeeGroup.sudo(self.user_hrmanager_2_id).create({
+            'name': 'Hol51',
+            'employee_id': self.employee_hrmanager_2_id,
+            'holiday_status_id': self.holidays_status_1.id,
+            'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
+            'date_to': (datetime.today() + relativedelta(days=16)),
+            'number_of_days_temp': 1,
+        })
+
+        with self.assertRaises(UserError):
+            hol51.action_approve()
+
+        # Unless there is not manager above
+        hol52 = HolidaysEmployeeGroup.sudo(self.user_hrmanager_id).create({
+            'name': 'Hol52',
+            'employee_id': self.employee_hrmanager_id,
+            'holiday_status_id': self.holidays_status_1.id,
+            'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
+            'date_to': (datetime.today() + relativedelta(days=16)),
+            'number_of_days_temp': 1,
+        })
+
+        hol52.action_approve()
+
     def test_10_leave_summary_reports(self):
         # Print the HR Holidays(Summary Department) Report through the wizard
         ctx = {

@@ -13,6 +13,22 @@ _logger = logging.getLogger(__name__)
 
 
 class HolidaysAllocation(models.Model):
+    """
+        Here are the rights associated with the flow of allocation requests
+
+        State       Groups              Restriction
+        ============================================================================================================
+        Draft       Anybody             Own Allocation only and state in [confirm, refuse]
+                    Holiday Manager     State in [confirm, refuse]
+        Confirm     All                 State = draft
+        Validate1   Holiday Officer     Not his own Allocation and state = confirm
+                    Holiday Manager     Not his own Allocation or has no manager and State = confirm
+        Validate    Holiday Officer     Not his own Allocation and state = confirm
+                    Holiday Manager     Not his own Allocation or has no manager and State in [validate1, confirm]
+        Refuse      Holiday Officer     State in [confirm, validate, validate1]
+                    Holiday Manager     State in [confirm, validate, validate1]
+        ============================================================================================================
+    """
     _name = "hr.leave.allocation"
     _description = "Leaves Allocation"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -67,6 +83,7 @@ class HolidaysAllocation(models.Model):
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
+    can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
@@ -90,6 +107,18 @@ class HolidaysAllocation(models.Model):
         for holiday in self:
             if group_hr_manager in user.groups_id or holiday.employee_id and holiday.employee_id.user_id == user:
                 holiday.can_reset = True
+
+    @api.depends('employee_id', 'department_id')
+    def _compute_can_approve(self):
+        """ User can only approve a leave request if it is not his own
+            Exception : User is holiday manager and has no manager
+        """
+        for holiday in self:
+            # User is holiday manager and has no manager
+            manager = self.user_has_groups('hr_holidays.group_hr_holidays_manager') \
+                        and not holiday.employee_id.parent_id \
+                        and not holiday.department_id.manager_id
+            holiday.can_approve = (holiday.employee_id.user_id.id != self.env.uid) or manager
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
@@ -241,6 +270,9 @@ class HolidaysAllocation(models.Model):
     def action_validate(self):
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
+
+        if any(not holiday.can_approve for holiday in self):
+            raise UserError(_('Only your manager can approve your allocations'))
 
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
