@@ -550,3 +550,10 @@ class HolidaysRequest(models.Model):
             })
 
         return [new_group] + groups
+
+    @api.multi
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
+        # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo
+        if self.state in ['validate', 'validate1']:
+            return super(HolidaysRequest, self.sudo()).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, force=force)
+        return super(HolidaysRequest, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, force=force)
