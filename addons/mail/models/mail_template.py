@@ -238,37 +238,6 @@ class MailTemplate(models.Model):
             self.null_value = False
 
     @api.multi
-    def write(self, vals):
-        # This override is for checking that the template is correct when
-        # saving it
-        if vals.get('body_html'):
-            # render_template can return empty results if the mako rendering
-            # crashes or if the body_html is empty, therefore we will only
-            # perform this check if the new body_html is non-empty
-            if vals.get('model_id'):
-                _model = self.env['ir.model'].sudo().browse(
-                    vals['model_id']).model
-            else:
-                _model = self.model
-
-            Model = self.env[_model]
-            if not Model._abstract:
-                # Get the latest record so as to not use older, potentially
-                # deprecated/obsolete records
-                res_ids = Model.search([], limit=1, order='id DESC').ids[:1]
-                if res_ids:
-                    render = self.render_template(
-                        vals['body_html'], _model, res_ids)
-
-                    if not any(render.values()):
-                        raise UserError(_(
-                            "Template rendering failed, this could mean that "
-                            "your template contains python syntax errors"
-                        ))
-
-        return super(MailTemplate, self).write(vals)
-
-    @api.multi
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
