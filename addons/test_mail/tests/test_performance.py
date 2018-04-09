@@ -160,14 +160,14 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(admin=47, emp=54):  # com runbot 46 - 52 // test_mail only: 35 - 41
+        with self.assertQueryCount(margin=1, admin=46, emp=52):  # com runbot 46 - 52 // test_mail only: 35 - 41
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
                 'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
             })
 
-        with self.assertQueryCount(admin=84, emp=116):  # com runbot 84 - 116 // test_mail only: 68 - 96
+        with self.assertQueryCount(margin=1, admin=84, emp=115):  # com runbot 84 - 116 // test_mail only: 68 - 96
             activity.action_feedback(feedback='Zizisse Done !')
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -231,7 +231,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=85, emp=115):  # com runbot 83 - 112 // test_mail only: 81 - 110
+        with self.assertQueryCount(margin=1, admin=85, emp=114):  # com runbot 83 - 112 // test_mail only: 81 - 110
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -243,7 +243,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=44, emp=58):  # com runbot 42 - 55 // test_mail only: 42 - 55
+        with self.assertQueryCount(margin=1, admin=44, emp=57):  # com runbot 42 - 55 // test_mail only: 42 - 55
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
