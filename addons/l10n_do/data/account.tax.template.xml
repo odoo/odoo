@@ -462,7 +462,7 @@
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
-            <field eval="[(6, 0, [ref('ret_75_tax_nonformal'), ref('tax_18_purch')])]" name="children_tax_ids"/>
+            <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_75_tax_nonformal')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
         <record id="tax_group_person_construction" model="account.tax.template">
@@ -490,7 +490,7 @@
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
-            <field eval="[(6, 0, [ref('ret_100_tax_person'), ref('ret_2_income_person')])]" name="children_tax_ids"/>
+            <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_100_tax_person'), ref('ret_2_income_person')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
         <record id="tax_group_restaurant_sale" model="account.tax.template">

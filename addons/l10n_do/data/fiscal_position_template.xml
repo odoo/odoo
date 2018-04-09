@@ -7,39 +7,39 @@
         <!-- Principal Fiscal Position for Dominican Republic internally -->
         <record id="position_buyer_final" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Consumidor Final</field>
+            <field name="name">Consumidor Final - Obsoleto</field>
         </record>
         <record id="position_buyer_moral" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Crédito Fiscal</field>
+            <field name="name">Crédito Fiscal - Obsoleto</field>
         </record>
         <record id="position_provider_moral" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Fiscal</field>
+            <field name="name">Proveedor de Servicios</field>
         </record>
         <record id="position_construction_moral" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Fiscal (Construcción)</field>
+            <field name="name">Proveedor de Vigilancia</field>
         </record>
         <record id="position_construction_person" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Persona Física (Construcción)</field>
+            <field name="name">Persona Física (Construcción) - Obsoleto</field>
         </record>
         <record id="position_person" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Persona Física</field>
+            <field name="name">Persona Física de Servicios</field>
         </record>
         <record id="position_nonformal" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Informal (Bienes)</field>
+            <field name="name">Proveedor Informal de Bienes</field>
         </record>
         <record id="position_exterior" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor del Exterior</field>
+            <field name="name">Servicios del Exterior</field>
         </record>
         <record id="position_expenses" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Gastos Menores</field>
+            <field name="name">Gastos Menores - Obsoleto</field>
         </record>
         <record id="position_gov" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -47,7 +47,7 @@
         </record>
         <record id="position_nonprofit" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">No lucrativas</field>
+            <field name="name">No lucrativa de Servicios</field>
         </record>
         <record id="position_especial" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -81,23 +81,17 @@
         </record>
         <!-- Gubernamental -->
         <record id="fiscal_position_tax_1" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_18_sale"/>
-            <field name="position_id" ref="position_gov"/>
-            <field name="tax_dest_id" ref="tax_0_sale"/>
         </record>
         <record id="fiscal_position_tax_2" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_18_purch"/>
-            <field name="position_id" ref="position_gov"/>
-            <field name="tax_dest_id" ref="tax_0_purch"/>
         </record>
         <!-- No Lucrativas -->
         <record id="fiscal_position_tax_12" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_nonprofit"/>
-            <field name="tax_dest_id" ref="tax_0_purch"/>
+            <field name="tax_dest_id" ref="ret_100_tax_nonprofit"/>
         </record>
         <record id="fiscal_position_tax_13" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_18_purch_serv"/>
+            <field name="tax_src_id" ref="tax_18_purch_incl"/>
             <field name="position_id" ref="position_nonprofit"/>
             <field name="tax_dest_id" ref="ret_100_tax_nonprofit"/>
         </record>
@@ -105,13 +99,13 @@
         <record id="fiscal_position_tax_8" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_construction_moral"/>
-            <field name="tax_dest_id" ref="tax_group_moral_construction"/>
+            <field name="tax_dest_id" ref="ret_100_tax_security"/>
         </record>
         <!-- Persona Física Construcción -->
         <record id="fiscal_position_tax_7" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_construction_person"/>
-            <field name="tax_dest_id" ref="tax_group_person_construction"/>
+            <field name="tax_dest_id" ref="ret_30_tax_freelance"/>
         </record>
         <!-- Importación / Exportación -->
         <!-- Proveedo del Exterior -->
@@ -123,7 +117,7 @@
         <record id="fiscal_position_tax_6" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_exterior"/>
-            <field name="tax_dest_id" ref="tax_0_purch"/>
+            <field name="tax_dest_id" ref="ret_27_income_remittance"/>
         </record>
         <!-- = = = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Accounts Template -->
