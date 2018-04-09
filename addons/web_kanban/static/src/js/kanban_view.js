@@ -733,6 +733,12 @@ var KanbanView = View.extend({
             column.insertBefore(self.$('.o_column_quick_create'));
             self.widgets.push(column);
             self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
+
+            var col_ids = [];
+            self.$('.o_kanban_group').each(function (index, u) {
+                col_ids.push($(u).data('id'));
+            });
+            self.resequence(col_ids);
         });
     },
 
