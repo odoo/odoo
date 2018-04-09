@@ -763,7 +763,10 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = _.map($selectedRows, function (row) {
             return $(row).data('id');
         });
-        if (this.selection.length === this.state.data.length && this.state.count > this.selection.length) {
+        var isAllSelected = this.selection.length === this.state.data.length
+                                && this.state.count > this.selection.length;
+        // TO-DO check for groupBy
+        if (this.hasSelectionBar && isAllSelected) {
             this._renderSelectionBar();
         }
         this.trigger_up('selection_changed', { selection: this.selection, allSelected: this.allSelected });

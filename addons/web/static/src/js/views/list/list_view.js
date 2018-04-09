@@ -48,6 +48,8 @@ var ListView = BasicView.extend({
         this.rendererParams.arch = this.arch;
         this.rendererParams.hasSelectors =
                 'hasSelectors' in params ? params.hasSelectors : true;
+        this.rendererParams.hasSelectionBar =
+                'hasSelectionBar' in params ? params.hasSelectionBar : true;
         this.rendererParams.editable = params.readonly ? false : this.arch.attrs.editable;
         this.rendererParams.selectedRecords = selectedRecords;
 

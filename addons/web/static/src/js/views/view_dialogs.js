@@ -349,6 +349,7 @@ var SelectCreateDialog = ViewDialog.extend({
             context: this.context,
             domain: domain,
             hasSelectors: !this.options.disable_multiple_selection,
+            hasSelectionBar: false,
             modelName: this.res_model,
             readonly: true,
             withBreadcrumbs: false,
