@@ -1,845 +1,696 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import babel.dates
-
-from odoo.tools.datetime import datetime, timedelta, date, time, relativedelta, rrule, DAILY
-
-from odoo.fields import Date, Datetime
-from odoo.addons.resource.models.resource import to_user_tz
+from odoo.exceptions import ValidationError
+from odoo.tools.float_utils import float_compare
+from odoo.tools.datetime import datetime, date
 from odoo.addons.resource.tests.common import TestResourceCommon
 
 
-class TestIntervals(TestResourceCommon):
-
+class TestErrors(TestResourceCommon):
     def setUp(self):
-        super(TestIntervals, self).setUp()
-        # Some data intervals
-        #  - first one is included in second one
-        #  - second one is extended by third one
-        #  - sixth one is included in fourth one
-        #  - fifth one is prior to other one
-        # Once cleaned: 1 interval 3/02 8-10), 2 intervals 4/02 (8-14 + 17-21)
-        self.intervals = [
-            self.calendar._interval_new(
-                datetime(2013, 2, 4, 9, 0, 0),
-                datetime(2013, 2, 4, 11, 0, 0)
-            ), self.calendar._interval_new(
-                datetime(2013, 2, 4, 8, 0, 0),
-                datetime(2013, 2, 4, 12, 0, 0)
-            ), self.calendar._interval_new(
-                datetime(2013, 2, 4, 11, 0, 0),
-                datetime(2013, 2, 4, 14, 0, 0)
-            ), self.calendar._interval_new(
-                datetime(2013, 2, 4, 17, 0, 0),
-                datetime(2013, 2, 4, 21, 0, 0)
-            ), self.calendar._interval_new(
-                datetime(2013, 2, 3, 8, 0, 0),
-                datetime(2013, 2, 3, 10, 0, 0)
-            ), self.calendar._interval_new(
-                datetime(2013, 2, 4, 18, 0, 0),
-                datetime(2013, 2, 4, 19, 0, 0)
-            )
-        ]
+        super(TestErrors, self).setUp()
 
-    def test_interval_merge(self):
-        cleaned_intervals = self.env['resource.calendar']._interval_merge(self.intervals)
-        self.assertEqual(len(cleaned_intervals), 3)
-        # First interval: 3, unchanged
-        self.assertEqual(cleaned_intervals[0][:2], (datetime(2013, 2, 3, 8, 0, 0), datetime(2013, 2, 3, 10, 0, 0)))
-        # Second interval: 4, 8-14, combining 8-12 and 11-14, 9-11 being inside 8-12
-        self.assertEqual(cleaned_intervals[1][:2], (datetime(2013, 2, 4, 8, 0, 0), datetime(2013, 2, 4, 14, 0, 0)))
-        # Third interval: 4, 17-21, 18-19 being inside 17-21
-        self.assertEqual(cleaned_intervals[2][:2], (datetime(2013, 2, 4, 17, 0, 0), datetime(2013, 2, 4, 21, 0, 0)))
+    def test_create_negative_leave(self):
+        # from > to
+        with self.assertRaises(ValidationError):
+            self.env['resource.calendar.leaves'].create({
+                'name': 'error cannot return in the past',
+                'resource_id': False,
+                'calendar_id': self.calendar_1.id,
+                'date_from': datetime(2018, 4, 3, 20, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                'date_to': datetime(2018, 4, 3, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            })
 
-    def test_interval_and(self):
-        self.assertEqual(self.env['resource.calendar']._interval_and(self.intervals[0], self.intervals[1]),
-                         self.calendar._interval_new(datetime(2013, 2, 4, 9, 0, 0), datetime(2013, 2, 4, 11, 0, 0)))
-        self.assertEqual(self.env['resource.calendar']._interval_and(self.intervals[2], self.intervals[3]),
-                         None)
-
-    def test_interval_remove(self):
-        working_interval = self.calendar._interval_new(datetime(2013, 2, 4, 8, 0, 0), datetime(2013, 2, 4, 18, 0, 0))
-        result = self.env['resource.calendar']._interval_remove_leaves(working_interval, self.intervals)
-        self.assertEqual(len(result), 1)
-        # First interval: 4, 14-17
-        self.assertEqual(result[0][:2], (datetime(2013, 2, 4, 14, 0, 0), datetime(2013, 2, 4, 17, 0, 0)))
-
-    def test_interval_schedule_hours(self):
-        cleaned_intervals = self.env['resource.calendar']._interval_merge(self.intervals)
-        result = self.env['resource.calendar']._interval_schedule_hours(cleaned_intervals, 5.5)
-        self.assertEqual(len(result), 2)
-        # First interval: 3, 8-10 untouched
-        self.assertEqual(result[0][:2], (datetime(2013, 2, 3, 8, 0, 0), datetime(2013, 2, 3, 10, 0, 0)))
-        # First interval: 4, 8-11:30
-        self.assertEqual(result[1][:2], (datetime(2013, 2, 4, 8, 0, 0), datetime(2013, 2, 4, 11, 30, 0)))
-
-    def test_interval_schedule_hours_backwards(self):
-        cleaned_intervals = self.env['resource.calendar']._interval_merge(self.intervals)
-        result = self.env['resource.calendar']._interval_schedule_hours(cleaned_intervals, 5.5, backwards=True)
-        self.assertEqual(len(result), 2)
-        # First interval: 3, 8-10 untouched
-        self.assertEqual(result[1][:2], (datetime(2013, 2, 4, 17, 0, 0), datetime(2013, 2, 4, 21, 0, 0)))
-        # First interval: 4, 8-11:30
-        self.assertEqual(result[0][:2], (datetime(2013, 2, 4, 12, 30, 0), datetime(2013, 2, 4, 14, 0, 0)))
+        with self.assertRaises(ValidationError):
+            self.env['resource.calendar.leaves'].create({
+                'name': 'error caused by timezones',
+                'resource_id': False,
+                'calendar_id': self.calendar_1.id,
+                'date_from': datetime(2018, 4, 3, 10, 0, 0, tzinfo='UTC'),
+                'date_to': datetime(2018, 4, 3, 12, 0, 0, tzinfo='Etc/GMT-6')
+            })
 
 
-class TestCalendarBasics(TestResourceCommon):
+class TestCalendar(TestResourceCommon):
+    def setUp(self):
+        super(TestCalendar, self).setUp()
 
-    def test_calendar_weekdays(self):
-        weekdays = self.calendar._get_weekdays()
-        self.assertEqual(weekdays, [1, 4])
-
-    def test_calendar_next_day(self):
-        # Test: next day: next day after day1 is day4
-        test_date = self.calendar._get_next_work_day(day_date=date(2013, 2, 12))
-        self.assertEqual(test_date, self.date2.date())
-
-        # Test: next day: next day after day4 is (day1+7)
-        test_date = self.calendar._get_next_work_day(day_date=date(2013, 2, 15))
-        self.assertEqual(test_date, self.date1.date() + relativedelta(days=7))
-
-        # Test: next day: next day after day4+1 is (day1+7)
-        test_date = self.calendar._get_next_work_day(day_date=date(2013, 2, 15) + relativedelta(days=1))
-        self.assertEqual(test_date, self.date1.date() + relativedelta(days=7))
-
-        # Test: next day: next day after day1-1 is day1
-        test_date = self.calendar._get_next_work_day(day_date=date(2013, 2, 12) + relativedelta(days=-1))
-        self.assertEqual(test_date, self.date1.date())
-
-    def test_calendar_previous_day(self):
-        # Test: previous day: previous day before day1 is (day4-7)
-        test_date = self.calendar._get_previous_work_day(day_date=date(2013, 2, 12))
-        self.assertEqual(test_date, self.date2.date() + relativedelta(days=-7))
-
-        # Test: previous day: previous day before day4 is day1
-        test_date = self.calendar._get_previous_work_day(day_date=date(2013, 2, 15))
-        self.assertEqual(test_date, self.date1.date())
-
-        # Test: previous day: previous day before day4+1 is day4
-        test_date = self.calendar._get_previous_work_day(day_date=date(2013, 2, 15) + relativedelta(days=1))
-        self.assertEqual(test_date, self.date2.date())
-
-        # Test: previous day: previous day before day1-1 is (day4-7)
-        test_date = self.calendar._get_previous_work_day(day_date=date(2013, 2, 12) + relativedelta(days=-1))
-        self.assertEqual(test_date, self.date2.date() + relativedelta(days=-7))
-
-    def test_calendar_working_day_intervals_no_leaves(self):
-        # Test: day0 without leaves: 1 interval
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 12), start_time=time(9, 8, 7))
-        self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 12, 9, 8, 7), datetime(2013, 2, 12, 16, 0, 0)))
-        self.assertEqual(intervals[0][2]['attendances'], self.att_1)
-
-        # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 19), start_time=time(10, 30, 0))
-        self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 19, 10, 30, 0), datetime(2013, 2, 19, 16, 0, 0)))
-        self.assertEqual(intervals[0][2]['attendances'], self.att_1)
-
-        # Test: day3 without leaves: 2 interval
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 15), start_time=time(10, 11, 12))
-        self.assertEqual(len(intervals), 2)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 15, 10, 11, 12), datetime(2013, 2, 15, 13, 0, 0)))
-        self.assertEqual(intervals[1][:2], (datetime(2013, 2, 15, 16, 0, 0), datetime(2013, 2, 15, 23, 0, 0)))
-        self.assertEqual(intervals[0][2]['attendances'], self.att_2)
-        self.assertEqual(intervals[1][2]['attendances'], self.att_3)
-
-    def test_calendar_working_day_intervals_leaves_generic(self):
-        # Test: day0 with leaves outside range: 1 interval
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 12), start_time=time(7, 0, 0), compute_leaves=True)
-        self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 12, 8, 0, 0), datetime(2013, 2, 12, 16, 0, 0)))
-
-        # Test: day0 with leaves: 2 intervals because of leave between 9 and 12, ending at 15:45:30
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 19),
-                                                          start_time=time(8, 15, 0),
-                                                          end_time=time(15, 45, 30),
-                                                          compute_leaves=True)
-        self.assertEqual(len(intervals), 2)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 19, 8, 15, 0), datetime(2013, 2, 19, 9, 0, 0)))
-        self.assertEqual(intervals[1][:2], (datetime(2013, 2, 19, 12, 0, 0), datetime(2013, 2, 19, 15, 45, 30)))
-        self.assertEqual(intervals[0][2]['attendances'], self.att_1)
-        self.assertEqual(intervals[0][2]['leaves'], self.leave1)
-        self.assertEqual(intervals[1][2]['attendances'], self.att_1)
-        self.assertEqual(intervals[0][2]['leaves'], self.leave1)
-
-    def test_calendar_working_day_intervals_leaves_resource(self):
-        # Test: day1+14 on leave, with resource leave computation
-        intervals = self.calendar._get_day_work_intervals(
-            date(2013, 2, 26),
-            start_time=time(7, 0, 0),
-            compute_leaves=True,
-            resource_id=self.resource1_id
-        )
-        # Result: nothing, because on leave
-        self.assertEqual(len(intervals), 0)
-
-    def test_calendar_working_day_intervals_limited_attendances(self):
-        """ Test attendances limited in time. """
-        attendance = self.env['resource.calendar.attendance'].search(
-            [('name', '=', 'Att3')])
-        attendance.write({
-            'date_from': self.date2 + relativedelta(days=7),
-            'date_to': False,
+    def test_get_work_hours_count(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Global Leave',
+            'resource_id': False,
+            'calendar_id': self.calendar_1.id,
+            'date_from': datetime(2018, 4, 3, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 3, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz),
         })
-        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
-        self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 15, 10, 11, 12), datetime(2013, 2, 15, 13, 0, 0)))
 
-        attendance.write({
-            'date_from': False,
-            'date_to': self.date2 - relativedelta(days=7),
+        self.env['resource.calendar.leaves'].create({
+            'name': 'leave for Jean',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 5, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 5, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz),
         })
-        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
-        self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 15, 10, 11, 12), datetime(2013, 2, 15, 13, 0, 0)))
 
-        attendance.write({
-            'date_from': self.date2 + relativedelta(days=7),
-            'date_to': self.date2 - relativedelta(days=7),
+        hours = self.calendar_1.get_work_hours_count(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                                    datetime(2018, 4, 6, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(hours, 32)
+
+        hours = self.calendar_1.get_work_hours_count(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                                    datetime(2018, 4, 6, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz),
+                                                    compute_leaves=False)
+        self.assertEqual(hours, 40)
+
+        # leave of size 0
+        self.env['resource.calendar.leaves'].create({
+            'name': 'zero_length',
+            'calendar_id': self.calendar_2.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 3, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 3, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
         })
-        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
-        self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 15, 10, 11, 12), datetime(2013, 2, 15, 13, 0, 0)))
 
-        attendance.write({
-            'date_from': self.date2,
-            'date_to': self.date2,
-        })
-        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
-        self.assertEqual(len(intervals), 2)
-        self.assertEqual(intervals[0][:2], (datetime(2013, 2, 15, 10, 11, 12), datetime(2013, 2, 15, 13, 0, 0)))
-        self.assertEqual(intervals[1][:2], (datetime(2013, 2, 15, 16, 0, 0), datetime(2013, 2, 15, 23, 0, 0)))
+        hours = self.calendar_2.get_work_hours_count(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+                                                     datetime(2018, 4, 6, 23, 59, 59, tzinfo=self.patel.resource_calendar_id.tz))
 
-    def test_calendar_working_hours_of_date(self):
-        # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
-        wh = self.calendar.get_work_hours_count(datetime(2013, 2, 19, 10, 30, 0), datetime(2013, 2, 19, 18, 0, 0), self.resource1_id, compute_leaves=False)
-        self.assertEqual(wh, 5.5)
+        self.assertEqual(hours, 35)
 
-
-class ResourceWorkingHours(TestResourceCommon):
-
-    def test_calendar_working_hours(self):
-        # new API: resource without leaves
-        # res: 2 weeks -> 40 hours
-        res = self.calendar.get_work_hours_count(
-            datetime(2013, 2, 12, 6, 0, 0),
-            datetime(2013, 2, 22, 23, 0, 0),
-            self.resource1_id,
-            compute_leaves=False)
-        self.assertEqual(res, 40.0)
-
-    def test_calendar_working_hours_leaves(self):
-        # new API: resource and leaves
-        # res: 2 weeks -> 40 hours - (3+4) leave hours
-        res = self.calendar.get_work_hours_count(
-            datetime(2013, 2, 12, 6, 0, 0),
-            datetime(2013, 2, 22, 23, 0, 0),
-            self.resource1_id,
-            compute_leaves=True)
-        self.assertEqual(res, 33.0)
-
-    def test_calendar_timezone(self):
-        # user in timezone UTC-9 asks for work hours
-        #  Limits: between 2013-02-19 10:00:00 and 2013-02-26 15:30:00 (User TZ)
-        #          between 2013-02-19 19:00:00 and 2013-02-27 0:30:00 (UTC)
-        # Leaves:  between 2013-02-21 10:00:00 and 2013-02-26 12:00:00 (User TZ)
-        # res: 19/02 (10-16 (beginning)) + 22/02 (0 (leave)) + 26/02 (12-15.30 (leave+ending))
-        self.env.user.tz = 'US/Alaska'
-        (self.leave1 | self.leave2 | self.leave3).unlink()
+        # leave of medium size
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Timezoned Leaves',
-            'calendar_id': self.calendar.id,
-            'resource_id': self.resource1_id,
-            'date_from': datetime(2013, 2, 21, 10, 0, 0, tzinfo=self.env.user.tz),
-            'date_to': datetime(2013, 2, 26, 12, 0, 0, tzinfo=self.env.user.tz)
+            'name': 'zero_length',
+            'calendar_id': self.calendar_2.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 3, 9, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 3, 12, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
         })
-        res = self.calendar.get_work_hours_count(
-            datetime(2013, 2, 19, 10, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 26, 15, 30, 0, tzinfo=self.env.user.tz),
-            self.resource1_id,
-            compute_leaves=True)
-        self.assertEqual(res, 9.5)
 
-    def test_calendar_leave_intervals_timezone(self):
-        # _iter_leave_intervals takes UTC and outputs UTC
-        # Leave is taken by user in US/Alaska timezone
-        # It should be visible at the right time for every timezone
-        self.env.user.tz = 'US/Alaska'
-        (self.leave1 | self.leave2 | self.leave3).unlink()
+        hours = self.calendar_2.get_work_hours_count(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+                                                     datetime(2018, 4, 6, 23, 59, 59, tzinfo=self.patel.resource_calendar_id.tz))
+
+        self.assertEqual(hours, 32)
+
+        leave.unlink()
+
+        # leave of very small size
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Timezoned Leaves',
-            'calendar_id': self.calendar.id,
-            'resource_id': self.resource1_id,
-            'date_from': datetime(2013, 2, 21, 10, 0, 0, tzinfo=self.env.user.tz),
-            'date_to': datetime(2013, 2, 26, 12, 0, 0, tzinfo=self.env.user.tz)
+            'name': 'zero_length',
+            'calendar_id': self.calendar_2.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 3, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 3, 0, 0, 10, tzinfo=self.patel.resource_calendar_id.tz),
         })
 
-        def to_tuple(interval):
-            return (interval.start_datetime, interval.end_datetime)
+        hours = self.calendar_2.get_work_hours_count(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+                                                     datetime(2018, 4, 6, 23, 59, 59, tzinfo=self.patel.resource_calendar_id.tz))
 
-        # Checking for 'Europe/Brussels'
-        self.env.user.tz = 'Europe/Brussels'
-        leaves = list(self.calendar._iter_leave_intervals(
-            datetime(2013, 2, 26, 14, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 26, 15, 30, 0, tzinfo=self.env.user.tz),
-            self.resource1_id))
+        self.assertEqual(hours, 35)
+
+        leave.unlink()
+
+        # no timezone given should be converted to UTC
+        # Should equal to a leave between 2018/04/03 10:00:00 and 2018/04/04 10:00:00
+        self.env['resource.calendar.leaves'].create({
+            'name': 'no timezone',
+            'calendar_id': self.calendar_2.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 3, 4, 0, 0),
+            'date_to': datetime(2018, 4, 4, 4, 0, 0),
+        })
+
+        hours = self.calendar_2.get_work_hours_count(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+                                                     datetime(2018, 4, 6, 23, 59, 59, tzinfo=self.patel.resource_calendar_id.tz))
+
+        self.assertEqual(hours, 28)
+
+        hours = self.calendar_2.get_work_hours_count(datetime(2018, 4, 2, 23, 59, 59, tzinfo=self.patel.resource_calendar_id.tz),
+                                                     datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz))
+
+        self.assertEqual(hours, 0)
+
+    def test_plan_hours(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'global',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 11, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 11, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        time = self.calendar_1.plan_hours(2, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=False)
+        self.assertEqual(time, datetime(2018, 4, 10, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        time = self.calendar_1.plan_hours(20, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=False)
+        self.assertEqual(time, datetime(2018, 4, 12, 12, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        time = self.calendar_1.plan_hours(5, datetime(2018, 4, 10, 15, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, datetime(2018, 4, 12, 12, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        # negative planning
+        time = self.calendar_1.plan_hours(-10, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, datetime(2018, 4, 6, 14, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        # zero planning
+        time = self.calendar_1.plan_hours(0, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        # very small planning sets to the first hour it finds
+        time = self.calendar_1.plan_hours(0.0002, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, datetime(2018, 4, 10, 8, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        # huge planning
+        time = self.calendar_1.plan_hours(3000, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=False)
+        self.assertEqual(time, datetime(2019, 9, 16, 16, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+    def test_plan_days(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': 'global',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 11, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 11, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        time = self.calendar_1.plan_days(1, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=False)
+        self.assertEqual(time, datetime(2018, 4, 10, 16, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        time = self.calendar_1.plan_days(3, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=False)
+        self.assertEqual(time, datetime(2018, 4, 12, 16, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        time = self.calendar_1.plan_days(4, datetime(2018, 4, 10, 16, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, datetime(2018, 4, 17, 16, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        # negative planning
+        time = self.calendar_1.plan_days(-10, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, datetime(2018, 3, 27, 8, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        # zero planning
+        time = self.calendar_1.plan_days(0, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        # very small planning returns False in this case
+        # TODO: decide if this behaviour is alright
+        time = self.calendar_1.plan_days(0.0002, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=True)
+        self.assertEqual(time, False)
+
+        # huge planning
+        # TODO: Same as above
+        # NOTE: Maybe allow to set a max limit to the method
+        time = self.calendar_1.plan_days(3000, datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz), compute_leaves=False)
+        self.assertEqual(time, False)
+
+
+class TestResMixin(TestResourceCommon):
+    def setUp(self):
+        super(TestResMixin, self).setUp()
+
+    def test_work_days_data(self):
+        # Looking at Jean's calendar
+
+        # Viewing it as Jean
+        datas = self.jean.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 16, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+        self.assertEqual(datas['days'], 5)
+        self.assertEqual(datas['hours'], 40)
+        # Viewing it as Patel
+        # Views from 2018/04/01 20:00:00 to 2018/04/06 12:00:00
+        datas = self.jean.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 16, 0, 0, tzinfo=self.patel.resource_calendar_id.tz))
+        self.assertEqual(datas['days'], 4.5)
+        self.assertEqual(datas['hours'], 36)  # We see only 36 hours
+        # Viewing it as John
+        # Views from 2018/04/02 09:00:00 to 2018/04/07 02:00:00
+        datas = self.jean.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 16, 0, 0, tzinfo=self.john.resource_calendar_id.tz))
+        self.assertEqual(datas['days'], 5)  # Still showing as 5 days because of rounding
+        self.assertEqual(datas['hours'], 39)  # We see only 39 hours
+
+        # Looking at John's calendar
+
+        # Viewing it as Jean
+        # Views from 2018/04/01 15:00:00 to 2018/04/06 14:00:00
+        datas = self.john.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+        self.assertEqual(datas['days'], 1.5)
+        self.assertEqual(datas['hours'], 13)
+
+        # Viewing it as Patel
+        # Views from 2018/04/01 11:00:00 to 2018/04/06 10:00:00
+        datas = self.john.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.patel.resource_calendar_id.tz))
+        self.assertEqual(datas['days'], 1.25)
+        self.assertEqual(datas['hours'], 10)
+
+        # Viewing it as John
+        datas = self.john.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.john.resource_calendar_id.tz))
+        self.assertEqual(datas['days'], 2)
+        self.assertEqual(datas['hours'], 20)
+
+        # half days
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'half',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        datas = self.jean.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(datas['days'], 4.5)
+        self.assertEqual(datas['hours'], 36)
+
+        leave.unlink()
+
+        # leave size 0
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'zero',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.calendar_1.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.calendar_1.tz),
+        })
+
+        datas = self.jean.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(datas['days'], 5)
+        self.assertEqual(datas['hours'], 40)
+
+        leave.unlink()
+
+        # leave very small size
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'small',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.calendar_1.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 1, tzinfo=self.calendar_1.tz),
+        })
+
+        datas = self.jean.get_work_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(datas['days'], 5)
+        self.assertEqual(float_compare(datas['hours'], 40, precision_digits=2), 0)
+
+        leave.unlink()
+
+    def test_leaves_days_data(self):
+        # Jean takes a leave
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Jean is visiting India',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 10, 8, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 10, 16, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        # John takes a leave for Jean
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Jean is comming in USA',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 12, 8, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 12, 16, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+        })
+
+        # Jean asks to see how much leave he has taken
+        datas = self.jean.get_leave_days_data(datetime(2018, 4, 9, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                               datetime(2018, 4, 13, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz))
+        # Sees only 1 day and 8 hours because, as john is in UTC-7 the second leave is not in
+        # the attendances of Jean
+        self.assertEqual(datas['days'], 1)
+        self.assertEqual(datas['hours'], 8)
+
+        # Patel Asks to see when Jean has taken some leaves
+        # Patel should see the same
+        datas = self.jean.get_leave_days_data(datetime(2018, 4, 9, 0, 0, 0, tzinfo=self.patel.resource_calendar_id.tz),
+                                               datetime(2018, 4, 13, 23, 59, 59, tzinfo=self.patel.resource_calendar_id.tz))
+        self.assertEqual(datas['days'], 1)
+        self.assertEqual(datas['hours'], 8)
+
+        # Jean takes a leave for John
+        # Gives 3 hours (3/8 of a day)
+        self.env['resource.calendar.leaves'].create({
+            'name': 'John is sick',
+            'calendar_id': self.john.resource_calendar_id.id,
+            'resource_id': self.john.resource_id.id,
+            'date_from': datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 10, 20, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        # John takes a leave
+        # Gives all day (12 hours)
+        self.env['resource.calendar.leaves'].create({
+            'name': 'John goes to holywood',
+            'calendar_id': self.john.resource_calendar_id.id,
+            'resource_id': self.john.resource_id.id,
+            'date_from': datetime(2018, 4, 13, 7, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 13, 18, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+        })
+
+        # John asks how much leaves he has
+        # He sees that he has only 15 hours of leave in his attendances
+        datas = self.john.get_leave_days_data(datetime(2018, 4, 9, 0, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+                                               datetime(2018, 4, 13, 23, 59, 59, tzinfo=self.john.resource_calendar_id.tz))
+
+        self.assertEqual(datas['days'], 1)
+        self.assertEqual(datas['hours'], 10)
+
+        # half days
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'half',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        datas = self.jean.get_leave_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(datas['days'], .5)
+        self.assertEqual(datas['hours'], 4)
+
+        leave.unlink()
+
+        # leave size 0
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'zero',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.calendar_1.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.calendar_1.tz),
+        })
+
+        datas = self.jean.get_leave_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(datas['days'], 0)
+        self.assertEqual(datas['hours'], 0)
+
+        leave.unlink()
+
+        # leave very small size
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'small',
+            'calendar_id': self.calendar_1.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.calendar_1.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 1, tzinfo=self.calendar_1.tz),
+        })
+
+        datas = self.jean.get_leave_days_data(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                             datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(datas['days'], 0)
+        self.assertEqual(float_compare(datas['hours'], 0, precision_digits=2), 0)
+
+        leave.unlink()
+
+    def test_list_leaves(self):
+        jean_leave = self.env['resource.calendar.leaves'].create({
+            'name': "Jean's son is sick",
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': False,
+            'date_from': datetime(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 10, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        leaves = self.jean.list_leaves(datetime(2018, 4, 9, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                       datetime(2018, 4, 13, 23, 59, 59, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(leaves[0][0], date(2018, 4, 10))
+        self.assertEqual(leaves[0][1], 8)
+        self.assertEqual(leaves[0][2].id, jean_leave.id)
+
+        # half days
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'half',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        leaves = self.jean.list_leaves(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                       datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(leaves[0][0], date(2018, 4, 2))
+        self.assertEqual(leaves[0][1], 4)
+        self.assertEqual(leaves[0][2].id, leave.id)
+
+        leave.unlink()
+
+        # very small size
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'small',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        leaves = self.jean.list_leaves(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                       datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(leaves[0][0], date(2018, 4, 2))
+        self.assertEqual(float_compare(leaves[0][1], 0, precision_digits=2), 0)
+        self.assertEqual(leaves[0][2].id, leave.id)
+
+        leave.unlink()
+
+        # size 0
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'zero',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+        })
+
+        leaves = self.jean.list_leaves(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                       datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
+
         self.assertEqual(len(leaves), 0)
 
-        leaves = list(self.calendar._iter_leave_intervals(
-            datetime(2013, 2, 26, 8, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 26, 11, 0, 0, tzinfo=self.env.user.tz),
-            self.resource1_id))[0]
-        self.assertEqual(len(leaves), 1)
-        self.assertEqual(to_tuple(leaves[0]), (datetime(2013, 2, 26, 7, 0, 0), datetime(2013, 2, 26, 10, 0, 0)))
+        leave.unlink()
 
-        leaves = list(self.calendar._iter_leave_intervals(
-            datetime(2013, 2, 22, 8, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 22, 20, 0, 0, tzinfo=self.env.user.tz),
-            self.resource1_id))[0]
-        self.assertEqual(len(leaves), 2)
-        self.assertEqual(to_tuple(leaves[0]), (datetime(2013, 2, 22, 7, 0, 0), datetime(2013, 2, 22, 12, 0, 0)))
+    def test_list_work_time_per_day(self):
+        working_time = self.john.list_work_time_per_day(datetime(2018, 4, 9, 0, 0, 0, tzinfo=self.john.resource_calendar_id.tz),
+                                                        datetime(2018, 4, 13, 23, 59, 59, tzinfo=self.john.resource_calendar_id.tz))
 
-        # Checking for 'Japan'
-        self.env.user.tz = 'Japan'
-        leaves = list(self.calendar._iter_leave_intervals(
-            datetime(2013, 2, 26, 14, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 26, 15, 30, 0, tzinfo=self.env.user.tz),
-            self.resource1_id))
-        self.assertEqual(len(leaves), 0)
+        self.assertEqual(len(working_time), 2)
+        self.assertEqual(working_time[0][0], date(2018, 4, 10))
+        self.assertEqual(working_time[0][1], 8)
 
-        leaves = list(self.calendar._iter_leave_intervals(
-            datetime(2013, 2, 26, 8, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 26, 11, 0, 0, tzinfo=self.env.user.tz),
-            self.resource1_id))[0]
-        self.assertEqual(len(leaves), 1)
-        self.assertEqual(to_tuple(leaves[0]), (datetime(2013, 2, 25, 23, 0, 0), datetime(2013, 2, 26, 2, 0, 0)))
-
-        leaves = list(self.calendar._iter_leave_intervals(
-            datetime(2013, 2, 22, 8, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 22, 20, 0, 0, tzinfo=self.env.user.tz),
-            self.resource1_id))[0]
-        self.assertEqual(len(leaves), 2)
-        self.assertEqual(to_tuple(leaves[0]), (datetime(2013, 2, 21, 23, 0, 0), datetime(2013, 2, 22, 4, 0, 0)))
-
-    def test_calendar_work_days_intervals_timezone(self):
-        # _get_day_work_intervals converts from the timezone
-        # of the user into UTC
-        self.env.user.tz = 'US/Alaska'
-        (self.leave1 | self.leave2 | self.leave3).unlink()
+        # half days
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Timezoned Leaves',
-            'calendar_id': self.calendar.id,
-            'resource_id': self.resource1_id,
-            'date_from': datetime(2013, 2, 21, 10, 0, 0, tzinfo=self.env.user.tz),
-            'date_to': datetime(2013, 2, 26, 12, 0, 0, tzinfo=self.env.user.tz)
+            'name': 'small',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
         })
 
-        def to_tuple(interval):
-            return (interval.start_datetime, interval.end_datetime)
+        working_time = self.jean.list_work_time_per_day(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                                        datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
 
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 26), time(10), time(18), False, self.resource1_id)
-        self.assertEqual(to_tuple(intervals[0]), (datetime(2013, 2, 26, 19, 0, 0), datetime(2013, 2, 27, 1, 0, 0)))
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 26), time(10), time(18), True, self.resource1_id)
-        self.assertEqual(to_tuple(intervals[0]), (datetime(2013, 2, 26, 21, 0, 0), datetime(2013, 2, 27, 1, 0, 0)))
+        self.assertEqual(len(working_time), 5)
+        self.assertEqual(working_time[0][0], date(2018, 4, 2))
+        self.assertEqual(working_time[0][1], 4)
 
-        self.env.user.tz = 'Japan'
+        leave.unlink()
 
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 26), time(10), time(18), False, self.resource1_id)
-        self.assertEqual(to_tuple(intervals[0]), (datetime(2013, 2, 26, 1, 0, 0), datetime(2013, 2, 26, 7, 0, 0)))
-        intervals = self.calendar._get_day_work_intervals(date(2013, 2, 26), time(10), time(18), True, self.resource1_id)
-        self.assertEqual(to_tuple(intervals[0]), (datetime(2013, 2, 26, 3, 0, 0), datetime(2013, 2, 26, 7, 0, 0)))
-
-    def test_calendar_leave_days_intervals_timezone(self):
-        # _get_day_leave_intervals converts from the timezone
-        # of the user into UTC
-        self.env.user.tz = 'US/Alaska'
-        (self.leave1 | self.leave2 | self.leave3).unlink()
+        # very small size
         leave = self.env['resource.calendar.leaves'].create({
-            'name': 'Timezoned Leaves',
-            'calendar_id': self.calendar.id,
-            'resource_id': self.resource1_id,
-            'date_from': datetime(2013, 2, 21, 10, 0, 0, tzinfo=self.env.user.tz),
-            'date_to': datetime(2013, 2, 26, 12, 0, 0, tzinfo=self.env.user.tz)
+            'name': 'small',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.resource_calendar_id.tz),
         })
 
-        def to_tuple(interval):
-            return (interval.start_datetime, interval.end_datetime)
+        working_time = self.jean.list_work_time_per_day(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                                        datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
 
-        intervals = self.calendar._get_day_leave_intervals(date(2013, 2, 26), time(10), time(18), self.resource1_id)
-        self.assertEqual(to_tuple(intervals[0]), (datetime(2013, 2, 26, 20, 0, 0), datetime(2013, 2, 26, 22, 0, 0)))
+        self.assertEqual(len(working_time), 5)
+        self.assertEqual(working_time[0][0], date(2018, 4, 2))
+        self.assertEqual(float_compare(working_time[0][1], 8, precision_digits=2), 0)
 
-        self.env.user.tz = 'Japan'
+        leave.unlink()
 
-        intervals = self.calendar._get_day_leave_intervals(date(2013, 2, 26), time(10), time(18), self.resource1_id)
-        self.assertEqual(to_tuple(intervals[0]), (datetime(2013, 2, 26, 1, 0, 0), datetime(2013, 2, 26, 3, 0, 0)))
-
-    def test_calendar_hours_scheduling_backward(self):
-        res = self.calendar._schedule_hours(-40, day_dt=datetime(2013, 2, 12, 9, 0, 0))
-        # current day, limited at 9:00 because of day_dt specified -> 1 hour
-        self.assertEqual(res[-1][:2], (datetime(2013, 2, 12, 8, 0, 0), datetime(2013, 2, 12, 9, 0, 0)))
-        # previous days: 5+7 hours / 8 hours / 5+7 hours -> 32 hours
-        self.assertEqual(res[-2][:2], (datetime(2013, 2, 8, 16, 0, 0), datetime(2013, 2, 8, 23, 0, 0)))
-        self.assertEqual(res[-3][:2], (datetime(2013, 2, 8, 8, 0, 0), datetime(2013, 2, 8, 13, 0, 0)))
-        self.assertEqual(res[-4][:2], (datetime(2013, 2, 5, 8, 0, 0), datetime(2013, 2, 5, 16, 0, 0)))
-        self.assertEqual(res[-5][:2], (datetime(2013, 2, 1, 16, 0, 0), datetime(2013, 2, 1, 23, 0, 0)))
-        self.assertEqual(res[-6][:2], (datetime(2013, 2, 1, 8, 0, 0), datetime(2013, 2, 1, 13, 0, 0)))
-        # 7 hours remaining
-        self.assertEqual(res[-7][:2], (datetime(2013, 1, 29, 9, 0, 0), datetime(2013, 1, 29, 16, 0, 0)))
-
-        # Compute scheduled hours
-        td = timedelta()
-        for item in res:
-            td += item[1] - item[0]
-        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
-
-        res = self.calendar.plan_hours(-40, day_dt=datetime(2013, 2, 12, 9, 0, 0))
-        self.assertEqual(res, datetime(2013, 1, 29, 9, 0, 0))
-
-    def test_calendar_hours_scheduling_forward(self):
-        res = self.calendar._schedule_hours(40, day_dt=datetime(2013, 2, 12, 9, 0, 0))
-        self.assertEqual(res[0][:2], (datetime(2013, 2, 12, 9, 0, 0), datetime(2013, 2, 12, 16, 0, 0)))
-        self.assertEqual(res[1][:2], (datetime(2013, 2, 15, 8, 0, 0), datetime(2013, 2, 15, 13, 0, 0)))
-        self.assertEqual(res[2][:2], (datetime(2013, 2, 15, 16, 0, 0), datetime(2013, 2, 15, 23, 0, 0)))
-        self.assertEqual(res[3][:2], (datetime(2013, 2, 19, 8, 0, 0), datetime(2013, 2, 19, 16, 0, 0)))
-        self.assertEqual(res[4][:2], (datetime(2013, 2, 22, 8, 0, 0), datetime(2013, 2, 22, 13, 0, 0)))
-        self.assertEqual(res[5][:2], (datetime(2013, 2, 22, 16, 0, 0), datetime(2013, 2, 22, 23, 0, 0)))
-        self.assertEqual(res[6][:2], (datetime(2013, 2, 26, 8, 0, 0), datetime(2013, 2, 26, 9, 0, 0)))
-
-        td = timedelta()
-        for item in res:
-            td += item[1] - item[0]
-        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
-
-        res = self.calendar.plan_hours(40, day_dt=datetime(2013, 2, 12, 9, 0, 0))
-        self.assertEqual(res, datetime(2013, 2, 26, 9, 0, 0))
-
-    def test_calendar_hours_scheduling_timezone(self):
-        # user in timezone UTC-9 asks for work hours
-        self.env.user.tz = 'US/Alaska'
-        res = self.calendar.plan_hours(
-            42,
-            datetime(2013, 2, 12, 9, 25, 0, tzinfo=self.env.user.tz))
-        self.assertEqual(res, datetime(2013, 2, 26, 11, 25, 0, tzinfo=self.env.user.tz))
-
-    def test_calendar_hours_scheduling_timezone_2(self):
-        # Call schedule_hours for a user in Autralia, Sydney (GMT+10)
-        # Two cases:
-        # - start at 2013-02-15 8:00:00 => 2013-02-14 21:00:00 in UTC
-        # - start at 2013-02-15 11:00:00 => 2013-02-15 0:00:00 in UTC
-        self.env.user.tz = 'Australia/Sydney'
-        self.env['resource.calendar.attendance'].create({
-            'name': 'Day3 - 1',
-            'dayofweek': '3',
-            'hour_from': 8,
-            'hour_to': 12,
-            'calendar_id': self.calendar.id,
+        # size 0
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'zero',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+            'date_to': datetime(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
         })
-        self.env['resource.calendar.attendance'].create({
-            'name': 'Day3 - 2',
-            'dayofweek': '3',
-            'hour_from': 13,
-            'hour_to': 17,
-            'calendar_id': self.calendar.id,
-        })
-        hours = 1.0/60.0
-        tz = self.env.user.tz
-        for start_dt in [datetime(2013, 2, 15, 8, tzinfo=tz), datetime(2013, 2, 15, 11, tzinfo=tz)]:
-            res = self.calendar._schedule_hours(hours, start_dt)
-            self.assertEqual(
-                [(start_dt, start_dt.replace(minute=1))], res,
-                'resource_calendar: wrong schedule_hours computation')
 
-    def test_calendar_hours_scheduling_forward_leaves_resource(self):
-        res = self.calendar._schedule_hours(
-            40, day_dt=datetime(2013, 2, 12, 9, 0, 0),
-            compute_leaves=True, resource_id=self.resource1_id
-        )
-        self.assertEqual(res[0][:2], (datetime(2013, 2, 12, 9, 0, 0), datetime(2013, 2, 12, 16, 0, 0)))
-        self.assertEqual(res[1][:2], (datetime(2013, 2, 15, 8, 0, 0), datetime(2013, 2, 15, 13, 0, 0)))
-        self.assertEqual(res[2][:2], (datetime(2013, 2, 15, 16, 0, 0), datetime(2013, 2, 15, 23, 0, 0)))
-        self.assertEqual(res[3][:2], (datetime(2013, 2, 19, 8, 0, 0), datetime(2013, 2, 19, 9, 0, 0)))
-        self.assertEqual(res[4][:2], (datetime(2013, 2, 19, 12, 0, 0), datetime(2013, 2, 19, 16, 0, 0)))
-        self.assertEqual(res[5][:2], (datetime(2013, 2, 22, 8, 0, 0), datetime(2013, 2, 22, 9, 0, 0)))
-        self.assertEqual(res[6][:2], (datetime(2013, 2, 22, 16, 0, 0), datetime(2013, 2, 22, 23, 0, 0)))
-        self.assertEqual(res[7][:2], (datetime(2013, 3, 1, 11, 30, 0), datetime(2013, 3, 1, 13, 0, 0)))
-        self.assertEqual(res[8][:2], (datetime(2013, 3, 1, 16, 0, 0), datetime(2013, 3, 1, 22, 30, 0)))
+        working_time = self.jean.list_work_time_per_day(datetime(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.resource_calendar_id.tz),
+                                                        datetime(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.resource_calendar_id.tz))
 
-        td = timedelta()
-        for item in res:
-            td += item[1] - item[0]
-        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
+        self.assertEqual(len(working_time), 5)
+        self.assertEqual(working_time[0][0], date(2018, 4, 2))
+        self.assertEqual(working_time[0][1], 8)
 
-    def test_calendar_days_scheduling(self):
-        res = self.calendar.plan_days(5, datetime(2013, 2, 12, 9, 8, 7) )
-        self.assertEqual(res.date(), datetime(2013, 2, 26, 0, 0, 0).date(), 'resource_calendar: wrong days scheduling')
-        res = self.calendar.plan_days(-2, datetime(2013, 2, 12, 9, 8, 7) )
-        self.assertEqual(res.date(), datetime(2013, 2, 8, 0, 0, 0).date(), 'resource_calendar: wrong days scheduling')
-
-        res = self.calendar.plan_days(
-            5, datetime(2013, 2, 12, 9, 8, 7),
-            compute_leaves=True, resource_id=self.resource1_id)
-        self.assertEqual(res.date(), datetime(2013, 3, 1, 0, 0, 0).date(), 'resource_calendar: wrong days scheduling')
-
-    def test_calendar_days_scheduling_timezone(self):
-        self.env.user.tz = 'US/Alaska'
-        res = self.calendar.plan_days(5, datetime(2013, 2, 12, 9, 8, 7, tzinfo=self.env.user.tz))
-        self.assertEqual(to_user_tz(res, self.env.user).date(), datetime(2013, 2, 26, 0, 0, 0).date())
+        leave.unlink()
 
 
-WAR_START = date(1932, 11, 2)
-WAR_END = date(1932, 12, 10)
-
-
-class TestWorkDays(TestResourceCommon):
-
-    def _make_attendance(self, weekday, **kw):
-        data = {
-            'name': babel.dates.get_day_names()[weekday],
-            'dayofweek': str(weekday),
-            'hour_from': 9,
-            'hour_to': 17,
-        }
-        data.update(kw)
-        return data
-
+class TestTimezones(TestResourceCommon):
     def setUp(self):
-        super(TestWorkDays, self).setUp()
-        # trivial 5/7 9-17 resource calendar
-        self.calendar.write({
-            'attendance_ids': [
-                (0, 0, self._make_attendance(i))
-                for i in range(5)
-            ]
-        })
+        super(TestTimezones, self).setUp()
 
-        self._days = [dt.date() for dt in rrule(DAILY, dtstart=WAR_START, until=WAR_END)]
+        self.tz1 = 'Etc/GMT+6'
+        self.tz2 = 'Europe/Brussels'
+        self.tz3 = 'Etc/GMT-10'
+        self.tz4 = 'Etc/GMT+10'
 
-    def test_trivial_calendar_no_leaves(self):
-        """ If leaves are not involved, only calendar attendances (basic
-        company configuration) are taken in account
-        """
-        r = self.env['resource.resource'].create({
-            'name': "Trivial Calendar",
-            'calendar_id': self.calendar.id
-        })
+    def test_work_hours_count(self):
+        # When no timezone => UTC
+        count = self.calendar_1.get_work_hours_count(datetime(2018, 4, 10, 8, 0, 0),
+                                                     datetime(2018, 4, 10, 12, 0, 0))
 
-        # with the trivial calendar, all days are work days except for
-        # saturday and sunday
-        self.assertEqual(
-            [d for d in self._days if d.weekday() not in (5, 6)],
-            list(r.calendar_id._iter_work_days(WAR_START, WAR_END, r.id))
-        )
+        self.assertEqual(count, 4)
 
-    def test_global_leaves(self):
+        # This timezone is not the same as the calendar's one
+        count = self.calendar_1.get_work_hours_count(datetime(2018, 4, 10, 8, 0, 0, tzinfo=self.tz1),
+                                                     datetime(2018, 4, 10, 12, 0, 0, tzinfo=self.tz1))
+
+        self.assertEqual(count, 0)
+
+        # Using two different timezones
+        # 10-04-2018 06:00:00 - 10-04-2018 02:00:00
+        count = self.calendar_1.get_work_hours_count(datetime(2018, 4, 10, 8, 0, 0, tzinfo=self.tz2),
+                                                     datetime(2018, 4, 10, 12, 0, 0, tzinfo=self.tz3))
+
+        self.assertEqual(count, 0)
+
+        # Using two different timezones
+        # 2018-4-10 06:00:00 - 2018-4-10 22:00:00
+        count = self.calendar_1.get_work_hours_count(datetime(2018, 4, 10, 8, 0, 0, tzinfo=self.tz2),
+                                                     datetime(2018, 4, 10, 12, 0, 0, tzinfo=self.tz4))
+
+        self.assertEqual(count, 8)
+
+    def test_plan_hours(self):
+        dt = self.calendar_1.plan_hours(10, datetime(2018, 4, 10, 8, 0, 0))
+
+        self.assertEqual(dt, datetime(2018, 4, 11, 12, 0, 0, tzinfo=self.tz2))
+
+        dt = self.calendar_1.plan_hours(10, datetime(2018, 4, 10, 8, 0, 0, tzinfo=self.tz4))
+
+        self.assertEqual(dt, datetime(2018, 4, 12, 10, 0, 0, tzinfo=self.tz2))
+
+    def test_plan_days(self):
+        dt = self.calendar_1.plan_days(2, datetime(2018, 4, 10, 8, 0, 0))
+
+        self.assertEqual(dt, datetime(2018, 4, 11, 16, 0, 0, tzinfo=self.tz2))
+
+        # We lose one day because of timezone
+        dt = self.calendar_1.plan_days(2, datetime(2018, 4, 10, 8, 0, 0, tzinfo=self.tz4))
+
+        self.assertEqual(dt, datetime(2018, 4, 12, 16, 0, 0, tzinfo=self.tz2))
+
+    def test_work_data(self):
+        # 09-04-2018 10:00:00 - 13-04-2018 18:00:00
+        data = self.jean.get_work_days_data(datetime(2018, 4, 9, 8, 0, 0),
+                                            datetime(2018, 4, 13, 16, 0, 0))
+
+        self.assertEqual(data['hours'], 38)
+
+        # 09-04-2018 00:00:00 - 13-04-2018 08:00:00
+        data = self.jean.get_work_days_data(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
+                                            datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3))
+
+        self.assertEqual(data['hours'], 32)
+
+        # 09-04-2018 08:00:00 - 14-04-2018 12:00:00
+        data = self.jean.get_work_days_data(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
+                                            datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4))
+
+        self.assertEqual(data['hours'], 40)
+
+    def test_leave_data(self):
         self.env['resource.calendar.leaves'].create({
-            'calendar_id': self.calendar.id,
-            'date_from': '1932-11-09 0:00:00',
-            'date_to': '1932-11-12 23:59:59',
+            'name': '',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
+            'date_to': datetime(2018, 4, 9, 14, 0, 0, tzinfo=self.tz2),
         })
 
-        r1 = self.env['resource.resource'].create({
-            'name': "Resource 1",
-            'calendar_id': self.calendar.id
-        })
-        r2 = self.env['resource.resource'].create({
-            'name': "Resource 2",
-            'calendar_id': self.calendar.id
-        })
+        # 09-04-2018 10:00:00 - 13-04-2018 18:00:00
+        data = self.jean.get_leave_days_data(datetime(2018, 4, 9, 8, 0, 0),
+                                            datetime(2018, 4, 13, 16, 0, 0))
 
-        days = [
-            d for d in self._days
-            if d.weekday() not in (5, 6)
-            if d < date(1932, 11, 9) or d > date(1932, 11, 12)
-        ]
-        self.assertEqual(days, list(r1.calendar_id._iter_work_days(WAR_START, WAR_END, r1.id)))
-        self.assertEqual(days, list(r2.calendar_id._iter_work_days(WAR_START, WAR_END, r2.id)))
+        self.assertEqual(data['hours'], 4)
 
-    def test_personal_leaves(self):
-        """ Leaves with a resource_id apply only to that resource
-        """
-        r1 = self.env['resource.resource'].create({
-            'name': "Resource 1",
-            'calendar_id': self.calendar.id
-        })
-        r2 = self.env['resource.resource'].create({
-            'name': "Resource 2",
-            'calendar_id': self.calendar.id
-        })
+        # 09-04-2018 00:00:00 - 13-04-2018 08:00:00
+        data = self.jean.get_leave_days_data(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
+                                            datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3))
+
+        self.assertEqual(data['hours'], 6)
+
+        # 09-04-2018 08:00:00 - 14-04-2018 12:00:00
+        data = self.jean.get_leave_days_data(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
+                                            datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4))
+
+        self.assertEqual(data['hours'], 6)
+
+    def test_leaves(self):
         self.env['resource.calendar.leaves'].create({
-            'calendar_id': self.calendar.id,
-            'date_from': '1932-11-09 0:00:00',
-            'date_to': '1932-11-12 23:59:59',
-            'resource_id': r2.id
+            'name': '',
+            'calendar_id': self.jean.resource_calendar_id.id,
+            'resource_id': self.jean.resource_id.id,
+            'date_from': datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
+            'date_to': datetime(2018, 4, 9, 14, 0, 0, tzinfo=self.tz2),
         })
 
-        weekdays = [d for d in self._days if d.weekday() not in (5, 6)]
-        self.assertEqual(weekdays, list(r1.calendar_id._iter_work_days(WAR_START, WAR_END, r1.id)))
-        self.assertEqual([
-            d for d in weekdays if d < date(1932, 11, 9) or d > date(1932, 11, 12)],
-            list(r2.calendar_id._iter_work_days(WAR_START, WAR_END, r2.id))
-        )
+        # 09-04-2018 10:00:00 - 13-04-2018 18:00:00
+        leaves = self.jean.list_leaves(datetime(2018, 4, 9, 8, 0, 0),
+                                       datetime(2018, 4, 13, 16, 0, 0))
 
-    def test_mixed_leaves(self):
-        r = self.env['resource.resource'].create({
-            'name': "Resource 1",
-            'calendar_id': self.calendar.id
-        })
-        self.env['resource.calendar.leaves'].create({
-            'calendar_id': self.calendar.id,
-            'date_from': '1932-11-09 0:00:00',
-            'date_to': '1932-11-12 23:59:59',
-        })
-        self.env['resource.calendar.leaves'].create({
-            'calendar_id': self.calendar.id,
-            'date_from': '1932-12-02 0:00:00',
-            'date_to': '1932-12-31 23:59:59',
-            'resource_id': r.id
-        })
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(leaves[0][1], 4)
 
-        self.assertEqual([
-            d for d in self._days
-            if d.weekday() not in (5, 6)
-            if d < date(1932, 11, 9) or d > date(1932, 11, 12)
-            if d < date(1932, 12, 2)],
-            list(r.calendar_id._iter_work_days(WAR_START, WAR_END, r.id))
-        )
+        # 09-04-2018 00:00:00 - 13-04-2018 08:00:00
+        leaves = self.jean.list_leaves(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
+                                       datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3))
 
-        # _is_work_day is built on _iter_work_days, but it's probably a good
-        # idea to ensure it does do what it should
-        self.assertTrue(r.calendar_id._is_work_day(date(1932, 11, 8), r.id))
-        self.assertTrue(r.calendar_id._is_work_day(date(1932, 11, 14), r.id))
-        self.assertTrue(r.calendar_id._is_work_day(date(1932, 12, 1), r.id))
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(leaves[0][1], 6)
 
-        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 11), r.id))  # global leave
-        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 13), r.id))  # sun
-        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 19), r.id))  # sat
-        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 20), r.id))  # sun
-        self.assertFalse(r.calendar_id._is_work_day(date(1932, 12, 6), r.id))  # personal leave
+        # 09-04-2018 08:00:00 - 14-04-2018 12:00:00
+        leaves = self.jean.list_leaves(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
+                                       datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4))
 
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(leaves[0][1], 6)
 
-class TestResourceMixin(TestResourceCommon):
+    def test_works(self):
+        work = self.jean.list_work_time_per_day(datetime(2018, 4, 9, 8, 0, 0),
+                                           datetime(2018, 4, 13, 16, 0, 0))
 
-    def setUp(self):
-        super(TestResourceMixin, self).setUp()
-        self.lost_user = self.env['res.users'].with_context(
-            no_reset_password=True,
-            mail_create_nosubscribe=True
-        ).create({
-            'name': 'Désiré Boideladodo',
-            'login': 'desire',
-            'tz': 'Indian/Reunion',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
-        })
-        self.test = self.env['resource.test'].with_context(default_resource_calendar_id=self.calendar.id).create({'name': 'Test'})
+        self.assertEqual(len(work), 5)
+        self.assertEqual(work[0][1], 6)
 
-    def test_basics(self):
-        self.assertEqual(self.env['resource.test'].create({'name': 'Test'}).resource_calendar_id, self.env.user.company_id.resource_calendar_id)
-        self.assertEqual(self.test.resource_calendar_id, self.calendar)
+        work = self.jean.list_work_time_per_day(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
+                                           datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3))
 
-    def test_work_days_count(self):
-        # user in timezone UTC-9 asks for work hours
-        self.env.user.tz = 'US/Alaska'
+        self.assertEqual(len(work), 4)
 
-        res = self.test.get_work_days_count(
-            datetime(2013, 2, 12, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 22, 23, 0, 0, tzinfo=self.env.user.tz))
-        self.assertEqual(res, 3.75)  # generic leaves, 3 hours
+        work = self.jean.list_work_time_per_day(datetime(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
+                                           datetime(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4))
 
-        res = self.test.get_work_days_count(
-            datetime(2013, 2, 12, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 22, 20, 0, 0, tzinfo=self.env.user.tz))
-        self.assertEqual(res, 3.5)  # last day is truncated of 3 hours on 12)
-
-        self.env['resource.calendar.leaves'].create({
-            'name': 'Timezoned Leaves',
-            'calendar_id': self.test.resource_calendar_id.id,
-            'resource_id': self.test.resource_id.id,
-            'date_from': datetime(2013, 2, 13, 10, 0, 0, tzinfo=self.env.user.tz),
-            'date_to': datetime(2013, 2, 17, 12, 0, 0, tzinfo=self.env.user.tz)
-        })
-
-        res = self.test.get_work_days_count(
-            datetime(2013, 2, 12, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 22, 20, 0, 0, tzinfo=self.env.user.tz))
-        self.assertEqual(res, 2.5)  # one day is on leave and last day is truncated of 3 hours on 12)
-
-    def test_work_days_count_timezones_ultra(self):
-        # user in timezone UTC+4 is attached to the resource and create leaves
-        self.test.resource_id.write({
-            'user_id': self.lost_user.id,
-        })
-        reunion_leave = self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
-            'name': 'Timezoned Leaves',
-            'calendar_id': self.test.resource_calendar_id.id,
-            'resource_id': self.test.resource_id.id,
-            'date_from': datetime(2013, 2, 12, 10, 0, 0, tzinfo=self.lost_user._context.get('tz') or self.lost_user.tz),
-            'date_to': datetime(2013, 2, 12, 12, 0, 0, tzinfo=self.lost_user._context.get('tz') or self.lost_user.tz)
-        })
-        self.assertEqual(reunion_leave.tz, 'Indian/Reunion')
-
-        # user in timezone UTC-9 read and manipulate leaves
-        self.env.user.tz = 'US/Alaska'
-        res = self.test.get_work_days_data(
-            datetime(2013, 2, 12, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 12, 20, 0, 0, tzinfo=self.env.user.tz))
-        self.assertEqual(res['days'], 0.75)
-        self.assertEqual(res['hours'], 6.0)
-
-        # user in timezone UTC+4 read and manipulate leaves
-        res = self.test.sudo(self.lost_user).get_work_days_data(
-            datetime(2013, 2, 12, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2013, 2, 12, 20, 0, 0, tzinfo=self.env.user.tz))
-        self.assertEqual(res['days'], 0.75)
-        self.assertEqual(res['hours'], 6.0)
-
-    def test_days_count_with_domain(self):
-        self.test.resource_id.write({
-            'user_id': self.lost_user.id,
-        })
-
-        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
-            'name': 'first',
-            'calendar_id': self.test.resource_calendar_id.id,
-            'resource_id': self.test.resource_id.id,
-            'date_from': datetime(2018, 2, 5, 8, 0, 0, tzinfo=self.lost_user._context.get('tz') or self.lost_user.tz),
-            'date_to': datetime(2018, 2, 9, 18, 0, 0, tzinfo=self.lost_user._context.get('tz') or self.lost_user.tz)
-        })
-
-        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
-            'name': 'second',
-            'calendar_id': self.test.resource_calendar_id.id,
-            'resource_id': self.test.resource_id.id,
-            'date_from': datetime(2018, 1, 12, 8, 0, 0, tzinfo=self.lost_user._context.get('tz') or self.lost_user.tz),
-            'date_to': datetime(2018, 1, 13, 18, 0, 0, tzinfo=self.lost_user._context.get('tz') or self.lost_user.tz)
-        })
-
-        res = self.test.get_work_days_count(
-            datetime(2018, 2, 4, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2018, 2, 14, 20, 0, 0, tzinfo=self.env.user.tz),
-            domain=[('name', '=', '')]
-        )
-        self.assertEqual(res, 3.0)
-
-        res = self.test.get_work_days_count(
-            datetime(2018, 2, 4, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2018, 2, 14, 20, 0, 0, tzinfo=self.env.user.tz),
-            domain=[('name', '=', 'first')]
-        )
-        self.assertEqual(res, 1.0)
-
-        res = self.test.get_leaves_day_count(
-            datetime(2018, 2, 4, 6, 0, 0, tzinfo=self.env.user.tz),
-            datetime(2018, 2, 14, 20, 0, 0, tzinfo=self.env.user.tz),
-            domain=[('name', '=', 'first')]
-        )
-        self.assertEqual(res, 2.0)
-
-class TestGlobalLeaves(TestResourceCommon):
-
-    def setUp(self):
-        super(TestGlobalLeaves, self).setUp()
-
-        self.Leave = self.env['resource.calendar.leaves']
-
-        # This leave has a timezone of False : UTC should be used as default
-        self.global_no_tz = self.Leave.create({
-            'name': 'global no timezone',
-            'calendar_id': self.calendar.id,
-            'date_from': datetime(2018, 12, 25, 8, 0, 0, tzinfo=self.env.user.tz),
-            'date_to': datetime(2018, 12, 25, 23, 0, 0, tzinfo=self.env.user.tz),
-            'tz': False,
-        })
-
-        # This leave has no timezone defined : should default to user timezone (here UTC)
-        self.global_user_tz = self.Leave.create({
-            'name': 'global user timezone',
-            'calendar_id': self.calendar.id,
-            'date_from': datetime(2018, 5, 1, 8, 0, 0, tzinfo=self.env.user.tz),
-            'date_to': datetime(2018, 5, 1, 23, 0, 0, tzinfo=self.env.user.tz),
-        })
-
-        # This leave has been taken in Japan timezone
-        # Leave from 8:00 to 13:00 but we have to adapt cause we define it in UTC
-        self.global_spec_tz = self.Leave.create({
-            'name': 'global specific timezone',
-            'calendar_id': self.calendar.id,
-            'date_from': datetime(2018, 4, 6, 8, 0, 0),
-            'date_to': datetime(2018, 4, 6, 13, 0, 0),
-            'tz' : 'Japan', # UTC+9
-        })
-
-    def test_timezones(self):
-        self.assertEqual(self.global_no_tz.tz, False)
-        self.assertEqual(self.global_user_tz.tz, self.env.user.tz)
-        self.assertEqual(self.global_spec_tz.tz, 'Japan')
-
-    def test_leave(self):
-        def to_tuple(interval):
-            return (interval.start_datetime, interval.end_datetime)
-
-        # Here we test if the leaves are correctly computed in the case our user is in UTC
-        # NB: Beware of winter/spring time
-        work_no_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(date(2018, 12, 25), time(0), time(23, 59, 59), self.resource1_id)]
-        self.assertEqual(work_no_tz[0], (datetime(2018, 12, 25, 8, 0, 0), datetime(2018, 12, 25, 16, 0, 0)))
-
-        work_user_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(date(2018, 5, 1), time(0), time(23, 59, 59), self.resource1_id)]
-        self.assertEqual(work_user_tz[0], (datetime(2018, 5, 1, 8, 0, 0), datetime(2018, 5, 1, 16, 0, 0)))
-
-        work_spec = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(date(2018, 4, 6), time(0), time(23, 59, 59), self.resource1_id)]
-        self.assertEqual(work_spec[0], (datetime(2018, 4, 6, 8, 0, 0, tzinfo='Japan'), datetime(2018, 4, 6, 13, 0, 0, tzinfo='Japan')))
-
-    def test_leaves_timezones(self):
-        self.env.user.tz = 'US/Alaska' # UTC-9
-
-        def to_tuple(interval):
-            return (interval.start_datetime, interval.end_datetime)
-
-        # Here we test if the leaves are correctly computed in the case our user is in tz Alaska
-        # NB: Beware of winter/spring time
-        work_no_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(date(2018, 12, 25), time(0), time(23, 59, 59), self.resource1_id)]
-        self.assertEqual(work_no_tz[0], (datetime(2018, 12, 25, 17, 0, 0), datetime(2018, 12, 26, 1, 0, 0)))
-
-        work_user_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(date(2018, 5, 1), time(0), time(23, 59, 59), self.resource1_id)]
-        self.assertEqual(work_user_tz[0], (datetime(2018, 5, 1, 16, 0, 0), datetime(2018, 5, 2, 0, 0, 0)))
-
-        work_spec = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(date(2018, 4, 6), time(0), time(23, 59, 59), self.resource1_id)]
-        self.assertEqual(work_spec[0], (datetime(2018, 4, 6, 16, 0, 0), datetime(2018, 4, 6, 21, 0, 0)))
-
-
-class TestTimeType(TestResourceCommon):
-    def setUp(self):
-        super(TestTimeType, self).setUp()
-        Leave = self.env['resource.calendar.leaves']
-
-        self.other1 = Leave.create({
-            'name': 'Formation',
-            'calendar_id': self.calendar.id,
-            'resource_id': self.resource1_id,
-            'date_from': datetime(2013, 2, 15, 9, 0, 0),
-            'date_to': datetime(2013, 2, 15, 19, 0, 0),
-            'time_type': 'other',
-        })
-        self.other2 = Leave.create({
-            'name': 'Homeworking',
-            'calendar_id': self.calendar.id,
-            'resource_id': self.resource1_id,
-            'date_from': datetime(2013, 2, 12, 9, 0, 0),
-            'date_to': datetime(2013, 2, 12, 15, 0, 0),
-            'time_type': 'other',
-        })
-
-    def test_leaves_leaves(self):
-        # Here we test if setting the value to leave has the effect intended
-        leave = self.calendar._get_day_leave_intervals(date(2013, 2, 26), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'leave')])
-        self.assertEqual(len(leave), 1, "When asking for leave should compute the leaves")
-        leave = self.calendar._get_day_leave_intervals(date(2013, 2, 15), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'leave')])
-        self.assertEqual(len(leave), 0, "When asking for leave should ignore others")
-
-    def test_leaves_other(self):
-        # Here we test if setting the value to other has the effect intended
-        leave = self.calendar._get_day_leave_intervals(date(2013, 2, 26), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'other')])
-        self.assertEqual(len(leave), 0, "When asking for other should ignore leaves")
-        leave = self.calendar._get_day_leave_intervals(date(2013, 2, 15), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'other')])
-        self.assertEqual(len(leave), 2, "When asking for other should compute others")
+        self.assertEqual(len(work), 5)
+        self.assertEqual(work[0][1], 8)
