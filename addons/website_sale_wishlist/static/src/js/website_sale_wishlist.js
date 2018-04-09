@@ -7,7 +7,7 @@ var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website_sale_utils = require('website_sale.utils');
-var weContext = require('web_editor.context');
+var session = require('web.session');
 
 if(!$('.oe_website_sale').length) {
     return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
@@ -112,14 +112,9 @@ var ProductWishlist = Widget.extend({
         var product = tr.data('product-id');
         var self = this;
 
-        rpc.query({
-                model: 'product.wishlist',
-                method: 'write',
-                args: [[wish], { active: false }, weContext.getExtra()],
-            })
-            .then(function(){
-                $(tr).hide();
-            });
+        session.rpc('/shop/wishlist/remove/' + wish).done(function () {
+            $(tr).hide();
+        });
 
         this.wishlist_product_ids = _.without(this.wishlist_product_ids, product);
         if (this.wishlist_product_ids.length === 0) {
