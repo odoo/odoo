@@ -5,7 +5,7 @@ Profiling Odoo code
 .. warning::
 
     This tutorial requires :ref:`having installed Odoo <setup/install>`
-    and :ref:`writing Odoo code <backend>`
+    and :doc:`writing Odoo code <backend>`
 
 Graph a method Up to 10.0
 =========================
