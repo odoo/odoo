@@ -7,7 +7,7 @@
     'category': 'Tools',
     'description': "",
     'website': 'https://www.odoo.com/page/notes',
-    'summary': 'Sticky notes, Collaborative, Memos',
+    'summary': 'Notes, Reminders, Todos',
     'sequence': 45,
     'depends': [
         'mail',
