@@ -256,15 +256,17 @@
             <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
             <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
             <span> • </span><span t-field="question.write_date" t-options='{"format":"short"}'/>
-            <span> • </span><span t-field="question.views" /> View<t t-if="question.views&gt;1">s</t>
+            <span> • </span><span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
             <span> • </span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
 
                 <t t-esc="question.child_count"/>
                 <t t-if="question.post_type == 'question'">
-                    Answer<t t-if="question.child_count&gt;1">s</t>
+                    <t t-if="question.child_count&lt;=1">View</t>
+                    <t t-else="">Views</t>
                 </t>
                 <t t-if="question.post_type != 'question'">
-                    Comment<t t-if="question.child_count&gt;1">s</t>
+                    <t t-if="question.child_count&lt;=1">Comment</t>
+                    <t t-else="">Comments</t>
                 </t>
             </a>
             <t t-if="question.state == 'flagged'">
