@@ -14,7 +14,7 @@ QUnit.module('Views', {
                 fields: {
                     foo: {string: "Foo", type: "integer", store: true},
                     bar: {string: "bar", type: "boolean"},
-                    product_id: {string: "Product", type: "many2one", relation: 'product'},
+                    product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     color_id: {string: "Color", type: "many2one", relation: 'color'},
                 },
                 records: [
@@ -525,6 +525,33 @@ QUnit.module('Views', {
                 "should have first datapoint with value 2");
             assert.strictEqual(graph.model.chart.data[1].value, 2,
                 "should have second datapoint with value 2");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure and as a groupby should work', function (assert) {
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id" type="row"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            // need to set the measure this way because it cannot be set in the
+            // arch.
+            graph.$buttons.find('li[data-field="product_id"] a').click();
+
+            assert.strictEqual(graph.model.chart.data[0].value, 1,
+                "should have first datapoint with value 1");
+            assert.strictEqual(graph.model.chart.data[1].value, 1,
+                "should have second datapoint with value 1");
+
             graph.destroy();
             done();
         });
