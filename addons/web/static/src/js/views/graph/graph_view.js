@@ -36,12 +36,15 @@ var GraphView = AbstractView.extend({
     /**
      * @override
      */
-    init: function () {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
+        var self = this;
         var measure;
         var groupBys = [];
+        var measures = {__count__: {string: _t("Count"), type: "integer"}};
         this.fields.__count__ = {string: _t("Count"), type: "integer"};
+
         this.arch.children.forEach(function (field) {
             var name = field.attrs.name;
             if (field.attrs.interval) {
@@ -49,16 +52,17 @@ var GraphView = AbstractView.extend({
             }
             if (field.attrs.type === 'measure') {
                 measure = name;
+                measures[name] = self.fields[name];
             } else {
                 groupBys.push(name);
             }
         });
 
-        var measures = {__count__: {string: _t("Count"), type: "integer"}};
         _.each(this.fields, function (field, name) {
             if (name !== 'id' && field.store === true) {
-                if (field.type === 'integer' || field.type === 'float' || field.type === 'monetary' || field.type === 'many2one') {
-                    measures[name] = field;
+                if (_.contains(['integer', 'float', 'monetary'], field.type) ||
+                    _.contains(params.additionalMeasures, name)) {
+                        measures[name] = field;
                 }
             }
         });
