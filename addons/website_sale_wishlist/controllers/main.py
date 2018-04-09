@@ -39,3 +39,8 @@ class WebsiteSaleWishlist(WebsiteSale):
             return request.redirect("/shop")
 
         return request.render("website_sale_wishlist.product_wishlist", dict(wishes=values))
+
+    @http.route(['/shop/wishlist/remove/<model("product.wishlist"):wish>'], type='json', auth="public", website=True)
+    def rm_from_wishlist(self, wish, **kw):
+        wish.active = False
+        return True
