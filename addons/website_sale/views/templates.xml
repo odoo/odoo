@@ -508,15 +508,17 @@
         </t>
     </template>
 
-    <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Activate Magnify">
+    <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Image Zoom">
         <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
     </template>
 
-    <template inherit_id='website_sale.product_picture_magnify' id="product_picture_magnify_auto" active="False" customize_show="True" name="Auto Zoom">
+    <template inherit_id='website_sale.product' id="product_picture_magnify_auto" active="False" customize_show="True" name="Automatic Image Zoom">
         <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
             <attribute name="data-ecom-zoom-auto">1</attribute>
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+
         </xpath>
     </template>
 
@@ -1359,11 +1361,12 @@
         <div class="panel panel-default js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
             <div class="panel-body row">
                 <h4 class='col-md-12 hidden visible-lg'>Order Total</h4>
+                <hr class='hidden visible-lg mt4 mb4'/>
                 <div class='col-md-12'>
                     <t t-call="website_sale.total">
                         <t t-set='no_rowspan'>1</t>
                     </t>
-                    <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-default pull-right mb32 mr8 hidden visible-lg" href="/shop/checkout?express=1">
+                    <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-default pull-right mr8 hidden visible-lg" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>
@@ -1507,9 +1510,9 @@
         <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order and website_sale_order.website_order_line">
             <table class='table'>
                   <tr id="empty">
-                      <t t-if='not no_rowspan'><td rowspan="10"/></t>
-                      <td class="col-sm-2 col-xs-3"></td>
-                      <td class="col-sm-2 col-xs-3" ></td>
+                      <t t-if='not no_rowspan'><td rowspan="10" class="noborder"/></t>
+                      <td class="col-sm-2 col-xs-3 noborder"></td>
+                      <td class="col-sm-2 col-xs-3 noborder" ></td>
                   </tr>
                   <tr id="order_total_untaxed">
                       <td class="text-right noborder">Subtotal:</td>
