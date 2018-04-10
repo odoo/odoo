@@ -56,7 +56,7 @@ class Holidays(models.Model):
             holiday_project = holiday.holiday_status_id.timesheet_project_id
             holiday_task = holiday.holiday_status_id.timesheet_task_id
 
-            work_hours_data = [item for item in holiday.employee_id.iter_work_hours_count(holiday.date_from, holiday.date_to)]
+            work_hours_data = [item for item in holiday.employee_id.list_work_time_per_day(holiday.date_from, holiday.date_to)]
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 self.env['account.analytic.line'].create({
                     'name': "%s (%s/%s)" % (holiday.name or '', index + 1, len(work_hours_data)),

@@ -177,9 +177,9 @@ class ResourceCalendar(models.Model):
         combine = datetime.combine
 
         # express all dates and times in the user's timezone if not already the case
-        if start_dt.tz.name != self.env.user.tz:
+        if start_dt.tzinfo != self.env.user.tz:
             start_dt = start_dt.in_tz(self.env.user.tz)
-        if end_dt.tz.name != self.env.user.tz:
+        if end_dt.tzinfo != self.env.user.tz:
             end_dt = end_dt.in_tz(self.env.user.tz)
         result = []
 
