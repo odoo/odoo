@@ -1016,7 +1016,7 @@ class ProcurementRule(models.Model):
 
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and values['group_id'].id) or False
+                (gpo == 'propagate' and 'group_id' in values and values['group_id'].id) or False
 
         return {
             'partner_id': partner.id,
@@ -1041,7 +1041,7 @@ class ProcurementRule(models.Model):
         domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
-                (gpo == 'propagate' and values['group_id']) or False
+                (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
 
         domain += (
             ('partner_id', '=', partner.id),
