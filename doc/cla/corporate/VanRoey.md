@@ -8,9 +8,12 @@ declaration.
 
 Signed,
 
-Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666
+Ward Marissen Ward.Marissen@vanroey.be https://github.com/Wardm95
 
 List of contributors:
 
-Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666
+Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666 (up to 2018-01-26)
 Vincent Adriaensen vincent.adriaensen@vanroey.be https://github.com/vincentadriaensen
+Pol Van Dingenen pol.vandingenen@vanroey.be https://github.com/Cyhexy
+Ward Marissen Ward.Marissen@vanroey.be https://github.com/Wardm95
+Abderahman Moujahid Abderahman.Moujahid@vanroey.be https://github.com/Abderahman88
