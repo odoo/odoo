@@ -2084,7 +2084,6 @@ class MailThread(models.AbstractModel):
                 channel_ids, dict((cid, subtype_ids) for cid in channel_ids),
                 customer_ids=customer_ids, check_existing=True, existing_policy='force')
 
-        self.invalidate_cache()
         return True
 
     @api.multi

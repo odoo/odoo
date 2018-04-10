@@ -190,6 +190,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         })
         hol2_user_group = hol2.sudo(self.user_hruser_id)
         # Check left days: - 1 virtual remaining day
+        hol_status_2_employee_group.invalidate_cache()
         _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
 
         # HrManager validates the first step
