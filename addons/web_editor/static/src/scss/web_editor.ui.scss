@@ -1686,3 +1686,17 @@ body .modal {
         }
     }
 }
+
+
+// Highlight selected image/icon
+%o-we-selected-image {
+    $o-selected-image-color: rgba(150, 150, 220, 0.3);
+    background: $o-selected-image-color;
+    outline: 3px solid $o-selected-image-color;
+}
+img.o_we_selected_image {
+    @extend %o-we-selected-image;
+}
+.fa.o_we_selected_image::before {
+    @extend %o-we-selected-image;
+}
