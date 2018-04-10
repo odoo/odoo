@@ -237,6 +237,7 @@ var LivechatButton = Widget.extend({
             is_needaction: false,
             is_note: data.is_note,
             is_discussion: data.is_discussion,
+            is_notification: data.is_notification,
             customer_email_data: []
         };
 

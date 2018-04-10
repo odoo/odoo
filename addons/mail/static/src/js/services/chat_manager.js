@@ -1314,6 +1314,7 @@ var ChatManager =  AbstractService.extend({
      * @param  {string} [data.info]
      * @param  {boolean} data.is_discussion
      * @param  {boolean} data.is_note
+     * @param  {boolean} data.is_notification
      * @param  {string} data.message_type
      * @param  {string} [data.model]
      * @param  {boolean} data.module_icon src url of the module icon
@@ -1336,6 +1337,7 @@ var ChatManager =  AbstractService.extend({
             is_author: data.author_id && data.author_id[0] === session.partner_id,
             is_note: data.is_note,
             is_discussion: data.is_discussion,
+            is_notification: data.is_notification,
             is_system_notification: (data.message_type === 'notification' && data.model === 'mail.channel')
                 || data.info === 'transient_message',
             attachment_ids: data.attachment_ids || [],
