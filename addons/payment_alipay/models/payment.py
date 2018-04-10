@@ -147,17 +147,15 @@ class PaymentTransaction(models.Model):
         if acquirer_id and acquirer_id.provider == 'alipay' and acquirer_id.alipay_payment_method == 'express_checkout':
             currency_id = self.currency_id
             if currency_id and currency_id.name != 'CNY':
-                error = _("Only CNY currency is allowed for Alipay Express Checkout")
-                _logger.info(error)
-                raise ValidationError(error)
+                _logger.info("Only CNY currency is allowed for Alipay Express Checkout")
+                raise ValidationError(_("Only CNY currency is allowed for Alipay Express Checkout"))
         return super(PaymentTransaction, self).write(vals)
 
     @api.model
     def create(self, vals):
         if not self._is_valid_alipay_configuration(vals):
-            error = _("Only CNY currency is allowed for Alipay Express Checkout")
-            _logger.info(error)
-            raise ValidationError(error)
+            _logger.info("Only CNY currency is allowed for Alipay Express Checkout")
+            raise ValidationError(_("Only CNY currency is allowed for Alipay Express Checkout"))
         return super(PaymentTransaction, self).create(vals)
 
     # --------------------------------------------------
@@ -168,26 +166,27 @@ class PaymentTransaction(models.Model):
     def _alipay_form_get_tx_from_data(self, data):
         reference, txn_id, sign = data.get('reference'), data.get('trade_no'), data.get('sign')
         if not reference or not txn_id:
-            error_msg = _('Alipay: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id)
-            _logger.info(error_msg)
-            raise ValidationError(error_msg)
+            _logger.info('Alipay: received data with missing reference (%s) or txn_id (%s)' % (reference, txn_id))
+            raise ValidationError(_('Alipay: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id))
 
         txs = self.env['payment.transaction'].search([('reference', '=', reference)])
         if not txs or len(txs) > 1:
-            error_msg = 'Alipay: received data for reference %s' % (reference)
+            error_msg = _('Alipay: received data for reference %s') % (reference)
+            logger_msg = 'Alipay: received data for reference %s' % (reference)
             if not txs:
-                error_msg += '; no order found'
+                error_msg += _('; no order found')
+                logger_msg += '; no order found'
             else:
-                error_msg += '; multiple order found'
-            _logger.info(error_msg)
+                error_msg += _('; multiple order found')
+                logger_msg += '; multiple order found'
+            _logger.info(logger_msg)
             raise ValidationError(error_msg)
 
         # verify sign
         sign_check = txs.acquirer_id._build_sign(data)
         if sign != sign_check:
-            error_msg = _('Alipay: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data)
-            _logger.info(error_msg)
-            raise ValidationError(error_msg)
+            _logger.info('Alipay: invalid sign, received %s, computed %s, for data %s' % (sign, sign_check, data))
+            raise ValidationError(_('Alipay: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data))
 
         return txs
 
