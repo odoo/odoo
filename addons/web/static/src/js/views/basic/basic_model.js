@@ -3383,7 +3383,7 @@ var BasicModel = AbstractModel.extend({
             var val = data[fieldName];
             if (field.type === 'many2one') {
                 // process many2one: split [id, nameget] and create corresponding record
-                if (val !== false) {
+                if (val !== false && !_.isNull(val)) {
                     // the many2one value is of the form [id, display_name]
                     var r = self._makeDataPoint({
                         modelName: field.relation,
