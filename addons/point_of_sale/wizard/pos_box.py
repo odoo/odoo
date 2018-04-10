@@ -13,10 +13,9 @@ class PosBox(CashBox):
     @api.multi
     def run(self):
         active_model = self.env.context.get('active_model', False)
-        active_ids = self.env.context.get('active_ids', [])
 
         if active_model == 'pos.session':
-            bank_statements = [session.cash_register_id for session in self.env[active_model].browse(active_ids) if session.cash_register_id]
+            bank_statements = [session.cash_register_id for session in self.env[active_model].get_active_records() if session.cash_register_id]
             if not bank_statements:
                 raise UserError(_("There is no cash register for this PoS Session"))
             return self._run(bank_statements)
