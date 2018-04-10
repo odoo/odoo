@@ -150,7 +150,7 @@
                                 </group>
                             </form>
                             <tree string="Fees" editable="bottom">
-                                <field name="product_id" domain="[('type','=','service')]"/>
+                                <field name="product_id" domain="[('type','=','service')]" required="True"/>
                                 <field name='name'/>
                                 <field name="product_uom_qty" string="Quantity"/>
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
