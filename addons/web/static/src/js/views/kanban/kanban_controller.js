@@ -238,12 +238,45 @@ var KanbanController = BasicController.extend({
                     var kanban_record = event.target;
                     kanban_record.update(data);
 
-                    // Check if we still need to display the record
-                    var domain = parent ? parent.domain : group.domain;
-                    if ('active' in data.data && _.pluck(domain, 0).indexOf('active') === -1) {
-                        domain = [['active', '=', true]].concat(domain);
+                    // Check if we still need to display the record. Some fields of the domain are
+                    // not guaranteed to be in data. This is for example the case if the action
+                    // contains a domain on a field which is not in the Kanban view. Therefore,
+                    // we need to handle multiple cases based on 3 variables:
+                    // domInData: all domain fields are in the data
+                    // activeInDomain: 'active' is already in the domain
+                    // activeInData: 'active' is available in the data
+                    
+                    var domain = (parent ? parent.domain : group.domain) || [];
+                    var domInData = _.every(domain, function (d) {
+                        return d[0] in data.data;
+                    });
+                    var activeInDomain = _.pluck(domain, 0).indexOf('active') !== -1;
+                    var activeInData = 'active' in data.data;
+
+                    // Case # | domInData | activeInDomain | activeInData
+                    //   1    |   true    |      true      |      true     => no domain change
+                    //   2    |   true    |      true      |      false    => not possible
+                    //   3    |   true    |      false     |      true     => add active in domain
+                    //   4    |   true    |      false     |      false    => no domain change
+                    //   5    |   false   |      true      |      true     => no evaluation
+                    //   6    |   false   |      true      |      false    => no evaluation
+                    //   7    |   false   |      false     |      true     => replace domain
+                    //   8    |   false   |      false     |      false    => no evaluation
+
+                    // There are 3 cases which cannot be evaluated since we don't have all the
+                    // necessary information. The complete solution would be to perform a RPC in
+                    // these cases, but this is out of scope. A simpler one is to do a try / catch.
+
+                    if (domInData && !activeInDomain && activeInData) {
+                        domain = domain.concat([['active', '=', true]]);
+                    } else if (!domInData && !activeInDomain && activeInData) {
+                        domain = [['active', '=', true]];
                     }
-                    var visible = new Domain(domain).compute(data.evalContext);
+                    try {
+                        var visible = new Domain(domain).compute(data.evalContext);
+                    } catch (e) {
+                        return;
+                    }
                     if (!visible) {
                         kanban_record.destroy();
                     }
