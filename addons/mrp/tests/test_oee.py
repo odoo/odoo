@@ -21,29 +21,31 @@ class TestOee(TestMrpCommon):
         if day.weekday() in (5, 6):
             day -= timedelta(days=2)
 
-        start_time = datetime.combine(day, time(10, 43, 22))
-        end_time = datetime.combine(day, time(10, 56, 22))
+        tz = self.workcenter_1.resource_calendar_id.tz
+
+        start_time = datetime.combine(day, time(10, 43, 22), tzinfo=tz)
+        end_time = datetime.combine(day, time(10, 56, 22), tzinfo=tz)
         # Productive time duration (13 min)
         self.create_productivity_line(self.env.ref('mrp.block_reason7'), start_time, end_time)
 
         # Material Availability time duration (1.52 min)
         # Check working state is blocked or not.
-        start_time = datetime.combine(day, time(10, 47, 8))
+        start_time = datetime.combine(day, time(10, 47, 8), tzinfo=tz)
         workcenter_productivity_1 = self.create_productivity_line(self.env.ref('mrp.block_reason0'), start_time)
         self.assertEqual(self.workcenter_1.working_state, 'blocked', "Wrong working state of workcenter.")
 
         # Check working state is normal or not.
-        end_time = datetime.combine(day, time(10, 48, 39))
+        end_time = datetime.combine(day, time(10, 48, 39), tzinfo=tz)
         workcenter_productivity_1.write({'date_end': end_time})
         self.assertEqual(self.workcenter_1.working_state, 'normal', "Wrong working state of workcenter.")
 
         # Process Defect time duration (1.33 min)
-        start_time = datetime.combine(day, time(10, 48, 38))
-        end_time = datetime.combine(day, time(10, 49, 58))
+        start_time = datetime.combine(day, time(10, 48, 38), tzinfo=tz)
+        end_time = datetime.combine(day, time(10, 49, 58), tzinfo=tz)
         self.create_productivity_line(self.env.ref('mrp.block_reason5'), start_time, end_time)
         # Reduced Speed time duration (3.0 min)
-        start_time = datetime.combine(day, time(10, 50, 22))
-        end_time = datetime.combine(day, time(10, 53, 22))
+        start_time = datetime.combine(day, time(10, 50, 22), tzinfo=tz)
+        end_time = datetime.combine(day, time(10, 53, 22), tzinfo=tz)
         self.create_productivity_line(self.env.ref('mrp.block_reason4'), start_time, end_time)
 
         # Block time : ( Process Defact (1.33 min) + Reduced Speed (3.0 min) + Material Availability (1.52 min)) = 5.85 min
@@ -51,6 +53,7 @@ class TestOee(TestMrpCommon):
         # Productive time : Productive time duration (13 min)
         productive_time_in_hour = round((13.0 / 60.0), 2)
 
+        self.workcenter_1._compute_blocked_time()
         # Check blocked time and productive time
         self.assertEqual(self.workcenter_1.blocked_time, blocked_time_in_hour, "Wrong block time on workcenter.")
         self.assertEqual(self.workcenter_1.productive_time, productive_time_in_hour, "Wrong productive time on workcenter.")

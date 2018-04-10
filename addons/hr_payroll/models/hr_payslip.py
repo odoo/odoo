@@ -174,23 +174,24 @@ class HrPayslip(models.Model):
 
             # compute leave days
             leaves = {}
-            day_leave_intervals = contract.employee_id.iter_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
-            for day_intervals in day_leave_intervals:
-                for interval in day_intervals:
-                    holiday = interval[2]['leaves'].holiday_id
-                    current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
-                        'name': holiday.holiday_status_id.name,
-                        'sequence': 5,
-                        'code': holiday.holiday_status_id.name,
-                        'number_of_days': 0.0,
-                        'number_of_hours': 0.0,
-                        'contract_id': contract.id,
-                    })
-                    leave_time = (interval[1] - interval[0]).seconds / 3600
-                    current_leave_struct['number_of_hours'] += leave_time
-                    work_hours = contract.employee_id.get_day_work_hours_count(interval[0].date(), calendar=contract.resource_calendar_id)
-                    if work_hours:
-                        current_leave_struct['number_of_days'] += leave_time / work_hours
+            calendar = contract.resource_calendar_id
+            day_leave_intervals = contract.employee_id.list_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
+            for interval in day_leave_intervals:
+                holiday = interval[2].holiday_id
+                current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
+                    'name': holiday.holiday_status_id.name,
+                    'sequence': 5,
+                    'code': holiday.holiday_status_id.name,
+                    'number_of_days': 0.0,
+                    'number_of_hours': 0.0,
+                    'contract_id': contract.id,
+                })
+                current_leave_struct['number_of_hours'] += interval[1]
+                work_hours = calendar.get_work_hours_count(datetime.combine(interval[0], datetime_time(0, 0, 0), tzinfo=calendar.tz),
+                                                           datetime.combine(interval[0], datetime_time(23, 59, 59), tzinfo=calendar.tz),
+                                                           compute_leaves=False)
+                if work_hours:
+                    current_leave_struct['number_of_days'] += interval[1] / work_hours
 
             # compute worked days
             work_data = contract.employee_id.get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)
@@ -445,7 +446,7 @@ class HrPayslip(models.Model):
         date_to = self.date_to
         contract_ids = []
 
-        ttyme = datetime.fromtimestamp(time.mktime(date_from))
+        ttyme = datetime.combine(date_from, datetime_time(0, 0, 0))
         locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
