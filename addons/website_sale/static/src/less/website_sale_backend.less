@@ -1,0 +1,62 @@
+.o_website_sale_image_list .o_kanban_view.o_kanban_ungrouped.o_attachments_previews {
+    width: auto;
+
+    .o_kanban_record.o_attachment.o_website_sale_image_card {
+        border: none;
+        background: none;
+        margin: 0 0 @grid-gutter-width*0.2;
+        padding: @o-mail-attachment-margin;
+        .o-flex(0, 1, 50%);
+
+        @media (min-width: @screen-sm-min) {
+            .o-flex(0, 0, percentage(1/3));
+        }
+
+        @media (min-width: @screen-md-min) {
+            .o-flex(0, 0, percentage(1/5));
+        }
+
+        @media (min-width: @screen-lg-min){
+            .o-flex(0, 0, percentage(1/6));
+        }
+
+        .o_image_box {
+            padding-top: 50%;
+
+            @media (min-width: @screen-sm-min) {
+                padding-top: 75%;
+            }
+        }
+
+        .o_image_overlay {
+            bottom: 16%;
+            background: fade(@gray-darker, 20%);
+        }
+
+        .o_website_sale_image_card_title {
+            .o-text-overflow(block);
+            padding:6px;
+            position: relative;
+            background: @gray-lighter;
+            color:@headings-color;
+        }
+
+        .o_website_sale_image_card_remove, .o_website_sale_image_card_size {
+            .o-position-absolute(0, 0);
+            border-radius: 0 2px;
+        }
+
+        .o_website_sale_image_card_size {
+            left: 0;
+            right: auto;
+            border-radius: 0 0 2px;
+            font-weight: normal;
+            font-size: @font-size-small - 1;
+
+            &.label-normal {
+                background-color: @gray-lighter;
+                color: @text-color;
+            }
+        }
+    }
+}
