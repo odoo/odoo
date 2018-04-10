@@ -264,14 +264,7 @@
         <t t-if="can_edit">
             <li>
               <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id">
-                <t t-if="view.type == 'form'">Edit Form view</t>
-                <t t-elif="view.type == 'list'">Edit List view</t>
-                <t t-elif="view.type == 'kanban'">Edit Kanban view</t>
-                <t t-elif="view.type == 'graph'">Edit Graph view</t>
-                <t t-elif="view.type == 'gantt'">Edit Gantt view</t>
-                <t t-elif="view.type == 'pivot'">Edit Pivot view</t>
-                <t t-elif="view.type == 'calendar'">Edit Calendar view</t>
-                <t t-else="1">Edit view, type: <t t-esc="_.str.capitalize(view.type)"/></t>
+                Edit View: <t t-esc="_.str.capitalize(view.type)"/>
               </a>
             </li>
             <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.searchFieldsView.view_id">Edit SearchView</a></li>
