@@ -99,6 +99,7 @@ class TestMailActivity(BaseFunctionalTest):
             self.assertEqual(self.test_record.activity_state, 'overdue')
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
+            self.test_record.invalidate_cache(ids=self.test_record.ids)
             self.assertEqual(self.test_record.activity_ids, act1 | act2 | act3)
 
             # Perform todo activities for admin
