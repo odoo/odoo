@@ -508,7 +508,7 @@ class HrExpenseSheet(models.Model):
     def _onchange_employee_id(self):
         self.address_id = self.employee_id.sudo().address_home_id
         self.department_id = self.employee_id.department_id
-        self.user_id = self.employee_id.expense_manager_id
+        self.user_id = self.employee_id.expense_manager_id or self.employee_id.parent_id.user_id
 
     @api.multi
     @api.constrains('expense_line_ids')
@@ -527,7 +527,7 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        sheet = super(HrExpenseSheet, self).create(vals)
+        sheet = super(HrExpenseSheet, self.with_context(mail_create_nosubscribe=True)).create(vals)
         sheet.activity_update()
         return sheet
 
@@ -557,9 +557,8 @@ class HrExpenseSheet(models.Model):
         res = super(HrExpenseSheet, self)._message_auto_subscribe_followers(updated_values, subtype_ids)
         if updated_values.get('employee_id'):
             employee = self.env['hr.employee'].browse(updated_values['employee_id'])
-            users = employee.user_id | employee.parent_id.user_id | employee.department_id.manager_id.user_id
-            for pid in users.mapped('partner_id').ids:
-                res.append((pid, subtype_ids, False))
+            if employee.user_id:
+                res.append((employee.user_id.partner_id.id, subtype_ids, False))
         return res
 
     # --------------------------------------------
