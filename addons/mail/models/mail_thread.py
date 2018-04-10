@@ -1973,16 +1973,16 @@ class MailThread(models.AbstractModel):
         kw_author = kwargs.pop('author_id', False)
         if kw_author:
             author = self.env['res.partner'].sudo().browse(kw_author)
-            email_from = formataddr((author.name, author.email))
         else:
             author = self.env.user.partner_id
-            email_from = formataddr((author.name, author.email))
+        if not author.email:
+            raise exceptions.UserError(_("Unable to notify message, please configure the sender's email address."))
 
         msg_values = {
             'subject': subject,
             'body': body,
             'author_id': author.id,
-            'email_from': email_from,
+            'email_from': formataddr((author.name, author.email)),
             'message_type': 'notification',
             'partner_ids': partner_ids,
             'model': False,
@@ -2007,16 +2007,16 @@ class MailThread(models.AbstractModel):
         kw_author = kwargs.pop('author_id', False)
         if kw_author:
             author = self.env['res.partner'].sudo().browse(kw_author)
-            email_from = formataddr((author.name, author.email))
         else:
             author = self.env.user.partner_id
-            email_from = formataddr((author.name, author.email))
+        if not author.email:
+            raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
 
         message_values = {
             'subject': subject,
             'body': body,
             'author_id': author.id,
-            'email_from': email_from,
+            'email_from': formataddr((author.name, author.email)),
             'message_type': message_type,
             'model': kwargs.get('model', self._name),
             'res_id': self.ids[0] if self.ids else False,
