@@ -1752,6 +1752,37 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('button executes action with domain field not in view', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            domain: [['bar', '=', true]],
+            arch:
+                '<kanban>' +
+                    '<templates><div t-name="kanban-box">' +
+                        '<field name="foo"/>' +
+                        '<button type="object" name="a1" />' +
+                        '<button type="object" name="toggle_action" />' +
+                    '</div></templates>' +
+                '</kanban>',
+        });
+
+        testUtils.intercept(kanban, 'execute_action', function (event) {
+            event.data.on_closed();
+        });
+
+        try {
+            kanban.$('.o_kanban_record:contains(yop) button[data-name="toggle_action"]').click();
+            assert.strictEqual(true, true, 'Everything went fine');
+        } catch (e) {
+            assert.strictEqual(true, false, 'Error triggered at action execution');
+        }
+        kanban.destroy();
+    });
+
     QUnit.test('rendering date and datetime', function (assert) {
         assert.expect(2);
 
