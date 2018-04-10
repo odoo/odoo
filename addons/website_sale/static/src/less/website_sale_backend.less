@@ -60,3 +60,27 @@
         }
     }
 }
+
+.o_website_sale_image_modal {
+    .o_website_sale_image_modal_container {
+        border-left: 1px solid @gray-lighter-darker;
+
+        .o_field_image {
+            margin-bottom: 0;
+            box-shadow: 0 2px 10px @gray-lighter-dark;
+
+            > img {
+                border: 1px solid @gray-lighter-darker;
+                min-height: 200px;
+                max-height: 350px; // Fallback for browsers that dosn't support responsive units
+                max-height: 50vh;
+                width: auto;
+            }
+
+            .o_form_image_controls {
+                .o-hover-opacity(0.7, 1);
+                padding: 2%;
+            }
+        }
+    }
+}
