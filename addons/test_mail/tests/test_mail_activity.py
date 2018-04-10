@@ -3,12 +3,15 @@
 
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch
+from unittest.mock import DEFAULT
 
 from odoo import exceptions
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest
+from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
 
-    
+
 class TestMailActivity(BaseFunctionalTest):
 
     @classmethod
@@ -133,3 +136,30 @@ class TestMailActivity(BaseFunctionalTest):
             # Canceling activities should simply remove them
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
+
+    def test_activity_security_user_access(self):
+        activity = self.test_record.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_employee.id)
+
+        activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+        activity2.write({'user_id': self.user_employee.id})
+
+    def test_activity_security_user_noaccess(self):
+
+        def _employee_crash(*args, **kwargs):
+            """ If employee is test employee, consider he has no access on document """
+            recordset = args[0]
+            if recordset.env.uid == self.user_employee.id:
+                raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
+            return DEFAULT
+
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.UserError):
+                activity = self.test_record.activity_schedule(
+                    'test_mail.mail_act_test_todo',
+                    user_id=self.user_employee.id)
+
+            activity2 = self.test_record.activity_schedule('test_mail.mail_act_test_todo')
+            with self.assertRaises(exceptions.UserError):
+                activity2.write({'user_id': self.user_employee.id})
