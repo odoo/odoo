@@ -5,7 +5,7 @@
         <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
-                <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
+                <t t-set="has_preview" t-value="(type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf') and !disable_preview"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
                 <div t-attf-class="o_image_box pull-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">

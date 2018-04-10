@@ -80,6 +80,7 @@
             <t t-foreach="attachments" t-as='attachment'>
                 <t t-call="mail.Attachment">
                      <t t-set="editable" t-value="true"/>
+                     <t t-set="disable_preview" t-value="true"/>
                 </t>
             </t>
         </div>
@@ -106,6 +107,7 @@
                             <t t-foreach='message.attachment_ids' t-as='attachment'>
                                 <t t-call="mail.Attachment">
                                     <t t-set="attachment.url" t-value="'/web/content/'+ attachment.id + '?download=true'"/>
+                                    <t t-set="disable_preview" t-value="true"/>
                                 </t>
                             </t>
                         </div>
