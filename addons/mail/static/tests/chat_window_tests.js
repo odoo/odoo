@@ -37,6 +37,7 @@ QUnit.module('mail', {
             id: 1,
             is_note: false,
             is_discussion: true,
+            is_notification: false,
             is_starred: false,
             model: 'partner',
             res_id: 2

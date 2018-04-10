@@ -392,8 +392,9 @@ class Message(models.Model):
                     'message_type': u'comment',
                     'id': 59,
                     'subject': False
-                    'is_note': True # only if the subtype is internal
+                    'is_note': True # only if the message is a note (subtype == note)
                     'is_discussion': False # only if the message is a discussion (subtype == discussion)
+                    'is_notification': False # only if the message is a note but is a notification aka not linked to a document like assignation
                 }
         """
         message_values = self.read([
@@ -419,6 +420,7 @@ class Message(models.Model):
         for message in message_values:
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id
             message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id
+            message['is_notification'] = message['is_note'] and not message['model'] and not message['res_id']
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
