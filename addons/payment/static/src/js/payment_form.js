@@ -417,7 +417,7 @@ odoo.define('payment.payment_form', function (require) {
                 acquirerID = this.getAcquirerIdFromRadio($checkedRadio[0]),
                 $acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
 
-            if ($checkedRadio.length === 0) {
+            if ($checkedRadio.length === 0 || !$acquirerForm.length) {
                 return new Dialog(null, {
                     title: _t('Error: ') + _.str.escapeHTML(title),
                     size: 'medium',
