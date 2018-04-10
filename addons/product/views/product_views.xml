@@ -90,6 +90,11 @@
                             </group>
                         </page>
                         <page string="Notes" name="notes">
+                            <group name="description_internal">
+                                <group string="Description for Internal">
+                                    <field name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
+                                </group>
+                            </group>
                             <group name="description">
                                 <group string="Description for Customers" attrs="{'invisible': [('sale_ok','=',False)]}">
                                     <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders."/>
