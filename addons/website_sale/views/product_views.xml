@@ -238,14 +238,18 @@
         <field name="model">product.image</field>
         <field name="arch" type="xml">
             <form string="Product Images">
-                <sheet>
-                    <field name="image" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
-                    <div class="oe_title">
-                        <label class="oe_edit_only" for="name" string="Image Name"/>
-                        <h1><field name="name" placeholder="Image Name" required="True"/></h1>
-                        <field name="product_tmpl_id" invisible="1"/>
+                <div class="row o_website_sale_image_modal">
+                    <div class="col-sm-6 col-lg-5">
+                        <div class="oe_title">
+                            <label class="small text-muted" for="name" string="Image Name"/>
+                            <h2><field name="name" placeholder="Image Name" required="True"/></h2>
+                            <field name="product_tmpl_id" invisible="1"/>
+                        </div>
                     </div>
-                </sheet>
+                    <div class="col-sm-6 col-lg-7 text-center o_website_sale_image_modal_container">
+                        <field name="image" widget="image"/>
+                    </div>
+                </div>
             </form>
         </field>
     </record>
