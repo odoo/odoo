@@ -214,6 +214,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     fn_boutton_update.call(this, $container, oStyle);
 
     $container.find('.note-color').removeClass("hidden");
+    $('#wrapwrap .fa.o_icon_selected').removeClass('o_icon_selected');
 
     if (oStyle.image) {
         $container.find('[data-event]').parent().removeClass("active");
@@ -225,6 +226,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $container.find('a[data-event="padding"][data-value=""]').parent().toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
 
         if (dom.isImgFont(oStyle.image)) {
+            $(oStyle.image).addClass('o_icon_selected');
 
             $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass("hidden");
             $container.find('.only_fa').removeClass("hidden");

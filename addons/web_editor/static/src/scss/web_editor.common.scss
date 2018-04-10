@@ -232,6 +232,13 @@ a.o_underline {
     }
 }
 
+// Highlight fontawesome icon
+#wrap {
+    .fa.o_icon_selected:before {
+        background: rgba(150, 150, 220, 0.3);
+    }
+}
+
 // Create classes for theme colors...
 @include o-create-color-classes(alpha, $color-alpha);
 @include o-create-color-classes(beta, $color-beta);
