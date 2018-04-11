@@ -2544,6 +2544,51 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('drag & drop records grouped by m2o with progressbar', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].product_id = false;
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="int_field"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    return $.when(true);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "1",
+            "counter should contain the correct value");
+
+        testUtils.dragAndDrop(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:eq(0)'), kanban.$('.o_kanban_group:eq(1)'));
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "0",
+            "counter should contain the correct value");
+
+        testUtils.dragAndDrop(kanban.$('.o_kanban_group:eq(1) .o_kanban_record:eq(2)'), kanban.$('.o_kanban_group:eq(0)'));
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "1",
+            "counter should contain the correct value");
+
+        testUtils.dragAndDrop(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:eq(0)'), kanban.$('.o_kanban_group:eq(1)'));
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "0",
+            "counter should contain the correct value");
+
+        kanban.destroy();
+    });
+
     QUnit.test('keep adding quickcreate in first column after a record from this column was moved', function (assert) {
         assert.expect(2);
 
