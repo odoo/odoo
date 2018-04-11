@@ -103,15 +103,21 @@ var KanbanRenderer = BasicRenderer.extend({
             previousCard.focus();
         }
     },
+    /**
+     * @private
+     * @param {KeyboardEvent} e
+     */
     _onRecordKeyDown: function(e) {
         switch(e.which) {
             case $.ui.keyCode.DOWN:
                 this._focusOnNextCard(e.currentTarget);
                 e.stopPropagation();
+                e.preventDefault();
                 break;
             case $.ui.keyCode.UP:
                 this._focusOnPrevousCard(e.currentTarget);
                 e.stopPropagation();
+                e.preventDefault();
                 break;
             case $.ui.keyCode.RIGHT:
                 var currentColumn = e.currentTarget.parentElement;
@@ -126,6 +132,7 @@ var KanbanRenderer = BasicRenderer.extend({
                     this._focusOnNextCard(e.currentTarget);
                 }
                 e.stopPropagation();
+                e.preventDefault();
                 break;
             case $.ui.keyCode.LEFT:
                 var currentColumn = e.currentTarget.parentElement;
@@ -140,6 +147,7 @@ var KanbanRenderer = BasicRenderer.extend({
                     this._focusOnPrevousCard(e.currentTarget);
                 }
                 e.stopPropagation();
+                e.preventDefault();
                 break;
         }
     },
