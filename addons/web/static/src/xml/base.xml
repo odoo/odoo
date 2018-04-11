@@ -864,12 +864,12 @@
 </t>
 <t t-name="FieldStatus.content">
     <t t-if="selection_folded.length">
+        <button type="button" class="btn btn-sm o_arrow_button btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"/></button>
         <ul class="dropdown-menu o-status-more" role="menu">
             <li t-foreach="selection_folded" t-as="i">
                 <t t-call="FieldStatus.content.button"/>
             </li>
         </ul>
-        <button type="button" class="btn btn-sm o_arrow_button btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"/></button>
     </t>
     <t t-foreach="selection_unfolded.reverse()" t-as="i">
         <t t-call="FieldStatus.content.button"/>
