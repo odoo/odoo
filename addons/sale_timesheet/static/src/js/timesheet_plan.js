@@ -15,6 +15,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
         "click a[type='action']": "_onClickAction",
         "click .o_timesheet_plan_redirect": '_onRedirect',
         "click .oe_stat_button": "_onClickStatButton",
+        "click .o_timesheet_plan_non_billable_task": "_onClickNonBillableTask",
         "click .o_timesheet_plan_sale_timesheet_people_time .progress-bar": '_onClickEmployeeProgressbar',
     },
     /**
@@ -25,6 +26,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
         this.action = action;
         this.action_manager = parent;
         this.set('title', action.name || _t('Overview'));
+        this.project_ids = [];
     },
     /**
      * @override
@@ -121,6 +123,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
             params: {domain: domain},
         }).then(function(result){
             self._refreshPlan(result.html_content);
+            self.project_ids = result.project_ids;
         });
     },
     /**
@@ -222,6 +225,22 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
             },
         }).then(function(action){
             self.do_action(action);
+        });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickNonBillableTask: function (event) {
+        var self = this;
+        this.do_action({
+            name: _t('Non Billable Tasks'),
+            type: 'ir.actions.act_window',
+            view_type: 'form',
+            view_mode: 'form',
+            res_model: 'project.task',
+            views: [[false, 'list'], [false, 'form']],
+            domain: [['project_id', 'in', this.project_ids || []], ['sale_line_id', '=', false]]
         });
     },
     /**

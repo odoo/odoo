@@ -21,7 +21,8 @@ class SaleTimesheetController(http.Controller):
         values = self._plan_prepare_values(projects)
         view = request.env.ref('sale_timesheet.timesheet_plan')
         return {
-            'html_content': view.render(values)
+            'html_content': view.render(values),
+            'project_ids': projects.ids,
         }
 
     def _plan_prepare_values(self, projects):
