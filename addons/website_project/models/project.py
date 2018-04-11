@@ -8,6 +8,13 @@ from odoo.addons.website.models.website import slug
 class Project(models.Model):
     _inherit = ['project.project']
 
+    # DO NOT FORWARD-PORT (only for saas-15)
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
+
+    def _compute_website_url(self):
+        for project in self:
+            project.website_url = '/my/project/%s' % project.id
+
     @api.multi
     def get_access_action(self):
         """ Instead of the classic form view, redirect to website for portal users
@@ -25,7 +32,7 @@ class Project(models.Model):
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': '/my/project/%s' % self.id,
+                    'url': self.website_url,
                     'target': 'self',
                     'res_id': self.id,
                 }
