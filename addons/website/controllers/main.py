@@ -10,6 +10,7 @@ import re
 import urllib2
 import werkzeug.utils
 import werkzeug.wrappers
+import urlparse
 
 import odoo
 from odoo import http
@@ -110,7 +111,9 @@ class Website(Home):
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
-            return request.redirect('/page/' + page[8:], code=301)
+            params = list(urlparse.urlparse(request.httprequest.url))[4]
+            url = urlparse.urlunparse(['', '', '/page/' + page[8:], '', params, ''])
+            return request.redirect(url, code=301)
         elif '.' not in page:
             page = 'website.%s' % page
 
