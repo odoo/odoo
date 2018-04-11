@@ -327,6 +327,17 @@ class AdjustmentLines(models.Model):
             raise UserError(_('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
 
         return self._create_account_move_line(move, credit_account_id, debit_account_id, qty_out, already_out_account_id)
+    
+    def get_base_line(self, move):
+        '''
+        hook sera utilizado en un metodo superior
+        '''
+        return {
+            'name': self.name,
+            'move_id': move.id,
+            'product_id': self.product_id.id,
+            'quantity': self.quantity,
+        }
 
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, qty_out, already_out_account_id):
         """
@@ -335,12 +346,7 @@ class AdjustmentLines(models.Model):
         """
         AccountMoveLine = self.env['account.move.line'].with_context(check_move_validity=False, recompute=False)
 
-        base_line = {
-            'name': self.name,
-            'move_id': move.id,
-            'product_id': self.product_id.id,
-            'quantity': self.quantity,
-        }
+        base_line = self.get_base_line(move)
         debit_line = dict(base_line, account_id=debit_account_id)
         credit_line = dict(base_line, account_id=credit_account_id)
         diff = self.additional_landed_cost
