@@ -8,7 +8,7 @@
     <t t-extend="PosTicket">
          <t t-jquery='.receipt-change' t-operation='after'>
              <t t-if="receipt.l10n_fr_hash">
-                 <div class="l10n_fr_hash">Hash: <t t-esc='receipt.l10n_fr_hash'/></div>
+                 <div class="l10n_fr_hash">Hash: <span style="font-size: 0.7em"><t t-esc='receipt.l10n_fr_hash'/></span></div>
              </t>
              <t t-if="!receipt.l10n_fr_hash">
                  PRO FORMA TICKET
