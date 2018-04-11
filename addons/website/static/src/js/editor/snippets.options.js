@@ -394,6 +394,14 @@ options.registry.layout_column = options.Class.extend({
             $columns.first().addClass('col-md-offset-' + colOffset);
         }
     },
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        this.$el.find('li[data-select-count]').removeClass('active')
+            .filter('li[data-select-count=' + this.$target.children().length + ']').addClass('active');
+    },
 });
 
 options.registry.parallax = options.Class.extend({
