@@ -3166,6 +3166,9 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {string[]} [options.fieldNames] the fields to fetch for a record
      * @param {boolean} [options.onlyGroups=false]
+     * @param {boolean} [options.keepEmptyGroups=false] if set, the groups not
+     *   present in the read_group anymore (empty groups) will stay in the
+     *   datapoint (used to mimic the kanban renderer behaviour for example)
      * @returns {Deferred}
      */
     _load: function (dataPoint, options) {
@@ -3796,6 +3799,16 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._load(newGroup, options));
                     }
                 });
+                if (options && options.keepEmptyGroups) {
+                    // Find the groups that were available in a previous
+                    // readGroup but are not there anymore.
+                    // Note that these groups are put after existing groups so
+                    // the order is not conserved. A sort *might* be useful.
+                    var emptyGroupsIDs = _.difference(_.pluck(previousGroups, 'id'), list.data);
+                    _.each(emptyGroupsIDs, function (groupID) {
+                        list.data.push(groupID);
+                    });
+                }
                 return $.when.apply($, defs).then(function () {
                     // generate the res_ids of the main list, being the concatenation
                     // of the fetched res_ids in each group
