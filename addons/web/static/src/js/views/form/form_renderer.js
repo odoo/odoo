@@ -49,8 +49,8 @@ var FormRenderer = BasicRenderer.extend({
      * Focuses the field having attribute 'default_focus' set, if any, or the
      * first focusable field otherwise.
      * In read mode, delegate which button to give the focus to, to the form_renderer
-     * 
-     * @returns {int || undefined} the index of the widget activated else 
+     *
+     * @returns {int | undefined} the index of the widget activated else
      * undefined
      */
     autofocus: function () {
