@@ -73,10 +73,14 @@
         </record>
         <!-- Gubernamental -->
         <record id="fiscal_position_tax_1" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_sale"/>
             <field name="position_id" ref="position_gov"/>
+            <field name="tax_dest_id" ref="ret_5_income_gov"/>
         </record>
         <record id="fiscal_position_tax_2" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_sale_incl"/>
             <field name="position_id" ref="position_gov"/>
+            <field name="tax_dest_id" ref="ret_5_income_gov"/>
         </record>
         <!-- No Lucrativas -->
         <record id="fiscal_position_tax_12" model="account.fiscal.position.tax.template">

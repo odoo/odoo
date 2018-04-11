@@ -455,6 +455,19 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
         </record>
+        <record id="ret_5_income_gov" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">50</field>
+            <field name="name">Retención ISR 5% Gubernamentales</field>
+            <field name="description">-5% ISR</field>
+            <field name="amount">-5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">none</field>
+            <field name="account_id" ref="do_niif_21030308"/>
+            <field name="refund_account_id" ref="do_niif_21030308"/>
+            <field eval="0" name="price_include"/>
+            <field name="tax_group_id" ref="group_isr"/>
+        </record>
         <record id="tax_group_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">60</field>
