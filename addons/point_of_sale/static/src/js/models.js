@@ -940,6 +940,7 @@ exports.PosModel = Backbone.Model.extend({
                 model: 'pos.order',
                 method: 'create_from_ui',
                 args: args,
+                kwargs: {context: session.user_context},
             }, {
                 timeout: timeout,
                 shadow: !options.to_invoice
