@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
+from itertools import chain
 from operator import itemgetter
 from collections import namedtuple
 
@@ -9,7 +10,7 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare, float_round
-from odoo.tools.datetime import timedelta, rrule, relativedelta, datetime, time, DAILY
+from odoo.tools.datetime import timedelta, relativedelta, datetime, time, rrule, DAILY, timezone
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -24,6 +25,78 @@ def float_to_time(float_hour):
 def to_user_tz(datetime, record):
     tz_name = record._context.get('tz') or record.env.user.tz
     return datetime.astimezone(tz_name)
+
+
+def events(pairs, opening, closing):
+    """ Return an iterator that contains one pair for each interval boundary. """
+    for start, stop, meta in pairs:
+        yield (start, opening, meta)
+        yield (stop, closing, meta)
+
+
+class Intervals(object):
+    """ Collection of ordered disjoint intervals. """
+    def __init__(self, pairs=(), _pairs=None):
+        self._pairs = list(self._union(pairs) if _pairs is None else _pairs)
+
+    def __bool__(self):
+        return bool(self._pairs)
+
+    def __iter__(self):
+        return iter(self._pairs)
+
+    def __reversed__(self):
+        return reversed(self._pairs)
+
+    def __eq__(self, other):
+        if isinstance(other, Intervals):
+            return self._pairs == other._pairs
+        return NotImplemented
+
+    def __or__(self, other):
+        """ Return the union of two sets of disjoint intervals. """
+        return Intervals(chain(self, other))
+
+    def __and__(self, other):
+        """ Return the intersection of two sets of disjoint intervals. """
+        return Intervals(_pairs=self._merge(self, other, False))
+
+    def __sub__(self, other):
+        """ Return the difference of two sets of disjoint intervals. """
+        return Intervals(_pairs=self._merge(self, other))
+
+    def _union(self, pairs):
+        """ Generate ordered disjoint intervals. """
+        starts = []
+        for value, flag, meta in sorted(events(pairs, 'start', 'stop')):
+            if flag == 'start':
+                starts.append(value)
+            else:
+                start = starts.pop()
+                if not starts:
+                    yield (start, value, meta)
+
+    def _merge(self, pairs1, pairs2, enable=True):
+        """ Return the difference or intersection of disjoint intervals. """
+        events1 = events(pairs1, 'start', 'stop')
+        events2 = events(pairs2, 'switch', 'switch')
+        start = None                            # set by start/stop
+        enabled = enable                        # changed by switch
+        oldmeta = None
+        for value, flag, meta in sorted(chain(events1, events2)):
+            if flag == 'start':
+                start = value
+                oldmeta = meta
+            elif flag == 'stop':
+                if enabled and start < value:
+                    yield (start, value, meta)
+                start = None
+            else:
+                if not enabled and start is not None:
+                    start = value
+                if enabled and start is not None and start < value:
+                    yield (start, value, oldmeta)
+                enabled = not enabled
 
 
 class ResourceCalendar(models.Model):
@@ -78,7 +151,10 @@ class ResourceCalendar(models.Model):
         'resource.calendar.leaves', 'calendar_id', 'Global Leaves',
         domain=[('resource_id', '=', False)]
         )
-    hours_per_day = fields.Float("Average hour per day", default=HOURS_PER_DAY, help="Average hours per day a resource is supposed to work with this calendar.")
+    hours_per_day = fields.Float("Average hour per day", default=HOURS_PER_DAY,
+                                 help="Average hours per day a resource is supposed to work with this calendar.")
+    tz = fields.Selection(_tz_get, default=_get_tz, string='Timezone',
+                          help="This field is used in order to define in which timezone the resources will work.")
 
     @api.onchange('attendance_ids')
     def _onchange_hours_per_day(self):
@@ -89,552 +165,200 @@ class ResourceCalendar(models.Model):
         self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
 
     # --------------------------------------------------
-    # Utility methods
+    # Computation API
     # --------------------------------------------------
-
-    def _merge_kw(self, kw, kw_ext):
-        new_kw = dict(kw, **kw_ext)
-        new_kw.update(
-            attendances=kw.get('attendances', self.env['resource.calendar.attendance']) | kw_ext.get('attendances', self.env['resource.calendar.attendance']),
-            leaves=kw.get('leaves', self.env['resource.calendar.leaves']) | kw_ext.get('leaves', self.env['resource.calendar.leaves'])
-        )
-        return new_kw
-
-    def _interval_new(self, start_datetime, end_datetime, kw=None):
-        kw = kw if kw is not None else dict()
-        kw.setdefault('attendances', self.env['resource.calendar.attendance'])
-        kw.setdefault('leaves', self.env['resource.calendar.leaves'])
-        return self._interval_obj(start_datetime, end_datetime, kw)
-
-    def _interval_exclude_left(self, interval, interval_dst):
-        return self._interval_obj(
-            interval.start_datetime > interval_dst.end_datetime and interval.start_datetime or interval_dst.end_datetime,
-            interval.end_datetime,
-            self._merge_kw(interval.data, interval_dst.data)
-        )
-
-    def _interval_exclude_right(self, interval, interval_dst):
-        return self._interval_obj(
-            interval.start_datetime,
-            interval.end_datetime < interval_dst.start_datetime and interval.end_datetime or interval_dst.start_datetime,
-            self._merge_kw(interval.data, interval_dst.data)
-        )
-
-    def _interval_or(self, interval, interval_dst):
-        return self._interval_obj(
-            interval.start_datetime < interval_dst.start_datetime and interval.start_datetime or interval_dst.start_datetime,
-            interval.end_datetime > interval_dst.end_datetime and interval.end_datetime or interval_dst.end_datetime,
-            self._merge_kw(interval.data, interval_dst.data)
-        )
-
-    def _interval_and(self, interval, interval_dst):
-        if interval.start_datetime > interval_dst.end_datetime or interval.end_datetime < interval_dst.start_datetime:
-            return None
-        return self._interval_obj(
-            interval.start_datetime > interval_dst.start_datetime and interval.start_datetime or interval_dst.start_datetime,
-            interval.end_datetime < interval_dst.end_datetime and interval.end_datetime or interval_dst.end_datetime,
-            self._merge_kw(interval.data, interval_dst.data)
-        )
-
-    def _interval_merge(self, intervals):
-        """ Sort intervals based on starting datetime and merge overlapping intervals.
-
-        :return list cleaned: sorted intervals merged without overlap """
-        intervals = sorted(intervals, key=itemgetter(0))  # sort on first datetime
-        cleaned = []
-        working_interval = None
-        while intervals:
-            current_interval = intervals.pop(0)
-            if not working_interval:  # init
-                working_interval = self._interval_new(*current_interval)
-            elif working_interval[1] < current_interval[0]:  # interval is disjoint
-                cleaned.append(working_interval)
-                working_interval = self._interval_new(*current_interval)
-            elif working_interval[1] < current_interval[1]:  # union of greater intervals
-                working_interval = self._interval_or(working_interval, current_interval)
-        if working_interval:  # handle void lists
-            cleaned.append(working_interval)
-        return cleaned
-
-    @api.model
-    def _interval_remove_leaves(self, interval, leave_intervals):
-        """ Remove leave intervals from a base interval
-
-        :param tuple interval: an interval (see above) that is the base interval
-                               from which the leave intervals will be removed
-        :param list leave_intervals: leave intervals to remove
-        :return list intervals: ordered intervals with leaves removed """
-        intervals = []
-        leave_intervals = self._interval_merge(leave_intervals)
-        current_interval = interval
-        for leave in leave_intervals:
-            # skip if ending before the current start datetime
-            if leave[1] <= current_interval[0]:
-                continue
-            # skip if starting after current end datetime; break as leaves are ordered and
-            # are therefore all out of range
-            if leave[0] >= current_interval[1]:
-                break
-            # begins within current interval: close current interval and begin a new one
-            # that begins at the leave end datetime
-            if current_interval[0] < leave[0] < current_interval[1]:
-                intervals.append(self._interval_exclude_right(current_interval, leave))
-                current_interval = self._interval_exclude_left(interval, leave)
-            # ends within current interval: set current start datetime as leave end datetime
-            if current_interval[0] <= leave[1]:
-                current_interval = self._interval_exclude_left(interval, leave)
-        if current_interval and current_interval[0] < interval[1]:  # remove intervals moved outside base interval due to leaves
-            intervals.append(current_interval)
-        return intervals
-
-    @api.model
-    def _interval_schedule_hours(self, intervals, hour, backwards=False):
-        """ Schedule hours in intervals. The last matching interval is truncated
-        to match the specified hours. This method can be applied backwards meaning
-        scheduling hours going in the past. In that case truncating last interval
-        is done accordingly. If number of hours to schedule is greater than possible
-        scheduling in the given intervals, returned result equals intervals.
-
-        :param list intervals:  a list of time intervals
-        :param int/float hours: number of hours to schedule. It will be converted
-                                into a timedelta, but should be submitted as an
-                                int or float
-        :param boolean backwards: schedule starting from last hour
-
-        :return list results: a list of time intervals """
-        if backwards:
-            intervals.reverse()  # first interval is the last working interval of the day
-        results = []
-        res = timedelta()
-        limit = timedelta(hours=hour)
-        for interval in intervals:
-            res += interval[1] - interval[0]
-            if res > limit and not backwards:
-                interval = (interval[0], interval[1] + relativedelta(seconds=(limit - res).total_seconds()))
-            elif res > limit:
-                interval = (interval[0] + relativedelta(seconds=(res - limit).total_seconds()), interval[1])
-            results.append(interval)
-            if res > limit:
-                break
-        if backwards:
-            results.reverse()  # return interval with increasing starting times
-        return results
-
-    # --------------------------------------------------
-    # Date and hours computation
-    # --------------------------------------------------
-
-    @api.multi
-    def _get_day_attendances(self, day_date, start_time, end_time):
-        """ Given a day date, return matching attendances. Those can be limited
-        by starting and ending time objects. """
-        self.ensure_one()
-        weekday = day_date.weekday()
-        attendances = self.env['resource.calendar.attendance']
-
-        for attendance in self.attendance_ids.filtered(
-            lambda att:
-                int(att.dayofweek) == weekday and
-                not (att.date_from and att.date_from > day_date) and
-                not (att.date_to and att.date_to < day_date)):
-            if start_time and float_to_time(attendance.hour_to) < start_time:
-                continue
-            if end_time and float_to_time(attendance.hour_from) > end_time:
-                continue
-            attendances |= attendance
-        return attendances
-
-    @api.multi
-    def _get_weekdays(self):
-        """ Return the list of weekdays that contain at least one working
-        interval. """
-        self.ensure_one()
-        return list({int(d) for d in self.attendance_ids.mapped('dayofweek')})
-
-    @api.multi
-    def _get_next_work_day(self, day_date):
-        """ Get following date of day_date, based on resource.calendar. """
-        self.ensure_one()
-        weekdays = self._get_weekdays()
-        weekday = next((item for item in weekdays if item > day_date.weekday()), weekdays[0])
-        days = weekday - day_date.weekday()
-        if days < 0:
-            days = 7 + days
-
-        return day_date + relativedelta(days=days)
-
-    @api.multi
-    def _get_previous_work_day(self, day_date):
-        """ Get previous date of day_date, based on resource.calendar. """
-        self.ensure_one()
-        weekdays = self._get_weekdays()
-        weekdays.reverse()
-        weekday = next((item for item in weekdays if item < day_date.weekday()), weekdays[0])
-        days = weekday - day_date.weekday()
-        if days > 0:
-            days = days - 7
-
-        return day_date + relativedelta(days=days)
-
-    @api.multi
-    def _get_leave_intervals(self, resource_id=None, start_datetime=None, end_datetime=None, domain=None):
-        """Get the leaves of the calendar. Leaves can be filtered on the resource,
-        and on a start and end datetime.
-
-        Leaves are encoded from a given timezone given by their tz field. COnverting
-        them in user timezone require to use the leave timezone, not the current
-        user timezone. For example people managing leaves could be from different
-        timezones and the correct one is the one used when encoding them.
-
-        :return list leaves: list of time intervals """
-        self.ensure_one()
-        if resource_id:
-            search_domain = ['|', ('resource_id', '=', resource_id), ('resource_id', '=', False)]
-        else:
-            search_domain = [('resource_id', '=', False)]
-        if start_datetime:
-            # domain += [('date_to', '>', start_datetime)]
-            search_domain += [('date_to', '>', start_datetime + timedelta(days=-1))]
-        if end_datetime:
-            # domain += [('date_from', '<', end_datetime)]
-            search_domain += [('date_from', '<', end_datetime + timedelta(days=1))]
-        if domain:
-            search_domain += domain
-        if domain is None:
-            search_domain += [('time_type', '=', 'leave')]
-        leaves = self.env['resource.calendar.leaves'].search(search_domain + [('calendar_id', '=', self.id)])
-
-        filtered_leaves = self.env['resource.calendar.leaves']
-        for leave in leaves:
-            if start_datetime:
-                leave_date_to = leave.date_to.astimezone(leave.tz)
-                if not leave_date_to >= start_datetime:
-                    continue
-            if end_datetime:
-                leave_date_from = leave.date_from.astimezone(leave.tz)
-                if not leave_date_from <= end_datetime:
-                    continue
-            filtered_leaves += leave
-
-        return [self._interval_new(
-            leave.date_from.astimezone(leave.tz),
-            leave.date_to.astimezone(leave.tz),
-            {'leaves': leave}) for leave in filtered_leaves]
-
-    def _iter_day_attendance_intervals(self, day_date, start_time, end_time):
-        """ Get an iterator of all interval of current day attendances. """
-        for calendar_working_day in self._get_day_attendances(day_date, start_time, end_time):
-            from_time = float_to_time(calendar_working_day.hour_from)
-            to_time = float_to_time(calendar_working_day.hour_to)
-
-            dt_f = datetime.combine(day_date, max(from_time, start_time), tzinfo=self._get_tz())
-            dt_t = datetime.combine(day_date, min(to_time, end_time), tzinfo=self._get_tz())
-
-            yield self._interval_new(dt_f, dt_t, {'attendances': calendar_working_day})
-
-    @api.multi
-    def _get_day_work_intervals(self, day_date, start_time=None, end_time=None, compute_leaves=False, resource_id=None, domain=None):
-        """ Get the working intervals of the day given by day_date based on
-        current calendar. Input should be given in current user timezone and
-        output is given in UTC, ready to be used by the orm or webclient.
-
-        :param time start_time: time object that is the beginning hours in user TZ
-        :param time end_time: time object that is the ending hours in user TZ
-        :param boolean compute_leaves: indicates whether to compute the
-                                       leaves based on calendar and resource.
-        :param int resource_id: the id of the resource to take into account when
-                                computing the work intervals. Leaves notably are
-                                filtered according to the resource.
-
-        :return list intervals: list of time intervals in UTC """
-        self.ensure_one()
-
-        if not start_time:
-            start_time = time.min
-        if not end_time:
-            end_time = time.max
-
-        working_intervals = [att_interval for att_interval in self._iter_day_attendance_intervals(day_date, start_time, end_time)]
-
-        # filter according to leaves
-        if compute_leaves:
-            leaves = self._get_leave_intervals(
-                resource_id=resource_id,
-                start_datetime=datetime.combine(day_date, start_time, tzinfo=self._get_tz()),
-                end_datetime=datetime.combine(day_date, end_time, tzinfo=self._get_tz()),
-                domain=domain)
-            working_intervals = [
-                sub_interval
-                for interval in working_intervals
-                for sub_interval in self._interval_remove_leaves(interval, leaves)]
-
-        # adapt tz
-        return [self._interval_new(
-            interval[0],
-            interval[1],
-            interval[2]) for interval in working_intervals]
-
-    def _get_day_leave_intervals(self, day_date, start_time, end_time, resource_id, domain=None):
-        """ Get the leave intervals of the day given by day_date based on current
-        calendar. Input should be given in current user timezone and
-        output is given in UTC, ready to be used by the orm or webclient.
-
-        :param time start_time: time object that is the beginning hours in user TZ
-        :param time end_time: time object that is the ending hours in user TZ
-        :param int resource_id: the id of the resource to take into account when
-                                computing the leaves.
-
-        :return list intervals: list of time intervals in UTC """
-        self.ensure_one()
-
-        if not start_time:
-            start_time = time.min
-        if not end_time:
-            end_time = time.max
-
-        working_intervals = [att_interval for att_interval in self._iter_day_attendance_intervals(day_date, start_time, end_time)]
-
-        leaves_intervals = self._get_leave_intervals(
-            resource_id=resource_id,
-            start_datetime=datetime.combine(day_date, start_time, tzinfo=self._get_tz()),
-            end_datetime=datetime.combine(day_date, end_time, tzinfo=self._get_tz()),
-            domain=domain)
-
-        final_intervals = [i for i in
-                           [self._interval_and(leave_interval, work_interval)
-                            for leave_interval in leaves_intervals
-                            for work_interval in working_intervals] if i]
-
-        # adapt tz
-        return [self._interval_new(
-            interval[0],
-            interval[1],
-            interval[2]) for interval in final_intervals]
-
-    # --------------------------------------------------
-    # Main computation API
-    # --------------------------------------------------
-
-    def _iter_work_intervals(self, start_dt, end_dt, resource_id, compute_leaves=True, domain=None):
-        """ Lists the current resource's work intervals between the two provided
-        datetimes (inclusive) expressed in UTC, for each worked day. """
-        start_dt = to_user_tz(start_dt, self.env.user)
-        end_dt = to_user_tz(end_dt, self.env.user)
-
-        if not end_dt:
-            end_dt = datetime.combine(start_dt.date(), time.max, tzinfo=self._get_tz())
-
-        for day in rrule(DAILY,
-                         dtstart=start_dt,
-                         until=end_dt,
-                         byweekday=self._get_weekdays()):
-            start_time = time.min
-            if day.date() == start_dt.date():
-                start_time = start_dt.time()
-            end_time = time.max
-            if day.date() == end_dt.date() and end_dt.time() != time():
-                end_time = end_dt.time()
-
-            intervals = self._get_day_work_intervals(
-                day.date(),
-                start_time=start_time,
-                end_time=end_time,
-                compute_leaves=compute_leaves,
-                resource_id=resource_id,
-                domain=domain)
-            if intervals:
-                yield intervals
-
-    def _iter_leave_intervals(self, start_dt, end_dt, resource_id, domain=None):
-        """ Lists the current resource's leave intervals between the two provided
-        datetimes (inclusive) expressed in UTC. """
-        start_dt = to_user_tz(start_dt, self.env.user)
-        end_dt = to_user_tz(end_dt, self.env.user)
-
-        if not end_dt:
-            end_dt = datetime.combine(start_dt.date(), time.max, tzinfo=self._get_tz())
-
-        for day in rrule(DAILY,
-                         dtstart=start_dt,
-                         until=end_dt,
-                         byweekday=self._get_weekdays()):
-            start_time = time.min
-            if day.date() == start_dt.date():
-                start_time = start_dt.time()
-            end_time = time.max
-            if day.date() == end_dt.date() and end_dt.time() != time():
-                end_time = end_dt.time()
-
-            intervals = self._get_day_leave_intervals(
-                day.date(),
-                start_time,
-                end_time,
-                resource_id,
-                domain=domain)
-
-            if intervals:
-                yield intervals
-
-    def _iter_work_hours_count(self, from_datetime, to_datetime, resource_id, domain=None):
-        """ Lists the current resource's work hours count between the two provided
-        datetime expressed in UTC. """
-        from_datetime = to_user_tz(from_datetime, self.env.user)
-        to_datetime = to_user_tz(to_datetime, self.env.user)
-
-        for interval in self._iter_work_intervals(from_datetime, to_datetime, resource_id, domain=domain):
-            td = timedelta()
-            for work_interval in interval:
-                td += work_interval[1] - work_interval[0]
-            yield (interval[0][0].date(), td.total_seconds() / 3600.0)
-
-    def _iter_work_days(self, from_date, to_date, resource_id, domain=None):
-        """ Lists the current resource's work days between the two provided
-        dates (inclusive) expressed in UTC.
-
-        Work days are the company or service's open days (as defined by the
-        resource.calendar) minus the resource's own leaves.
-
-        :param date from_date: start of the interval to check for
-                                        work days (inclusive)
-        :param date to_date: end of the interval to check for work
-                                      days (inclusive)
-        :rtype: list(date)
+    def _attendance_intervals(self, start_dt, end_dt):
+        """ Return the attendance intervals in the given datetime range.
+            The returned intervals are expressed in the calendar's timezone.
         """
-        for interval in self._iter_work_intervals(
-                datetime(from_date.year, from_date.month, from_date.day),
-                datetime(to_date.year, to_date.month, to_date.day),
-                resource_id, domain=domain):
-            yield interval[0][0].date()
+        assert start_dt.tzinfo and end_dt.tzinfo
+        combine = datetime.combine
 
-    @api.multi
-    def _is_work_day(self, date, resource_id):
-        """ Whether the provided date is a work day for the subject resource.
+        # express all dates and times in the user's timezone if not already the case
+        if start_dt.tz.name != self.env.user.tz:
+            start_dt = start_dt.in_tz(self.env.user.tz)
+        if end_dt.tz.name != self.env.user.tz:
+            end_dt = end_dt.in_tz(self.env.user.tz)
+        result = []
 
-        :type date: date
-        :rtype: bool """
-        return bool(next(self._iter_work_days(date, date, resource_id), False))
+        # for each attendance spec, generate the intervals in the date range
+        for attendance in self.attendance_ids:
+            start = start_dt.date()
+            if attendance.date_from:
+                start = max(start, attendance.date_from)
+            until = end_dt.date()
+            if attendance.date_to:
+                until = min(until, attendance.date_to)
+            weekday = int(attendance.dayofweek)
 
-    @api.multi
-    def get_work_hours_count(self, start_dt, end_dt, resource_id, compute_leaves=True, domain=None):
-        """ Count number of work hours between two datetimes. For compute_leaves,
-        resource_id: see _get_day_work_intervals. """
-        res = timedelta()
-        for intervals in self._iter_work_intervals(start_dt, end_dt, resource_id, compute_leaves=compute_leaves, domain=domain):
-            for interval in intervals:
-                res += interval[1] - interval[0]
-        return res.total_seconds() / 3600.0
+            for day in rrule(DAILY, start, until=until, byweekday=weekday):
+                # attendance hours are interpreted in the calendar's timezone
+                dt0 = combine(day, float_to_time(attendance.hour_from), tzinfo=self.tz)
+                dt1 = combine(day, float_to_time(attendance.hour_to), tzinfo=self.tz)
+                interval = (max(start_dt, dt0), min(end_dt, dt1), attendance)
+                if interval[0] < interval[1]:
+                    result.append(interval)
 
-    # --------------------------------------------------
-    # Scheduling API
-    # --------------------------------------------------
+        return Intervals(result)
 
-    @api.multi
-    def _schedule_hours(self, hours, day_dt, compute_leaves=False, resource_id=None, domain=None):
-        """ Schedule hours of work, using a calendar and an optional resource to
-        compute working and leave days. This method can be used backwards, i.e.
-        scheduling days before a deadline. For compute_leaves, resource_id:
-        see _get_day_work_intervals. This method does not use rrule because
-        rrule does not allow backwards computation.
-
-        :param int hours: number of hours to schedule. Use a negative number to
-                          compute a backwards scheduling.
-        :param datetime day_dt: reference date to compute working days. If days is
-                                > 0 date is the starting date. If days is < 0
-                                date is the ending date.
-
-        :return list intervals: list of time intervals in UTC """
+    def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None):
+        """ Return the leave intervals in the given datetime range.
+            The returned intervals are expressed in the calendar's timezone.
+        """
+        assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
-        backwards = (hours < 0)
-        intervals = []
-        remaining_hours, iterations = abs(hours * 1.0), 0
 
-        day_dt_tz = to_user_tz(day_dt, self.env.user)
-        current_datetime = day_dt_tz
+        # for the computation, express all datetimes in UTC
+        resource_ids = [resource.id, False] if resource else [False]
+        start_dt = start_dt.in_tz('UTC')
+        end_dt = end_dt.in_tz('UTC')
+        if domain is None:
+            domain = [('time_type', '=', 'leave')]
+        domain = domain + [
+            ('calendar_id', '=', self.id),
+            ('resource_id', 'in', resource_ids),
+            ('date_from', '<=', fields.Datetime.to_string(end_dt)),
+            ('date_to', '>=', fields.Datetime.to_string(start_dt)),
+        ]
 
-        call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id, domain=domain)
+        # retrieve leave intervals in (start_dt, end_dt)
+        result = []
+        for leave in self.env['resource.calendar.leaves'].search(domain):
+            leave_from = leave.date_from.in_tz(self.tz)
+            leave_to = leave.date_to.in_tz(self.tz)
+            interval = (max(start_dt, leave_from), min(end_dt, leave_to), leave)
+            if interval[0] < interval[1]:
+                result.append(interval)
 
-        while float_compare(remaining_hours, 0.0, precision_digits=2) in (1, 0) and iterations < 1000:
-            if backwards:
-                call_args['end_time'] = current_datetime.time()
-            else:
-                call_args['start_time'] = current_datetime.time()
+        return Intervals(result)
 
-            working_intervals = self._get_day_work_intervals(current_datetime.date(), **call_args)
+    def _work_intervals(self, start_dt, end_dt, resource=None, domain=None):
+        """ Return the effective work intervals between the given datetimes. """
+        return (self._attendance_intervals(start_dt, end_dt) -
+                self._leave_intervals(start_dt, end_dt, resource, domain))
 
-            if working_intervals:
-                new_working_intervals = self._interval_schedule_hours(working_intervals, remaining_hours, backwards=backwards)
-
-                res = timedelta()
-                for interval in working_intervals:
-                    res += interval[1] - interval[0]
-                remaining_hours -= res.total_seconds() / 3600.0
-
-                intervals = intervals + new_working_intervals if not backwards else new_working_intervals + intervals
-            # get next day
-            if backwards:
-                current_datetime = datetime.combine(self._get_previous_work_day(current_datetime), time(23, 59, 59), tzinfo=self._get_tz())
-            else:
-                current_datetime = datetime.combine(self._get_next_work_day(current_datetime), time(), tzinfo=self._get_tz())
-            # avoid infinite loops
-            iterations += 1
-
-        return intervals
+    # --------------------------------------------------
+    # External API
+    # --------------------------------------------------
 
     @api.multi
-    def plan_hours(self, hours, day_dt, compute_leaves=False, resource_id=None, domain=None):
-        """ Return datetime after having planned hours """
-        res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, domain)
-        if res and hours < 0.0:
-            return res[0][0]
-        elif res:
-            return res[-1][1]
-        return False
+    def get_work_hours_count(self, start_dt, end_dt, compute_leaves=True, domain=None):
+        """
+            `compute_leaves` controls whether or not this method is taking into
+            account the global leaves.
+
+            `domain` controls the way leaves are recognized.
+            None means default value ('time_type', '=', 'leave')
+
+            Counts the number of work hours between two datetimes.
+        """
+        # Set timezone in UTC if no timezone is explicitly given
+        if not start_dt.tzinfo:
+            start_dt = start_dt.replace(tzinfo='UTC')
+        if not end_dt.tzinfo:
+            end_dt = end_dt.replace(tzinfo='UTC')
+
+        if compute_leaves:
+            intervals = self._work_intervals(start_dt, end_dt, None, domain)
+        else:
+            intervals = self._attendance_intervals(start_dt, end_dt)
+
+        return sum(
+            (stop - start).total_seconds() / 3600
+            for start, stop, meta in intervals
+        )
 
     @api.multi
-    def _schedule_days(self, days, day_dt, compute_leaves=False, resource_id=None, domain=None):
-        """Schedule days of work, using a calendar and an optional resource to
-        compute working and leave days. This method can be used backwards, i.e.
-        scheduling days before a deadline. For compute_leaves, resource_id:
-        see _get_day_work_intervals. This method does not use rrule because
-        rrule does not allow backwards computation.
+    def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None):
+        """
+        `compute_leaves` controls whether or not this method is taking into
+        account the global leaves.
 
-        :param int days: number of days to schedule. Use a negative number to
-                         compute a backwards scheduling.
-        :param date day_dt: reference datetime to compute working days. If days is > 0
-                            date is the starting date. If days is < 0 date is the
-                            ending date.
+        `domain` controls the way leaves are recognized.
+        None means default value ('time_type', '=', 'leave')
 
-        :return list intervals: list of time intervals in UTC """
-        backwards = (days < 0)
-        intervals = []
-        planned_days, iterations = 0, 0
+        Return datetime after having planned hours
+        """
+        if not day_dt.tzinfo:
+            day_dt = day_dt.replace(tzinfo='UTC')
 
-        day_dt_tz = to_user_tz(day_dt, self.env.user)
-        current_datetime = day_dt_tz.replace(hour=0, minute=0, second=0, microsecond=0)
+        # which method to use for retrieving intervals
+        if compute_leaves:
+            get_intervals = lambda a, b: self._work_intervals(a, b, None, domain)
+        else:
+            get_intervals = self._attendance_intervals
 
-        while planned_days < abs(days) and iterations < 100:
-            working_intervals = self._get_day_work_intervals(
-                current_datetime.date(),
-                compute_leaves=compute_leaves, resource_id=resource_id,
-                domain=domain)
-            if not self or working_intervals:  # no calendar -> no working hours, but day is considered as worked
-                planned_days += 1
-                intervals += working_intervals
-            # get next day
-            if backwards:
-                current_datetime = self._get_previous_work_day(current_datetime)
-            else:
-                current_datetime = self._get_next_work_day(current_datetime)
-            # avoid infinite loops
-            iterations += 1
+        if hours > 0:
+            delta = timedelta(days=14)
+            for n in range(100):
+                dt = day_dt + delta * n
+                for start, stop, meta in get_intervals(dt, dt + delta):
+                    interval_hours = (stop - start).total_seconds() / 3600
+                    if hours <= interval_hours:
+                        return (start + timedelta(hours=hours)).astimezone(day_dt.tzinfo)
+                    hours -= interval_hours
+            return False
 
-        return intervals
+        elif hours < 0:
+            hours = abs(hours)
+            delta = timedelta(days=14)
+            for n in range(100):
+                dt = day_dt - delta * n
+                for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
+                    interval_hours = (stop - start).total_seconds() / 3600
+                    if hours <= interval_hours:
+                        return (stop - timedelta(hours=hours)).astimezone(day_dt.tzinfo)
+                    hours -= interval_hours
+            return False
+
+        else:
+            return day_dt
 
     @api.multi
-    def plan_days(self, days, day_dt, compute_leaves=False, resource_id=None, domain=None):
-        """ Returns the datetime of a days scheduling. """
-        res = self._schedule_days(days, day_dt, compute_leaves, resource_id, domain)
-        return res and res[-1][1] or False
+    def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
+        """
+        `compute_leaves` controls whether or not this method is taking into
+        account the global leaves.
+
+        `domain` controls the way leaves are recognized.
+        None means default value ('time_type', '=', 'leave')
+
+        Returns the datetime of a days scheduling.
+        """
+        if not day_dt.tzinfo:
+            day_dt = day_dt.replace(tzinfo='UTC')
+
+        # which method to use for retrieving intervals
+        if compute_leaves:
+            get_intervals = lambda a, b: self._work_intervals(a, b, None, domain)
+        else:
+            get_intervals = self._attendance_intervals
+
+        if days > 0:
+            found = set()
+            delta = timedelta(days=14)
+            for n in range(100):
+                dt = day_dt + delta * n
+                for start, stop, meta in get_intervals(dt, dt + delta):
+                    found.add(start.date())
+                    if len(found) == days:
+                        return stop.astimezone(day_dt.tzinfo)
+            return False
+
+        elif days < 0:
+            days = abs(days)
+            found = set()
+            delta = timedelta(days=14)
+            for n in range(100):
+                dt = day_dt - delta * n
+                for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
+                    found.add(start.date())
+                    if len(found) == days:
+                        return start.astimezone(day_dt.tzinfo)
+            return False
+
+        else:
+            return day_dt
 
 
 class ResourceCalendarAttendance(models.Model):
@@ -745,10 +469,6 @@ class ResourceCalendarLeaves(models.Model):
     calendar_id = fields.Many2one('resource.calendar', 'Working Hours')
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
-    tz = fields.Selection(
-        _tz_get, string='Timezone', default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
-        help="Timezone used when encoding the leave. It is used to correctly "
-             "localize leave hours when computing time intervals.")
     resource_id = fields.Many2one(
         "resource.resource", 'Resource',
         help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource")
