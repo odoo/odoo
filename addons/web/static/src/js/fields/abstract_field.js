@@ -314,12 +314,12 @@ var AbstractField = Widget.extend({
     },
 
     /**
-     * Update the modifiers with the newest value. 
-     * Now this.attrs.modifiersValue can be used consistantly even with 
-     * conditional modifiers inside field widgets, and without needing new 
+     * Update the modifiers with the newest value.
+     * Now this.attrs.modifiersValue can be used consistantly even with
+     * conditional modifiers inside field widgets, and without needing new
      * events or synchronization between the widgets, renderer and controller
-     * 
-     * @param {Object || null} modifiers  the updated modifiers
+     *
+     * @param {Object | null} modifiers  the updated modifiers
      * @override
      */
     updateModifiersValue: function(modifiers) {
