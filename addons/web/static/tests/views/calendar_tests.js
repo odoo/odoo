@@ -1715,6 +1715,41 @@ QUnit.module('Views', {
 
         testUtils.unpatch(mixins.ParentedMixin);
     });
+
+    QUnit.test('timezone does not affect current day', function (assert) {
+        assert.expect(2);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar date_start="start_date">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return -2400; // 40 hours timezone
+                },
+            },
+
+        });
+
+        var $sidebar = calendar.$('.o_calendar_sidebar');
+
+        assert.strictEqual($sidebar.find('.ui-datepicker-current-day').text(), "12", "should highlight the target day");
+
+        // go to previous day
+        $sidebar.find('.ui-datepicker-current-day').prev().click();
+
+        assert.strictEqual($sidebar.find('.ui-datepicker-current-day').text(), "11", "should highlight the selected day");
+
+        calendar.destroy();
+    });
 });
 
 });
