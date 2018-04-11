@@ -3065,6 +3065,35 @@ QUnit.module('ActionManager', {
             actionManager.destroy();
         });
     });
+
+    QUnit.test('properly drop client actions after new action is initiated', function (assert) {
+        assert.expect(1);
+
+        var slowWillStartDef = $.Deferred();
+
+        var ClientAction = AbstractAction.extend({
+            willStart: function () {
+                return slowWillStartDef;
+            },
+        });
+
+        core.action_registry.add('slowAction', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('slowAction');
+        actionManager.doAction(4);
+        slowWillStartDef.resolve();
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            'should have loaded a kanban view');
+
+        actionManager.destroy();
+        delete core.action_registry.map.slowAction;
+    });
+
 });
 
 });
