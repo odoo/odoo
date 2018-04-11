@@ -803,6 +803,11 @@ class AccountTax(models.Model):
         if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
             raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
+    @api.constrains('children_tax_ids')
+    def _check_recursion(self):
+        if not self._check_m2m_recursion('children_tax_ids'):
+            raise ValidationError(_('Recursion found in Group of Taxes.'))
+
     @api.one
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
