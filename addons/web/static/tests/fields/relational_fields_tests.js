@@ -11298,6 +11298,32 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('reference and list navigation', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="reference"/></tree>',
+        });
+
+        // edit first row
+        list.$('.o_data_row .o_data_cell').first().click();
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_field_widget[name="reference"] input')[0], document.activeElement,
+            'input of first data row should be selected');
+
+        // press TAB to go to next line
+        list.$('.o_data_row:eq(0) input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_field_widget[name="reference"] select')[0], document.activeElement,
+            'select of second data row should be selected');
+
+        list.destroy();
+    });
+
     QUnit.test('one2many with extra field from server not in form', function (assert) {
         assert.expect(6);
 
