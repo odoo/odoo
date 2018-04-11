@@ -143,6 +143,9 @@ class TestAdvMailPerformance(TransactionCase):
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
         })
 
+        # automatically follow activities, for backward compatibility concerning query count
+        self.env.ref('mail.mt_activities').write({'default': True})
+
     @users('admin', 'emp')
     @warmup
     def test_adv_activity(self):
