@@ -46,12 +46,9 @@ class PosOrder(models.Model):
         }
 
     def _payment_fields(self, ui_paymentline):
-        payment_date = ui_paymentline['name']
-        if len(payment_date) > 10:
-            payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
         return {
             'amount':       ui_paymentline['amount'] or 0.0,
-            'payment_date': payment_date,
+            'payment_date': ui_paymentline['name'],
             'statement_id': ui_paymentline['statement_id'],
             'payment_name': ui_paymentline.get('note', False),
             'journal':      ui_paymentline['journal_id'],
@@ -607,32 +604,6 @@ class PosOrder(models.Model):
             if (not order.lines) or (not order.statement_ids) or (abs(order.amount_total - order.amount_paid) > 0.00001):
                 return False
         return True
-    
-    def _prepare_picking_vals(self, partner_id, picking_type_id, location_id, destination_id):
-        return {
-            'origin': self.name,
-            'partner_id': partner_id,
-            'date_done': self.date_order,
-            'picking_type_id': picking_type_id,
-            'company_id': self.company_id.id,
-            'move_type': 'direct',
-            'note': self.note or "",
-            'location_id': location_id,
-            'location_dest_id': destination_id,
-        }
-        
-    def _prepare_stock_move_vals(self, line, order_picking, return_picking, picking_type, return_pick_type, location_id, destination_id):
-        return {
-            'name': line.name,
-            'product_uom': line.product_id.uom_id.id,
-            'picking_id': order_picking.id if line.qty >= 0 else return_picking.id,
-            'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
-            'product_id': line.product_id.id,
-            'product_uom_qty': abs(line.qty),
-            'state': 'draft',
-            'location_id': location_id if line.qty >= 0 else destination_id,
-            'location_dest_id': destination_id if line.qty >= 0 else return_pick_type != picking_type and return_pick_type.default_location_dest_id.id or location_id,
-        }
 
     def create_picking(self):
         """Create a picking for each order and validate it."""
@@ -660,7 +631,17 @@ class PosOrder(models.Model):
 
             if picking_type:
                 message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-                picking_vals = order._prepare_picking_vals(address.get('delivery', False), picking_type.id, location_id, destination_id)
+                picking_vals = {
+                    'origin': order.name,
+                    'partner_id': address.get('delivery', False),
+                    'date_done': order.date_order,
+                    'picking_type_id': picking_type.id,
+                    'company_id': order.company_id.id,
+                    'move_type': 'direct',
+                    'note': order.note or "",
+                    'location_id': location_id,
+                    'location_dest_id': destination_id,
+                }
                 pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if pos_qty:
                     order_picking = Picking.create(picking_vals.copy())
@@ -677,7 +658,17 @@ class PosOrder(models.Model):
                     return_picking.message_post(body=message)
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
-                moves |= Move.create(order._prepare_stock_move_vals(line, order_picking, return_picking, picking_type, return_pick_type, location_id, destination_id))
+                moves |= Move.create({
+                    'name': line.name,
+                    'product_uom': line.product_id.uom_id.id,
+                    'picking_id': order_picking.id if line.qty >= 0 else return_picking.id,
+                    'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
+                    'product_id': line.product_id.id,
+                    'product_uom_qty': abs(line.qty),
+                    'state': 'draft',
+                    'location_id': location_id if line.qty >= 0 else destination_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else return_pick_type != picking_type and return_pick_type.default_location_dest_id.id or location_id,
+                })
 
             # prefer associating the regular order picking, not the return
             order.write({'picking_id': order_picking.id or return_picking.id})
@@ -758,7 +749,7 @@ class PosOrder(models.Model):
         """Create a new payment for the order"""
         args = {
             'amount': data['amount'],
-            'date': data.get('payment_date', fields.Date.context_today(self)),
+            'date': data.get('payment_date', fields.Date.today()),
             'name': self.name + ': ' + (data.get('payment_name', '') or ''),
             'partner_id': self.env["res.partner"]._find_accounting_partner(self.partner_id).id or False,
         }
