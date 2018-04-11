@@ -278,7 +278,7 @@ var BasicRenderer = AbstractRenderer.extend({
             element.$el.toggleClass("o_readonly_modifier", !!modifiers.readonly);
             element.$el.toggleClass("o_required_modifier", !!modifiers.required);
 
-            if (element.widget) {
+            if (element.widget && element.widget.updateModifiersValue) {
                 element.widget.updateModifiersValue(modifiers);
             }
 
