@@ -337,7 +337,7 @@ var ActionManager = Widget.extend({
                     // communicate its status
                     widget.set_cp_bus(self.controlPanel.get_bus());
                 }
-                return self._startController(controller);
+                return self.dp.add(self._startController(controller));
             })
             .then(function (controller) {
                 if (self.currentDialogController) {
