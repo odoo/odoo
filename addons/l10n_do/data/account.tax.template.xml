@@ -458,7 +458,7 @@
         <record id="tax_group_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="sequence">60</field>
-            <field name="name">Proveedores Informales de Bienes</field>
+            <field name="name">Retención a Proveedores Informales de Bienes</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
@@ -485,12 +485,22 @@
         </record>
         <record id="tax_group_person_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="sequence">63</field>
-            <field name="name">Retención a Física por Servicios Profesionales</field>
+            <field name="sequence">58</field>
+            <field name="name">Retención a Físicas por Servicios Profesionales</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
             <field name="type_tax_use">purchase</field>
             <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_100_tax_person'), ref('ret_2_income_person')])]" name="children_tax_ids"/>
+            <field name="tax_group_id" ref="group_ret"/>
+        </record>
+        <record id="tax_group_moral_services" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">58</field>
+            <field name="name">Retención a Jurídicas por Servicios Profesionales</field>
+            <field name="amount_type">group</field>
+            <field eval="0" name="amount"/>
+            <field name="type_tax_use">purchase</field>
+            <field eval="[(6, 0, [ref('tax_18_purch'), ref('ret_30_tax_moral')])]" name="children_tax_ids"/>
             <field name="tax_group_id" ref="group_ret"/>
         </record>
         <record id="tax_group_restaurant_sale" model="account.tax.template">
