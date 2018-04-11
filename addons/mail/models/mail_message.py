@@ -649,7 +649,7 @@ class Message(models.Model):
                              if message.get('parent_id') in not_parent_ids]
 
         # Recipients condition, for read and write (partner_ids) and create (message_follower_ids)
-        other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
+        other_ids = set(author_ids).difference(set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         if operation in ['read', 'write']:
             notified_ids = [mid for mid, message in message_values.items() if message.get('notified')]
