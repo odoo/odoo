@@ -117,7 +117,9 @@ var BoardController = FormController.extend({
 
 var BoardRenderer = FormRenderer.extend({
     custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
+        do_action: '_onDoAction',
         env_updated: '_onEnvUpdated',
+        update_filters: '_onUpdateFilters',
     }),
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .oe_dashboard_column .oe_fold': '_onFoldClick',
@@ -332,10 +334,23 @@ var BoardRenderer = FormRenderer.extend({
         });
     },
     /**
-     * Stops the propagation of 'update_env' events triggered by the controllers
+     * Intercepts (without stopping) 'do_action' events to force the
+     * 'keepSearchView' option to false, as the dashboard action has no search
+     * view, and thus there is no search view that could be re-used for the
+     * action to execute (a new one will be created instead).
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onDoAction: function (event) {
+        if (event.data.options) {
+            event.data.options.keepSearchView = false;
+        }
+    },
+    /**
+     * Stops the propagation of 'env_updated' events triggered by the controllers
      * instantiated by the dashboard.
      *
-     * @override
      * @private
      */
     _onEnvUpdated: function (event) {
@@ -359,6 +374,17 @@ var BoardRenderer = FormRenderer.extend({
         $e.toggleClass('oe_minimize oe_maximize');
         $action.find('.oe_content').toggle();
         this.trigger_up('save_dashboard');
+    },
+    /**
+     * Stops the propagation of 'update_filters' events triggered by the
+     * controllers instantiated by the dashboard to prevent them from
+     * interfering with the ActionManager.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onUpdateFilters: function (event) {
+        event.stopPropagation();
     },
 });
 
