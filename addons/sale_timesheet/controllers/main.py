@@ -153,7 +153,7 @@ class SaleTimesheetController(http.Controller):
             sale_line_row_key = (map_sol_so.get(sale_line_id), sale_line_id)
             rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line_id, _('No Sale Order Line')), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line'}] + default_row_vals[:]
             sale_line = map_sol.get(sale_line_id)
-            rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour) if sale_line else 0.0
+            rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
 
         for row_key, row_employee in rows_employee.items():
             sale_line_id = row_key[1]
@@ -163,7 +163,7 @@ class SaleTimesheetController(http.Controller):
             if sale_line_row_key not in rows_sale_line:
                 sale_line = map_sol.get(sale_line_id, request.env['sale.order.line'])
                 rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line.id) if sale_line else _('No Sale Order Line'), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
-                rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour) if sale_line else 0.0
+                rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
 
             for index in range(len(rows_employee[row_key])):
                 if index != 0:
