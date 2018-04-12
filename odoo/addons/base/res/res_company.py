@@ -11,6 +11,7 @@ from odoo.exceptions import ValidationError, UserError
 class Company(models.Model):
     _name = "res.company"
     _description = 'Companies'
+    _inherit = ['format.address.mixin']
     _order = 'sequence, name'
 
     @api.multi
@@ -119,6 +120,15 @@ class Company(models.Model):
     def _inverse_country(self):
         for company in self:
             company.partner_id.country_id = company.country_id
+
+    @api.model
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if (not view_id) and (view_type == 'form'):
+            view_id = self.env.ref('base.view_company_form').id
+        res = super(Company, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self._fields_view_get_address(res['arch'])
+        return res
 
     @api.depends('partner_id', 'partner_id.image')
     def _compute_logo_web(self):
