@@ -388,6 +388,26 @@ QUnit.module('core', {}, function () {
         assert.ok(true,
             "there should be no crash when calling _rpc on a destroyed widget");
     });
+
+    QUnit.test('start is not called when widget is destroyed', function (assert) {
+        assert.expect(0);
+        var slowWillStartDef = $.Deferred();
+        var $fix = $( "#qunit-fixture");
+
+        var widget = new (Widget.extend({
+            willStart: function () {
+                return slowWillStartDef;
+            },
+            start: function () {
+                throw new Error('Should not call start method');
+            },
+        }))();
+
+        widget.appendTo($fix);
+        widget.destroy();
+        slowWillStartDef.resolve();
+    });
+
 });
 
 });
