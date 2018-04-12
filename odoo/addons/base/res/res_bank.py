@@ -17,6 +17,7 @@ def sanitize_account_number(acc_number):
 
 class Bank(models.Model):
     _description = 'Bank'
+    _inherit = ['format.address.mixin']
     _name = 'res.bank'
     _order = 'name'
 
@@ -31,6 +32,15 @@ class Bank(models.Model):
     phone = fields.Char()
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
+
+    @api.model
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        if (not view_id) and (view_type == 'form'):
+            view_id = self.env.ref('base.view_res_bank_form').id
+        res = super(Bank, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self._fields_view_get_address(res['arch'])
+        return res
 
     @api.multi
     @api.depends('name', 'bic')
