@@ -4239,7 +4239,6 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-
     QUnit.test('one2many list (non editable): edition', function (assert) {
         assert.expect(12);
 
@@ -8732,6 +8731,53 @@ QUnit.module('relational_fields', {
         form.$('.o_input[name="turtle_foo"]').val('a').trigger('input');
         assert.strictEqual(form.$('.o_data_row').length, 4,
             'should still have 4 data rows (the limit is increased to 4)');
+
+        form.destroy();
+    });
+
+    QUnit.test('add a line, edit it and "Save & New"', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree><field name="display_name"/></tree>' +
+                        '<form><field name="display_name"/></form>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "there should be no record in the relation");
+
+        // add a new record
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('.modal .o_field_widget').val('new record').trigger('input');
+        $('.modal .modal-footer .btn-primary:first').click(); // Save & Close
+
+        assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'new record',
+            "should display the new record");
+
+        // reopen freshly added record and edit it
+        form.$('.o_data_row .o_data_cell').click();
+        $('.modal .o_field_widget').val('new record edited').trigger('input');
+
+        // save it, and choose to directly create another record
+        $('.modal .modal-footer .btn-primary:nth(1)').click(); // Save & New
+
+        assert.strictEqual($('.modal').length, 1,
+            "the model should still be open");
+        assert.strictEqual($('.modal .o_field_widget').text(), '',
+            "should have cleared the input");
+
+        $('.modal .o_field_widget').val('another new record').trigger('input');
+        $('.modal .modal-footer .btn-primary:first').click(); // Save & Close
+
+        assert.strictEqual(form.$('.o_data_row .o_data_cell').text(),
+            'new record editedanother new record', "should display the two records");
 
         form.destroy();
     });
