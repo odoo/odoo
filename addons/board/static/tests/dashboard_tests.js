@@ -3,6 +3,7 @@ odoo.define('board.dashboard_tests', function (require) {
 
 var BoardView = require('board.BoardView');
 
+var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
@@ -453,6 +454,61 @@ QUnit.test('clicking on a kanban\'s button should trigger the action', function 
     form.$('.o_kanban_test').find('button:first').click();
 
     form.destroy();
+});
+
+QUnit.test('dashboard intercepts custom events triggered by sub controllers', function (assert) {
+    assert.expect(4);
+
+    // we patch the ListController to force it to trigger the custom events that
+    // we want the dashboard to intercept (to stop them or to tweak their data)
+    testUtils.patch(ListController, {
+        start: function () {
+            this.trigger_up('update_filters');
+            this.trigger_up('env_updated');
+            this.do_action({}, {keepSearchView: true});
+        },
+    });
+
+    var board = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route) {
+            if (route === '/web/action/load') {
+                return $.when({res_model: 'partner', views: [[false, 'list']]});
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,false,list': '<tree string="Partner"/>',
+        },
+        intercepts: {
+            do_action: function (ev) {
+                assert.strictEqual(ev.data.options.keepSearchView, false,
+                    "the 'keepSearchView' options should have been set to false");
+            },
+            env_updated: function (ev) {
+                assert.strictEqual(ev.target.modelName, 'board',
+                    "env_updated event should be triggered by the dashboard itself");
+                assert.step('env_updated');
+            },
+            update_filters: assert.step.bind(assert, 'update_filters'),
+        },
+    });
+
+    assert.verifySteps([
+        'env_updated', // triggered by the dashboard itself
+    ]);
+
+    testUtils.unpatch(ListController);
+    board.destroy();
 });
 
 });
