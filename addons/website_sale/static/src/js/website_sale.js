@@ -476,6 +476,16 @@ odoo.define('website_sale.website_sale', function (require) {
         $('.toggle_summary_div').removeClass('visible-lg');
     });
 
+    // fold/unfold product attributes filter in mobile
+    $('#toggle_product_attributes_mobile a').on('click', function (e) {
+        $('.js_attributes').toggleClass('hidden-xs');
+        $('.js_attributes').hasClass('hidden-xs') ?
+            $('#toggle_product_attributes_mobile a').text('Show Filters') :
+            $('#toggle_product_attributes_mobile a').text('Hide Filters');
+    });
+
+
+
     core.bus.on('resize', this, function() {
         if (config.device.size_class === config.device.SIZES.LG) {
             $('.toggle_summary_div').addClass('visible-lg');
