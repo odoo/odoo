@@ -401,6 +401,9 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
     _widgetRenderAndInsert: function (insertion, target) {
         var self = this;
         return this.willStart().then(function () {
+            if (self.__parentedDestroyed) {
+                return;
+            }
             self.renderElement();
             insertion(target);
             return self.start();
