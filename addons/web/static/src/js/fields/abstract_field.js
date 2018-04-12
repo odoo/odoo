@@ -487,11 +487,13 @@ var AbstractField = Widget.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.TAB:
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {
+                var event = this.trigger_up('navigation_move', {
                     direction: ev.shiftKey ? 'previous' : 'next',
                 });
+                if (event.is_stopped()) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
                 break;
             case $.ui.keyCode.ENTER:
                 ev.stopPropagation();

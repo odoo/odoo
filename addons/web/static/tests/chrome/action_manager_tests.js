@@ -3114,18 +3114,19 @@ QUnit.module('ActionManager', {
         delete core.action_registry.ClientAction;
     });
 
-    QUnit.test('fields in abstract action do not crash on navigation_moves', function (assert) {
+    QUnit.test('fields in abstract action does not crash on navigation_moves', function (assert) {
         assert.expect(1);
         var self = this;
 
-        // create a client action with 1 input field
+        // create a client action with 2 input field
         var inputWidget;
-        var ClientAction = AbstractAction.extend(StandaloneFieldManagerMixin,{
-            init: function() {
+        var secondInputWidget;
+        var ClientAction = AbstractAction.extend(StandaloneFieldManagerMixin, {
+            init: function () {
                 this._super.apply(this, arguments);
                 StandaloneFieldManagerMixin.init.call(this);
             },
-            start: function(){
+            start: function () {
                 var _self = this;
 
                 return this.model.makeRecord('partner', [{
@@ -3135,7 +3136,13 @@ QUnit.module('ActionManager', {
                     var record = _self.model.get(recordID);
                     inputWidget = new BasicFields.InputField(_self, 'display_name', record, {mode: 'edit',});
                     _self._registerWidget(recordID, 'display_name', inputWidget);
+
+                    secondInputWidget = new BasicFields.InputField(_self, 'display_name', record, {mode: 'edit',});
+                    secondInputWidget.attrs = {className:"secondField"};
+                    _self._registerWidget(recordID, 'display_name', secondInputWidget);
+
                     inputWidget.appendTo(_self.$el);
+                    secondInputWidget.appendTo(_self.$el);
                 });
             }
         });
@@ -3146,9 +3153,15 @@ QUnit.module('ActionManager', {
             data: this.data,
         });
         actionManager.doAction('ClientAction');
-        inputWidget.$el.trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        inputWidget.$el[0].focus();
+        var event = $.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        });
+        $(inputWidget.$el[0]).trigger(event);
 
-        assert.ok(true); // no error so it's good
+        assert.notOk(event.isDefaultPrevented(),
+            "the keyboard event default should not be prevented"); // no crash is good
         actionManager.destroy();
         delete core.action_registry.ClientAction;
     });
