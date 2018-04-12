@@ -1034,7 +1034,7 @@ QUnit.module('Views', {
                 '</pivot>',
         });
         pivot.$('tbody .o_pivot_header_cell_closed').first().click();
-        // click on date by day
+        // click on date by month
         pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a[data-interval="month"]').click();
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '2211',
@@ -1083,5 +1083,4 @@ QUnit.module('Views', {
             'should have loaded the proper data');
         pivot.destroy();
     });
-
 });});
