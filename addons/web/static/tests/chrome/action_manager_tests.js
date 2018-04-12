@@ -5,14 +5,15 @@ var ReportClientAction = require('report.client_action');
 
 var AbstractAction = require('web.AbstractAction');
 var AbstractStorageService = require('web.AbstractStorageService');
+var BasicFields = require('web.basic_fields');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var ListController = require('web.ListController');
+var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var RamStorage = require('web.RamStorage');
 var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
-
 var createActionManager = testUtils.createActionManager;
 
 QUnit.module('ActionManager', {
@@ -3092,6 +3093,64 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
         delete core.action_registry.map.slowAction;
+    });
+
+
+    QUnit.test('abstract action does not crash on navigation_moves', function (assert) {
+        assert.expect(1);
+        var ClientAction = AbstractAction.extend({
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('ClientAction');
+        actionManager.trigger_up('navigation_move', {direction:'down'});
+
+        assert.ok(true); // no error so it's good
+        actionManager.destroy();
+        delete core.action_registry.ClientAction;
+    });
+
+    QUnit.test('fields in abstract action do not crash on navigation_moves', function (assert) {
+        assert.expect(1);
+        var self = this;
+
+        // create a client action with 1 input field
+        var inputWidget;
+        var ClientAction = AbstractAction.extend(StandaloneFieldManagerMixin,{
+            init: function() {
+                this._super.apply(this, arguments);
+                StandaloneFieldManagerMixin.init.call(this);
+            },
+            start: function(){
+                var _self = this;
+
+                return this.model.makeRecord('partner', [{
+                    name: 'display_name',
+                    type: 'char',
+                }]).then(function (recordID) {
+                    var record = _self.model.get(recordID);
+                    inputWidget = new BasicFields.InputField(_self, 'display_name', record, {mode: 'edit',});
+                    _self._registerWidget(recordID, 'display_name', inputWidget);
+                    inputWidget.appendTo(_self.$el);
+                });
+            }
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('ClientAction');
+        inputWidget.$el.trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+
+        assert.ok(true); // no error so it's good
+        actionManager.destroy();
+        delete core.action_registry.ClientAction;
     });
 
 });
