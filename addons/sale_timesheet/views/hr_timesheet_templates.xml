@@ -217,8 +217,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <t t-set="row_is_milestone" t-value="False"/>
                                         <t t-foreach="timesheet_forecast_table['rows']" t-as="row">
                                             <t t-set="row_type" t-value="row[0].get('type')"/>
+                                            <t t-if="row_type == 'sale_order_line'">
+                                                <t t-set="row_is_milestone" t-value="row[0].get('is_milestone')"/>
+                                            </t>
                                             <tr t-att-class="'o_timesheet_forecast_' + row_type">
                                                 <t t-foreach="row" t-as="row_value">
                                                     <td t-att-class="'o_right_bordered' if row_value_index in [5,10] else '' + ' text-center' if row_value_index != 0 else ''">
@@ -229,17 +233,27 @@
                                                                 </a>
                                                             </t>
                                                             <t t-if="row_type != 'sale_order'">
-                                                                <span><t t-esc="row_value.get('label')"/></span>
+                                                                <t t-if="not row_is_milestone">
+                                                                    <span><t t-esc="row_value.get('label')"/></span>
+                                                                </t>
+                                                                 <t t-if="row_is_milestone">
+                                                                    <span><i><t t-esc="row_value.get('label')"/></i></span>
+                                                                </t>
                                                             </t>
                                                         </t>
                                                         <t t-if="row_value_index != 0">
-                                                            <t t-if="row_value_index &gt; 10">
-                                                                <t t-if="row_type == 'sale_order'">
+                                                            <t t-if="row_value_index &lt; len(row)-2">
+                                                                <t t-if="row_is_milestone">
+                                                                    <i><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></i>
+                                                                </t>
+                                                                <t t-else="">
                                                                     <t t-esc="row_value" t-options="{'widget': 'float_time'}"/>
                                                                 </t>
                                                             </t>
-                                                            <t t-if="row_value_index &lt;= 10">
-                                                                <t t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                            <t t-else="">
+                                                                <t t-if="not row_is_milestone">
+                                                                    <t t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                                </t>
                                                             </t>
                                                         </t>
                                                     </td>
