@@ -1699,10 +1699,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'day': 'dd MMM yyyy', # yyyy = normal year
                 'week': "'W'w YYYY",  # w YYYY = ISO week-year
                 'month': 'MMMM yyyy',
-                'bimester': 'MMMM yyyy',
+                'bimester': 'MMM yyyy',
                 'quarter': 'QQQ yyyy',
-                'trimester': 'MMMM yyyy',
-                'semester': 'MMMM yyyy',
+                'trimester': 'MMM yyyy',
+                'semester': 'MMM yyyy',
                 'year': 'yyyy',
             }
             time_intervals = {
