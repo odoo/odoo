@@ -62,21 +62,6 @@ class PurchaseOrder(models.Model):
     # CRUD
     # --------------------------------------------------
 
-    def write(self, vals):
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
-        res = super(PurchaseOrder, self).write(vals)
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                to_log = {}
-                for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
-                        to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
-                if to_log:
-                    order._log_decrease_ordered_quantity(to_log)
-        return res
-
     # --------------------------------------------------
     # Actions
     # --------------------------------------------------
@@ -133,40 +118,6 @@ class PurchaseOrder(models.Model):
     # Business methods
     # --------------------------------------------------
 
-    def _log_decrease_ordered_quantity(self, purchase_order_lines_quantities):
-
-        def _keys_in_sorted(move):
-            """ sort by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id.id, move.product_id.responsible_id.id)
-
-        def _keys_in_groupby(move):
-            """ group by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id, move.product_id.responsible_id)
-
-        def _render_note_exception_quantity_po(order_exceptions):
-            order_line_ids = self.env['purchase.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
-            purchase_order_ids = order_line_ids.mapped('order_id')
-            move_ids = self.env['stock.move'].concat(*rendering_context.keys())
-            impacted_pickings = move_ids.mapped('picking_id')._get_impacted_pickings(move_ids) - move_ids.mapped('picking_id')
-            values = {
-                'purchase_order_ids': purchase_order_ids,
-                'order_exceptions': order_exceptions.values(),
-                'impacted_pickings': impacted_pickings,
-            }
-            return self.env.ref('purchase_stock.exception_on_po').render(values=values)
-
-        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
-        filtered_documents = {}
-        for (parent, responsible), rendering_context in documents.items():
-            if parent._name == 'stock.picking':
-                if parent.state == 'cancel':
-                    continue
-            filtered_documents[(parent, responsible)] = rendering_context
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
 
     @api.multi
     def _get_destination_location(self):
