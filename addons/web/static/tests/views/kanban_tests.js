@@ -3403,6 +3403,73 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+    QUnit.test('keyboard navigation on kanban grouped rendering with empty columns', function (assert) {
+        assert.expect(2);
+
+        var data = this.data;
+        data.partner.records[1].state = "abc";
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['state'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    // override read_group to return empty groups, as this is
+                    // the case for several models (e.g. project.task grouped
+                    // by stage_id)
+                    return this._super.apply(this, arguments).then(function (result) {
+                        // add 2 empty columns in the middle
+                        result.splice(1,0,{state_count:0,state:'def',
+                                           __domain:[["state","=","def"]]});
+                        result.splice(1,0,{state_count:0,state:'def',
+                                           __domain:[["state","=","def"]]});
+
+                        // add 1 empty column in the beginning and the end
+                        result.unshift({state_count:0,state:'def',
+                                        __domain:[["state","=","def"]]});
+                        result.push({state_count:0,state:'def',
+                                    __domain:[["state","=","def"]]});
+                        return result;
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        /**
+         * DEF columns are empty
+         *
+         *    | DEF | ABC  | DEF | DEF | GHI  | DEF
+         *    |-----|------|-----|-----|------|-----
+         *    |     | yop  |     |     | gnap |
+         *    |     | blip |     |     | blip |
+         */
+        var $yop = kanban.$('.o_kanban_record:first');
+        var $gnap = kanban.$('.o_kanban_group:eq(4) .o_kanban_record:first');
+
+        $yop.focus();
+
+        //RIGHT should select the next column that has a card
+        $yop.trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT,
+            keyCode: $.ui.keyCode.RIGHT, }));
+        assert.strictEqual(document.activeElement, $gnap[0],
+            "RIGHT should select the first card of the next column that has a card");
+
+        //LEFT should go back to the first column that has a card
+        $gnap.trigger($.Event('keydown', { which: $.ui.keyCode.LEFT,
+            keyCode: $.ui.keyCode.LEFT, }));
+        assert.strictEqual(document.activeElement, $yop[0],
+            "LEFT should select the first card of the first column that has a card");
+
+        kanban.destroy();
+    });
 });
 
 });
