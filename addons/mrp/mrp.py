@@ -148,6 +148,7 @@ class mrp_bom(osv.osv):
     _name = 'mrp.bom'
     _description = 'Bill of Material'
     _inherit = ['mail.thread']
+    _rec_name = 'product_tmpl_id'
 
     _columns = {
         'code': fields.char('Reference', size=16),
