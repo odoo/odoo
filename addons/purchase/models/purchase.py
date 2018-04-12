@@ -753,6 +753,12 @@ class PurchaseOrderLine(models.Model):
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
+    def _merge_in_existing_line(self, procurement):
+        """ This function purpose is to be override with the purpose to forbide make_po method
+        to merge a new po line in an existing one.
+        """
+        return True
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         result = {}
@@ -1072,23 +1078,24 @@ class ProcurementOrder(models.Model):
             po_line = False
             for line in po.order_line:
                 if line.product_id == procurement.product_id and line.product_uom == procurement.product_id.uom_po_id:
-                    procurement_uom_po_qty = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_po_id)
-                    seller = procurement.product_id._select_seller(
-                        partner_id=partner,
-                        quantity=line.product_qty + procurement_uom_po_qty,
-                        date=po.date_order and po.date_order[:10],
-                        uom_id=procurement.product_id.uom_po_id)
+                    if line._merge_in_existing_line(procurement):
+                        procurement_uom_po_qty = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_po_id)
+                        seller = procurement.product_id._select_seller(
+                            partner_id=partner,
+                            quantity=line.product_qty + procurement_uom_po_qty,
+                            date=po.date_order and po.date_order[:10],
+                            uom_id=procurement.product_id.uom_po_id)
 
-                    price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, self.company_id) if seller else 0.0
-                    if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
-                        price_unit = seller.currency_id.compute(price_unit, po.currency_id)
+                        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, self.company_id) if seller else 0.0
+                        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
+                            price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
-                    po_line = line.write({
-                        'product_qty': line.product_qty + procurement_uom_po_qty,
-                        'price_unit': price_unit,
-                        'procurement_ids': [(4, procurement.id)]
-                    })
-                    break
+                        po_line = line.write({
+                            'product_qty': line.product_qty + procurement_uom_po_qty,
+                            'price_unit': price_unit,
+                            'procurement_ids': [(4, procurement.id)]
+                        })
+                        break
             if not po_line:
                 vals = procurement._prepare_purchase_order_line(po, supplier)
                 self.env['purchase.order.line'].create(vals)
