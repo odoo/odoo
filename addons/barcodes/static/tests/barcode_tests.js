@@ -482,4 +482,58 @@ QUnit.test('specification of widget barcode_handler with keypress and notifyChan
         done();
     });
 });
+QUnit.test('barcode_scanned only trigger error for active view', function (assert) {
+    assert.expect(2);
+
+    this.data.order_line.fields._barcode_scanned = {string: 'Barcode scanned', type: 'char'};
+
+    var form = createView({
+        View: FormView,
+        model: 'order',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="_barcode_scanned" widget="barcode_handler"/>' +
+                    '<field name="line_ids">' +
+                        '<tree>' +
+                            '<field name="product_id"/>' +
+                            '<field name="product_barcode" invisible="1"/>' +
+                            '<field name="quantity"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        archs: {
+            "order_line,false,form":
+                '<form string="order line">' +
+                    '<field name="_barcode_scanned" widget="barcode_handler"/>' +
+                    '<field name="product_id"/>' +
+                '</form>',
+        },
+        res_id: 1,
+        intercepts: {
+            warning: function (event) {
+                assert.step(event.name);
+            }
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    form.$('.o_data_row:first').click();
+
+    // We do not trigger on the body since modal and 
+    // form view are both inside it.
+    function modalTriggerKeypressEvent(char) {
+        var keycode;
+        if (char === "Enter") {
+            keycode = $.ui.keyCode.ENTER;
+        } else {
+            keycode = char.charCodeAt(0);
+        }
+        return $('.modal').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+    }
+    _.each(['O','-','B','T','N','.','c','a','n','c','e','l','Enter'], modalTriggerKeypressEvent);
+    assert.verifySteps(['warning'], "only one event should be triggered");
+    form.destroy();
+});
 });
