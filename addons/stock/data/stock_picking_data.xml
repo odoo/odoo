@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <template id="log_activity_on_exception">
+        <div class="alert alert-warning"> 
+            Exception(s) occurred on <t t-esc="label"/> :
+            <t t-foreach="order_ids" t-as="order">
+                <br/>Your <t t-esc="label"/> <a href="#" t-att-data-oe-model="model_name" t-att-data-oe-id="order.id"><t t-esc="order.name"/></a> has been <t t-if="cancel">cancelled.</t><t t-else="">modified.</t>
+            </t>
+            <br/>Manual actions may be needed.
+        <div class="mt16">
+            <t t-if="not cancel">
+                <t t-foreach="order_ids" t-as="order">
+                    <p>Exception(s):</p>
+                    <ul t-foreach="order_exceptions" t-as="exception">
+                        <li>
+                            <t t-set="order_line" t-value="exception[0]"/>
+                            <t t-set="new_qty" t-value="exception[1][0]"/>
+                            <t t-set="old_qty" t-value="exception[1][1]"/>
+                            <a href="#" t-att-data-oe-model="model_name" t-att-data-oe-id="order.id"><t t-esc="order.name"/></a>:
+                            <t t-esc="new_qty"/> <t t-esc="order_line.product_id.uom_id.name"/> of <t t-esc="order_line.product_id.name"/>
+                            ordered instead of <t t-esc="old_qty"/> <t t-esc="order_line.product_id.uom_id.name"/>
+                        </li>
+                    </ul>
+                </t>
+            </t>
+        </div>
+        <div class="mt16" t-if="impacted_pickings">
+            <p>Next transfer(s) impacted:</p>
+            <ul t-foreach="impacted_pickings" t-as="picking">
+                <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
+            </ul>
+        </div>
+        </div>
+    </template>
+
+    </data>
+</odoo>

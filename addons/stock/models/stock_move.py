@@ -1230,3 +1230,60 @@ class StockMove(models.Model):
             return result
         else:
             return [(self.picking_id, self.product_id.responsible_id, visited)]
+
+    def _log_decrease_ordered_quantity(self, line_quantities, stream_field, sorted_order, model, label, order_ids):
+        def _keys_in_sorted(move):
+            """ sort by picking and the responsible for the product the
+            move.
+            """
+            if move._name == 'stock.move':
+                return (move.picking_id.id, move.product_id.responsible_id.id)
+            return (move.order_id.id, move.product_id.responsible_id.id)
+
+        def _keys_in_groupby(move):
+            """ group by picking and the responsible for the product the
+            move.
+            """
+            if move._name == 'stock.move':
+                return (move.picking_id, move.product_id.responsible_id)
+            return (move.order_id, move.product_id.responsible_id)
+
+        def _render_note_exception(order_exceptions):
+            context = rendering_context
+            visited_moves = []
+            if isinstance(order_exceptions, tuple):
+                order_exceptions, visited_moves = rendering_context
+                visited_moves = list(visited_moves)
+                visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
+                context = rendering_context[0]
+            if visited_moves:
+                impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
+            else:
+                key = list(context.keys())[0]
+                if key._name == 'stock.move':
+                    impacted_pickings = key.mapped('picking_id')._get_impacted_pickings(key) - key.mapped('picking_id')
+                else:
+                    moves = self.env['stock.move']
+                    for val in list(order_exceptions.values()):
+                        moves += val[0] 
+                    impacted_pickings = key.mapped('order_id').picking_ids._get_impacted_pickings(moves)
+            values = {
+                'label': label,
+                'order_ids': order_ids,
+                'order_exceptions': order_exceptions.values(),
+                'impacted_pickings': impacted_pickings,
+                'cancel': self._context.get('cancel'),
+                'model_name': model
+            }
+            return self.env.ref('stock.log_activity_on_exception').render(values=values)
+        if sorted_order == 'DOWN':
+           documents = self.env['stock.picking']._log_activity_get_documents(line_quantities, stream_field, sorted_order, _keys_in_sorted, _keys_in_groupby)
+        else:
+            documents = self.env['stock.picking']._log_activity_get_documents(line_quantities, stream_field, sorted_order)
+        filtered_documents = {}
+        for (parent, responsible), rendering_context in documents.items():
+            if parent._name == 'stock.picking' or 'stock.move':
+                if parent.state == 'cancel':
+                    continue
+            filtered_documents[(parent, responsible)] = rendering_context
+        self.env['stock.picking']._log_activity(_render_note_exception, filtered_documents)

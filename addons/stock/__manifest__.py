@@ -25,6 +25,7 @@
         'views/stock_menu_views.xml',
         'data/stock_traceability_report_data.xml',
         'data/procurement_data.xml',
+        'data/stock_picking_data.xml',
 
         'report/report_stock_forecast.xml',
         'report/stock_report_views.xml',
