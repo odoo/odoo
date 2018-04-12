@@ -1699,7 +1699,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'day': 'dd MMM yyyy', # yyyy = normal year
                 'week': "'W'w YYYY",  # w YYYY = ISO week-year
                 'month': 'MMMM yyyy',
+                'bimester': 'MMMM yyyy',
                 'quarter': 'QQQ yyyy',
+                'trimester': 'MMMM yyyy',
+                'semester': 'MMMM yyyy',
                 'year': 'yyyy',
             }
             time_intervals = {
@@ -1707,7 +1710,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'day': dateutil.relativedelta.relativedelta(days=1),
                 'week': datetime.timedelta(days=7),
                 'month': dateutil.relativedelta.relativedelta(months=1),
+                'bimester': dateutil.relativedelta.relativedelta(months=2),
                 'quarter': dateutil.relativedelta.relativedelta(months=3),
+                'trimester': dateutil.relativedelta.relativedelta(months=4),
+                'semester': dateutil.relativedelta.relativedelta(months=6),
                 'year': dateutil.relativedelta.relativedelta(years=1)
             }
             if tz_convert:
