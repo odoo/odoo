@@ -1,8 +1,9 @@
 odoo.define('board.dashboard_tests', function (require) {
 "use strict";
 
+var BoardView = require('board.BoardView');
+
 var testUtils = require('web.test_utils');
-var FormView = require('web.FormView');
 
 var createView = testUtils.createView;
 
@@ -42,7 +43,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
     assert.expect(4);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -55,7 +56,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
     form.destroy();
 
     form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -78,7 +79,7 @@ QUnit.test('display the no content helper', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -102,7 +103,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.expect(25);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -193,7 +194,7 @@ QUnit.test('can sort a sub list', function (assert) {
     this.data.partner.fields.foo.sortable = true;
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -232,7 +233,7 @@ QUnit.test('can open a record', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -275,7 +276,7 @@ QUnit.test('can drag and drop a view', function (assert) {
     assert.expect(4);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -321,7 +322,7 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
     assert.expect(2);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -369,7 +370,7 @@ QUnit.test('non-existing action in a dashboard', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -406,7 +407,7 @@ QUnit.test('clicking on a kanban\'s button should trigger the action', function 
     assert.expect(2);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -453,6 +454,5 @@ QUnit.test('clicking on a kanban\'s button should trigger the action', function 
 
     form.destroy();
 });
-
 
 });

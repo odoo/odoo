@@ -1,4 +1,4 @@
-odoo.define('board.dashboard', function (require) {
+odoo.define('board.BoardView', function (require) {
 "use strict";
 
 var Context = require('web.Context');
@@ -12,25 +12,20 @@ var FormView = require('web.FormView');
 var viewRegistry = require('web.view_registry');
 
 var _t = core._t;
+var _lt = core._lt;
 var QWeb = core.qweb;
 
-FormView.include({
-    /**
-     * @override
-     */
-    init: function (viewInfo) {
-        this._super.apply(this, arguments);
-        this.controllerParams.viewID = viewInfo.view_id;
-    },
-});
-
-FormController.include({
+var BoardController = FormController.extend({
     custom_events: _.extend({}, FormController.prototype.custom_events, {
         change_layout: '_onChangeLayout',
         enable_dashboard: '_onEnableDashboard',
         save_dashboard: '_saveDashboard',
         switch_view: '_onSwitchView',
     }),
+
+    /**
+     * @override
+     */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.viewID = params.viewID;
@@ -95,14 +90,12 @@ FormController.include({
         });
         dialog.open();
     },
-
     /**
      * @private
      */
     _onEnableDashboard: function () {
         this.inDashboard = true;
     },
-
     /**
      * We need to intercept switch_view event coming from sub views, because we
      * don't actually want to switch view in dashboard, we want to do a
@@ -119,12 +112,10 @@ FormController.include({
             views: [[false, 'form']],
             res_id: event.data.res_id,
         });
-
     },
-
 });
 
-FormRenderer.include({
+var BoardRenderer = FormRenderer.extend({
     custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
         env_updated: '_onEnvUpdated',
     }),
@@ -171,7 +162,6 @@ FormRenderer.include({
             $dashboard.attr('data-layout', layout);
         }
     },
-
     /**
      * Returns a representation of the current dashboard
      *
@@ -371,5 +361,35 @@ FormRenderer.include({
         this.trigger_up('save_dashboard');
     },
 });
+
+var BoardView = FormView.extend({
+    config: _.extend({}, FormView.prototype.config, {
+        Controller: BoardController,
+        Renderer: BoardRenderer,
+    }),
+    display_name: _lt('Board'),
+
+    /**
+     * @override
+     */
+    init: function (viewInfo) {
+        this._super.apply(this, arguments);
+        this.controllerParams.viewID = viewInfo.view_id;
+    },
+});
+
+return BoardView;
+
+});
+
+
+odoo.define('board.viewRegistry', function (require) {
+"use strict";
+
+var BoardView = require('board.BoardView');
+
+var viewRegistry = require('web.view_registry');
+
+viewRegistry.add('board', BoardView);
 
 });
