@@ -60,6 +60,10 @@
                     <strong>Payment Terms:</strong>
                     <p t-field="doc.payment_term_id"/>
                 </div>
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-xs-3">
+                    <strong>Expiration Date:</strong>
+                    <p t-field="doc.validity_date"/>
+                </div>
             </div>
 
             <!-- Is there a discount on at least one line? -->
