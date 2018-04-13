@@ -69,8 +69,7 @@ class SaleOrder(models.Model):
                     if pre_order_line_qty.get(order_line, False) and float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty[order_line])
                 if to_log:
-                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
-                    order._log_decrease_ordered_quantity(documents)
+                    self.env['stock.move']._log_decrease_ordered_quantity(to_log, 'move_ids', 'UP', 'sale.order', 'Sale Order', order)
         return res
 
     @api.multi
@@ -108,20 +107,13 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
-        documents = None
+        sale_order_lines_quantities = {}
         for sale_order in self:
             if sale_order.state == 'sale' and sale_order.order_line:
-                sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
-                documents = self.env['stock.picking']._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
+                sale_order_lines_quantities = {order_line: (0, order_line.product_uom_qty) for order_line in sale_order.order_line}
+        if sale_order_lines_quantities:
+            self.env['stock.move'].with_context(cancel=True)._log_decrease_ordered_quantity(sale_order_lines_quantities, 'move_ids', 'UP', 'sale.order', 'Sale Order', sale_order)
         self.mapped('picking_ids').action_cancel()
-        if documents:
-            filtered_documents = {}
-            for (parent, responsible), rendering_context in documents.items():
-                if parent._name == 'stock.picking':
-                    if parent.state == 'cancel':
-                        continue
-                filtered_documents[(parent, responsible)] = rendering_context
-            self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super(SaleOrder, self).action_cancel()
 
     @api.multi
@@ -134,25 +126,6 @@ class SaleOrder(models.Model):
     def _get_customer_lead(self, product_tmpl_id):
         super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
         return product_tmpl_id.sale_delay
-
-    def _log_decrease_ordered_quantity(self, documents, cancel=False):
-
-        def _render_note_exception_quantity_so(rendering_context):
-            order_exceptions, visited_moves = rendering_context
-            visited_moves = list(visited_moves)
-            visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
-            order_line_ids = self.env['sale.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
-            sale_order_ids = order_line_ids.mapped('order_id')
-            impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
-            values = {
-                'sale_order_ids': sale_order_ids,
-                'order_exceptions': order_exceptions.values(),
-                'impacted_pickings': impacted_pickings,
-                'cancel': cancel
-            }
-            return self.env.ref('sale_stock.exception_on_so').render(values=values)
-
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
 
 
 
