@@ -1532,6 +1532,36 @@ QUnit.module('ActionManager', {
         delete core.action_registry.map.HelloWorldTest;
     });
 
+    QUnit.test('breadcrumb is updated on title change', function (assert) {
+        assert.expect(2);
+
+        var ClientAction = Widget.extend(ControlPanelMixin, {
+            className: 'o_client_action_test',
+            events: {
+                click: function () {
+                    this.set("title", 'new title');
+                },
+            },
+            start: function () {
+                this.set("title", 'initial title');
+                this.$el.text('Hello World');
+            },
+        });
+        var actionManager = createActionManager();
+        core.action_registry.add('HelloWorldTest', ClientAction);
+        actionManager.doAction('HelloWorldTest');
+
+        assert.strictEqual($('ol.breadcrumb').text(), "initial title",
+            "should have initial title as breadcrumb content");
+
+        actionManager.$('.o_client_action_test').click();
+        assert.strictEqual($('ol.breadcrumb').text(), "new title",
+            "should have updated title as breadcrumb content");
+
+        actionManager.destroy();
+        delete core.action_registry.map.HelloWorldTest;
+    });
+
     QUnit.module('Server actions');
 
     QUnit.test('can execute server actions from db ID', function (assert) {
