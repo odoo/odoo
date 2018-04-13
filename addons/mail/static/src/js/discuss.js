@@ -169,18 +169,20 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         this.basicComposer.on('input_focused', this, this._onComposerFocused);
         this.extendedComposer.on('post_message', this, this._onPostMessage);
         this.extendedComposer.on('input_focused', this, this._onComposerFocused);
+        this._renderButtons();
 
         var defs = [];
-        defs.push(this._renderButtons());
         defs.push(this._renderThread());
         defs.push(this.basicComposer.appendTo(this.$('.o_mail_chat_content')));
         defs.push(this.extendedComposer.appendTo(this.$('.o_mail_chat_content')));
         defs.push(this._renderSearchView());
 
-        return $.when.apply($, defs)
-            .then(this._setChannel.bind(this, defaultChannel))
-            .then(this._updateChannels.bind(this))
+        return this.alive($.when.apply($, defs))
             .then(function () {
+                return self.alive(self._setChannel(defaultChannel));
+            })
+            .then(function () {
+                self._updateChannels();
                 self._startListening();
                 self.thread.$el.on("scroll", null, _.debounce(function () {
                     if (self.thread.is_at_bottom()) {
@@ -390,7 +392,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
             disable_groupby: true,
         };
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
-        return this.searchview.appendTo($("<div>")).then(function () {
+        return this.alive(this.searchview.appendTo($("<div>"))).then(function () {
             self.$searchview_buttons = self.searchview.$buttons.contents();
             // manually call do_search to generate the initial domain and filter
             // the messages in the default channel
