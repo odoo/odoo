@@ -78,7 +78,6 @@ function createDiscuss(params) {
     var selector = params.debug ? 'body' : '#qunit-fixture';
     var controlPanel = new ControlPanel(parent);
     controlPanel.appendTo($(selector));
-    discuss.appendTo($(selector));
 
     // override 'destroy' of discuss so that it calls 'destroy' on the parent
     // instead, which is the parent of discuss and the mockServer.
@@ -92,7 +91,7 @@ function createDiscuss(params) {
     // link the view to the control panel
     discuss.set_cp_bus(controlPanel.get_bus());
 
-    return discuss.call('chat_manager', 'isReady').then(function () {
+    return  discuss.appendTo($(selector)).then(function () {
         return discuss;
     });
 }

@@ -105,9 +105,9 @@ Discuss.include({
      */
     _setChannel: function (channel) {
         if (channel.type !== 'static') {
-            this.call('chat_manager', 'detachChannel', channel.id);
+            return this.call('chat_manager', 'detachChannel', channel.id);
         } else {
-            this._super.apply(this, arguments);
+            return this._super.apply(this, arguments);
         }
     },
     /**
