@@ -135,6 +135,12 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record model="ir.rule" id="account_payment_term_comp_rule">
+        <field name="name">Account payment term company rule</field>
+        <field name="model_id" ref="model_account_payment_term"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
     <!-- Portal for invoice and invoice lines -->
     <record id="account_invoice_rule_portal" model="ir.rule">
         <field name="name">Portal Personal Account Invoices</field>
