@@ -681,11 +681,13 @@ class PurchaseOrderLine(models.Model):
             self.name += '\n' + product_lang.description_purchase
 
         fpos = self.order_id.fiscal_position_id
+        account = self.product_id.property_account_expense_id or self.product_id.categ_id.property_account_expense_categ_id
+        taxes = self.product_id.supplier_taxes_id or account.tax_ids
         if self.env.uid == SUPERUSER_ID:
             company_id = self.env.user.company_id.id
-            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
+            self.taxes_id = fpos.map_tax(taxes.filtered(lambda r: r.company_id.id == company_id))
         else:
-            self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
+            self.taxes_id = fpos.map_tax(taxes)
 
         self._suggest_quantity()
         self._onchange_quantity()

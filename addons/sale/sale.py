@@ -558,7 +558,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
             # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            account = line.product_id.property_account_income_id or line.product_id.categ_id.property_account_income_categ_id
+            tax_id = line.product_id.taxes_id or account.tax_ids
+            taxes = tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes) if fpos else taxes
 
     @api.multi
