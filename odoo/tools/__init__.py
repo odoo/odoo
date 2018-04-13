@@ -5,6 +5,7 @@ from . import pycompat
 from . import win32
 from . import appdirs
 from . import pdf
+from . import query
 from .config import config
 from .misc import *
 from .convert import *
