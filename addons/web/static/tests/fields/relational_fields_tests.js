@@ -5107,6 +5107,32 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many and default_get (with date)', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.p.default = [
+            [0, false, {date: '2017-10-08'}],
+        ];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="date"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('.o_data_cell').text(), '10/08/2017',
+            "should correctly display the date");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many and onchange (with integer)', function (assert) {
         assert.expect(4);
 
