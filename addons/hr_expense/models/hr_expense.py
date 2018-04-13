@@ -90,7 +90,9 @@ class HrExpense(models.Model):
             amount = 0
             if expense.company_currency_id:
                 date_expense = expense.date
-                amount = expense.currency_id.with_context(date=date_expense, company_id=expense.company_id.id).compute(expense.total_amount, expense.company_currency_id)
+                amount = expense.currency_id._convert(
+                    expense.total_amount, expense.company_currency_id,
+                    expense.company_id, date_expense or fields.Date.today())
             expense.total_amount_company = amount
 
     @api.multi
@@ -285,7 +287,8 @@ class HrExpense(models.Model):
 
             # taxes move lines
             for tax in taxes['taxes']:
-                price = expense.currency_id.with_context(date=account_date).compute(tax['amount'], company_currency)
+                price = expense.currency_id._convert(
+                    tax['amount'], company_currency, expense.company_id, account_date)
                 amount_currency = price if different_currency else False
                 move_line_tax_values = {
                     'name': tax['name'],

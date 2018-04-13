@@ -45,6 +45,7 @@ class AccountInvoice(models.Model):
         taxes = line.taxes_id
         invoice_line_tax_ids = line.order_id.fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         invoice_line = self.env['account.invoice.line']
+        date = self.date_invoice
         data = {
             'purchase_line_id': line.id,
             'name': line.order_id.name+': '+line.name,
@@ -52,7 +53,8 @@ class AccountInvoice(models.Model):
             'uom_id': line.product_uom.id,
             'product_id': line.product_id.id,
             'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-            'price_unit': line.order_id.currency_id.with_context(date=self.date_invoice).compute(line.price_unit, self.currency_id, round=False),
+            'price_unit': line.order_id.currency_id._convert(
+                line.price_unit, self.currency_id, line.company_id, date or fields.Date.today(), round=False),
             'quantity': qty,
             'discount': 0.0,
             'account_analytic_id': line.account_analytic_id.id,
@@ -99,7 +101,10 @@ class AccountInvoice(models.Model):
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
-                line.price_unit = line.purchase_id.currency_id.with_context(date=self.date_invoice).compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
+                date = self.date_invoice or fields.Date.today()
+                company = self.company_id
+                line.price_unit = line.purchase_id.currency_id._convert(
+                    line.purchase_line_id.price_unit, self.currency_id, company, date, round=False)
 
     @api.onchange('invoice_line_ids')
     def _onchange_origin(self):
@@ -189,8 +194,8 @@ class AccountInvoice(models.Model):
                     interim_account_price = valuation_price_unit * line_quantity
                     if inv.currency_id.id != company_currency.id:
                             # We express everyhting in the invoice currency
-                            valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                            interim_account_price = company_currency.with_context(date=inv.date_invoice).compute(interim_account_price, inv.currency_id, round=False)
+                            valuation_price_unit = company_currency._convert(valuation_price_unit, inv.currency_id, inv.company_id, inv.date_invoice or fields.Date.today(), round=False)
+                            interim_account_price = company_currency._convert(interim_account_price, inv.currency_id, inv.company_id, inv.date_invoice or fields.Date.today(), round=False)
 
                     invoice_cur_prec = inv.currency_id.decimal_places
 

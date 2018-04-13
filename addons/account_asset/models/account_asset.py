@@ -516,7 +516,8 @@ class AccountAssetDepreciationLine(models.Model):
         company_currency = line.asset_id.company_id.currency_id
         current_currency = line.asset_id.currency_id
         prec = company_currency.decimal_places
-        amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
+        amount = current_currency._convert(
+            line.amount, company_currency, line.asset_id.company_id, depreciation_date)
         asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
         move_line_1 = {
             'name': asset_name,
@@ -554,7 +555,8 @@ class AccountAssetDepreciationLine(models.Model):
             # Sum amount of all depreciation lines
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
-            amount += current_currency.compute(line.amount, company_currency)
+            company = line.asset_id.company_id
+            amount += current_currency._convert(line.amount, company_currency, company, fields.Date.today())
 
         name = category_id.name + _(' (grouped)')
         move_line_1 = {

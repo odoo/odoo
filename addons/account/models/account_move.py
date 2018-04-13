@@ -548,7 +548,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             amount = line.amount_currency
             if line.currency_id and line.currency_id != line.company_currency_id:
-                amount = line.currency_id.with_context(date=line.date).compute(amount, line.company_currency_id)
+                amount = line.currency_id._convert(amount, line.company_currency_id, line.company_id, line.date or fields.Date.today())
                 line.debit = amount > 0 and amount or 0.0
                 line.credit = amount < 0 and -amount or 0.0
 
@@ -634,7 +634,8 @@ class AccountMoveLine(models.Model):
                 company_currency = sm_debit_move.company_id.currency_id
                 currency = sm_debit_move.currency_id or sm_credit_move.currency_id
                 currency_date = sm_debit_move.currency_id and sm_credit_move.date or sm_debit_move.date
-                amount_reconcile_currency = company_currency.with_context(date=currency_date).compute(amount_reconcile, currency)
+                amount_reconcile_currency = company_currency._convert(
+                    amount_reconcile, currency, sm_debit_move.company_id, currency_date or fields.Date.today())
                 currency = currency.id
 
         amount_reconcile = min(sm_debit_move.amount_residual, -sm_credit_move.amount_residual)
@@ -897,11 +898,9 @@ class AccountMoveLine(models.Model):
             if self._context.get('skip_full_reconcile_check') == 'amount_currency_excluded':
                 vals['amount_currency'] = 0.0
             else:
-                ctx = {}
-                if 'date' in vals:
-                    ctx['date'] = vals['date']
-                vals['amount_currency'] = account.company_id.currency_id.with_context(ctx).compute(amount, account.currency_id)
-
+                company = account.company_id
+                currency = account.company_id.currency_id
+                vals['amount_currency'] = currency._convert(amount, account.currency_id, company, vals.get('date') or fields.Date.today())
         if not ok:
             raise UserError(_('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
 
@@ -941,11 +940,10 @@ class AccountMoveLine(models.Model):
                     }
                     bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
                     if bank.currency_id != bank.company_id.currency_id:
-                        ctx = {}
-                        if 'date' in vals:
-                            ctx['date'] = vals['date']
+                        company = bank.company_id
+                        bank_currency = bank.company_id.currency_id
                         temp['currency_id'] = bank.currency_id.id
-                        temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
+                        temp['amount_currency'] = bank_currency._convert(tax_vals['amount'], bank.currency_id, company, vals.get('date') or fields.Date.today())
                     tax_lines_vals.append(temp)
 
         #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
@@ -1084,9 +1082,11 @@ class AccountMoveLine(models.Model):
         """ Helper function to compute value for fields debit/credit/amount_currency based on an amount and the currencies given in parameter"""
         amount_currency = False
         currency_id = False
+        date = self.env.context.get('date') or fields.Date.today()
+        company = self.env.context.get('company_id', self.env.user.company_id)
         if src_currency and src_currency != company_currency:
             amount_currency = amount
-            amount = src_currency.with_context(self._context).compute(amount, company_currency)
+            amount = src_currency._convert(amount, company_currency, company, date)
             currency_id = src_currency.id
         debit = amount > 0 and amount or 0.0
         credit = amount < 0 and -amount or 0.0

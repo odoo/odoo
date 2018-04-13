@@ -55,7 +55,8 @@ class AccountAnalyticLine(models.Model):
         price_unit = abs(self.amount / self.unit_amount)
         currency_id = self.company_id.currency_id
         if currency_id and currency_id != order.currency_id:
-            price_unit = currency_id.compute(price_unit, order.currency_id)
+            price_unit = currency_id._convert(
+                price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.today())
         return price_unit
 
     @api.multi

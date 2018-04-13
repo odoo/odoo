@@ -30,7 +30,15 @@ class CrmTeam(models.Model):
                 datum_currency = self.env['res.currency'].browse(datum['currency_id'][0])
                 if datum['state'] == 'authorized':
                     team.authorized_payment_transactions_count += datum['__count']
-                    team.authorized_payment_transactions_amount += datum_currency.compute(datum['amount'], self.env.user.company_id.currency_id)
+                    team.authorized_payment_transactions_amount += datum_currency._convert(
+                        datum['amount'],
+                        self.env.user.company_id.currency_id,
+                        self.env.user.company_id,
+                        fields.Date.today())
                 elif datum['state'] == 'pending':
                     team.pending_payment_transactions_count += datum['__count']
-                    team.pending_payment_transactions_amount += datum_currency.compute(datum['amount'], self.env.user.company_id.currency_id)
+                    team.pending_payment_transactions_amount += datum_currency._convert(
+                        datum['amount'],
+                        self.env.user.company_id.currency_id,
+                        self.env.user.company_id,
+                        fields.Date.today())
