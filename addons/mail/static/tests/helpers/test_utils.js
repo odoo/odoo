@@ -75,7 +75,6 @@ function createDiscuss(params) {
     var discuss = new Discuss(parent, params);
     discuss.set_cp_bus(new Widget());
     var selector = params.debug ? 'body' : '#qunit-fixture';
-    discuss.appendTo($(selector));
 
     // override 'destroy' of discuss so that it calls 'destroy' on the parent
     // instead, which is the parent of discuss and the mockServer.
@@ -86,7 +85,7 @@ function createDiscuss(params) {
         parent.destroy();
     };
 
-    return discuss.call('chat_manager', 'isReady').then(function () {
+    return  discuss.appendTo($(selector)).then(function () {
         return discuss;
     });
 }

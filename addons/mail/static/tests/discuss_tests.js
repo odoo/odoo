@@ -1,12 +1,14 @@
 odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
+var Discuss = require('mail.chat_discuss');
 var ChatManager = require('mail.ChatManager');
 var Composers = require('mail.composer');
 var mailTestUtils = require('mail.testUtils');
 
 var Bus = require('web.Bus');
 var concurrency = require('web.concurrency');
+var SearchView = require('web.SearchView');
 var testUtils = require('web.test_utils');
 
 var BasicComposer = Composers.BasicComposer;
@@ -291,6 +293,87 @@ QUnit.test('no crash focusout emoji button', function (assert) {
             done();
         }
     });
+});
+
+QUnit.test('do not crash when destroyed before start is completed', function (assert) {
+    assert.expect(3);
+    var discuss;
+
+    testUtils.patch(Discuss, {
+        init: function () {
+            discuss = this;
+            this._super.apply(this, arguments);
+        },
+    });
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method) {
+                assert.step(args.method);
+            }
+            var result = this._super.apply(this, arguments);
+            if (args.method === 'message_fetch') {
+                discuss.destroy();
+            }
+            return result;
+        },
+    });
+
+    assert.verifySteps([
+        "load_views",
+        "message_fetch"
+    ]);
+
+    testUtils.unpatch(Discuss);
+});
+
+QUnit.test('do not crash when destroyed between start en end of _renderSearchView', function (assert) {
+    assert.expect(2);
+    var discuss;
+
+    testUtils.patch(Discuss, {
+        init: function () {
+            discuss = this;
+            this._super.apply(this, arguments);
+        },
+    });
+
+    var def = $.Deferred();
+
+    testUtils.patch(SearchView, {
+        willStart: function () {
+            var result = this._super.apply(this, arguments);
+            return def.then($.when(result));
+        },
+    });
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method) {
+                assert.step(args.method);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    discuss.destroy();
+    def.resolve();
+    assert.verifySteps([
+        "load_views",
+    ]);
+
+    testUtils.unpatch(Discuss);
+    testUtils.unpatch(SearchView);
 });
 
 });
