@@ -1701,7 +1701,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'month': 'MMMM yyyy',
                 'bimester': 'MMM yyyy',
                 'quarter': 'QQQ yyyy',
-                'trimester': 'MMM yyyy',
+                'quadrimester': 'MMM yyyy',
                 'semester': 'MMM yyyy',
                 'year': 'yyyy',
             }
@@ -1712,7 +1712,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'month': dateutil.relativedelta.relativedelta(months=1),
                 'bimester': dateutil.relativedelta.relativedelta(months=2),
                 'quarter': dateutil.relativedelta.relativedelta(months=3),
-                'trimester': dateutil.relativedelta.relativedelta(months=4),
+                'quadrimester': dateutil.relativedelta.relativedelta(months=4),
                 'semester': dateutil.relativedelta.relativedelta(months=6),
                 'year': dateutil.relativedelta.relativedelta(years=1)
             }
