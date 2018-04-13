@@ -71,8 +71,8 @@ class AccountConfigSettings(models.TransientModel):
             self.env['ir.config_parameter'].sudo().get_param('account.default_sale_tax_id', default=False)
         )
         return {
-            'default_purchase_tax_id': int(default_purchase_tax_id[0]) if isinstance(default_purchase_tax_id, list) and default_purchase_tax_id else default_purchase_tax_id,
-            'default_sale_tax_id': int(default_sale_tax_id[0]) if isinstance(default_sale_tax_id, list) and default_sale_tax_id else default_sale_tax_id,
+            'default_purchase_tax_id': int(default_purchase_tax_id[0]) if isinstance(default_purchase_tax_id, list) and default_purchase_tax_id else (int(default_purchase_tax_id) or False),
+            'default_sale_tax_id': int(default_sale_tax_id[0]) if isinstance(default_sale_tax_id, list) and default_sale_tax_id else (int(default_sale_tax_id) or False),
         }
 
     @api.multi
