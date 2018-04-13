@@ -37,6 +37,18 @@ class ProductionLot(models.Model):
                 raise UserError(_("You are not allowed to create a lot for this picking type"))
         return super(ProductionLot, self).create(vals)
 
+    @api.multi
+    def write(self, vals):
+        if 'product_id' in vals:
+            move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids)])
+            if move_lines:
+                raise UserError(_(
+                    'You are not allowed to change the product linked to a serial or lot number ' +
+                    'if some stock moves have already been created with that number. ' +
+                    'This would lead to inconsistencies in your stock.'
+                ))
+        return super(ProductionLot, self).write(vals)
+
     @api.one
     def _product_qty(self):
         # We only care for the quants in internal or transit locations.
