@@ -3321,8 +3321,28 @@ var BasicModel = AbstractModel.extend({
      */
     _makeDefaultRecord: function (modelName, params) {
         var self = this;
+
+        var determineExtraFields = function() {
+            // Fields that are present in the originating view, that need to be initialized
+            // Hence preventing their value to crash when getting back to the originating view
+            var parentRecord = self.localData[params.parentID];
+
+            var originView =  parentRecord && parentRecord.fieldsInfo;
+            if (!originView || !originView[parentRecord.viewType])
+                return [];
+
+            var fieldsFromOrigin = _.filter(Object.keys(originView[parentRecord.viewType]),
+                function(fieldname) {
+                    return params.fields[fieldname] !== undefined;
+                });
+
+            return fieldsFromOrigin;
+        }
+
         var fieldNames = Object.keys(params.fieldsInfo[params.viewType]);
         var fields_key = _.without(fieldNames, '__last_update');
+
+        var extraFields = determineExtraFields();
 
         return this._rpc({
                 model: modelName,
@@ -3341,7 +3361,7 @@ var BasicModel = AbstractModel.extend({
                     viewType: params.viewType,
                 });
 
-                return self.applyDefaultValues(record.id, result)
+                return self.applyDefaultValues(record.id, result, {fieldNames: _.union(fieldNames, extraFields)})
                     .then(function () {
                         var def = $.Deferred();
                         self._performOnChange(record, fields_key).always(function () {
@@ -3605,6 +3625,8 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(['one2many', 'many2many'], fieldType)) {
                             var x2mCommands = commands[0][2][fieldName];
                             defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
+                        } else {
+                            r._changes[fieldName] = self._parseServerValue(field, r._changes[fieldName]);
                         }
                     }
                 }
