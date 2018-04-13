@@ -5144,7 +5144,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
 
         form.$('td:contains(01/25/2017)').click();
-        form.$('.o_datepicker_input').click();
+        form.$('.o_datepicker').click();
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
         $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
         $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
@@ -7671,7 +7671,7 @@ QUnit.module('relational_fields', {
         form.$('.o_field_x2many_list_row_add a').click();
         form.$('.o_data_row .o_field_widget').val('a name').trigger('input');
         def = $.Deferred();
-        form.$('.o_datepicker_input').click(); // focusout o2m and set value to today
+        form.$('.o_datepicker').click(); // focusout o2m and set value to today
         var dateTimeVal = fieldUtils.format.datetime(moment(), {timezone: false});
         form.$('.o_datepicker_input').val(dateTimeVal).trigger('change');
 
