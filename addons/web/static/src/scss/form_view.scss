@@ -40,7 +40,7 @@
 
             @include o-align-items(baseline);
             min-width: 50px;
-            margin: 0 -$o-form-spacing-unit/2;
+            margin: 0 (-$o-form-spacing-unit/2);
 
             > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
                 @include o-flex(0, 0, auto);
@@ -124,7 +124,7 @@
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
 
         .o_form_statusbar {
-            margin: -$o-sheet-vpadding -$o-horizontal-padding $o-sheet-vpadding -$o-horizontal-padding;
+            margin: (-$o-sheet-vpadding) (-$o-horizontal-padding) $o-sheet-vpadding (-$o-horizontal-padding);
         }
     }
 
