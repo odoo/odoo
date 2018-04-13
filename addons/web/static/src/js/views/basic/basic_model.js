@@ -3625,6 +3625,8 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(['one2many', 'many2many'], fieldType)) {
                             var x2mCommands = commands[0][2][fieldName];
                             defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
+                        } else {
+                            r._changes[fieldName] = self._parseServerValue(field, r._changes[fieldName]);
                         }
                     }
                 }
