@@ -650,6 +650,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # create missing xml ids
         missing = self.filtered(lambda r: r.id not in xids)
+        if not missing:
+            return (
+                (record, '%s.%s' % xids[record.id])
+                for record in self
+            )
+
         xids.update(
             (r.id, (modname, '%s_%s_%s' % (
                 r._table,
@@ -658,6 +664,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             )))
             for r in missing
         )
+        fields = ['module', 'model', 'name', 'res_id']
         cr.copy_from(io.StringIO(
             u'\n'.join(
                 u"%s\t%s\t%s\t%d" % (
@@ -669,10 +676,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 for record in missing
             )),
             table='ir_model_data',
-            columns=['module', 'model', 'name', 'res_id'],
+            columns=fields,
         )
-
-        self.invalidate_cache()
+        self.env['ir.model.data'].invalidate_cache(fnames=fields)
 
         return (
             (record, '%s.%s' % xids[record.id])
