@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Should be placed inside an application -->
+    <t t-name="web.wizard">
+        <!-- Accounting Example -->
+        <t t-call="web.wizard_container">
+
+            <!-- Use qweb variables to define design and options
+            ====================================================
+            classes (design): o_wizard_blue, o_wizard_orange, o_wizard_violet
+            image: background-image's url
+            no_fold_btn:  if true, the collapse button is not rendered.
+            no_close_btn: the close button is not rendered (mandatory field)
+            folded_by_default: the wizard is folded by defaul (overwrite 'no_fold_btn' option)
+            -->
+
+            <t t-set="classes" t-value="'o_wizard_blue'"/>
+            <t t-set="image" t-value="'/website/static/src/img/wizard/accounting_wizard_bg.jpg'"/>
+
+            <t t-call="web.wizard_step">
+                <t t-set="title" t-value="'Company data'"/>
+                <t t-set="description" t-value="'Your information is displayed on the invoices you send to clients.'"/>
+                <t t-set="btn_text" t-value="'Let\'s start!'"/>
+                <t t-set="done_text" t-value="'All done'"/>
+            </t>
+            <t t-call="web.wizard_step">
+                <t t-set="title" t-value="'Invoice template'"/>
+                <t t-set="description" t-value="'Create and send professional looking invoices.'"/>
+                <t t-set="done_icon" t-value="'fa-star'"/>
+                <t t-set="done_text" t-value="'Looks great!'"/>
+            </t>
+            <t t-call="web.wizard_step">
+                <t t-set="title" t-value="'Payment Method'"/>
+                <t t-set="description" t-value="'Define your favourite payment methods.'"/>
+                <t t-set="done_text" t-value="'Payment method set!'"/>
+            </t>
+            <t t-call="web.wizard_step">
+                <t t-set="title" t-value="'Sample Invoice'"/>
+                <t t-set="description" t-value="'Quicly preview what your client sees by sending yourself a sample.'"/>
+                <t t-set="btn_text" t-value="'I\'m ready'"/>
+                <t t-set="done_text" t-value="'Sample incoice sent!'"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web.wizard_container">
+        <div t-att-class="'o_wizard ' + classes + (folded_by_default? ' o_wizard_folded' : '')" t-att-style="'background-image:url(' + image + ')'">
+            <div class="o_wizard_wrap">
+                <a t-if="!no_close_btn" class="pull-right o_wizard_btn_close o_wizard_hide_folded"><i class="fa fa-times"/></a>
+                <div class="o_wizard_steps">
+                    <span t-if="!no_fold_btn" class="o_wizard_folded_title">Configuration steps:</span>
+                    <t t-raw="0"/>
+                </div>
+                <a t-if="!no_fold_btn or folded_by_default" class="o_wizard_btn_fold text-right"><i class="fa fa-chevron-up"/></a>
+                <div class="o_wizard_completed_message text-center">
+                    <i class="fa fa-check text-success mr8"/>
+                    <span class="h3 mr16">Nice work!</span>
+                    <div class="btn btn-primary btn-sm o_wizard_btn_completed" style="vertical-align: inherit;">Close</div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.wizard_step">
+        <div class="o_wizard_step">
+            <t t-call="web.wizard_confetti"/>
+            <div class="o_wizard_progress o_wizard_hide_folded hidden-xs progress">
+                <div class="progress-bar"></div>
+            </div>
+            <span class="o_wizard_dot o_wizard_hide_folded hidden-xs fa fa-check"/>
+            <div class="o_wizard_step_content">
+                <div class="o_wizard_step_content_info">
+                    <h4 class="o_wizard_step_title mt16"><t t-esc="title"/></h4>
+                    <p class="o_wizard_hide_folded mb16"><t t-esc="description"/></p>
+                </div>
+                <div class="o_wizard_step_action o_wizard_hide_folded btn"><t t-esc="btn_text ? btn_text : 'Let\'s do it'"/></div>
+                <div class="o_wizard_all_done mt16">
+                    <i t-attf-class="text-success mr6 fa #{done_icon? done_icon :'fa-check'}"/>
+                    <span class="o_wizard_hide_folded"><t t-esc="done_text ? done_text : 'All done!'"/></span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <div t-name="web.wizard_confetti" class="o_wizard_confetti">
+    	<div>
+    		<div class="flake color-3"/>
+    		<div class="ribbon color-1"/>
+    		<div class="ribbon color-2"/>
+    		<div class="flake color-1"/>
+    		<div/> <!-- spacer -->
+    	</div>
+    	<div>
+    		<div class="ribbon color-2"/>
+    		<div class="flake color-2"/>
+    		<div class="flake color-3"/>
+    		<div class="ribbon color-1"/>
+    		<div class="flake color-4"/>
+    		<div/> <!-- spacer -->
+    	</div>
+    	<div>
+    		<div class="ribbon color-1"/>
+    		<div class="ribbon color-4"/>
+    		<div class="ribbon color-2"/>
+    		<div class="flake color-3"/>
+    		<div/> <!-- spacer -->
+    	</div>
+    	<div>
+    		<div class="flake color-3"/>
+    		<div class="ribbon color-1"/>
+    		<div class="ribbon color-4"/>
+    		<div class="flake color-3"/>
+    		<div class="ribbon color-2"/>
+    		<div/> <!-- spacer -->
+    	</div>
+    	<div>
+    		<div class="ribbon color-2"/>
+    		<div class="flake color-3"/>
+    		<div class="flake color-4"/>
+    		<div class="ribbon color-1"/>
+    		<div/> <!-- spacer -->
+    	</div>
+    </div>
+</templates>
