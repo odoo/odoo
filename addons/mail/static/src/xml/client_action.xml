@@ -27,6 +27,10 @@
                  data-channel-id="channel_starred">
                 <span class="o_channel_name"> <i class="fa fa-star-o"/> Starred </span>
             </div>
+            <div t-attf-class="o_mail_chat_channel_item #{(active_channel_id == 'channel_all') ? 'o_active': ''}"
+                 data-channel-id="channel_read">
+                <span class="o_channel_name"> <i class="fa fa-check-square-o"/> All Messages </span>
+            </div>
 
             <t t-set="channel_type" t-value="'public'"/>
             <t t-call="mail.chat.SidebarTitle">
