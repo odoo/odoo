@@ -594,6 +594,25 @@ class MrpProduction(models.Model):
                     error_msg += ml.product_id.display_name + ' (' + ml.lot_produced_id.name +')\n'
                 raise UserError(error_msg)
 
+    def _log_activity_on_changes(self, moves, original_qty=False):
+        original_qty = original_qty or self.product_qty
+        dest_ids = moves.mapped('move_dest_ids')
+        orig_ids = moves.mapped('move_orig_ids')
+        log = {}
+        if dest_ids.mapped('picking_id'):
+            self.env['stock.move']._log_decrease_ordered_quantity({dest_ids.mapped('picking_id'): (self.product_qty, original_qty)}, 'move_lines', 'DOWN', 'mrp.production', 'Production Order', self)
+        if orig_ids.mapped('raw_material_production_id'):
+            self.env['stock.move']._log_decrease_ordered_quantity({orig_ids.mapped('raw_material_production_id'): (self.product_qty, original_qty)}, 'move_orig_ids', 'UP', 'mrp.production', 'Production Order', self)
+        for each_orig in orig_ids.mapped('move_orig_ids'):
+            purchase_line = each_orig.mapped('move_orig_ids').mapped('purchase_line_id')
+            if purchase_line:
+                product_qty = self.move_raw_ids.filtered(lambda r: r.product_id == purchase_line.product_id).product_uom_qty
+                log[each_orig.mapped('move_orig_ids')] = (product_qty, purchase_line.product_qty)
+            orig_ids = each_orig
+        if log:
+            self.env['stock.move']._log_decrease_ordered_quantity(log, 'purchase_line_id', 'DOWN', 'mrp.production', 'Production Order', self)
+        return True
+
     @api.multi
     def action_cancel(self):
         """ Cancels production order, unfinished stock moves and set procurement
@@ -614,6 +633,7 @@ class MrpProduction(models.Model):
             production.workorder_ids.filtered(lambda x: x.state != 'cancel').action_cancel()
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            production.with_context(cancel=True)._log_activity_on_changes(finish_moves + raw_moves)
             (finish_moves | raw_moves)._action_cancel()
             picking_ids = production.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             picking_ids.action_cancel()
@@ -624,7 +644,6 @@ class MrpProduction(models.Model):
                 if not parent or parent._name == 'stock.picking' and parent.state == 'cancel' or parent == self:
                     continue
                 filtered_documents[(parent, responsible)] = rendering_context
-            self._log_manufacture_exception(filtered_documents, cancel=True)
         return True
 
     def _get_document_iterate_key(self, move_raw_id):
@@ -714,61 +733,3 @@ class MrpProduction(models.Model):
             empty_list_help_document_name=_("manufacturing order"),
         )
         return super(MrpProduction, self).get_empty_list_help(help)
-
-    def _log_downside_manufactured_quantity(self, moves_modification):
-
-        def _keys_in_sorted(move):
-            """ sort by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id.id, move.product_id.responsible_id.id)
-
-        def _keys_in_groupby(move):
-            """ group by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id, move.product_id.responsible_id)
-
-        def _render_note_exception_quantity_mo(rendering_context):
-            values = {
-                'production_order': self,
-                'order_exceptions': dict((key, d[key]) for d in rendering_context for key in d),
-                'impacted_pickings': False,
-                'cancel': False
-            }
-            return self.env.ref('mrp.exception_on_mo').render(values=values)
-
-        documents = {}
-        for move, (old_qty, new_qty) in moves_modification.items():
-            document = self.env['stock.picking']._log_activity_get_documents(
-                {move: (old_qty, new_qty)}, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
-            for key, value in document.items():
-                if documents.get(key):
-                    documents[key] += [value]
-                else:
-                    documents[key] = [value]
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
-
-    def _log_manufacture_exception(self, documents, cancel=False):
-
-        def _render_note_exception_quantity_mo(rendering_context):
-            visited_objects = []
-            order_exceptions = {}
-            for exception in rendering_context:
-                order_exception, visited = exception
-                order_exceptions.update(order_exception)
-                visited_objects += visited
-            visited_objects = self.env[visited_objects[0]._name].concat(*visited_objects)
-            visited_objects |= visited_objects.mapped('move_orig_ids')
-            impacted_pickings = []
-            if visited_objects._name == 'stock.move':
-                impacted_pickings = visited_objects.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
-            values = {
-                'production_order': self,
-                'order_exceptions': order_exceptions,
-                'impacted_pickings': impacted_pickings,
-                'cancel': cancel
-            }
-            return self.env.ref('mrp.exception_on_mo').render(values=values)
-
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)

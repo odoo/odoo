@@ -42,6 +42,7 @@ class ChangeProductionQty(models.TransientModel):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for wizard in self:
             production = wizard.mo_id
+            original_qty = production.product_qty
             produced = sum(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).mapped('quantity_done'))
             if wizard.product_qty < produced:
                 format_qty = '%.{precision}f'.format(precision=precision)
@@ -52,24 +53,10 @@ class ChangeProductionQty(models.TransientModel):
             qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
             factor = production.product_uom_id._compute_quantity(production.product_qty - qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
-            documents = {}
-            for line, line_data in lines:
-                move, old_qty, new_qty = production._update_raw_move(line, line_data)
-                iterate_key = production._get_document_iterate_key(move)
-                if iterate_key:
-                    document = self.env['stock.picking']._log_activity_get_documents({move: (new_qty, old_qty)}, iterate_key, 'UP')
-                    for key, value in document.items():
-                        if documents.get(key):
-                            documents[key] += [value]
-                        else:
-                            documents[key] = [value]
-            production._log_manufacture_exception(documents)
             operation_bom_qty = {}
             for bom, bom_data in boms:
                 for operation in bom.routing_id.operation_ids:
                     operation_bom_qty[operation.id] = bom_data['qty']
-            finished_moves_modification = self._update_product_to_produce(production, production.product_qty - qty_produced, old_production_qty)
-            production._log_downside_manufactured_quantity(finished_moves_modification)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves._action_assign()
             for wo in production.workorder_ids:
@@ -101,4 +88,6 @@ class ChangeProductionQty(models.TransientModel):
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
                 if quantity > 0 and wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_line_ids:
                     wo._generate_lot_ids()
+            if original_qty > production.product_qty:
+                production._log_activity_on_changes(production.move_finished_ids + production.move_raw_ids, original_qty)
         return {}
