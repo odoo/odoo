@@ -101,7 +101,8 @@ class AccountAnalyticLine(models.Model):
             analytic_account = timesheet.account_id
             # convert the unit of mesure into hours
             sale_price_hour = so_line.product_uom._compute_price(so_line.price_unit, timesheet_uom)
-            sale_price = so_line.currency_id.compute(sale_price_hour, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
+            sale_price = so_line.currency_id._convert(
+                sale_price_hour, analytic_account.currency_id, so_line.company_id, fields.Date.today())  # amount from SO should be convert into analytic account currency
 
             # calculate the revenue on the timesheet
             if so_line.product_id.invoice_policy == 'delivery':
@@ -121,7 +122,8 @@ class AccountAnalyticLine(models.Model):
                 total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
                 # compute (new) revenue of current timesheet line
                 values['timesheet_revenue'] = min(
-                    analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-so_line.discount)),
+                    analytic_account.currency_id.round(unit_amount * so_line.currency_id._convert(
+                        so_line.price_unit, analytic_account.currency_id, so_line.company_id, fields.Date.today()) * (1-so_line.discount)),
                     total_revenue_so - total_revenue_invoiced
                 )
                 values['timesheet_invoice_type'] = 'billable_fixed'

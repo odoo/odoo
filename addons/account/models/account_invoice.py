@@ -59,9 +59,9 @@ class AccountInvoice(models.Model):
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.company_id and self.currency_id != self.company_id.currency_id:
-            currency_id = self.currency_id.with_context(date=self.date_invoice)
-            amount_total_company_signed = currency_id.compute(self.amount_total, self.company_id.currency_id)
-            amount_untaxed_signed = currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
+            currency_id = self.currency_id
+            amount_total_company_signed = currency_id._convert(self.amount_total, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today())
+            amount_untaxed_signed = currency_id._convert(self.amount_untaxed, self.company_id.currency_id, self.company_id, self.date_invoice or fields.Date.today())
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         self.amount_total_company_signed = amount_total_company_signed * sign
         self.amount_total_signed = self.amount_total * sign
@@ -114,8 +114,8 @@ class AccountInvoice(models.Model):
                 if line.currency_id == self.currency_id:
                     residual += line.amount_residual_currency if line.currency_id else line.amount_residual
                 else:
-                    from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
-                    residual += from_currency.compute(line.amount_residual, self.currency_id)
+                    from_currency = line.currency_id or line.company_id.currency_id
+                    residual += from_currency._convert(line.amount_residual, self.currency_id, line.company_id, line.date or fields.Date.today())
         self.residual_company_signed = abs(residual_company_signed) * sign
         self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
@@ -145,7 +145,8 @@ class AccountInvoice(models.Model):
                     if line.currency_id and line.currency_id == self.currency_id:
                         amount_to_show = abs(line.amount_residual_currency)
                     else:
-                        amount_to_show = line.company_id.currency_id.with_context(date=line.date).compute(abs(line.amount_residual), self.currency_id)
+                        currency = line.company_id.currency_id
+                        amount_to_show = currency._convert(abs(line.amount_residual), self.currency_id, self.company_id, line.date or fields.Date.today())
                     if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                         continue
                     info['content'].append({
@@ -189,8 +190,8 @@ class AccountInvoice(models.Model):
             if payment_currency_id and payment_currency_id == self.currency_id:
                 amount_to_show = amount_currency
             else:
-                amount_to_show = payment.company_id.currency_id.with_context(date=self.date).compute(amount,
-                                                                                                        self.currency_id)
+                currency = payment.company_id.currency_id
+                amount_to_show = currency._convert(amount, self.currency_id, payment.company_id, self.date or fields.Date.today())
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
             payment_ref = payment.move_id.name
@@ -920,8 +921,9 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         credit_aml = self.env['account.move.line'].browse(credit_aml_id)
         if not credit_aml.currency_id and self.currency_id != self.company_id.currency_id:
+            amount_currency = self.company_id.currency_id._convert(credit_aml.balance, self.currency_id, self.company_id, credit_aml.date or fields.Date.today())
             credit_aml.with_context(allow_amount_currency=True, check_move_validity=False).write({
-                'amount_currency': self.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, self.currency_id),
+                'amount_currency': amount_currency,
                 'currency_id': self.currency_id.id})
         if credit_aml.payment_id:
             credit_aml.payment_id.write({'invoice_ids': [(4, self.id, None)]})
@@ -952,11 +954,12 @@ class AccountInvoice(models.Model):
         total_currency = 0
         for line in invoice_move_lines:
             if self.currency_id != company_currency:
-                currency = self.currency_id.with_context(date=self._get_currency_rate_date() or fields.Date.context_today(self))
+                currency = self.currency_id
+                date = self._get_currency_rate_date() or fields.Date.context_today(self)
                 if not (line.get('currency_id') and line.get('amount_currency')):
                     line['currency_id'] = currency.id
                     line['amount_currency'] = currency.round(line['price'])
-                    line['price'] = currency.compute(line['price'], company_currency)
+                    line['price'] = currency._convert(line['price'], company_currency, self.company_id, date)
             else:
                 line['currency_id'] = False
                 line['amount_currency'] = False
@@ -1106,7 +1109,7 @@ class AccountInvoice(models.Model):
                 ctx['date'] = inv._get_currency_rate_date()
                 for i, t in enumerate(totlines):
                     if inv.currency_id != company_currency:
-                        amount_currency = company_currency.with_context(ctx).compute(t[1], inv.currency_id)
+                        amount_currency = company_currency._convert(t[1], inv.currency_id, inv.company_id, inv.date or inv.date_invoice or fields.Date.today())
                     else:
                         amount_currency = False
 
@@ -1443,7 +1446,9 @@ class AccountInvoiceLine(models.Model):
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
         self.price_total = taxes['total_included'] if taxes else self.price_subtotal
         if self.invoice_id.currency_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
-            price_subtotal_signed = self.invoice_id.currency_id.with_context(date=self.invoice_id._get_currency_rate_date()).compute(price_subtotal_signed, self.invoice_id.company_id.currency_id)
+            currency = self.invoice_id.currency_id
+            date = self.invoice_id._get_currency_rate_date()
+            price_subtotal_signed = currency._convert(price_subtotal_signed, self.invoice_id.company_id.currency_id, self.company_id, date or fields.Date.today())
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
 

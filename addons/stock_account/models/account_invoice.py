@@ -100,7 +100,11 @@ class AccountInvoiceLine(models.Model):
 
     def _get_price(self, company_currency, price_unit):
         if self.invoice_id.currency_id.id != company_currency.id:
-            price = company_currency.with_context(date=self.invoice_id.date_invoice).compute(price_unit * self.quantity, self.invoice_id.currency_id)
+            price = company_currency._convert(
+                price_unit * self.quantity,
+                self.invoice_id.currency_id,
+                self.invoice_id.company_id,
+                self.invoice_id.date_invoice or fields.Date.today())
         else:
             price = price_unit * self.quantity
         return self.invoice_id.currency_id.round(price)

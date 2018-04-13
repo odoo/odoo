@@ -176,9 +176,9 @@ class AccountVoucher(models.Model):
     def first_move_line_get(self, move_id, company_currency, current_currency):
         debit = credit = 0.0
         if self.voucher_type == 'purchase':
-            credit = self._convert_amount(self.amount)
+            credit = self._convert(self.amount)
         elif self.voucher_type == 'sale':
-            debit = self._convert_amount(self.amount)
+            debit = self._convert(self.amount)
         if debit < 0.0: debit = 0.0
         if credit < 0.0: credit = 0.0
         sign = debit - credit < 0 and -1 or 1
@@ -220,7 +220,7 @@ class AccountVoucher(models.Model):
         return move
 
     @api.multi
-    def _convert_amount(self, amount):
+    def _convert(self, amount):
         '''
         This function convert the amount given in company currency. It takes either the rate in the voucher (if the
         payment_rate_currency_id is relevant) either the rate encoded in the system.
@@ -232,7 +232,7 @@ class AccountVoucher(models.Model):
         :rtype: float
         '''
         for voucher in self:
-            return voucher.currency_id.compute(amount, voucher.company_id.currency_id)
+            return voucher.currency_id._convert(amount, voucher.company_id.currency_id, voucher.company_id, voucher.account_date)
 
     @api.multi
     def voucher_pay_now_payment_create(self):
@@ -279,9 +279,7 @@ class AccountVoucher(models.Model):
             if not line.price_subtotal:
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
-            # this calls res_curreny.compute() with the right context,
-            # so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
-            amount = self._convert_amount(line.price_unit*line.quantity)
+            amount = self._convert(line.price_unit*line.quantity)
             move_line = {
                 'journal_id': self.journal_id.id,
                 'name': line.name or '/',
@@ -314,7 +312,7 @@ class AccountVoucher(models.Model):
             company_currency = voucher.journal_id.company_id.currency_id.id
             current_currency = voucher.currency_id.id or company_currency
             # we select the context to use accordingly if it's a multicurrency case or not
-            # But for the operations made by _convert_amount, we always need to give the date in the context
+            # But for the operations made by _convert, we always need to give the date in the context
             ctx = local_context.copy()
             ctx['date'] = voucher.account_date
             ctx['check_move_validity'] = False
@@ -325,9 +323,9 @@ class AccountVoucher(models.Model):
             move_line = self.env['account.move.line'].with_context(ctx).create(voucher.with_context(ctx).first_move_line_get(move.id, company_currency, current_currency))
             line_total = move_line.debit - move_line.credit
             if voucher.voucher_type == 'sale':
-                line_total = line_total - voucher._convert_amount(voucher.tax_amount)
+                line_total = line_total - voucher._convert(voucher.tax_amount)
             elif voucher.voucher_type == 'purchase':
-                line_total = line_total + voucher._convert_amount(voucher.tax_amount)
+                line_total = line_total + voucher._convert(voucher.tax_amount)
             # Create one move line per voucher line where amount is not 0.0
             line_total = voucher.with_context(ctx).voucher_move_line_create(line_total, move.id, company_currency, current_currency)
 

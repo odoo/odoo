@@ -98,7 +98,8 @@ class AccountAnalyticAccount(models.Model):
         data_credit = {account_id: 0.0 for account_id in account_ids}
         for account_amount in account_amounts:
             currency_id = account_amount['currency_id'][0]
-            amount = res_currency_obj.browse(currency_id).compute(account_amount['amount'], user_currency)
+            amount = res_currency_obj.browse(currency_id)._convert(
+                account_amount['amount'], user_currency, self.env.user.company_id, fields.Date.today())
             if amount < 0.0:
                 data_debit[account_amount['account_id'][0]] += amount
             else:

@@ -201,7 +201,7 @@ class account_abstract_payment(models.AbstractModel):
             if payment_currency == currency:
                 total += amount_total
             else:
-                total += payment_currency.with_context(date=self.payment_date).compute(amount_total, currency)
+                total += payment_currency._convert(amount_total, currency, self.env.user.company_id, self.payment_date or fields.Date.today())
         return total
 
 
@@ -594,7 +594,7 @@ class account_payment(models.Model):
         """
         aml_obj = self.env['account.move.line'].with_context(check_move_validity=False)
         debit, credit, amount_currency, dummy = aml_obj.with_context(date=self.payment_date)._compute_amount_fields(amount, self.currency_id, self.company_id.currency_id)
-        amount_currency = self.destination_journal_id.currency_id and self.currency_id.with_context(date=self.payment_date).compute(amount, self.destination_journal_id.currency_id) or 0
+        amount_currency = self.destination_journal_id.currency_id and self.currency_id._convert(amount, self.destination_journal_id.currency_id, self.company_id, self.payment_date or fields.Date.today()) or 0
 
         dst_move = self.env['account.move'].create(self._get_move_vals(self.destination_journal_id))
 
@@ -691,7 +691,7 @@ class account_payment(models.Model):
 
         # If the journal has a currency specified, the journal item need to be expressed in this currency
         if self.journal_id.currency_id and self.currency_id != self.journal_id.currency_id:
-            amount = self.currency_id.with_context(date=self.payment_date).compute(amount, self.journal_id.currency_id)
+            amount = self.currency_id._convert(amount, self.journal_id.currency_id, self.company_id, self.payment_date or fields.Date.today())
             debit, credit, amount_currency, dummy = self.env['account.move.line'].with_context(date=self.payment_date)._compute_amount_fields(amount, self.journal_id.currency_id, self.company_id.currency_id)
             vals.update({
                 'amount_currency': amount_currency,

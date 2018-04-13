@@ -1092,7 +1092,10 @@ class SaleOrderLine(models.Model):
         context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
         base_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         if currency_id != self.order_id.pricelist_id.currency_id.id:
-            base_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(base_price, self.order_id.pricelist_id.currency_id)
+            currency = self.env['res.currency'].browse(currency_id)
+            base_price = currency._convert(
+                base_price, self.order_id.pricelist_id.currency_id,
+                self.order_id.company_id, self.order_id.date_order or fields.Date.today())
         # negative discounts (= surcharge) are included in the display price
         return max(base_price, final_price)
 
@@ -1223,7 +1226,7 @@ class SaleOrderLine(models.Model):
             if currency_id.id == product_currency.id:
                 cur_factor = 1.0
             else:
-                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id)
+                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id, self.order_id.date_order)
 
         product_uom = self.env.context.get('uom') or product.uom_id.id
         if uom and uom.id != product_uom:
@@ -1232,7 +1235,7 @@ class SaleOrderLine(models.Model):
         else:
             uom_factor = 1.0
 
-        return product[field_name] * uom_factor * cur_factor, currency_id.id
+        return product[field_name] * uom_factor * cur_factor, currency_id
 
     def _get_protected_fields(self):
         return [
@@ -1258,7 +1261,10 @@ class SaleOrderLine(models.Model):
         if new_list_price != 0:
             if self.order_id.pricelist_id.currency_id.id != currency_id:
                 # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
-                new_list_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(new_list_price, self.order_id.pricelist_id.currency_id)
+                currency = self.env['res.currency'].browse(currency_id)
+                new_list_price = currency._convert(
+                    new_list_price, self.order_id.pricelist_id.currency_id,
+                    self.order_id.company_id, self.order_id.date_order or fields.Date.today())
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount

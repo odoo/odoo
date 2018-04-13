@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import pycompat
@@ -530,8 +530,6 @@ class AccountReconciliation(models.AbstractModel):
 
             target_currency = target_currency or company_currency
 
-            ctx = context.copy()
-            ctx.update({'date': target_date or line.date})
             # Use case:
             # Let's assume that company currency is in USD and that we have the 3 following move lines
             #      Debit  Credit  Amount currency  Currency
@@ -571,8 +569,10 @@ class AccountReconciliation(models.AbstractModel):
                     total_amount_currency = ""
                 else:
                     amount_currency = line.currency_id and amount_currency or amount
-                    amount = company_currency.with_context(ctx).compute(amount, target_currency)
-                    total_amount = company_currency.with_context(ctx).compute((line.debit - line.credit), target_currency)
+                    company = line.account_id.company_id
+                    date = target_date or line.date
+                    amount = company_currency._convert(amount, target_currency, company, date)
+                    total_amount = company_currency._convert((line.debit - line.credit), target_currency, company, date)
                     total_amount_currency = line.currency_id and line.amount_currency or (line.debit - line.credit)
 
             ret_line['debit'] = amount > 0 and amount or 0
@@ -735,11 +735,13 @@ class AccountReconciliation(models.AbstractModel):
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
             company_currency = account_move_line[0].account_id.company_id.currency_id
+            company = account_move_line[0].account_id.company_id
+            date = fields.Date.today()
             writeoff_currency = account_move_line[0].currency_id or company_currency
             for mv_line_dict in new_mv_line_dicts:
                 if writeoff_currency != company_currency:
-                    mv_line_dict['debit'] = writeoff_currency.compute(mv_line_dict['debit'], company_currency)
-                    mv_line_dict['credit'] = writeoff_currency.compute(mv_line_dict['credit'], company_currency)
+                    mv_line_dict['debit'] = writeoff_currency._convert(mv_line_dict['debit'], company_currency, company, date)
+                    mv_line_dict['credit'] = writeoff_currency._convert(mv_line_dict['credit'], company_currency, company, date)
                 writeoff_lines += account_move_line._create_writeoff(mv_line_dict)
 
             (account_move_line + writeoff_lines).reconcile()

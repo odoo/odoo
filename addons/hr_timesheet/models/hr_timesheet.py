@@ -114,7 +114,8 @@ class AccountAnalyticLine(models.Model):
             for timesheet in sudo_self:
                 cost = timesheet.employee_id.timesheet_cost or 0.0
                 amount = -timesheet.unit_amount * cost
-                amount_converted = timesheet.employee_id.currency_id.compute(amount, timesheet.account_id.currency_id)
+                amount_converted = timesheet.employee_id.currency_id._convert(
+                    amount, timesheet.account_id.currency_id, self.env.user.company_id, timesheet.date)
                 result[timesheet.id].update({
                     'amount': amount_converted,
                 })

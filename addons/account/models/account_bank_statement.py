@@ -663,7 +663,8 @@ class AccountBankStatementLine(models.Model):
 
             # Complete dicts to create both counterpart move lines and write-offs
             to_create = (counterpart_aml_dicts + new_aml_dicts)
-            ctx = dict(self._context, date=self.date)
+            company = self.company_id
+            date = self.date or fields.Date.today()
             for aml_dict in to_create:
                 aml_dict['move_id'] = move.id
                 aml_dict['partner_id'] = self.partner_id.id
@@ -677,12 +678,12 @@ class AccountBankStatementLine(models.Model):
                         aml_dict['credit'] = company_currency.round(aml_dict['credit'] / st_line_currency_rate)
                     elif self.currency_id and st_line_currency_rate:
                         # Statement is in foreign currency and the transaction is in another one
-                        aml_dict['debit'] = statement_currency.with_context(ctx).compute(aml_dict['debit'] / st_line_currency_rate, company_currency)
-                        aml_dict['credit'] = statement_currency.with_context(ctx).compute(aml_dict['credit'] / st_line_currency_rate, company_currency)
+                        aml_dict['debit'] = statement_currency._convert(aml_dict['debit'] / st_line_currency_rate, company_currency, company, date)
+                        aml_dict['credit'] = statement_currency._convert(aml_dict['credit'] / st_line_currency_rate, company_currency, company, date)
                     else:
                         # Statement is in foreign currency and no extra currency is given for the transaction
-                        aml_dict['debit'] = st_line_currency.with_context(ctx).compute(aml_dict['debit'], company_currency)
-                        aml_dict['credit'] = st_line_currency.with_context(ctx).compute(aml_dict['credit'], company_currency)
+                        aml_dict['debit'] = st_line_currency._convert(aml_dict['debit'], company_currency, company, date)
+                        aml_dict['credit'] = st_line_currency._convert(aml_dict['credit'], company_currency, company, date)
                 elif statement_currency.id != company_currency.id:
                     # Statement is in foreign currency but the transaction is in company currency
                     prorata_factor = (aml_dict['debit'] - aml_dict['credit']) / self.amount_currency

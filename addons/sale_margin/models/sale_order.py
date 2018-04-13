@@ -17,9 +17,8 @@ class SaleOrderLine(models.Model):
         purchase_price = product_id.standard_price
         if product_uom_id != product_id.uom_id:
             purchase_price = product_id.uom_id._compute_price(purchase_price, product_uom_id)
-        ctx = self.env.context.copy()
-        ctx['date'] = order_id.date_order
-        price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
+        price = frm_cur._convert(
+            purchase_price, to_cur, order_id.company_id, order_id.date_order or fields.Date.today(), round=False)
         return price
 
     @api.model
@@ -29,9 +28,8 @@ class SaleOrderLine(models.Model):
         purchase_price = product.standard_price
         if product_uom != product.uom_id:
             purchase_price = product.uom_id._compute_price(purchase_price, product_uom)
-        ctx = self.env.context.copy()
-        ctx['date'] = date
-        price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
+        price = frm_cur._convert(
+            purchase_price, to_cur, self.order_id.company_id, date or fields.Date.today(), round=False)
         return {'purchase_price': price}
 
     @api.onchange('product_id', 'product_uom')
@@ -61,9 +59,13 @@ class SaleOrderLine(models.Model):
             currency = line.order_id.pricelist_id.currency_id
             price = line.purchase_price
             if not price:
-                from_cur = line.env.user.company_id.currency_id.with_context(date=line.order_id.date_order)
-                price = from_cur.compute(line.product_id.standard_price, currency, round=False)
- 
+                from_cur = line.env.user.company_id.currency_id
+                price = from_cur._convert(
+                    line.product_id.standard_price,
+                    currency,
+                    line.order_id.company_id,
+                    line.order_id.date_order or fields.Date.today(), round=False)
+
             line.margin = currency.round(line.price_subtotal - (price * line.product_uom_qty))
 
 

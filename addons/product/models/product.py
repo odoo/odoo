@@ -523,7 +523,8 @@ class ProductProduct(models.Model):
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
-                prices[product.id] = product.currency_id.compute(prices[product.id], currency)
+                prices[product.id] = product.currency_id._convert(
+                    prices[product.id], currency, product.company_id, fields.Date.today())
 
         return prices
 
