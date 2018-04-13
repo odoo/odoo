@@ -4021,6 +4021,35 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('display correctly buttonbox, in large size class', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div name="button_box" class="oe_button_box">' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="bar"/>' +
+                        '</button>' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="foo"/>' +
+                        '</button>' +
+                    '</div>' +
+                '</form>',
+            res_id: 2,
+            config: {
+                device: {size_class: 5},
+            },
+        });
+
+        assert.strictEqual(form.$('.oe_button_box').children().length, 2,
+            "button box should contain two children");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many default value creation', function (assert) {
         assert.expect(1);
 
