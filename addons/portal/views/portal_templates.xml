@@ -10,6 +10,7 @@
                         is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
                         user_id: <t t-esc="json.dumps(request.env.user.id)" />,
                         is_frontend: true,
+                        translationURL: '/website/translations',
                     };
                 </script>
 
@@ -278,7 +279,7 @@
                                 <select name="country_id" class="form-control">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
-                                        <option t-att-value="country.id" t-att-selected="country.id == partner.country_id.id">
+                                        <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
                                             <t t-esc="country.name" />
                                         </option>
                                     </t>
@@ -349,7 +350,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
-        <div id="discussion" class="hidden-print o_portal_chatter"
+        <div id="discussion" class="hidden-print o_portal_chatter o_not_editable"
             t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>

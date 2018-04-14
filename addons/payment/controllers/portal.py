@@ -73,7 +73,8 @@ class WebsitePayment(http.Controller):
 
         return tx
 
-    @http.route(['/website_payment/transaction/<string:reference>/<string:amount>/<string:currency_id>',], type='json', auth='public')
+    @http.route(['/website_payment/transaction/<string:reference>/<string:amount>/<string:currency_id>',
+                '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>',], type='json', auth='public')
     def transaction(self, acquirer_id, reference, amount, currency_id, **kwargs):
         partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
@@ -100,7 +101,8 @@ class WebsitePayment(http.Controller):
 
         return acquirer.sudo().render(reference, float(amount), int(currency_id), values=render_values)
 
-    @http.route(['/website_payment/token/<string:reference>/<float:amount>/<int:currency_id>'], type='http', auth='public', website=True)
+    @http.route(['/website_payment/token/<string:reference>/<string:amount>/<string:currency_id>',
+                '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='http', auth='public', website=True)
     def payment_token(self, pm_id, reference, amount, currency_id, return_url=None, **kwargs):
         token = request.env['payment.token'].browse(int(pm_id))
 

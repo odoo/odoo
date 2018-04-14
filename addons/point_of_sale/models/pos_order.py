@@ -46,9 +46,11 @@ class PosOrder(models.Model):
         }
 
     def _payment_fields(self, ui_paymentline):
+        payment_date = ui_paymentline['name']
+        payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
         return {
             'amount':       ui_paymentline['amount'] or 0.0,
-            'payment_date': ui_paymentline['name'],
+            'payment_date': payment_date,
             'statement_id': ui_paymentline['statement_id'],
             'payment_name': ui_paymentline.get('note', False),
             'journal':      ui_paymentline['journal_id'],
@@ -160,13 +162,14 @@ class PosOrder(models.Model):
         """
         Prepare the dict of values to create the new invoice for a pos order.
         """
+        invoice_type = 'out_invoice' if self.amount_total >= 0 else 'out_refund'
         return {
             'name': self.name,
             'origin': self.name,
             'account_id': self.partner_id.property_account_receivable_id.id,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'company_id': self.company_id.id,
-            'type': 'out_invoice',
+            'type': invoice_type,
             'reference': self.name,
             'partner_id': self.partner_id.id,
             'comment': self.note or '',
@@ -208,7 +211,7 @@ class PosOrder(models.Model):
         inv_line = {
             'invoice_id': invoice_id,
             'product_id': line.product_id.id,
-            'quantity': line.qty,
+            'quantity': line.qty if self.amount_total >= 0 else -line.qty,
             'account_analytic_id': self._prepare_analytic_account(line),
             'name': inv_name,
         }
@@ -257,7 +260,7 @@ class PosOrder(models.Model):
                     line = grouped_data[product_key][0]
                     product = Product.browse(line['product_id'])
                     # In the SO part, the entries will be inverted by function compute_invoice_totals
-                    price_unit = - product._get_anglo_saxon_price_unit()
+                    price_unit = self._get_pos_anglo_saxon_price_unit(product, line['partner_id'], line['quantity'])
                     account_analytic = Analytic.browse(line.get('analytic_account_id'))
                     res = Product._anglo_saxon_sale_move_lines(
                         line['name'], product, product.uom_id, line['quantity'], price_unit,
@@ -410,6 +413,16 @@ class PosOrder(models.Model):
             move.sudo().write({'line_ids': all_lines})
             move.sudo().post()
         return True
+
+    def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
+        price_unit = product._get_anglo_saxon_price_unit()
+        if product._get_invoice_policy() == "delivery":
+            moves = self.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id.move_lines').filtered(lambda m: m.product_id.id == product.id)
+            moves.sorted(lambda x: x.date)
+            average_price_unit = product._compute_average_price(0, quantity, moves)
+            price_unit = average_price_unit or price_unit
+        # In the SO part, the entries will be inverted by function compute_invoice_totals
+        return - price_unit
 
     def _reconcile_payments(self):
         for order in self:
@@ -732,7 +745,7 @@ class PosOrder(models.Model):
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
                 moves._action_assign()
-                moves.filtered(lambda m: m.state in ['confirmed', 'waiting']).force_assign()
+                moves.filtered(lambda m: m.state in ['confirmed', 'waiting'])._force_assign()
                 moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
 
         return True
@@ -792,7 +805,7 @@ class PosOrder(models.Model):
                         'location_dest_id': move.location_dest_id.id,
                         'lot_id': lot_id,
                     })
-                if not pack_lots:
+                if not pack_lots and not float_is_zero(qty_done, precision_rounding=move.product_uom.rounding):
                     move.quantity_done = qty_done
         return has_wrong_lots
 
@@ -800,7 +813,7 @@ class PosOrder(models.Model):
         """Create a new payment for the order"""
         args = {
             'amount': data['amount'],
-            'date': data.get('payment_date', fields.Date.today()),
+            'date': data.get('payment_date', fields.Date.context_today(self)),
             'name': self.name + ': ' + (data.get('payment_name', '') or ''),
             'partner_id': self.env["res.partner"]._find_accounting_partner(self.partner_id).id or False,
         }

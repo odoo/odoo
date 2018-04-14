@@ -6,17 +6,18 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Ted Wang <feiyuwang2012@gmail.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Martin Trigaux, 2017
 # Jonathon Li <jonathonli@gmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
-# zpq001 <zpq001@live.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # THL <wt39181819@gmail.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # Xiaoming Deng <sumandeng@hotmail.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -69,21 +70,21 @@ msgid ""
 "      </data>"
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"尊敬的 ${object.partner_id.name}，\n"
-"我们很高兴通知您，您的订单已发货。\n"
-"\n"
+"<data><p>尊敬的 ${object.partner_id.name}，</p>\n"
+"<p>我们很高兴通知您，您的订单已发货。</p>\n"
+"<p>\n"
 "%if object.carrier_tracking_ref:\n"
-" 您的跟踪参考：\n"
-" %if object.carrier_tracking_url:\n"
-" ${object.carrier_tracking_ref}.\n"
-" %else:\n"
-" ${object.carrier_tracking_ref}.\n"
-" %endif\n"
+"  您的跟踪参考：\n"
+"  %if object.carrier_tracking_url:\n"
+"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>。\n"
+"  %else:\n"
+"    ${object.carrier_tracking_ref}。\n"
+"  %endif\n"
 "%endif\n"
-"\n"
-"查找您附带的交货单了解更多详情。\n"
-"非常感谢，\n"
-"<data><p></p><p></p><p><a href=\"${object.carrier_tracking_url}\" target=\"_blank\"></a></p><p></p><p></p></data>"
+"</p>\n"
+"<p>查找附带的交货单以了解更多信息。</p>\n"
+"<p>非常感谢，</p>\n"
+"      </data>"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
@@ -142,57 +143,57 @@ msgid ""
 "      "
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" ${object.record_name}\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" ${object.body | safe}\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" ${user.company_id.name} ${user.company_id.phone or ''}\n"
-" \n"
-" % if user.company_id.email:\n"
-" ${user.company_id.email} \n"
-" % endif\n"
-" % if user.company_id.website:\n"
-" ${user.company_id.website}\n"
-" % endif\n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" \n"
-" 由 Odoo 提供技术支持。\n"
-" \n"
-" \n"
-" \n"
-"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\"><tbody><!-- HEADER --><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\"><tr><td valign=\"middle\"><span style=\"font-size:20px; color:white; font-weight: bold;\"></span></td><td valign=\"middle\" align=\"right\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/></td></tr></table></td></tr><!-- CONTENT --><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\"><tbody><td valign=\"top\" style=\"color: #555; font-size: 14px;\"></td></tbody></table></td></tr><!-- FOOTER --><tr><td align=\"center\" style=\"min-width: 590px;\"><table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\"><tr><td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\"><br/></td><td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\"><a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\"></a><br/><a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\"></a></td></tr></table></td></tr><tr><td align=\"center\"><a href=\"https://www.odoo.com\"></a></td></tr></tbody></table>"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"font-family:Arial,Helvetica,sans-serif; padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"          <tbody>\n"
+"            <!-- HEADER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                      <span style=\"font-size:20px; color:white; font-weight: bold;\">${object.record_name}</span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                      <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- CONTENT -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                  <tbody>\n"
+"                    <td valign=\"top\" style=\"color: #555; font-size: 14px;\">${object.body | safe}</td>\n"
+"                  </tbody>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <!-- FOOTER -->\n"
+"            <tr>\n"
+"              <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table width=\"650\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                  <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">${user.company_id.name}<br/>${user.company_id.phone or ''}</td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                      % if user.company_id.email:\n"
+"                      <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                      % endif\n"
+"                      % if user.company_id.website:\n"
+"                        <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">${user.company_id.website}</a>\n"
+"                      % endif\n"
+"                    </td>\n"
+"                  </tr>\n"
+"                </table>\n"
+"              </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"              <td align=\"center\">由 <a href=\"https://www.odoo.com\">Odoo </a>支持。</td>\n"
+"            </tr>\n"
+"          </tbody>\n"
+"        </table>\n"
+"      "
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:76
@@ -209,7 +210,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "<span>kg</span>"
-msgstr "<span>kg</span>"
+msgstr "<span>公斤</span>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -231,7 +232,7 @@ msgstr "<strong>重量</strong>"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr "操作在验证交货的订单"
+msgstr "在验证交货订单时的操作"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -248,7 +249,7 @@ msgstr "金额"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "免费送货的订单金额，以公司本位币显示"
+msgstr "免费送货的订单金额，以公司本位货币显示"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -296,7 +297,7 @@ msgstr "查看价格"
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr "点击创建一个新的运输方式"
+msgstr "点击以创建一个新的送货方式。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_company_id
@@ -380,7 +381,7 @@ msgstr "交货方式"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "邮包选择向导"
+msgstr "交货包裹选择向导"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
@@ -439,8 +440,8 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"每一个承运人(例如UPS)能有几种不同的运输方式(例如UPS快运, UPS 标准)\n"
-"并且每种方式都相应的一套定价规则"
+"每一个承运人(例如UPS)能有几种不同的运输方式(例如\n"
+"UPS快运, UPS 标准)并且每种方式都有相应的一套定价规则。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -462,14 +463,14 @@ msgstr "预估运输价格"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr "如果你打算根据发货的实际数量填写账单的话，就填写这一字段"
+msgstr "如果你打算根据发货的实际数量开具账单的话，就填写这一字段"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
-msgstr "填写此表，你可以根据你的客户的送货地址进行过滤。"
+msgstr "填写此表格，你可以根据你的客户送货地址进行过滤。"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -481,12 +482,12 @@ msgstr "固定价格"
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
-msgstr "免费运输"
+msgstr "免费运输费用"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_over
 msgid "Free if order amount is above"
-msgstr "如果订货量大则免费"
+msgstr "订单额度超过 时，免费"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -517,7 +518,7 @@ msgstr "高度"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr "高度必须是正数。"
+msgstr "高度必须是正数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_id
@@ -542,8 +543,8 @@ msgid ""
 "(The actual shipping cost is: %.2f)"
 msgstr ""
 "信息：\n"
-"由于订单金额超过 %.2f，所以免收运费。\n"
-"（实际运输成本为： %.2f）"
+"由于订单金额超过 %.2f，所以包邮。\n"
+"（实际发货成本为：%.2f） "
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -553,7 +554,7 @@ msgstr "增加更多供应商"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr "基础等级"
+msgstr "集成等级"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
@@ -639,7 +640,7 @@ msgstr "最大值"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr "可交付最大重量包装。"
+msgstr "可送货的最大重量包装。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name
@@ -657,13 +658,13 @@ msgstr "无承运商集成"
 #: code:addons/delivery/models/sale_order.py:73
 #, python-format
 msgid "No carrier set for this order."
-msgstr "此订单没有设置承运商"
+msgstr "此订单没有设置承运商。"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:100
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
-msgstr "没有与此订单匹配的价格规则；运送费用无法计算。"
+msgstr "没有与此订单匹配的价格规则；无法计算运送费用。"
 
 #. module: delivery
 #: model:product.product,name:delivery.product_product_delivery_normal
@@ -834,7 +835,7 @@ msgstr "如果您的证书已通过生产认证，请设置为 True。"
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
-msgstr "带有跟踪号码 %s <br/>的货物发送给承运人 %s 进行运输的成本：%.2f %s"
+msgstr "跟踪号码为 %s <br/>的货物发送给承运人 %s 进行运输的成本：%.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -857,7 +858,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_product_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr "国际航运和货物申报代码规范"
+msgstr "国际航运和货物申报的标准化代码"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -882,14 +883,14 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"这些方法能根据你的设定自动的计算运输价格；\n"
-"在销售订单中（基于报价单）或者发票中（基于发货单）"
+"这些方法能根据你的设定自动计算运输价格；\n"
+"在销售订单中（基于报价单）或者发票中（基于发货单）。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "这个交货方式会用在当从拣货开发票时。"
+msgstr "从拣货开发票时将使用此交货方式。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
@@ -904,7 +905,7 @@ msgstr "追踪"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "跟踪参照"
+msgstr "跟踪参考"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
@@ -925,7 +926,7 @@ msgstr "计量单位"
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr "计量单位 是测量重量的单位"
+msgstr "计量单位（计量单位）是测量重量的单位"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
@@ -1005,7 +1006,7 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:71
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
-msgstr "您只能在未经确认的报价单上添加交货价格。"
+msgstr "您只能在未经确认的报价单上添加运输价格。"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:182
@@ -1028,4 +1029,4 @@ msgstr "邮编到"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "例如，UPS　快递"
+msgstr "例如，UPS快递"

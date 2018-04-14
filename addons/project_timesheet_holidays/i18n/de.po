@@ -7,6 +7,7 @@
 # Martin Trigaux, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -42,7 +43,7 @@ msgstr "Unternehmen"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings_leave_timesheet_project_id
 msgid "Default project value for timesheet generated from leave type."
 msgstr ""
-"Standard-Projekteinstellungen für die aus dem Abwesenheitstyp generierten "
+"Standard-Projektwert für die aus dem Abwesenheitstyp generierte "
 "Zeiterfassung."
 
 #. module: project_timesheet_holidays
@@ -66,8 +67,8 @@ msgid ""
 "If checked, when validating a leave, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
-"Falls aktiviert, wird bei der Validierung eines Urlaubstages eine "
-"Zeiterfassung im Urlaubsprojekt des Unternehmens erstellt."
+"Falls aktiviert, wird bei der Genehmigung eines Urlaubes eine Zeiterfassung "
+"im Urlaubsprojekt des Unternehmens erstellt."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:30
@@ -97,7 +98,7 @@ msgstr "Urlaubsanfrage"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company_leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings_leave_timesheet_task_id
 msgid "Leave Task"
-msgstr "Aufgabe verlassen"
+msgstr "Urlaubsaufgabe"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_holidays_status
@@ -125,8 +126,8 @@ msgstr "Aufgabe"
 msgid ""
 "The project will contain the timesheet generated when a leave is validated."
 msgstr ""
-"Das Projekt enthält die Zeiterfassung, die bei der Validierung eines "
-"Urlaubstages erstellt wird."
+"Das Projekt enthält die Zeiterfassung, die bei der Genehmigung eines "
+"Urlaubes erstellt wird."
 
 #. module: project_timesheet_holidays
 #: model:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -140,7 +141,7 @@ msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
-"Sie können Zeiterfassungspositionen nicht löschen, die an einen Urlaubstag "
+"Sie können Zeiterfassungspositionen nicht löschen, die an einen Urlaub "
 "angehängt sind. Bitte entfernen Sie stattdessen die Urlaubstage."
 
 #. module: project_timesheet_holidays

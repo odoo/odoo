@@ -492,9 +492,13 @@ var MockServer = Class.extend({
                 return record.display_name.indexOf(str) !== -1;
             });
         }
-        return _.map(records, function (record) {
+        var result = _.map(records, function (record) {
             return [record.id, record.display_name];
         });
+        if (args.limit) {
+            return result.slice(0, args.limit);
+        }
+        return result;
     },
     /**
      * Simulate an 'onchange' rpc

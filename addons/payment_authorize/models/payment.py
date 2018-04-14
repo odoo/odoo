@@ -11,7 +11,7 @@ import time
 from odoo import _, api, fields, models
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class PaymentAcquirerAuthorize(models.Model):
         temp_authorize_tx_values = {
             'x_login': self.authorize_login,
             'x_trans_key': self.authorize_transaction_key,
-            'x_amount': str(values['amount']),
+            'x_amount': float_repr(values['amount'], values['currency'].decimal_places if values['currency'] else 2),
             'x_show_form': 'PAYMENT_FORM',
             'x_type': 'AUTH_CAPTURE' if not self.capture_manually else 'AUTH_ONLY',
             'x_method': 'CC',
@@ -126,8 +126,18 @@ class PaymentAcquirerAuthorize(models.Model):
         for field_name in mandatory_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
-        if data['cc_expiry'] and datetime.now().strftime('%y%m') > datetime.strptime(data['cc_expiry'], '%m / %y').strftime('%y%m'):
-            return False
+        if data['cc_expiry']:
+            # FIX we split the date into their components and check if there is two components containing only digits
+            # this fixes multiples crashes, if there was no space between the '/' and the components the code was crashing
+            # the code was also crashing if the customer was proving non digits to the date.
+            cc_expiry = [i.strip() for i in data['cc_expiry'].split('/')]
+            if len(cc_expiry) != 2 or any(not i.isdigit() for i in cc_expiry):
+                return False
+            try:
+                if datetime.now().strftime('%y%m') > datetime.strptime('/'.join(cc_expiry), '%m/%y').strftime('%y%m'):
+                    return False
+            except ValueError:
+                return False
         return False if error else True
 
     @api.multi

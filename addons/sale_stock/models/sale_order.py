@@ -343,8 +343,8 @@ class SaleOrderLine(models.Model):
             raise UserError('You cannot decrease the ordered quantity below the delivered quantity.\n'
                             'Create a return first.')
         for line in self:
-            pickings = self.order_id.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+            pickings = line.order_id.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
             for picking in pickings:
                 picking.message_post("The quantity of %s has been updated from %d to %d in %s" %
-                                      (line.product_id.name, line.product_uom_qty, values['product_uom_qty'], self.order_id.name))
+                                      (line.product_id.name, line.product_uom_qty, values['product_uom_qty'], line.order_id.name))
         super(SaleOrderLine, self)._update_line_quantity(values)

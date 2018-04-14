@@ -4,18 +4,19 @@
 # 
 # Translators:
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
 # zbik2607 <darek@krokus.com.pl>, 2017
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: zbik2607 <darek@krokus.com.pl>, 2017\n"
+"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +51,33 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"            \t<p>\n"
+"                    Droga/Drogi ${object.user_id.name or ''},\n"
+"                </p>\n"
+"                <p>\n"
+"                    Został Ci nadany dostęp do ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"                </p>\n"
+"                <p>\n"
+"                    Twój login konta danych to:\n"
+"                </p>\n"
+"                <ul>\n"
+"                    <li>Nazwa: ${object.user_id.login or ''}</li>\n"
+"                </ul>\n"
+"                <ul>\n"
+"                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"                </ul>\n"
+"                <ul>\n"
+"                \t<li>Baza danych: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                </ul>\n"
+"                <p>\n"
+"                \tMożesz zostawić lub zmienić swoje hasło poprzez następujący adres url:\n"
+"                </p>\n"
+"                <ul>\n"
+"                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                </ul>\n"
+"                <p>\n"
+"                \t${object.wizard_id.welcome_message or ''}            "
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -59,7 +87,7 @@ msgstr "<b>Zaloguj się</b>"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
-msgstr ""
+msgstr "<span id=\"search_label\">Szukaj</span> <span class=\"caret\"/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -98,7 +126,7 @@ msgstr "Wyczyść"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Kliknij tutaj aby zobaczyć swoje dokumenty"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -111,6 +139,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Potwierdź\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -200,7 +230,7 @@ msgstr "W portalu"
 #: code:addons/portal/controllers/portal.py:180
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Niepoprawny email! Proszę wpisać poprawny adres e-mail."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
@@ -350,7 +380,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:197
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Niektóre wymagane pola są puste."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details

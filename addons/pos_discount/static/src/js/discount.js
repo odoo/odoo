@@ -23,6 +23,13 @@ var DiscountButton = screens.ActionButtonWidget.extend({
         var order    = this.pos.get_order();
         var lines    = order.get_orderlines();
         var product  = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
+        if (product === undefined) {
+            this.gui.show_popup('error', {
+                title : _t("No discount product found"),
+                body  : _t("The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."),
+            });
+            return;
+        }
 
         // Remove existing discounts
         var i = 0;

@@ -21,7 +21,7 @@ class LandedCost(models.Model):
     _inherit = 'mail.thread'
 
     name = fields.Char(
-        'Name', default=lambda self: self.env['ir.sequence'].next_by_code('stock.landed.cost'),
+        'Name', default=lambda self: _('New'),
         copy=False, readonly=True, track_visibility='always')
     date = fields.Date(
         'Date', default=fields.Date.context_today,
@@ -56,6 +56,12 @@ class LandedCost(models.Model):
     @api.depends('cost_lines.price_unit')
     def _compute_total_amount(self):
         self.amount_total = sum(line.price_unit for line in self.cost_lines)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
+        return super(LandedCost, self).create(vals)
 
     @api.multi
     def unlink(self):
@@ -255,13 +261,12 @@ class AdjustmentLines(models.Model):
     product_id = fields.Many2one('product.product', 'Product', required=True)
     quantity = fields.Float(
         'Quantity', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'), required=True)
+        digits=0, required=True)
     weight = fields.Float(
         'Weight', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        digits=dp.get_precision('Stock Weight'))
     volume = fields.Float(
-        'Volume', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'))
+        'Volume', default=1.0)
     former_cost = fields.Float(
         'Former Cost', digits=dp.get_precision('Product Price'))
     former_cost_per_unit = fields.Float(

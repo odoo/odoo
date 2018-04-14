@@ -216,9 +216,9 @@ return AbstractModel.extend({
             filters: params.filters,
         };
 
+        this.setDate(params.initialDate);
         // Use mode attribute in xml file to specify zoom timeline (day,week,month)
         // by default month.
-        this.setDate(params.initialDate, true);
         this.setScale(params.mode);
 
         _.each(this.data.filters, function (filter) {
@@ -251,9 +251,8 @@ return AbstractModel.extend({
     },
     /**
      * @param {Moment} start
-     * @param {boolean} highlight
      */
-    setDate: function (start, highlight) {
+    setDate: function (start) {
         this.data.start_date = this.data.end_date = this.data.target_date = this.data.highlight_date = start;
         this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
 
@@ -269,9 +268,6 @@ return AbstractModel.extend({
             default:
                 this.data.start_date = this.data.start_date.clone().startOf('day');
                 this.data.end_date = this.data.end_date.clone().endOf('day');
-        }
-        if (highlight) {
-            this.data.highlight_date = this.data.target_date;
         }
     },
     setScale: function (scale) {
@@ -615,7 +611,8 @@ return AbstractModel.extend({
         var date_start;
         var date_stop;
         var date_delay = evt[this.mapping.date_delay] || 1.0,
-            all_day = this.mapping.all_day ? evt[this.mapping.all_day] : false,
+            all_day = this.fields[this.mapping.date_start].type === 'date' ||
+                this.mapping.all_day && evt[this.mapping.all_day] || false,
             the_title = '',
             attendees = [];
 
@@ -639,8 +636,6 @@ return AbstractModel.extend({
         if (this.mapping.all_day && evt[this.mapping.all_day]) {
             date_stop.add(1, 'days');
         }
-        var isAllDay = this.fields[this.mapping.date_start].type === 'date' ||
-                        this.mapping.all_day && evt[this.mapping.all_day] || false;
         var r = {
             'record': evt,
             'start': date_start,
@@ -648,7 +643,7 @@ return AbstractModel.extend({
             'r_start': date_start,
             'r_end': date_stop,
             'title': the_title,
-            'allDay': isAllDay,
+            'allDay': all_day,
             'id': evt.id,
             'attendees':attendees,
         };

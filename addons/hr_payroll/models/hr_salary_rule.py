@@ -76,7 +76,7 @@ class HrSalaryRuleCategory(models.Model):
     _name = 'hr.salary.rule.category'
     _description = 'Salary Rule Category'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)
     parent_id = fields.Many2one('hr.salary.rule.category', string='Parent',
         help="Linking a salary category to its parent is used only for the reporting purpose.")
@@ -89,7 +89,7 @@ class HrSalaryRuleCategory(models.Model):
 class HrSalaryRule(models.Model):
     _name = 'hr.salary.rule'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True,
         help="The code of salary rules can be used as reference in computation of other rules. "
              "In that case, it is case sensitive.")

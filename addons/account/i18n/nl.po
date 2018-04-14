@@ -15,13 +15,14 @@
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 # Julia van Orsouw <julia@odooexperts.nl>, 2017
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2017\n"
+"POT-Creation-Date: 2018-03-12 15:37+0000\n"
+"PO-Revision-Date: 2018-03-12 15:37+0000\n"
+"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -179,7 +180,7 @@ msgstr ": Proefbalans"
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Dear ${object.partner_id.name},</p>\n"
-"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${object.amount} ${object.currency_id.name}</strong> from ${object.company_id.name}.</p>\n"
+"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>\n"
 "<p>If you have any questions, please do not hesitate to contact us.</p>\n"
 "<p>Best regards,\n"
 "% if user and user.signature:\n"
@@ -189,9 +190,9 @@ msgid ""
 "</data>"
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"<data><p>Beste ${object.partner_id.name},</p>\n"
-"<p>Bedankt voor uw betaling.<br/>Hier is uw betaalbewijs <strong>${(object.name or '').replace('/','-')}</strong> voor het bedrag van <strong>${object.amount} ${object.currency_id.name}</strong> van ${object.company_id.name}.</p>\n"
-"<p>Wanneer u vragen heeft, laat het ons weten.</p>\n"
+"<data>Beste ${object.partner_id.name},</p>\n"
+"<p>Bedankt voor de betaling.<br/>Hierbij sturen wij u het afschrift van de betaling <strong>${(object.name or '').replace('/','-')}</strong> voor het bedrag van <strong>${format_amount(object.amount, object.currency_id)}</strong> van ${object.company_id.name}.</p>\n"
+"<p>Wanneer u nog vragen heeft, neemt u dan contact op.</p>\n"
 "<p>Met vriendelijke groet,\n"
 "% if user and user.signature:\n"
 "${user.signature | safe}\n"
@@ -356,7 +357,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -392,16 +393,16 @@ msgstr ""
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
 ",</p>\n"
-"<p>In de bijlage vind u, uw \n"
+"<p>In de bijlage sturen wij uw \n"
 "% if object.number:\n"
 "factuur <strong>${object.number}</strong>\n"
 "% else:\n"
 "factuur\n"
 "% endif\n"
 "% if object.origin:\n"
-"(met referentie: ${object.origin})\n"
+"(uw referentie: ${object.origin})\n"
 "% endif\n"
-"voor het bedrag van <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"voor een totaalbedrag van <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "van ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -414,12 +415,12 @@ msgstr ""
 "    <br/><br/>\n"
 "\n"
 "% if object.state=='paid':\n"
-"    <p>Deze factuur is al betaald.</p>\n"
+"    <p>Deze factuur is reeds voldaan.</p>\n"
 "% else:\n"
-"    Graag de betaling zo spoedig mogelijk te voldoen.</p>\n"
+"    <p>Wij stellen het op prijs wanneer u deze factuur z.s.m. betaald, doch uiterlijk op de vervaldatum.</p>\n"
 "% endif\n"
 "\n"
-"<p>Vriendelijk bedankt,</p>\n"
+"<p>Dank u vriendelijk,</p>\n"
 "<p style=\"color:#888888\">\n"
 "% if object.user_id and object.user_id.signature:\n"
 "    ${object.user_id.signature | safe}\n"
@@ -1984,11 +1985,6 @@ msgid "Allow Cancelling Entries"
 msgstr "Maak het annuleren van boekingen mogelijk"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
-msgid "Allow Currency Rate Live"
-msgstr "Sta live wisselkoers toe"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
 msgstr "Sta factuur & betalingen afletteren toe"
@@ -2030,6 +2026,7 @@ msgstr "Stelt u in staat kostenplaatsen te gebruiken"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2351,14 +2348,14 @@ msgid "Automated Entries"
 msgstr "Geautomatiseerde boekingen"
 
 #. module: account
-#: code:addons/account/models/company.py:349
+#: code:addons/account/models/company.py:354
 #: code:addons/account/wizard/setup_wizards.py:79
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr "Automatische balansregel"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
 msgid "Automatic Currency Rates"
 msgstr "Automatische wisselkoersen"
 
@@ -2538,6 +2535,12 @@ msgstr "Bank installatie gemarkeerd als voltooid"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Bankafschrift"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr "Bankafschrift %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -2935,7 +2938,7 @@ msgstr "Kas afrondingen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Statements"
-msgstr "Betaalbewijsen"
+msgstr "Betaalbewijzen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_ids
@@ -4637,11 +4640,6 @@ msgid "Enable Comparison"
 msgstr "Vergelijking inschakelen"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
-msgid "Enable payment followup management"
-msgstr "Activeren betaalherinneringen / betaalopvolging management"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "End"
 msgstr "Einde"
@@ -4994,7 +4992,7 @@ msgid "Follow-up"
 msgstr "Opvolging"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
 msgid "Follow-up Levels"
 msgstr "Betalingsherinnering niveau's"
 
@@ -8933,7 +8931,7 @@ msgid "Rounding Tree"
 msgstr "Afrondboom"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
 msgid "SEPA Credit Transfer (SCT)"
 msgstr "SEPA Overschrijving (SCT)"
 
@@ -10344,6 +10342,15 @@ msgid "The partner reference of this invoice."
 msgstr "Het relatiekenmerk van deze factuur."
 
 #. module: account
+#: code:addons/account/models/account.py:522
+#, python-format
+msgid ""
+"The partners of the journal's company and the related bank account mismatch."
+msgstr ""
+"De relaties van het dagboek bedrijf en de gerelateerde bankrekeningen komen "
+"niet overeen."
+
+#. module: account
 #: code:addons/account/models/account_payment.py:60
 #, python-format
 msgid "The payment amount cannot be negative."
@@ -11238,11 +11245,6 @@ msgid "Use SEPA Direct Debit"
 msgstr "Gebruik SEPA Auto Inacsso"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
-msgid "Use SEPA payments"
-msgstr "Gebruik SEPA betalingen"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
 msgid "Use Specific Journal"
 msgstr "Gebruik een specifiek dagboek"
@@ -11728,7 +11730,7 @@ msgstr ""
 "'Niveau')."
 
 #. module: account
-#: code:addons/account/models/account_move.py:207
+#: code:addons/account/models/account_move.py:209
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
@@ -11737,7 +11739,7 @@ msgstr ""
 "datum gelijk of na de blokkeerdatum %s"
 
 #. module: account
-#: code:addons/account/models/account_move.py:209
+#: code:addons/account/models/account_move.py:211
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
@@ -11748,7 +11750,7 @@ msgstr ""
 "'Controller'"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1208
+#: code:addons/account/models/account_invoice.py:1193
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -11756,6 +11758,16 @@ msgid ""
 msgstr ""
 "U kunt gedeeltelijk betaalde facturen niet annuleren. U dient de "
 "afgeletterde betaling eerst ongedaan te maken."
+
+#. module: account
+#: code:addons/account/models/company.py:143
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+"Het is niet mogelijk de valuta van het bedrijf te wijzigen omdat er al "
+"financiële boekingen zijn gemaakt."
 
 #. module: account
 #: code:addons/account/models/account.py:235

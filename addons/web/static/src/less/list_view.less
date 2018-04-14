@@ -37,11 +37,13 @@
         .user-select(none);  // Prevent unwanted selection while sorting
 
         &::after {
-            margin-left: 6px;
-            position: absolute;
             font-family: FontAwesome;
             content: "\f0d7";
             opacity: 0;
+        }
+        &:not(:empty)::after {
+            margin-left: 6px;
+            position: absolute;
         }
         &.o-sort-up {
             cursor: n-resize;
@@ -68,6 +70,14 @@
 
     .o_list_record_selector, .o_list_record_delete, .o_handle_cell {
         width: 1px;  // to prevent the column to expand
+    }
+
+    .o_list_record_delete_btn {
+        padding: 0px;
+        background-style: none;
+        border-style: none;
+        height: 0px;
+        display: table-cell;
     }
 
     // Decoration of the row

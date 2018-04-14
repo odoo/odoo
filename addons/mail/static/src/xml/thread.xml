@@ -51,6 +51,11 @@
             <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar">
                 <ul class="list-inline">
                     <li>
+                        <a class="o_rotate" href="#">
+                            <i class="fa fa-2x fa-repeat"></i>
+                        </a>
+                    </li>
+                    <li>
                         <a class="o_zoom_out" href="#">
                             <i class="fa fa-2x fa-search-minus"></i>
                         </a>
@@ -174,7 +179,7 @@
 
                     - <small class="o_mail_timestamp" t-att-title="message.date.format(date_format)"><t t-esc="message.hour"/></small>
                     <t t-if="message.model and (message.model != 'mail.channel') and options.display_document_link">
-                        <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" class="o_document_link">on <t t-esc="message.record_name"/></a>
+                        on <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" class="o_document_link"><t t-esc="message.record_name"/></a>
                     </t>
                     <t t-if="message.origin_id and (message.origin_id !== options.channel_id)">
                         (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
@@ -262,7 +267,7 @@
     </t>
 
     <t t-name="mail.Attachment">
-        <t t-set="type" t-value="attachment.mimetype.split('/').shift()"/>
+        <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
             <t t-if="type == 'image'">
                 <div class="o_image_box">

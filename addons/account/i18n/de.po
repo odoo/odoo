@@ -52,8 +52,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"POT-Creation-Date: 2018-03-12 15:37+0000\n"
+"PO-Revision-Date: 2018-03-12 15:37+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -211,7 +211,7 @@ msgstr ": Vorläufige Bilanz"
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Dear ${object.partner_id.name},</p>\n"
-"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${object.amount} ${object.currency_id.name}</strong> from ${object.company_id.name}.</p>\n"
+"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>\n"
 "<p>If you have any questions, please do not hesitate to contact us.</p>\n"
 "<p>Best regards,\n"
 "% if user and user.signature:\n"
@@ -220,16 +220,6 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Sehr geehrte(r) ${object.partner_id.name},</p>\n"
-"<p>Wir haben Ihre Zahlung dankend erhalten.<br/>Anbei übersenden wir Ihnen die Zahlungsbestätigung <strong>${(object.name or '').replace('/','-')}</strong> für <strong>${object.amount} ${object.currency_id.name}</strong> von ${object.company_id.name}.</p>\n"
-"<p>Wir Rückfragen stehen wir jederzeit zur Verfügung.</p>\n"
-"<p>Mit freundlichen Grüßen,\n"
-"% if user and user.signature:\n"
-"${user.signature | safe}\n"
-"% endif\n"
-"</p>\n"
-"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -388,7 +378,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -414,50 +404,6 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
-"<div>\n"
-"<p>Hallo ${object.partner_id.name}\n"
-"% set access_action = object.with_context(force_website=True).get_access_action()\n"
-"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
-"% set access_url = object.get_mail_url()\n"
-"\n"
-"% if object.partner_id.parent_id:\n"
-"    (<i>${object.partner_id.parent_id.name}</i>)\n"
-"% endif\n"
-",</p>\n"
-"<p>hier im Anhang finden Sie Ihre\n"
-"% if object.number:\n"
-"Rechnung <strong>${object.number}</strong>\n"
-"% else:\n"
-"Rechnung\n"
-"% endif\n"
-"% if object.origin:\n"
-"(mit Referenz: ${object.origin})\n"
-"% endif\n"
-"mit einem Betrag von <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"% if is_online:\n"
-"    <br/><br/>\n"
-"    <center>\n"
-"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Rechnung anzeigen</a>\n"
-"    </center>\n"
-"% endif\n"
-"    <br/><br/>\n"
-"\n"
-"% if object.state=='paid':\n"
-"    <p>Diese Rechnung ist bereits bezahlt.</p>\n"
-"% else:\n"
-"    <p>Bitte führen Sie die Zahlung so bald wie möglich durch.</p>\n"
-"% endif\n"
-"\n"
-"<p>Danke,</p>\n"
-"<p style=\"color:#888888\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
-"% endif\n"
-"</p>\n"
-"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2021,11 +1967,6 @@ msgid "Allow Cancelling Entries"
 msgstr "Storno erlauben"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
-msgid "Allow Currency Rate Live"
-msgstr "Währungskurs Live zulassen"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
 msgstr "Genehmigen Sie die Abstimmung der Rechnungen & Zahlungen"
@@ -2067,6 +2008,7 @@ msgstr "Erlaubt die Verwendung der Kostenrechnung."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2384,14 +2326,14 @@ msgid "Automated Entries"
 msgstr "Automatische Einträge"
 
 #. module: account
-#: code:addons/account/models/company.py:349
+#: code:addons/account/models/company.py:354
 #: code:addons/account/wizard/setup_wizards.py:79
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr "Automatischer Ausgleichsposten"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
 msgid "Automatic Currency Rates"
 msgstr "Automatische Wechselkurse"
 
@@ -2568,6 +2510,12 @@ msgstr "Bank-Konfiguration als erledigt markiert"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Bankauszug"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -3016,7 +2964,7 @@ msgstr "Kategorie des Erlöskontos"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Change"
-msgstr "Wechselgeld"
+msgstr "Ändern"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_writeoff_label
@@ -4646,7 +4594,7 @@ msgstr "Dynamische Berichte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_l10n_eu_service
 msgid "EU Digital Goods VAT"
-msgstr "EU-MwSt. digitale Waren"
+msgstr "EU-Ust. digitale Waren"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:166
@@ -4671,11 +4619,6 @@ msgstr "E-Mail Assistent"
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
 msgid "Enable Comparison"
 msgstr "Vergleich aktivieren"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
-msgid "Enable payment followup management"
-msgstr "Mahnwesen einschalten"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5031,7 +4974,7 @@ msgid "Follow-up"
 msgstr "Erinnerung"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
 msgid "Follow-up Levels"
 msgstr "Mahnstufen"
 
@@ -5195,7 +5138,7 @@ msgstr ""
 "erhalten. Sobald dies installiert ist, können Sie in den Bankkonto-"
 "Einstellungen für „Bank-Datenübertragungen“ „Synchronisation Bankkonto“ "
 "auswählen. Klicken Sie dann im Online-Konto auf „Konfigurieren“, um Ihre "
-"Bank-Anmeldedaten einzugeben."
+"Bank-Zugangsdaten einzugeben."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -5325,7 +5268,7 @@ msgstr "Setupleiste ausblenden"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_hide_tax_exigibility
 msgid "Hide Use Cash Basis Option"
-msgstr "Option „Berechnung der Steuer nach vereinnahmten Entgelten“ verbergen"
+msgstr "Option „Einnahmeüberschuss verwenden“ verbergen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5589,7 +5532,7 @@ msgid ""
 "telecommunications, and services that are electronically supplied instead of"
 " shipped. Gift cards sent online are not included in the definition."
 msgstr ""
-"Wenn Sie digitale Waren an Kunden in der EU verkaufen, müssen Sie die MwSt. "
+"Wenn Sie digitale Waren an Kunden in der EU verkaufen, müssen Sie die USt. "
 "auf der Grundlage Ihrer Kunden-Standorte berechnen. Diese Regel gilt "
 "unabhängig davon, wo Ihr Standort ist. Digitale Waren werden in den "
 "Rechtsvorschriften definiert als Rundfunk, Telekommunikation und "
@@ -6176,7 +6119,7 @@ msgstr "Kursiver Text (kleiner)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
-msgstr "Artikel"
+msgstr "Buchungsposten"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -8093,7 +8036,7 @@ msgstr "Zahlungsbedingungen: Am Ende des Folgemonats"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Zahlungsbedindungen: Sofortige Zahlung"
+msgstr "Zahlungsbedingungen: Sofortige Zahlung"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_payment_id
@@ -8987,7 +8930,7 @@ msgid "Rounding Tree"
 msgstr "Rundungsbaum"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
 msgid "SEPA Credit Transfer (SCT)"
 msgstr "SEPA-Überweisung (SCT)"
 
@@ -10423,6 +10366,13 @@ msgid "The partner reference of this invoice."
 msgstr "Referenz des Partners für diese Rechnung."
 
 #. module: account
+#: code:addons/account/models/account.py:522
+#, python-format
+msgid ""
+"The partners of the journal's company and the related bank account mismatch."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:60
 #, python-format
 msgid "The payment amount cannot be negative."
@@ -10640,7 +10590,7 @@ msgid ""
 "keeps track of the depreciation occurred on those assets, and creates "
 "account move for those depreciation lines."
 msgstr ""
-"Diese ermöglich Ihnen die Verwaltung der Anlagen, die ein Unternehmen oder "
+"Diese ermöglicht Ihnen die Verwaltung der Anlagen, die ein Unternehmen oder "
 "eine Person besitzt. Sie liefert die Abschreibungswerte dieser Anlagen und "
 "erstellt die dazu gehörenden Finanzbuchungen."
 
@@ -11317,11 +11267,6 @@ msgid "Use SEPA Direct Debit"
 msgstr "SEPA-Lastschrift verwenden"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
-msgid "Use SEPA payments"
-msgstr "Benutze die SEPA Zahlungen"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
 msgid "Use Specific Journal"
 msgstr "Benutze das spezifische Journal"
@@ -11803,7 +11748,7 @@ msgstr ""
 "Die automatische Formatierung verwendet die Formatierung aufgrund der automatisch ermittelten Hierarchie (auto-computed field 'level')."
 
 #. module: account
-#: code:addons/account/models/account_move.py:207
+#: code:addons/account/models/account_move.py:209
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
@@ -11812,7 +11757,7 @@ msgstr ""
 "hinzufügen oder ändern."
 
 #. module: account
-#: code:addons/account/models/account_move.py:209
+#: code:addons/account/models/account_move.py:211
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
@@ -11823,7 +11768,7 @@ msgstr ""
 " Sie jemanden in der Rolle des 'Finanzberaters'."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1208
+#: code:addons/account/models/account_invoice.py:1193
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -11831,6 +11776,14 @@ msgid ""
 msgstr ""
 "Sie können eine Rechnung mit Teilzahlung nicht stornieren. Sie müssen zuerst"
 " die Abstimmung der Zahlungen rückgängig machen."
+
+#. module: account
+#: code:addons/account/models/company.py:143
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:235

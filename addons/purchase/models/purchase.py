@@ -327,10 +327,10 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_approve(self, force=False):
-        self.write({'state': 'purchase'})
+        self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
-        if self.company_id.po_lock == 'lock':
-            self.write({'state': 'done'})
+        self.filtered(
+            lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
     @api.multi
@@ -372,6 +372,7 @@ class PurchaseOrder(models.Model):
                         siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
                         if all(state in ('done', 'cancel') for state in siblings_states):
                             order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
+                            order_line.move_dest_ids._recompute_state()
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
@@ -1011,11 +1012,11 @@ class ProcurementRule(models.Model):
     def _prepare_purchase_order(self, product_id, product_qty, product_uom, origin, values, partner):
         schedule_date = self._get_purchase_schedule_date(values)
         purchase_date = self._get_purchase_order_date(product_id, product_qty, product_uom, values, partner, schedule_date)
-        fpos = self.env['account.fiscal.position'].with_context(company_id=values['company_id'].id).get_fiscal_position(partner.id)
+        fpos = self.env['account.fiscal.position'].with_context(force_company=values['company_id'].id).get_fiscal_position(partner.id)
 
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and values['group_id'].id) or False
+                (gpo == 'propagate' and 'group_id' in values and values['group_id'].id) or False
 
         return {
             'partner_id': partner.id,
@@ -1040,7 +1041,7 @@ class ProcurementRule(models.Model):
         domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
-                (gpo == 'propagate' and values['group_id']) or False
+                (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
 
         domain += (
             ('partner_id', '=', partner.id),
@@ -1124,5 +1125,6 @@ class MailComposeMessage(models.TransientModel):
     @api.multi
     def send_mail(self, auto_commit=False):
         if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
+            self = self.with_context(mail_post_autofollow=True)
             self.mail_purchase_order_on_send()
-        return super(MailComposeMessage, self.with_context(mail_post_autofollow=True)).send_mail(auto_commit=auto_commit)
+        return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)

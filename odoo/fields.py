@@ -552,7 +552,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         # copy the cache of draft records into others' cache
-        if records.env != others.env:
+        if records.env.in_onchange and records.env != others.env:
             copy_cache(records - records.filtered('id'), others.env)
         #
         # Traverse fields one by one for all records, in order to take advantage
@@ -1527,6 +1527,9 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT) if value else False
 
+    def convert_to_column(self, value, record, values=None):
+        return super(Date, self).convert_to_column(value or None, record, values)
+
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
@@ -1596,6 +1599,9 @@ class Datetime(Field):
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT) if value else False
+
+    def convert_to_column(self, value, record, values=None):
+        return super(Datetime, self).convert_to_column(value or None, record, values)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
