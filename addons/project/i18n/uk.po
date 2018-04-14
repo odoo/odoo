@@ -131,6 +131,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Автоматичний вхід</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Ваша програма Odoo Project працює </span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">Що далі?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Спробуйте створити завдання, надсилаючи лист до </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Залучіть нових користувачів</span></a></span>\n"
+"                                        <span>до співпраці</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Відкрийте для себе </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">планувальник проекту</span></a></span>\n"
+"                                <span> для активації додаткових функцій</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Відмлідковуйте години з табелем,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Плануйте завдання та ресурси за допомогою прогнозів,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Отримайте розумні звіти та точні інформаційні панелі,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Рахунок часу на завдання чи проблеми,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Та багато іншого...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Потрібна допомога?</span>\n"
+"                                <span style=\"font-style:italic;\">Ви не самі</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Ми будемо раді допомогти вам на цьому шляху. Зв'яжіться з нами через нашу\n"
+"                                <a href=\"https://www.odoo.com/help\">форму підтримки</a>, якщо у вас є запитання.\n"
+"                                Ви також можете дізнатися, як найкращим чином використати наш проект Odoo </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Користувацька документація</span></a>\n"
+"                                </span><span> або з нашою </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">документацією API </span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Насолоджуйтесь досвідом Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Команда Odoo<br/>PS: Люди люблять Odoo, перевірте </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">що вони говорять про це.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -141,21 +242,26 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Шановний ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Дякуємо за ваш запит.<br /></p>\n"
+"<p>Якщо у вас є запитання, дайте нам знати.</p>\n"
+"<p>З найкращими побажаннями,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
 msgid "# Days to Assign"
-msgstr ""
+msgstr "# Днів до призначення"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr ""
+msgstr "# Днів до закриття"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Днів до дедлайну"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -166,7 +272,7 @@ msgstr "К-сть завдань"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
 msgid "# Working Days"
-msgstr ""
+msgstr "# Робочих днів"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -213,6 +319,8 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>Призначити завдання</b> комусь. <i>Ви можете створити та залучити нового "
+"користувача на льоту.</i>"
 
 #. module: project
 #. openerp-web
@@ -220,13 +328,14 @@ msgstr ""
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
+"<b>Натисніть кнопку збереження</b> щоби застосувати ваші зміни до завдання."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:48
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr ""
+msgstr "<b>Перетягніть завдання</b> між колонками, коли ви працюєте на них."
 
 #. module: project
 #. openerp-web
@@ -243,7 +352,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Позначте завдання</b>, щоби відзначити пріоритети команди."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -270,6 +379,8 @@ msgstr ""
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Натисніть, щоб створити новий "
+"проект.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -500,6 +611,8 @@ msgid ""
 "<strong> Adjourn (5 min)</strong>\n"
 "                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
 msgstr ""
+"<strong> Відкласти (5 хв.)</strong>\n"
+"                                Завершіть зустріч з оптимістичними висловлюваннями та позитивним внеском до досягнень проекту. Завжди зміцнюйте колективну роботу та заохочуйте всіх учасників стежити за собою, аби забезпечити успішність проекту."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -514,6 +627,8 @@ msgid ""
 "<strong> New business issues (5 min)</strong>\n"
 "                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  issue as you walk through the project status session. Not every  issue warrants spending time here, so keep discussions to a minimum."
 msgstr ""
+"<strong> Нові питання бізнесу (5 хв.)</strong>\n"
+"                                Ви можете дізнатися щось протягом тижня, що впливає на проект. Поділіться новинами на початку зустрічі, щоб допомогти членам команди розглянути цю проблему під час сеансу статусу проекту. Не кожен випадок вимагає витрачати час тут, тому продовжуйте обговорення до мінімуму."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -526,6 +641,8 @@ msgid ""
 "<strong> Project plan status review (20 min) </strong>\n"
 "                                Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager."
 msgstr ""
+"<strong> Огляд статусу плану проекту (20 хв.) </strong>\n"
+"                                Пройдіть ваш проектний план і дозвольте кожному члену команди надати стислий статус завдань на цьому тижні, а також завдання, заплановані на наступні два тижні. Ви хочете знати, чи виконуються завдання належним чином, і якщо хтось пропустив свій прогнозований термін. Ви також хочете дозволити члену команди поділитися будь-якими особливими міркуваннями, які можуть вплинути на інші завдання або учасники проекту. Обережно керуйте цією частиною, оскільки деякі члени команди захочуть посилити і провести більше часу, ніж це дійсно потрібно. Пам'ятайте, що ви є менеджером проекту."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -533,6 +650,8 @@ msgid ""
 "<strong> Q&amp;A and discussion time (10 min)</strong>\n"
 "                                Always give your team time to ask questions on issues that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
 msgstr ""
+"<strong> Питання та відповіді і час на дискусію (10 хв.)</strong>\n"
+"                                Завжди дайте команді час, щоб задавати питання, які не обговорювалися. Це дає вам ще одну можливість підкреслити ключові моменти, які ви набрали протягом тижня або знайшли під час зустрічі."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -540,6 +659,8 @@ msgid ""
 "<strong> Roll call (5 min)</strong>\n"
 "                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
 msgstr ""
+"<strong> Зворотній дзвінок (5 хв.)</strong>\n"
+"                                Дайте всім знати, хто є присутнім перед початком. Це важливо для віддалених членів команди, які набрали номер і заощадять вам час пізніше."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -547,6 +668,8 @@ msgid ""
 "<strong> Summary and follow-up items (5 min)</strong>\n"
 "                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
 msgstr ""
+"<strong> Підсумки та наступні пункти (5 хв.)</strong>\n"
+"                                Завжди вказуйте підсумок статусу проекту та перелік елементів дії, визначених на зустрічі, щоби допомогти просунути проект разом."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -554,6 +677,8 @@ msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases."
 msgstr ""
+"<strong>Відмінною функцією в Odoo є інтеграція блокноту для співпраці під назвою Etherpad.</strong><br/>\n"
+"                           Він замінює стандартну область опису в завданнях та питаннях і надзвичайно корисний в деяких випадках."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -561,6 +686,8 @@ msgid ""
 "<strong>A problem or request from a customer</strong> that needs to be "
 "identified, solved and followed up asap."
 msgstr ""
+"<strong>Проблема або запит від клієнта</strong>, яку потрібно "
+"ідентифікувати, вирішити та слідкувати за цим якнайшвидше."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -573,6 +700,8 @@ msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
 "                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update."
 msgstr ""
+"<strong>Додати дедлайн</strong><br/>\n"
+"                                    Кінцевий термін допоможе вам визначити, чи завдання або питання проходять як очікування, і передбачають наступне оновлення."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -580,6 +709,8 @@ msgid ""
 "<strong>An internal activity</strong> that should be done within a defined "
 "period of time."
 msgstr ""
+"<strong>Внутрішня діяльність</strong>, яка має бути зроблена протягом "
+"певного періоду часу."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -597,6 +728,8 @@ msgid ""
 "<strong>Ask participants to prepare</strong><br/>\n"
 "                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
 msgstr ""
+"<strong>Попросіть учасників підготуватися</strong><br/>\n"
+"                                Щоб провести ефективну зустріч, підготуйте учасників заздалегідь. Інформуйте їх про те, як вони внесуть свій внесок."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
