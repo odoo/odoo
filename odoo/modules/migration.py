@@ -108,7 +108,7 @@ class MigrationManager(object):
         }
         state = pkg.state if stage in ('pre', 'post') else getattr(pkg, 'load_state', None)
 
-        if not (hasattr(pkg, 'update') or state == 'to upgrade') or state == 'to install':
+        if not (hasattr(pkg, 'init') or hasattr(pkg, 'update') or state == 'to upgrade') or state == 'to install':
             return
 
         def convert_version(version):
