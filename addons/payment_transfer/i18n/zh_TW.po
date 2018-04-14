@@ -3,6 +3,7 @@
 # * payment_transfer
 # 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Carson Tsai <Ra661tCat@gmail.com>, 2018
 # Martin Trigaux, 2018
 msgid ""
@@ -23,13 +24,13 @@ msgstr ""
 #: code:addons/payment_transfer/models/payment.py:63
 #, python-format
 msgid "; multiple order found"
-msgstr "; 發現多張訂單"
+msgstr "; 找到多個訂單"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:61
 #, python-format
 msgid "; no order found"
-msgstr "; 未發現訂單"
+msgstr "; 沒有訂單"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:28
@@ -43,6 +44,13 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<h3>詳情請參考</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>通信</h4>\n"
+"<p>請使用訂單名稱作為通訊參考。</p>\n"
+"</div>"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:26
@@ -54,12 +62,12 @@ msgstr "銀行帳戶"
 #: code:addons/payment_transfer/models/payment.py:26
 #, python-format
 msgid "Bank Accounts"
-msgstr "銀行帳號"
+msgstr "銀行帳戶"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "款項讓受方"
+msgstr "付款方式"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
@@ -70,4 +78,4 @@ msgstr "付款交易"
 #: code:addons/payment_transfer/models/payment.py:59
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "接收到的信息,供參考 %s"

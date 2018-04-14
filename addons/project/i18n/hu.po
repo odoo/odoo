@@ -8,14 +8,13 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2016
 # Martin Trigaux, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
-# Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Last-Translator: Kisrobert <kisrobi@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +140,7 @@ msgstr ""
 "\n"
 "<p>Tisztelt ${object.partner_id.name or 'customer'},</p>\n"
 "<p>Köszönjük érdeklődését.<br /></p>\n"
-"<p>Bármilyen kérdés esetén kérjük keressen bennünket</p>\n"
+"<p>Bármilyen kérdés esetén kérjük, keressen bennünket</p>\n"
 "<p>Üdvözlettel,</p>"
 
 #. module: project
@@ -1067,8 +1066,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
 msgstr ""
-"Adjon oszlopokat a <b>projekt szakaszainak</b> beállításához.<br/><i>pl. "
-"Specifikáció &gt; Fejlesztés &gt; Kész</i>"
+"Adjon hozzá oszlopokat a <b>feladatok szakaszainak</b> "
+"létrehozásához.<br/><i>Pl.: Specifikáció &gt; Fejlesztés &gt; Kész</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -1332,7 +1331,7 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_7
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
-msgstr "Soroltassa előre vagy elvégzettnek jelölje"
+msgstr "Küldjön jelzést vagy állítsa kész állapotra"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
@@ -1636,18 +1635,18 @@ msgstr "Jelenlegi időkimutatás"
 #: model:ir.ui.view,arch_db:project.edit_project
 #, python-format
 msgid "Customer"
-msgstr "Vásárló"
+msgstr "Ügyfél"
 
 #. module: project
 #: code:addons/project/models/project.py:643
 #, python-format
 msgid "Customer Email"
-msgstr "Vásárlói e-mail"
+msgstr "Ügyféli e-mail"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer Service"
-msgstr "Vásárlói ügyfélszolgálat"
+msgstr "Ügyfélszolgálat"
 
 #. module: project
 #. openerp-web
@@ -1690,7 +1689,7 @@ msgstr "Testreszabás"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
 msgid "Dashboard"
-msgstr "Műszerfal"
+msgstr "Kezelőpult"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
@@ -2246,8 +2245,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
-"Ha beállított, egy emailt küld a vásárlónak, ha a feladat vagy bejelentett "
-"ügy eléri ezt a lépést."
+"Ha beállításra kerül, egy e-mail kerül elküldésre az ügyfélnek, amikor a "
+"feladat vagy ügy eléri ezt a szakaszt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2692,7 +2691,7 @@ msgstr "Új javítási munka hozzáadva"
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "No customer rating"
-msgstr "Nincs vásárló értékelés"
+msgstr "Nincs ügyféli értékelés"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2834,8 +2833,8 @@ msgid ""
 "internal, personal or customer projects."
 msgstr ""
 "Szervezze meg tevékenységeit (tervezzen feladatokat, kövesse az ügyeket, "
-"számlázzon munkaidő-beosztásokat) belső, személyi vagy vásárlói projekt "
-"témákban."
+"számlázzon időkimutatásokat) belső, személyes vagy ügyféli projektek "
+"esetében."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3460,12 +3459,12 @@ msgstr "A feladat szakasza megváltozott"
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr "Feladat Cím"
+msgstr "Feladat neve"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr "Feladat cím..."
+msgstr "Feladat neve..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
@@ -3540,7 +3539,7 @@ msgstr "Feladatok &amp; ügyek"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Feladatok elemézése"
+msgstr "Feladatok elemzése"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_type_ids
@@ -3551,7 +3550,7 @@ msgstr "Feladatok szakaszai"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr "Feladatok elemézése"
+msgstr "Feladatok elemzése"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3668,8 +3667,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
 msgid "This allows customers to give rating on provided services"
 msgstr ""
-"Ez lehetővé teszi a felhasználóknak a szolgáltatói szolgáltatásokra "
-"szavazhassanak"
+"Ez lehetővé teszi az ügyfeleknek a biztosított szolgáltatások értékelését"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3879,8 +3877,8 @@ msgstr ""
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the priority for tasks related to gold customers"
 msgstr ""
-"Használjon elsőbbséget az arany fokozatú vásárlókkal kapcsolatos "
-"feladatokhoz"
+"Használja a prioritást az arany fokozatú ügyfelekkel összefüggő feladatok "
+"esetében"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3934,7 +3932,7 @@ msgstr "Összes alkalmazott által látható"
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr "Következő alkalmazottak által látható"
+msgstr "A következő ügyfelek láthatják"
 
 #. module: project
 #. openerp-web

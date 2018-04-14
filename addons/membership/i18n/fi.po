@@ -6,10 +6,10 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# salmemik <salmemik@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Mikko Salmela <salmemik@gmail.com>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
+# Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 msgid ""
@@ -47,6 +47,8 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Jäsen, johon haluat liittää jäsenyyden. Jäsenyydessä huomioidaan liittyvän "
+"jäsenen tila."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -346,6 +348,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Määrittää jäsenyyden tilan.\n"
+"- Ei jäsen: kumppani, joka ei ole hakenut jäsenyyttä.\n"
+"- Peruttu jäsen: jäsen, joka on perunut jäsenyytensä.\n"
+"- Vanha jäsen: jäsenyys on vanhentunut.\n"
+"- Odottava jäsen: hakenut jäsenyyttä, mutta laskua ei ole vielä luotu.\n"
+"- Laskutettu jäsen: jäsenlasku on luotu. \n"
+"- Maksanut jäsen: maksanut jäsenmaksun. "
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
