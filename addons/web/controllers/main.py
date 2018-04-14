@@ -39,6 +39,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
 from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 from odoo.service import db
+from odoo.service.report import exp_report, exp_report_get
 
 _logger = logging.getLogger(__name__)
 
@@ -962,7 +963,7 @@ class Binary(http.Controller):
         '/web/content/<int:id>-<string:unique>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
-    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None):
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None, **kw):
         status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
@@ -1335,7 +1336,7 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
-        Model = request.env[model].with_context(**params.get('context', {}))
+        Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         records = Model.browse(ids) or Model.search(domain, offset=0, limit=False, order=False)
 
         if not Model._is_an_ordinary_table():
@@ -1475,14 +1476,11 @@ class Reports(http.Controller):
                 report_ids = action['datas'].pop('ids')
             report_data.update(action['datas'])
 
-        report_id = dispatch_rpc('report', 'report', [
-            request.session.db, request.session.uid, request.session.password,
-            action["report_name"], report_ids, report_data, context])
+        report_id = exp_report(request.session.db, request.session.uid, action["report_name"], report_ids, report_data, context)
 
         report_struct = None
         while True:
-            report_struct = dispatch_rpc('report', 'report_get', [
-                request.session.db, request.session.uid, request.session.password, report_id])
+            report_struct = exp_report_get(request.session.db, request.session.uid, report_id)
             if report_struct["state"]:
                 break
 

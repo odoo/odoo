@@ -59,7 +59,7 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <field name="reference" position="after" >
-                 <field name="purchase_id" attrs="{'readonly': [('state','not in',['draft'])], 'invisible': [('state', '=', 'purchase')]}" class="oe_edit_only"
+                 <field name="purchase_id" attrs="{'readonly': [('state','not in',['draft'])], 'invisible': ['|', ('state', '=', 'purchase'), ('type', '=', 'in_refund')]}" class="oe_edit_only"
                     options="{'no_create': True}"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
@@ -75,7 +75,7 @@
         <field name="inherit_id" ref="account.view_invoice_line_form"/>
         <field name="arch" type="xml">
             <field name="account_id" position="before">
-                <field name="purchase_id"/>
+                <field name="purchase_id" invisible="context.get('type') in ('out_invoice', 'out_refund')"/>
             </field>
         </field>
     </record>

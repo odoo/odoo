@@ -3,20 +3,38 @@
 # * stock
 # 
 # Translators:
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
+# Collex100, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 14:03+0000\n"
-"PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: Collex100, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:230
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:231
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Blocking: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -1719,6 +1737,7 @@ msgstr "Срок поставки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
+#: model:ir.model.fields,field_description:stock.field_res_users_property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
 msgstr "Место хранения заказчика"
@@ -3191,6 +3210,11 @@ msgid "Inventory Line"
 msgstr "Позиция инвентаризации"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_line_tree
+msgid "Inventory Lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
@@ -3502,6 +3526,11 @@ msgstr "Связанные Операции"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_propagated_from_id
 msgid "Linked Quant"
 msgstr "Связанные Кванты"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "List view of lines"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -3840,6 +3869,7 @@ msgstr "Максимальное количество"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
+#: model:ir.model.fields,field_description:stock.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr "Сообщение для комплектования запасов"
 
@@ -5212,6 +5242,11 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done_uom_ordered
+msgid "Quantity Done"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
 msgstr "Множитель количества"
@@ -5232,6 +5267,17 @@ msgstr "Зарезервированное Количество"
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "Количество не может быть отрицательным."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:394
+#, python-format
+msgid "Quantity decreased!"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
+msgid "Quantity done in UOM ordered"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
@@ -5382,10 +5428,15 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "Приход продуктов напрямую на склад (1 этап)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:337
 #, python-format
 msgid "Received Qty"
 msgstr "Полученное кол-во"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Recheck Availability"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5773,6 +5824,11 @@ msgid "Search Inventory"
 msgstr "Искать инвентаризацию"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
+msgid "Search Inventory Lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
 msgstr "Поиск отходов"
@@ -5795,6 +5851,7 @@ msgstr "Выберите места, где этот маршрут можно �
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_picking_warn
+#: model:ir.model.fields,help:stock.field_res_users_picking_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -6153,6 +6210,7 @@ msgstr "Складские Операции"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
+#: model:ir.model.fields,field_description:stock.field_res_users_picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_picking_id
 msgid "Stock Picking"
 msgstr "Комплектование запасов"
@@ -6448,6 +6506,12 @@ msgid ""
 msgstr ""
 "Родительское местоположение, которое включает это местоположение. Пример: "
 "'Зоной отправки' является родительское местоположение 'Gate 1'."
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:795
+#, python-format
+msgid "The pick is already validated"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
@@ -6763,6 +6827,7 @@ msgstr "Эта поставка является недопоставкой"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
+#: model:ir.model.fields,help:stock.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
@@ -6772,6 +6837,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_supplier
+#: model:ir.model.fields,help:stock.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
@@ -6886,6 +6952,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Today"
 msgstr "Сегодня"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
+msgid "Total"
+msgstr "Всего"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_total_qty
@@ -7198,6 +7269,7 @@ msgstr "Производитель"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
+#: model:ir.model.fields,field_description:stock.field_res_users_property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
 msgstr "Место хранения Поставщика"
@@ -7492,6 +7564,12 @@ msgstr ""
 "продуктов, например, легче управлять продуктом в электронной коммерции"
 
 #. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr "Вам не разрешено создавать много для этого типа выбора"
+
+#. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
 msgid ""
 "You can define here the main routes that run through\n"
@@ -7598,6 +7676,12 @@ msgid "You cannot delete a scrap which is done."
 msgstr "Вы не можете удалить отходы которые делаются."
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:103
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
@@ -7636,12 +7720,6 @@ msgid ""
 msgstr ""
 "Вы не можете установить отрицательное количество продукта в строке описи:\n"
 "\t%s - qty: %s"
-
-#. module: stock
-#: code:addons/stock/models/stock_production_lot.py:37
-#, python-format
-msgid "You are not allowed to create a lot for this picking type"
-msgstr "Вам не разрешено создавать много для этого типа выбора"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:919
@@ -7758,6 +7836,14 @@ msgstr "Вы должны принять только часть с тем же 
 #, python-format
 msgid "You should provide a different serial number for each piece"
 msgstr "Вы должны определить другой серийный номер для каждой части"
+
+#. module: stock
+#: code:addons/stock/models/product.py:371
+#, python-format
+msgid ""
+"You still have some active reordering rules on this product. Please archive "
+"or delete them first."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:226

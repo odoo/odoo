@@ -37,6 +37,9 @@ class AccountVoucher(models.Model):
         help="Effective date for accounting entries", copy=False, default=fields.Date.context_today)
     journal_id = fields.Many2one('account.journal', 'Journal',
         required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
+    payment_journal_id = fields.Many2one('account.journal', string='Payment Method', readonly=True, store=False,
+        states={'draft': [('readonly', False)]}, domain="[('type', 'in', ['cash', 'bank'])]",
+        compute='_compute_payment_journal_id', inverse='_inverse_payment_journal_id')
     account_id = fields.Many2one('account.account', 'Account',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         domain="[('deprecated', '=', False), ('internal_type','=', (pay_now == 'pay_now' and 'liquidity' or voucher_type == 'purchase' and 'payable' or 'receivable'))]")
@@ -101,6 +104,29 @@ class AccountVoucher(models.Model):
     def _get_journal_currency(self):
         self.currency_id = self.journal_id.currency_id.id or self.company_id.currency_id.id
 
+    @api.depends('company_id', 'pay_now', 'account_id')
+    def _compute_payment_journal_id(self):
+        for voucher in self:
+            if voucher.pay_now != 'pay_now':
+                continue
+            domain = [
+                ('type', 'in', ('bank', 'cash')),
+                ('company_id', '=', voucher.company_id.id),
+            ]
+            if voucher.account_id and voucher.account_id.internal_type == 'liquidity':
+                field = 'default_debit_account_id' if voucher.voucher_type == 'sale' else 'default_credit_account_id'
+                domain.append((field, '=', voucher.account_id.id))
+            voucher.payment_journal_id = self.env['account.journal'].search(domain, limit=1)
+
+    def _inverse_payment_journal_id(self):
+        for voucher in self:
+            if voucher.pay_now != 'pay_now':
+                continue
+            if voucher.voucher_type == 'sale':
+                voucher.account_id = voucher.payment_journal_id.default_debit_account_id
+            else:
+                voucher.account_id = voucher.payment_journal_id.default_credit_account_id
+
     @api.multi
     @api.depends('tax_correction', 'line_ids.price_subtotal')
     def _compute_total(self):
@@ -114,22 +140,13 @@ class AccountVoucher(models.Model):
             voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
-    @api.one
-    @api.depends('account_pay_now_id', 'account_pay_later_id', 'pay_now')
-    def _get_account(self):
-        self.account_id = self.account_pay_now_id if self.pay_now == 'pay_now' else self.account_pay_later_id
-
     @api.onchange('date')
     def onchange_date(self):
         self.account_date = self.date
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
-        if self.pay_now == 'pay_now':
-            liq_journal = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))], limit=1)
-            self.account_id = liq_journal.default_debit_account_id \
-                if self.voucher_type == 'sale' else liq_journal.default_credit_account_id
-        else:
+        if self.pay_now != 'pay_now':
             if self.partner_id:
                 self.account_id = self.partner_id.property_account_receivable_id \
                     if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
@@ -177,7 +194,7 @@ class AccountVoucher(models.Model):
                 'account_id': self.account_id.id,
                 'move_id': move_id,
                 'journal_id': self.journal_id.id,
-                'partner_id': self.partner_id.id,
+                'partner_id': self.partner_id.commercial_partner_id.id,
                 'currency_id': company_currency != current_currency and current_currency or False,
                 'amount_currency': (sign * abs(self.amount)  # amount < 0 for refunds
                     if company_currency != current_currency else 0.0),
@@ -224,19 +241,29 @@ class AccountVoucher(models.Model):
 
     @api.multi
     def voucher_pay_now_payment_create(self):
-        payment_methods = self.journal_id.outbound_payment_method_ids
+        if self.voucher_type == 'sale':
+            payment_methods = self.journal_id.inbound_payment_method_ids
+            payment_type = 'inbound'
+            partner_type = 'customer'
+            sequence_code = 'account.payment.customer.invoice'
+        else:
+            payment_methods = self.journal_id.outbound_payment_method_ids
+            payment_type = 'outbound'
+            partner_type = 'supplier'
+            sequence_code = 'account.payment.supplier.invoice'
+        name = self.env['ir.sequence'].with_context(ir_sequence_date=self.date).next_by_code(sequence_code)
         return {
-            'payment_type': 'outbound',
+            'name': name,
+            'payment_type': payment_type,
             'payment_method_id': payment_methods and payment_methods[0].id or False,
-            'partner_type': 'supplier',
-            'partner_id': self.partner_id.id,
+            'partner_type': partner_type,
+            'partner_id': self.partner_id.commercial_partner_id.id,
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'payment_date': self.date,
-            'journal_id': self.journal_id.id,
+            'journal_id': self.payment_journal_id.id,
             'company_id': self.company_id.id,
             'communication': self.name,
-            'name': self.name,
             'state': 'reconciled',
         }
 
@@ -259,6 +286,9 @@ class AccountVoucher(models.Model):
             #create one move line per voucher line where amount is not 0.0
             if not line.price_subtotal:
                 continue
+            line_subtotal = line.price_subtotal
+            if self.voucher_type == 'sale':
+                line_subtotal = -1 * line.price_subtotal
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context,
             # so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
@@ -268,14 +298,14 @@ class AccountVoucher(models.Model):
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
-                'partner_id': self.partner_id.id,
+                'partner_id': self.partner_id.commercial_partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'quantity': 1,
                 'credit': abs(amount) if self.voucher_type == 'sale' else 0.0,
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
                 'date': self.account_date,
                 'tax_ids': [(4,t.id) for t in line.tax_ids],
-                'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
+                'amount_currency': line_subtotal if current_currency != company_currency else 0.0,
                 'currency_id': company_currency != current_currency and current_currency or False,
                 'payment_id': self._context.get('payment_id'),
             }

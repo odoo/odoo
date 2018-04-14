@@ -758,6 +758,7 @@ class BaseModel(object):
             :param fields: list of lists of fields to traverse
             :return: list of lists of corresponding values
         """
+        import_compatible = self.env.context.get('import_compat', True)
         lines = []
         for record in self:
             # main line of record, initially empty
@@ -791,8 +792,9 @@ class BaseModel(object):
                     else:
                         primary_done.append(name)
 
-                        # This is a special case, its strange behavior is intended!
-                        if field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
+                        # in import_compat mode, m2m should always be exported as
+                        # a comma-separated list of xids in a single cell
+                        if import_compatible and field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
                             xml_ids = [r.__export_xml_id() for r in value]
                             current[i] = ','.join(xml_ids) or False
                             continue
@@ -3386,53 +3388,54 @@ class BaseModel(object):
             raise UserError(_('Unable to delete this document because it is used as a default property'))
 
         # Delete the records' properties.
-        self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
+        with self.env.norecompute():
+            self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
 
-        self.delete_workflow()
+            self.delete_workflow()
 
-        self.check_access_rule('unlink')
+            self.check_access_rule('unlink')
 
-        cr = self._cr
-        Data = self.env['ir.model.data'].sudo().with_context({})
-        Values = self.env['ir.values']
-        Attachment = self.env['ir.attachment']
+            cr = self._cr
+            Data = self.env['ir.model.data'].sudo().with_context({})
+            Values = self.env['ir.values']
+            Attachment = self.env['ir.attachment']
 
-        for sub_ids in cr.split_for_in_conditions(self.ids):
-            query = "DELETE FROM %s WHERE id IN %%s" % self._table
-            cr.execute(query, (sub_ids,))
+            for sub_ids in cr.split_for_in_conditions(self.ids):
+                query = "DELETE FROM %s WHERE id IN %%s" % self._table
+                cr.execute(query, (sub_ids,))
 
-            # Removing the ir_model_data reference if the record being deleted
-            # is a record created by xml/csv file, as these are not connected
-            # with real database foreign keys, and would be dangling references.
-            #
-            # Note: the following steps are performed as superuser to avoid
-            # access rights restrictions, and with no context to avoid possible
-            # side-effects during admin calls.
-            data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
-            if data:
-                data.unlink()
+                # Removing the ir_model_data reference if the record being deleted
+                # is a record created by xml/csv file, as these are not connected
+                # with real database foreign keys, and would be dangling references.
+                #
+                # Note: the following steps are performed as superuser to avoid
+                # access rights restrictions, and with no context to avoid possible
+                # side-effects during admin calls.
+                data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
+                if data:
+                    data.unlink()
 
-            # For the same reason, remove the relevant records in ir_values
-            refs = ['%s,%s' % (self._name, i) for i in sub_ids]
-            values = Values.search(['|', ('value', 'in', refs),
-                                         '&', ('model', '=', self._name),
-                                              ('res_id', 'in', sub_ids)])
-            if values:
-                values.unlink()
+                # For the same reason, remove the relevant records in ir_values
+                refs = ['%s,%s' % (self._name, i) for i in sub_ids]
+                values = Values.search(['|', ('value', 'in', refs),
+                                             '&', ('model', '=', self._name),
+                                                  ('res_id', 'in', sub_ids)])
+                if values:
+                    values.unlink()
 
-            # For the same reason, remove the relevant records in ir_attachment
-            # (the search is performed with sql as the search method of
-            # ir_attachment is overridden to hide attachments of deleted
-            # records)
-            query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
-            cr.execute(query, (self._name, sub_ids))
-            attachments = Attachment.browse([row[0] for row in cr.fetchall()])
-            if attachments:
-                attachments.unlink()
+                # For the same reason, remove the relevant records in ir_attachment
+                # (the search is performed with sql as the search method of
+                # ir_attachment is overridden to hide attachments of deleted
+                # records)
+                query = 'SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s'
+                cr.execute(query, (self._name, sub_ids))
+                attachments = Attachment.browse([row[0] for row in cr.fetchall()])
+                if attachments:
+                    attachments.unlink()
 
-        # invalidate the *whole* cache, since the orm does not handle all
-        # changes made in the database, like cascading delete!
-        self.invalidate_cache()
+            # invalidate the *whole* cache, since the orm does not handle all
+            # changes made in the database, like cascading delete!
+            self.invalidate_cache()
 
         # recompute new-style fields
         if self.env.recompute and self._context.get('recompute', True):
@@ -3557,15 +3560,28 @@ class BaseModel(object):
                 self._write(old_vals)
 
             if new_vals:
-                # put the values of pure new-style fields into cache, and inverse them
                 self.modified(set(new_vals) - set(old_vals))
-                for record in self:
-                    record._cache.update(record._convert_to_cache(new_vals, update=True))
+
+                # put the values of fields into cache, and inverse them
                 for key in new_vals:
-                    self._fields[key].determine_inverse(self)
+                    field = self._fields[key]
+                    # If a field is not stored, its inverse method will probably
+                    # write on its dependencies, which will invalidate the field
+                    # on all records. We therefore inverse the field one record
+                    # at a time.
+                    batches = [self] if field.store else list(self)
+                    for records in batches:
+                        for record in records:
+                            record._cache.update(
+                                record._convert_to_cache(new_vals, update=True)
+                            )
+                        field.determine_inverse(records)
+
                 self.modified(set(new_vals) - set(old_vals))
+
                 # check Python constraints for inversed fields
                 self._validate_fields(set(new_vals) - set(old_vals))
+
                 # recompute new-style fields
                 if self.env.recompute and self._context.get('recompute', True):
                     self.recompute()

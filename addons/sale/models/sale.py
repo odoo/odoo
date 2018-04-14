@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
-            refunds = invoice_ids.search([('origin', 'like', order.name)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
+            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
@@ -122,7 +122,7 @@ class SaleOrder(models.Model):
     validity_date = fields.Date(string='Expiration Date', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sale order is confirmed.", oldname="date_confirm")
+    confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sale order is confirmed.", oldname="date_confirm", copy=False)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
@@ -488,7 +488,7 @@ class SaleOrder(models.Model):
                 report_pages.append([])
             # Append category to current report page
             report_pages[-1].append({
-                'name': category and category.name or 'Uncategorized',
+                'name': category and category.name or _('Uncategorized'),
                 'subtotal': category and category.subtotal,
                 'pagebreak': category and category.pagebreak,
                 'lines': list(lines)
@@ -502,19 +502,14 @@ class SaleOrder(models.Model):
         res = {}
         currency = self.currency_id or self.company_id.currency_id
         for line in self.order_line:
-            base_tax = 0
+            price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+            taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=self.partner_shipping_id)['taxes']
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
-                # FORWARD-PORT UP TO SAAS-17
-                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-                taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=self.partner_shipping_id)['taxes']
                 for t in taxes:
-                    res[group] += t['amount']
-                if tax.include_base_amount:
-                    base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
-                                                partner=self.partner_shipping_id)['taxes'][0]['amount']
+                    if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
+                        res[group] += t['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = map(lambda l: (l[0].name, l[1]), res)
         return res

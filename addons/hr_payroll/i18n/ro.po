@@ -5,15 +5,15 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Laurentiu Archip <lauarchipstefan@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Laurentiu Archip, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Laurentiu Archip <lauarchipstefan@gmail.com>, 2016\n"
+"Last-Translator: Laurentiu Archip, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,24 +66,24 @@ msgstr "<strong>Din data:</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date From</strong>"
-msgstr ""
+msgstr "<strong>De la</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
-msgstr ""
+msgstr "<strong>Pana la:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date To</strong>"
-msgstr ""
+msgstr "<strong>Pana la:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
-msgstr ""
+msgstr "<strong>Funcția</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -95,7 +95,7 @@ msgstr "<strong>Email</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Identification No</strong>"
-msgstr ""
+msgstr "<strong>CNP</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -107,12 +107,12 @@ msgstr "<strong>Nume</strong>"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Reference</strong>"
-msgstr ""
+msgstr "<strong>Referință</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
-msgstr ""
+msgstr "<strong>Denumire registru:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -231,7 +231,7 @@ msgstr "Anulati Foaia de salariu"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "Un fluturaș confirmat nu se poate anula"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -265,7 +265,7 @@ msgstr "Definitie conturi subordonate"
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Click to add a new contribution register."
-msgstr ""
+msgstr "Click pentru a adauga un nou registru de contribuții"
 
 #. module: hr_payroll
 #: selection:hr.payslip.run,state:0
@@ -380,7 +380,7 @@ msgstr "Registre contributie"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
 msgid "Create journal entries from payslips"
-msgstr "Creează înregistrări în registru din fluturașii de salariu"
+msgstr "Creează notele contabile din fluturașii de salariu"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
@@ -688,6 +688,10 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Este folosit la calculul procentajului si al sumei fixe. De ex. O regula "
+"pentru Tichetul de masa care are suma fixa de 1 € pe ziua lucrătoare poate "
+"avea cantitatea definita printr-o expresie precum "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -972,12 +976,12 @@ msgstr "Linii Fluturas de salariu"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
-msgstr ""
+msgstr "Linii Fluturaș de salariu după Registrul Contributiei"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
 msgid "Payslip Name"
-msgstr ""
+msgstr "Denumire fluturaș"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1438,7 +1442,7 @@ msgstr "Trebuie sa selectati angajatii pentru a genera fluturasii de salariu."
 #: code:addons/hr_payroll/models/hr_payroll.py:838
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
+msgstr "Trebuie selectat un contract pentru a crea o linie in fluturaș"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
@@ -1453,12 +1457,12 @@ msgstr "ru.regula.salarizare"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "report.hr_payroll.report_contributionregister"
-msgstr ""
+msgstr "report.hr_payroll.report_contributionregister"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
 msgid "report.hr_payroll.report_payslipdetails"
-msgstr ""
+msgstr "report.hr_payroll.report_payslipdetails"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base

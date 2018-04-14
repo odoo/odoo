@@ -7,18 +7,19 @@
 # Manuela Silva <manuela.silva@sky.com>, 2016
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # José Gomes <jg@opencloud.pro>, 2016
 # Manuela Silva <inactive+alfalb@transifex.com>, 2016
 # Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2016
 # Nuno Dias <ngalvesdias@mail.com>, 2016
+# Joao Felix <jrmfelix@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Nuno Dias <ngalvesdias@mail.com>, 2016\n"
+"Last-Translator: Joao Felix <jrmfelix@gmail.com>, 2018\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,6 +113,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"Quando o indicador 'Rascunho' é usado ele indica que o utilizador inseriu a fatura sem a confirmar.\n"
+"O indicador 'Pro-forma' é usado quando a fatura não é numerada.\n"
+"O indicador 'Em aberto' é usado quando o utilizador cria uma fatura e a mesma é numerada automaticamente. A fatura fica no modo 'Em aberto' até que o utilizador registe o pagamento da fatura.\n"
+"O indicador 'Paga' é exibido automaticamente após o registo do pagamento da fatura. Os correspondentes registos contabilisticos no diário de contabilidade poderão ou não estar reconciliados.\n"
+"O indicador \"Cancelado\" é exibido após o utilizador cancelar a fatura."
 
 #. module: account
 #. openerp-web
@@ -226,7 +232,7 @@ msgstr ": Registo Geral"
 #: code:addons/account/models/account.py:397
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr "Reembolso"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -769,6 +775,8 @@ msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
 msgstr ""
+"Reconciliação rápida de pagamentos: sugestão automática de pagamentos "
+"pendentes quando forem criadas faturas."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2228,6 +2236,12 @@ msgstr "Pré-ajuste de Movimento de Reconciliação Bancária"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Extrato Bancário"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -10619,6 +10633,14 @@ msgid ""
 msgstr ""
 "Não pode cancelar uma fatura que está parcialmente paga. Precisa de "
 "desreconciliar primeiro as entradas do pagamento relacionado."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

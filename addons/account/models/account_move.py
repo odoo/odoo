@@ -100,7 +100,7 @@ class AccountMove(models.Model):
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     statement_line_id = fields.Many2one('account.bank.statement.line', index=True, string='Bank statement line reconciled with this entry', copy=False, readonly=True)
     # Dummy Account field to search on account.move by account_id
-    dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False)
+    dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False, readonly=True)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -218,6 +218,15 @@ class AccountMove(models.Model):
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
 
+    # Do not forward port in >= saas-14
+    def _reconcile_reversed_pair(self, move, reversed_move):
+        amls_to_reconcile = (move.line_ids + reversed_move.line_ids).filtered(lambda l: not l.reconciled)
+        accounts_reconcilable = amls_to_reconcile.mapped('account_id').filtered(lambda a: a.reconcile)
+        for account in accounts_reconcilable:
+            amls_for_account = amls_to_reconcile.filtered(lambda l: l.account_id.id == account.id)
+            amls_for_account.reconcile()
+            amls_to_reconcile = amls_to_reconcile - amls_for_account
+
     @api.multi
     def _reverse_move(self, date=None, journal_id=None):
         self.ensure_one()
@@ -231,6 +240,7 @@ class AccountMove(models.Model):
                 'credit': acm_line.debit,
                 'amount_currency': -acm_line.amount_currency
             })
+        self._reconcile_reversed_pair(self, reversed_move)
         return reversed_move
 
     @api.multi
@@ -269,7 +279,7 @@ class AccountMoveLine(models.Model):
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
 
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'account_id.currency_id', 'move_id.state')
+    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'move_id.state')
     def _amount_residual(self):
         """ Computes the residual amount of a move line from a reconciliable account in the company currency and the line's currency.
             This amount will be 0 for fully reconciled lines or lines from a non-reconciliable account, the original line amount
@@ -439,7 +449,7 @@ class AccountMoveLine(models.Model):
                 raise ValidationError(_("You cannot create journal items with a secondary currency without filling both 'currency' and 'amount currency' field."))
 
     @api.multi
-    @api.constrains('amount_currency')
+    @api.constrains('amount_currency', 'debit', 'credit')
     def _check_currency_amount(self):
         for line in self:
             if line.amount_currency:
@@ -1052,6 +1062,11 @@ class AccountMoveLine(models.Model):
                     account_move_line.payment_id.write({'invoice_ids': [(3, invoice.id, None)]})
             rec_move_ids += account_move_line.matched_debit_ids
             rec_move_ids += account_move_line.matched_credit_ids
+        if self.env.context.get('invoice_id'):
+            current_invoice = self.env['account.invoice'].browse(self.env.context['invoice_id'])
+            rec_move_ids = rec_move_ids.filtered(
+                lambda r: (r.debit_move_id + r.credit_move_id) & current_invoice.move_id.line_ids
+            )
         return rec_move_ids.unlink()
 
     ####################################################
@@ -1225,7 +1240,7 @@ class AccountMoveLine(models.Model):
                 raise UserError(_('You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n%s.') % err_msg)
             if line.move_id.id not in move_ids:
                 move_ids.add(line.move_id.id)
-            self.env['account.move'].browse(list(move_ids))._check_lock_date()
+        self.env['account.move'].browse(list(move_ids))._check_lock_date()
         return True
 
     ####################################################

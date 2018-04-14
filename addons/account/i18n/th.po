@@ -4,18 +4,19 @@
 # 
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Prawit Boonthue <prawit.boonthue@gmail.com>, 2016
-# Wara Kong <hiwakui@hotmail.com>, 2016
+# Waratha Kong, 2016
 # Seksan Poltree <seksan.poltree@gmail.com>, 2016
 # monchai7 <montchye@gmail.com>, 2016
+# Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: monchai7 <montchye@gmail.com>, 2016\n"
+"Last-Translator: Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2018\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2093,6 +2094,12 @@ msgstr "Bank Reconciliation Move preset"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "เอกสารสรุป รายการเดินบัญชี"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -7265,7 +7272,7 @@ msgstr "กำไร"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Profit &amp; Loss"
-msgstr ""
+msgstr "กำไรขาดทุน "
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
@@ -10043,6 +10050,14 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account

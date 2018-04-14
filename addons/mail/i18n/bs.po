@@ -3,17 +3,17 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Boško Stojaković <bluesoft83@gmail.com>, 2016
 # Bole <bole@dajmi5.com>, 2016
-# Malik K <koljenovic@gmail.com>, 2016
+# Malik K, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Malik K <koljenovic@gmail.com>, 2016\n"
+"Last-Translator: Malik K, 2016\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,6 +180,15 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
 
 #. module: mail
@@ -3430,7 +3439,7 @@ msgstr "Pristup odbijen"
 #: code:addons/mail/static/src/js/client_action.js:130
 #, python-format
 msgid "Permission granted"
-msgstr ""
+msgstr "Pristup dozvoljen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image
@@ -4797,7 +4806,7 @@ msgid ""
 "message), received %s"
 msgstr ""
 "objavljivanje poruka bez modela bi trebao biti sa null res_id (privatna "
-"poruka), primljena"
+"poruka), primljena %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917

@@ -6,7 +6,7 @@
 # Matus Krnac <matus.krnac@gmail.com>, 2017
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
 # gebri <gebri@inmail.sk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 # Robert Kirschner <robertkirschner@yahoo.com>, 2017
 # palica <pavol.cupka@gmail.com>, 2017
@@ -2198,6 +2198,12 @@ msgstr "Predvoľba pohybu bankového vyúčtovania"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Bankový výpis"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -10539,6 +10545,14 @@ msgid ""
 msgstr ""
 "Nemôžete zrušiť faktúru ktorá je už čiastočne zaplatená. Musíte "
 "najskôrodzosúladiť pridružené platobné vstupy."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

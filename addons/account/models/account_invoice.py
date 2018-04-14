@@ -189,7 +189,7 @@ class AccountInvoice(models.Model):
     @api.depends('move_id.line_ids.amount_residual')
     def _compute_payments(self):
         payment_lines = []
-        for line in self.move_id.line_ids:
+        for line in self.move_id.line_ids.filtered(lambda l: l.account_id.id == self.account_id.id):
             payment_lines.extend(filter(None, [rp.credit_move_id.id for rp in line.matched_credit_ids]))
             payment_lines.extend(filter(None, [rp.debit_move_id.id for rp in line.matched_debit_ids]))
         self.payment_move_line_ids = self.env['account.move.line'].browse(list(set(payment_lines)))
@@ -928,25 +928,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def line_get_convert(self, line, part):
-        return {
-            'date_maturity': line.get('date_maturity', False),
-            'partner_id': part,
-            'name': line['name'],
-            'debit': line['price'] > 0 and line['price'],
-            'credit': line['price'] < 0 and -line['price'],
-            'account_id': line['account_id'],
-            'analytic_line_ids': line.get('analytic_line_ids', []),
-            'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
-            'currency_id': line.get('currency_id', False),
-            'quantity': line.get('quantity', 1.00),
-            'product_id': line.get('product_id', False),
-            'product_uom_id': line.get('uom_id', False),
-            'analytic_account_id': line.get('account_analytic_id', False),
-            'invoice_id': line.get('invoice_id', False),
-            'tax_ids': line.get('tax_ids', False),
-            'tax_line_id': line.get('tax_line_id', False),
-            'analytic_tag_ids': line.get('analytic_tag_ids', False),
-        }
+        return self.env['product.product']._convert_prepared_anglosaxon_line(line, part)
 
     @api.multi
     def action_cancel(self):
@@ -1428,7 +1410,15 @@ class AccountInvoiceTax(models.Model):
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
     base = fields.Monetary(string='Base', compute='_compute_base_amount')
 
-
+    # DO NOT FORWARD-PORT!!! ONLY FOR v10
+    @api.model
+    def create(self, vals):
+        inv_tax = super(AccountInvoiceTax, self).create(vals)
+        # Workaround to make sure the tax amount is rounded to the currency precision since the ORM
+        # won't round it automatically at creation.
+        if inv_tax.company_id.tax_calculation_rounding_method == 'round_globally':
+            inv_tax.amount = inv_tax.currency_id.round(inv_tax.amount)
+        return inv_tax
 
 
 class AccountPaymentTerm(models.Model):

@@ -4,16 +4,18 @@
 # 
 # Translators:
 # 최재호 <hwangtog@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Goh Gangtai <gangtai.goh@gmail.com>, 2017
 # 방상우 <mrroom@gmail.com>, 2017
+# Linkup <link-up@naver.com>, 2018
+# Up Link <linkup.way@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: 방상우 <mrroom@gmail.com>, 2017\n"
+"Last-Translator: Up Link <linkup.way@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,18 +26,18 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>고객 레퍼런스:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>인코텀즈:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr ""
+msgstr "판매-후"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -45,14 +47,14 @@ msgstr "배송비 추가 허용"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr ""
+msgstr "주문라인 별 제조주문 속성 설정 허용 (고급)"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
 msgid ""
 "Allow to modify the sales order dates to postpone deliveries and "
 "procurements"
-msgstr ""
+msgstr "납품 및 조달연기 판매 주문서 날짜 수정 허용"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -62,7 +64,7 @@ msgstr "판매 주문 명세에 속성과 함께 태그 허용."
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "Choose specific routes on sales order lines (advanced)"
-msgstr ""
+msgstr "판매 주문 라인의 특정 경로 선택 (고급)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -77,7 +79,7 @@ msgstr "날짜"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr ""
+msgstr "기본 배송 정책"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -102,7 +104,7 @@ msgstr "배송 주문"
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr ""
+msgstr "제조 속성을 사용하지 마십시오 (더 쉽게 권장 됨)"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -164,29 +166,29 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr ""
+msgstr "MTO 또는 드롭 운송과 같은 주문 특정 노선 없음"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr ""
+msgstr "판매 주문에 대한 배송비 없음"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "재고가 충분하지 않습니다!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order Routing"
-msgstr ""
+msgstr "주문 경로"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:156
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "주문한 수량이 감소했습니다!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -206,7 +208,7 @@ msgstr "조달"
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
 msgid "Procurements and deliveries dates are based on the sales order dates"
-msgstr ""
+msgstr "조달 및 납품일은 판매 주문 일자를 기준으로 합니다."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
@@ -221,7 +223,7 @@ msgstr "제품 양식"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
-msgstr ""
+msgstr "SO 라인의 특성"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
@@ -261,7 +263,7 @@ msgstr "판매 주문 통계"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "판매 안전기간"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
@@ -276,12 +278,12 @@ msgstr "선택 가능한 판매 주문 명세"
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship all products at once, without back orders"
-msgstr ""
+msgstr "이월주문 주문없이 즉시 모든 제품을 발송합니다."
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr ""
+msgstr "보유제품 있을 시 제품을 발송하고, 이월주문을 허용합니다"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
@@ -308,17 +310,17 @@ msgstr "재고 이동"
 #: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
+msgstr "이 제품은 %.2f%s포장되어 있습니다. %.2f%s를 판매해야 합니다."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid "To Refund"
-msgstr ""
+msgstr "환불하기"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
 msgid "To Refund in SO"
-msgstr ""
+msgstr "SO 환불하기"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -330,7 +332,7 @@ msgstr "출하"
 #: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid ""
 "Trigger a decrease of the delivered quantity in the associated Sale Order"
-msgstr ""
+msgstr "관련 판매 주문서에 제공된 납품 수량이 감소합니다."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -350,7 +352,7 @@ msgstr "경고"
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr ""
+msgstr "주문 수량을 줄이고 있습니다! 필요한 경우 배달주문를 수동으로 업데이트하는 것을 잊지 마십시오."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:146
@@ -359,6 +361,8 @@ msgid ""
 "You plan to sell %s %s but you only have %s %s available!\n"
 "The stock on hand is %s %s."
 msgstr ""
+"%s%s를 판매 할 계획이지만 %s%s만 사용할 수 있습니다!\n"
+"현재 재고가 %s%s입니다."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

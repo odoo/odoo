@@ -3,16 +3,18 @@
 # * hr_recruitment
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
-# Bo Cao <cao.poobo@hotmail.com>, 2017
+# Bo Cao, 2017
+# e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Bo Cao <cao.poobo@hotmail.com>, 2017\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +58,15 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>各位：</p>\n"
+"<p>很高兴宣布，<strong>${object.name} </strong> 将\n"
+"加入我们，担任 ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    部门：${object.department_id.name}。\n"
+"%endif\n"
+"。</p>\n"
+"<p>请大家表示欢迎并给予帮助。</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -340,7 +351,7 @@ msgstr "申请人类别"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr ""
+msgstr "点击此处创建新职位。"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -456,7 +467,7 @@ msgstr "生产别名"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
-msgstr ""
+msgstr "创建一些用于跟踪申请人来自何处的别名。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -843,7 +854,7 @@ msgstr "工作岗位"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "具体职位"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -909,7 +920,7 @@ msgstr "最后更新时间"
 #, python-format
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
-msgstr ""
+msgstr "<b/>"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -1027,7 +1038,7 @@ msgstr "无主题"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet."
-msgstr ""
+msgstr "还没有文件。"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1078,11 +1089,13 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
+"职位一经创建，您便可以跟踪申请人\n"
+" 并管理与职位相关的招聘流程。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Ongoing"
-msgstr ""
+msgstr "正在进行"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
@@ -1339,7 +1352,7 @@ msgstr "指定的电子邮件"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
-msgstr ""
+msgstr "使用此阶段的具体职位。其他职位将不使用此阶段。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1458,7 +1471,7 @@ msgstr ""
 msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
-msgstr ""
+msgstr "这些别名可以是电子邮件或每个来源的 url。当申请人通过上述两种方式之一到这里时，您便会知道他来自哪里。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1513,7 +1526,7 @@ msgstr "当这个阶段中没有任何记录要呈现的时候，这个阶段在
 msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
-msgstr ""
+msgstr "尝试向此地址发送电子邮件，它会自动创建申请。"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1548,7 +1561,7 @@ msgstr "使用模板"
 #: code:addons/hr_recruitment/static/src/js/tour.js:25
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "<b/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1571,7 +1584,7 @@ msgstr "非常优秀"
 #: code:addons/hr_recruitment/static/src/js/tour.js:11
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
-msgstr ""
+msgstr "<b/><i/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1581,7 +1594,7 @@ msgstr "关注者的电子邮件"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "欢迎 ${object.name}"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee

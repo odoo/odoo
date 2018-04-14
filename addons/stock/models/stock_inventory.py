@@ -96,6 +96,13 @@ class Inventory(models.Model):
         else:
             self.total_qty = 0
 
+    @api.multi
+    def unlink(self):
+        for inventory in self:
+            if inventory.state == 'done':
+                raise UserError(_('You cannot delete a validated inventory adjustement.'))
+        return super(Inventory, self).unlink()
+
     @api.model
     def _selection_filter(self):
         """ Get the list of filter allowed according to the options checked
@@ -377,6 +384,7 @@ class InventoryLine(models.Model):
     def write(self, values):
         values.pop('product_name', False)
         res = super(InventoryLine, self).write(values)
+        return res
 
     @api.model
     def create(self, values):
@@ -394,7 +402,8 @@ class InventoryLine(models.Model):
         if existings:
             raise UserError(_("You cannot have two inventory adjustements in state 'in Progess' with the same product"
                               "(%s), same location(%s), same package, same owner and same lot. Please first validate"
-                              "the first inventory adjustement with this product before creating another one.") % (res.product_id.name, res.location_id.name))
+                              "the first inventory adjustement with this product before creating another one.") %
+                            (res.product_id.display_name, res.location_id.display_name))
         return res
 
     def _get_quants(self):

@@ -3,15 +3,16 @@
 # * payment
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# Martin Trigaux, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -263,7 +264,7 @@ msgstr "配置付款托收方法"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "对应模块"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
@@ -436,7 +437,7 @@ msgstr "表单按钮模板"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "使用标记化技术的表单"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -608,7 +609,7 @@ msgstr "无自动确认"
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr ""
+msgstr "请注意，来自设置为仅授权交易（而非获取金额）的收购方的标记不可用。"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -619,13 +620,13 @@ msgstr "Ogone"
 #: code:addons/payment/models/payment_acquirer.py:619
 #, python-format
 msgid "Only transactions in the Authorized status can be captured."
-msgstr ""
+msgstr "只能捕获“已授权”状态的交易。"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:626
 #, python-format
 msgid "Only transactions in the Authorized status can be voided."
-msgstr ""
+msgstr "只能取消“已授权”状态的交易。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
@@ -864,6 +865,8 @@ msgid ""
 "This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
+"此功能不适用于已设置为“授权”模式的支付受让人。\n"
+" 请使用 %s 之外的其他提供者的标记。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -931,7 +934,7 @@ msgstr "电汇"
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompt with Stripe Payment page for payment information."
-msgstr ""
+msgstr "使用 Stripe Payment 页面，您将收到有关支付信息的提示。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -959,14 +962,14 @@ msgstr "在点击支付按钮后你将会被重定向到Buckaroo网站"
 msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
-msgstr ""
+msgstr "点击支付按钮后您将被重定向到 Ingenico 网站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
 msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
-msgstr ""
+msgstr "点击支付按钮后您将被重定向到 PayUmoney 网站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
@@ -1026,7 +1029,7 @@ msgstr "partner_values:关于购买的运费需要参考具体的货运方法,�
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

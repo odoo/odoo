@@ -3,25 +3,26 @@
 # * gamification
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Wolfgang Taferner, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Renzo Meister <info@jamotion.ch>, 2016
+# Renzo Meister, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
 # Henry Mineehen <info@mineehen.de>, 2016
 # Philipp Hug <philipp@hug.cx>, 2016
-# Niki Waibel <niki.waibel@gmail.com>, 2016
+# Niki Waibel, 2016
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-08 13:58+0000\n"
+"PO-Revision-Date: 2018-03-08 13:58+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -166,7 +167,7 @@ msgstr "%s hat die Challenge verlassen. "
 #: code:addons/gamification/models/challenge.py:657
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
-msgstr ""
+msgstr "<br/>"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:654
@@ -1163,6 +1164,11 @@ msgstr "Niemals"
 msgid "Never reminded if no value or zero is specified."
 msgstr ""
 "Nicht erinnern, wenn der Wert null ist bzw. kein Wert eingetragen wurde."
+
+#. module: gamification
+#: model:mail.template,subject:gamification.email_template_badge_received
+msgid "New badge ${object.badge_id.name} granted"
+msgstr "Neue Medialle ${object.badge_id.name} bekommen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date

@@ -3,16 +3,18 @@
 # * gamification
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Saba Khmaladze <skhmaladze@uglt.org>, 2018
 # Giorgi Melitauri <gmelitauri@live.com>, 2018
+# Temur, 2018
+# Gizo Kobakhidze <040168@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Giorgi Melitauri <gmelitauri@live.com>, 2018\n"
+"POT-Creation-Date: 2018-03-08 13:58+0000\n"
+"PO-Revision-Date: 2018-03-08 13:58+0000\n"
+"Last-Translator: Gizo Kobakhidze <040168@gmail.com>, 2018\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,7 +211,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_action_id
 msgid "Action"
-msgstr ""
+msgstr "ქმედება"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_active
@@ -219,7 +221,7 @@ msgstr "აქტიური"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr ""
+msgstr "დამატებითი პარამეტრები"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth
@@ -349,7 +351,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
-msgstr ""
+msgstr "კატეგორია"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_challenge_id
@@ -430,7 +432,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_comment
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_comment
 msgid "Comment"
-msgstr ""
+msgstr "კომენტარი"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
@@ -462,6 +464,11 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
+"შექმენით და მართეთ მომხმარებლები რომლებიც დაუკავშირდებიან სისტემას. "
+"შესაძლებელია მომხმარებლების დეაქტივაცია პერიოდისთვის როდესაც მათ არ ჭირდებათ"
+" (ან არ შეიძლება) სისტემასთან დაკავშირება. თქვენ შეძლებთ მათთვის ჯგუფების "
+"მინიჭებას რათა განუსაზღვროთ წვდომის შესაბამისი უფლებები სხვადასხვა მოდულების"
+" გამოსაყენებლად."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
@@ -601,7 +608,7 @@ msgstr ""
 #: selection:gamification.challenge,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr ""
+msgstr "დასრულებულია"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -680,7 +687,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr ""
+msgstr "გამგზავნი"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_full_suffix
@@ -885,7 +892,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_image
 msgid "Image"
-msgstr ""
+msgstr "გამოსახულება"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -994,7 +1001,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_ids
 msgid "Lines"
-msgstr ""
+msgstr "ხაზები"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_ids
@@ -1015,7 +1022,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
-msgstr ""
+msgstr "მოდელი"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_monetary
@@ -1076,6 +1083,11 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
 msgid "Never reminded if no value or zero is specified."
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,subject:gamification.email_template_badge_received
+msgid "New badge ${object.badge_id.name} granted"
 msgstr ""
 
 #. module: gamification
@@ -1184,7 +1196,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
 msgid "Python Code"
-msgstr ""
+msgstr "Python-ის კოდი"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_compute_code
@@ -1211,7 +1223,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
-msgstr ""
+msgstr "წყარო"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1266,7 +1278,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_manager_id
 msgid "Responsible"
-msgstr ""
+msgstr "პასუხისმგებელი"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:489
@@ -1317,7 +1329,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr ""
+msgstr "განრიგი"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1421,7 +1433,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr ""
+msgstr "მდგომარეობა"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1438,7 +1450,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3073
 msgid "Suffix"
-msgstr ""
+msgstr "სუფიქსი"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_invited_user_ids
@@ -1663,7 +1675,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
-msgstr ""
+msgstr "მიმღები"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_target_goal
@@ -1678,7 +1690,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count
 msgid "Total"
-msgstr ""
+msgstr "ჯამი"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_unique_owner_ids
@@ -1693,7 +1705,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr ""
+msgstr "განახლება"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:444

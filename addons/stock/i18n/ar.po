@@ -3,11 +3,11 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Mustafa Rawi <mustafa@cubexco.com>, 2016
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 # hoxhe Aits <hoxhe0@gmail.com>, 2016
-# SaFi J. <safi2266@gmail.com>, 2016
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2016
 # Mahmoud M. Soliman <mahmoud_soliman4@alex-comm.edu.eg>, 2016
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # mohammed rabea <moh.rabea@gmail.com>, 2016
@@ -26,19 +26,38 @@
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # zahi chemaly <zahi@sercotex.net>, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
+# Waleed Mohsen <mohsen.waleed@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 14:03+0000\n"
-"PO-Revision-Date: 2016-11-22 14:03+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: Waleed Mohsen <mohsen.waleed@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:230
+#, python-format
+msgid ""
+"\n"
+"\n"
+"%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:231
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Blocking: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -1594,6 +1613,7 @@ msgstr "توقيت مبادرة العميل"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
+#: model:ir.model.fields,field_description:stock.field_res_users_property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
 msgstr "مكان العميل"
@@ -2995,6 +3015,11 @@ msgid "Inventory Line"
 msgstr "خط الجرد"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_line_tree
+msgid "Inventory Lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
@@ -3292,6 +3317,11 @@ msgstr "العمليات المتصلة"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_propagated_from_id
 msgid "Linked Quant"
 msgstr "الكميات المتصلة"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_inventory_form
+msgid "List view of lines"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -3624,6 +3654,7 @@ msgstr "الكمية القصوى"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
+#: model:ir.model.fields,field_description:stock.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr "رسالة لاختيار الأسهم"
 
@@ -4788,7 +4819,7 @@ msgstr "قالب المنتج"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Product Types"
-msgstr ""
+msgstr "أنواع المنتج"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_uom_id
@@ -4950,6 +4981,11 @@ msgid "Quantity"
 msgstr "كمية"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done_uom_ordered
+msgid "Quantity Done"
+msgstr "كمية منجزة"
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
 msgstr "كمية متعددة "
@@ -4970,6 +5006,17 @@ msgstr "الكمية محجوزه "
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "الكميه لايمك أن تكون سالبه "
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:394
+#, python-format
+msgid "Quantity decreased!"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
+msgid "Quantity done in UOM ordered"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
@@ -5116,10 +5163,15 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "استلام البضائع مباشره فى المخزون (خطوه 1)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:337
 #, python-format
 msgid "Received Qty"
 msgstr "الكمية المستلمة"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Recheck Availability"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5212,7 +5264,7 @@ msgstr "استراتيجيه الحذف"
 #: code:addons/stock/models/stock_quant.py:467
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr "إستراتيجيه الحذف s% ليست منفذه "
+msgstr "إستراتيجيه الحذف %s ليست منفذه "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_warehouse_2_stock_warehouse_orderpoint
@@ -5502,6 +5554,11 @@ msgid "Search Inventory"
 msgstr "ابحث عن جرد"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
+msgid "Search Inventory Lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
 msgstr ""
@@ -5524,6 +5581,7 @@ msgstr "تحديد الأماكن التي يمكن لهذا المسار أن �
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_picking_warn
+#: model:ir.model.fields,help:stock.field_res_users_picking_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -5868,6 +5926,7 @@ msgstr "عمليات المخزون"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
+#: model:ir.model.fields,field_description:stock.field_res_users_picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_picking_id
 msgid "Stock Picking"
 msgstr "إلتقاط المخزون"
@@ -6153,6 +6212,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:795
+#, python-format
+msgid "The pick is already validated"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
 msgstr "نوع الالتقاط يحدد عرض الالتقاط "
@@ -6418,6 +6483,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
+#: model:ir.model.fields,help:stock.field_res_users_property_stock_customer
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
@@ -6427,6 +6493,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_supplier
+#: model:ir.model.fields,help:stock.field_res_users_property_stock_supplier
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
@@ -6524,6 +6591,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Today"
 msgstr "اليوم"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
+msgid "Total"
+msgstr "الإجمالي "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_total_qty
@@ -6823,6 +6895,7 @@ msgstr "المورّد"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
+#: model:ir.model.fields,field_description:stock.field_res_users_property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
 msgstr "مكان المورد"
@@ -7094,6 +7167,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
 msgid ""
 "You can define here the main routes that run through\n"
@@ -7182,6 +7261,12 @@ msgid "You cannot delete a scrap which is done."
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:103
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
@@ -7195,7 +7280,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:176
 #, python-format
 msgid "You cannot move to a location of type view %s."
-msgstr "لا يمكنك نقل إلى موقع من نوع عرض s%"
+msgstr "لا يمكنك نقل إلى موقع من نوع عرض %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:85
@@ -7214,12 +7299,6 @@ msgid ""
 msgstr ""
 "لا يمكنك وضع كمية المنتج سالبه في خطوط المخزون:\n"
 "%s - الكمية: %s "
-
-#. module: stock
-#: code:addons/stock/models/stock_production_lot.py:37
-#, python-format
-msgid "You are not allowed to create a lot for this picking type"
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:919
@@ -7322,6 +7401,14 @@ msgstr ""
 #: code:addons/stock/models/stock_pack_operation.py:238
 #, python-format
 msgid "You should provide a different serial number for each piece"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:371
+#, python-format
+msgid ""
+"You still have some active reordering rules on this product. Please archive "
+"or delete them first."
 msgstr ""
 
 #. module: stock

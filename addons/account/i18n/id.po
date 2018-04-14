@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Deddy Ddr <deddy.ddr@gmail.com>, 2016
 # Rizky Fajar Ryanda <rizky.rikuverse@gmail.com>, 2016
 # Febrasari Almania <febrasari.almania@gmail.com>, 2016
@@ -2338,6 +2338,12 @@ msgstr "Pernyataan bank yang digunakan untuk rekonsiliasi bank"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Akun Koran"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -10732,6 +10738,14 @@ msgid ""
 msgstr ""
 "Anda tidak dapat membatalkan tagihan yang sebagian dibayar. Anda perlu "
 "unreconcile pembayaran terkait entri pertama."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

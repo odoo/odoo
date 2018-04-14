@@ -8,8 +8,8 @@
 # nasaaskii <nasaaskii@gmail.com>, 2017
 # Erdenebold Ts <erdenebold10@gmail.com>, 2017
 # Bayarkhuu Bataa, 2017
-# Batsaihan Purevjav <batsaihan.p@gmail.com>, 2017
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
+# Batsaihan Purevjav <batsaihan.p@gmail.com>, 2017
 # ERDENESAIKHAN BATZORIG <esab.orgil@gmail.com>, 2017
 # Jacara <baskhuujacara@gmail.com>, 2017
 # Unurjargal Tsoodol <unuruu25@gmail.com>, 2017
@@ -210,12 +210,12 @@ msgstr "Автоматаар 1 гүйлгээ тулгагдсан байна."
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr "15 өдөр"
+msgstr "15 хоног дотор"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr "30 Цэвэр өдөрүүд"
+msgstr "30 хоног дотор"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -1418,7 +1418,7 @@ msgstr "Дансны төрөл"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_type_control_ids
 msgid "Account Types Allowed"
-msgstr "Зөвшөөрөгдсөн Дансны төрөлүүд"
+msgstr "Зөвшөөрөгдсөн дансны төрлүүд"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -2321,6 +2321,12 @@ msgstr "Хөдөлгөөний Урьдчилсан тохируулгаарх �
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Банкны хуулга"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -5083,7 +5089,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "If you want to be able to send customer statements from Odoo, you must:"
-msgstr "Хэрэв та захиалагчийн хуулгыг Odoo-с илгээж чаддаг байхыг хүсвэл:"
+msgstr "Хэрэв та захиалагчийн тооцоог Odoo-с илгээж чаддаг байхыг хүсвэл:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6906,7 +6912,7 @@ msgstr "Нээх"
 #: code:addons/account/static/src/xml/account_payment.xml:82
 #, python-format
 msgid "Open Payment"
-msgstr "Нээлттэй Төлбөр"
+msgstr "Төлбөрийг нээх"
 
 #. module: account
 #. openerp-web
@@ -7038,7 +7044,7 @@ msgstr "Хэтэрсэн зээл өрийн багаж"
 #: code:addons/account/models/account_invoice.py:119
 #, python-format
 msgid "Outstanding debits"
-msgstr "Хэтэрсэн өр"
+msgstr "Илүү төлбөр"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8470,7 +8476,7 @@ msgid ""
 "Sending customer statements (outstanding invoices) manually during the "
 "transition period"
 msgstr ""
-"Захиалагчийн хуулга (илүүдсэн нэхэмжлэлүүд)-г шилжилтийн үед гараараа илгээх"
+"Захиалагчийн тооцоо (илүүдсэн нэхэмжлэлүүд)-г шилжилтийн үед гараараа илгээх"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9469,8 +9475,8 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
-"Эдгээр төрөлүүд нь танай улсын дагууд тодорхойлогддог. Төрөлүүд нь "
-"данснуудын тухай мэдээллийг агуулдаг тул энэ мэдээллийг тодорхойлж өгдөг."
+"Эдгээр төрлүүд нь танай улсын дагууд тодорхойлогддог. Төрлүүд нь данснуудын "
+"тухай мэдээллийг агуулдаг тул энэ мэдээллийг тодорхойлж өгдөг."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10687,6 +10693,14 @@ msgstr ""
 "тулгалтыг эхлээд арилгах хэрэгтэй."
 
 #. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:180
 #, python-format
 msgid ""
@@ -11102,7 +11116,7 @@ msgstr "эсвэл"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "outstanding debits"
-msgstr "Хэтэрсэн өглөг"
+msgstr "илүү төлбөр"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form

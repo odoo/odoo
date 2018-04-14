@@ -3,7 +3,7 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Muḥend Belqasem <belkacem77@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -2072,6 +2072,12 @@ msgstr "Préselection de transactions bancaires à réconcilier"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Relevé bancaire"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -6870,7 +6876,7 @@ msgstr "Amgired n ufru"
 #: code:addons/account/static/src/js/account_payment_widget.js:53
 #, python-format
 msgid "Payment Information"
-msgstr "Talɣut n ufru"
+msgstr "Talɣut n lexlas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -10152,6 +10158,14 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas annuler une facture qui est partiellement payée. Vous "
 "devez d'abord annuler le lettrage des lignes de paiement correspondantes."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

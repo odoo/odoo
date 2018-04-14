@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2016
 # Masayuki Takesue <m_takesue@nifty.com>, 2016
@@ -2099,6 +2099,12 @@ msgid "Bank Statement"
 msgstr "銀行取引明細書"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "銀行取引明細書内容"
@@ -2161,7 +2167,7 @@ msgstr "基準額"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Base Amount"
-msgstr ""
+msgstr "基準額"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2498,7 +2504,7 @@ msgstr "チャートテンプレート"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr ""
+msgstr "勘定科目表テンプレート"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -4471,7 +4477,7 @@ msgstr "コンフィグレーションパネルに移動"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Good Debtor"
-msgstr ""
+msgstr "良い"
 
 #. module: account
 #. openerp-web
@@ -6306,7 +6312,7 @@ msgstr "ノート"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Nothing to Reconcile"
-msgstr ""
+msgstr "消込対象なし"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -9434,7 +9440,7 @@ msgstr "取引額小計"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Transfer Account"
-msgstr ""
+msgstr "振替勘定科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_journal_id
@@ -10065,6 +10071,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account.py:180
 #, python-format
 msgid ""
@@ -10289,7 +10303,7 @@ msgid ""
 "                                credit note directly or keep it draft,\n"
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
-msgstr ""
+msgstr "作成したクレジットノートは即検証することもできますし、仕入先/顧客からのドキュメントが届くまでドラフトのままにしておくこともできます。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

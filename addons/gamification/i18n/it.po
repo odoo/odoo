@@ -5,19 +5,19 @@
 # Translators:
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
+# Paolo Valier, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"POT-Creation-Date: 2018-03-08 13:58+0000\n"
+"PO-Revision-Date: 2018-03-08 13:58+0000\n"
 "Last-Translator: Giovanni Perteghella <giovanni@perteghella.org>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -482,11 +482,11 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
-"Crea e gestisce gli utenti che si connettono al sistema. Gli utenti possono "
-"essere disattivati, anche per un periodo di tempo, durante il quale essi non"
-" possono/devono collegarsi al sistema. È possibile assegnare ad essi gruppi "
-"per fornire accessi specifici alle applicazioni, che hanno bisogno di usare,"
-" del sistema."
+"Crea e gestisci gli utenti che si connetteranno al sistema. Gli utenti "
+"possono essere disattivati nel caso in cui ci sia un periodo durante il "
+"quale essi non dovranno/dovrebbero connettersi al sistema. È possibile "
+"assegnare loro gruppi per fornire un accesso specifico alle applicazioni che"
+" devono utilizzare nel sistema."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
@@ -1105,6 +1105,11 @@ msgstr "Mai"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
 msgid "Never reminded if no value or zero is specified."
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,subject:gamification.email_template_badge_received
+msgid "New badge ${object.badge_id.name} granted"
 msgstr ""
 
 #. module: gamification

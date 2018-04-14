@@ -3,24 +3,25 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Rolandas <info@paninfo.lt>, 2016
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # Arminas Grigonis <arminas@versada.lt>, 2016
 # Zygi Mantus <zygimantus@gmail.com>, 2016
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2016
-# Valdemar St <vaalds@gmail.com>, 2016
+# vaalds <vaalds@gmail.com>, 2016
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2016
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# SButko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2017\n"
+"Last-Translator: SButko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2119,6 +2120,12 @@ msgstr "Banko pridengimo judėjimo išankstinis nustatymas"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Banko išrašas"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -4991,6 +4998,8 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"Tarpinė sąskaita, kuri naudojama pinigų perkelimams iš likvidumo į kitą "
+"sąskaitą "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_narration
@@ -5867,7 +5876,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "Užrakinti datą ne apskaitininkams"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -6548,6 +6557,9 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
+"Tik apskaitininko rolę turintys naudotojai gali redaguoti sąskaitas iki ir "
+"įskaitant šią datą. Naudokite ją periodo uždarymui einamųjų finansinių metų "
+"intervale, pavyzdžiui."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -10174,6 +10186,14 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account
