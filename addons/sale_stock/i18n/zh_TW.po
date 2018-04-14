@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Martin Trigaux, 2018
 # amos lin <seeing@edirect168.com>, 2018
 # Jason Wu <jaronemo@msn.com>, 2018
@@ -24,7 +25,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>客戶參考:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -40,29 +41,29 @@ msgstr "售後"
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr "允許加上貨運成本"
+msgstr "允許追加送貨費用"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Allow setting manufacturing order properties per order line (advanced)"
-msgstr "允許由訂單細項設置製令單屬性(進階)"
+msgstr "允許逐行設定製造訂單屬性（高級）"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
 msgid ""
 "Allow to modify the sales order dates to postpone deliveries and "
 "procurements"
-msgstr ""
+msgstr "允許修改銷售單以便推遲發貨和補貨"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Allows you to tag sales order lines with properties."
-msgstr "讓您在銷售訂單細項標記屬性。"
+msgstr "允許您用 屬性來標識銷售訂單行。"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "Choose specific routes on sales order lines (advanced)"
-msgstr "在銷售訂單選擇特定的路線(高級)"
+msgstr "在銷售訂單選擇特定的路線（高級）"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -77,17 +78,17 @@ msgstr "日期"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr "預設送貨策略"
+msgstr "預設送貨政策"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "一次全部交貨"
+msgstr "一次性交付所有產品"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "可供貨產品先出貨"
+msgstr "交付每個可用的產品"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -97,12 +98,12 @@ msgstr "交貨"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr "出貨單"
+msgstr "交貨單"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
 msgid "Don't use manufacturing properties (recommended as its easier)"
-msgstr "不使用生產屬性(這樣更容易些)"
+msgstr "不用製造屬性（推薦，它更容易）"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -113,7 +114,7 @@ msgstr "開啟銷售訂單行上的路線"
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 msgid "Incoterms"
-msgstr "國際商業用語"
+msgstr "貿易術語"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
@@ -128,12 +129,12 @@ msgstr "貿易術語是一系列的銷售術語,用來劃分交易成本和買�
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr "國貿條款(INCOTERMS)是一系列事先定義並使用於國際交易的商業術語。"
+msgstr "國際商業條款是一系列預定義的用於國際貿易的商業條款。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "庫存路徑"
+msgstr "庫存路線"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -143,12 +144,12 @@ msgstr "發票"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "發票明細"
+msgstr "發票行"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "發票開立"
+msgstr "開立發票"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -157,17 +158,17 @@ msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr "承諾客戶日期的邊際誤差，為了處理供應鏈中非預期性的延滯，產品的採購及出貨排程會較實際承諾日期提早該天數。"
+msgstr "向客戶承諾日期的誤差幅度。產品將被比實際承諾的日期提前很多天安排採購和交貨，以應對供應鏈中的意外延誤。"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
 msgid "No order specific routes like MTO or drop shipping"
-msgstr "不用像是 MTO  或 drop shipping 的特殊路線"
+msgstr "不用特殊路線例如MTO 或drop shipping"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr "銷售訂單不計入運輸成本"
+msgstr "銷售訂單不加運輸成本"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
@@ -178,13 +179,13 @@ msgstr "庫存不夠！"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order Routing"
-msgstr ""
+msgstr "訂單路線"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:156
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "訂貨數量減少"
+msgstr "訂貨數量減少！"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -199,12 +200,12 @@ msgstr "與此銷售相關的揀貨"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_order
 msgid "Procurement"
-msgstr "採購"
+msgstr "補貨"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_sale_order_dates:0
 msgid "Procurements and deliveries dates are based on the sales order dates"
-msgstr ""
+msgstr "補貨和發貨日期是基於銷售單的日期"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
@@ -214,17 +215,17 @@ msgstr "產品"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
 msgid "Product Template"
-msgstr "產品範本"
+msgstr "產品模板"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Properties on SO Lines"
-msgstr "銷售訂單明細的屬性"
+msgstr "銷售訂單行的屬性"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退貨提貨單"
+msgstr "退貨揀貨"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -239,17 +240,17 @@ msgstr "銷售訂單"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
 msgid "Sale Order Lines"
-msgstr "銷售訂單明細"
+msgstr "銷售訂單行"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "銷貨單"
+msgstr "銷售訂單"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "銷售訂單細項"
+msgstr "銷售訂單行"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -259,64 +260,64 @@ msgstr "銷售訂單統計"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr "銷售安全期"
+msgstr "銷售安全天數"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
 msgid "Sales Safety Days *"
-msgstr ""
+msgstr "銷售安全天數 *"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "在銷售訂單明細上可選擇的"
+msgstr "在銷售訂單行上可選"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship all products at once, without back orders"
-msgstr "一次出貨所有產品"
+msgstr "一次性發貨所有產品"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_picking_policy:0
 msgid "Ship products when some are available, and allow back orders"
-msgstr "當有庫存時候，就可以出貨，無須全部數量"
+msgstr "當有庫存時候，就可以發貨，勿須全部數量"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
 #: model:ir.ui.view,arch_db:sale_stock.view_sales_config_inherit_sale_stock
 msgid "Shipping"
-msgstr "船運"
+msgstr "送貨"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr "配送資訊"
+msgstr "送貨信息"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr "貨運規則"
+msgstr "送貨策略"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "庫存調動"
+msgstr "庫存移動"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
+msgstr "該產品由 %.2f %s 打包。你應該出售 %.2f %s "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid "To Refund"
-msgstr ""
+msgstr "待退款"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
 msgid "To Refund in SO"
-msgstr ""
+msgstr "銷貨訂單待退款"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -328,7 +329,7 @@ msgstr "調撥"
 #: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid ""
 "Trigger a decrease of the delivered quantity in the associated Sale Order"
-msgstr ""
+msgstr "將造成相關銷售訂單中交貨數量的減少"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -348,7 +349,7 @@ msgstr "警告"
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "你正在減少訂購數量！ 如果需要，請勿忘記手動更新送貨單。"
+msgstr "您正在減少訂購的數量！如果需要，不要忘記手動更新交貨單。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:146
@@ -357,6 +358,8 @@ msgid ""
 "You plan to sell %s %s but you only have %s %s available!\n"
 "The stock on hand is %s %s."
 msgstr ""
+"您計劃出售 %s %s ，但只有 %s %s 可用！\n"
+"手上的庫存數量為  %s %s 。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
