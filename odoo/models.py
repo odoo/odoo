@@ -1718,7 +1718,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
-            qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
+            # Postgres has no native date_trunc for some intervals
+            # Work around based on
+            # https://stackoverflow.com/questions/7299342/what-is-the-fastest-way-to-truncate-timestamps-to-5-minutes-in-postgres
+            if gb_function == 'bimester':
+                qualified_field = "date_trunc('year', %s) + date_part('month', %s)::int / 2 * interval '2 month'"
+            elif gb_function == 'quadrimester':
+                qualified_field = "date_trunc('year', %s) + date_part('month', %s)::int / 4 * interval '4 month'"
+            elif gb_function == 'semester':
+                qualified_field = "date_trunc('year', %s) + date_part('month', %s)::int / 6 * interval '6 month'"
+            else:
+                qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
