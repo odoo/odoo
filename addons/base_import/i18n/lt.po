@@ -10,13 +10,14 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Naglis Jonaitis, 2017
 # Rolandas <info@paninfo.lt>, 2017
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +141,7 @@ msgstr "Dešimtainis skyriklis:"
 #: code:addons/base_import/static/src/xml/base_import.xml:71
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "Atidėti tėvų/vaikų skaičiavimus"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
@@ -292,6 +293,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Jei faile bus pateikti\n"
+"                stulpelių pavadinimai, Odoo automatiškai bandys susieti juos\n"
+"                su atitinkamais laukais. Tai palengvina importavimą\n"
+"                ir ypatingai tada, kai failas susideda iš daug stulpelių."
 
 #. module: base_import
 #. openerp-web
@@ -302,6 +307,10 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
+"Jei modelis naudoja pokalbių skydelį, istorijos sekimui"
+"                             bus sukurtos prenumeratos ir išsiųsti "
+"pranešimai                             importavimo metu, o tai šiek tiek "
+"sulėtins importavimo procesą."
 
 #. module: base_import
 #. openerp-web
@@ -312,6 +321,10 @@ msgid ""
 "                      parent / child relation occurs on every line, and lead"
 " to a slower import.                     Defering it can speed up import."
 msgstr ""
+"Jei modelyje naudojamos tėvų/vaikų sąsajos, skaičiavimai"
+"                      tėvų / vaikų sąsajoms atliekami kiekvienai eilutei, o "
+"tai sulėtina importavimą.                     Atidėjimas gali pagreitinti "
+"importavimo procesą."
 
 #. module: base_import
 #. openerp-web
@@ -510,7 +523,7 @@ msgstr "Kortelė"
 #: code:addons/base_import/static/src/xml/base_import.xml:86
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "Testuoti importavimą"
 
 #. module: base_import
 #. openerp-web
