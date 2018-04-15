@@ -3,21 +3,23 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Paulius Sladkevičius <paulius@hbee.eu>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Paulius Sladkevičius <paulius@versada.eu>, 2017
+# Martin Trigaux, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Anatolij <an@cq.lt>, 2017
+# Anatolij, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Eimantas <eimantas@focusate.eu>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2017\n"
+"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,12 +78,12 @@ msgstr "Jau importuoti elementai"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Bent vienas įeinantis mokėjimas"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Bent vienas išeinantis mokėjimas"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:78
@@ -118,12 +120,12 @@ msgstr "Banko išrašo eilutė"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr ""
+msgstr "Banko nustatymai pažymėti, kaip baigti"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Priklauso naudotojo dabartinei įmonei"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -138,6 +140,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
+"Nepavyko atpažinti, kuriam žurnalui importuoti šį išrašą. Prašome pasirinkti"
+" žurnalą rankiniu būdu."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -145,6 +149,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Pažymėkite varnele, jei nenorite, kad šiame žurnale kuriamos sąskaitos ir "
+"sąskaitų grąžinimai naudotų tą pačią seką."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -182,6 +188,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"Nepavyko apdoroti pateikto failo.\n"
+"Ar instaliavote modulį, kuris palaikytų tokio tipo failus?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -198,12 +206,12 @@ msgstr "Sukurta"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr ""
+msgstr "Kliento grąžinimo įrašų seka"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr ""
+msgstr "Kliento grąžinimai: kitas numeris"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -218,7 +226,7 @@ msgstr "Debito būdas"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "Seka dedikuota klientų grąžinimams"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -242,6 +250,8 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
+"Parsisiųskite banko išrašą iš savo banko ir importuokite jį čia. Palaikomi "
+"formatai:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -295,7 +305,7 @@ msgstr "Importuoti banko sąskaitos išrašą"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Import Bank Statement Journal Creation Wizard"
-msgstr ""
+msgstr "Banko išrašų importavimo žurnalo kūrimo vedlys"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -350,12 +360,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "Kanban skydelis"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "Kanban skydelio grafas"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
@@ -387,6 +397,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Rankinis: priimkite mokėjimus grynais, čekiais ar bet kokiu kitu metodu už Odoo.\n"
+"Elektroninis: priimkite apmokėjimus automatiškai per mokėjimo gavėją, prašant tranzakcijos išsaugotos kliento kortelėje pirkimo arba prenumeratos (naudojant pirkimo žymę) metu.\n"
+"Grupinis depozitas: sutvarkykite kelis čekius iš karto sugeneruodami grupinį depozitą. Kai sukeliate banko išrašą į Odoo, Jums pasiūloma sudengti tranzakcijas su grupiniu depozitu. Įgalinkite šią opciją nustatymuose."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -395,6 +408,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Rankinis: priimkite mokėjimus grynais, čekiais ar bet kokiu kitu metodu už Odoo.\n"
+"Čekis: apmokėkite sąskaitą čekiu ir išspausdinkite jį per Odoo.\n"
+"SEPA kredito pervedimas: apmokėkite sąskaita iš SEPA kredito pervedimo failo, kurį pateikiate bankui. Įgalinkite šį funkcionalumą nustatymuose."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
@@ -430,6 +446,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Pasirinkite 'Pardavimai' norėdami atidaryti klientų sąskaitų žurnalus. \n"
+"Pasirinkite 'Pirkimai' tiekėjų sąskaitų žurnalams. \n"
+"Pasirinkite 'grynieji' arba 'bankas' žurnalams, naudojamiems klientų ir tiekėjų mokėjimams. \n"
+"Pasirinkite 'bendra' įvairaus pobūdžio operacijų žurnalams. "
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -445,6 +465,7 @@ msgstr "Seka"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
+"Nepažymėkite laukelio 'aktyvus' jei norite paslėpti žurnalą jo neištrinant."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
@@ -460,6 +481,7 @@ msgstr "Rodyti įrašus skydelyje"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Technical field used in the special view for the setup bar step."
 msgstr ""
+"Techninis laukas naudojamas specialiame vaizde nustatymo juostos žingsnyje."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -492,17 +514,18 @@ msgstr "Valiuta naudota įvedant dokumentą"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
+msgstr "Žurnalo įrašai šiam žurnalui bus vadinami naudojant šį prefiksą."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
 msgstr ""
+"Sekantis eilės numeris, kuris bus naudojamas sekančiai kreditinei sąskaitai."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "Sekantis eilės numeris, kuris bus naudojamas sekančiai sąskaitai."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
