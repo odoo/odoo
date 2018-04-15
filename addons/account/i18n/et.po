@@ -595,7 +595,7 @@ msgstr "<span> Kuni </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr "<span>Andmiku kirjed</span>"
+msgstr "<span>Andmiku kanded</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1142,8 +1142,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Andmiku kanne sisaldab mitut andmiku kirjet, mis võivad olla kas deebet- või"
-" kreedit-tehingud."
+"Andmiku kanne sisaldab mitut kirjet, mis võivad olla kas deebet- või "
+"kreedit-tehingud."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -2417,7 +2417,7 @@ msgstr "Pangakonto eesliide"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
 msgid "Bank Feeds"
-msgstr "Pangakanalid"
+msgstr "Pangaväljavõtted"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_yodlee
@@ -3001,7 +3001,7 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Vali see, kui see konto lubab arvete ja maksete sobitamist andmiku kirjetel."
+"Vali, kui see konto lubab arvete ja maksete sobitamist andmiku kirjetel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
@@ -3334,7 +3334,7 @@ msgid ""
 "Compute the counter part accounts of this journal item for this journal "
 "entry. This can be needed in reports."
 msgstr ""
-"Arvuta kirje vastaskontod sellele andmikukandele. See võib olla vajalik "
+"Arvuta kirje vastaskontod sellele andmiku kirjele. See võib olla vajalik "
 "aruandluses."
 
 #. module: account
@@ -3709,7 +3709,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr "Loomise kuupäev"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit
@@ -3798,7 +3798,7 @@ msgstr "Kreeditsumma"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Kreedit andmiku kirjed, mis on sobitatud selle andmiku kirjetega."
+msgstr "Kreedit andmiku kanded, mis on sobitatud selle andmiku kannetega."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -4081,7 +4081,7 @@ msgstr "Deebetsumma"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Deebet andmiku kirjed, mis on sobitatud selle andmiku kirjega."
+msgstr "Deebet andmiku kanded, mis on sobitatud selle andmiku kannetega."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6083,7 +6083,7 @@ msgstr "Andmikukande number"
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
-msgstr "Andmikukirje"
+msgstr "Andmiku kanne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_writeoff_label
@@ -6091,7 +6091,7 @@ msgstr "Andmikukirje"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_label
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Journal Item Label"
-msgstr "Andmikukirje silt"
+msgstr "Andmiku kande silt"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:399
@@ -6128,7 +6128,7 @@ msgstr "Andmiku kirjed"
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
-msgstr "Andmikukirjed sobitamiseks"
+msgstr "Sobitamist vajavad andmiku kirjed"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_name
@@ -6148,7 +6148,7 @@ msgstr "Käesoleva aasta arved andmikus"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Andmikukirjed, kus vastavuse number pole määratud "
+msgstr "Andmiku kirjed, kus vastavuse number pole määratud "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_account_opening_journal_id
@@ -6569,7 +6569,7 @@ msgstr "Kohustus"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_move_id
 msgid "Link to the automatically generated Journal Items."
-msgstr "Link automaatselt loodud andmikukirjete juurde."
+msgstr "Link automaatselt loodud andmiku kirjete juurde."
 
 #. module: account
 #: selection:account.account.type,type:0
@@ -6796,7 +6796,7 @@ msgstr "Sobitatud deebet"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Sobitatud andmikukirjed"
+msgstr "Sobitatud andmiku kirjed"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
@@ -7430,7 +7430,7 @@ msgstr "Algsaldode kanne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_opening_opening_move_line_ids
 msgid "Opening Journal Items"
-msgstr "Algsaldode andmikukirjed"
+msgstr "Algsaldode andmiku kirjed"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_opening_move_posted
@@ -7679,7 +7679,7 @@ msgstr "Partnerettevõte"
 #: model:ir.ui.menu,name:account.menu_partner_ledger
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "Partner Ledger"
-msgstr "Partneri pearaamat"
+msgstr "Ostu- ja müügireskontro"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
@@ -10943,7 +10943,7 @@ msgstr "Sisestamata"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Postitamata andmiku kirjed"
+msgstr "Postitamata andmiku kanded"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11467,7 +11467,7 @@ msgid ""
 "used in an account journal item. If you need to change the unit of measure, "
 "you may deactivate this product."
 msgstr ""
-"Te ei saa muuta toote mõõtühikut, mida on juba kasutatud andmikukirje "
+"Te ei saa muuta toote mõõtühikut, mida on juba kasutatud andmiku kirje "
 "kontona. Kui te peate muutma toote mõõtühikut, siis on teil võimalik toode "
 "deaktiveerida."
 
