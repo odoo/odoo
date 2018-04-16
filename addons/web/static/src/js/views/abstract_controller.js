@@ -102,6 +102,18 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * Called each time the controller is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        this.renderer.on_attach_callback();
+    },
+    /**
+     * Called each time the controller is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        this.renderer.on_detach_callback();
+    },
 
     //--------------------------------------------------------------------------
     // Public

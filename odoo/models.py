@@ -651,6 +651,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # create missing xml ids
         missing = self.filtered(lambda r: r.id not in xids)
+        if not missing:
+            return (
+                (record, '%s.%s' % xids[record.id])
+                for record in self
+            )
+
         xids.update(
             (r.id, (modname, '%s_%s_%s' % (
                 r._table,
@@ -659,6 +665,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             )))
             for r in missing
         )
+        fields = ['module', 'model', 'name', 'res_id']
         cr.copy_from(io.StringIO(
             u'\n'.join(
                 u"%s\t%s\t%s\t%d" % (
@@ -670,10 +677,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 for record in missing
             )),
             table='ir_model_data',
-            columns=['module', 'model', 'name', 'res_id'],
+            columns=fields,
         )
-
-        self.invalidate_cache()
+        self.env['ir.model.data'].invalidate_cache(fnames=fields)
 
         return (
             (record, '%s.%s' % xids[record.id])
@@ -681,10 +687,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         )
 
     @api.multi
-    def _export_rows(self, fields):
+    def _export_rows(self, fields, batch_invalidate=True):
         """ Export fields of the records in ``self``.
 
             :param fields: list of lists of fields to traverse
+            :param batch_invalidate:
+                whether to clear the cache for the top-level object every so often (avoids huge memory consumption when exporting large numbers of records)
             :return: list of lists of corresponding values
         """
         import_compatible = self.env.context.get('import_compat', True)
@@ -700,6 +708,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 for rec in sub:
                     yield rec
                 rs.invalidate_cache(ids=sub.ids)
+        if not batch_invalidate:
+            splittor = lambda rs: rs
 
         # both _ensure_xml_id and the splitter want to work on recordsets but
         # neither returns one, so can't really be composed...
@@ -750,7 +760,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         # 'display_name' where no subfield is exported
                         fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
                                    for p in fields]
-                        lines2 = value._export_rows(fields2)
+                        lines2 = value._export_rows(fields2, batch_invalidate=False)
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):

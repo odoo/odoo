@@ -75,6 +75,7 @@
                     <field name="product_id"/>
                     <field name="priority"/>
                     <field name="state"/>
+                    <field name="show_details_visible"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -88,7 +89,11 @@
                                     <field name="product_id"/>
                                 </div>
                                 <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left"/>
+                                    <div class="oe_kanban_bottom_left">
+                                        <button name="action_show_details" string="Register lots, packs, location"
+                                                class="o_icon_button fa fa-list" type="object"
+                                                attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                    </div>
                                     <div class="oe_kanban_bottom_right">
                                         <span><field name="product_uom_qty"/></span>
                                     </div>

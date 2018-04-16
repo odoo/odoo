@@ -99,6 +99,7 @@ var FormController = BasicController.extend({
      * @todo convert to new style
      */
     on_attach_callback: function () {
+        this._super.apply(this, arguments);
         this.autofocus();
     },
     /**
