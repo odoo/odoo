@@ -580,8 +580,10 @@ class AccountMoveLine(models.Model):
             return
         # If we have multiple currency, we can only base ourselve on debit-credit to see if it is fully reconciled
         currency = set([a.currency_id for a in amls if a.currency_id.id != False])
+        multiple_currency = False
         if len(currency) != 1:
             currency = False
+            multiple_currency = True
         else:
             currency = list(currency)[0]
         # Get the sum(debit, credit, amount_currency) of all amls involved 
@@ -597,6 +599,7 @@ class AccountMoveLine(models.Model):
             total_amount_currency += aml.amount_currency
             # Convert in currency if we only have one currency and no amount_currency
             if not aml.amount_currency and currency:
+                multiple_currency = True
                 total_amount_currency += aml.company_id.currency_id.with_context(date=aml.date).compute(aml.balance, currency)
             # If we still have residual value, it means that this move might need to be balanced using an exchange rate entry
             if aml.amount_residual != 0 or aml.amount_residual_currency != 0:
@@ -604,8 +607,14 @@ class AccountMoveLine(models.Model):
                     to_balance[aml.currency_id] = self.env['account.move.line']
                 to_balance[aml.currency_id] += aml
         # Check if reconciliation is total
+        # To check if reconciliation is total we have 3 differents use case:
+        # 1) There are multiple currency different than company currency, in that case we check using debit-credit
+        # 2) We only have one currency which is different than company currency, in that case we check using amount_currency
+        # 3) We have only one currency and some entries that don't have a secundary currency, in that case we check debit-credit
+        #   or amount_currency.
         digits_rounding_precision = amls[0].company_id.currency_id.rounding
-        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0:
+        if (currency and float_is_zero(total_amount_currency, precision_rounding=currency.rounding)) or \
+            (multiple_currency and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0):
             exchange_move_id = False
             # Eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
             if to_balance:
