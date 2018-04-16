@@ -160,6 +160,8 @@ class StockMove(models.Model):
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
+    package_level_id = fields.Many2one('stock.package_level', 'Package Level')
+    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
@@ -550,7 +552,8 @@ class StockMove(models.Model):
     def _prepare_merge_moves_distinct_fields(self):
         return [
             'product_id', 'price_unit', 'product_packaging', 'procure_method',
-            'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id'
+            'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
+            'package_level_id'
         ]
 
     @api.model
@@ -558,7 +561,8 @@ class StockMove(models.Model):
         move.ensure_one()
         return [
             move.product_id.id, move.price_unit, move.product_packaging.id, move.procure_method, 
-            move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
+            move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
+            move.package_level_id.id
         ]
 
     def _merge_moves(self, merge_into=False):
@@ -929,10 +933,11 @@ class StockMove(models.Model):
                         assigned_moves |= move
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    available_quantity = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id)
+                    forced_package_id = move.package_level_id.package_id or None
+                    available_quantity = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id, package_id=forced_package_id)
                     if available_quantity <= 0:
                         continue
-                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
                         continue
                     if need == taken_quantity:
@@ -1122,7 +1127,7 @@ class StockMove(models.Model):
                 .mapped('move_line_ids.result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.mapped('location_id')) > 1:
-                raise UserError(_('You should not put the contents of a package in different locations.'))
+                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package inot two location.'))
         picking = moves_todo and moves_todo[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids')._action_assign()

@@ -6,174 +6,94 @@ from odoo.tests.common import TransactionCase
 
 class TestPacking(TransactionCase):
 
-    def test_packing(self):
+    def setUp(self):
+        super(TestPacking, self).setUp()
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.warehouse = self.env['stock.warehouse'].search([('lot_stock_id', '=', self.stock_location.id)], limit=1)
+        self.warehouse.write({'delivery_steps': 'pick_pack_ship'})
+        self.pack_location = self.warehouse.wh_pack_stock_loc_id
+        self.ship_location = self.warehouse.wh_output_stock_loc_id
+        self.customer_location = self.env.ref('stock.stock_location_customers')
 
-        # Create a new stockable product
+        self.productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        self.productB = self.env['product.product'].create({'name': 'Product B', 'type': 'product'})
 
-        product1 = self.env['product.product'].create({
-            'name': 'Nice product',
-            'type': 'product',
-            'categ_id': self.ref('product.product_category_1'),
-            'list_price': 100.0,
-            'standard_price': 70.0,
-            'seller_ids': [(0, 0, {
-                'delay': 1,
-                'name': self.ref('base.res_partner_2'),
-                'min_qty': 2.0,
-            })],
-            'uom_id': self.ref('uom.product_uom_unit'),
-            'uom_po_id': self.ref('uom.product_uom_unit'),
+    def test_put_in_pack(self):
+        """ In a pick pack ship scenario, create two packs in pick and check that
+        they are correctly recognised and handled by the pack and ship picking.
+        Along this test, we'll use action_toggle_processed to process a pack
+        from the entire_package_ids one2many and we'll directly fill the move
+        lines, the latter is the behavior when the user did not enable the display
+        of entire packs on the picking type.
+        """
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 20.0)
+        ship_move_a = self.env['stock.move'].create({
+            'name': 'The ship move',
+            'product_id': self.productA.id,
+            'product_uom_qty': 5.0,
+            'product_uom': self.productA.uom_id.id,
+            'location_id': self.ship_location.id,
+            'location_dest_id': self.customer_location.id,
+            'warehouse_id': self.warehouse.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'procure_method': 'make_to_order',
+            'state': 'draft',
         })
-
-        # Create an incoming picking for this product of 300 PCE from suppliers to stock
-        default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-        default_get_vals.update({
-            'name': 'Incoming picking',
-            'partner_id': self.ref('base.res_partner_2'),
-            'picking_type_id': self.ref('stock.picking_type_in'),
-            'move_lines': [(0, 0, {
-                'product_id': product1.id,
-                'product_uom_qty': 300.00,
-                'location_id': self.ref('stock.stock_location_suppliers'),
-                'location_dest_id': self.ref('stock.stock_location_stock'),
-            })],
+        ship_move_b = self.env['stock.move'].create({
+            'name': 'The ship move',
+            'product_id': self.productB.id,
+            'product_uom_qty': 5.0,
+            'product_uom': self.productB.uom_id.id,
+            'location_id': self.ship_location.id,
+            'location_dest_id': self.customer_location.id,
+            'warehouse_id': self.warehouse.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'procure_method': 'make_to_order',
+            'state': 'draft',
         })
-        pick1 = self.env['stock.picking'].new(default_get_vals)
-        pick1.onchange_picking_type()
-        pick1.move_lines.onchange_product_id()
-        vals = pick1._convert_to_write(pick1._cache)
-        pick1 = self.env['stock.picking'].create(vals)
+        ship_move_a._assign_picking()
+        ship_move_b._assign_picking()
+        ship_move_a._action_confirm()
+        ship_move_b._action_confirm()
+        pack_move_a = ship_move_a.move_orig_ids[0]
+        pick_move_a = pack_move_a.move_orig_ids[0]
 
-        # Confirm and assign picking
-        pick1.action_confirm()
-        pick1.action_assign()
+        pick_picking = pick_move_a.picking_id
+        packing_picking = pack_move_a.picking_id
+        shipping_picking = ship_move_a.picking_id
 
-        # Put 120 pieces on Pallet 1 (package), 120 pieces on Pallet 2 with lot A and 60 pieces on Pallet 3
-        lot_a = self.env['stock.production.lot'].create({
-            'name': 'Lot A',
-            'product_id': product1.id,
+        pick_picking.action_assign()
+        pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).qty_done = 1.0
+        pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).qty_done = 2.0
+
+        first_pack = pick_picking.put_in_pack()
+        pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA and ml.qty_done == 0.0).qty_done = 4.0
+        pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB and ml.qty_done == 0.0).qty_done = 3.0
+        second_pack = pick_picking.put_in_pack()
+        pick_picking.button_validate()
+        self.assertEqual(len(first_pack.quant_ids), 2)
+        self.assertEqual(len(second_pack.quant_ids), 2)
+        packing_picking.action_assign()
+        self.assertEqual(len(packing_picking.package_level_ids), 2, 'Two package levels must be created after assigning picking')
+        packing_picking.package_level_ids.write({'is_done': True})
+        packing_picking.action_done()
+
+
+    def test_pick_a_pack_confirm(self):
+        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, package_id=pack)
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
         })
-
-        # create package
-        package1 = self.env['stock.quant.package'].create({'name': 'Pallet 1'})
-        package2 = self.env['stock.quant.package'].create({'name': 'Pallet 2'})
-        package3 = self.env['stock.quant.package'].create({'name': 'Pallet 3'})
-
-        # Create package for each line and assign it as result_package_id
-        # create pack operation
-        pick1.move_line_ids[0].write({'result_package_id': package1.id, 'qty_done': 120})
-        new_pack1 = self.env['stock.move.line'].create({
-          'product_id': product1.id,
-          'product_uom_id': self.ref('uom.product_uom_unit'),
-          'picking_id': pick1.id,
-          'lot_id': lot_a.id,
-          'qty_done': 120.0,
-          'result_package_id': package2.id,
-          'location_id': self.ref('stock.stock_location_suppliers'),
-          'location_dest_id': self.ref('stock.stock_location_stock')
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
         })
-        new_pack2 = self.env['stock.move.line'].create({
-          'product_id': product1.id,
-          'product_uom_id': self.ref('uom.product_uom_unit'),
-          'picking_id': pick1.id,
-          'result_package_id': package3.id,
-          'qty_done': 60.0,
-          'location_id': self.ref('stock.stock_location_suppliers'),
-          'location_dest_id': self.ref('stock.stock_location_stock')
-        })
-
-        # Transfer the receipt
-        pick1.action_done()
-
-        # Check the system created 5 quants one with 120 pieces on pallet 1,
-        # one with 120 pieces on pallet 2 with lot A and 60 pieces on pallet 3 in stock
-        # and 1 with -180 pieces and another with -120 piece lot A in supplier
-        quants = self.env['stock.quant'].search([('product_id', '=', product1.id)])
-        self.assertTrue(len(quants.ids) == 5, "The number of quants created is not correct")
-        for quant in quants:
-            if quant.package_id.name == 'Pallet 1':
-                self.assertTrue(quant.quantity == 120, "Should have 120 pieces on pallet 1")
-            elif quant.package_id.name == 'Pallet 2':
-                self.assertTrue(quant.quantity == 120, "Should have 120 pieces on pallet 2")
-            elif quant.package_id.name == 'Pallet 3':
-                self.assertTrue(quant.quantity == 60, "Should have 60 pieces on pallet 3")
-
-        # Check there is no backorder or extra moves created
-        backorder = self.env['stock.picking'].search([('backorder_id', '=', pick1.id)])
-        self.assertTrue(not backorder)
-
-        # Check extra moves created
-        self.assertTrue(len(pick1.move_lines) == 1)
-
-        # Make a delivery order of 300 pieces to the customer
-        default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-        default_get_vals.update({
-            'name': 'outgoing picking',
-            'partner_id': self.ref('base.res_partner_4'),
-            'picking_type_id': self.ref('stock.picking_type_out'),
-            'move_lines': [(0, 0, {
-                'product_id': product1.id,
-                'product_uom_qty': 300.00,
-                'location_id': self.ref('stock.stock_location_stock'),
-                'location_dest_id': self.ref('stock.stock_location_customers'),
-            })],
-        })
-        delivery_order1 = self.env['stock.picking'].new(default_get_vals)
-        delivery_order1.onchange_picking_type()
-        delivery_order1.move_lines.onchange_product_id()
-        vals = delivery_order1._convert_to_write(delivery_order1._cache)
-        delivery_order1 = self.env['stock.picking'].create(vals)
-
-        # Assign and confirm
-        delivery_order1.action_confirm()
-        delivery_order1.action_assign()
-
-        # Instead of doing the 300 pieces, you decide to take pallet 1 (do not
-        # mention product in operation here) and 20 pieces from lot A and 10 pieces from pallet 3
-        for rec in delivery_order1.move_line_ids:
-            if rec.package_id.name == 'Pallet 1':
-                rec.qty_done = 120
-                rec.result_package_id = False
-            if rec.package_id.name == 'Pallet 2':
-                rec.qty_done = 20
-                rec.result_package_id = False
-            if rec.package_id.name == 'Pallet 3':
-                rec.qty_done = 10
-                rec.result_package_id = False
-
-        # Process this picking
-        delivery_order1.action_done()
-
-        # Check the quants that you have 100 pieces of pallet 2 and 50 pieces of pallet 3 in stock
-        records = self.env['stock.quant'].search([('product_id', '=', product1.id)])
-        for rec in records:
-            if rec.package_id.name == 'Pallet 2' and rec.location_id.id == self.ref('stock.stock_location_stock'):
-                self.assertTrue(rec.quantity == 100, "Should have 100 pieces in stock on pallet 2, got " + str(rec.quantity))
-            elif rec.package_id.name == 'Pallet 3' and rec.location_id.id == self.ref('stock.stock_location_stock'):
-                self.assertTrue(rec.quantity == 50, "Should have 50 pieces in stock on pallet 3")
-            else:
-                self.assertTrue(rec.location_id.id != self.ref('stock.stock_location_stock'), "Unrecognized quant in stock")
-
-        # Check a backorder was created and on that backorder, prepare partial and process backorder
-        backorders = self.env['stock.picking'].search([('backorder_id', '=', delivery_order1.id)])
-        self.assertTrue(backorders, "Backorder should have been created")
-        backorders.action_assign()
-        picking = backorders[0]
-        self.assertTrue(len(picking.move_line_ids) == 2, "Wrong number of pack operation")
-        for pack_op in picking.move_line_ids:
-            self.assertTrue(pack_op.package_id.name in ('Pallet 2', 'Pallet 3'), "Wrong pallet info in pack operation (%s found)" % (pack_op.package_id.name))
-            if pack_op.package_id.name == 'Pallet 2':
-                self.assertTrue(pack_op.product_qty == 100)
-                pack_op.qty_done = 100
-            elif pack_op.package_id.name == 'Pallet 3':
-                self.assertTrue(pack_op.product_qty == 50)
-                pack_op.qty_done = 50
-        backorders.action_done()
-
-        # Check there are still 0 pieces in stock
-        records = self.env['stock.quant'].search([('product_id', '=', product1.id), ('location_id', '=', self.ref('stock.stock_location_stock'))])
-        total_qty = 0
-        for rec in records:
-            total_qty += rec.quantity
-        self.assertTrue(total_qty == 0, "Total quantity in stock should be 0 as the backorder took everything out of stock")
-        self.assertTrue(product1.qty_available == 0, "Quantity available should be 0 too")
+        picking.action_confirm()
+        self.assertEqual(len(picking.move_lines), 1, 'One move should be created when the package_level has been confirmed')
