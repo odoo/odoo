@@ -80,14 +80,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 for line in rec.sale_order_id.order_line:
                     if not line.is_downpayment:
                         if line.qty_delivered > line.product_uom_qty:
-                            upsell += ((line.qty_delivered - line.product_uom_qty) * (line.price_unit + (line.price_tax/line.product_uom_qty)))
+                            upsell += ((line.qty_delivered - line.product_uom_qty) * (line.price_unit + (line.price_tax/(line.product_uom_qty or 1))))
                         else:
-                            undeliver += (((line.product_uom_qty - line.qty_delivered) * (line.price_unit + (line.price_tax/line.product_uom_qty))) if line.product_id.invoice_policy == 'delivery' else 0.0)
+                            undeliver += (((line.product_uom_qty - line.qty_delivered) * (line.price_unit + (line.price_tax/(line.product_uom_qty or 1)))) if line.product_id.invoice_policy == 'delivery' else 0.0)
                         if line.invoice_status == 'to invoice':
                             if line.product_id.invoice_policy == 'delivery':
-                                ready = ready + ((line.price_unit + (line.price_tax/line.product_uom_qty)) * (line.qty_delivered - line.qty_invoiced))
+                                ready = ready + ((line.price_unit + (line.price_tax/(line.product_uom_qty or 1))) * (line.qty_delivered - line.qty_invoiced))
                             else:
-                                ready = ready + ((line.price_unit + (line.price_tax/line.product_uom_qty)) * (line.product_uom_qty - line.qty_invoiced))
+                                ready = ready + ((line.price_unit + (line.price_tax/(line.product_uom_qty or 1))) * (line.product_uom_qty - line.qty_invoiced))
                         unbill += (((line.price_unit + (line.price_tax/line.product_uom_qty)) * (line.product_uom_qty - line.qty_invoiced)) if (line.product_uom_qty - line.qty_invoiced) > 0.0 else 0.0)
                     else:
                         taxes = line.tax_id.compute_all(line.price_reduce, line.order_id.currency_id, line.qty_to_invoice, product=line.product_id, partner=line.order_id.partner_shipping_id)
