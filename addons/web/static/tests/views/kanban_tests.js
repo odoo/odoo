@@ -1130,7 +1130,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create a column in grouped on m2o', function (assert) {
-        assert.expect(13);
+        assert.expect(14);
 
         var nbRPCs = 0;
         var kanban = createView({
@@ -1148,6 +1148,11 @@ QUnit.module('Views', {
                 nbRPCs++;
                 if (args.method === 'name_create') {
                     assert.ok(true, "should call name_create");
+                }
+                //Create column will call resequence to set column order
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(true, "should call resequence");
+                    return $.when(true);
                 }
                 return this._super(route, args);
             },
@@ -1229,7 +1234,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(32);
+        assert.expect(33);
 
         testUtils.patch(KanbanRenderer, {
             _renderGrouped: function () {
@@ -2015,7 +2020,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('archive new kanban column', function (assert) {
-        assert.expect(15);
+        assert.expect(16);
 
         this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
 
@@ -2044,6 +2049,7 @@ QUnit.module('Views', {
         kanban.$('.o_column_quick_create input').val('new colum');
         kanban.$('.o_column_quick_create button.o_kanban_add').click();
         rpcs.push('/web/dataset/call_kw/product/name_create');
+        rpcs.push('/web/dataset/resequence');
         assert.verifySteps(rpcs);
 
         // add a record inside
