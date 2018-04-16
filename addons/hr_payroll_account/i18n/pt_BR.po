@@ -3,17 +3,16 @@
 # * hr_payroll_account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Mateus Lopes <mateus1@gmail.com>, 2017
-# grazziano <gra.negocia@gmail.com>, 2017
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
+# Martin Trigaux, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: grazziano <gra.negocia@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +27,7 @@ msgid "Accounting"
 msgstr "Contabilidade"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_move_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__move_id
 msgid "Accounting Entry"
 msgstr "Entrada Contábil"
 
@@ -40,26 +39,26 @@ msgid "Adjustment Entry"
 msgstr "Entrada de Ajuste"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_analytic_account_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_analytic_account_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
 msgid "Analytic Account"
 msgstr "Conta Analítica"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_credit
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_credit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_credit
 msgid "Credit Account"
 msgstr "Conta de Crédito"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_date
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__date
 msgid "Date Account"
 msgstr "Data da Conta"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_debit
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_debit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_debit
 msgid "Debit Account"
 msgstr "Conta de Débito"
 
@@ -74,7 +73,7 @@ msgid "Generate payslips for all selected employees"
 msgstr "Gerar holerites para todos os funcionários selecionados"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip__date
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr "Deixe vazio para usar o período da data de validação (holerite)."
 
@@ -84,14 +83,14 @@ msgid "Pay Slip"
 msgstr "Holerite"
 
 #. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lotes holerite"
+
+#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
 msgid "Payslip Line"
 msgstr "Linha de Holerite"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Run"
-msgstr "Rodar Holerite"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
@@ -100,15 +99,15 @@ msgid "Payslip of %s"
 msgstr "Holerites de %s"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_journal_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_journal_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run_journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__journal_id
 msgid "Salary Journal"
 msgstr "Diário de Salário"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_tax_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_tax_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_tax_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_tax_id
 msgid "Tax"
 msgstr "Imposto"
 

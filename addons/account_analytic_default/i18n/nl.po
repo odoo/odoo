@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,15 @@ msgid "Accounts"
 msgstr "Kostenplaatsen"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
+#: code:addons/account_analytic_default/models/account_analytic_default.py:27
+#, python-format
+msgid ""
+"An analytic default requires at least an analytic account or an analytic "
+"tag."
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Kostenplaats"
@@ -68,7 +77,12 @@ msgid "Analytic Rules"
 msgstr "Kostenplaatsregels"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Labels kostenplaats"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "Bedijf"
@@ -79,12 +93,12 @@ msgid "Conditions"
 msgstr "Voorwaarden"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
@@ -94,27 +108,27 @@ msgid "Default Analytic Values"
 msgstr "Standaard analytische waardes"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
 msgstr "Standaard einddatum voor deze kostenplaats"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
 msgstr "Standaard startdatum voor deze kostenplaats."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_stop
 msgid "End Date"
 msgstr "Einddatum"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr "Bepaalt de volgorde bij het weergeven van de kostenverdeling"
@@ -125,7 +139,7 @@ msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
 msgid "ID"
 msgstr "ID"
 
@@ -135,28 +149,28 @@ msgid "Invoice Line"
 msgstr "Factuurregel"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "Relatie"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Product"
@@ -167,7 +181,7 @@ msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -178,7 +192,7 @@ msgstr ""
 "selecteren, wordt dit als kostenplaats gebruikt)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -189,7 +203,7 @@ msgstr ""
 "selecteren, wordt dit als kostenplaats gebruikt)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -200,7 +214,7 @@ msgstr ""
 "selecteren, wordt dit als kostenplaats gebruikt)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr ""
@@ -208,17 +222,17 @@ msgstr ""
 "gespecificeerd in de kostenplaats standaarden."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
 msgstr "Reeks"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Gebruiker"

@@ -3,22 +3,22 @@
 # * hr
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
-# xiaobin wu <bd5dml@gmail.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # 石家庄_老刘 <liuaiqun@sina.com>, 2017
-# Xia Fajin <xia.fajin@elico-corp.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
+# xiaobin wu <bd5dml@gmail.com>, 2017
+# Martin Trigaux, 2017
+# nle_odoo, 2018
+# fausthuang, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: fausthuang, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,11 @@ msgstr ""
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -57,10 +62,16 @@ msgid "<span>To Do</span>"
 msgstr "<span>待办</span>"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_active
-#: model:ir.model.fields,field_description:hr.field_hr_employee_active
+#: model:ir.model.fields,field_description:hr.field_hr_department__active
+#: model:ir.model.fields,field_description:hr.field_hr_employee__active
 msgid "Active"
 msgstr "有效"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.act_employee_from_department
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid "Add a new employee"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -69,7 +80,7 @@ msgid "Archived"
 msgstr "已归档"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "银行账户号码"
 
@@ -79,17 +90,7 @@ msgid "Birth"
 msgstr "出生"
 
 #. module: hr
-#: model:hr.job,name:hr.job_ceo
-msgid "Chief Executive Officer"
-msgstr "首席执行官"
-
-#. module: hr
-#: model:hr.job,name:hr.job_cto
-msgid "Chief Technical Officer"
-msgstr "首席技术官"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
+#: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
 msgid "Child Departments"
 msgstr "子部门"
 
@@ -99,31 +100,15 @@ msgid "Citizenship & Other Information"
 msgstr "身份和其它信息"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.act_employee_from_department
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid "Click to add a new employee."
-msgstr "单击添加一个新的员工"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid "Click to create a department."
-msgstr "单击创建一个部门"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid "Click to define a new job position."
-msgstr "点击定义一个新的工作岗位"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_coach_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
 msgstr "师傅"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_color
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
-#: model:ir.model.fields,field_description:hr.field_hr_employee_color
+#: model:ir.model.fields,field_description:hr.field_hr_department__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee__color
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
 msgid "Color Index"
 msgstr "颜色索引"
 
@@ -133,20 +118,20 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_company_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_company_id
+#: model:ir.model.fields,field_description:hr.field_hr_department__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
 msgstr "公司"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
 msgstr "公司的上班时间"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+#: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
 msgid "Complete Name"
 msgstr "完整名称"
 
@@ -154,11 +139,6 @@ msgstr "完整名称"
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
 msgstr "配置"
-
-#. module: hr
-#: model:hr.job,name:hr.job_consultant
-msgid "Consultant"
-msgstr "顾问"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
@@ -171,34 +151,39 @@ msgid "Contact Information"
 msgstr "合同信息"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
-#: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid "Create a new department"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_create_date
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_date
-#: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
-#: model:ir.model.fields,field_description:hr.field_hr_job_create_date
+#: model:ir.model.fields,field_description:hr.field_hr_department__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_job__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
 msgid "Current Number of Employees"
 msgstr "当前员工数量"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
+#: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 msgid "Date of Birth"
 msgstr "出生日期"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_department_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
@@ -206,7 +191,7 @@ msgid "Department"
 msgstr "部门"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_name
+#: model:ir.model.fields,field_description:hr.field_hr_department__name
 msgid "Department Name"
 msgstr "部门名称"
 
@@ -218,10 +203,10 @@ msgid "Departments"
 msgstr "部门"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_display_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
-#: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
-#: model:ir.model.fields,field_description:hr.field_hr_job_display_name
+#: model:ir.model.fields,field_description:hr.field_hr_department__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -247,7 +232,7 @@ msgid "Employee Category"
 msgstr "员工类别"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
 msgid "Employee Tag"
 msgstr "员工标签"
 
@@ -259,7 +244,7 @@ msgid "Employee Tags"
 msgstr "员工标签"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
+#: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 msgid "Employee bank salary account"
 msgstr "员工工资银行账户"
 
@@ -272,8 +257,8 @@ msgstr "员工姓名"
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_employee_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job_employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -295,39 +280,34 @@ msgid "Employees Tags"
 msgstr "员工标签"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
+#: model:ir.model.fields,help:hr.field_hr_employee__address_home_id
 msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr "在此处输入员工的家庭地址，非办公地址"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "错误！你不能创建递归的部门"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "错误！您不能创建递归的员工层级。"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Expected New Employees"
 msgstr "预计的新员工"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job_expected_employees
+#: model:ir.model.fields,help:hr.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr "新的招聘后这个工作岗位上期望的员工人数"
-
-#. module: hr
-#: model:hr.job,name:hr.job_developer
-msgid "Experienced Developer"
-msgstr "有经验的开发人员"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -345,7 +325,7 @@ msgid "Followers"
 msgstr "关注者"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_gender
+#: model:ir.model.fields,field_description:hr.field_hr_employee__gender
 msgid "Gender"
 msgstr "性别"
 
@@ -366,7 +346,7 @@ msgid "HR Settings"
 msgstr "HR 设置"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
+#: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
 msgid "Hired Employees"
 msgstr "已雇用员工"
 
@@ -376,25 +356,20 @@ msgid "Human Resources"
 msgstr "人力资源"
 
 #. module: hr
-#: model:hr.job,name:hr.job_hrm
-msgid "Human Resources Manager"
-msgstr "人力资源管理员"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_department__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__id
+#: model:ir.model.fields,field_description:hr.field_hr_job__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 msgid "Identification No"
 msgstr "身份证号"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_active
+#: model:ir.model.fields,help:hr.field_hr_employee__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
@@ -419,14 +394,14 @@ msgid "Job"
 msgstr "工作"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_description
+#: model:ir.model.fields,field_description:hr.field_hr_job__description
 msgid "Job Description"
 msgstr "工作说明"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
-#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__name
 msgid "Job Position"
 msgstr "工作岗位"
 
@@ -436,50 +411,44 @@ msgid "Job Positions"
 msgstr "工作岗位"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"Job Positions are used to define jobs and their requirements.\n"
-"                You can keep track of the number of employees you have per job\n"
-"                position and follow the evolution according to what you planned\n"
-"                for the future."
-msgstr ""
-"工作岗位用来定义工作和相关需求\n"
-"你可以根据工作岗位来跟踪雇员并且根据变化计划将来的事情"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
+#: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
 msgstr "工作"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department___last_update
-#: model:ir.model.fields,field_description:hr.field_hr_employee___last_update
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
-#: model:ir.model.fields,field_description:hr.field_hr_job___last_update
+#: model:ir.model.fields,field_description:hr.field_hr_department____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category____last_update
+#: model:ir.model.fields,field_description:hr.field_hr_job____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
-#: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_department__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_write_date
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_write_date
-#: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
-#: model:ir.model.fields,field_description:hr.field_hr_job_write_date
+#: model:ir.model.fields,field_description:hr.field_hr_department__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_employee_category__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "Launch Recruitment"
-msgstr "启动招聘"
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid "Let's create a job position."
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -487,35 +456,30 @@ msgid "Male"
 msgstr "男性"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "经理"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_marital
+#: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 msgid "Marital Status"
 msgstr "婚姻状况"
 
 #. module: hr
-#: model:hr.job,name:hr.job_marketing
-msgid "Marketing and Community Manager"
-msgstr "市场及社区经理"
-
-#. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr "已婚 (或类似信息)"
+msgid "Married"
+msgstr "已婚"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_medium
 msgid "Medium-sized photo"
 msgstr "中等尺寸照片"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_image_medium
+#: model:ir.model.fields,help:hr.field_hr_employee__image_medium
 msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
@@ -523,7 +487,7 @@ msgid ""
 msgstr "员工的中等尺寸照片。保留纵横比例，自动缩放为128x128px的图像。这个字段用在表单视图和某些看板视图。"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
+#: model:ir.model.fields,field_description:hr.field_hr_department__member_ids
 msgid "Members"
 msgstr "会员"
 
@@ -533,12 +497,12 @@ msgid "Messages"
 msgstr "信息"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee__name
 msgid "Name"
 msgstr "名称"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 msgid "Nationality (Country)"
 msgstr "国籍(国家)"
 
@@ -548,28 +512,28 @@ msgid "Not Recruiting"
 msgstr "停止招聘"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_note
+#: model:ir.model.fields,field_description:hr.field_hr_department__note
 msgid "Note"
 msgstr "笔记"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_notes
+#: model:ir.model.fields,field_description:hr.field_hr_employee__notes
 msgid "Notes"
 msgstr "备注"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
 msgstr "这个工作岗位上现有的员工人数"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr "招聘阶段此岗位已经雇佣的员工数量。"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
+#: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
 msgstr "您计划招聘的新员工数。"
 
@@ -599,17 +563,17 @@ msgid "Other Information ..."
 msgstr "其它信息..."
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
+#: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
 msgstr "上级部门"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
 msgid "Passport No"
 msgstr "护照号"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_image
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image
 msgid "Photo"
 msgstr "照片"
 
@@ -619,7 +583,7 @@ msgid "Position"
 msgstr "岗位"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
 msgid "Private Address"
 msgstr "家庭住址"
 
@@ -627,6 +591,11 @@ msgstr "家庭住址"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
 msgstr "个人隐私信息"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid "Ready to recruit more efficiently?"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -644,12 +613,12 @@ msgid "Related User"
 msgstr "相关用户"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
+#: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
 msgid "Related employees"
 msgstr "相关的员工"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_user_id
+#: model:ir.model.fields,help:hr.field_hr_employee__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr "用于管理资源访问权限的用户名"
 
@@ -659,17 +628,17 @@ msgid "Reporting"
 msgstr "报告"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_requirements
+#: model:ir.model.fields,field_description:hr.field_hr_job__requirements
 msgid "Requirements"
 msgstr "要求"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
 msgid "SIN No"
 msgstr "社会保险号SIN"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_ssnid
+#: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
 msgstr "社会保险号SSN"
 
@@ -681,7 +650,7 @@ msgid ""
 msgstr "设置确省的日程，用于在考勤和时间安排中计算时间"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_job_state
+#: model:ir.model.fields,help:hr.field_hr_job__state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr "可以设置这个岗位的招聘流程是开放的还是关闭"
@@ -694,7 +663,7 @@ msgid "Settings"
 msgstr "设置"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
 msgid "Show Organizational Chart"
 msgstr "显示组织架构图"
 
@@ -714,12 +683,12 @@ msgid "Single"
 msgstr "单身"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_image_small
+#: model:ir.model.fields,field_description:hr.field_hr_employee__image_small
 msgid "Small-sized photo"
 msgstr "小尺寸照片"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_image_small
+#: model:ir.model.fields,help:hr.field_hr_employee__image_small
 msgid ""
 "Small-sized photo of the employee. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
@@ -727,17 +696,22 @@ msgid ""
 msgstr "小尺寸的员工照片。保留纵横比，自动缩放为64x64px。用在任何需要小图像的场合"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_sinid
+#: model:ir.model.fields,help:hr.field_hr_employee__sinid
 msgid "Social Insurance Number"
 msgstr "社会保险号"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_ssnid
+#: model:ir.model.fields,help:hr.field_hr_employee__ssnid
 msgid "Social Security Number"
 msgstr "社会保障号"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_state
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Start Recruitment"
+msgstr "开始招聘"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job__state
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
@@ -754,7 +728,7 @@ msgid "Subordinate Hierarchy"
 msgstr "下属层级"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_child_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
 msgid "Subordinates"
 msgstr "下属"
 
@@ -764,12 +738,12 @@ msgid "Tag name already exists !"
 msgstr "标签名已存在!"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
 msgid "Tags"
 msgstr "标签"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
+#: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 msgid "The employee adress has a company linked"
 msgstr "员工地址与公司地址相链接"
 
@@ -779,21 +753,28 @@ msgid "The name of the job position must be unique per department in company!"
 msgstr "公司内部门的工作岗位名称必须唯一！"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_image
+#: model:res.groups,comment:hr.group_hr_user
+msgid "The user will be able to approve document created by employees."
+msgstr ""
+
+#. module: hr
+#: model:res.groups,comment:hr.group_hr_manager
+msgid ""
+"The user will have an access to the human resources configuration as well as"
+" statistic reports."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__image
 msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr "这个字段保存员工的照片，限制为 1024x1024px"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
+#: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "预计员工数合计"
-
-#. module: hr
-#: model:hr.job,name:hr.job_trainee
-msgid "Trainee"
-msgstr "见习"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -815,7 +796,7 @@ msgstr ""
 "不应该是工作地址"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
 msgid "User"
 msgstr "用户"
 
@@ -830,12 +811,12 @@ msgid "Vacancies :"
 msgstr "职位空缺"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 msgid "Visa Expire Date"
 msgstr "签证到期日期"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
+#: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
 msgid "Visa No"
 msgstr "签证号"
 
@@ -854,12 +835,12 @@ msgid ""
 msgstr "随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信息;联系人数据，工作岗位，可用性等。"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 msgid "Work Address"
 msgstr "工作地址"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
 msgid "Work Email"
 msgstr "工作Email"
 
@@ -869,12 +850,12 @@ msgid "Work Information"
 msgstr "工作信息"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
 msgid "Work Location"
 msgstr "工作地点"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
 msgid "Work Mobile"
 msgstr "办公手机"
 
@@ -889,22 +870,14 @@ msgid "Work Permit"
 msgstr "工作许可证"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
+#: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
 msgid "Work Permit No"
 msgstr "工作许可编号"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
 msgid "Work Phone"
 msgstr "办公电话"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"You can attach a survey to a job position. It will be used in\n"
-"                the recruitment process to evaluate the applicants for this job\n"
-"                position."
-msgstr "你可以给一个工作岗位做调查，它被用在招聘流程中，用来评估这个岗位的申请者"
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
@@ -943,15 +916,3 @@ msgstr "mail.alias.mixin"
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "res.config.settings"
 msgstr "设置-基础设置"
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_user
-msgid "the user will be able to approve document created by employees."
-msgstr "这个用户能审批员工创建的单据"
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_manager
-msgid ""
-"the user will have an access to the human resources configuration as well as"
-" statistic reports."
-msgstr "用户将有权限访问人力资源配置以及统计报表。"

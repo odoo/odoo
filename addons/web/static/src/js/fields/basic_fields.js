@@ -998,6 +998,21 @@ var FieldPhone = FieldEmail.extend({
         // important right now.
         this.$el.removeClass('o_text_overflow');
     },
+     * Remove possibly present &shy; characters when saving number
+     *
+     * @override
+     * @private
+     */
+    _setValue: function (value, options) {
+        // NOT NEEDED AS OF SAAS-11.3
+        if (value) {
+            // remove possibly pasted &shy; characters
+            value = value.replace(/\u00AD/g, '');
+        }
+        return this._super(value, options);
+    },
+
+    /**
 });
 
 var UrlWidget = InputField.extend({

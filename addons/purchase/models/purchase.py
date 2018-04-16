@@ -354,8 +354,8 @@ class PurchaseOrder(models.Model):
     def button_approve(self, force=False):
         self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
-        if self.company_id.po_lock == 'lock':
-            self.write({'state': 'done'})
+        self.filtered(
+            lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
     @api.multi
@@ -397,6 +397,7 @@ class PurchaseOrder(models.Model):
                         siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
                         if all(state in ('done', 'cancel') for state in siblings_states):
                             order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
+                            order_line.move_dest_ids._recompute_state()
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
@@ -647,7 +648,7 @@ class PurchaseOrderLine(models.Model):
     product_image = fields.Binary(
         'Product Image', related="product_id.image",
         help="Non-stored related field to allow portal user to see the image of the product he has ordered")
-    product_type = fields.Selection(related='product_id.type')
+    product_type = fields.Selection(related='product_id.type', readonly=True)
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
@@ -1050,11 +1051,11 @@ class ProcurementRule(models.Model):
     def _prepare_purchase_order(self, product_id, product_qty, product_uom, origin, values, partner):
         schedule_date = self._get_purchase_schedule_date(values)
         purchase_date = self._get_purchase_order_date(product_id, product_qty, product_uom, values, partner, schedule_date)
-        fpos = self.env['account.fiscal.position'].with_context(company_id=values['company_id'].id).get_fiscal_position(partner.id)
+        fpos = self.env['account.fiscal.position'].with_context(force_company=values['company_id'].id).get_fiscal_position(partner.id)
 
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and values['group_id'].id) or False
+                (gpo == 'propagate' and 'group_id' in values and values['group_id'].id) or False
 
         return {
             'partner_id': partner.id,
@@ -1079,7 +1080,7 @@ class ProcurementRule(models.Model):
         domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
-                (gpo == 'propagate' and values['group_id']) or False
+                (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
 
         domain += (
             ('partner_id', '=', partner.id),

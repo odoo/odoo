@@ -11,10 +11,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -22,28 +22,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
-msgid ""
-"- Click on the <span class=\"fa fa-phone text-success\"></span> to announce that the order is ordered <br>\n"
-"                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
-"                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
-msgstr ""
-"<span class=\"fa fa-phone text-success\"></span><br><span class=\"fa fa-"
-"check text-success\"></span><br><span class=\"fa fa-times-circle text-"
-"danger\"></span>"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
-msgid ""
-"- Click on the <span class=\"fa fa-phone text-success\"></span> to announce that the order is ordered <br>\n"
-"                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
-"                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
-msgstr ""
-"<span class=\"fa fa-phone text-success\"></span><br><span class=\"fa fa-"
-"check text-success\"></span><br><span class=\"fa fa-times-circle text-"
-"danger\"></span>"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -72,8 +50,8 @@ msgid "A product is defined by its name, category, price and vendor."
 msgstr "通过产品的名称,类别,价格和供应商来定义一个产品。"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_active
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_active
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__active
 msgid "Active"
 msgstr "有效"
 
@@ -92,7 +70,7 @@ msgstr "警告"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_alert_action
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_alerts
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__alerts
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
 msgid "Alerts"
 msgstr "警告"
@@ -107,12 +85,12 @@ msgstr ""
 " 要创建午餐提醒您必须定义在执行提醒和显示信息期间的循环次数、时间间隔。"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
 msgid "Amount"
 msgstr "总额"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_end_hour
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__end_hour
 msgid "And"
 msgstr "和"
 
@@ -123,12 +101,12 @@ msgid "Archived"
 msgstr "已归档"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__balance_visible
 msgid "Balance Visible"
 msgstr "余额可见"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__start_hour
 msgid "Between"
 msgstr "介于"
 
@@ -158,12 +136,12 @@ msgid "By Vendor"
 msgstr "由供应商"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
+#: model:ir.model.fields,help:lunch.field_lunch_cashmove__description
 msgid "Can be an order or a payment"
 msgstr "可以是一个订单或支付"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_cashmove_amount
+#: model:ir.model.fields,help:lunch.field_lunch_cashmove__amount
 msgid ""
 "Can be positive (payment) or negative (order or payment if user wants to get"
 " his money back)"
@@ -183,49 +161,33 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_cashmove
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__cashmove
 msgid "Cash Move"
 msgstr "现金划拨"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__cash_move_balance
 msgid "Cash Move Balance"
 msgstr "现金划转余额"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_name
-#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
-msgid "Category"
-msgstr "类别"
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid ""
+"Click on the <span class=\"fa fa-phone text-success\"></span> to announce that the order is ordered.<br>\n"
+"                Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received.<br>\n"
+"                Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available."
+msgstr ""
 
 #. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_alert_action
-msgid "Click to create a lunch alert."
-msgstr "点击建立一个午餐提示"
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+msgid ""
+"Click on the <span class=\"fa fa-phone text-success\"></span> to announce that the order is ordered.<br>\n"
+"                Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received.<br>\n"
+"                Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available."
+msgstr ""
 
 #. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_product_category_action
-msgid "Click to create a lunch category."
-msgstr "点击建立一个午餐分类"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
-msgid "Click to create a new payment."
-msgstr "点击建立一个新的付款"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
-msgid "Click to create a payment."
-msgstr "点击建立一个付款"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_product_action
-msgid "Click to create a product for lunch."
-msgstr "点击建立一个午餐的产品"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__company_id
 msgid "Company"
 msgstr "公司"
 
@@ -246,65 +208,85 @@ msgid "Control Vendors"
 msgstr "供应商控制"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_create_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_create_uid
+#: model:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Create a new lunch alert"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_product_category_action
+msgid "Create a new lunch category"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
+msgid "Create a new payment"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_product_action
+msgid "Create a new product for lunch"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_create_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_currency_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__currency_id
 msgid "Currency"
 msgstr "币种"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__date
 msgid "Date"
 msgstr "日期"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_specific_day
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__specific_day
 msgid "Day"
 msgstr "日"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_description
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_description
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__description
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__description
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 msgid "Description"
 msgstr "说明"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_display
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__display
 msgid "Display"
 msgstr "显示"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -321,7 +303,7 @@ msgid "Employee Payments"
 msgstr "员工付款"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
+#: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky__is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
 msgstr "激活这个选项为你的幸运订单设一个最大预算"
 
@@ -338,15 +320,11 @@ msgstr "每周"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid ""
-"Example: <br>\n"
-"                - Recurency: Everyday<br>\n"
-"                - Time interval: from 00h00 am to 11h59 pm<br>\n"
-"                - Message: \"You must order before 10h30 am\""
+"Example:<br>\n"
+"                Recurency: Everyday,<br>\n"
+"                Time interval: from 00h00 am to 11h59 pm,<br>\n"
+"                Message: \"You must order before 10h30 am\"."
 msgstr ""
-"例如: <br>\n"
-"                - 重复: 每天<br>\n"
-"                - 时间间隔: 从 00h00 am to 11h59 pm<br>\n"
-"                - 信息: \"你必须在 10h30 am前下订单\""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -354,7 +332,7 @@ msgid "Feeling Lucky"
 msgstr "运气不错"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_friday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__friday
 msgid "Friday"
 msgstr "周五"
 
@@ -376,13 +354,6 @@ msgstr "帮你处理午餐需要的事务，如果是一个管理者，你能创
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
 msgstr "这里你可以访问所有的午餐产品的种类"
-
-#. module: lunch
-#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
-msgid ""
-"Here you can see the employees' payment. A payment is a cash move from the "
-"employee to the company."
-msgstr "这里你可以看到所有员工的付款。付款是一个从员工到公司的现金划转。"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -413,56 +384,56 @@ msgid "I'm feeling lucky today !"
 msgstr "我觉得今天运气真好！"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_is_max_budget
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__is_max_budget
 msgid "I'm not feeling rich"
 msgstr "我不觉得我很富有"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1786
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__id
 msgid "ID"
 msgstr "ID"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__state
 msgid "Is an order or a payment"
 msgstr "一个订单或是一个付款"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert___last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove___last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_order___last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line___last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky___last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_product___last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category___last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_order____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_product____last_update
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_write_uid
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_write_date
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
@@ -498,6 +469,11 @@ msgid "Lunch Order"
 msgstr "午餐订单"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Lunch Order Form"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Lunch: Archive/Restore products"
 msgstr "午餐：归档/修复产品"
@@ -524,18 +500,18 @@ msgid "Manager"
 msgstr "经理"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_max_budget
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__max_budget
 msgid "Max Budget"
 msgstr "最大预算"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_message
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Message"
 msgstr "消息"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_monday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__monday
 msgid "Monday"
 msgstr "周一"
 
@@ -571,6 +547,21 @@ msgid "New Order"
 msgstr "新的订单"
 
 #. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
+msgid "No cash move yet"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
+msgid "No lunch order yet"
+msgstr ""
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action
+msgid "No previous order found"
+msgstr ""
+
+#. module: lunch
 #: code:addons/lunch/wizard/lucky_order.py:39
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
@@ -582,9 +573,14 @@ msgid "Not Received"
 msgstr "未收到"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_note
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__note
 msgid "Note"
 msgstr "笔记"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
+msgid "Nothing to order today"
+msgstr ""
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:225
@@ -605,8 +601,8 @@ msgid "Only your lunch manager sets the orders as received."
 msgstr "只有午餐经理可以把订单设置为已接收。"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_order_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__order_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__order_id
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -652,12 +648,19 @@ msgid "Payment"
 msgstr "付款"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
+msgid ""
+"Payments are used to register liquidity movements. You can process those "
+"payments by your own means or by using installed facilities."
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_ids
 msgid "Previous Order"
 msgstr "先前的订单"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_widget
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_widget
 msgid "Previous Order Widget"
 msgstr "先前的订购小工具"
 
@@ -667,8 +670,8 @@ msgid "Previous Orders"
 msgstr "之前的订单"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_price
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_price
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__price
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__price
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Price"
 msgstr "价格"
@@ -679,9 +682,9 @@ msgid "Price:"
 msgstr "价格:"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_product_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_product_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__product_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__product_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__name
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Product"
 msgstr "产品"
@@ -693,7 +696,10 @@ msgid "Product Categories"
 msgstr "产品类别"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__name
+#: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Category"
 msgstr "产品种类"
 
@@ -703,7 +709,7 @@ msgid "Product Category:"
 msgstr "产品类别:"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__name
 msgid "Product Name"
 msgstr "产品名称"
 
@@ -714,7 +720,7 @@ msgstr "产品搜索"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_order_line_ids
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__order_line_ids
 #: model:ir.ui.menu,name:lunch.lunch_product_menu
 msgid "Products"
 msgstr "产品"
@@ -743,7 +749,7 @@ msgid "Received"
 msgstr "已接收"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_alert_type
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__alert_type
 msgid "Recurrence"
 msgstr "重新提起"
 
@@ -753,7 +759,12 @@ msgid "Register Cash Moves"
 msgstr "登记现金凭证"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_saturday
+#: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
+msgid "Register a payment"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__saturday
 msgid "Saturday"
 msgstr "周六"
 
@@ -796,8 +807,8 @@ msgid "Specific Day"
 msgstr "指定日"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_state
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_state
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__state
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__state
 msgid "Status"
 msgstr "状态"
 
@@ -807,12 +818,12 @@ msgid "Summary of all lunch orders, grouped by vendor and by date."
 msgstr "按代理和日期统计所有午餐订单"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sunday
 msgid "Sunday"
 msgstr "周日"
 
 #. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_order_company_id
+#: model:ir.model.fields,help:lunch.field_lunch_order__company_id
 msgid "The company this user is currently working for."
 msgstr "该用户当前工作的公司"
 
@@ -837,7 +848,7 @@ msgid "This is the first time you order a meal"
 msgstr "这是你第一次订购食品"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_thursday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__thursday
 msgid "Thursday"
 msgstr "周四"
 
@@ -852,7 +863,7 @@ msgid "Today's Orders"
 msgstr "今天的订单"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_total
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__total
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -861,7 +872,7 @@ msgid "Total"
 msgstr "总计"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_tuesday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__tuesday
 msgid "Tuesday"
 msgstr "周二"
 
@@ -871,17 +882,17 @@ msgid "Unit Price"
 msgstr "单价"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_user_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_user_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__user_id
 #: model:res.groups,name:lunch.group_lunch_user
 msgid "User"
 msgstr "用户"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_supplier_ids
-#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_supplier
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_supplier
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line__supplier
+#: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__supplier_ids
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Vendor"
 msgstr "供应商"
@@ -892,7 +903,7 @@ msgid "Vendor Orders by Month"
 msgstr "代理订单按月"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert_wednesday
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday
 msgid "Wednesday"
 msgstr "周三"
 

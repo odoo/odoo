@@ -42,6 +42,14 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def create(self, values):
+        # compute employee only for timesheet lines, makes no sense for other lines
+        if not values.get('employee_id') and values.get('project_id'):
+            if values.get('user_id'):
+                ts_user_id = values['user_id']
+            else:
+                ts_user_id = self._default_user()
+            values['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
+
         values = self._timesheet_preprocess(values)
         result = super(AccountAnalyticLine, self).create(values)
         if result.project_id:  # applied only for timesheet
@@ -71,13 +79,6 @@ class AccountAnalyticLine(models.Model):
         if vals.get('employee_id') and not vals.get('user_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])
             vals['user_id'] = employee.user_id.id
-        # compute employee only for timesheet lines, makes no sense for other lines
-        if not vals.get('employee_id') and vals.get('project_id'):
-            if vals.get('user_id'):
-                ts_user_id = vals['user_id']
-            else:
-                ts_user_id = self._default_user()
-            vals['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
         # force customer partner, from the task or the project
         if (vals.get('project_id') or vals.get('task_id')) and not vals.get('partner_id'):
             partner_id = False

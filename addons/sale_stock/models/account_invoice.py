@@ -47,23 +47,4 @@ class AccountInvoiceLine(models.Model):
         return price_unit
 
     def _compute_average_price(self, qty_done, quantity, moves):
-        average_price_unit = 0
-        qty_delivered = 0
-        invoiced_qty = 0
-        for move in moves:
-            if move.state != 'done':
-                continue
-            invoiced_qty += move.product_qty
-            if invoiced_qty <= qty_done:
-                continue
-            qty_to_consider = move.product_qty
-            if invoiced_qty - move.product_qty < qty_done:
-                qty_to_consider = invoiced_qty - qty_done
-            qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
-            qty_delivered += qty_to_consider
-            # `move.price_unit` is negative if the move is out and positive if the move is
-            # dropshipped. Use its absolute value to compute the average price unit.
-            average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + abs(move.price_unit) * qty_to_consider) / qty_delivered
-            if qty_delivered == quantity:
-                break
-        return average_price_unit
+        return self.env['product.product']._compute_average_price(qty_done, quantity, moves)

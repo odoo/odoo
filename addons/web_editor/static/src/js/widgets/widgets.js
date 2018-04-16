@@ -455,11 +455,13 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _toggleImage: function (attachment, clearSearch) {
+    _toggleImage: function (attachment, clearSearch, force_select) {
         if (this.multiImages) {
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
-                this.images.splice(this.images.indexOf(img[0]),1);
+                if (!force_select) {
+                    this.images.splice(this.images.indexOf(img[0]),1);
+                }
             } else {
                 this.images.push(attachment);
             }
@@ -527,17 +529,18 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _onImageClick: function (ev) {
+    _onImageClick: function (ev, force_select) {
         var $img = $(ev.currentTarget);
         var attachment = _.find(this.records, function (record) {
             return record.id === $img.data('id');
         });
-        this._toggleImage(attachment);
+        this._toggleImage(attachment, false, force_select);
     },
     /**
      * @private
      */
     _onImageDblClick: function (ev) {
+        this._onImageClick(ev, true);
         this.trigger_up('save_request');
     },
     /**

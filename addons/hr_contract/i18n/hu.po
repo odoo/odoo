@@ -3,16 +3,16 @@
 # * hr_contract
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux, 2016
+# krnkris, 2016
 # gezza <geza.nagy@oregional.hu>, 2016
 # Ákos Nagy <akos.nagy@oregional.hu>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgid "<span>/ month</span>"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
 msgid "Advantages"
 msgstr "Előnyök"
 
@@ -47,19 +47,19 @@ msgid "Cancelled"
 msgstr "Törölve"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Click here to create new contracts."
-msgstr "Kattintson új szerződések létrehozásához."
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_company_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_id
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
 msgid "Company Vehicle"
 msgstr "Cégautó"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
+msgid "Contract Count"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -67,7 +67,7 @@ msgid "Contract Details"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
 msgstr "Szerződés hivatkozás"
@@ -79,8 +79,8 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6036
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
@@ -120,8 +120,7 @@ msgstr "Megújítandó szerződés"
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_ids
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contracts_count
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
@@ -130,24 +129,29 @@ msgid "Contracts"
 msgstr "Szerződések"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_uid
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Create a new contract"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_uid
 msgid "Created by"
 msgstr "Készítette"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_currency_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__currency_id
 msgid "Currency"
 msgstr "Pénznem"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
@@ -164,13 +168,13 @@ msgid "Delete"
 msgstr "Törlés"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__department_id
 msgid "Department"
 msgstr "Osztály, részleg"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -181,7 +185,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_employee_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
 msgstr "Alkalmazott"
@@ -192,32 +196,32 @@ msgid "Employee Contract"
 msgstr "Munkavállalói szerződés"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 msgid "Employee's monthly gross wage."
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_resource_calendar_id
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Employee's working schedule."
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
 msgid "End Date"
 msgstr "Befejezés dátuma"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_end
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_trial_date_end
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__trial_date_end
 msgid "End date of the trial period (if there is one)."
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
 msgid "End of Trial Period"
 msgstr ""
 
@@ -228,7 +232,7 @@ msgid "Expired"
 msgstr "Lejárt"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
 msgid "Gives the sequence when displaying a list of Contract."
 msgstr "Ha megjeleníti a kapcsolatok listáját akkor kiadja annak sorozatát"
 
@@ -245,13 +249,13 @@ msgid "HR Contract: update state"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle_distance
 msgid "Home-Work Dist."
 msgstr "Lakhely és munkahely távolsága"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__id
 msgid "ID"
 msgstr "Azonosító ID"
 
@@ -261,12 +265,12 @@ msgid "Important Messages"
 msgstr "Fontos üzenetek"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__vehicle_distance
 msgid "In kilometers"
 msgstr "Kilométerben"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__manager
 msgid "Is a Manager"
 msgstr "Vezető?"
 
@@ -276,30 +280,30 @@ msgid "Job"
 msgstr "Munka"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
 msgid "Job Position"
 msgstr "Beosztás"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type___last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract____last_update
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type____last_update
 msgid "Last Modified on"
 msgstr "Utoljára frissítve ekkor"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_uid
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_uid
 msgid "Last Updated by"
 msgstr "Utoljára frissítette"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_date
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_date
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
+#: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Latest contract of the employee"
 msgstr "Legutolsó szerződés az alkalmazottal"
 
@@ -309,7 +313,7 @@ msgid "Medical Exam"
 msgstr "Orvosi vizsgálat"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__medic_exam
 msgid "Medical Examination Date"
 msgstr "Orvosi vizsgálat időpontja"
 
@@ -324,18 +328,18 @@ msgid "New"
 msgstr "Új"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_notes
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__children
 msgid "Number of Children"
 msgstr "Gyerekek száma"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__place_of_birth
 msgid "Place of Birth"
 msgstr "Születés helye"
 
@@ -360,18 +364,18 @@ msgid "Search Contract Type"
 msgstr "Szerződéstípusok keresése"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__sequence
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
 msgid "Start Date"
 msgstr "Kezdő dátum"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_start
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__date_start
 msgid "Start date of the contract."
 msgstr ""
 
@@ -381,12 +385,12 @@ msgid "State"
 msgstr "Állam / megye"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__state
 msgid "Status"
 msgstr "Állapot"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_state
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__state
 msgid "Status of the contract"
 msgstr "Szerződés állapota"
 
@@ -398,26 +402,26 @@ msgid "To Renew"
 msgstr "Megújításhoz"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire
 msgid "Visa Expire Date"
 msgstr "Vízum lejárati dátuma"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
 msgid "Visa No"
 msgstr "Vízum száma"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
 msgid "Wage"
 msgstr "Bér"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "Munkavállalási engedély száma"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
 msgid "Working Schedule"
 msgstr "Munkabeosztás"

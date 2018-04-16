@@ -3,19 +3,19 @@
 # * stock_picking_batch
 # 
 # Translators:
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 # Mateus Lopes <mateus1@gmail.com>, 2017
 # grazziano <gra.negocia@gmail.com>, 2017
 # danimaribeiro <danimaribeiro@gmail.com>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 # falexandresilva <falexandresilva@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: falexandresilva <falexandresilva@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -49,15 +49,15 @@ msgstr "Fornada"
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_id_8938
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
 msgid "Batch Picking"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
 msgid "Batch Picking Name"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgid "Batch Pickings not finished"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_id_8938
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this picking"
 msgstr ""
 
@@ -94,11 +94,6 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: stock_picking_batch
-#: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
-msgid "Click to create a Batch Picking."
-msgstr ""
-
-#. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm"
 msgstr "Confirmar"
@@ -109,20 +104,25 @@ msgid "Confirm picking"
 msgstr "Confirmar separação"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_create_uid
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_create_uid
+#: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
+msgid "Create a new batch picking"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_uid
 msgid "Created by"
 msgstr "Criado por"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_create_date
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
 msgid "Created on"
 msgstr "Criado em"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_display_name
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
 msgstr "Nome exibido"
 
@@ -143,30 +143,10 @@ msgid "Group By"
 msgstr "Agrupar Por"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_id
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
 msgid "ID"
 msgstr "ID"
-
-#. module: stock_picking_batch
-#: model:product.product,name:stock_picking_batch.product_product_ice_cream_choco
-#: model:product.template,name:stock_picking_batch.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate"
-msgstr "Sorvete de chocolate"
-
-#. module: stock_picking_batch
-#: model:product.product,description_sale:stock_picking_batch.product_product_ice_cream_choco
-#: model:product.template,description_sale:stock_picking_batch.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate with sticks"
-msgstr "Sorvete de chocolate com palitos"
-
-#. module: stock_picking_batch
-#: model:product.product,description_sale:stock_picking_batch.product_product_ice_cream_vani
-#: model:product.product,name:stock_picking_batch.product_product_ice_cream_vani
-#: model:product.template,description_sale:stock_picking_batch.product_product_ice_cream_vani_product_template
-#: model:product.template,name:stock_picking_batch.product_product_ice_cream_vani_product_template
-msgid "Ice Cream Vanilla"
-msgstr "Sorvete de Baunilha"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_immediate_transfer
@@ -185,30 +165,30 @@ msgid "In Progress"
 msgstr "Em Andamento"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch___last_update
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch___last_update
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch____last_update
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch____last_update
 msgid "Last Modified on"
 msgstr "Última modificação em"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_write_uid
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_uid
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_uid
 msgid "Last Updated by"
 msgstr "Última atualização por"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_write_date
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__write_date
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__write_date
 msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_picking_ids
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of picking associated to this batch"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_name
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
 msgid "Name of the batch picking"
 msgstr ""
 
@@ -219,22 +199,22 @@ msgid "Nothing to print."
 msgstr "Nada para imprimir"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_user_id
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__user_id
 msgid "Person responsible for this batch picking"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
 msgid "Pick To Backorder"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer_pick_to_backorder_ids
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
 msgid "Picking to backorder"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_picking_ids
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Pickings"
 msgstr "Separações"
@@ -245,7 +225,7 @@ msgid "Print"
 msgstr "Imprimir"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_user_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
 msgid "Responsible"
 msgstr "Responsável"
 
@@ -281,25 +261,13 @@ msgid ""
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:product.product,name:stock_picking_batch.product_product_dry_specu
-#: model:product.template,name:stock_picking_batch.product_product_dry_specu_product_template
-msgid "Speculoos"
-msgstr "Speculoos"
-
-#. module: stock_picking_batch
-#: model:product.product,description_sale:stock_picking_batch.product_product_dry_specu
-#: model:product.template,description_sale:stock_picking_batch.product_product_dry_specu_product_template
-msgid "Speculoos - A belgian speciality"
-msgstr "Speculoos - Uma especilidade belga"
-
-#. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
 #: model:mail.message.subtype,name:stock_picking_batch.mt_batch_state
 msgid "Stage Changed"
 msgstr "Estágio Alterado"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_state
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__state
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "State"
 msgstr "Estado"

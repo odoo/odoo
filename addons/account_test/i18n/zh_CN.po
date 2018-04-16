@@ -3,14 +3,14 @@
 # * account_test
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +45,7 @@ msgid "Accouting tests on"
 msgstr "会计测试"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
 msgid "Active"
 msgstr "有效"
 
@@ -84,11 +84,6 @@ msgstr "检查已收和已付科目中已调节的分录相关的销售/采购�
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
 msgstr "检查是否平衡：借方合计=贷方合计"
-
-#. module: account_test
-#: model:ir.actions.act_window,help:account_test.action_accounting_assert
-msgid "Click to create Accounting Test."
-msgstr "点击创建一个会计测试"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -138,12 +133,17 @@ msgstr ""
 "    result = cr.dictfetchall()"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
+#: model:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid "Create a new accounting test"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
 msgid "Created on"
 msgstr "创建时间"
 
@@ -153,8 +153,8 @@ msgid "Description"
 msgstr "说明"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -164,24 +164,24 @@ msgid "Expression"
 msgstr "表达式"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
@@ -191,12 +191,12 @@ msgid "Python Code"
 msgstr "Python 代码"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
 msgstr "Python代码"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
 msgid "Sequence"
 msgstr "序号"
 
@@ -232,12 +232,12 @@ msgid "Test 7 : Closing balance on bank statements"
 msgstr "测试 7：在银行对账单上关张余额"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
 msgid "Test Description"
 msgstr "测试描述"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
 msgid "Test Name"
 msgstr "测试项"
 
