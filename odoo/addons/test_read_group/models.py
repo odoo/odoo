@@ -9,6 +9,13 @@ class GroupOnDate(models.Model):
     value = fields.Integer("Value")
 
 
+class GroupOnDatetime(models.Model):
+    _name = 'test_read_group.on_datetime'
+
+    datetime = fields.Datetime("Datetime")
+    value = fields.Integer("Value")
+
+
 class BooleanAggregate(models.Model):
     _name = 'test_read_group.aggregate.boolean'
     _order = 'key DESC'

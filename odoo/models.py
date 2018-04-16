@@ -1680,7 +1680,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         split = gb.split(':')
         field_type = self._fields[split[0]].type
-        gb_function = split[1] if len(split) == 2 else None
+        gb_function = split[1] if len(split) == 2 else 'month'
         temporal = field_type in ('date', 'datetime')
         tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
         qualified_field = self._inherits_join_calc(self._table, split[0], query)
@@ -1697,6 +1697,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # Cfr: http://babel.pocoo.org/docs/dates/#date-fields
                 'hour': 'hh:00 dd MMM',
                 'day': 'dd MMM yyyy', # yyyy = normal year
+                'dow': 'ddd',
                 'week': "'W'w YYYY",  # w YYYY = ISO week-year
                 'month': 'MMMM yyyy',
                 'quarter': 'QQQ yyyy',
@@ -1710,17 +1711,63 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'quarter': dateutil.relativedelta.relativedelta(months=3),
                 'year': dateutil.relativedelta.relativedelta(years=1)
             }
+            start_point = {
+                'minute': 'hour',
+                'hour': 'day',
+                'day': 'month',
+            }
+            unsupported_intervals = ['quarter', 'year']
+            zero_intervals = ['hour', 'minute', 'dow']
+
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
-            qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
+
+            def get_number_interval(str_interval):
+                number, interval = re.match('(\d*)(.*)', str_interval).groups()
+                return int(number or 1), interval
+
+            only_intervals = None
+            normal_interval = None
+            if '_' in gb_function:
+                # Extract functions -- see description of read_group
+                only_intervals = [get_number_interval(s) for s in gb_function.split('_')[1:]]
+            else:
+                normal_interval = get_number_interval(gb_function)
+
+            def date_part(round_interval):
+                """returns postgres expresion to compute interval for rounded value"""
+                return "((date_part('{t}', {{qualified_field}})::int  - {zero_fix}) / {n} ) * interval '{n} {t}'"\
+                    .format(n=round_interval[0],
+                            t=round_interval[1],
+                            zero_fix=1 if round_interval[1] not in zero_intervals else 0,
+                    )
+
+            new_qualified_field = [
+                date_part(interval)
+                for interval in
+                only_intervals or [normal_interval]
+            ]
+
+            if normal_interval:
+                if normal_interval[1] in unsupported_intervals:
+                    # just use date_trunc
+                    new_qualified_field = ["date_trunc('%s', {qualified_field})" \
+                                               % normal_interval[1]]
+                else:
+                    new_qualified_field.append("date_trunc('%s', {qualified_field})" \
+                                               % start_point.get(normal_interval[1], 'year'))
+
+            qualified_field = ' + '.join(new_qualified_field).format(qualified_field=qualified_field)
+
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
             'field': split[0],
             'groupby': gb,
-            'type': field_type, 
-            'display_format': display_formats[gb_function or 'month'] if temporal else None,
-            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'type': field_type,
+            'normal_interval': bool(temporal and normal_interval),
+            'display_format': display_formats[gb_function] if temporal and normal_interval else None,
+            'interval': normal_interval[0] * time_intervals[normal_interval[1]] if temporal and normal_interval else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field
         }
@@ -1738,8 +1785,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if isinstance(value, pycompat.string_types):
                 dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 value = datetime.datetime.strptime(value, dt_format)
-            if gb['tz_convert']:
+
+            if isinstance(value, datetime.timedelta):
+                # TODO make a good formatting here
+                value = str(value)
+
+            elif gb['tz_convert']:
                 value = pytz.timezone(self._context['tz']).localize(value)
+
         return value
 
     @api.model
@@ -1765,10 +1818,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if value:
                 if ftype == 'many2one':
                     value = value[0]
+                elif ftype in ('date', 'datetime') and not gb['normal_interval']:
+                    # TODO: getting domain for non-normal grouping is not supported.
+                    data[gb['groupby']] = (False, value)
+                    pass
                 elif ftype in ('date', 'datetime'):
                     locale = self._context.get('lang') or 'en_US'
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                     tzinfo = None
+
                     range_start = value
                     range_end = value + gb['interval']
                     # value from postgres is in local tz (so range is
@@ -1825,9 +1883,31 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 and 'count_distinct', with the expected meaning.
         :param list groupby: list of groupby descriptions by which the records will be grouped.  
                 A groupby description is either a field (then it will be grouped by that field)
-                or a string 'field:groupby_function'.  Right now, the only functions supported
-                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
-                date/datetime fields.
+                or a string 'field:groupby_function'. Right now, the only functions supported
+                are for date/datetime fields:
+
+                * Truncate functions: 'Nminute', 'Nhour', 'Nday', 'Nweek', 'Nmonth',
+                  'quarter' or 'year'
+                * Extract functions: only_INTERVAL1_..._INTERVALLAST,
+                  where INTERVAL is one following values:
+                  'Nminute', 'Nhour', 'Ndow', 'Nweek', 'Nday', 'Nmonth', 'Ndoy'
+
+                  For example,
+
+                  * 'date:only_hour' -- group by every hour of a day (one of 24 values)
+                  * 'date:only_hour_15minute' -- group by every 15 min of a day (one of 24*4 values)
+                  * 'date:only_dow' -- group by day of a week (one of 7 values)
+                  * 'date:only_dow_hour' -- group by hour of each day of a week (one of 7*24 values)
+                  * 'date:only_doy' -- group by day of a year (one of 365 values)
+
+
+                 N is a number or skipped. It's normally should be devider of
+                 max value, because otherwise last group will be shorter, that
+                 other. For example, 5hour means split by group 5,5,5,5,4 (total is 24).
+
+                 "Extract functions" cannot be used in tree few, because they
+                 will not be expanded properoly (__domain will be wrong)
+
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
         :param list orderby: optional ``order by`` specification, for
