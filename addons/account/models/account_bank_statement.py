@@ -695,9 +695,6 @@ class AccountBankStatementLine(models.Model):
             # Create write-offs
             for aml_dict in new_aml_dicts:
                 aml_dict['payment_id'] = payment and payment.id or False
-                if new_aml_currency and not aml_dict.get('currency_id'):
-                    aml_dict['currency_id'] = new_aml_currency.id
-                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], new_aml_currency)
                 aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
