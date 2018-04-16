@@ -52,7 +52,6 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', store=True)
     in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
-    @api.one
     def _compute_location_description(self):
         for operation, operation_sudo in izip(self, self.sudo()):
             operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
