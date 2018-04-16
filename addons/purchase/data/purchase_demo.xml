@@ -22,7 +22,7 @@
             <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
         </record>
     </data>
-    
+
     <record id="purchase_order_1" model="purchase.order">
         <field name="partner_id" ref="base.res_partner_1"/>
         <field name="state">draft</field>
@@ -187,5 +187,11 @@
     <record id="stock.stock_warehouse_shop0" model="stock.warehouse">
         <field name="buy_to_resupply" eval="True"/>
     </record>
+
+    <function model="stock.warehouse" name="write">
+      <value model="stock.warehouse" search="[('partner_id', '=', ref('stock.res_partner_company_1'))]"/>
+      <value eval="{'buy_to_resupply': True}"/>
+    </function>
+
 </odoo>
 

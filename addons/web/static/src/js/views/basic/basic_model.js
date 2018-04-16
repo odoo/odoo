@@ -3167,6 +3167,9 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {string[]} [options.fieldNames] the fields to fetch for a record
      * @param {boolean} [options.onlyGroups=false]
+     * @param {boolean} [options.keepEmptyGroups=false] if set, the groups not
+     *   present in the read_group anymore (empty groups) will stay in the
+     *   datapoint (used to mimic the kanban renderer behaviour for example)
      * @returns {Deferred}
      */
     _load: function (dataPoint, options) {
@@ -3319,8 +3322,28 @@ var BasicModel = AbstractModel.extend({
      */
     _makeDefaultRecord: function (modelName, params) {
         var self = this;
+
+        var determineExtraFields = function() {
+            // Fields that are present in the originating view, that need to be initialized
+            // Hence preventing their value to crash when getting back to the originating view
+            var parentRecord = self.localData[params.parentID];
+
+            var originView =  parentRecord && parentRecord.fieldsInfo;
+            if (!originView || !originView[parentRecord.viewType])
+                return [];
+
+            var fieldsFromOrigin = _.filter(Object.keys(originView[parentRecord.viewType]),
+                function(fieldname) {
+                    return params.fields[fieldname] !== undefined;
+                });
+
+            return fieldsFromOrigin;
+        }
+
         var fieldNames = Object.keys(params.fieldsInfo[params.viewType]);
         var fields_key = _.without(fieldNames, '__last_update');
+
+        var extraFields = determineExtraFields();
 
         return this._rpc({
                 model: modelName,
@@ -3339,7 +3362,7 @@ var BasicModel = AbstractModel.extend({
                     viewType: params.viewType,
                 });
 
-                return self.applyDefaultValues(record.id, result)
+                return self.applyDefaultValues(record.id, result, {fieldNames: _.union(fieldNames, extraFields)})
                     .then(function () {
                         var def = $.Deferred();
                         self._performOnChange(record, fields_key).always(function () {
@@ -3603,6 +3626,8 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(['one2many', 'many2many'], fieldType)) {
                             var x2mCommands = commands[0][2][fieldName];
                             defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
+                        } else {
+                            r._changes[fieldName] = self._parseServerValue(field, r._changes[fieldName]);
                         }
                     }
                 }
@@ -3801,6 +3826,16 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._load(newGroup, options));
                     }
                 });
+                if (options && options.keepEmptyGroups) {
+                    // Find the groups that were available in a previous
+                    // readGroup but are not there anymore.
+                    // Note that these groups are put after existing groups so
+                    // the order is not conserved. A sort *might* be useful.
+                    var emptyGroupsIDs = _.difference(_.pluck(previousGroups, 'id'), list.data);
+                    _.each(emptyGroupsIDs, function (groupID) {
+                        list.data.push(groupID);
+                    });
+                }
                 return $.when.apply($, defs).then(function () {
                     // generate the res_ids of the main list, being the concatenation
                     // of the fetched res_ids in each group

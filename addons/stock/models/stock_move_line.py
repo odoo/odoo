@@ -52,7 +52,6 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', store=True, related_sudo=False)
     in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
-    @api.one
     def _compute_location_description(self):
         for operation, operation_sudo in izip(self, self.sudo()):
             operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
@@ -141,7 +140,7 @@ class StockMoveLine(models.Model):
         help him. This onchange will warn him if he set `qty_done` to a non-supported value.
         """
         res = {}
-        if self.product_id.tracking == 'serial':
+        if self.qty_done and self.product_id.tracking == 'serial':
             if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
                 message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}

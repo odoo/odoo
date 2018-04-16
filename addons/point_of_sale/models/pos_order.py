@@ -46,9 +46,11 @@ class PosOrder(models.Model):
         }
 
     def _payment_fields(self, ui_paymentline):
+        payment_date = ui_paymentline['name']
+        payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
         return {
             'amount':       ui_paymentline['amount'] or 0.0,
-            'payment_date': ui_paymentline['name'],
+            'payment_date': payment_date,
             'statement_id': ui_paymentline['statement_id'],
             'payment_name': ui_paymentline.get('note', False),
             'journal':      ui_paymentline['journal_id'],
@@ -413,14 +415,14 @@ class PosOrder(models.Model):
         return True
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
-        # In the SO part, the entries will be inverted by function compute_invoice_totals
-        price_unit = - product._get_anglo_saxon_price_unit()
+        price_unit = product._get_anglo_saxon_price_unit()
         if product._get_invoice_policy() == "delivery":
             moves = self.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id.move_lines').filtered(lambda m: m.product_id.id == product.id)
             moves.sorted(lambda x: x.date)
-            average_price_unit = product._compute_average_price(quantity, quantity, moves)
+            average_price_unit = product._compute_average_price(0, quantity, moves)
             price_unit = average_price_unit or price_unit
-        return price_unit
+        # In the SO part, the entries will be inverted by function compute_invoice_totals
+        return - price_unit
 
     def _reconcile_payments(self):
         for order in self:
@@ -811,7 +813,7 @@ class PosOrder(models.Model):
         """Create a new payment for the order"""
         args = {
             'amount': data['amount'],
-            'date': data.get('payment_date', fields.Date.today()),
+            'date': data.get('payment_date', fields.Date.context_today(self)),
             'name': self.name + ': ' + (data.get('payment_name', '') or ''),
             'partner_id': self.env["res.partner"]._find_accounting_partner(self.partner_id).id or False,
         }

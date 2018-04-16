@@ -3080,7 +3080,7 @@ QUnit.module('basic_fields', {
     QUnit.module('PhoneWidget');
 
     QUnit.test('phone field in form view on extra small screens', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var form = createView({
             View: FormView,
@@ -3126,6 +3126,15 @@ QUnit.module('basic_fields', {
             "new value should be displayed properly as text with the skype obfuscation");
         assert.strictEqual($phoneLink.attr('href'), 'tel:new',
             "should still have proper tel prefix");
+
+        // NOT NEEDED AS OF SAAS-11.3
+        // save phone with &shy; and verify it is removed
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[type="text"].o_field_widget').val('h\u00ADi').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        $phoneLink = form.$('a.o_form_uri.o_field_widget');
+        assert.strictEqual($phoneLink.attr('href'), 'tel:hi',
+            "U+00AD should have been removed");
 
         form.destroy();
     });
