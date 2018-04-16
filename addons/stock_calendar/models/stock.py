@@ -54,7 +54,7 @@ class StockWarehouseOrderpoint(models.Model):
                     date = interval[1]
                     res_intervals += [(date, group), ]
         else:
-            return [(now_date, None)]
+            return [(False, None)]
         return res_intervals
 
     def _get_previous_dates(self, start_date=False):
