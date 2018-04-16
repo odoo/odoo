@@ -78,6 +78,7 @@ class Partner(models.Model):
         company_name = company.name;
 
         return {
+            'author': user,
             'signature': signature,
             'website_url': website_url,
             'company': company,
