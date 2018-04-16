@@ -16,12 +16,8 @@ class StockQuantPackage(models.Model):
     @api.depends('quant_ids')
     def _compute_weight(self):
         weight = 0.0
-        if self.env.context.get('picking_id'):
-            for ml in self.current_picking_move_line_ids:
-                weight += ml.product_uom_id._compute_quantity(ml.qty_done,ml.product_id.uom_id) * ml.product_id.weight
-        else:
-            for quant in self.quant_ids:
-                weight += quant.quantity * quant.product_id.weight
+        for quant in self.quant_ids:
+            weight += quant.quantity * quant.product_id.weight
         self.weight = weight
 
     weight = fields.Float(compute='_compute_weight', help="Weight computed based on the sum of the weights of the products.")

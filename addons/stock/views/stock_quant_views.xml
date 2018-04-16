@@ -192,16 +192,7 @@
                         </group>
                     </group>
                     <separator string="Content" />
-                    <field name="current_picking_id" invisible="1"/>
-                    <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
-                        <tree>
-                            <field name="product_id"/>
-                            <field name="lot_id" groups="stock.group_production_lot"/>
-                            <field name="qty_done" string="Quantity"/>
-                            <field name="product_uom_id" groups="uom.group_uom"/>
-                        </tree>
-                    </field>
-                    <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}">
+                    <field name="quant_ids">
                         <tree>
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
@@ -244,22 +235,6 @@
                     </t>
                 </templates>
             </kanban>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_quant_package_picking_tree">
-        <field name="name">stock.quant.package.picking.tree</field>
-        <field name="model">stock.quant.package</field>
-        <field name="priority">1000</field>
-        <field name="arch" type="xml">
-            <tree editable="bottom" create="0" delete="0">
-                <field name="name" string="Package" readonly="1"/>
-                <field name="is_processed" invisible="1"/>
-                <field name="current_source_location_id" string="From" readonly="1" groups="stock.group_stock_multi_locations"/>
-                <field name="current_destination_location_id" string="To" attrs="{'readonly': [('is_processed', '=', True)]}" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
-                <button name="action_toggle_processed" icon="fa-square-o" type="object" context="{'picking_id': parent.id, 'destination_location': current_destination_location_id}" attrs="{'invisible': ['|', ('is_processed', '=', True),('parent.state', '=', 'done')]}"/>
-                <button name="action_toggle_processed" icon="fa-check-square-o" type="object" context="{'picking_id': parent.id}" attrs="{'invisible': ['|', ('is_processed', '=', False), ('parent.state', '=', 'done')]}"/>
-            </tree>
         </field>
     </record>
 

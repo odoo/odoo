@@ -14,12 +14,12 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <div t-if="o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
+                                    <div t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id.id != o.partner_id.id">
                                         <span><strong>Delivery Address:</strong></span>
-                                        <div t-field="o.move_lines[0].partner_id"
+                                        <div t-field="o.move_ids_without_package[0].partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                                     </div>
-                                    <div t-if="o.picking_type_id.code != 'internal' and (not o.move_lines or not o.move_lines[0].partner_id) and o.picking_type_id.warehouse_id.partner_id">
+                                    <div t-if="o.picking_type_id.code != 'internal' and (not o.move_ids_without_package or not o.move_ids_without_package[0].partner_id) and o.picking_type_id.warehouse_id.partner_id">
                                         <span><strong>Warehouse Address:</strong></span>
                                         <div t-field="o.picking_type_id.warehouse_id.partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
@@ -70,7 +70,7 @@
                             <br/>
                             <br/>
                             <table class="table table-condensed" t-if="o.move_line_ids">
-                                <t t-set="has_barcode" t-value="any([move_lines.product_id and move_lines.product_id.sudo().barcode or move_lines.package_id for move_lines in o.move_line_ids])"/>
+                                <t t-set="has_barcode" t-value="any([move_ids_without_package.product_id and move_ids_without_package.product_id.sudo().barcode or move_ids_without_package.package_id for move_ids_without_package in o.move_line_ids])"/>
                                 <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/>
                                 <thead>
                                     <tr>
@@ -88,7 +88,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="o.move_lines.sorted(key=lambda m: m.product_id.id)" t-as="move">
+                                    <t t-foreach="o.move_ids_without_package.sorted(key=lambda m: m.product_id.id)" t-as="move">
                                         <t t-foreach="move.move_line_ids.sorted(key=lambda ml: ml.location_id.id)" t-as="ml">
                                             <tr>
                                                 <td>
@@ -130,7 +130,7 @@
                                     </t>
                                   </tbody>
                             </table>
-                            <table class="table table-condensed" t-if="o.entire_package_ids and o.picking_type_entire_packs">
+                            <table class="table table-condensed" t-if="o.package_level_ids and o.picking_type_entire_packs">
                                 <thead>
                                     <tr>
                                         <th width="25%">Package</th>
@@ -140,12 +140,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="o.entire_package_ids.sorted(key=lambda p: p.name)" t-as="package">
+                                    <tr t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)" t-as="package">
                                         <t t-set="package" t-value="package.with_context({'picking_id':o.id})" />
-                                        <td><span t-field="package.name"/></td>
-                                        <td><img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.name, 600, 100)" style="width:300px    ;height:50px"/></td>
-                                        <td><span t-field="package.current_source_location_id"/></td>
-                                        <td><span t-field="package.current_destination_location_id"/></td>
+                                        <td><span t-field="package.package_id.name"/></td>
+                                        <td><img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.package_id.name, 600, 100)" style="width:300px    ;height:50px"/></td>
+                                        <td><span t-field="package.location_id"/></td>
+                                        <td><span t-field="package.location_dest_id"/></td>
                                     </tr>
                                 </tbody>
                             </table>
