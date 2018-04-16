@@ -158,7 +158,7 @@
                         <button type="object"
                             name="action_view_picking"
                             class="oe_stat_button"
-                            icon="fa-truck">
+                            icon="fa-truck" attrs="{'invisible':[('picking_count','=', 0)]}">
                             <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
                         </button>
                         <button type="object"  name="action_view_invoice"
