@@ -343,7 +343,7 @@ exports.PosModel = Backbone.Model.extend({
         fields: ['id', 'name', 'parent_id', 'child_id'],
         domain: null,
         loaded: function(self, categories){
-            self.db.add_categories(categories);
+            self.db.add_categories(categories, self.config.iface_available_categ_ids);
         },
     },{
         model:  'product.product',
