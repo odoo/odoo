@@ -18,6 +18,8 @@ from odoo.addons.base.ir.ir_http import RequestUID, ModelConverter
 from odoo.http import request
 from odoo.tools import config, ustr, pycompat
 
+from ..geoipresolver import GeoIPResolver
+
 _logger = logging.getLogger(__name__)
 
 # global resolver (GeoIP API is thread-safe, for multithreaded workers)
@@ -265,25 +267,18 @@ class IrHttp(models.AbstractModel):
         # Lazy init of GeoIP resolver
         if odoo._geoip_resolver is not None:
             return
+        geofile = config.get('geoip_database')
         try:
-            import GeoIP
-            # updated database can be downloaded on MaxMind website
-            # http://dev.maxmind.com/geoip/legacy/install/city/
-            geofile = config.get('geoip_database')
-            if os.path.exists(geofile):
-                odoo._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
-            else:
-                odoo._geoip_resolver = False
-                _logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
-        except ImportError:
-            odoo._geoip_resolver = False
+            odoo._geoip_resolver = GeoIPResolver.open(geofile) or False
+        except Exception as e:
+            _logger.warning('Cannot load GeoIP: %s', ustr(e))
 
     @classmethod
     def _geoip_resolve(cls):
         if 'geoip' not in request.session:
             record = {}
             if odoo._geoip_resolver and request.httprequest.remote_addr:
-                record = odoo._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
+                record = odoo._geoip_resolver.resolve(request.httprequest.remote_addr) or {}
             request.session['geoip'] = record
 
     @classmethod
