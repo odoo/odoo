@@ -579,8 +579,8 @@ class AccountMoveLine(models.Model):
         if not amls:
             return
         # If we have multiple currency, we can only base ourselve on debit-credit to see if it is fully reconciled
-        currency = set([a.currency_id for a in amls if a.currency_id != False])
-        if len(currency) > 1:
+        currency = set([a.currency_id for a in amls if a.currency_id.id != False])
+        if len(currency) != 1:
             currency = False
         else:
             currency = list(currency)[0]
@@ -638,6 +638,7 @@ class AccountMoveLine(models.Model):
         while (debit_moves and credit_moves):
             debit_move = debit_moves[0]
             credit_move = credit_moves[0]
+            company_currency = debit_move.company_id.currency_id
             # We need those temporary value otherwise the computation might be wrong below
             temp_amount_residual = min(debit_move.amount_residual, -credit_move.amount_residual)
             temp_amount_residual_currency = min(debit_move.amount_residual_currency, -credit_move.amount_residual_currency)
@@ -665,6 +666,12 @@ class AccountMoveLine(models.Model):
                 currency = credit_move.currency_id.id
                 amount_reconcile_currency = temp_amount_residual_currency
                 amount_reconcile = temp_amount_residual
+            elif debit_move.currency_id != credit_move.currency_id:
+                if debit_move.currency_id == company_currency or credit_move.currency_id == company_currency:
+                    currency = debit_move.currency_id or credit_move.currency_id
+                    currency_date = debit_move.currency_id and debit_move.date or credit_move.date
+                    amount_reconcile_currency = company_currency.with_context(date=currency_date).compute(amount_reconcile, currency)
+                    currency = currency.id
 
             if cash_basis:
                 cash_basis_percentage_before_rec.append(debit_move._get_matched_percentage())
@@ -1217,7 +1224,7 @@ class AccountPartialReconcile(models.Model):
             'credit_move_id': aml.debit and line_to_reconcile.id or aml.id,
             'amount': abs(aml.amount_residual),
             'amount_currency': abs(aml.amount_residual_currency),
-            'currency_id': currency.id,
+            'currency_id': currency and currency.id or False,
         }
 
     @api.model
