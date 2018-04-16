@@ -106,10 +106,10 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * Called each time the controller is attached into the DOM.
      */
     on_attach_callback: function () {
-        this.renderer.on_attach_callback();
         if (this.searchView) {
             this.searchView.on_attach_callback();
         }
+        this.renderer.on_attach_callback();
     },
     /**
      * Called each time the controller is detached from the DOM.
