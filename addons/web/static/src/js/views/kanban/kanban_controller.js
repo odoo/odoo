@@ -163,7 +163,9 @@ var KanbanController = BasicController.extend({
         var self = this;
         this.model.createGroup(event.data.value, this.handle).then(function () {
             var state = self.model.get(self.handle);
-            var ids = _.map(state.data, function (group) { return group.res_id; });
+            var ids = _.chain(state.data)
+                        .map(function (group) { return group.res_id; })
+                        .filter(function (res_id) { return _.isNumber(res_id) }).value();
             return self.resequenceColumn(ids);
         }).then(function () {
             return self.update({}, {reload: false});
