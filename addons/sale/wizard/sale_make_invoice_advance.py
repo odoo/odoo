@@ -181,7 +181,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
 
         if self.advance_payment_method == 'delivered':
-            sale_orders.action_invoice_create()
+            # In case of refund displaying deduct down payment is not ok so display credti note amount with ready to invoice
+            final = any(line.qty_to_invoice < 0 for line in self.sale_order_id.order_line)
+            sale_orders.action_invoice_create(final=final)
         elif self.advance_payment_method == 'all':
             sale_orders.action_invoice_create(final=True)
         elif self.advance_payment_method == 'unbilled':
