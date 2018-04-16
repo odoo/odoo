@@ -75,7 +75,7 @@ class PadCommon(models.AbstractModel):
     @api.model
     def pad_get_content(self, url):
         company = self.env.user.sudo().company_id
-        myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
+        myPad = EtherpadLiteClient(company.pad_key, (company.pad_server or '') + '/api')
         content = ''
         if url:
             split_url = url.split('/p/')
@@ -132,7 +132,7 @@ class PadCommon(models.AbstractModel):
         for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
                 company = self.env.user.sudo().company_id
-                myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
+                myPad = EtherpadLiteClient(company.pad_key, (company.pad_server or '') + '/api')
                 path = self[k].split('/p/')[1]
                 myPad.setHtmlFallbackText(path, vals[field.pad_content_field])
 
