@@ -134,6 +134,31 @@ var BoardRenderer = FormRenderer.extend({
         this._super.apply(this, arguments);
         this.noContentHelp = params.noContentHelp;
         this.actionsDescr = {};
+        this._boardSubcontrollers = []; // for board: controllers of subviews
+    },
+    /**
+     * Call `on_attach_callback` for each subview
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        _.each(this._boardSubcontrollers, function (controller) {
+            if ('on_attach_callback' in controller) {
+                controller.on_attach_callback();
+            }
+        });
+    },
+    /**
+     * Call `on_detach_callback` for each subview
+     *
+     * @override
+     */
+    on_detach_callback: function () {
+        _.each(this._boardSubcontrollers, function (controller) {
+            if ('on_detach_callback' in controller) {
+                controller.on_detach_callback();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -235,6 +260,7 @@ var BoardRenderer = FormRenderer.extend({
                         hasSelectors: false,
                     });
                     return view.getController(self).then(function (controller) {
+                        self._boardSubcontrollers.push(controller);
                         return controller.appendTo(params.$node);
                     });
                 });

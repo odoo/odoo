@@ -61,11 +61,15 @@ class MercuryTransaction(models.Model):
             'SOAPAction': 'http://www.mercurypay.com/CreditTransaction',
         }
 
+        url = 'https://w1.mercurypay.com/ws/ws.asmx'
+        if self.env['ir.config_parameter'].sudo().get_param('pos_mercury.enable_test_env'):
+            url = 'https://w1.mercurycert.net/ws/ws.asmx'
+
         try:
-            r = requests.post('https://w1.mercurypay.com/ws/ws.asmx', data=xml_transaction, headers=headers, timeout=65)
+            r = requests.post(url, data=xml_transaction, headers=headers, timeout=65)
             r.raise_for_status()
             response = werkzeug.utils.unescape(r.content.decode())
-        except:
+        except Exception:
             response = "timeout"
 
         return response

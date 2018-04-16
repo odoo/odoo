@@ -8,24 +8,31 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Clo <clo@odoo.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
+# Olivier Dony <odo@odoo.com>, 2018
+# Richard Mathot <rim@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:36+0000\n"
-"PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Richard Mathot <rim@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
@@ -111,22 +118,17 @@ msgstr ""
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
-#: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__account_invoice_id
 msgid "Invoice"
 msgstr "Facture"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
-msgstr "Facture payée avec succès."
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_tx_id
 msgid "Last Transaction"
 msgstr "Dernière transaction"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_tx_count
 msgid "Number of payment transactions"
 msgstr "Nombre de transactions de paiement"
 
@@ -149,7 +151,7 @@ msgid "Pay with"
 msgstr "Payer avec"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_acquirer_id
 msgid "Payment Acquirer"
 msgstr "Intermédiaire de Paiement"
 
@@ -238,7 +240,12 @@ msgstr ""
 " de carte bancaire non valide."
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_tx_ids
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
 msgstr "Transactions"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Votre paiement a été autorisé."

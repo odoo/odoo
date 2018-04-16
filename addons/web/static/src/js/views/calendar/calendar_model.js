@@ -262,7 +262,10 @@ return AbstractModel.extend({
      * @param {Moment} start
      */
     setDate: function (start) {
-        this.data.start_date = this.data.end_date = this.data.target_date = this.data.highlight_date = start;
+        // keep highlight/target_date in localtime
+        this.data.highlight_date = this.data.target_date = start.clone();
+        // set dates in UTC with timezone applied manually
+        this.data.start_date = this.data.end_date = start;
         this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
 
         switch (this.data.scale) {

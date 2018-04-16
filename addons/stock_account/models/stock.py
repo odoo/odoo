@@ -74,34 +74,42 @@ class StockMoveLine(models.Model):
 
     @api.multi
     def write(self, vals):
+        """ When editing a done stock.move.line, we impact the valuation. Users may increase or
+        decrease the `qty_done` field. There are three cost method available: standard, average
+        and fifo. We implement the logic in a similar way for standard and average: increase
+        or decrease the original value with the standard or average price of today. In fifo, we
+        have a different logic wheter the move is incoming or outgoing. If the move is incoming, we
+        update the value and remaining_value/qty with the unit price of the move. If the move is
+        outgoing and the user increases qty_done, we call _run_fifo and it'll consume layer(s) in
+        the stack the same way a new outgoing move would have done. If the move is outoing and the
+        user decreases qty_done, we either increase the last receipt candidate if one is found or
+        we decrease the value with the last fifo price.
+        """
         if 'qty_done' in vals:
-            # We need to update the `value`, `remaining_value` and `remaining_qty` on the linked
-            # stock move.
             moves_to_update = {}
             for move_line in self.filtered(lambda ml: ml.state == 'done' and (ml.move_id._is_in() or ml.move_id._is_out())):
                 moves_to_update[move_line.move_id] = vals['qty_done'] - move_line.qty_done
 
             for move_id, qty_difference in moves_to_update.items():
-                # more/less units are available, update `remaining_value` and
-                # `remaining_qty` on the linked stock move.
-                move_vals = {'remaining_qty': move_id.remaining_qty + qty_difference}
-                new_remaining_value = 0
+                move_vals = {}
                 if move_id.product_id.cost_method in ['standard', 'average']:
                     correction_value = qty_difference * move_id.product_id.standard_price
-                    move_vals['value'] = move_id.value - correction_value
-                    move_vals.pop('remaining_qty')
+                    if move_id._is_in():
+                        move_vals['value'] = move_id.value + correction_value
+                    elif move_id._is_out():
+                        move_vals['value'] = move_id.value - correction_value
                 else:
-                    # FIFO handling
                     if move_id._is_in():
                         correction_value = qty_difference * move_id.price_unit
                         new_remaining_value = move_id.remaining_value + correction_value
+                        move_vals['value'] = move_id.value + correction_value
+                        move_vals['remaining_qty'] = move_id.remaining_qty + qty_difference
+                        move_vals['remaining_value'] = move_id.remaining_value + correction_value
                     elif move_id._is_out() and qty_difference > 0:
-                        # send more, run fifo again
                         correction_value = self.env['stock.move']._run_fifo(move_id, quantity=qty_difference)
-                        new_remaining_value = move_id.remaining_value + correction_value
-                        move_vals.pop('remaining_qty')
+                        # no need to adapt `remaining_qty` and `remaining_value` as `_run_fifo` took care of it
+                        move_vals['value'] = move_id.value - correction_value
                     elif move_id._is_out() and qty_difference < 0:
-                        # fake return, find the last receipt and augment its qties
                         candidates_receipt = self.env['stock.move'].search(move_id._get_in_domain(), order='date, id desc', limit=1)
                         if candidates_receipt:
                             candidates_receipt.write({
@@ -111,15 +119,11 @@ class StockMoveLine(models.Model):
                             correction_value = qty_difference * candidates_receipt.price_unit
                         else:
                             correction_value = qty_difference * move_id.product_id.standard_price
-                        move_vals.pop('remaining_qty')
-                if move_id._is_out():
-                    move_vals['remaining_value'] = new_remaining_value if new_remaining_value < 0 else 0
-                else:
-                    move_vals['remaining_value'] = new_remaining_value
+                        move_vals['value'] = move_id.value - correction_value
                 move_id.write(move_vals)
 
                 if move_id.product_id.valuation == 'real_time':
-                    move_id.with_context(force_valuation_amount=correction_value)._account_entry_move()
+                    move_id.with_context(force_valuation_amount=correction_value, forced_quantity=qty_difference)._account_entry_move()
                 if qty_difference > 0:
                     move_id.product_price_update_before_done(forced_qty=qty_difference)
         return super(StockMoveLine, self).write(vals)
@@ -210,13 +214,23 @@ class StockMove(models.Model):
 
     @api.model
     def _run_fifo(self, move, quantity=None):
+        """ Value `move` according to the FIFO rule, meaning we consume the
+        oldest receipt first. Candidates receipts are marked consumed or free
+        thanks to their `remaining_qty` and `remaining_value` fields.
+        By definition, `move` should be an outgoing stock move.
+
+        :param quantity: quantity to value instead of `move.product_qty`
+        :returns: valued amount in absolute
+        """
         move.ensure_one()
-        # Find back incoming stock moves (called candidates here) to value this move.
+
+        # Deal with possible move lines that do not impact the valuation.
         valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)
         valued_quantity = 0
         for valued_move_line in valued_move_lines:
             valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
 
+        # Find back incoming stock moves (called candidates here) to value this move.
         qty_to_take_on_candidates = quantity or valued_quantity
         candidates = move.product_id._get_fifo_candidates_in_move()
         new_standard_price = 0
@@ -259,11 +273,12 @@ class StockMove(models.Model):
         elif qty_to_take_on_candidates > 0:
             last_fifo_price = new_standard_price or move.product_id.standard_price
             negative_stock_value = last_fifo_price * -qty_to_take_on_candidates
+            tmp_value += abs(negative_stock_value)
             vals = {
                 'remaining_qty': move.remaining_qty + -qty_to_take_on_candidates,
                 'remaining_value': move.remaining_value + negative_stock_value,
-                'value': -tmp_value + negative_stock_value,
-                'price_unit': (-tmp_value + negative_stock_value) / (move.product_qty or quantity),
+                'value': -tmp_value,
+                'price_unit': -1 * last_fifo_price,
             }
             move.write(vals)
         return tmp_value
@@ -388,12 +403,14 @@ class StockMove(models.Model):
             if not candidates:
                 continue
             qty_to_take_on_candidates = abs(move.remaining_qty)
+            qty_taken_on_candidates = 0
             tmp_value = 0
             for candidate in candidates:
                 if candidate.remaining_qty <= qty_to_take_on_candidates:
                     qty_taken_on_candidate = candidate.remaining_qty
                 else:
                     qty_taken_on_candidate = qty_to_take_on_candidates
+                qty_taken_on_candidates += qty_taken_on_candidate
 
                 value_taken_on_candidate = qty_taken_on_candidate * candidate.price_unit
                 candidate_vals = {
@@ -407,27 +424,22 @@ class StockMove(models.Model):
                 if qty_to_take_on_candidates == 0:
                     break
 
-            remaining_value_before_vacuum = move.remaining_value
 
-            # If `remaining_qty` should be updated to 0, we wipe `remaining_value`. If it was set
-            # it was only used to infer the correction entry anyway.
-            new_remaining_qty = -qty_to_take_on_candidates
-            new_remaining_value = 0 if not new_remaining_qty else move.remaining_value + tmp_value
+            # When working with `price_unit`, beware that out move are negative.
+            move_price_unit = move.price_unit if move._is_out() else -1 * move.price_unit
+            # Get the estimated value we will correct.
+            remaining_value_before_vacuum = qty_taken_on_candidates * move_price_unit
+            new_remaining_qty = move.remaining_qty + qty_taken_on_candidates
+            new_remaining_value = new_remaining_qty * abs(move.price_unit)
+
+            corrected_value = remaining_value_before_vacuum + tmp_value
             move.write({
                 'remaining_value': new_remaining_value,
                 'remaining_qty': new_remaining_qty,
+                'value': move.value - corrected_value,
             })
 
             if move.product_id.valuation == 'real_time':
-                # If `move.remaining_value` is negative, it means that we initially valued this move at
-                # an estimated price *and* posted an entry. `tmp_value` is the real value we took to
-                # compensate and should always be positive, but if the remaining value is still negative
-                # we have to take care to not overvalue by decreasing the correction entry by what's
-                # already been posted.
-                corrected_value = tmp_value
-                if remaining_value_before_vacuum < 0:
-                    corrected_value += remaining_value_before_vacuum
-
                 # If `corrected_value` is 0, absolutely do *not* call `_account_entry_move`. We
                 # force the amount in the context, but in the case it is 0 it'll create an entry
                 # for the entire cost of the move. This case happens when the candidates moves
@@ -441,9 +453,9 @@ class StockMove(models.Model):
                     # The correction should behave as a return too. As `_account_entry_move`
                     # will post the natural values for an IN move (credit IN account, debit
                     # OUT one), we inverse the sign to create the correct entries.
-                    move.with_context(force_valuation_amount=-corrected_value)._account_entry_move()
+                    move.with_context(force_valuation_amount=-corrected_value, forced_quantity=0)._account_entry_move()
                 else:
-                    move.with_context(force_valuation_amount=corrected_value)._account_entry_move()
+                    move.with_context(force_valuation_amount=corrected_value, forced_quantity=0)._account_entry_move()
 
     @api.model
     def _run_fifo_vacuum(self):
@@ -502,6 +514,11 @@ class StockMove(models.Model):
         else:
             valuation_amount = cost
 
+        if self._context.get('forced_ref'):
+            ref = self._context['forced_ref']
+        else:
+            ref = self.picking_id.name
+
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
         debit_value = self.company_id.currency_id.round(valuation_amount)
@@ -537,7 +554,7 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
-            'ref': self.picking_id.name,
+            'ref': ref,
             'partner_id': partner_id,
             'debit': debit_value if debit_value > 0 else 0,
             'credit': -debit_value if debit_value < 0 else 0,
@@ -549,7 +566,7 @@ class StockMove(models.Model):
             'product_id': self.product_id.id,
             'quantity': qty,
             'product_uom_id': self.product_id.uom_id.id,
-            'ref': self.picking_id.name,
+            'ref': ref,
             'partner_id': partner_id,
             'credit': credit_value if credit_value > 0 else 0,
             'debit': -credit_value if credit_value < 0 else 0,
@@ -572,7 +589,7 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,
                 'quantity': qty,
                 'product_uom_id': self.product_id.uom_id.id,
-                'ref': self.picking_id.name,
+                'ref': ref,
                 'partner_id': partner_id,
                 'credit': diff_amount > 0 and diff_amount or 0,
                 'debit': diff_amount < 0 and -diff_amount or 0,
@@ -586,14 +603,25 @@ class StockMove(models.Model):
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
         self.ensure_one()
         AccountMove = self.env['account.move']
-        move_lines = self._prepare_account_move_line(self.product_qty, abs(self.value), credit_account_id, debit_account_id)
+        quantity = self.env.context.get('forced_quantity', self.product_qty if self._is_in() else -1 * self.product_qty)
+
+        # Make an informative `ref` on the created account move to differentiate between classic
+        # movements, vacuum and edition of past moves.
+        ref = self.picking_id.name
+        if self.env.context.get('force_valuation_amount'):
+            if self.env.context.get('forced_quantity') == 0:
+                ref = 'Revaluation of %s (negative inventory)' % ref
+            elif self.env.context.get('forced_quantity') is not None:
+                ref = 'Correction of %s (modification of past move)' % ref
+
+        move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': self.picking_id.name,
+                'ref': ref,
                 'stock_move_id': self.id,
             })
             new_account_move.post()

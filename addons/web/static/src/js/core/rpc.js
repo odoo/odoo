@@ -52,19 +52,19 @@ return {
 
         if (options.method === 'read_group') {
             if (!(params.args && params.args[0] !== undefined)) {
-                params.kwargs.domain = options.domain || params.domain || params.kwargs.domain || [];
+                params.kwargs.domain = options.domain || params.domain || params.kwargs.domain || [];
             }
             if (!(params.args && params.args[1] !== undefined)) {
-                params.kwargs.fields = options.fields || params.fields || params.kwargs.fields || [];
+                params.kwargs.fields = options.fields || params.fields || params.kwargs.fields || [];
             }
             if (!(params.args && params.args[2] !== undefined)) {
-                params.kwargs.groupby = options.groupBy || params.groupBy || params.kwargs.groupby || [];
+                params.kwargs.groupby = options.groupBy || params.groupBy || params.kwargs.groupby || [];
             }
-            params.kwargs.offset = options.offset || params.offset || params.kwargs.offset;
-            params.kwargs.limit = options.limit || params.limit || params.kwargs.limit;
+            params.kwargs.offset = options.offset || params.offset || params.kwargs.offset;
+            params.kwargs.limit = options.limit || params.limit || params.kwargs.limit;
             // In kwargs, we look for "orderby" rather than "orderBy" (note the absence of capital B),
             // since the Python argument to the actual function is "orderby".
-            var orderBy = options.orderBy || params.orderBy || params.kwargs.orderby;
+            var orderBy = options.orderBy || params.orderBy || params.kwargs.orderby;
             params.kwargs.orderby = orderBy ? this._serializeSort(orderBy) : orderBy;
             params.kwargs.lazy = 'lazy' in options ? options.lazy : params.lazy;
         }
@@ -72,7 +72,7 @@ return {
         if (options.method === 'search_read') {
             // call the model method
             params.kwargs.domain = options.domain || params.domain || params.kwargs.domain;
-            params.kwargs.fields = options.fields || params.fields || params.kwargs.fields;
+            params.kwargs.fields = options.fields || params.fields || params.kwargs.fields;
             params.kwargs.offset = options.offset || params.offset || params.kwargs.offset;
             params.kwargs.limit = options.limit || params.limit || params.kwargs.limit;
             // In kwargs, we look for "order" rather than "orderBy" since the Python

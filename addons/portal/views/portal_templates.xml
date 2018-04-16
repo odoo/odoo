@@ -10,6 +10,7 @@
                         is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
                         user_id: <t t-esc="json.dumps(request.env.user.id)" />,
                         is_frontend: true,
+                        translationURL: '/website/translations',
                     };
                 </script>
 

@@ -142,7 +142,7 @@ class SaleOrderLine(models.Model):
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
 
     @api.multi
-    @api.depends('product_id.type')
+    @api.depends('product_id')
     def _compute_qty_delivered_method(self):
         """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])]
             For SO line coming from expense, no picking should be generate: we don't manage stock for

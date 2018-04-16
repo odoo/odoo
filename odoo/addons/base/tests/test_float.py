@@ -206,3 +206,12 @@ class TestFloatPrecision(TransactionCase):
 
         with self.assertRaises(AssertionError):
             float_round(0.01, precision_digits=3, precision_rounding=0.01)
+
+    def test_amount_to_text_10(self):
+        """ verify that amount_to_text works as expected """
+        currency = self.env.ref('base.EUR')
+
+        amount_target = currency.amount_to_text(0.29)
+        amount_test = currency.amount_to_text(0.28)
+        self.assertNotEqual(amount_test, amount_target,
+                            "Amount in text should not depend on float representation")
