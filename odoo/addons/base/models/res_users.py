@@ -230,6 +230,10 @@ class Users(models.Model):
     name = fields.Char(related='partner_id.name', inherited=True)
     email = fields.Char(related='partner_id.email', inherited=True)
 
+    number_access = fields.Integer(compute='_get_number_access', groups='base.group_erp_manager')
+    number_rules = fields.Integer(compute='_get_number_access', groups='base.group_erp_manager')
+    number_groups = fields.Integer(compute='_get_number_access', groups='base.group_erp_manager')
+
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
@@ -599,6 +603,52 @@ class Users(models.Model):
         return bool(self._cr.fetchone())
     # for a few places explicitly clearing the has_group cache
     has_group.clear_cache = _has_group.clear_cache
+
+    def _get_number_access(self):
+        for user in self:
+            groups = user.mapped('groups_id')
+            user.number_access = len(groups.mapped('model_access'))
+            user.number_rules = len(groups.mapped('rule_groups'))
+            user.number_groups = len(groups)
+
+    def action_show_groups(self):
+        self.ensure_one()
+        self.user_has_groups('base.group_erp_manager')
+        return {
+            'name': _('Groups'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'res.groups',
+            'type': 'ir.actions.act_window',
+            'domain': [('id','in', self.groups_id.ids)],
+            'target': 'current',
+        }
+
+    def action_show_access(self):
+        self.ensure_one()
+        self.user_has_groups('base.group_erp_manager')
+        return {
+            'name': _('Access Controls List'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.model.access',
+            'type': 'ir.actions.act_window',
+            'domain': [('id','in', self.mapped('groups_id.model_access').ids)],
+            'target': 'current',
+        }
+
+    def action_show_rules(self):
+        self.ensure_one()
+        self.user_has_groups('base.group_erp_manager')
+        return {
+            'name': _('Record Rules'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.rule',
+            'type': 'ir.actions.act_window',
+            'domain': [('id','in', self.mapped('groups_id.rule_groups').ids)],
+            'target': 'current',
+        }
 
     @api.multi
     def _is_public(self):

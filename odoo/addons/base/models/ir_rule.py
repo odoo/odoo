@@ -11,7 +11,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class IrRule(models.Model):
     _name = 'ir.rule'
-    _order = 'model_id DESC'
+    _order = 'model_id,id'
     _MODES = ['read', 'write', 'create', 'unlink']
 
     name = fields.Char(index=True)
