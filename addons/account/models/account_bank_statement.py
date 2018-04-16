@@ -240,7 +240,7 @@ class AccountBankStatement(models.Model):
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
                 moves = (moves | st_line.journal_entry_ids)
             if moves:
-                moves.post()
+                moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
         statements.link_bank_to_partner()
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})
