@@ -1766,7 +1766,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             'groupby': gb,
             'type': field_type,
             'normal_interval': bool(temporal and normal_interval),
-            'display_format': display_formats[gb_function] if temporal and normal_interval else None,
+            'display_format': display_formats[normal_interval[1]] if temporal and normal_interval else None,
             'interval': normal_interval[0] * time_intervals[normal_interval[1]] if temporal and normal_interval else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field
