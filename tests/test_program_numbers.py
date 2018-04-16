@@ -178,3 +178,11 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         # (10x25) + (320 +15% tax) - (20% of (320 + 15% tax) = 250 + 368 - 73.6 = 544.4
         self.assertEqual(order.amount_total, 544.4, "We should only get reduction on ipad")
+        sol1.product_uom_qty = 10
+        order.recompute_coupon_lines()
+        # (10x25) + (10x (320 +15% tax)) - (20% of (10x (320 + 15% tax))) - 2 free iPads = 250 + 3680 - 736 - 736 = 2458
+        self.assertEqual(order.amount_total, 2458, "Changing ipad quantity should change discount amount correctly")
+
+        p_specific_product.discount_max_amount = 200
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 2994, "The discount should be limited to $200")
