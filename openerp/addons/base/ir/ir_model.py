@@ -379,7 +379,7 @@ class ir_model_fields(osv.osv):
             if self.relation not in self.env:
                 return {
                     'warning': {
-                        'title': _('Model %s does not exist' % self.relation),
+                        'title': _('Model %s does not exist') % self.relation,
                         'message': _('Please specify a valid model for the object relation'),
                     }
                 }
