@@ -1140,55 +1140,81 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         return saved_actions.get("actions", {}).get(key)
 
     def save_request_data(self):
-        import uuid
         req = request.httprequest
-        files = werkzeug.datastructures.MultiDict()
         # NOTE we do not store files in the session itself to avoid loading them in memory.
         #      By storing them in the session store, we ensure every worker (even ones on other
         #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
-        for f in req.files.values():
-            storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
-            path = os.path.join(root.session_store.path, storename)
-            with open(path, 'w') as fp:
-                f.save(fp)
-            files.add(f.name, (storename, f.filename, f.content_type))
+        files_refs = root.session_store.save_request_data_to_store(self.sid, req.files)
         self['serialized_request_data'] = {
             'form': req.form,
-            'files': files,
+            'files': files_refs,
         }
 
     @contextlib.contextmanager
     def load_request_data(self):
         data = self.pop('serialized_request_data', None)
-        files = werkzeug.datastructures.MultiDict()
         try:
             if data:
-                # regenerate files filenames with the current session store
-                for name, (storename, filename, content_type) in data['files'].items():
-                    path = os.path.join(root.session_store.path, storename)
-                    files.add(name, (path, filename, content_type))
+                files = root.session_store.load_request_data_from_store(data['files'])
                 yield werkzeug.datastructures.CombinedMultiDict([data['form'], files])
             else:
                 yield None
         finally:
-            # cleanup files
-            for f, _, _ in files.values():
-                try:
-                    os.unlink(f)
-                except IOError:
-                    pass
+            root.session_store.request_data_cleanup(files)
 
+class OdooSessionStore(werkzeug.contrib.sessions.FilesystemSessionStore):
+    """Overridable Session Store Class. Implementing custom
+        session sotres, as a minimum require implementation of the
+        methods provided by this class.
+        Custom classes should probably inherit
+        `werkzeug.contrib.sessions.SessionStore`, instead.
+    """
+    def __init__(self):
+        self.path = odoo.tools.config.session_dir
+        _logger.debug('HTTP sessions stored in: %s', self.path)
+        super(OdooSessionStore, self).__init__(self.path, session_class=OpenERPSession)
 
-def session_gc(session_store):
-    if random.random() < 0.001:
-        # we keep session one week
-        last_week = time.time() - 60*60*24*7
-        for fname in os.listdir(session_store.path):
-            path = os.path.join(session_store.path, fname)
+    def session_gc(self):
+        """ Garbage colect old sessions and request files, if any."""
+        if random.random() < 0.001:
+            # we keep session one week
+            last_week = time.time() - 60*60*24*7
+            for fname in os.listdir(self.path):
+                fpath = os.path.join(self.path, fname)
             try:
-                if os.path.getmtime(path) < last_week:
-                    os.unlink(path)
+                if os.path.getmtime(fpath) < last_week:
+                    os.unlink(fpath)
             except OSError:
+                pass
+
+    def save_request_data_to_store(self, sid, req_files):
+        """Safe request files to the session store."""
+        import uuid
+        files = werkzeug.datastructures.MultiDict()
+        key = 'werkzeug_%s_%s.file' % (sid, uuid.uuid4().hex)
+        path = os.path.join(self.path, key)
+        for f in req_files.values():
+            with open(path, 'w') as fp:
+                f.save(fp)
+                files.add(f.name, (key, f.filename, f.content_type))
+        return files
+
+    def load_request_data_from_store(self, file_refs):
+        """Load files from session store through the Session's file reference"""
+        files = werkzeug.datastructures.MultiDict()
+        # regenerate files filenames with the current session store
+        for name, (storename, filename, content_type) in file_refs.items():
+            path = os.path.join(self.path, storename)
+            files.add(name, (path, filename, content_type))
+        return files
+
+    def request_data_cleanup(self, files):
+        """Cleanup files from session store"""
+        _ = self  # Not used in filestore implementation
+        for f, _, _ in files.values():
+            try:
+                os.unlink(f)
+            except IOError:
                 pass
 
 #----------------------------------------------------------
@@ -1292,9 +1318,7 @@ class Root(object):
     @lazy_property
     def session_store(self):
         # Setup http sessions
-        path = odoo.tools.config.session_dir
-        _logger.debug('HTTP sessions stored in: %s', path)
-        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        return OdooSessionStore()
 
     @lazy_property
     def nodb_routing_map(self):
@@ -1337,7 +1361,7 @@ class Root(object):
 
     def setup_session(self, httprequest):
         # recover or create session
-        session_gc(self.session_store)
+        self.session_store.session_gc()
 
         sid = httprequest.args.get('session_id')
         explicit_session = True
