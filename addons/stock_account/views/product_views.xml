@@ -88,27 +88,14 @@
                 </data>
             </field>
         </record>
-        
-        <record id="product_valuation_tree" model="ir.ui.view">
-            <field name="name">product.valuation.tree</field>
-            <field name="model">product.product</field>
-            <field name="arch" type="xml">
-                <tree create="false">
-                    <field name="display_name" string="Product"/>
-                    <field name="qty_available" context="{'company_owned': True}" string="Quantity on Hand"/>
-                    <field name="uom_id" groups="uom.group_uom"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="stock_value" sum="Stock Valuation" widget="monetary" string="Total Value"/>
-                </tree>
-            </field>
-        </record>
+
         <record id="product_valuation_action" model="ir.actions.act_window">
             <field name="name">Product Valuation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="product_valuation_tree"/>
+            <field name="view_id" ref="view_stock_product_tree2"/>
             <field name="domain">[('type', '=', 'product'), ('qty_available', '!=', 0)]</field>
             <field name="context">{}</field>
             <field name="help" type="html">
@@ -119,68 +106,5 @@
                 </p>
             </field>
         </record>
-
-        <record id="product_valuation_form_view" model="ir.ui.view">
-             <field name="name">product.product</field>
-             <field name="model">product.product</field>
-             <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
-             <field name="arch" type="xml">
-                 <xpath expr="//button[@name='action_view_stock_move_lines']" position="after">
-                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': ['|', ('cost_method', '=', 'standard'), ('id', '=', False)]}"/>
-                 </xpath>
-             </field>
-        </record>
-
-        <record id="product_template_valuation_form_view" model="ir.ui.view">
-             <field name="name">product.template</field>
-             <field name="model">product.template</field>
-             <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
-             <field name="arch" type="xml">
-                 <xpath expr="//button[@name='action_view_stock_move_lines']" position="after">
-                    <button string="Inventory Valuation" type="object" name="action_open_product_moves" class="oe_stat_button" icon="fa-cubes" attrs="{'invisible': [('cost_method', '=', 'standard')]}"/>
-                 </xpath>
-             </field>
-        </record>
-
-        <!-- stock move valuation view -->
-        <record id="view_move_tree_valuation" model="ir.ui.view">
-            <field name="name">stock.move.tree.valuation</field>
-            <field name="model">stock.move</field>
-            <field eval="8" name="priority"/>
-            <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
-                    <field name="name"/>
-                    <field name="picking_id" string="Reference"/>
-                    <field name="origin"/>
-                    <field name="picking_type_id" invisible="1"/>
-                    <field name="create_date" invisible="1" groups="base.group_no_one"/>
-                    <field name="product_id"/>
-                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
-                    <field name="date" groups="base.group_no_one"/>
-                    <field name="state" invisible="1"/>
-                    <field name="product_uom_qty" string="Qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                    <field name="price_unit"/>
-                    <field name="value" sum="Stock Valuation"/>
-                    <field name="remaining_qty" invisible="context.get('is_avg')"/>
-                    <field name="remaining_value" sum="Stock Valuation" invisible="context.get('is_avg')"/>
-                </tree>
-            </field>
-        </record>
-        <record id="stock_move_valuation_action" model="ir.actions.act_window">
-            <field name="name">Stock Moves</field>
-            <field name="res_model">stock.move</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_move_tree_valuation"/>
-            <field name="search_view_id" ref="stock.view_move_search"/>
-            <field name="context">{'search_default_outgoing': 1, 'search_default_incoming': 1, 'search_default_done': 1, 'search_default_group_by_product': 1}</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new stock movement
-              </p>
-            </field>
-        </record>
-    </data>
+   </data>
 </odoo>

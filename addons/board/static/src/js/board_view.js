@@ -1,4 +1,4 @@
-odoo.define('board.dashboard', function (require) {
+odoo.define('board.BoardView', function (require) {
 "use strict";
 
 var Context = require('web.Context');
@@ -12,25 +12,20 @@ var FormView = require('web.FormView');
 var viewRegistry = require('web.view_registry');
 
 var _t = core._t;
+var _lt = core._lt;
 var QWeb = core.qweb;
 
-FormView.include({
-    /**
-     * @override
-     */
-    init: function (viewInfo) {
-        this._super.apply(this, arguments);
-        this.controllerParams.viewID = viewInfo.view_id;
-    },
-});
-
-FormController.include({
+var BoardController = FormController.extend({
     custom_events: _.extend({}, FormController.prototype.custom_events, {
         change_layout: '_onChangeLayout',
         enable_dashboard: '_onEnableDashboard',
         save_dashboard: '_saveDashboard',
         switch_view: '_onSwitchView',
     }),
+
+    /**
+     * @override
+     */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.viewID = params.viewID;
@@ -95,14 +90,12 @@ FormController.include({
         });
         dialog.open();
     },
-
     /**
      * @private
      */
     _onEnableDashboard: function () {
         this.inDashboard = true;
     },
-
     /**
      * We need to intercept switch_view event coming from sub views, because we
      * don't actually want to switch view in dashboard, we want to do a
@@ -119,14 +112,14 @@ FormController.include({
             views: [[false, 'form']],
             res_id: event.data.res_id,
         });
-
     },
-
 });
 
-FormRenderer.include({
+var BoardRenderer = FormRenderer.extend({
     custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
+        do_action: '_onDoAction',
         env_updated: '_onEnvUpdated',
+        update_filters: '_onUpdateFilters',
     }),
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .oe_dashboard_column .oe_fold': '_onFoldClick',
@@ -141,6 +134,31 @@ FormRenderer.include({
         this._super.apply(this, arguments);
         this.noContentHelp = params.noContentHelp;
         this.actionsDescr = {};
+        this._boardSubcontrollers = []; // for board: controllers of subviews
+    },
+    /**
+     * Call `on_attach_callback` for each subview
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        _.each(this._boardSubcontrollers, function (controller) {
+            if ('on_attach_callback' in controller) {
+                controller.on_attach_callback();
+            }
+        });
+    },
+    /**
+     * Call `on_detach_callback` for each subview
+     *
+     * @override
+     */
+    on_detach_callback: function () {
+        _.each(this._boardSubcontrollers, function (controller) {
+            if ('on_detach_callback' in controller) {
+                controller.on_detach_callback();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -171,7 +189,6 @@ FormRenderer.include({
             $dashboard.attr('data-layout', layout);
         }
     },
-
     /**
      * Returns a representation of the current dashboard
      *
@@ -243,6 +260,7 @@ FormRenderer.include({
                         hasSelectors: false,
                     });
                     return view.getController(self).then(function (controller) {
+                        self._boardSubcontrollers.push(controller);
                         return controller.appendTo(params.$node);
                     });
                 });
@@ -342,10 +360,23 @@ FormRenderer.include({
         });
     },
     /**
-     * Stops the propagation of 'update_env' events triggered by the controllers
+     * Intercepts (without stopping) 'do_action' events to force the
+     * 'keepSearchView' option to false, as the dashboard action has no search
+     * view, and thus there is no search view that could be re-used for the
+     * action to execute (a new one will be created instead).
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onDoAction: function (event) {
+        if (event.data.options) {
+            event.data.options.keepSearchView = false;
+        }
+    },
+    /**
+     * Stops the propagation of 'env_updated' events triggered by the controllers
      * instantiated by the dashboard.
      *
-     * @override
      * @private
      */
     _onEnvUpdated: function (event) {
@@ -370,6 +401,47 @@ FormRenderer.include({
         $action.find('.oe_content').toggle();
         this.trigger_up('save_dashboard');
     },
+    /**
+     * Stops the propagation of 'update_filters' events triggered by the
+     * controllers instantiated by the dashboard to prevent them from
+     * interfering with the ActionManager.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onUpdateFilters: function (event) {
+        event.stopPropagation();
+    },
 });
+
+var BoardView = FormView.extend({
+    config: _.extend({}, FormView.prototype.config, {
+        Controller: BoardController,
+        Renderer: BoardRenderer,
+    }),
+    display_name: _lt('Board'),
+
+    /**
+     * @override
+     */
+    init: function (viewInfo) {
+        this._super.apply(this, arguments);
+        this.controllerParams.viewID = viewInfo.view_id;
+    },
+});
+
+return BoardView;
+
+});
+
+
+odoo.define('board.viewRegistry', function (require) {
+"use strict";
+
+var BoardView = require('board.BoardView');
+
+var viewRegistry = require('web.view_registry');
+
+viewRegistry.add('board', BoardView);
 
 });

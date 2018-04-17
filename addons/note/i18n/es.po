@@ -4,17 +4,15 @@
 # 
 # Translators:
 # oihane <oihanecruce@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Antonio Trueba, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Roberto Lizana <robertolizana@trey.es>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Andrés Felipe Casas Palomino <afcasas@nubark.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
@@ -22,10 +20,10 @@
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -35,10 +33,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_open
+#: model:ir.model.fields,field_description:note.field_note_note__open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "Activo"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid "Add a new personal note"
+msgstr ""
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Add a new tag"
+msgstr ""
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -51,18 +59,8 @@ msgid "By sticky note Category"
 msgstr "Por categoría de nota fijada"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
-msgid "Click to add a new tag."
-msgstr "Clic para añadir una nueva etiqueta."
-
-#. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid "Click to add a personal note."
-msgstr "Haga clic para añadir una nota personal."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_color
-#: model:ir.model.fields,field_description:note.field_note_tag_color
+#: model:ir.model.fields,field_description:note.field_note_note__color
+#: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
 msgstr "Índice de Colores"
 
@@ -72,21 +70,21 @@ msgid "Configuration"
 msgstr "Configuración"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_create_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_create_uid
+#: model:ir.model.fields,field_description:note.field_note_note__create_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__create_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_date
-#: model:ir.model.fields,field_description:note.field_note_stage_create_date
-#: model:ir.model.fields,field_description:note.field_note_tag_create_date
+#: model:ir.model.fields,field_description:note.field_note_note__create_date
+#: model:ir.model.fields,field_description:note.field_note_stage__create_date
+#: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
 msgstr "Creado el"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_date_done
+#: model:ir.model.fields,field_description:note.field_note_note__date_done
 msgid "Date done"
 msgstr "Fecha realización"
 
@@ -96,14 +94,14 @@ msgid "Delete"
 msgstr "Suprimir"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_display_name
-#: model:ir.model.fields,field_description:note.field_note_stage_display_name
-#: model:ir.model.fields,field_description:note.field_note_tag_display_name
+#: model:ir.model.fields,field_description:note.field_note_note__display_name
+#: model:ir.model.fields,field_description:note.field_note_stage__display_name
+#: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
 msgstr "Nombre a mostrar"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_fold
+#: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Replegado por defecto"
 
@@ -118,30 +116,30 @@ msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_id
-#: model:ir.model.fields,field_description:note.field_note_stage_id
-#: model:ir.model.fields,field_description:note.field_note_tag_id
+#: model:ir.model.fields,field_description:note.field_note_note__id
+#: model:ir.model.fields,field_description:note.field_note_stage__id
+#: model:ir.model.fields,field_description:note.field_note_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note___last_update
-#: model:ir.model.fields,field_description:note.field_note_stage___last_update
-#: model:ir.model.fields,field_description:note.field_note_tag___last_update
+#: model:ir.model.fields,field_description:note.field_note_note____last_update
+#: model:ir.model.fields,field_description:note.field_note_stage____last_update
+#: model:ir.model.fields,field_description:note.field_note_tag____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_write_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_write_uid
+#: model:ir.model.fields,field_description:note.field_note_note__write_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__write_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_date
-#: model:ir.model.fields,field_description:note.field_note_stage_write_date
-#: model:ir.model.fields,field_description:note.field_note_tag_write_date
+#: model:ir.model.fields,field_description:note.field_note_note__write_date
+#: model:ir.model.fields,field_description:note.field_note_stage__write_date
+#: model:ir.model.fields,field_description:note.field_note_tag__write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
 
@@ -151,7 +149,6 @@ msgid "Late Activities"
 msgstr "Actividades tardías"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "Más tarde"
@@ -174,7 +171,7 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_memo
+#: model:ir.model.fields,field_description:note.field_note_note__memo
 msgid "Note Content"
 msgstr "Contenido de la nota"
 
@@ -184,7 +181,7 @@ msgid "Note Stage"
 msgstr "Fase de nota"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_name
+#: model:ir.model.fields,field_description:note.field_note_note__name
 msgid "Note Summary"
 msgstr "Resumen de nota"
 
@@ -202,19 +199,19 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_user_id
-#: model:ir.model.fields,field_description:note.field_note_stage_user_id
+#: model:ir.model.fields,field_description:note.field_note_note__user_id
+#: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
 msgstr "Propietario"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_user_id
+#: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
 msgstr "Propietario de la etapa de la nota"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_sequence
-#: model:ir.model.fields,field_description:note.field_note_stage_sequence
+#: model:ir.model.fields,field_description:note.field_note_note__sequence
+#: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
 msgstr "Secuencia"
 
@@ -226,13 +223,13 @@ msgstr ""
 "hoy"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_id
+#: model:ir.model.fields,field_description:note.field_note_note__stage_id
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
 msgstr "Etapa"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_name
+#: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
 msgstr "Nombre de la etapa"
 
@@ -254,12 +251,12 @@ msgid "Stages of Notes"
 msgstr "Fases de las notas"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_ids
+#: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
 msgstr "Fases de usuarios"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_tag_name
+#: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
 msgstr "Nombre de etiqueta"
 
@@ -270,7 +267,7 @@ msgstr "¡El nombre de etiqueta ya existe!"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
-#: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
 #: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.note_tag_view_tree
@@ -284,7 +281,6 @@ msgid "This Week"
 msgstr "Esta semana"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Hoy"
@@ -293,11 +289,6 @@ msgstr "Hoy"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
 msgstr "Actividades de Hoy"
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "Mañana"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -315,7 +306,7 @@ msgstr ""
 "            activa la función de bloc para la escritura colaborativa)."
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_sequence
+#: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Úselo para ordenar las fases de nota"
 

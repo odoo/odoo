@@ -176,10 +176,7 @@ class BlogPost(models.Model):
                 blog_post.teaser = blog_post.teaser_manual
             else:
                 content = html2plaintext(blog_post.content).replace('\n', ' ')
-                blog_post.teaser = ' '.join(itertools.islice(
-                    (c for c in content.split(' ') if c),
-                    50
-                )) + '...'
+                blog_post.teaser = content[:150] + '...'
 
     @api.multi
     def _set_teaser(self):

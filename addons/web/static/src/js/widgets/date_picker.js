@@ -79,8 +79,15 @@ var DateWidget = Widget.extend({
             var oldValue = this.getValue();
             this._setValueFromUi();
             var newValue = this.getValue();
-
-            if (!oldValue !== !newValue || oldValue && newValue && !oldValue.isSame(newValue)) {
+            var hasChanged = !oldValue !== !newValue;
+            if (oldValue && newValue) {
+                var formattedOldValue = oldValue.format(time.getLangDatetimeFormat());
+                var formattedNewValue = newValue.format(time.getLangDatetimeFormat())
+                if (formattedNewValue !== formattedOldValue) {
+                    hasChanged = true;
+                }
+            }
+            if (hasChanged) {
                 // The condition is strangely written; this is because the
                 // values can be false/undefined
                 this.trigger("datetime_changed");

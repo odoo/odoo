@@ -1292,6 +1292,7 @@
             <field name="currency_subunit_label">Cents</field>
         </record>
 
+        <!-- no longer in use since 2007 -->
         <record id="SDD" model="res.currency">
             <field name="name">SDD</field>
             <field name="symbol">£Sd</field>
@@ -1299,6 +1300,13 @@
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
             <field name="currency_subunit_label">Fils</field>
+        </record>
+
+        <record id="SDG" model="res.currency">
+            <field name="name">SDG</field>
+            <field name="symbol">ج.س.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
         </record>
 
         <record id="LKR" model="res.currency">

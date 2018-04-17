@@ -3,7 +3,7 @@
 # * hr_timesheet_attendance
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
@@ -11,10 +11,10 @@
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -24,12 +24,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_date
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__date
 msgid "Date"
 msgstr "Fecha"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_display_name
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__display_name
 msgid "Display Name"
 msgstr "Nombre a mostrar"
 
@@ -39,30 +39,14 @@ msgid "HR Timesheet/Attendance Report"
 msgstr "Informe de Parte de horas/Asistencia"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_id
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report___last_update
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
-
-#. module: hr_timesheet_attendance
-#: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:76
-#, python-format
-msgid ""
-"Please verify that the total difference of the sheet is lower than %.2f."
-msgstr ""
-"Por favor, verifique que la diferencia total del parte es menor que %.2f."
-
-#. module: hr_timesheet_attendance
-#: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:85
-#, python-format
-msgid ""
-"The timesheet cannot be validated as it contains an attendance record with "
-"no Check Out."
-msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
@@ -80,30 +64,24 @@ msgid "Timesheet / Attendance"
 msgstr "Parte de horas / Asistencia"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
 msgid "Total Attendance"
 msgstr "Total servicio"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_difference
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
 msgid "Total Difference"
 msgstr "Diferencia total"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_total_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_timesheet
 msgid "Total Timesheet"
 msgstr "Total hoja servicios"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_user_id
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
 msgid "User"
 msgstr "Usuario"
-
-#. module: hr_timesheet_attendance
-#: code:addons/hr_timesheet_attendance/models/hr_timesheet_sheet.py:53
-#, python-format
-msgid "You cannot delete a timesheet that has attendance entries."
-msgstr "No se puede eliminar un parte de horas que contiene asistencias."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_timesheet_attendance_report

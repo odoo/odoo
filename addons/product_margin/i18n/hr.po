@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Tina Milas <tina@uvid.hr>, 2017
+# Tina Milas, 2017
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -24,12 +24,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_num_invoiced
+#: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_num_invoiced
 msgid "# Invoiced in Purchase"
 msgstr "# Izdano računa u nabavi"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_sale_num_invoiced
+#: model:ir.model.fields,field_description:product_margin.field_product_product__sale_num_invoiced
 msgid "# Invoiced in Sale"
 msgstr "# Izdano računa u prodaji"
 
@@ -44,18 +44,27 @@ msgid "Analysis Criteria"
 msgstr "Kriterij analize"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
+#: model:ir.model.fields,help:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Price in Customer Invoices."
 msgstr "Prosječna cijena u izlaznim računima"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
+#: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
 msgstr "Prosj. cijena u ulaznim računima"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
-#: model:ir.model.fields,field_description:product_margin.field_product_product_sale_avg_price
+#: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
+msgid "Avg. Purchase Unit Price"
+msgstr ""
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product__sale_avg_price
+msgid "Avg. Sale Unit Price"
+msgstr ""
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Avg. Unit Price"
 msgstr "Prosj. jedinična cijena"
 
@@ -70,17 +79,17 @@ msgid "Catalog Price"
 msgstr "Kataloška cijena"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__create_date
 msgid "Created on"
 msgstr "Datum kreiranja"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
 
@@ -91,37 +100,37 @@ msgid "Draft, Open and Paid"
 msgstr "Nacrt, Otvoreno i Plaćeno"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product__expected_margin
 msgid "Expected Margin"
 msgstr "Očekivana marža"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin_rate
+#: model:ir.model.fields,field_description:product_margin.field_product_product__expected_margin_rate
 msgid "Expected Margin (%)"
 msgstr "Očekivana marža (%)"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_sale_expected
+#: model:ir.model.fields,field_description:product_margin.field_product_product__sale_expected
 msgid "Expected Sale"
 msgstr "Očekivana prodaja"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_expected_margin
+#: model:ir.model.fields,help:product_margin.field_product_product__expected_margin
 msgid "Expected Sale - Normal Cost"
 msgstr "Očekivana prodaja - normalni troškovi"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_sales_gap
+#: model:ir.model.fields,help:product_margin.field_product_product__sales_gap
 msgid "Expected Sale - Turn Over"
 msgstr "Očekivana prodaja - obrtaj"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_expected_margin_rate
+#: model:ir.model.fields,help:product_margin.field_product_product__expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
 msgstr "Očekivana marža * 100 / Očekivana prodaja"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__from_date
 msgid "From"
 msgstr "Od"
 
@@ -131,38 +140,38 @@ msgid "General Information"
 msgstr "Opći podaci"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_id
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__id
 msgid "ID"
 msgstr "ID"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
-#: model:ir.model.fields,field_description:product_margin.field_product_product_invoice_state
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__invoice_state
+#: model:ir.model.fields,field_description:product_margin.field_product_product__invoice_state
 msgid "Invoice State"
 msgstr "Stanje fakture"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin___last_update
+#: model:ir.model.fields,field_description:product_margin.field_product_margin____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_write_uid
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_write_date
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_date_from
+#: model:ir.model.fields,field_description:product_margin.field_product_product__date_from
 msgid "Margin Date From"
 msgstr "Krajnji datum od"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_date_to
+#: model:ir.model.fields,field_description:product_margin.field_product_product__date_to
 msgid "Margin Date To"
 msgstr "Krajnji datum do"
 
@@ -172,12 +181,12 @@ msgid "Margins"
 msgstr "Marže"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
+#: model:ir.model.fields,field_description:product_margin.field_product_product__normal_cost
 msgid "Normal Cost"
 msgstr "Normalna cijena"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_purchase_gap
+#: model:ir.model.fields,help:product_margin.field_product_product__purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Normalni trošak - Totalni trošak"
 
@@ -225,7 +234,7 @@ msgid "Properties categories"
 msgstr "Kategorije svojstava"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_gap
+#: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_gap
 msgid "Purchase Gap"
 msgstr "Razmak u kupovini"
 
@@ -240,7 +249,7 @@ msgid "Sales"
 msgstr "Prodaja"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_sales_gap
+#: model:ir.model.fields,field_description:product_margin.field_product_product__sales_gap
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Sales Gap"
 msgstr "Razmak u prodaji"
@@ -251,72 +260,72 @@ msgid "Standard Price"
 msgstr "Uobičajena cijena"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
+#: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr "Suma umnožaka cijene troška i količine sa ulaznih računa"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_turnover
+#: model:ir.model.fields,help:product_margin.field_product_product__turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr "Suma umnoška cijene na računu i količine sa ulaznih računa"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_total_cost
+#: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
 msgstr ""
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
+#: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
 msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
+#: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
 msgstr "Suma količina na fakturama kupca"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
+#: model:ir.model.fields,help:product_margin.field_product_product__purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
 msgstr "Ukupna količina u ulaznim računima"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
+#: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
 msgid "To"
 msgstr "za"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_total_cost
+#: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Cost"
 msgstr "Ukupni trošak"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr "Ukupna marža"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin_rate
+#: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin_rate
 msgid "Total Margin Rate(%)"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_total_margin_rate
+#: model:ir.model.fields,help:product_margin.field_product_product__total_margin_rate
 msgid "Total margin * 100 / Turnover"
 msgstr "Ukupna marža * 100 / Zarada"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_turnover
+#: model:ir.model.fields,field_description:product_margin.field_product_product__turnover
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Turnover"
 msgstr "Zarada"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_total_margin
+#: model:ir.model.fields,help:product_margin.field_product_product__total_margin
 msgid "Turnover - Standard price"
 msgstr "Obrtaj - uobičajena cijena"

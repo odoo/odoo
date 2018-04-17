@@ -41,12 +41,12 @@ class PaymentAcquirerStripe(models.Model):
         stripe_tx_values = dict(tx_values)
         temp_stripe_tx_values = {
             'company': self.company_id.name,
-            'amount': tx_values.get('amount'),
-            'currency': tx_values.get('currency') and tx_values.get('currency').name or '',
-            'currency_id': tx_values.get('currency') and tx_values.get('currency').id or '',
-            'address_line1': tx_values.get('partner_address'),
+            'amount': tx_values['amount'],  # Mandatory
+            'currency': tx_values['currency'].name,  # Mandatory anyway
+            'currency_id': tx_values['currency'].id,  # same here
+            'address_line1': tx_values.get('partner_address'),  # Any info of the partner is not mandatory
             'address_city': tx_values.get('partner_city'),
-            'address_country': tx_values.get('partner_country') and tx_values['partner_country'].name or '',
+            'address_country': tx_values.get('partner_country') and tx_values.get('partner_country').name or '',
             'email': tx_values.get('partner_email'),
             'address_zip': tx_values.get('partner_zip'),
             'name': tx_values.get('partner_name'),
@@ -130,7 +130,7 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
-        result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref)
+        result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref, email=self.partner_email)
         return self._stripe_s2s_validate_tree(result)
 
 

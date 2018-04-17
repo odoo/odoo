@@ -15,7 +15,7 @@ var FormController = BasicController.extend({
         bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
         do_action: '_onDoAction',
-        freeze_order: '_onFreezeOrder',
+        edited_list: '_onEditedList',
         open_one2many_record: '_onOpenOne2ManyRecord',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
@@ -109,6 +109,7 @@ var FormController = BasicController.extend({
      * @todo convert to new style
      */
     on_attach_callback: function () {
+        this._super.apply(this, arguments);
         this.autofocus();
     },
     /**
@@ -529,11 +530,15 @@ var FormController = BasicController.extend({
      * in a x2many list view
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
+     * @param {integer} ev.id of the list to freeze while editing a line
      */
-    _onFreezeOrder: function (event) {
-        event.stopPropagation();
-        this.model.freezeOrder(event.data.id);
+    _onEditedList: function (ev) {
+        ev.stopPropagation();
+        if (ev.data.id) {
+            this.model.save(ev.data.id, {savePoint: true});
+        }
+        this.model.freezeOrder(ev.data.id);
     },
     /**
      * Set the focus on the first primary button of the controller (likely Edit)

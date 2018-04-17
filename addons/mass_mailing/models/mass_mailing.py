@@ -534,20 +534,20 @@ class MassMailing(models.Model):
 
     @api.onchange('mailing_model_id', 'contact_list_ids')
     def _onchange_model_and_list(self):
-        str_tuples = ""
+        mailing_domain = []
         if self.mailing_model_name:
             if self.mailing_model_name == 'mail.mass_mailing.list':
                 if self.contact_list_ids:
-                    str_tuples += "('list_ids', 'in', {}),".format(','.join(str(id) for id in self.contact_list_ids.ids))
+                    mailing_domain.append(('list_ids', 'in', self.contact_list_ids.ids))
                 else:
-                    str_tuples += "(0, '=', 1),"
+                    mailing_domain.append((0, '=', 1))
             elif self.mailing_model_name == 'res.partner':
-                str_tuples += "('customer', '=', True),"
+                mailing_domain.append(('customer', '=', True))
             elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
-                str_tuples += "('opt_out', '=', False),"
+                mailing_domain.append(('opt_out', '=', False))
         else:
-            str_tuples += "(0, '=', 1),"
-        self.mailing_domain = "[{}]".format(str_tuples)
+            mailing_domain.append((0, '=', 1))
+        self.mailing_domain = repr(mailing_domain)
         self.body_html = "on_change_model_and_list"
 
     #------------------------------------------------------

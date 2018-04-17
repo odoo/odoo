@@ -18,10 +18,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -224,7 +224,7 @@ msgid "Already have an account?"
 msgstr "Existiert schon ein Benutzer?"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
@@ -237,7 +237,7 @@ msgid "Another user is already registered using this email address."
 msgstr "Ein anderer Benutzer ist bereits mit dieser Emailadresse registriert"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:135
 #, python-format
 msgid "Authentication Failed."
 msgstr "Authentifizierung fehlgeschlagen"
@@ -275,24 +275,19 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr "Kopier die Berechtigungen von"
-
-#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
 msgstr "Konnte neues Konto nicht anlegen."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:82
 #, python-format
 msgid "Could not reset your password"
 msgstr "Ihr Passwort konnte nicht zurückgesetzt werden"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
 msgstr "Kundenkonto"
 
@@ -307,10 +302,15 @@ msgid "Don't have an account?"
 msgstr "Existiert kein Benutzer?"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "Passwort zurücksetzen von der Login-Seite erlauben"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "Felder"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -328,7 +328,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr "Falls leer, dürfen nur eingeladene Benutzer sich einloggen"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:113
 #, python-format
 msgid "Invalid signup token"
 msgstr "Anmeldungs-Token ist ungültig"
@@ -344,7 +344,7 @@ msgid "Never Connected"
 msgstr "Noch nie angemeldet"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:75
 #, python-format
 msgid "No login provided."
 msgstr "Keine Anmeldung vorhanden."
@@ -370,7 +370,7 @@ msgid "Password reset"
 msgstr "Passwort zurücksetzen"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:123
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Passwörter stimmen nicht überein; bitte geben Sie sie erneut ein."
@@ -402,32 +402,32 @@ msgid "Sign up"
 msgstr "Registrieren"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
 msgid "Signup Expiration"
 msgstr "Ablauf der Registrierung"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
 msgstr "Anmelde Token"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
 msgstr "Typ Anmeldetoken"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
 msgstr "Anmeldungs-Token ist gültig"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
 msgstr "Registrierungs URL"
 
@@ -452,17 +452,17 @@ msgid "Signup token '%s' is not valid"
 msgstr "Registrierungstoken „%s“ ist ungültig"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_state
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
 msgstr "Status"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr "Vorlage 'Benutzer' für neue registrierte Benutzer"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:121
 #, python-format
 msgid "The form was not properly filled in."
 msgstr "Das Formular wurde nicht ordnungsgemäß ausgefüllt."
