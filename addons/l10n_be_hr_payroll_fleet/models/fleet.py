@@ -139,19 +139,6 @@ class FleetVehicleModel(models.Model):
         for model in self:
             model.default_total_depreciated_cost = model.co2_fee + model.default_recurring_cost_amount_depreciated
 
-    @api.multi
-    @api.depends('name', 'brand_id', 'default_total_depreciated_cost')
-    def name_get(self):
-        res = super(FleetVehicleModel, self).name_get()
-        new_res = []
-        for res_item in res:
-            model = self.browse(res_item[0])
-            if model.default_total_depreciated_cost != 0.0:
-                new_res.append((res_item[0], res_item[1] + u" \u2022 " + str(round(model.default_total_depreciated_cost, 2))))
-            else:
-                new_res.append(res_item)
-        return new_res
-
     @api.depends('default_co2')
     def _compute_co2_fee(self):
         for model in self:
