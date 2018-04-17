@@ -219,6 +219,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div attrs="{'invisible': [('group_stock_production_lot', '=', False)]}">
+                            <h2>Business Documents</h2>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-xs-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <field name="group_lot_on_delivery_slip"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="group_lot_on_delivery_slip"/>
+                                        <div class="text-muted">
+                                            Display serial &amp; lot numbers on the delivery orders
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h2 class="mt32">Warehouse</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box" title="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.">

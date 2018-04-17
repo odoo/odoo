@@ -49,10 +49,19 @@
                             </tr>
                         </tbody>
                     </table>
+                    
+                    <!-- This checks if the setting "Lots & Serial Numbers on Delivery Slip" was ticked -->
+                    <t t-set="show_SN_LN" t-value="o.env.user.has_group('stock.group_lot_on_delivery_slip')"/>
+                    <!-- This checks if the setting "Expiration Dates" was ticked by checking that the module that it installs is indeed installed -->
+                    <!-- but it does not feel like the proper way to do it ... -->
+                    <t t-set="show_expiration_date" t-value="env['ir.module.module'].search([('state', '=', 'installed'), ('name', '=', 'product_expiry')])"/>
+
                     <table class="table table-condensed mt48" t-if="o.state!='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
+                                <th t-if="show_SN_LN"><strong>SN/LN</strong></th>
+                                <th t-if="show_SN_LN and show_expiration_date"><strong>Expiration Date</strong></th>
                                 <th><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -60,6 +69,8 @@
                             <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
                             <tr t-foreach="lines" t-as="move">
                                 <td><span t-field="move.product_id"/></td>
+                                <th t-if="show_SN_LN">xxx</th>
+                                <th t-if="show_SN_LN and show_expiration_date">xxx</th>
                                 <td>
                                     <span t-field="move.product_uom_qty"/>
                                     <span t-field="move.product_uom"/>
@@ -71,6 +82,8 @@
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
+                                <th t-if="show_SN_LN"><strong>SN/LN</strong></th>
+                                <th t-if="show_SN_LN and show_expiration_date"><strong>Expiration Date</strong></th>
                                 <th class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -85,6 +98,15 @@
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
                                 </td>
+                                <th t-if="show_SN_LN">
+                                    <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
+                                    <span t-else="">N/A</span>
+                                </th>
+                                <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
+                                <th t-if="show_SN_LN and show_expiration_date">
+                                    <span t-if="expiration_date" t-esc="expiration_date"/>
+                                    <span t-else="">N/A</span>
+                                </th>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
