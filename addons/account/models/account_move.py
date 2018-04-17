@@ -675,11 +675,6 @@ class AccountMoveLine(models.Model):
                 currency = credit_move.currency_id.id
                 amount_reconcile_currency = temp_amount_residual_currency
                 amount_reconcile = temp_amount_residual
-            elif debit_move.currency_id != credit_move.currency_id and (not debit_move.currency_id.id or not credit_move.currency_id.id):
-                currency = debit_move.currency_id or credit_move.currency_id
-                currency_date = debit_move.currency_id and credit_move.date or debit_move.date
-                amount_reconcile_currency = company_currency.with_context(date=currency_date).compute(amount_reconcile, currency)
-                currency = currency.id
 
             if cash_basis:
                 cash_basis_percentage_before_rec.append(debit_move._get_matched_percentage())
