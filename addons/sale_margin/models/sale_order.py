@@ -29,7 +29,9 @@ class SaleOrderLine(models.Model):
         if product_uom != product.uom_id:
             purchase_price = product.uom_id._compute_price(purchase_price, product_uom)
         price = frm_cur._convert(
-            purchase_price, to_cur, self.order_id.company_id, date or fields.Date.today(), round=False)
+            purchase_price, to_cur,
+            self.order_id.company_id or self.env.user.company_id,
+            date or fields.Date.today(), round=False)
         return {'purchase_price': price}
 
     @api.onchange('product_id', 'product_uom')
@@ -63,7 +65,7 @@ class SaleOrderLine(models.Model):
                 price = from_cur._convert(
                     line.product_id.standard_price,
                     currency,
-                    line.order_id.company_id,
+                    line.order_id.company_id or self.env.user.company_id,
                     line.order_id.date_order or fields.Date.today(), round=False)
 
             line.margin = currency.round(line.price_subtotal - (price * line.product_uom_qty))
