@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ConfigParser
+import errno
 import optparse
 import os
 import sys
@@ -596,9 +597,11 @@ class configmanager(object):
     @property
     def session_dir(self):
         d = os.path.join(self['data_dir'], 'sessions')
-        if not os.path.exists(d):
+        try:
             os.makedirs(d, 0700)
-        else:
+        except OSError as e:
+            if e.errno != errno.EEXIST or not os.path.isdir(d):
+                raise
             assert os.access(d, os.W_OK), \
                 "%s: directory is not writable" % d
         return d
