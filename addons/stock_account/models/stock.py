@@ -514,11 +514,6 @@ class StockMove(models.Model):
         else:
             valuation_amount = cost
 
-        if self._context.get('forced_ref'):
-            ref = self._context['forced_ref']
-        else:
-            ref = self.picking_id.name
-
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
         debit_value = self.company_id.currency_id.round(valuation_amount)
@@ -548,6 +543,11 @@ class StockMove(models.Model):
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
         # This method returns a dictonary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
+
+        if self._context.get('forced_ref'):
+            ref = self._context['forced_ref']
+        else:
+            ref = self.picking_id.name
 
         debit_line_vals = {
             'name': self.name,
