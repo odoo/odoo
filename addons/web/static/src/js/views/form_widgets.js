@@ -1170,8 +1170,13 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     }
 });
 
-var FieldBinaryFile = FieldBinary.extend({
+var FieldBinaryFile = FieldBinary.extend(common.ReinitializeFieldMixin, {
     template: 'FieldBinaryFile',
+    init: function(field_manager, node) {
+        var self = this;
+        this._super(field_manager, node);
+        this.temp_new_filename = null;
+    },
     initialize_content: function() {
         var self = this;
         this._super();
@@ -1187,6 +1192,18 @@ var FieldBinaryFile = FieldBinary.extend({
             this.$input.on('click', function() {
                 self.$inputFile.click();
             });
+        }
+    },
+
+    set_filename: function(value) {
+        var self = this;
+        this._super(value);
+        var filename = this.node.attrs.filename;
+        if (filename) {
+            var field = this.field_manager.fields[filename];
+            if (field) {
+                self.temp_new_filename = value;
+            }
         }
     },
     render_value: function() {
@@ -1208,6 +1225,11 @@ var FieldBinaryFile = FieldBinary.extend({
             if(this.get('value')) {
                 this.$el.children().removeClass('o_hidden');
                 this.$('.o_select_file_button').first().addClass('o_hidden');
+                var new_filename = this.temp_new_filename;
+                if (new_filename) {
+                    filename = new_filename;
+                    this.temp_new_filename = null;
+                }
                 this.$input.val(filename || this.get('value'));
             } else {
                 this.$el.children().addClass('o_hidden');
