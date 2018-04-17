@@ -3,15 +3,15 @@
 # * board
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # grazziano <gra.negocia@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -22,6 +22,15 @@ msgstr ""
 
 #. module: board
 #. openerp-web
+#: code:addons/board/static/src/xml/board.xml:53
+#, python-format
+msgid ""
+"\"Add to\n"
+"                Dashboard\""
+msgstr ""
+
+#. module: board
+#. openerp-web
 #: code:addons/board/static/src/xml/board.xml:25
 #, python-format
 msgid "&nbsp;"
@@ -29,33 +38,28 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:97
+#: code:addons/board/static/src/js/favorite_menu.js:98
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' adicionado ao painel"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "<b>Your personal dashboard is empty.</b>"
-msgstr "<b>Seu painel pessoal esta vazio.</b>"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
+#: code:addons/board/static/src/xml/board.xml:85
 #, python-format
 msgid "Add"
 msgstr "Adicionar"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:63
+#: code:addons/board/static/src/xml/board.xml:79
 #, python-format
 msgid "Add to my Dashboard"
 msgstr "Adicionar ao Meu Painel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:335
+#: code:addons/board/static/src/js/dashboard.js:337
 #, python-format
 msgid "Are you sure you want to remove this item?"
 msgstr ""
@@ -88,13 +92,13 @@ msgstr "Escolha o Layout do Painel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:99
+#: code:addons/board/static/src/js/favorite_menu.js:100
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Não foi possível adicionar o filtro ao painel"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_board__display_name
 msgid "Display Name"
 msgstr "Nome para Exibição"
 
@@ -106,12 +110,12 @@ msgid "Edit Layout"
 msgstr "Editar Layout"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_board__id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_board____last_update
 msgid "Last Modified on"
 msgstr "Última Modificação em"
 
@@ -126,21 +130,33 @@ msgid "My Dashboard"
 msgstr "Meu Painel"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:51
+#, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
-"                    Dashboard'</i> in the extended search options."
+"                menu, switch to list or graph view, and click"
 msgstr ""
-"Para adicionar o seu primeiro relatório no dashboard, vá a qualquer\n"
-"menu, mude para lista ou vista de gráfico e clique em <i>'Adicionar ao\n"
-"Dashboard'</i> nas opções de pesquisa avançada."
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:55
+#, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                    dashboard using the search options."
+"                dashboard using the search options."
 msgstr ""
-"Você pode filtrar e agrupar dados antes de inserir no\n"
-"dashboard utilizando as opções de pesquisa."
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:49
+#, python-format
+msgid "Your personal dashboard is empty"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:53
+#, python-format
+msgid "in the extended search options."
+msgstr ""

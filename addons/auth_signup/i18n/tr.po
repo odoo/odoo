@@ -3,7 +3,7 @@
 # * auth_signup
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
@@ -11,13 +11,14 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # gezgin biri <gezginbiri@hotmail.com>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: gezgin biri <gezginbiri@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -208,10 +209,10 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "Zaten bir hesabınız mı var?"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
@@ -224,7 +225,7 @@ msgid "Another user is already registered using this email address."
 msgstr "Başka bir kullanıcı bu e-posta adresiyle zaten kayıtlı."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:135
 #, python-format
 msgid "Authentication Failed."
 msgstr "Kimlik Doğrulama Başarısız Oldu."
@@ -262,24 +263,19 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr ""
-
-#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
 msgstr "Yeni bir hesap açılamadı."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:82
 #, python-format
 msgid "Could not reset your password"
 msgstr "Parolanız sıfırlanamıyor"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
 msgstr "Müşteri Hesabı"
 
@@ -291,13 +287,18 @@ msgstr "Varsayılan Erişim Hakları"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Henüz bir hesabınız yok mu?"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "Kullanıcı giriş sayfasından parola sıfırlamayı aktif et"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "Alanlar"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -315,7 +316,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr "İşaretli değilse, yalnızca davetli kullanıcılar kayıt olabilir."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:113
 #, python-format
 msgid "Invalid signup token"
 msgstr "Geçersiz kayıt belirteci"
@@ -331,7 +332,7 @@ msgid "Never Connected"
 msgstr "Hiç bağlanmadı"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:75
 #, python-format
 msgid "No login provided."
 msgstr ""
@@ -357,10 +358,10 @@ msgid "Password reset"
 msgstr "Parola sıfırlandı"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:123
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "Şifre eşleşmedi; lütfen tekrar yazın."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -389,32 +390,32 @@ msgid "Sign up"
 msgstr "Kayıt ol"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
 msgid "Signup Expiration"
 msgstr "Kayıt Olma Süresi Aşımı"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
 msgstr "Kayıt Olma Belirteçi"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
 msgstr "Kayıt Olma Belirteçi Türü"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
 msgstr "Kayıt Olma Belirteçi Geçerli"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
 msgstr "Kayıt URL"
 
@@ -422,7 +423,7 @@ msgstr "Kayıt URL"
 #: code:addons/auth_signup/models/res_users.py:88
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "Davet edilmeyen kullanıcılar için giriş izni verilmedi."
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:146
@@ -437,21 +438,21 @@ msgid "Signup token '%s' is not valid"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_state
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
 msgstr "Durum"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
 "Yeni kullanıcılar için kayıt olma içinden oluşturulan şablon kullanıcı"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:121
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "Bu form düzgünce doldurulmadı."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users

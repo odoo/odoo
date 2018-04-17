@@ -1802,12 +1802,17 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     var $dom = $(ancestor);
 
     if (!dom.isList(ancestor)) {
+        // to indent a selection, we indent the child nodes of the common
+        // ancestor that contains this selection
         $dom = $(dom.node(ancestor)).children();
     }
-    if (!$dom.length) {
-        $dom = $(dom.ancestor(r.sc, dom.isList) || dom.ancestor(r.sc, dom.isCell));
+    if (!$dom.not('br').length) {
+        // if selection is inside a list, we indent its list items
+        $dom = $(dom.ancestor(r.sc, dom.isList));
         if (!$dom.length) {
-            $dom = $(r.sc).closest(options.styleTags.join(','));
+            // if the selection is contained in a single HTML node, we indent
+            // the first ancestor 'content block' (P, H1, PRE, ...) or TD
+            $dom = $(r.sc).closest(options.styleTags.join(',')+',td');
         }
     }
 

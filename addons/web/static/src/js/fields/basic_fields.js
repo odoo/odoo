@@ -319,7 +319,9 @@ var InputField = DebouncedField.extend({
                 || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
                 ev.stopPropagation();
             }
-            if (ev.data.direction ==='next' && this.attrs.modifiersValue.required) { 
+            if (ev.data.direction ==='next' &&
+                this.attrs.modifiersValue &&
+                this.attrs.modifiersValue.required) {
                 if (!this.$input.val()){
                     this.setInvalidClass();
                     ev.stopPropagation();

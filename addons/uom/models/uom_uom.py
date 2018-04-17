@@ -122,12 +122,19 @@ class UoM(models.Model):
         return new_uom.name_get()[0]
 
     @api.multi
-    def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP'):
+    def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
+        """ Convert the given quantity from the current UoM `self` into a given one
+            :param qty: the quantity to convert
+            :param to_unit: the destination UoM record (uom.uom)
+            :param raise_if_failure: only if the conversion is not possible
+                - if true, raise an exception if the conversion is not possible (different UoM category),
+                - otherwise, return the initial quantity
+        """
         if not self:
             return qty
         self.ensure_one()
         if self.category_id.id != to_unit.category_id.id:
-            if self._context.get('raise-exception', True):
+            if raise_if_failure:
                 raise UserError(_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (self.name, to_unit.name))
             else:
                 return qty

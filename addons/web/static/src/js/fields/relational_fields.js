@@ -1059,7 +1059,7 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this.trigger_up('freeze_order', {id: this.value.id});
+        this.trigger_up('edited_list', { id: this.value.id });
         var editedRecord = this.value.data[ev.data.index];
         this.renderer.setRowMode(editedRecord.id, 'edit')
             .done(ev.data.onSuccess);
@@ -1147,7 +1147,7 @@ var FieldX2Many = AbstractField.extend({
     _onResequence: function (event) {
         event.stopPropagation();
         var self = this;
-        this.trigger_up('freeze_order', {id: this.value.id});
+        this.trigger_up('edited_list', { id: this.value.id });
         var rowIDs = event.data.rowIDs.slice();
         var rowID = rowIDs.pop();
         var defs = _.map(rowIDs, function (rowID, index) {
@@ -1300,7 +1300,7 @@ var FieldOne2Many = FieldX2Many.extend({
                 }
             } else if (!this.creatingRecord) {
                 this.creatingRecord = true;
-                this.trigger_up('freeze_order', {id: this.value.id});
+                this.trigger_up('edited_list', { id: this.value.id });
                 this._setValue({
                     operation: 'CREATE',
                     position: this.editable,
@@ -1330,12 +1330,27 @@ var FieldOne2Many = FieldX2Many.extend({
         // we don't want interference with the components upstream.
         ev.stopPropagation();
 
+        var self = this;
         var id = ev.data.id;
-        // trigger an empty 'UPDATE' operation when the user clicks on 'Save' in
-        // the dialog, to notify the main record that a subrecord of this
-        // relational field has changed (those changes will be already stored on
-        // that subrecord, thanks to the 'Save').
-        var onSaved = this._setValue.bind(this, { operation: 'UPDATE', id: id }, {});
+        var onSaved = function (record, hasChanged) {
+            if (!hasChanged) {
+                return;
+            }
+            if (_.some(self.value.data, {id: record.id})) {
+                // the record already exists in the relation, so trigger an
+                // empty 'UPDATE' operation when the user clicks on 'Save' in
+                // the dialog, to notify the main record that a subrecord of
+                // this relational field has changed (those changes will be
+                // already stored on that subrecord, thanks to the 'Save').
+                self._setValue({ operation: 'UPDATE', id: record.id });
+            } else {
+                // the record isn't in the relation yet, so add it ; this can
+                // happen if the user clicks on 'Save & New' in the dialog (the
+                // opened record will be updated, and other records will be
+                // created)
+                self._setValue({ operation: 'ADD', id: record.id });
+            }
+        };
         this._openFormDialog({
             id: id,
             on_saved: onSaved,

@@ -5,14 +5,15 @@ var ReportClientAction = require('report.client_action');
 
 var AbstractAction = require('web.AbstractAction');
 var AbstractStorageService = require('web.AbstractStorageService');
+var BasicFields = require('web.basic_fields');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var ListController = require('web.ListController');
+var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var RamStorage = require('web.RamStorage');
 var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
-
 var createActionManager = testUtils.createActionManager;
 
 QUnit.module('ActionManager', {
@@ -1642,6 +1643,36 @@ QUnit.module('ActionManager', {
         delete core.action_registry.map.HelloWorldTest;
     });
 
+    QUnit.test('breadcrumb is updated on title change', function (assert) {
+        assert.expect(2);
+
+        var ClientAction = Widget.extend(ControlPanelMixin, {
+            className: 'o_client_action_test',
+            events: {
+                click: function () {
+                    this.set("title", 'new title');
+                },
+            },
+            start: function () {
+                this.set("title", 'initial title');
+                this.$el.text('Hello World');
+            },
+        });
+        var actionManager = createActionManager();
+        core.action_registry.add('HelloWorldTest', ClientAction);
+        actionManager.doAction('HelloWorldTest');
+
+        assert.strictEqual($('ol.breadcrumb').text(), "initial title",
+            "should have initial title as breadcrumb content");
+
+        actionManager.$('.o_client_action_test').click();
+        assert.strictEqual($('ol.breadcrumb').text(), "new title",
+            "should have updated title as breadcrumb content");
+
+        actionManager.destroy();
+        delete core.action_registry.map.HelloWorldTest;
+    });
+
     QUnit.module('Server actions');
 
     QUnit.test('can execute server actions from db ID', function (assert) {
@@ -3092,6 +3123,77 @@ QUnit.module('ActionManager', {
 
         actionManager.destroy();
         delete core.action_registry.map.slowAction;
+    });
+
+
+    QUnit.test('abstract action does not crash on navigation_moves', function (assert) {
+        assert.expect(1);
+        var ClientAction = AbstractAction.extend({
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('ClientAction');
+        actionManager.trigger_up('navigation_move', {direction:'down'});
+
+        assert.ok(true); // no error so it's good
+        actionManager.destroy();
+        delete core.action_registry.ClientAction;
+    });
+
+    QUnit.test('fields in abstract action does not crash on navigation_moves', function (assert) {
+        assert.expect(1);
+        var self = this;
+
+        // create a client action with 2 input field
+        var inputWidget;
+        var secondInputWidget;
+        var ClientAction = AbstractAction.extend(StandaloneFieldManagerMixin, {
+            init: function () {
+                this._super.apply(this, arguments);
+                StandaloneFieldManagerMixin.init.call(this);
+            },
+            start: function () {
+                var _self = this;
+
+                return this.model.makeRecord('partner', [{
+                    name: 'display_name',
+                    type: 'char',
+                }]).then(function (recordID) {
+                    var record = _self.model.get(recordID);
+                    inputWidget = new BasicFields.InputField(_self, 'display_name', record, {mode: 'edit',});
+                    _self._registerWidget(recordID, 'display_name', inputWidget);
+
+                    secondInputWidget = new BasicFields.InputField(_self, 'display_name', record, {mode: 'edit',});
+                    secondInputWidget.attrs = {className:"secondField"};
+                    _self._registerWidget(recordID, 'display_name', secondInputWidget);
+
+                    inputWidget.appendTo(_self.$el);
+                    secondInputWidget.appendTo(_self.$el);
+                });
+            }
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('ClientAction');
+        inputWidget.$el[0].focus();
+        var event = $.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        });
+        $(inputWidget.$el[0]).trigger(event);
+
+        assert.notOk(event.isDefaultPrevented(),
+            "the keyboard event default should not be prevented"); // no crash is good
+        actionManager.destroy();
+        delete core.action_registry.ClientAction;
     });
 
 });

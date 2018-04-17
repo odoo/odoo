@@ -2511,6 +2511,73 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('button executes action and check domain', function (assert) {
+        assert.expect(2);
+
+        var data = this.data;
+        data.partner.fields.active = {string: "Active", type: "boolean", default: true};
+        for (var k in this.data.partner.records) {
+            data.partner.records[k].active = true;
+        }
+
+        var kanban = createView({
+            View: KanbanView,
+            model: "partner",
+            data: data,
+            arch:
+                '<kanban>' +
+                    '<templates><div t-name="kanban-box">' +
+                        '<field name="foo"/>' +
+                        '<field name="active"/>' +
+                        '<button type="object" name="a1" />' +
+                        '<button type="object" name="toggle_active" />' +
+                    '</div></templates>' +
+                '</kanban>',
+        });
+
+        testUtils.intercept(kanban, 'execute_action', function (event) {
+            data.partner.records[0].active = false;
+            event.data.on_closed();
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 1, "should display 'yop' record");
+        kanban.$('.o_kanban_record:contains(yop) button[data-name="toggle_active"]').click();
+        assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 0, "should remove 'yop' record from the view");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('button executes action with domain field not in view', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            domain: [['bar', '=', true]],
+            arch:
+                '<kanban>' +
+                    '<templates><div t-name="kanban-box">' +
+                        '<field name="foo"/>' +
+                        '<button type="object" name="a1" />' +
+                        '<button type="object" name="toggle_action" />' +
+                    '</div></templates>' +
+                '</kanban>',
+        });
+
+        testUtils.intercept(kanban, 'execute_action', function (event) {
+            event.data.on_closed();
+        });
+
+        try {
+            kanban.$('.o_kanban_record:contains(yop) button[data-name="toggle_action"]').click();
+            assert.strictEqual(true, true, 'Everything went fine');
+        } catch (e) {
+            assert.strictEqual(true, false, 'Error triggered at action execution');
+        }
+        kanban.destroy();
+    });
+
     QUnit.test('rendering date and datetime', function (assert) {
         assert.expect(2);
 
@@ -3150,6 +3217,51 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('drag & drop records grouped by m2o with progressbar', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].product_id = false;
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="int_field"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    return $.when(true);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "1",
+            "counter should contain the correct value");
+
+        testUtils.dragAndDrop(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:eq(0)'), kanban.$('.o_kanban_group:eq(1)'));
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "0",
+            "counter should contain the correct value");
+
+        testUtils.dragAndDrop(kanban.$('.o_kanban_group:eq(1) .o_kanban_record:eq(2)'), kanban.$('.o_kanban_group:eq(0)'));
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "1",
+            "counter should contain the correct value");
+
+        testUtils.dragAndDrop(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:eq(0)'), kanban.$('.o_kanban_group:eq(1)'));
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "0",
+            "counter should contain the correct value");
+
+        kanban.destroy();
+    });
+
     QUnit.test('progress bar subgroup count recompute', function(assert) {
         assert.expect(2);
 
@@ -3400,6 +3512,73 @@ QUnit.module('Views', {
         //LEFT should go back to the first column
         $secondColumnSecondCard.trigger($.Event('keydown', { which: $.ui.keyCode.LEFT, keyCode: $.ui.keyCode.LEFT, }));
         assert.strictEqual(document.activeElement, $firstColumnFisrtCard[0], "LEFT should select the first card of the first column");
+
+        kanban.destroy();
+    });
+    QUnit.test('keyboard navigation on kanban grouped rendering with empty columns', function (assert) {
+        assert.expect(2);
+
+        var data = this.data;
+        data.partner.records[1].state = "abc";
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['state'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    // override read_group to return empty groups, as this is
+                    // the case for several models (e.g. project.task grouped
+                    // by stage_id)
+                    return this._super.apply(this, arguments).then(function (result) {
+                        // add 2 empty columns in the middle
+                        result.splice(1,0,{state_count:0,state:'def',
+                                           __domain:[["state","=","def"]]});
+                        result.splice(1,0,{state_count:0,state:'def',
+                                           __domain:[["state","=","def"]]});
+
+                        // add 1 empty column in the beginning and the end
+                        result.unshift({state_count:0,state:'def',
+                                        __domain:[["state","=","def"]]});
+                        result.push({state_count:0,state:'def',
+                                    __domain:[["state","=","def"]]});
+                        return result;
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        /**
+         * DEF columns are empty
+         *
+         *    | DEF | ABC  | DEF | DEF | GHI  | DEF
+         *    |-----|------|-----|-----|------|-----
+         *    |     | yop  |     |     | gnap |
+         *    |     | blip |     |     | blip |
+         */
+        var $yop = kanban.$('.o_kanban_record:first');
+        var $gnap = kanban.$('.o_kanban_group:eq(4) .o_kanban_record:first');
+
+        $yop.focus();
+
+        //RIGHT should select the next column that has a card
+        $yop.trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT,
+            keyCode: $.ui.keyCode.RIGHT, }));
+        assert.strictEqual(document.activeElement, $gnap[0],
+            "RIGHT should select the first card of the next column that has a card");
+
+        //LEFT should go back to the first column that has a card
+        $gnap.trigger($.Event('keydown', { which: $.ui.keyCode.LEFT,
+            keyCode: $.ui.keyCode.LEFT, }));
+        assert.strictEqual(document.activeElement, $yop[0],
+            "LEFT should select the first card of the first column that has a card");
 
         kanban.destroy();
     });

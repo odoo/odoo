@@ -27,10 +27,12 @@ import collections
 import dateutil
 import functools
 import itertools
+import io
 import logging
 import operator
 import pytz
 import re
+import uuid
 from collections import defaultdict, MutableMapping, OrderedDict
 from contextlib import closing
 from inspect import getmembers, currentframe
@@ -616,39 +618,81 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _is_an_ordinary_table(self):
         return tools.table_kind(self.env.cr, self._table) == 'r'
 
-    def __export_xml_id(self):
-        """ Return a valid xml_id for the record ``self``. """
+    def __ensure_xml_id(self, skip=False):
+        """ Create missing external ids for records in ``self``, and return an
+            iterator of pairs ``(record, xmlid)`` for the records in ``self``.
+
+        :rtype: Iterable[Model, str | None]
+        """
+        if skip:
+            return ((record, None) for record in self)
+
+        if not self:
+            return iter([])
+
         if not self._is_an_ordinary_table():
             raise Exception(
                 "You can not export the column ID of model %s, because the "
                 "table %s is not an ordinary table."
                 % (self._name, self._table))
-        ir_model_data = self.sudo().env['ir.model.data']
-        data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
-        if data:
-            if data[0].module:
-                return '%s.%s' % (data[0].module, data[0].name)
-            else:
-                return data[0].name
-        else:
-            postfix = 0
-            name = '%s_%s' % (self._table, self.id)
-            while ir_model_data.search([('module', '=', '__export__'), ('name', '=', name)]):
-                postfix += 1
-                name = '%s_%s_%s' % (self._table, self.id, postfix)
-            ir_model_data.create({
-                'model': self._name,
-                'res_id': self.id,
-                'module': '__export__',
-                'name': name,
-            })
-            return '__export__.' + name
+
+        modname = '__export__'
+
+        cr = self.env.cr
+        cr.execute("""
+            SELECT res_id, module, name
+            FROM ir_model_data
+            WHERE model = %s AND res_id in %s
+        """, (self._name, tuple(self.ids)))
+        xids = {
+            res_id: (module, name)
+            for res_id, module, name in cr.fetchall()
+        }
+
+        # create missing xml ids
+        missing = self.filtered(lambda r: r.id not in xids)
+        if not missing:
+            return (
+                (record, '%s.%s' % xids[record.id])
+                for record in self
+            )
+
+        xids.update(
+            (r.id, (modname, '%s_%s_%s' % (
+                r._table,
+                r.id,
+                uuid.uuid4().hex[:8],
+            )))
+            for r in missing
+        )
+        fields = ['module', 'model', 'name', 'res_id']
+        cr.copy_from(io.StringIO(
+            u'\n'.join(
+                u"%s\t%s\t%s\t%d" % (
+                    modname,
+                    record._name,
+                    xids[record.id][1],
+                    record.id,
+                )
+                for record in missing
+            )),
+            table='ir_model_data',
+            columns=fields,
+        )
+        self.env['ir.model.data'].invalidate_cache(fnames=fields)
+
+        return (
+            (record, '%s.%s' % xids[record.id])
+            for record in self
+        )
 
     @api.multi
-    def _export_rows(self, fields):
+    def _export_rows(self, fields, batch_invalidate=True):
         """ Export fields of the records in ``self``.
 
             :param fields: list of lists of fields to traverse
+            :param batch_invalidate:
+                whether to clear the cache for the top-level object every so often (avoids huge memory consumption when exporting large numbers of records)
             :return: list of lists of corresponding values
         """
         import_compatible = self.env.context.get('import_compat', True)
@@ -660,13 +704,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             from the cache after it's been iterated in full
             """
             for idx in range(0, len(rs), 1000):
-                sub = rs[idx: idx+1000]
+                sub = rs[idx:idx+1000]
                 for rec in sub:
                     yield rec
                 rs.invalidate_cache(ids=sub.ids)
+        if not batch_invalidate:
+            splittor = lambda rs: rs
 
+        # both _ensure_xml_id and the splitter want to work on recordsets but
+        # neither returns one, so can't really be composed...
+        xids = dict(self.__ensure_xml_id(skip=['id'] not in fields))
         # memory stable but ends up prefetching 275 fields (???)
-        for idx, record in enumerate(splittor(self)):
+        for record in splittor(self):
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
@@ -686,7 +735,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if name == '.id':
                     current[i] = str(record.id)
                 elif name == 'id':
-                    current[i] = record.__export_xml_id()
+                    xid = xids.get(record)
+                    assert xid, "no xid was generated for the record %s" % record
+                    current[i] = xid
                 else:
                     field = record._fields[name]
                     value = record[name]
@@ -701,7 +752,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         # in import_compat mode, m2m should always be exported as
                         # a comma-separated list of xids in a single cell
                         if import_compatible and field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
-                            xml_ids = [r.__export_xml_id() for r in value]
+                            xml_ids = [xid for _, xid in value.__ensure_xml_id()]
                             current[i] = ','.join(xml_ids) or False
                             continue
 
@@ -709,7 +760,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         # 'display_name' where no subfield is exported
                         fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
                                    for p in fields]
-                        lines2 = value._export_rows(fields2)
+                        lines2 = value._export_rows(fields2, batch_invalidate=False)
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):

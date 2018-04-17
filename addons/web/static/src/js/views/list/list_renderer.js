@@ -742,9 +742,11 @@ var ListRenderer = BasicRenderer.extend({
             switch(e.which) {
                 case $.ui.keyCode.DOWN:
                     $(e.currentTarget).next().find('input').focus();
+                    e.preventDefault();
                     break;
                 case $.ui.keyCode.UP:
                     $(e.currentTarget).prev().find('input').focus();
+                    e.preventDefault();
                     break; 
                 case $.ui.keyCode.ENTER: 
                     e.preventDefault();

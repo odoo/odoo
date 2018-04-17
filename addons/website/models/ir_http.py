@@ -17,9 +17,10 @@ from odoo.http import request
 from odoo.tools import config
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import FALSE_DOMAIN
+from odoo.osv.expression import FALSE_DOMAIN, OR
 
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
 
@@ -104,6 +105,11 @@ class Http(models.AbstractModel):
         return super(Http, cls)._get_default_lang()
 
     @classmethod
+    def _get_translation_frontend_modules_domain(cls):
+        domain = super(Http, cls)._get_translation_frontend_modules_domain()
+        return OR([domain, [('name', 'ilike', 'website')]])
+
+    @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
 
@@ -145,7 +151,7 @@ class Http(models.AbstractModel):
 
         redirect = cls._serve_redirect()
         if redirect:
-            return request.redirect(redirect.url_to, code=redirect.type)
+            return request.redirect(_build_url_w_params(redirect.url_to, request.params), code=redirect.type)
 
         return False
 

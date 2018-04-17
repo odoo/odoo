@@ -229,15 +229,7 @@ ActionManager.include({
                     // the action has been removed, so simply destroy the widget
                     widget.destroy();
                 } else {
-                    // AAB: change this logic to stop using the properties mixin
-                    widget.on("change:title", this, function () {
-                        if (!action.flags.headless) {
-                            var breadcrumbs = self._getBreadcrumbs();
-                            self.controlPanel.update({breadcrumbs: breadcrumbs}, {clear: false});
-                        }
-                    });
                     controller.widget = widget;
-
                     def.resolve(controller);
                 }
             }).fail(def.reject.bind(def));

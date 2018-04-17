@@ -9,15 +9,14 @@
 # Martin Trigaux, 2016
 # Melanie Bernard <mbe@odoo.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
 # Florian Hatat, 2017
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -27,32 +26,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
 msgstr "Identifiant API"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
 msgid "API Transaction Key"
 msgstr "Clé de transaction API"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/authorize_request.py:67
-#, python-format
-msgid ""
-"Authorize.net Error Message(s):\n"
-" %s"
-msgstr ""
-"Message(s) d'erreur Authorize.net: \n"
-"%s"
-
-#. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
 msgstr "ID de profil Authorize.net"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:167
+#: code:addons/payment_authorize/models/payment.py:178
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
@@ -87,6 +76,14 @@ msgid "How to get paid with Authorize.Net"
 msgstr "Comment se faire payer avec Authorize.Net"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:61
+#, python-format
+msgid ""
+"If you don't have any account, please ask your salesperson to update your "
+"profile. "
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Intermédiaire de Paiement"
@@ -97,23 +94,43 @@ msgid "Payment Transaction"
 msgstr "Transaction"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_provider
+#: code:addons/payment_authorize/controllers/main.py:63
+#, python-format
+msgid "Please complete your profile. "
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:58
+#, python-format
+msgid "Please sign in to complete your profile."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
 msgstr "Fournisseur"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
 msgstr "Enregistrer les cartes"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:372
+#: code:addons/payment_authorize/models/payment.py:383
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "La création du profil client dans Authorize.Net a échoué."
 
 #. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
+#: code:addons/payment_authorize/controllers/main.py:55
+#, python-format
+msgid ""
+"The transaction cannot be processed because some contact details are missing"
+" or invalid: "
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
@@ -122,17 +139,13 @@ msgstr ""
 "paiement dans le backend Authorize.Net"
 
 #. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase.If you manage subscriptions (recurring "
-"invoicing), you need it to automatically charge the customer when you issue "
-"an invoice."
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
 msgstr ""
-"Cette option permet aux clients d'enregistrer leur carte bancaire en tant "
-"que jeton de paiement et de la réutiliser ultérieurement. Si vous gérez les "
-"abonnements (facturation récurrente), vous devez débiter le client "
-"automatiquement lors de l'émission d'une facture."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

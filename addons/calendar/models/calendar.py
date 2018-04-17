@@ -609,7 +609,8 @@ class Meeting(models.Model):
         if not event_date:
             event_date = datetime.now()
 
-        if self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule:
+        use_naive_datetime = self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule
+        if use_naive_datetime:
             rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
         else:
             # Convert the event date to saved timezone (or context tz) as it'll
@@ -617,9 +618,13 @@ class Meeting(models.Model):
             event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
             rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
-
         for meeting in recurring_meetings:
-            rset1._exdate.append(todate(meeting.recurrent_id_date))
+            recurring_date = fields.Datetime.from_string(meeting.recurrent_id_date)
+            if use_naive_datetime:
+                recurring_date = recurring_date.replace(tzinfo=None)
+            else:
+                recurring_date = todate(meeting.recurrent_id_date)
+            rset1.exdate(recurring_date)
         return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1]
 
     @api.multi
@@ -1142,9 +1147,14 @@ class Meeting(models.Model):
             for key in (order or self._order).split(',')
         ))
         def key(record):
+            # we need to deal with undefined fields, as sorted requires an homogeneous iterable
+            def boolean_product(x):
+                if isinstance(x, bool):
+                    return (x, x)
+                return (True, x)
             # first extract the values for each key column (ids need special treatment)
             vals_spec = (
-                (any_id2key(record[name]) if name == 'id' else record[name], desc)
+                (any_id2key(record[name]) if name == 'id' else boolean_product(record[name]), desc)
                 for name, desc in sort_spec
             )
             # then Reverse if the value matches a "desc" column

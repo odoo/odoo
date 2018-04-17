@@ -166,7 +166,7 @@ root can have the following attributes:
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
     (``font-style: italic``), or any `bootstrap contextual color
-    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
+    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
@@ -1160,31 +1160,32 @@ There are 5 possible type of tags in a dashboard view:
 ``view``
     declares a sub view.
 
-    Possible attributes are:
+    Admissible attributes are:
 
-    ``type`` the type of the sub view.  For example, *graph* or *pivot*.
+    - ``type`` (mandatory)
+        The type of the sub view.  For example, *graph* or *pivot*.
 
-    ``ref`` (optional)
-        an xml id for a view. If not given, the default view for the model will
+    - ``ref`` (optional)
+        An xml id for a view. If not given, the default view for the model will
         be used.
 
-    ``name`` (optional)
-        a string which identifies this element.  It is mostly
+    - ``name`` (optional)
+        A string which identifies this element.  It is mostly
         useful to be used as a target for an xpath.
 
 ``group``
     defines a column layout.  This is actually very similar to the group element
     in a form view.
 
-    Possible attributes are:
+    Admissible attributes are:
 
-    ``string`` (optional)
+    - ``string`` (optional)
         A description which will be displayed as a group title.
 
-    ``colspan`` (optional)
+    - ``colspan`` (optional)
         The number of subcolumns in this group tag. By default, 6.
 
-    ``col`` (optional)
+    - ``col`` (optional)
         The number of columns spanned by this group tag (only makes sense inside
         another group). By default, 6.
 
@@ -1196,9 +1197,9 @@ There are 5 possible type of tags in a dashboard view:
     Note that aggregates are supposed to be used inside a group tag (otherwise
     the style will not be properly applied).
 
-    Attributes are:
+    Admissible attributes are:
 
-    - ``field``
+    - ``field`` (mandatory)
         The field name to use for computing the aggregate. Possible field types
         are:
 
@@ -1206,7 +1207,7 @@ There are 5 possible type of tags in a dashboard view:
         - ``float``  (default group operator is sum)
         - ``many2one`` (default group operator is count distinct)
 
-    - ``name``
+    - ``name`` (mandatory)
         A string to identify this aggregate (useful for formulas)
 
     - ``string`` (optional)
@@ -1222,39 +1223,49 @@ There are 5 possible type of tags in a dashboard view:
         the search view as a facet.  The string displayed for this facet can
         be customized with this attribute.
 
-    ``col`` (optional)
+    - ``group_operator`` (optional)
+        A valid postgreSQL aggregate function identifier to use when aggregating
+        values (see https://www.postgresql.org/docs/9.5/static/functions-aggregate.html).
+        If not provided, By default, the group_operator from the field definition is used.
+        Note that no aggregation of field values is achieved if the group_operator value is "".
+
+        .. code-block:: xml
+
+          <aggregate name="price_total_max" field="price_total" group_operator="max"/>
+
+    - ``col`` (optional)
         The number of columns spanned by this tag (only makes sense inside a
         group). By default, 1.
 
-    ``widget`` (optional)
+    - ``widget`` (optional)
         A widget to format the value (like the widget attribute for fields).
         For example, monetary.
 
 ``formula``
-    declares a derived value.  Formulas are values computed from other aggregates.
+    declares a derived value.  Formulas are values computed from aggregates.
 
     Note that like aggregates, formulas are supposed to be used inside a group
     tag (otherwise the style will not be properly applied).
 
-    Possible attributes are:
+    Admissible attributes are:
 
-    - ``value``
+    - ``value`` (mandatory)
         A string expression that will be evaluated, with the builtin python
         evaluator (in the web client).  Every aggregate can be used in the
         context, in the ``record`` variable.  For example,
         ``record.price_total / record.order_id``.
 
-    - ``string``
+    - ``name`` (optional)
+        A string to identify this formula
+
+    - ``string`` (optional)
         A short description that will be displayed above the formula.
 
-    - ``name`` (optional)
-        A string to identify this aggregate
-
-    ``col`` (optional)
+    - ``col`` (optional)
         The number of columns spanned by this tag (only makes sense inside a
         group). By default, 1.
 
-    ``widget`` (optional)
+    - ``widget`` (optional)
         A widget to format the value (like the widget attribute for fields).
         For example, monetary. By default, it is 'float'.
 
@@ -1262,11 +1273,13 @@ There are 5 possible type of tags in a dashboard view:
     Declares a specialized widget to be used to display the information. This is
     a mechanism similar to the widgets in the form view.
 
-    - ``name``
+    Admissible attributes are:
+
+    - ``name`` (mandatory)
         A string to identify which widget should be instantiated. The view will
         look into the ``widget_registry`` to get the proper class.
 
-    ``col`` (optional)
+    - ``col`` (optional)
         The number of columns spanned by this tag (only makes sense inside a
         group). By default, 1.
 
