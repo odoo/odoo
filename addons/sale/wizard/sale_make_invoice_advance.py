@@ -47,8 +47,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
     sale_order_id = fields.Many2one('sale.order', string='Sale Order', default=_default_sale_order_id)
     invoice_options = fields.Char(compute="_compute_invoice_options")
     advance_payment_method = fields.Selection([
-        ('delivered', 'Invoiceable lines'),
-        ('all', 'Invoiceable lines (deduct down payments)'),
+        ('delivered', 'Ready to invoice'),
+        ('all', 'Ready to invoice, deduct down payments'),
+        ('unbilled', 'Unbilled Total'),
         ('percentage', 'Down payment (percentage)'),
         ('fixed', 'Down payment (fixed amount)')
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
@@ -156,6 +157,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
             sale_orders.action_invoice_create()
         elif self.advance_payment_method == 'all':
             sale_orders.action_invoice_create(final=True)
+        elif self.advance_payment_method == 'unbilled':
+            sale_orders.action_invoice_create(unbilled=True)
         else:
             # Create deposit product if necessary
             if not self.product_id:
