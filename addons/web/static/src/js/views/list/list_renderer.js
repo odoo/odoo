@@ -278,7 +278,7 @@ var ListRenderer = BasicRenderer.extend({
         } else if (node.tag === 'widget') {
             return $td.append(this._renderWidget(record, node));
         }
-        if (node.attrs.widget || (options && options.renderWidgets)) {
+        if (node.attrs.widget || (options && options.renderWidgets) || (options && options.forceRenderWidget)) {
             var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
             this._handleAttributes(widget.$el, node);
             return $td.append(widget.$el);

@@ -339,6 +339,23 @@ ListRenderer.include({
 
         return $.when.apply($, defs);
     },
+
+   /*
+    * @Override
+    */
+    _renderBodyCell: function(record, node, colIndex, options) {
+        var currentFieldName = node.attrs && node.attrs.name;
+        var currentField = currentFieldName && record.fields[currentFieldName];
+
+        // Force rendering of the boolean field's widget
+        // to be able to tick it on any line (being edited or not)
+        if (currentField && currentField.type === 'boolean') {
+            options = options || {};
+            options.forceRenderWidget = true;
+            options.mode = 'edit';
+        }
+        return this._super.apply(this, [record, node, colIndex, options]);
+    },
     /**
      * This method is called whenever we click/move outside of a row that was
      * in edit mode. This is the moment we save all accumulated changes on that
