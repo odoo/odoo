@@ -1203,6 +1203,12 @@ class AccountMoveLine(models.Model):
         if context.get('analytic_account_ids'):
             domain += [('analytic_account_id', 'in', context['analytic_account_ids'].ids)]
 
+        if context.get('res_partners'):
+            domain += [('partner_id', 'in', context['res_partners'].ids)]
+
+        if context.get('res_partner_categories'):
+            domain += [('partner_id.category_id', 'in', context['res_partner_categories'].ids)]
+
         where_clause = ""
         where_clause_params = []
         tables = ''
