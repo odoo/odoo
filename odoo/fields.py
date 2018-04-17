@@ -620,14 +620,14 @@ class Field(MetaField('DummyField', (object,), {})):
         for record, value in zip(records, values):
             record[self.name] = value[self.related_field.name]
 
-    def _inverse_related(self, records):
-        """ Inverse the related field ``self`` on ``records``. """
-        # store record values, otherwise they may be lost by cache invalidation!
-        record_value = {record: record[self.name] for record in records}
-        for record in records:
-            other, field = self.traverse_related(record)
-            if other:
-                other[field.name] = record_value[record]
+    def _inverse_related(self, record):
+        """ Return record sets for related model, related field object and
+            updated values for that field
+        """
+        other, rField = self.traverse_related(record)
+        value = self.convert_to_cache(record[self.name], record)
+        write_value = self.convert_to_write(self.convert_to_record(value, record), record)
+        return other, rField, write_value
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """

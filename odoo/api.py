@@ -983,6 +983,10 @@ class Environment(Mapping):
         field = min(self.all.todo, key=self.registry.field_sequence)
         return field, self.all.todo[field][0]
 
+    def get_all_todo(self):
+        """ Return all list of pair ``[(field, records)]`` to recompute """
+        return [(field, self.all.todo[field][0]) for field in self.all.todo]
+
     @property
     def recompute(self):
         return self.all.recompute

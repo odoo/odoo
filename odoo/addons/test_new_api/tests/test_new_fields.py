@@ -185,6 +185,31 @@ class TestFields(common.TransactionCase):
             record2 = model.create({'foo': 'unprotected'})
             self.assertEqual(record2.bar, 'unprotected')
 
+    def test_11_related_field_query_count(self):
+        discussion1 = self.env.ref('test_new_api.discussion_0')
+        self.assertEqual(len(discussion1.messages), 3)
+
+        # related record changed
+        with self.assertQueryCount(15):
+            discussion1.write({'name': 'New Stuff', 'moderator': self.env.ref('base.user_demo').id})
+
+        for message in discussion1.messages:
+            self.assertEqual(message.discussion_name, 'New Stuff')
+            self.assertEqual(message.discussion_moderator.id, self.env.ref('base.user_demo').id)
+
+        message = self.env.ref('test_new_api.message_0_1')
+
+        # related record inverse change
+        with self.assertQueryCount(15):
+            message.write({
+                'discussion_name': 'My Stuff',
+                'discussion_moderator': self.env.ref('base.user_root').id
+            })
+
+        for message in discussion1.messages:
+            self.assertEqual(message.discussion_name, 'My Stuff')
+            self.assertEqual(message.discussion_moderator.id, self.env.ref('base.user_root').id)
+
     def test_11_computed_access(self):
         """ test computed fields with access right errors """
         User = self.env['res.users']

@@ -3349,6 +3349,7 @@ Fields:
 
             if inverse_vals:
                 self.modified(set(inverse_vals) - set(store_vals))
+                relatedValues = defaultdict(dict)
 
                 # group fields by inverse method (to call it once), and order
                 # groups by dependence (in case they depend on each other)
@@ -3364,12 +3365,27 @@ Fields:
                     batches = [self] if all(f.store for f in fields) else list(self)
                     # put the values of fields in cache, and inverse them
                     inv_vals = {f.name: inverse_vals[f.name] for f in fields}
+
+                    is_inverse_related = fields[0].inverse == fields[0]._inverse_related
                     for records in batches:
                         for record in records:
                             record._cache.update(
                                 record._convert_to_cache(inv_vals, update=True)
                             )
-                        fields[0].determine_inverse(records)
+                            # Prepare default dictionary for related model's record sets and updated values
+                            # Performing only for _inverse_realted fields
+                            if is_inverse_related:
+                                other, rField, write_value = fields[0]._inverse_related(record)
+                                relatedModel = relatedValues.get(other, {})
+                                relatedModel.update({rField.name: write_value})
+                                relatedValues.update({other: relatedModel})
+                        # Other compute fields for determine inverse
+                        if not is_inverse_related:
+                            fields[0].determine_inverse(records)
+
+                # Writing updated values to related models
+                for relatedModel, vals in relatedValues.items():
+                    relatedModel.write(vals)
 
                 self.modified(set(inverse_vals) - set(store_vals))
 
@@ -5272,21 +5288,25 @@ Fields:
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        while self.env.has_todo():
-            field, recs = self.env.get_todo()
-            # determine the fields to recompute
-            fs = self.env[field.model_name]._field_computed[field]
-            ns = [f.name for f in fs if f.store]
-            # evaluate fields, and group record ids by update
+        recomputeValues = defaultdict(dict)
+
+        # Getting all todo at once and mapping related records and values together
+        for field, recs in self.env.get_all_todo():
+            recomputeValues.update({recs: recomputeValues.get(recs, []) + [field]})
+
+        # Processing grouped fields and records to compute
+        for recs, fields in recomputeValues.items():
             updates = defaultdict(set)
-            for rec in recs:
-                try:
-                    vals = {n: rec[n] for n in ns}
-                except MissingError:
-                    continue
-                vals = rec._convert_to_write(vals)
-                updates[frozendict(vals)].add(rec.id)
-            # update records in batch when possible
+            for field in fields:
+                fs = self.env[field.model_name]._field_computed[field]
+                ns = [f.name for f in fs if f.store]
+                for rec in recs:
+                    try:
+                        vals = {n: rec[n] for n in ns}
+                    except MissingError:
+                        continue
+                    vals = rec._convert_to_write(vals)
+                    updates[frozendict(vals)].add(rec.id)
             with recs.env.norecompute():
                 for vals, ids in updates.items():
                     target = recs.browse(ids)
@@ -5295,10 +5315,12 @@ Fields:
                     except MissingError:
                         # retry without missing records
                         target.exists()._write(dict(vals))
+                for field in fields:
+                    recs._recompute_done(field)
 
-            # mark computed fields as done
-            for f in fs:
-                recs._recompute_done(f)
+        # If there are any pending todo to compute (or recursive)
+        if self.env.has_todo():
+            self.recompute()
 
     #
     # Generic onchange method
