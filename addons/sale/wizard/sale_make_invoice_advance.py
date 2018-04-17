@@ -60,6 +60,53 @@ class SaleAdvancePaymentInv(models.TransientModel):
     deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],
         help="Account used for deposits", default=_default_deposit_account_id)
     deposit_taxes_id = fields.Many2many("account.tax", string="Customer Taxes", help="Taxes used for deposits", default=_default_deposit_taxes_id)
+    currency_id = fields.Many2one(related='sale_order_id.currency_id', string='Currency')
+    order_total = fields.Monetary(string='Order Total', compute='compute_all')
+    upsell_downsell = fields.Monetary(string='Upsell/Downsell', compute='compute_all')
+    total_to_invoice = fields.Monetary(string='Total to Invoice', compute='compute_all')
+    downpayment_total = fields.Monetary(string='Down Payment', compute='compute_all')
+    already_invoiced = fields.Monetary(string='Already Invoiced', compute='compute_all')
+    unbilled_total = fields.Monetary(string='Unbilled Total', compute='compute_all')
+    undelivered_products = fields.Monetary(string='Undelivered Products', compute='compute_all')
+    ready_to_invoice = fields.Monetary(string='Ready to Invoice', compute='compute_all')
+
+    @api.depends('sale_order_id')
+    def compute_all(self):
+        upsell_downsell = downpayment = unbill = undeliver = ready = so_price = invoice_price = downsell = upsell = 0.0
+        for rec in self:
+            already_invoiced = sum(rec.sale_order_id.invoice_ids.mapped('amount_total_signed'))
+            amount_total = rec.sale_order_id.amount_total
+
+            for line in rec.sale_order_id.order_line:
+                if not line.is_downpayment:
+                    if line.qty_delivered > line.product_uom_qty:
+                        upsell += ((line.qty_delivered - line.product_uom_qty) * (line.price_reduce_taxinc))
+                    elif line.product_id.invoice_policy == 'delivery':
+                        undelivered_qty = line.product_uom_qty - (line.qty_delivered  if line.qty_delivered >= line.qty_invoiced else line.qty_invoiced)
+                        undeliver += undelivered_qty * line.price_reduce_taxinc
+                    if line.invoice_status == 'to invoice':
+                        ready_to_invoice_qty = line.product_uom_qty if line.product_uom_qty >= line.qty_delivered else line.qty_delivered
+                        ready = ready + (line.price_reduce_taxinc * (ready_to_invoice_qty - line.qty_invoiced))
+                    unbilled_qty = line.product_uom_qty if line.product_uom_qty >= line.qty_delivered else line.qty_delivered
+                    unbill += (line.price_reduce_taxinc * (unbilled_qty - line.qty_invoiced if unbilled_qty > 0.0 else 0.0))
+                    so_price = (line.qty_invoiced * line.price_reduce_taxinc)
+                    invoice_price = sum([(invoice_line.price_total) for invoice_line in line.invoice_lines])
+                    downsell += (so_price - invoice_price) if invoice_price > 0.0 else 0.0
+                else:
+                    taxes = line.tax_id.compute_all(line.price_reduce, line.order_id.currency_id, line.qty_to_invoice, product=line.product_id, partner=line.order_id.partner_shipping_id)
+                    downpayment += taxes['total_included']
+            upsell_downsell = upsell - downsell
+
+            rec.update({
+                'order_total': amount_total,
+                'upsell_downsell': upsell_downsell,
+                'total_to_invoice': amount_total + upsell_downsell,
+                'downpayment_total': downpayment,
+                'already_invoiced': -(already_invoiced + downpayment),
+                'unbilled_total': (unbill + downpayment),
+                'undelivered_products': -undeliver,
+                'ready_to_invoice': ready + downpayment if ready > 0 else ready
+            })
 
     @api.depends('sale_order_id')
     def _compute_invoice_options(self):
