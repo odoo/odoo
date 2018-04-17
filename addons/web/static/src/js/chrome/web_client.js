@@ -12,7 +12,7 @@ var SystrayMenu = require('web.SystrayMenu');
 var UserMenu = require('web.UserMenu');
 
 return AbstractWebClient.extend({
-    events: {
+    events: _.extend({}, AbstractWebClient.prototype.events, {
         'click .oe_logo_edit_admin': 'logo_edit',
         'click .oe_logo img': function(ev) {
             ev.preventDefault();
@@ -20,7 +20,7 @@ return AbstractWebClient.extend({
                 framework.redirect("/web" + (config.debug ? "?debug" : ""));
             });
         },
-    },
+    }),
     show_application: function() {
         var self = this;
 
