@@ -468,7 +468,7 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
     });
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
