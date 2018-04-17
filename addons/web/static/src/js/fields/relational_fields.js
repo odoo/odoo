@@ -2273,7 +2273,15 @@ var FieldRadio = FieldSelection.extend({
      * @private
      */
     _setValues: function () {
-        if (this.field.type === 'selection') {
+        if (this.field.type === 'selection' && this.nodeOptions.visibility_field) {
+            var visibility = this.record.data[this.nodeOptions.visibility_field].split(",");
+            this.values = _.filter(this.field.selection, function (val) {
+                if (!visibility) {
+                    return true
+                }
+                return visibility && _.contains(visibility, val[0]) || val[0] === self.value;
+            });
+        } else if (this.field.type === 'selection') {
             this.values = this.field.selection || [];
         } else if (this.field.type === 'many2one') {
             this.values = _.map(this.record.specialData[this.name], function (val) {

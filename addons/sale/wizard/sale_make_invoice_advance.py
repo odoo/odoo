@@ -40,6 +40,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _default_deposit_taxes_id(self):
         return self._default_product_id().taxes_id
 
+    @api.model
+    def _default_sale_order_id(self):
+        return self._context.get('active_id')
+
+    sale_order_id = fields.Many2one('sale.order', string='Sale Order', default=_default_sale_order_id)
+    invoice_options = fields.Char(compute="_compute_invoice_options")
     advance_payment_method = fields.Selection([
         ('delivered', 'Invoiceable lines'),
         ('all', 'Invoiceable lines (deduct down payments)'),
@@ -53,6 +59,21 @@ class SaleAdvancePaymentInv(models.TransientModel):
     deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],
         help="Account used for deposits", default=_default_deposit_account_id)
     deposit_taxes_id = fields.Many2many("account.tax", string="Customer Taxes", help="Taxes used for deposits", default=_default_deposit_taxes_id)
+
+    @api.depends('sale_order_id')
+    def _compute_invoice_options(self):
+        for rec in self:
+            sale_order = rec.sale_order_id
+            options = ['percentage', 'fixed']
+            invoiceable_lines = sale_order.order_line.filtered(lambda line: line.invoice_status == 'to invoice')
+
+            if invoiceable_lines.filtered(lambda x: not x.is_downpayment):
+                options.append('delivered')
+                if invoiceable_lines.filtered(lambda x: x.is_downpayment):
+                    options.append('all')
+            if sale_order.order_line.filtered(lambda line: line.invoice_status == 'no'):
+                options.append('unbilled')
+            rec.invoice_options = ','.join(options)
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
