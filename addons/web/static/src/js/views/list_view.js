@@ -1431,7 +1431,7 @@ ListView.Groups = Class.extend({
                     } else if (column.id in group.aggregates) {
                         var r = {};
                         r[column.id] = {value: group.aggregates[column.id]};
-                        $('<td class="oe_number">')
+                        $('<td class="oe_number o_list_number">')
                             .html(column.format(r, {process_modifiers: false}))
                             .appendTo($row);
                     } else {
