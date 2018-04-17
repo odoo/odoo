@@ -3622,7 +3622,19 @@ var BasicModel = AbstractModel.extend({
                             });
                             r._changes[fieldName] = rec.id;
                             many2ones[fieldName] = true;
-                        } else if (_.contains(['one2many', 'many2many'], fieldType)) {
+                        }
+                        else if (fieldType === 'reference') {
+                            var reference = r._changes[fieldName].split(',');
+                            var rec = self._makeDataPoint({
+                                context: r.context,
+                                modelName: reference[0],
+                                data: {id: parseInt(reference[1])},
+                                parentID: r.id,
+                            });
+                            r._changes[fieldName] = rec.id;
+                            many2ones[fieldName] = true;
+                        }
+                        else if (_.contains(['one2many', 'many2many'], fieldType)) {
                             var x2mCommands = commands[0][2][fieldName];
                             defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
                         } else {
