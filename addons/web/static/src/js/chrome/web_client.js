@@ -93,6 +93,10 @@ return AbstractWebClient.extend({
     bind_hashchange: function() {
         var self = this;
         $(window).bind('hashchange', this.on_hashchange);
+        var didHashChanged = false;
+        $(window).one('hashchange', function () {
+            didHashChanged = true;
+        });
 
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action === "login") {
@@ -103,6 +107,9 @@ return AbstractWebClient.extend({
                         args: [[session.uid], ['action_id']],
                     })
                     .done(function(result) {
+                        if (didHashChanged) {
+                            return;
+                        }
                         var data = result[0];
                         if(data.action_id) {
                             self.action_manager.do_action(data.action_id[0]);
