@@ -53,21 +53,3 @@ class PurchaseBillUnion(models.Model):
             name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
             result.append((doc.id, name))
         return result
-
-
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
-
-    vendor_bill_purchase_id = fields.Many2one(
-        comodel_name='purchase.bill.union',
-        string='Auto-Complete'
-    )
-
-    @api.onchange('vendor_bill_purchase_id')
-    def _onchange_bill_purchase_order(self):
-        if not self.vendor_bill_purchase_id:
-            return {}
-        self.purchase_id = self.vendor_bill_purchase_id.purchase_order_id
-        self.vendor_bill_id = self.vendor_bill_purchase_id.vendor_bill_id
-        self.vendor_bill_purchase_id = False
-        return {}
