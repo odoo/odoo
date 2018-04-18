@@ -113,7 +113,7 @@ class Field(MetaField('DummyField', (object,), {})):
             default ``False``)
 
         :param index: whether the field is indexed in database (boolean, by
-            default ``False``)
+            default ``False`` except for Many2one fields)
 
         :param default: the default value for the field; this is either a static
             value, or a function taking a recordset and returning a value; use
@@ -1949,6 +1949,7 @@ class Many2one(_Relational):
         'ondelete': 'set null',         # what to do when value is deleted
         'auto_join': False,             # whether joins are generated upon search
         'delegate': False,              # whether self implements delegation
+        'index': True,                  # create a database on foreign keys
     }
 
     def __init__(self, comodel_name=Default, string=Default, **kwargs):
