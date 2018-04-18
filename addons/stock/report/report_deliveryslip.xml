@@ -52,9 +52,8 @@
                     
                     <!-- This checks if the setting "Lots & Serial Numbers on Delivery Slip" was ticked -->
                     <t t-set="show_SN_LN" t-value="o.env.user.has_group('stock.group_lot_on_delivery_slip')"/>
-                    <!-- This checks if the setting "Expiration Dates" was ticked by checking that the module that it installs is indeed installed -->
-                    <!-- but it does not feel like the proper way to do it ... -->
-                    <t t-set="show_expiration_date" t-value="env['ir.module.module'].search([('state', '=', 'installed'), ('name', '=', 'product_expiry')])"/>
+                    <!-- This checks if the setting "Expiration Dates on Delivery Slip" was ticked-->
+                    <t t-set="show_expiration_date" t-value="o.env.user.has_group('stock.group_expiration_date_on_delivery_slip')"/>
 
                     <!-- of the following 3 tables, only one of them is displayed at a time  -->
                     <table class="table table-condensed mt48" t-if="not o.move_line_ids and o.state!='done'">
@@ -86,7 +85,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_line_ids" t-as="move_line">
+                            <tr t-foreach="o.move_line_ids.filtered(lambda x: x.product_uom_qty)" t-as="move_line">
                                 <td><span t-field="move_line.product_id"/></td>
                                 <td t-if="show_SN_LN">
                                     <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
@@ -115,7 +114,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_line_ids" t-as="move_line">
+                            <tr t-foreach="o.move_line_ids.filtered(lambda x: x.product_uom_qty)" t-as="move_line">
                                 <td>
                                     <span t-field="move_line.product_id"/>
                                     <p t-if="o.picking_type_code == 'outgoing'">

@@ -18,6 +18,8 @@ class ResConfigSettings(models.TransientModel):
         implied_group='stock.group_production_lot')
     group_lot_on_delivery_slip = fields.Boolean("Lots & Serial Numbers on Delivery Slip", 
         implied_group='stock.group_lot_on_delivery_slip')
+    group_expiration_date_on_delivery_slip = fields.Boolean("Expiration Date on Delivery Slip",
+        implied_group='stock.group_expiration_date_on_delivery_slip')
     group_stock_tracking_lot = fields.Boolean("Delivery Packages",
         implied_group='stock.group_tracking_lot')
     group_stock_tracking_owner = fields.Boolean("Consignment",
@@ -43,6 +45,22 @@ class ResConfigSettings(models.TransientModel):
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
     group_stock_multi_warehouses = fields.Boolean('Multi-Warehouses', implied_group='stock.group_stock_multi_warehouses')
 
+    @api.onchange('module_product_expiry')
+    def _onchange_module_product_expiry(self):
+        if not self.module_product_expiry:
+            self.group_expiration_date_on_delivery_slip = False
+
+    @api.onchange('group_stock_production_lot')
+    def _onchange_group_stock_production_lot(self):
+        if not self.group_stock_production_lot:
+            self.group_lot_on_delivery_slip = False
+            self.group_expiration_date_on_delivery_slip = False
+    
+    @api.onchange('group_lot_on_delivery_slip')
+    def _onchange_group_lot_on_delivery_slip(self):
+        if not self.group_lot_on_delivery_slip:
+            self.group_expiration_date_on_delivery_slip = False
+    
     @api.onchange('use_propagation_minimum_delta')
     def _onchange_use_propagation_minimum_delta(self):
         if not self.use_propagation_minimum_delta:
