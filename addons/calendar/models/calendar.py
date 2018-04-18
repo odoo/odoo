@@ -617,13 +617,21 @@ class Meeting(models.Model):
             event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
             rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
-        for meeting in recurring_meetings:
-            recurring_date = fields.Datetime.from_string(meeting.recurrent_id_date)
-            if use_naive_datetime:
-                recurring_date = recurring_date.replace(tzinfo=None)
-            else:
-                recurring_date = todate(meeting.recurrent_id_date)
-            rset1.exdate(recurring_date)
+
+        # We handle a maximum of 50,000 meetings at a time, and clear the cache at each step to
+        # control the memory usage.
+        invalidate = False
+        for meetings in self.env.cr.split_for_in_conditions(recurring_meetings, size=50000):
+            if invalidate:
+                self.invalidate_cache()
+            for meeting in meetings:
+                recurring_date = fields.Datetime.from_string(meeting.recurrent_id_date)
+                if use_naive_datetime:
+                    recurring_date = recurring_date.replace(tzinfo=None)
+                else:
+                    recurring_date = todate(meeting.recurrent_id_date)
+                rset1.exdate(recurring_date)
+            invalidate = True
         return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1]
 
     @api.multi
@@ -1148,6 +1156,7 @@ class Meeting(models.Model):
         def key(record):
             # we need to deal with undefined fields, as sorted requires an homogeneous iterable
             def boolean_product(x):
+                x = False if (isinstance(x, models.Model) and not x) else x
                 if isinstance(x, bool):
                     return (x, x)
                 return (True, x)
