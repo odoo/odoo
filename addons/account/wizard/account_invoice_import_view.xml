@@ -7,17 +7,12 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <group>
-                            <field name="journal_id" context="{'default_type': 'purchase'}"/>
-                        </group>
-                    </group>
-                    <group>
                         <field name="attachment_ids" widget="many2many_binary" colspan="2"
                                string="Upload Files" nolabel="1"/>
                     </group>
                     <footer>
                         <button string="Import" name="create_invoices" type="object" class="oe_highlight"/>
-                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
