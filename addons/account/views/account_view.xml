@@ -345,7 +345,7 @@
                                         <field name="loss_account_id"/>
                                     </group>
                                     <group name="group_alias" string="Email your Vendor Bills" attrs="{'invisible': [('type', '!=',  'purchase')]}">
-                                        <label string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                        <label string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}" for="alias_id"/>
                                         <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                             <field name="alias_id" class="oe_read_only oe_inline"/>
                                             <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
@@ -860,7 +860,7 @@
                                 <label for="amount"/>
                                 <div>
                                     <field name="amount" class="oe_inline"/>
-                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
+                                    <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
                                 <field name="journal_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
                             </group>
@@ -882,7 +882,7 @@
                                 <label for="second_amount" string="Amount"/>
                                 <div>
                                     <field name="second_amount" class="oe_inline"/>
-                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
+                                    <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
                                 <field name="second_journal_id" string="Journal" domain="[('company_id', '=', company_id)]" widget="selection"/>
                             </group>
@@ -1105,7 +1105,7 @@
                                     <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
                                     <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
                                         <field name="amount" class="oe_inline" />
-                                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
+                                        <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
                                     </div>
                                 </group>
                                 <group attrs="{'invisible':[('amount_type','=', 'group')]}" groups="account.group_account_user">
@@ -1695,7 +1695,7 @@
                             <div attrs="{'invisible':[('value','=', 'balance')]}" class="o_row">
                                 <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
                                 <field name="value_amount" class="oe_inline"/>
-                                <label string="%" class="oe_inline" attrs="{'invisible':[('value','!=','percent')]}"/>
+                                <span class="o_form_label oe_inline" attrs="{'invisible':[('value','!=','percent')]}">%</span>
                             </div>
                         </group>
                     </group>
@@ -1713,7 +1713,7 @@
                     <div colspan="2" attrs="{'invisible': [('option','!=', 'day_after_invoice_date')]}">
                         <label for="day_of_the_month" string="On the"/>
                         <field name="day_of_the_month" class="oe_inline"/>
-                        <label string="of the month"/>
+                        <span class="o_form_label">of the month</span>
                     </div>
                 </form>
             </field>
@@ -1942,7 +1942,7 @@
                                     <label for="amount" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                     <div attrs="{'invisible':[('amount_type','=', 'group')]}">
                                         <field name="amount" class="oe_inline" />
-                                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
+                                        <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
                                     </div>
                                 </group>
                                 <group attrs="{'invisible':[('amount_type','=', 'group')]}">

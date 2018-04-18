@@ -88,8 +88,8 @@ def valid_att_in_field(arch):
 
 @validate('form')
 def valid_att_in_label(arch):
-    """ ``label`` nodes must have a ``@for`` or a ``@string`` """
-    return not arch.xpath('//label[not(@for or @string)]')
+    """ ``label`` nodes must have a ``@for`` """
+    return not arch.xpath('//label[not(@for)]')
 
 
 @validate('form')

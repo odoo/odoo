@@ -18,7 +18,7 @@ invalid_form = etree.parse(io.BytesIO(b'''\
     <group>
         <div>
             <page></page>
-            <label colspan="True"></label>
+            <label colspan="True" string=""></label>
             <field></field>
         </div>
     </group>
@@ -26,7 +26,7 @@ invalid_form = etree.parse(io.BytesIO(b'''\
         <page>
             <group col="Two">
             <div>
-                <label></label>
+                <label string=""></label>
                 <field colspan="Five"> </field>
                 </div>
             </group>
@@ -42,13 +42,13 @@ valid_form = etree.parse(io.BytesIO(b'''\
     <notebook>
         <page>
             <field name=""></field>
-            <label string=""></label>
+            <label for="" string=""></label>
             <field name=""></field>
         </page>
         <page>
             <group colspan="5" col="2">
                 <label for=""></label>
-                <label string="" colspan="5"></label>
+                <label for="" string="" colspan="5"></label>
             </group>
         </page>
     </notebook>
