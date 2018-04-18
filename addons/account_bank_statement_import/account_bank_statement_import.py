@@ -229,7 +229,7 @@ class AccountBankStatementImport(models.TransientModel):
                 st_vals.pop('transactions', None)
                 for line_vals in filtered_st_lines:
                     line_vals.pop('account_number', None)
-                # Create the satement
+                # Create the statement
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
                 statement_ids.append(BankStatement.create(st_vals).id)
         if len(statement_ids) == 0:
