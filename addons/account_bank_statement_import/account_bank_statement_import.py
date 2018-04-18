@@ -217,7 +217,7 @@ class AccountBankStatementImport(models.TransientModel):
             if len(filtered_st_lines) > 0:
                 # Remove values that won't be used to create records
                 st_vals.pop('transactions', None)
-                # Create the satement
+                # Create the statement
                 st_vals['line_ids'] = [[0, False, line] for line in filtered_st_lines]
                 statement_ids.append(BankStatement.create(st_vals).id)
         if len(statement_ids) == 0:
