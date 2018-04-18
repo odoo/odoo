@@ -146,10 +146,10 @@ FormController.include({
      * @param {Object} activeBarcode: options sent by the field who use barcode features
      * @returns {Deferred}
      */
-    _barcodeSelectedCandidate: function (candidate, record, barcode, activeBarcode) {
+    _barcodeSelectedCandidate: function (candidate, record, barcode, activeBarcode, quantity) {
         var changes = {};
         var candidateChanges = {};
-        candidateChanges[activeBarcode.quantity] = candidate.data[activeBarcode.quantity] + 1;
+        candidateChanges[activeBarcode.quantity] = quantity ? quantity : candidate.data[activeBarcode.quantity] + 1;
         changes[activeBarcode.fieldName] = {
             operation: 'UPDATE',
             id: candidate.id,
@@ -283,15 +283,14 @@ FormController.include({
                     function (reserved) {return barcode.indexOf(reserved) === 0;});
             var hasCommand = false;
             var defs = [];
+            if (! $.contains(target, self.el)) {
+                return;
+            }
             for (var k in self.activeBarcode) {
                 var activeBarcode = self.activeBarcode[k];
                 // Handle the case where there are several barcode widgets on the same page. Since the
                 // event is global on the page, all barcode widgets will be triggered. However, we only
                 // want to keep the event on the target widget.
-                if (! $.contains(target, self.el)) {
-                    continue;
-                }
-
                 var methods = self.activeBarcode[k].commands;
                 var method = prefixed ? methods[barcode] : methods.barcode;
                 if (method) {
@@ -306,6 +305,8 @@ FormController.include({
             }
             return self.alive($.when.apply($, defs)).then(function () {
                 if (!prefixed) {
+                    // remember the barcode scanned for the quantity listener
+                    self.current_barcode = barcode;
                     // redraw the view if we scanned a real barcode (required if
                     // we manually apply the change in JS, e.g. incrementing the
                     // quantity)
@@ -321,6 +322,9 @@ FormController.include({
     _quantityListener: function (event) {
         var character = String.fromCharCode(event.which);
 
+        if (! $.contains(event.target, this.el)) {
+            return;
+        }
         // only catch the event if we're not focused in
         // another field and it's a number
         if (!$(event.target).is('body, .modal') || !/[0-9]/.test(character)) {
@@ -355,9 +359,10 @@ FormController.include({
             title: _t('Set quantity'),
             buttons: [{text: _t('Select'), classes: 'btn-primary', close: true, click: function () {
                 var new_qty = this.$content.find('.o_set_qty_input').val();
-                var values = {};
-                values[activeBarcode.quantity] = parseFloat(new_qty);
-                return self.model.notifyChanges(activeBarcode.candidate.id, values).then(function () {
+                var record = self.model.get(self.handle);
+                return self._barcodeSelectedCandidate(activeBarcode.candidate, record,
+                        self.current_barcode, activeBarcode, parseFloat(new_qty))
+                .then(function () {
                     self.update({}, {reload: false});
                 });
             }}, {text: _t('Discard'), close: true}],
