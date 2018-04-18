@@ -256,6 +256,7 @@ class TestReconciliation(AccountingTestCase):
         self.assertEquals(invoice_record.state, 'paid', 'The invoice should be paid by now')
         invoice_rec_line = invoice_record.move_id.line_ids.filtered(lambda x: x.account_id.reconcile)
         self.assertTrue(invoice_rec_line.reconciled, 'The invoice should be totally reconciled')
+        self.assertTrue(invoice_rec_line.full_reconcile_id, 'The invoice should have a full reconcile number')
         self.assertEquals(invoice_rec_line.amount_residual, 0, 'The invoice should be totally reconciled')
         self.assertEquals(invoice_rec_line.amount_residual_currency, 0, 'The invoice should be totally reconciled')
 
