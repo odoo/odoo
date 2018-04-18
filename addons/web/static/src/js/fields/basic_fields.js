@@ -1197,9 +1197,6 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
     },
-    isSet: function () {
-        return true;
-    },
 });
 
 var FieldBinaryFile = AbstractFieldBinary.extend({

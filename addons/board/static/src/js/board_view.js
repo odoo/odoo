@@ -28,7 +28,7 @@ var BoardController = FormController.extend({
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.viewID = params.viewID;
+        this.customViewID = params.customViewID;
     },
 
     //--------------------------------------------------------------------------
@@ -58,9 +58,9 @@ var BoardController = FormController.extend({
         var board = this.renderer.getBoard();
         var arch = QWeb.render('DashBoard.xml', _.extend({}, board));
         return this._rpc({
-                route: '/web/view/add_custom',
+                route: '/web/view/edit_custom',
                 params: {
-                    view_id: this.viewID,
+                    custom_id: this.customViewID,
                     arch: arch,
                 }
             }).then(dataManager.invalidate.bind(dataManager));
@@ -426,7 +426,7 @@ var BoardView = FormView.extend({
      */
     init: function (viewInfo) {
         this._super.apply(this, arguments);
-        this.controllerParams.viewID = viewInfo.view_id;
+        this.controllerParams.customViewID = viewInfo.custom_view_id;
     },
 });
 

@@ -78,6 +78,7 @@
                         <group string="Applied On">
                             <field name="location_id"/>
                             <field name="warehouse_id" groups="base.group_no_one"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group string="Creates">
                             <field name="location_src_id" attrs="{'required': [('action', '=', 'move')], 'invisible':[('action', '!=', 'move')]}"  domain="[('usage','!=','view')]"/>

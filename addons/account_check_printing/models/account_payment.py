@@ -44,7 +44,7 @@ class AccountPayment(models.Model):
     _inherit = "account.payment"
 
     check_amount_in_words = fields.Char(string="Amount in Words")
-    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
+    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
     check_number = fields.Integer(string="Check Number", readonly=True, copy=False,
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
