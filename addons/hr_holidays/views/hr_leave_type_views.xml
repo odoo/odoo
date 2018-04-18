@@ -32,13 +32,13 @@
                         <group name="leave_request" string="Leave Request">
                             <field name="time_type" groups="base.group_no_one"/>
                             <field name="limit"/>
-                            <field name="sequence" attrs="{'invisible': [('limit', '=', 'False')]}" groups="base.group_no_one"/>
+                            <field name="sequence" attrs="{'invisible': [('limit', '=', False)]}" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
                         </group>
                         <group name="visibility" string="Visibility">
-                            <field name="employee_applicability" widget="radio"/>
+                            <field name="employee_applicability" widget="radio" attrs="{'readonly': [('limit', '=', True)]}"/>
                         </group>
                         <group name="calendar" string="Calendar">
                             <field name="categ_id"/>
