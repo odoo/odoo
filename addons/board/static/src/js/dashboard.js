@@ -172,8 +172,8 @@ var DashBoard = form_common.FormWidget.extend({
             board.columns.push(actions);
         });
         var arch = QWeb.render('DashBoard.xml', board);
-        this.rpc('/web/view/add_custom', {
-            view_id: this.view.fields_view.view_id,
+        this.rpc('/web/view/edit_custom', { // do not forward-port > saas-15
+            custom_id: this.view.fields_view.custom_view_id, // do not forward-port > saas-15
             arch: arch
         }).then(function() {
             data_manager.invalidate();
