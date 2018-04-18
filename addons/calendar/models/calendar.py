@@ -1156,6 +1156,7 @@ class Meeting(models.Model):
         def key(record):
             # we need to deal with undefined fields, as sorted requires an homogeneous iterable
             def boolean_product(x):
+                x = False if (isinstance(x, models.Model) and not x) else x
                 if isinstance(x, bool):
                     return (x, x)
                 return (True, x)
