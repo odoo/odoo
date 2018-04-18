@@ -138,6 +138,8 @@ class AccountBankStatement(models.Model):
     date_done = fields.Datetime(string="Closed On")
     balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
+    accounting_date = fields.Date(string="Accounting Date", help="If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
+        "This is useful if the accounting period in which the entries should normally be booked is already closed.")
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
@@ -488,7 +490,7 @@ class AccountBankStatementLine(models.Model):
             ref = move_ref + ' - ' + self.ref if move_ref else self.ref
         data = {
             'journal_id': self.statement_id.journal_id.id,
-            'date': self.date,
+            'date': self.statement_id.accounting_date or self.date,
             'ref': ref,
         }
         if self.move_name:
