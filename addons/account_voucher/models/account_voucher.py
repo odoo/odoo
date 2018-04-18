@@ -326,7 +326,7 @@ class AccountVoucher(models.Model):
                             if self.account_date:
                                 ctx['date'] = self.account_date
                             temp['currency_id'] = current_currency.id
-                            temp['amount_currency'] = company_currency.with_context(ctx).compute(tax_vals['amount'], current_currency, round=True)
+                            temp['amount_currency'] = company_currency._convert(tax_vals['amount'], current_currency, line.company_id, self.account_date or fields.Date.today(), round=True)
                         self.env['account.move.line'].create(temp)
 
             self.env['account.move.line'].create(move_line)

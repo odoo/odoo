@@ -1126,7 +1126,7 @@ class AccountInvoice(models.Model):
                 res_amount_currency = total_currency
                 for i, t in enumerate(totlines):
                     if inv.currency_id != company_currency:
-                        amount_currency = company_currency._convert(t[1], inv.currency_id, inv._get_currency_rate_date() or fields.Date.today())
+                        amount_currency = company_currency._convert(t[1], inv.currency_id, inv.company_id, inv._get_currency_rate_date() or fields.Date.today())
                     else:
                         amount_currency = False
 

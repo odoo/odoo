@@ -600,7 +600,7 @@ class AccountMoveLine(models.Model):
             # Convert in currency if we only have one currency and no amount_currency
             if not aml.amount_currency and currency:
                 multiple_currency = True
-                total_amount_currency += aml.company_id.currency_id.with_context(date=aml.date).compute(aml.balance, currency)
+                total_amount_currency += aml.company_id.currency_id._convert(aml.balance, currency, aml.company_id, aml.date)
             # If we still have residual value, it means that this move might need to be balanced using an exchange rate entry
             if aml.amount_residual != 0 or aml.amount_residual_currency != 0:
                 if not to_balance.get(aml.currency_id):
