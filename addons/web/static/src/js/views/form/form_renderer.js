@@ -55,7 +55,7 @@ var FormRenderer = BasicRenderer.extend({
      */
     autofocus: function () {
         if (this.mode === 'readonly') {
-            var firstPrimaryFormButton =  this.$el.find('button.oe_highlight:enabled:visible:first()');
+            var firstPrimaryFormButton =  this.$el.find('button.btn-primary:enabled:visible:first()');
             if (firstPrimaryFormButton.length > 0) {
                 return firstPrimaryFormButton.focus();
             } else {
@@ -345,7 +345,7 @@ var FormRenderer = BasicRenderer.extend({
             folded_buttons = [];
         }
 
-        // Toggle class to tell if the button box is full (LESS requirement)
+        // Toggle class to tell if the button box is full (CSS requirement)
         var full = (visible_buttons.length > nb_buttons);
         $result.toggleClass('o_full', full).toggleClass('o_not_full', !full);
 
@@ -356,10 +356,11 @@ var FormRenderer = BasicRenderer.extend({
 
         // Add the dropdown with folded buttons if any
         if (folded_buttons.length) {
-            $result.append($("<button>", {
-                type: 'button',
-                'class': "btn btn-sm oe_stat_button o_button_more dropdown-toggle",
-                'data-toggle': "dropdown",
+            $result.append(dom.renderButton({
+                attrs: {
+                    class: 'oe_stat_button o_button_more dropdown-toggle',
+                    'data-toggle': 'dropdown',
+                },
                 text: _t("More"),
             }));
 
@@ -392,9 +393,8 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
-        var $button = $('<button>')
-                        .text(node.attrs.string)
-                        .addClass('btn btn-sm btn-default');
+        var $button = this._renderButtonFromNode(node);
+
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
@@ -582,18 +582,9 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderStatButton: function (node) {
-        var $button = $('<button>').addClass('btn btn-sm oe_stat_button');
-        if (node.attrs.icon) {
-            $('<div>')
-                .addClass('fa fa-fw o_button_icon')
-                .addClass(node.attrs.icon)
-                .appendTo($button);
-        }
-        if (node.attrs.string) {
-            $('<span>')
-                .text(node.attrs.string)
-                .appendTo($button);
-        }
+        var $button = this._renderButtonFromNode(node, {
+            extraClass: 'oe_stat_button',
+        });
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
@@ -633,11 +624,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagButton: function (node) {
-        var $button = dom.renderButton({
-            attrs: _.omit(node.attrs, 'icon', 'string'),
-            icon: node.attrs.icon,
-            text: (node.attrs.string || '').replace(/_/g, ''),
-        });
+        var $button = this._renderButtonFromNode(node);
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);

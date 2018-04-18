@@ -95,7 +95,7 @@ assets may be large, but are seldom needed.  In that case, we sometimes want the
 to be loaded lazily.
 
 The main idea is that we define a set of *bundles* in xml.  A bundle is here defined as
-a collection of files (javascript, css, less). In Odoo, the most important
+a collection of files (javascript, css, scss). In Odoo, the most important
 bundles are defined in the file *addons/web/views/webclient_templates.xml*. It looks
 like this:
 
@@ -119,11 +119,11 @@ directive:
 
 Here is what happens when a template is rendered by the server with these directives:
 
-- all the *less* files described in the bundle are compiled into css files. A file
-  named *file.less* will be compiled in a file named *file.less.css*.
+- all the *scss* files described in the bundle are compiled into css files. A file
+  named *file.scss* will be compiled in a file named *file.scss.css*.
 
 - if we are in *debug=assets* mode,
-    - the *t-call-assets* directive with the *t-js* attribute set to false will 
+    - the *t-call-assets* directive with the *t-js* attribute set to false will
       be replaced by a list of stylesheet tags pointing to the css files
     - the *t-call-assets* directive with the *t-css* attribute set to false will
       be replaced by a list of script tags pointing to the js files
@@ -173,7 +173,7 @@ to add a file from that addon.  In that case, it should be done in three steps:
 
     <template id="assets_backend" name="helpdesk assets" inherit_id="web.assets_backend">
         <xpath expr="//script[last()]" position="after">
-            <link rel="stylesheet" href="/helpdesk/static/src/less/helpdesk.less"/>
+            <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/>
             <script type="text/javascript" src="/helpdesk/static/src/js/helpdesk_dashboard.js"></script>
         </xpath>
     </template>
@@ -308,12 +308,12 @@ The *odoo.define* method is given three arguments:
 If an error happens, it will be logged (in debug mode) in the console:
 
 * ``Missing dependencies``:
-  These modules do not appear in the page. It is possible that the JavaScript 
+  These modules do not appear in the page. It is possible that the JavaScript
   file is not in the page or that the module name is wrong
 * ``Failed modules``:
   A javascript error is detected
 * ``Rejected modules``:
-  The module returns a rejected deferred. It (and its dependent modules) is not 
+  The module returns a rejected deferred. It (and its dependent modules) is not
   loaded.
 * ``Rejected linked modules``:
   Modules who depend on a rejected module
@@ -1160,7 +1160,7 @@ to be translated.  The way it currently works is the following:
   is found.
 
 Note that translations are explained in more details, from the server point of
-view, in the document :doc:`translations`. 
+view, in the document :doc:`translations`.
 
 There are two important functions for the translations in javascript: *_t* and
 *_lt*.  The difference is that *_lt* is lazily evaluated.
@@ -1595,7 +1595,7 @@ order.
     - current_value: get the current_value from the field that must be present in the view
     - max_value: get the max_value from the field that must be present in the view
     - edit_max_value: boolean if the max_value is editable
-    - title: title of the bar, displayed on top of the bar --> not translated, 
+    - title: title of the bar, displayed on top of the bar --> not translated,
       use parameter (not option) "title" instead
 
     .. code-block:: xml

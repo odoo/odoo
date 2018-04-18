@@ -50,8 +50,9 @@ var FormController = BasicController.extend({
     autofocus: function () {
         if (!this.disableAutofocus) {
             var isControlActivted = this.renderer.autofocus();
-            if (!isControlActivted) { 
-                // this can happen in read mode if there are no button with class oe_highlight
+            if (!isControlActivted) {
+                // this can happen in read mode if there are no buttons with
+                // btn-primary class
                 if (this.$buttons && this.mode === 'readonly') {
                     return this.$buttons.find('.o_form_button_edit').focus();
                 }
@@ -239,7 +240,7 @@ var FormController = BasicController.extend({
     /**
      * Assign on the buttons save and discard additionnal behavior to facilitate
      * the work of the users doing input only using the keyboard
-     * 
+     *
      * @param {jQueryElement} $saveCancelButtonContainer  The div containing the
      * save and cancel buttons
      * @private
@@ -257,9 +258,7 @@ var FormController = BasicController.extend({
                     self._discardChanges.apply(self);
                     break;
                 case $.ui.keyCode.TAB:
-                    if (!e.shiftKey && 
-                        (e.target.classList.contains("btn-primary") || 
-                         e.target.classList.contains("oe_highlight"))) {
+                    if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
                         $saveCancelButtonContainer.tooltip('show');
                         e.preventDefault();
                     }
@@ -491,11 +490,11 @@ var FormController = BasicController.extend({
      */
     _onDoAction: function (event) {
         var self=this;
-        // A priori, different widgets could write on the "on_success" key. 
+        // A priori, different widgets could write on the "on_success" key.
         // Below we ensure that all the actions required by those widgets
         // are executed in a suitable order before every cycle of destruction.
         var callback = event.data.on_success || function () {};
-        event.data.on_success = function () { 
+        event.data.on_success = function () {
             callback();
             function isDialog (widget) {
                 return (widget instanceof Dialog);
@@ -542,7 +541,7 @@ var FormController = BasicController.extend({
     },
     /**
      * Set the focus on the first primary button of the controller (likely Edit)
-     * 
+     *
      * @private
      * @param {OdooEvent} event
      */
@@ -554,7 +553,7 @@ var FormController = BasicController.extend({
     },
     /**
      * Reset the focus on the control that openned a Dialog after it was closed
-     * 
+     *
      * @private
      * @param {OdooEvent} event
      */

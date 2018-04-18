@@ -29,7 +29,7 @@
                                     </t>
                                 </div>
                                 <t t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodyGraph"/>
-                            </div><div class="container o_kanban_card_manage_pane">
+                            </div><div class="container o_kanban_card_manage_pane dropdown-menu">
                                 <t t-call="JournalManage"/>
                             </div>
                         </div>

@@ -318,7 +318,7 @@
 <t t-name="Sidebar">
     <t t-foreach="widget.sections" t-as="section">
         <div class="btn-group o_dropdown">
-            <button t-if="section.name != 'buttons'" class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button t-if="section.name != 'buttons'" class="o_dropdown_toggler_btn btn btn-sm btn-link btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                 <t t-esc="section.label"/> <span class="caret"/>
             </button>
@@ -1026,7 +1026,7 @@
     <ul class="dropdown-menu o_searchview_autocomplete" role="menu"></ul>
 </t>
 <div t-name="SearchView.FilterMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+    <button class="o_dropdown_toggler_btn btn btn-sm btn-link btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
         <span class="fa fa-filter"/> Filters <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_filters_menu" role="menu">
@@ -1138,7 +1138,7 @@
     </select>
 </t>
 <div t-name="SearchView.GroupByMenu" class="btn-group hidden-xs o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+    <button class="o_dropdown_toggler_btn btn btn-sm btn-link btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
         <span class="fa fa-bars"/> Group By <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_group_by_menu" role="menu">
@@ -1159,7 +1159,7 @@
     </li>
 </t>
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+    <button class="o_dropdown_toggler_btn btn btn-sm btn-link btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
         <span class="fa fa-star"/> Favorites <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_favorites_menu" role="menu">

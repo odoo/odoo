@@ -1,0 +1,455 @@
+///
+/// This file regroups the odoo mixins. They are available in every asset bundle.
+///
+
+// ------------------------------------------------------------------
+// Caret
+// ------------------------------------------------------------------
+@mixin utils-caret-boilerplate {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+}
+
+// ------------------------------------------------------------------
+// Vendor prefixes
+// ------------------------------------------------------------------
+// Flex
+@mixin o-flex-display {
+    display: -ms-flexbox;
+    display: -moz-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+
+    display: flex;
+}
+@mixin o-inline-flex-display {
+    display: -ms-inline-flexbox;
+    display: -moz-inline-box;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+
+    display: inline-flex;
+}
+@mixin o-flex-flow($direction, $wrap) {
+    -ms-flex-flow: $direction $wrap;
+    -moz-flex-flow: $direction $wrap;
+    -webkit-flex-flow: $direction $wrap;
+
+    flex-flow: $direction $wrap;
+}
+@mixin o-flex($grow, $schrink, $basis) {
+    -ms-flex: $grow $schrink $basis;
+    -moz-flex: $grow $schrink $basis;
+    -webkit-box-flex: $grow;
+    -webkit-flex: $grow $schrink $basis;
+
+    flex: $grow $schrink $basis;
+}
+@mixin o-justify-content($justify) {
+    -moz-justify-content: $justify;
+    -webkit-justify-content: $justify;
+
+    justify-content: $justify;
+}
+@mixin o-align-content($align) {
+    -webkit-align-content: $align;
+
+    align-content: $align;
+}
+@mixin o-align-items($align) {
+    -webkit-align-items: $align;
+
+    align-items: $align;
+}
+@mixin o-align-self($align) {
+    -webkit-align-self: $align;
+
+    align-self: $align;
+}
+
+// Background-size
+@mixin o-background-size($size) {
+    -webkit-background-size: $size;
+    -moz-background-size: $size;
+    -o-background-size: $size;
+    background-size: $size;
+}
+
+// ------------------------------------------------------------------
+// Select Appearance
+// ------------------------------------------------------------------
+@mixin o-appearance($value) {
+    -webkit-appearance: $value;
+    -moz-appearance: $value;
+    appearance: $value;
+}
+
+// ------------------------------------------------------------------
+// Transform
+// ------------------------------------------------------------------
+@mixin o-transform-origin($x: 50%, $y: 50%, $z: 0) {
+    -ms-transform-origin: $x $y $z;
+    -webkit-transform-origin: $x $y $z;
+    -moz-transform-origin: $x $y $z;
+    transform-origin: $x $y $z;
+}
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+@mixin o-animation($name: none, $duration: 0s, $timing-function: ease, $delay: 0s, $iteration-count: 1, $direction: normal, $fill-mode: none, $play-state: running) {
+    -webkit-animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
+    -moz-animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
+    -o-animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
+    animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
+}
+
+// ------------------------------------------------------------------
+// Transition
+// ------------------------------------------------------------------
+@mixin o-transition($property: all, $duration: 0s, $timing-function: ease, $transition-delay: 0s) {
+    -webkit-transition: $property $duration $timing-function $transition-delay;
+    -moz-transition: $property $duration $timing-function $transition-delay;
+    -o-transition: $property $duration $timing-function $transition-delay;
+    transition: $property $duration $timing-function $transition-delay;
+}
+
+// ------------------------------------------------------------------
+// Columns
+// ------------------------------------------------------------------
+@mixin o-columns($width: auto, $col: auto) {
+    -webkit-columns: $width $col;
+    -moz-columns: $width $col;
+    columns: $width $col;
+}
+
+// ------------------------------------------------------------------
+// Position absolute
+// ------------------------------------------------------------------
+@mixin o-position-absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
+    position: absolute;
+    top: $top;
+    left: $left;
+    bottom: $bottom;
+    right: $right;
+}
+
+// ------------------------------------------------------------------
+// Text overflow
+// ------------------------------------------------------------------
+@mixin o-text-overflow($display: inline-block, $max-width: 100%) {
+    display: $display;
+    max-width: $max-width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top; // To update display context changed by overflow:hidden
+}
+
+// ------------------------------------------------------------------
+// Gradients
+// ------------------------------------------------------------------
+@mixin o-linear-gradient($deg: 45deg, $start-color: #555, $end-color: #333) {
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient($deg, $start-color, $end-color);
+    background-image: -o-linear-gradient($deg, $start-color, $end-color);
+    background-image: linear-gradient($deg, $start-color, $end-color);
+}
+@mixin o-vertical-gradient($startColor: #555, $endColor: #333) {
+    background-color: mix($startColor, $endColor);
+    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor));
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor);
+    background-image: -moz-linear-gradient(top, $startColor, $endColor);
+    background-image: -ms-linear-gradient(top, $startColor, $endColor);
+    background-image: -o-linear-gradient(top, $startColor, $endColor);
+    background-image: linear-gradient(to bottom, $startColor, $endColor);
+}
+@mixin o-skew-gradient($startColor: #555, $endColor: #333) {
+    background-color: $endColor;
+    background: -moz-linear-gradient(135deg, $endColor, $startColor);
+    background: -o-linear-gradient(135deg, $startColor, $endColor);
+    background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor));
+    background: -ms-linear-gradient(top, $startColor, $endColor);
+}
+
+// ------------------------------------------------------------------
+// Transform
+// ------------------------------------------------------------------
+@mixin o-transform($transform) {
+    -webkit-transform: $transform;
+    -moz-transform: $transform;
+    -ms-transform: $transform;
+    -o-transform: $transform;
+    transform: $transform;
+}
+
+// ------------------------------------------------------------------
+// Hovering effects
+// ------------------------------------------------------------------
+@mixin o-hover-opacity($default-opacity: 0.5, $hover-opacity: 1) {
+    opacity: $default-opacity;
+
+    &:hover, &:focus, &.focus {
+        opacity: $hover-opacity;
+    }
+}
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+@function luma($color) {
+    @return ((red($color) * .299) + (green($color) * .587) + (blue($color) * .114)) / 255 * 100%;
+}
+@function o-get-most-contrast($color, $c1, $c2) {
+    $luma: luma($color);
+    @return if(abs($luma - luma($c1)) > abs($luma - luma($c2)), $c1, $c2);
+}
+
+// ------------------------------------------------------------------
+// Padding
+// ------------------------------------------------------------------
+@mixin o-webclient-padding($top: 0px, $right: $o-horizontal-padding, $bottom: 0px, $left: $o-horizontal-padding) {
+    padding-top: $top;
+    padding-right: $right;
+    padding-bottom: $bottom;
+    padding-left: $left;
+}
+
+// ------------------------------------------------------------------
+// Caret
+// ------------------------------------------------------------------
+@mixin o-caret-down($caret-width: $caret-width-base) {
+    @include utils-caret-boilerplate;
+    border-bottom: 0;
+    border-left: $caret-width solid transparent;
+    border-right: $caret-width solid transparent;
+    border-top: $caret-width solid;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+@mixin o-caret-up($caret-width: $caret-width-base) {
+    @include utils-caret-boilerplate;
+    border-bottom: $caret-width solid;
+    border-left: $caret-width solid transparent;
+    border-right: $caret-width solid transparent;
+    border-top: 0;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+@mixin o-caret-left($caret-width: $caret-width-base) {
+    @include utils-caret-boilerplate;
+    border-bottom: $caret-width solid transparent;
+    border-left: 0;
+    border-right: $caret-width solid;
+    border-top: $caret-width solid transparent;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+@mixin o-caret-right($caret-width: $caret-width-base) {
+    @include utils-caret-boilerplate;
+    border-bottom: $caret-width solid transparent;
+    border-left: $caret-width solid;
+    border-right: 0;
+    border-top: $caret-width solid transparent;
+    -moz-transform: scale(0.9999); // Smooth the caret on firefox
+}
+
+// ------------------------------------------------------------------
+// Dropdowns
+// ------------------------------------------------------------------
+@mixin o-selected-li {
+    li {
+        position: relative;
+        > a {
+            color: $o-main-text-color;
+            &:hover {
+                color: darken($o-main-text-color, 10%);
+            }
+        }
+        &.selected {
+            > a {
+                color: darken($o-main-text-color, 10%);
+                font-weight: bold;
+                &:before {
+                    font-family: FontAwesome;
+                    position: absolute;
+                    left: 6px;
+                    content: "\f00c";
+                }
+            }
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Hovering effects
+// ------------------------------------------------------------------
+@mixin o-hover-text-color($default-color: $text-color, $hover-color: $link-color) {
+    color: $default-color;
+
+    &:hover, &:focus, &.focus {
+        color: $hover-color;
+    }
+}
+
+// ------------------------------------------------------------------
+// Mixin to define variations for btn-links and muted btn-links
+// ------------------------------------------------------------------
+@mixin o-btn-link-variant($color, $color-active) {
+    text-transform: none;
+    @include o-hover-text-color($default-color: $color, $hover-color: $color-active);
+
+    &, &:hover, &:focus, &:active, &.active {
+        border-color: transparent;
+        background-color: transparent
+    }
+
+    &.text-muted, .text-muted {
+        @include o-hover-opacity;
+        @include o-hover-text-color($default-color: $text-muted, $hover-color: $color-active);
+    }
+}
+
+// ------- Kanban grouped mixins -------
+@mixin o-kanban-icon($base-opacity: 0.5) {
+    display: block;
+    text-align: center;
+    color: $o-main-text-color;
+    font-size: $font-size-small;
+    cursor: pointer;
+    @include o-hover-opacity($base-opacity);
+}
+@mixin o-kanban-tag-color {
+    @for $size from 1 through length($o-colors) {
+        // Note: the first color is supposed to be invisible if there is a color
+        // field but it is used as a default color when there is no color field
+        &.o_tag_color_#{$size - 1} span {
+            background-color: nth($o-colors, $size);
+        }
+    }
+}
+@mixin o-kanban-record-color {
+    @for $size from 2 through length($o-colors) {
+        // Note: the first color is not defined as it is the 'no color' for kanban
+        .oe_kanban_color_#{$size - 1}::after {
+            background-color: nth($o-colors, $size);
+        }
+    }
+}
+@mixin o-kanban-slim-col {
+    position: relative;
+    @include o-flex(0, 0, auto);
+    margin: 0;
+    padding: 0 floor($o-kanban-group-padding * 0.7);
+    cursor: pointer;
+}
+@mixin o-kanban-header-title {
+    @include o-flex-display;
+    @include o-align-items(center);
+    height: $o-kanban-header-title-height;
+    line-height: 2.2;
+    color: $headings-color;
+}
+@mixin o-kanban-v-title {
+    @include o-position-absolute($o-kanban-inside-vgutter * 2, $left: floor(-$o-kanban-inside-vgutter * 1.2));
+    @include o-transform-origin(left, bottom, $z: 0);
+    @include o-transform(rotate(90deg));
+    overflow: visible;
+    white-space: nowrap;
+    font-size: 15px;
+}
+
+// ------- Kanban records mixins -------
+@mixin o-kanban-record-title($font-size) {
+    color: $headings-color;
+    font-size: $font-size;
+    font-weight: 500;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+@mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
+    margin: -1px -1px auto auto; // compensate border
+    padding: $padding-base/2 $padding-base;
+    border: 1px solid transparent;
+    border-bottom: none;
+    vertical-align: top;
+    color: $text-color;
+
+    &:hover {
+        color: $headings-color;
+    }
+    &:focus, &:active, &:focus:active {
+        outline: none;
+    }
+}
+@mixin o-kanban-dropdown-open {
+    position: relative;
+    background: white;
+    border-color: $gray-lighter-darker;
+    z-index: $zindex-dropdown + 1;
+}
+@mixin o-kanban-dropdown-menu {
+    @include o-position-absolute($right: -1px);
+    margin-top: -1px;
+    border-color: $gray-lighter-darker;
+}
+@mixin o-kanban-colorpicker {
+    max-width: 150px;
+    padding: 3px ($o-dropdown-hpadding - $o-kanban-inner-hmargin) 3px $o-dropdown-hpadding;
+
+    > li {
+        display: inline-block;
+        margin: $o-kanban-inner-hmargin $o-kanban-inner-hmargin 0 0;
+        border: 1px solid white;
+        box-shadow: 0 0 0 1px $gray-lighter-dark;
+
+        > a {
+            display: block;
+
+            &::after {
+                content: "";
+                display: block;
+                width: 20px;
+                height: 15px;
+            }
+        }
+
+        // No Color
+        &:first-child > a {
+            position: relative;
+            &::before {
+                content: "";
+                @include o-position-absolute(-2px, $left: 10px);
+                display: block;
+                width: 1px;
+                height: 20px;
+                @include rotate(45deg);
+                background-color: red;
+            }
+            &::after {
+                background-color: white;
+            }
+        }
+    }
+}
+
+// Emulate dropdown links
+@mixin o-kanban-dashboard-dropdown-link($link-padding-gap: $o-dropdown-hpadding) {
+    padding: 0;
+
+    > a {
+        margin: auto auto auto (-$link-padding-gap);
+        padding: 3px $link-padding-gap;
+        color: $text-color;
+        display: block;
+
+        &:hover {
+            background-color: $gray-lighter-dark;
+            color: $headings-color;
+        }
+    }
+    &:last-child {
+        margin-bottom: 5px;
+    }
+}

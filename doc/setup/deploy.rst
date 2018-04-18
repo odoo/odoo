@@ -109,9 +109,9 @@ in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
   host    all             all             192.168.1.0/24          md5
 
 in ``/etc/postgresql/9.5/main/postgresql.conf`` set:
-  
+
 .. code-block:: text
-  
+
   listen_addresses = 'localhost,192.168.1.2'
   port = 5432
   max_connections = 80
@@ -171,7 +171,7 @@ SSL Between Odoo and PostgreSQL
 -------------------------------
 
 Since Odoo 11.0, you can enforce ssl connection between Odoo and PostgreSQL.
-in Odoo the db_sslmode control the ssl security of the connection 
+in Odoo the db_sslmode control the ssl security of the connection
 with value choosed out of 'disable', 'allow', 'prefer', 'require', 'verify-ca'
 or 'verify-full'
 
@@ -302,27 +302,27 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
   upstream odoochat {
    server 127.0.0.1:8072;
   }
-  
+
   # http -> https
   server {
      listen 80;
      server_name odoo.mycompany.com;
      rewrite ^(.*) https://$host$1 permanent;
   }
-  
+
   server {
    listen 443;
    server_name odoo.mycompany.com;
    proxy_read_timeout 720s;
    proxy_connect_timeout 720s;
    proxy_send_timeout 720s;
-   
+
    # Add Headers for odoo proxy mode
    proxy_set_header X-Forwarded-Host $host;
    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
    proxy_set_header X-Forwarded-Proto $scheme;
    proxy_set_header X-Real-IP $remote_addr;
-   
+
    # SSL parameters
    ssl on;
    ssl_certificate /etc/ssl/nginx/server.crt;
@@ -331,7 +331,7 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
    ssl_prefer_server_ciphers on;
-   
+
    # log
    access_log /var/log/nginx/odoo.access.log;
    error_log /var/log/nginx/odoo.error.log;
@@ -348,10 +348,10 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
    }
 
    # common gzip
-   gzip_types text/css text/less text/plain text/xml application/xml application/json application/javascript;
+   gzip_types text/css text/scss text/plain text/xml application/xml application/json application/javascript;
    gzip on;
   }
- 
+
 Odoo as a WSGI Application
 ==========================
 
@@ -521,9 +521,9 @@ which will generate a 32 characters pseudorandom printable string.
 Supported Browsers
 ==================
 
-Odoo is supported by multiple browsers for each of its versions. No 
+Odoo is supported by multiple browsers for each of its versions. No
 distinction is made according to the browser version in order to be
-up-to-date. Odoo is supported on the current browser version. The list 
+up-to-date. Odoo is supported on the current browser version. The list
 of the supported browsers by Odoo version is the following:
 
 - **Odoo 9:** IE11, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge

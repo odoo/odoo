@@ -1,34 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="web.less_helpers">
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/variables.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/vendor-prefixes.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/buttons.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/clearfix.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/size.less"/>
-
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/variables.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/utils.less"/>
+    <template id="_assets_utils">
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/_mixins.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
     </template>
 
-    <template id="web.assets_common" name="Common Assets (used in backend interface and website)">
-        <t t-call="web.less_helpers"/>
+    <template id="_assets_primary_variables">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/primary_variables.scss"/>
+    </template>
+
+    <template id="_assets_secondary_variables">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/secondary_variables.scss"/>
+    </template>
+
+    <template id="_assets_helpers">
+        <t t-call="web._assets_utils"/>
+        <t t-call="web._assets_primary_variables"/>
+        <t t-call="web._assets_secondary_variables"/>
+
+        <!-- Bootstrap variables should not be necessary, all pages come with bootstrap in at least one of their -->
+        <!-- bundle and, ideally, these should be available in all assets... with their odoo override. This system -->
+        <!-- however works for now as non-backend and non-frontend assets do not need overriden BS variables yet. -->
+        <link t-if="not no_bs_vars" rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/bootstrap/_variables.scss"/>
+    </template>
+
+    <template id="_assets_backend_helpers">
+        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden.scss"/>
+    </template>
+
+    <template id="_assets_frontend_helpers">
+        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_frontend.scss"/>
+    </template>
+
+    <template id="assets_common" name="Common Assets (used in backend interface and website)">
+        <t t-call="web._assets_helpers"/>
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap-datetimepicker/src/less/_bootstrap-datetimepicker.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap-datetimepicker/src/scss/_bootstrap-datetimepicker.scss"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fonts.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/ui.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/ui_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/navbar.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/mimetypes.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/modal.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/animation.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/rainbow.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/datepicker.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ui.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ui_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/mimetypes.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/modal.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/animation.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/rainbow.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/datepicker.scss"/>
 
         <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
@@ -97,46 +120,45 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
     </template>
 
-    <template id="web.assets_backend" name="Backend Assets (used in backend interface)">
-        <t t-call="web.less_helpers"/>
+    <template id="assets_backend" name="Backend Assets (used in backend interface)">
+        <t t-call="web._assets_backend_helpers"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
 
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/bootstrap_overridden.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient_layout.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient_layout.scss"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/webclient.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/domain_selector.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/model_field_selector.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/progress_bar.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/dropdown.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/dropdown_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/tooltip.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/debug_manager.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/control_panel.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fields.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/fields_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/views.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/pivot_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/graph_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/form_view_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/list_view_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_dashboard.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_examples_dialog.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_column_progressbar.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/kanban_view_mobile.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/web_calendar.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/search_view_extra.less"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/data_export.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/domain_selector.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/model_field_selector.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/progress_bar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/tooltip.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/debug_manager.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/control_panel.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fields.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fields_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/views.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/pivot_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/graph_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/form_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/form_view_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/list_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/list_view_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_dashboard.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_examples_dialog.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_column_progressbar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_view_mobile.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web_calendar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/data_export.scss"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/base_settings.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_settings.scss"/>
         <script type="text/javascript" src="/base/static/src/js/res_config_settings.js"></script>
 
         <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
@@ -252,13 +274,13 @@
 
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/report_backend.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report_backend.scss"/>
     </template>
 
     <template id="web.assets_frontend" name="Website Assets">
-        <t t-call="web.less_helpers"/>
+        <t t-call="web._assets_frontend_helpers"/>
 
-        <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
     </template>

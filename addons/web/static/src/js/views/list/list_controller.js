@@ -232,7 +232,7 @@ var ListController = BasicController.extend({
     },
     /**
      * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard
-     * 
+     *
      * @param {jQueryElement} $createButton  The create button itself
      */
     _assignCreateKeyboardBehavior: function($createButton) {
@@ -249,7 +249,7 @@ var ListController = BasicController.extend({
                     self.renderer.giveFocus();
                     break;
                 case $.ui.keyCode.TAB:
-                    if (!e.shiftKey && (e.target.classList.contains("btn-primary") || e.target.classList.contains("oe_highlight"))) {
+                    if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
                         e.preventDefault();
                         $createButton.tooltip('show');
                     }

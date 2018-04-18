@@ -1,0 +1,20 @@
+.o_graph {
+    .o_graph_svg_container {
+        height: 100%;
+        overflow: auto;
+        svg {
+            background-color: $o-view-background-color;
+        }
+    }
+}
+
+.nvtooltip thead {
+    background-color: transparent;
+}
+
+// ------------------------------------------------------------------
+// Control panel buttons
+// ------------------------------------------------------------------
+.o_graph_measures_list {
+    @include o-selected-li;
+}
