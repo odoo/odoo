@@ -281,7 +281,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         // TODO: test that write // succeeded?
         this.$el.removeClass('oe_import_preview_error oe_import_error');
         this.$el.toggleClass(
-            'oe_import_noheaders',
+            'oe_import_noheaders text-muted',
             !this.$('input.oe_import_has_header').prop('checked'));
         this._rpc({
                 model: 'base_import.import',

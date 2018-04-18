@@ -1,0 +1,109 @@
+.o_web_client .o_export {
+    @include o-flex(1, 1, auto);
+    @include o-flex-display;
+    @include o-flex-flow(column, nowrap);
+    min-height: 0;
+
+    > p, > .row {
+        @include o-flex(0, 0, auto);
+    }
+
+    label {
+        vertical-align: top;
+        font-weight: normal;
+    }
+
+    .o_import_compat, .o_export_format {
+        display: inline-block;
+
+        > div {
+            margin-left: 5px;
+            @include o-inline-flex-display;
+            @include o-align-items(center);
+
+            > label, > input {
+                margin: 0 0 0 5px;
+            }
+        }
+    }
+
+    .o_export_panel {
+        @include o-flex(1, 1, auto);
+        position: relative;
+        min-height: 0;
+
+        > div {
+            height: 100%;
+            @include o-flex-display;
+            @include o-flex-flow(column, nowrap);
+            @include o-justify-content(center);
+
+            &.o_left_panel { // Needed because of chrome
+                @include o-position-absolute($top: 0, $bottom: 0, $left: 0, $right: 57%);
+            }
+            &.o_center_panel { // Needed because of chrome
+                @include o-position-absolute($top: 0, $bottom: 0, $left: 43%, $right: 43%);
+            }
+            &.o_right_panel { // Needed because of chrome
+                @include o-position-absolute($top: 0, $bottom: 0, $left: 57%, $right: 0);
+            }
+
+            > h4, > div {
+                @include o-flex(0, 0, auto);
+            }
+
+            > button {
+                @include o-flex(0, 0, auto);
+                margin-top: 10px;
+            }
+
+            .o_left_field_panel, .o_fields_list {
+                border: 1px solid $o-brand-lightsecondary;
+                overflow: auto;
+                @include o-flex(1, 1, auto);
+                min-height: 0;
+            }
+
+            .o_export_tree_item {
+                cursor: pointer;
+                position: relative;
+                padding-left: 20px;
+                @include user-select(none);
+
+                &.o_selected > .o_tree_column {
+                    background-color: $o-brand-primary;
+                    color: white;
+                }
+
+                .o_expand_parent {
+                    @include o-position-absolute($top: 4px, $left: 5px);
+                }
+                .o_tree_column {
+                    display: block;
+
+                    &.o_required {
+                        border-bottom: 2px solid $o-main-text-color;
+                    }
+                }
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            .o_save_list, .o_exported_lists {
+                @include o-flex-display;
+                @include o-align-items(baseline);
+
+                > label, > button {
+                    margin: 0 0 5px;
+                    @include o-flex(0, 0, auto);
+                }
+                > input, > select {
+                    width: 0;
+                    @include o-flex(1, 0, auto);
+                }
+            }
+        }
+    }
+}

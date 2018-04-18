@@ -9,7 +9,7 @@
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/copy_clipboard.js"></script>
-                <link rel="stylesheet" href="/im_livechat/static/src/less/copy_clipboard.less"/>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/copy_clipboard.scss"/>
             </xpath>
         </template>
 
@@ -148,11 +148,11 @@
             <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
-            <t t-call="web.less_helpers"/>
-            <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat_bootstrap.less"/>
-            <link rel="stylesheet" href="/mail/static/src/less/chat_window.less"></link>
-            <link rel="stylesheet" href="/mail/static/src/less/thread.less"></link>
-            <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat.less"/>
+            <t t-call="web._assets_helpers"/>
+            <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_bootstrap.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/chat_window.scss"></link>
+            <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
+            <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
         </template>
 
         <!-- the js code to initialize the LiveSupport object -->

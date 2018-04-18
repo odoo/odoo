@@ -158,9 +158,9 @@ var Dialog = Widget.extend({
 
     /**
      * Show a dialog
-     * 
+     *
      * @param {Object} options
-     * @param {boolean} options.shouldFocusButtons  if true, put the focus on 
+     * @param {boolean} options.shouldFocusButtons  if true, put the focus on
      * the first button primary when the dialog opens
      */
     open: function (options) {
@@ -194,7 +194,7 @@ var Dialog = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
-        var isFocusSet = this._focusOnClose(); 
+        var isFocusSet = this._focusOnClose();
 
         this._super();
 
@@ -214,7 +214,7 @@ var Dialog = Widget.extend({
         }
     },
     /**
-     * adds the keydown behavior to the dialogs after external files modifies 
+     * adds the keydown behavior to the dialogs after external files modifies
      * its DOM.
      */
     rebindButtonBehavior: function () {
@@ -226,7 +226,7 @@ var Dialog = Widget.extend({
     /**
      * Manages the focus when the dialog closes. The default behavior is to set the focus on the top-most opened popup.
      * The goal of this function is to be overridden by all children of the dialog class.
-     * 
+     *
      * @returns: boolean  should return true if the focus has already been set else false.
      */
     _focusOnClose: function() {
@@ -237,7 +237,7 @@ var Dialog = Widget.extend({
     //--------------------------------------------------------------------------
     /**
      * Moves the focus to the first button primary in the footer of the dialog
-     * 
+     *
      * @private
      * @param {odooEvent} e
      */
@@ -250,17 +250,17 @@ var Dialog = Widget.extend({
         }
     },
     /**
-     * Manages the TAB key on the buttons. If you the focus is on a primary 
+     * Manages the TAB key on the buttons. If you the focus is on a primary
      * button and the users tries to tab to go to the next button, display
      * a tooltip
-     * 
+     *
      * @param {jQueryEvent} e
      * @private
      */
     _onFooterButtonKeyDown: function (e) {
         switch(e.which) {
             case $.ui.keyCode.TAB:
-                if (!e.shiftKey && (e.target.classList.contains("btn-primary") || e.target.classList.contains("oe_highlight"))) {
+                if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
                     e.preventDefault();
                     var $primaryButton = $(e.target);
                     $primaryButton.tooltip({

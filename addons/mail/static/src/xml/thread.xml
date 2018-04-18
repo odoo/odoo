@@ -142,14 +142,14 @@
                     t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.id" title="Mark as Todo"/>
             </div>
-            <div class='o_thread_message_core'>
-                <p t-if="message.display_author" class="o_mail_info">
+            <div class="o_thread_message_core">
+                <p t-if="message.display_author" class="o_mail_info text-muted">
                     <t t-if="message.is_note">
                         Note by
                     </t>
 
                     <strong t-if="message.mailto">
-                        <a class="o_mail_mailto" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
+                        <a class="text-muted" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
                             <t t-esc="message.mailto"/>
                         </a>
                     </strong>

@@ -6703,9 +6703,9 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch:'<form>' +
-                    '<field name="product_ids">' + 
-                        '<tree><field name="partner_type_id"/></tree>' + 
-                        '<form><field name="partner_type_id"/></form>' + 
+                    '<field name="product_ids">' +
+                        '<tree><field name="partner_type_id"/></tree>' +
+                        '<form><field name="partner_type_id"/></form>' +
                     '</field>' +
                 '</form>',
             res_id: 1,
@@ -6723,7 +6723,7 @@ QUnit.module('Views', {
         });
         // Open one2many
         form.$('.o_data_row').click();
-        assert.strictEqual($('.modal-content').length, 1, "a popup window should have opened");       
+        assert.strictEqual($('.modal-content').length, 1, "a popup window should have opened");
         // Click on many2one and trigger do_action
         $('.modal-content a[name="partner_type_id"]').click();
         assert.strictEqual($('.modal-content').length, 0, "the popup window should have closed");
@@ -6749,14 +6749,14 @@ QUnit.module('Views', {
             data: this.data,
             arch:'<form>' +
                         '<field name="p">' +
-                            '<tree><field name="display_name"/></tree>' + 
+                            '<tree><field name="display_name"/></tree>' +
                         '</field>' +
                 '</form>',
             archs: {
                 'partner,false,form': '<form><field name="product_ids">' +
                                             '<tree><field name="partner_type_id"/></tree>' +
                                             '<form><field name="partner_type_id"/></form>' +
-                                        '</field></form>', 
+                                        '</field></form>',
             },
             res_id: 1,
             mockRPC: function (route, args) {
@@ -6874,8 +6874,8 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                     '<field name="state" invisible="1"/>' +
                     '<header>' +
-                        '<button name="post" class="oe_highlight firstButton" string="Confirm" type="object"/>' +
-                        '<button name="post" class="oe_highlight secondButton" string="Confirm2" type="object"/>' +
+                        '<button name="post" class="btn-primary firstButton" string="Confirm" type="object"/>' +
+                        '<button name="post" class="btn-primary secondButton" string="Confirm2" type="object"/>' +
                     '</header>' +
                     '<sheet>' +
                         '<group>' +
@@ -6907,8 +6907,8 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                     '<field name="state" invisible="1"/>' +
                     '<header>' +
-                        '<button name="post" class="oe_highlight firstButton" string="Confirm" type="object"/>' +
-                        '<button name="post" class="oe_highlight secondButton" string="Confirm2" type="object"/>' +
+                        '<button name="post" class="btn-primary firstButton" string="Confirm" type="object"/>' +
+                        '<button name="post" class="btn-primary secondButton" string="Confirm2" type="object"/>' +
                     '</header>' +
                     '<sheet>' +
                         '<group>' +
@@ -6946,14 +6946,14 @@ QUnit.module('Views', {
                         '</group>' +
                     '</sheet>' +
                 '</form>',
-            res_id: 2,           
+            res_id: 2,
             //debug:1,
         });
         assert.strictEqual(form.$buttons.find('.o_form_button_edit')[0],document.activeElement,
-                        "in read mode, when there are no primary buttons on the form, the default button with the focus should be edit");        
+                        "in read mode, when there are no primary buttons on the form, the default button with the focus should be edit");
         form.destroy();
     });
-    
+
     QUnit.test('In Edition mode, when an attribute is dynamically required (and not required), TAB should navigate to the next field', function (assert) {
         assert.expect(1);
 
@@ -7040,7 +7040,7 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {
                 mode: 'edit',
-            },            
+            },
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
                     assert.ok(true, "should call the /create route");
@@ -7066,7 +7066,7 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {
                 mode: 'edit',
-            },            
+            },
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
                     assert.ok(true, "should call the /create route");
@@ -7092,7 +7092,7 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {
                 mode: 'edit',
-            },            
+            },
             mockRPC: function (route, args) {
                 if (args.method === 'default_get') {
                     assert.ok(true, "should call the /create route");
@@ -7118,7 +7118,7 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {
                 mode: 'edit',
-            },            
+            },
             mockRPC: function (route, args) {
                 if (args.method === 'default_get') {
                     assert.ok(true, "should call the /create route");
