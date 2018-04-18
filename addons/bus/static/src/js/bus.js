@@ -14,7 +14,7 @@ var MASTER_TAB_HEARTBEAT_PERIOD = 1500;  // 1.5 second
 bus.ERROR_DELAY = 10000;
 
 bus.Bus = Widget.extend({
-    init: function(){
+    init: function () {
         var self = this;
         this._super();
         this.options = {};
@@ -37,8 +37,8 @@ bus.Bus = Widget.extend({
         $(window).on("focus." + this.bus_id, _.bind(this.focus_change, this, true));
         $(window).on("blur." + this.bus_id, _.bind(this.focus_change, this, false));
         $(window).on("unload." + this.bus_id, _.bind(this.focus_change, this, false));
-        _.each('click,keydown,keyup'.split(','), function(evtype) {
-            $(window).on(evtype + "." + self.bus_id, function() {
+        _.each('click,keydown,keyup'.split(','), function (evtype) {
+            $(window).on(evtype + "." + self.bus_id, function () {
                 self.last_presence = new Date().getTime();
             });
         });
@@ -48,22 +48,22 @@ bus.Bus = Widget.extend({
         $(window).off("focus." + this.bus_id);
         $(window).off("blur." + this.bus_id);
         $(window).off("unload." + this.bus_id);
-        _.each('click,keydown,keyup'.split(','), function(evtype) {
+        _.each('click,keydown,keyup'.split(','), function (evtype) {
             $(window).off(evtype + "." + self.bus_id);
         });
     },
-    start_polling: function(){
-        if(!this.activated){
+    start_polling: function () {
+        if (!this.activated) {
             this.poll();
             this.stop = false;
         }
     },
-    stop_polling: function(){
+    stop_polling: function () {
         this.activated = false;
         this.stop = true;
         this.channels = [];
     },
-    poll: function() {
+    poll: function () {
         var self = this;
         self.activated = true;
         var now = new Date().getTime();
@@ -77,19 +77,28 @@ bus.Bus = Widget.extend({
         }
         var data = {channels: self.channels, last: self.last, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
-        session.rpc('/longpolling/poll', data, {shadow : true, timeout: 60000}).then(function(result) {
+        this._pollRpc = session.rpc('/longpolling/poll', data, {shadow : true, timeout: 60000});
+        this._pollRpc.then(function (result) {
+            self._pollRpc = false;
             self.on_notification(result);
-            if(!self.stop){
+            if (!self.stop) {
                 self.poll();
             }
-        }, function(unused, e) {
+        }, function (error, event) {
+            self._pollRpc = false;
             // no error popup if request is interrupted or fails for any reason
-            e.preventDefault();
-            // random delay to avoid massive longpolling
-            setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY + (Math.floor((Math.random()*20)+1)*1000));
+            event.preventDefault();
+            if (error && error.message === "XmlHttpRequestError abort") {
+                if (!self.stop && self.activated) {
+                    self.poll();
+                }
+            } else {
+                // random delay to avoid massive longpolling
+                setTimeout(_.bind(self.poll, self), bus.ERROR_DELAY + (Math.floor((Math.random()*20)+1)*1000));
+            }
         });
     },
-    on_notification: function(notifications) {
+    on_notification: function (notifications) {
         var self = this;
         var notifs = _.map(notifications, function (notif) {
             if (notif.id > self.last) {
@@ -99,15 +108,25 @@ bus.Bus = Widget.extend({
         });
         this.trigger("notification", notifs);
     },
-    add_channel: function(channel){
-        this.channels.push(channel);
-        this.channels = _.uniq(this.channels);
+    add_channel: function (channel) {
+        if (this.channels.indexOf(channel) === -1) {
+            this.channels.push(channel);
+            if (this._pollRpc) {
+                this._pollRpc.abort();
+            }
+        }
     },
-    delete_channel: function(channel){
-        this.channels = _.without(this.channels, channel);
+    delete_channel: function (channel) {
+        var index = this.channels.indexOf(channel);
+        if (index !== -1) {
+            this.channels.splice(index, 1);
+            if (this._pollRpc) {
+                this._pollRpc.abort();
+            }
+        }
     },
     // bus presence : window focus/unfocus
-    focus_change: function(focus) {
+    focus_change: function (focus) {
         this.set("window_focus", focus);
     },
     is_odoo_focused: function () {
@@ -116,11 +135,11 @@ bus.Bus = Widget.extend({
     get_last_presence: function () {
         return this.last_presence;
     },
-    update_option: function(key, value){
+    update_option: function (key, value) {
         this.options[key] = value;
     },
-    delete_option: function(key){
-        if(_.contains(_.keys(this.options), key)){
+    delete_option: function (key) {
+        if (_.contains(_.keys(this.options), key)) {
             delete this.options[key];
         }
     },
@@ -146,7 +165,7 @@ bus.Bus = Widget.extend({
  * - bus.tab_master : generated id of the master tab
  */
 var CrossTabBus = bus.Bus.extend({
-    init: function(){
+    init: function () {
         this._super.apply(this, arguments);
         this.is_master = false;
         this.is_registered = false;
@@ -156,7 +175,7 @@ var CrossTabBus = bus.Bus.extend({
 
         on("storage", this.on_storage.bind(this));
     },
-    start_polling: function(){
+    start_polling: function () {
         var self = this;
         if (!this.is_registered) {
             this.is_registered = true;
@@ -187,8 +206,8 @@ var CrossTabBus = bus.Bus.extend({
             this._super.apply(this, arguments);
         }
      },
-    on_notification: function(notifications){
-        if(this.is_master) { // broadcast to other tabs
+    on_notification: function (notifications) {
+        if (this.is_master) { // broadcast to other tabs
             var last = getItem('bus.last', -1);
             var max_id = Math.max(last, 0);
             var new_notifications = _.filter(notifications, function (notif) {
@@ -211,43 +230,43 @@ var CrossTabBus = bus.Bus.extend({
         // localStorage (avoid race condition)
         var value = e.newValue;
         // notifications changed
-        if(e.key === 'bus.notification'){
+        if (e.key === 'bus.notification') {
             var notifs = JSON.parse(value);
             this.on_notification(notifs);
         }
         // update channels
-        if(e.key === 'bus.channels'){
+        if (e.key === 'bus.channels') {
             this.channels = JSON.parse(value);
         }
         // update options
-        if(e.key === 'bus.options'){
+        if (e.key === 'bus.options') {
             this.options = JSON.parse(value);
         }
         // update focus
-        if(e.key === 'bus.focus'){
+        if (e.key === 'bus.focus') {
             this.set('window_focus', JSON.parse(value));
         }
     },
-    add_channel: function(){
+    add_channel: function () {
         this._super.apply(this, arguments);
         setItem('bus.channels', this.channels);
     },
-    delete_channel: function(){
+    delete_channel: function () {
         this._super.apply(this, arguments);
         setItem('bus.channels', this.channels);
     },
     get_last_presence: function () {
         return getItem('bus.last_presence') || new Date().getTime();
     },
-    update_option: function(){
+    update_option: function () {
         this._super.apply(this, arguments);
         setItem('bus.options', this.options);
     },
-    delete_option: function(){
+    delete_option: function () {
         this._super.apply(this, arguments);
         setItem('bus.options', this.options);
     },
-    focus_change: function(focus) {
+    focus_change: function (focus) {
         this._super.apply(this, arguments);
         setItem('bus.focus', focus);
     },
@@ -304,7 +323,7 @@ var tab_manager = {
             tab_manager.start_election();
         }
 
-        on('storage', function(e) {
+        on('storage', function (e) {
             if (!e) { e = window.event;}
             if (e.key !== tab_manager.masterKey) {
                 return;
@@ -354,7 +373,7 @@ var tab_manager = {
         }
         this.on_heartbeat_callback();
 
-        setTimeout(function(){
+        setTimeout(function () {
             tab_manager.heartbeat();
         }, tab_manager.isMaster ? MASTER_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD);
     },
@@ -398,7 +417,7 @@ var tab_manager = {
 
 // bus singleton, depending of the browser :
 // if supporting LocalStorage, there will be only one tab polling
-if(typeof Storage !== "undefined"){
+if (typeof Storage !== "undefined") {
     bus.bus = new CrossTabBus();
 } else {
     bus.bus = new bus.Bus();
