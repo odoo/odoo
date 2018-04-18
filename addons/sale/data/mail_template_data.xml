@@ -69,7 +69,7 @@ from ${object.company_id.name}.
             <field name="body_html"><![CDATA[<html>
                 <head></head>
                 % set record = ctx.get('record')
-                % set company = record and record.company_id or user.company_id
+                % set company = record and record.company_id or ctx.get('company')
                 <body style="margin: 0; padding: 0;">
                 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
                     <tbody>
