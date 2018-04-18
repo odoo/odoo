@@ -472,6 +472,8 @@ class HttpCase(TransactionCase):
                 _logger.info("Phantom JS return code: %d" % phantom.returncode)
                 if phantom.returncode == -SIGSEGV:
                     _logger.error("Phantom JS has crashed (segmentation fault) during testing; log may not be relevant")
+                elif phantom.returncode < 0:
+                   _logger.error("Phantom JS probably crashed (Phantom JS return code: %d)" % phantom.returncode)
 
             self._wait_remaining_requests()
 
