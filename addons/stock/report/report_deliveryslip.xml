@@ -56,7 +56,27 @@
                     <!-- but it does not feel like the proper way to do it ... -->
                     <t t-set="show_expiration_date" t-value="env['ir.module.module'].search([('state', '=', 'installed'), ('name', '=', 'product_expiry')])"/>
 
-                    <table class="table table-condensed mt48" t-if="o.state!='done'">
+                    <!-- of the following 3 tables, only one of them is displayed at a time  -->
+                    <table class="table table-condensed mt48" t-if="not o.move_line_ids and o.state!='done'">
+                        <thead>
+                            <tr>
+                                <th><strong>Product</strong></th>
+                                <th><strong>Quantity</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <tr t-foreach="lines" t-as="move">
+                                <td><span t-field="move.product_id"/></td>
+                                <td>
+                                    <span t-field="move.product_uom_qty"/>
+                                    <span t-field="move.product_uom"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-condensed mt48" t-if="o.move_line_ids and o.state!='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -66,18 +86,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
-                            <tr t-foreach="lines" t-as="move">
-                                <td><span t-field="move.product_id"/></td>
-                                <th t-if="show_SN_LN">xxx</th>
-                                <th t-if="show_SN_LN and show_expiration_date">xxx</th>
+                            <tr t-foreach="o.move_line_ids" t-as="move_line">
+                                <td><span t-field="move_line.product_id"/></td>
+                                <td t-if="show_SN_LN">
+                                    <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
+                                    <span t-else="">N/A</span>
+                                </td>
+                                <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
+                                <td t-if="show_SN_LN and show_expiration_date">
+                                    <span t-if="expiration_date" t-esc="expiration_date"/>
+                                    <span t-else="">N/A</span>
+                                </td>
                                 <td>
-                                    <span t-field="move.product_uom_qty"/>
-                                    <span t-field="move.product_uom"/>
+                                    <span t-field="move_line.qty_done"/>
+                                    <span t-field="move_line.product_uom_id"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    
                     <table class="table table-condensed mt48" t-if="o.move_line_ids and o.state=='done'">
                         <thead>
                             <tr>
@@ -98,15 +125,15 @@
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
                                 </td>
-                                <th t-if="show_SN_LN">
+                                <td t-if="show_SN_LN">
                                     <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
                                     <span t-else="">N/A</span>
-                                </th>
+                                </td>
                                 <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
-                                <th t-if="show_SN_LN and show_expiration_date">
+                                <td t-if="show_SN_LN and show_expiration_date">
                                     <span t-if="expiration_date" t-esc="expiration_date"/>
                                     <span t-else="">N/A</span>
-                                </th>
+                                </td>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
@@ -114,6 +141,7 @@
                             </tr>
                         </tbody>
                     </table>
+
                     <p>
                         <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
                             All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
