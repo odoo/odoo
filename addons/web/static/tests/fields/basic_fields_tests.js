@@ -321,6 +321,43 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('boolean field in editable list view is clickable', function (assert) {
+        assert.expect(4);
+
+        // Only to simplify the test and debugging
+        this.data.partner.records = this.data.partner.records.slice(0,1);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="bar" /></tree>',
+            mockRPC: function(route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    assert.deepEqual(args.args, [[1], {bar: false}],
+                        'The right values should have been written');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        var checkbox = list.$('.o_list_view .o_field_boolean input');
+
+        assert.equal(checkbox.prop('checked'), true,
+            'Checkbox should be checked');
+
+        assert.equal(checkbox.prop('disabled'), false,
+            'Checkbox should be clickable');
+
+        checkbox.click();
+
+        assert.equal(checkbox.prop('checked'), false,
+            'Checkbox should be unchecked');
+
+        list.$buttons.find('.o_list_button_save').click();
+
+        list.destroy();
+    });
 
     QUnit.module('FieldBooleanButton');
 
