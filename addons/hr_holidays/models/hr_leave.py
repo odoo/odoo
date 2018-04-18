@@ -143,9 +143,7 @@ class HolidaysRequest(models.Model):
         """
         for holiday in self:
             # User is holiday manager and has no manager
-            manager = self.user_has_groups('hr_holidays.group_hr_holidays_manager') \
-                        and not holiday.employee_id.parent_id \
-                        and not holiday.department_id.manager_id
+            manager = self.user_has_groups('hr_holidays.group_hr_holidays_manager')
             holiday.can_approve = (holiday.employee_id.user_id.id != self.env.uid) or manager
 
     @api.onchange('holiday_type')
@@ -412,10 +410,10 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             validation_type = holiday.holiday_status_id.validation_type
             manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
-            if (validation_type in ['manager', 'both']) and (manager and manager != current_employee)\
+            if (validation_type in ['hr', 'both']) and (manager and manager != current_employee)\
               and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('You must be %s manager to approve this leave') % (holiday.employee_id.name))
-            elif validation_type == 'hr' and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+            elif validation_type == 'manager' and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                 raise UserError(_('You must be a Human Resource Manager to approve this Leave'))
 
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
