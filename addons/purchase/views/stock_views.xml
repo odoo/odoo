@@ -21,7 +21,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <!-- Purchase button on orderpoints -->
 
         <record id="view_warehouse_orderpoint_purchase_form" model="ir.ui.view">
@@ -40,4 +40,11 @@
             </field>
         </record>
 
+        <record id="purchase_open_picking" model="ir.actions.act_window">
+            <field name="name">Receptions</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('purchase_id', '=', active_id)]</field>
+        </record>
 </odoo>

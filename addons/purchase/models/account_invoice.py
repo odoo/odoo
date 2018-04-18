@@ -7,12 +7,26 @@ from odoo.tools.float_utils import float_compare
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
+
     purchase_id = fields.Many2one(
         comodel_name='purchase.order',
         string='Add Purchase Order',
         readonly=True, states={'draft': [('readonly', False)]},
         help='Load the vendor bill based on selected purchase order. Several PO can be selected.'
     )
+    vendor_bill_purchase_id = fields.Many2one(
+        comodel_name='purchase.bill.union',
+        string='Auto-Complete'
+    )
+
+    @api.onchange('vendor_bill_purchase_id')
+    def _onchange_bill_purchase_order(self):
+        if not self.vendor_bill_purchase_id:
+            return {}
+        self.purchase_id = self.vendor_bill_purchase_id.purchase_order_id
+        self.vendor_bill_id = self.vendor_bill_purchase_id.vendor_bill_id
+        self.vendor_bill_purchase_id = False
+        return {}
 
     @api.onchange('state', 'partner_id', 'invoice_line_ids')
     def _onchange_allowed_purchase_ids(self):
