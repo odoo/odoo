@@ -19,7 +19,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # The context key allow it to appear
         ctx = self._context
         periods = {}
-        start = datetime.strptime(date_from, "%Y-%m-%d")
+        start = datetime.strptime(date_from, "%Y-%m-%d") - relativedelta(days=1)
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
             periods[str(i)] = {
@@ -86,7 +86,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 WHERE (l.account_id = account_account.id) AND (l.move_id = am.id)
                     AND (am.state IN %s)
                     AND (account_account.internal_type IN %s)
-                    AND (COALESCE(l.date_maturity,l.date) > %s)\
+                    AND (COALESCE(l.date_maturity,l.date) >= %s)\
                     AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
                 AND (l.date <= %s)
                 AND l.company_id IN %s'''
