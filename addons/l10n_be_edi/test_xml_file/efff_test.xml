@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" xmlns:ccts="urn:oasis:names:specification:ubl:schema:xsd:CoreComponentParameters-2" xmlns:stat="urn:oasis:names:specification:ubl:schema:xsd:DocumentStatusCode-1.0" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:udt="urn:un:unece:uncefact:data:draft:UnqualifiedDataTypesSchemaModule:2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+    <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+    <cbc:CustomizationID>1.0</cbc:CustomizationID>
+    <cbc:ProfileID>FFF.BE KOALABOOX 1.0.0</cbc:ProfileID>
+    <cbc:ID>2019/045</cbc:ID>
+    <cbc:CopyIndicator>0</cbc:CopyIndicator>
+    <cbc:IssueDate>2019-01-31</cbc:IssueDate>
+    <cbc:InvoiceTypeCode listURI="http://www.FFF.be/ubl/2.0/cl/gc/BE-InvoiceCode-1.0.gc">380</cbc:InvoiceTypeCode>
+    <cbc:Note></cbc:Note>
+    <cbc:TaxPointDate>2019-01-31</cbc:TaxPointDate>
+    <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+    <cbc:LineCountNumeric>1</cbc:LineCountNumeric>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:EndpointID schemeID="GLN">BE0123456789</cbc:EndpointID>
+            <cac:PartyIdentification>
+                <cbc:ID schemeAgencyName="KBO" schemeAgencyID="BE">123456789</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>The best supplier</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Chemin de Odoo 34</cbc:StreetName>
+                <cbc:CityName>Odoo Ville</cbc:CityName>
+                <cbc:PostalZone>7777</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>The best supplier</cbc:RegistrationName>
+                <cbc:CompanyID>12345689</cbc:CompanyID>
+            </cac:PartyLegalEntity>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cbc:CustomerAssignedAccountID></cbc:CustomerAssignedAccountID>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeAgencyName="Just a customer" schemeAgencyID=""/>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>Just a customer</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:StreetName>Customer Street 5 </cbc:StreetName>
+                <cbc:CityName>Customer City</cbc:CityName>
+                <cbc:PostalZone>6666</cbc:PostalZone>
+                <cac:Country>
+                    <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:Contact>
+                <cbc:Name>Just a customer</cbc:Name>
+                <cbc:Telephone></cbc:Telephone>
+                <cbc:ElectronicMail/>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:PaymentMeans>
+        <cbc:PaymentMeansCode listURI="http://docs.oasis-open.org/ubl/os-UBL-2.0-update/cl/gc/default/PaymentMeansCode-2.0.gc" listName="Payment Means" listID="UN/ECE 4461">1</cbc:PaymentMeansCode>
+        <cbc:PaymentDueDate>2019-02-07</cbc:PaymentDueDate>
+        <cbc:InstructionID>+++000/0000/00505+++</cbc:InstructionID>
+        <cac:PayeeFinancialAccount>
+            <cbc:ID></cbc:ID>
+        </cac:PayeeFinancialAccount>
+    </cac:PaymentMeans>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="EUR">115.67</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="EUR">550.83</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="EUR">115.67</cbc:TaxAmount>
+            <cbc:Percent>21.00</cbc:Percent>
+            <cac:TaxCategory>
+                <cbc:ID schemeName="Duty or tax or fee category" schemeID="UN/EDIFACT 5305">S</cbc:ID>
+                <cbc:Name>03</cbc:Name>
+                <cac:TaxScheme>
+                    <cbc:ID>VAT</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="EUR">550.83</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="EUR">550.83</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="EUR">666.50</cbc:TaxInclusiveAmount>
+        <cbc:PayableAmount currencyID="EUR">666.50</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:Note></cbc:Note>
+        <cbc:InvoicedQuantity>1.0000</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="EUR">550.83</cbc:LineExtensionAmount>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="EUR">115.67</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="EUR">550.83</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="EUR">115.67</cbc:TaxAmount>
+                <cbc:Percent>21.00</cbc:Percent>
+                <cac:TaxCategory>
+                    <cbc:ID schemeName="Duty or tax or fee category" schemeID="UN/EDIFACT 5305">S</cbc:ID>
+                    <cbc:Name>03</cbc:Name>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Description>Loyer du %month% / %year%</cbc:Description>
+            <cbc:Name></cbc:Name>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="EUR">550.83</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+</Invoice>

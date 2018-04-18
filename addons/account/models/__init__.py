@@ -19,4 +19,3 @@ from . import account_cash_rounding
 from . import reconciliation_widget
 from . import account_incoterms
 from . import digest
-from . import account_invoice_import_wizard

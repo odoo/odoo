@@ -16,12 +16,16 @@ class ImportInvoiceImportWizard(models.TransientModel):
 
     @api.multi
     def _create_invoice_from_file(self, attachment):
-        self = self.with_context(default_journal_id= self.journal_id.id)
+        self = self.with_context(default_journal_id=self.journal_id.id)
         invoice_form = Form(self.env['account.invoice'], view='account.invoice_supplier_form')
         invoice = invoice_form.save()
         attachment.write({'res_model': 'account.invoice', 'res_id': invoice.id})
         invoice.message_post(attachment_ids=[attachment.id])
         return invoice
+
+    @api.multi
+    def _create_invoice(self, attachment):
+        return self._create_invoice_from_file(attachment)
 
     @api.multi
     def create_invoices(self):
@@ -33,12 +37,12 @@ class ImportInvoiceImportWizard(models.TransientModel):
 
         invoices = self.env['account.invoice']
         for attachment in self.attachment_ids:
-            invoices += self._create_invoice_from_file(attachment)
+            invoices += self._create_invoice(attachment)
 
         form_view = self.env.context.get('journal_type') == 'purchase' and self.env.ref('account.invoice_supplier_form').id or self.env.ref('account.invoice_form').id
         tree_view = self.env.context.get('journal_type') == 'purchase' and self.env.ref('account.invoice_supplier_tree').id or self.env.ref('account.invoice_tree').id
         action_vals = {
-            'name': _('Invoices'),
+            'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
             'view_type': 'form',
             'res_model': 'account.invoice',
