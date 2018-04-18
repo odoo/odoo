@@ -156,3 +156,12 @@ class TestPurchaseOrder(AccountingTestCase):
         self.invoice.invoice_line_ids[1].quantity = 2.0
         self.invoice.invoice_validate()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')
+
+    def test_03_log_activity_on_decrease_qty(self):
+        self.po = self.PurchaseOrder.create(self.po_vals)
+        self.po.button_confirm()
+        self.po.write({'order_line': [(1, self.po.order_line[0].id, {'product_qty': 2})]})
+        activity = self.env['mail.activity'].search([('res_id', 'in', self.po.picking_ids.ids)])
+        self.assertIsNotNone(activity)
+        self.assertEqual(len(activity), 1)
+        self.assertIn(self.po.picking_ids.id, activity.mapped('res_id'))
