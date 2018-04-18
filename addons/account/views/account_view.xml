@@ -644,6 +644,7 @@
                             <field name="cashbox_end_id" invisible="1"/>
                             <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" widget="selection"/>
                             <field name="date"/>
+                            <field name="accounting_date" groups="base.group_no_one"/>
                             <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
                             <field name="currency_id" invisible="1"/>
                         </group><group>
