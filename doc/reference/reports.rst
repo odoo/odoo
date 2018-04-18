@@ -203,6 +203,10 @@ More parameters can be passed as a query string
     <img t-att-src="'/report/barcode/?
         type=%s&value=%s&width=%s&height=%s'%('QR', 'text', 200, 200)"/>
 
+You can also use string formatting to generate dynamic barcodes.
+.. code-block:: html
+
+    <img class="barcode" t-att-src="'/report/barcode/QR/{{variable}}'"/>
 
 Useful Remarks
 --------------
