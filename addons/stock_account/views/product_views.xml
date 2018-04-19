@@ -74,6 +74,7 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <div name="standard_price_div">
+                            <label for="standard_price"/>
                             <field name="standard_price"
                                 attrs="{'readonly':[('valuation','=','real_time')]}"
                                 widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="pull-left"/>
@@ -97,7 +98,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_stock_product_tree2"/>
             <field name="domain">[('type', '=', 'product'), ('qty_available', '!=', 0)]</field>
-            <field name="context">{}</field>
+            <field name="context">{'company_owned': True}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new product valuation

@@ -40,10 +40,9 @@ class HolidaysType(models.Model):
         ('wheat', 'Wheat'),
         ('ivory', 'Ivory')], string='Color in Report', required=True, default='red',
         help='This color will be used in the leaves summary located in Reporting > Leaves by Department.')
-    limit = fields.Boolean('Allow to Override Limit',
-        help='If you select this check box, the system allows the employees to take more leaves '
-             'than the available ones for this type and will not take them into account for the '
-             '"Remaining Legal Leaves" defined on the employee form.')
+    limit = fields.Boolean('Unlimited',
+        help="If you select this check box, the system will allow the employees to ask"
+             "for leaves without allocating some beforehand")
     active = fields.Boolean('Active', default=True,
         help="If the active field is set to false, it will allow you to hide the leave type without removing it.")
 
@@ -67,7 +66,7 @@ class HolidaysType(models.Model):
     employee_applicability = fields.Selection([('both', 'On Leave As Well As On Allocation'),
                                             ('leave', 'Only On Leave'),
                                             ('allocation', 'Only On Allocation')],
-                                           default='both', string='Available For Employee :',
+                                           default=lambda self: 'leave' if self.limit else 'both', string='Available For Employee :',
                                            help='This leave type will be available on Leave / Allocation request based on selected value')
 
     validity_start = fields.Date("Start Date", default=fields.Date.today(),
@@ -87,6 +86,11 @@ class HolidaysType(models.Model):
             if htype.validity_start and htype.validity_stop and \
                htype.validity_start > htype.validity_stop:
                 raise ValidationError(_("End of validity period should be greater than start of validity period"))
+
+    @api.onchange('limit')
+    def _onchange_limit(self):
+        if self.limit:
+            self.employee_applicability = 'leave'
 
     @api.multi
     @api.depends('validity_start', 'validity_stop', 'limit')

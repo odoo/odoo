@@ -101,14 +101,9 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             hol1_employee_group.action_approve()
         self.assertEqual(hol1_manager_group.state, 'confirm', 'hr_holidays: employee should not be able to validate its own leave request')
 
-        # HrUser validates the employee leave request -> should not work
-        with self.assertRaises(UserError):
-            hol1_user_group.action_approve()
-        self.assertEqual(hol1_manager_group.state, 'confirm', 'hr_holidays: hr user should not be able to validate manager only leaves')
-
-        # HrManager validates the employee leave request
-        hol1_manager_group.action_approve()
-        self.assertEqual(hol1_manager_group.state, 'validate', 'hr_holidays: validates leave request should be in validate state')
+        # HrUser validates the employee leave request -> should work
+        hol1_user_group.action_approve()
+        self.assertEqual(hol1_manager_group.state, 'validate', 'hr_holidays: validated leave request should be in validate state')
 
         # Employee creates a leave request in a no-limit category department manager only
         hol12_employee_group = HolidaysEmployeeGroup.create({
@@ -128,8 +123,12 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             hol12_employee_group.action_approve()
         self.assertEqual(hol12_user_group.state, 'confirm', 'hr_holidays: employee should not be able to validate its own leave request')
 
-        # HrUser validates the employee leave request
-        hol12_user_group.action_approve()
+        # HrUser validates the employee leave request -> should not work
+        with self.assertRaises(UserError):
+            hol12_user_group.action_approve()
+
+        # HrManager validate the employee leave request
+        hol12_manager_group.action_approve()
         self.assertEqual(hol1_user_group.state, 'validate', 'hr_holidays: validates leave request should be in validate state')
 
         # --------------------------------------------------
@@ -328,7 +327,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         with self.assertRaises(UserError):
             hol50.action_approve()
 
-        # Manager should not be able to approve it's own leave
+        # Manager should be able to approve it's own leave
         hol51 = HolidaysEmployeeGroup.sudo(self.user_hrmanager_2_id).create({
             'name': 'Hol51',
             'employee_id': self.employee_hrmanager_2_id,
@@ -338,8 +337,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'number_of_days_temp': 1,
         })
 
-        with self.assertRaises(UserError):
-            hol51.action_approve()
+        hol51.action_approve()
 
         # Unless there is not manager above
         hol52 = HolidaysEmployeeGroup.sudo(self.user_hrmanager_id).create({
