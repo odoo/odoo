@@ -63,6 +63,12 @@ class RecruitmentStage(models.Model):
     fold = fields.Boolean(
         "Folded in Recruitment Pipe",
         help="This stage is folded in the kanban view when there are no records in that stage to display.")
+    legend_blocked = fields.Char(
+        'Red Kanban Label', default=lambda self: _('Blocked'), translate=True, required=True)
+    legend_done = fields.Char(
+        'Green Kanban Label', default=lambda self: _('Ready for Next Stage'), translate=True, required=True)
+    legend_normal = fields.Char(
+        'Grey Kanban Label', default=lambda self: _('In Progress'), translate=True, required=True)
 
     @api.model
     def default_get(self, fields):
@@ -156,6 +162,15 @@ class Applicant(models.Model):
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
     employee_name = fields.Char(related='emp_id.name', string="Employee Name")
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
+    kanban_state = fields.Selection([
+        ('normal', 'Grey'),
+        ('done', 'Green'),
+        ('blocked', 'Red')], string='Kanban State',
+        copy=False, default='normal', required=True)
+    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked')
+    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid')
+    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
+    
 
     @api.depends('date_open', 'date_closed')
     @api.one
@@ -267,6 +282,8 @@ class Applicant(models.Model):
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
+            if 'kanban_state' not in vals:
+                vals['kanban_state'] = 'normal'
             for applicant in self:
                 vals['last_stage_id'] = applicant.stage_id.id
                 res = super(Applicant, self).write(vals)

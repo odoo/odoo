@@ -102,6 +102,10 @@
                             options='{"terminology": "archive"}'/>
                     </button>
                 </div>
+                <field name="kanban_state" widget="kanban_state_selection"/>
+                <field name="legend_normal" invisible="1"/>
+                <field name="legend_blocked" invisible="1"/>
+                <field name="legend_done" invisible="1"/>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -200,6 +204,10 @@
                 <field name="department_id"/>
                 <field name="user_id"/>
                 <field name="stage_id" domain="[]"/>
+                <separator/>
+                <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
+                <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
+                <filter string="In progress" name="in_progress" domain="[('kanban_state', '=', 'normal')]"/>
                 <separator/>
                 <filter string="My Activities" name="activities_my"
                     domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -324,6 +332,12 @@
                                                 <t t-esc="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>
+                                        <div class="o_kanban_state_with_padding">
+                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="legend_normal" invisible="1"/>
+                                            <field name="legend_blocked" invisible="1"/>
+                                            <field name="legend_done" invisible="1"/>
+                                        </div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                     </div>
                                     
@@ -707,6 +721,18 @@
                          <field name="fold"/>
                         <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
+                </group>
+                <group string="Tooltips">
+                    <p class="text-muted" colspan="2">
+                        You can define here the labels that will be displayed for the kanban state instead
+                        of the default labels.
+                    </p>
+                    <label for="legend_normal" string=" " class="o_status"/>
+                    <field name="legend_normal" nolabel="1"/>
+                    <label for="legend_blocked" string=" " class="o_status o_status_red"/>
+                    <field name="legend_blocked" nolabel="1"/>
+                    <label for="legend_done" string=" " class="o_status o_status_green"/>
+                    <field name="legend_done" nolabel="1"/>
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
