@@ -229,6 +229,9 @@ function classToStyle($editable) {
         } else {
             $target.attr('style', style);
         }
+        if (this.nodeName === 'TD' && !this.childNodes.length) {
+            this.innerHTML = '&nbsp;';
+        }
     });
 }
 
