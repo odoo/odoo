@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_inalterability_check" model="ir.ui.view">
+            <field name="name">account.inalterability.check.form</field>
+            <field name="model">account.inalterability.check</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <div>
+                            According to the law in vigor in some countries, Odoo must be able to guarantee the
+                            accounting data are not corrupted and remains in their original and unalterable state.
+                            E.g. this is the case of the CGI 286 I-3 bis certification in France.
+                        </div>
+                    </group>
+                    <group>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>Check your journal entries</td>
+                                    <td>
+                                        <button string="Check" name="check_account_move_hash_integrity" type="object"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Close" class="btn btn-default" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_inalterability_check" model="ir.actions.act_window">
+            <field name="name">Data Inalterability Check</field>
+            <field name="res_model">account.inalterability.check</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_inalterability_check"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="menu_action_view_account_inalterability_check"
+            action="action_view_account_inalterability_check"
+            parent="account.menu_finance_reports"
+            sequence="10"
+            groups="account.group_account_user"/>
+    </data>
+</odoo>

@@ -9,6 +9,28 @@ class ResCompany(models.Model):
 
     l10n_fr_closing_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closings', readonly=True)
 
+    def _create_secure_sequence(self, sequence_fields):
+        """This function creates a no_gap sequence on each companies in self that will ensure
+        a unique number is given to all posted account.move in such a way that we can always
+        find the previous move of a journal entry.
+        """
+        for company in self:
+            vals_write = {}
+            for seq_field in sequence_fields:
+                if not company[seq_field]:
+                    vals = {
+                        'name': 'French Securisation of ' + seq_field + ' - ' + company.name,
+                        'code': 'FRSECUR',
+                        'implementation': 'no_gap',
+                        'prefix': '',
+                        'suffix': '',
+                        'padding': 0,
+                        'company_id': company.id}
+                    seq = self.env['ir.sequence'].create(vals)
+                    vals_write[seq_field] = seq.id
+            if vals_write:
+                company.write(vals_write)
+
     @api.model
     def create(self, vals):
         company = super(ResCompany, self).create(vals)

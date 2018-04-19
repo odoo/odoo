@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_inalterability_check_inherit_form" model="ir.ui.view">
+            <field name="name">account.inalterability.check.inherit.l10n_fr_certification.form</field>
+            <field name="model">account.inalterability.check</field>
+            <field name="inherit_id" ref="account_unalterable.view_account_inalterability_check"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tr[@id='french_certification']" position="before">
+                    <tr>
+                        <td>Check your point of sale orders</td>
+                        <td>
+                            <button string="Check" name="check_pos_order_hash_integrity" type="object"/>
+                        </td>
+                    </tr>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

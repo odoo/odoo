@@ -19,13 +19,11 @@ The module adds following features:
 
     Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)
 """,
-    'depends': ['l10n_fr'],
+    'depends': ['l10n_fr', 'account_unalterable'],
     'installable': True,
     'auto_install': False,
     'application': False,
     'data': [
-        'data/account_move.xml',
-        'views/res_config.xml',
+        'views/inalterability_check_wizard_view.xml',
     ],
-    'post_init_hook': '_setup_inalterability',
 }

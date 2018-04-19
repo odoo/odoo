@@ -16,6 +16,7 @@ class AccountClosing(models.Model):
     in order to compute its own data.
     """
     _name = 'account.sale.closing'
+    _inherit = 'unalterable.fields.mixin'
     _order = 'date_closing_stop desc, sequence_number desc'
 
     name = fields.Char(help="Frequency and unique sequence number", required=True)
@@ -46,13 +47,13 @@ class AccountClosing(models.Model):
 
         if first_move_sequence_number is not False and first_move_sequence_number is not None:
             params['first_move_sequence_number'] = first_move_sequence_number
-            query += '''AND m.l10n_fr_secure_sequence_number > %(first_move_sequence_number)s'''
+            query += '''AND m.unalterable_sequence_number > %(first_move_sequence_number)s'''
         elif date_start:
             #the first time we compute the closing, we consider only from the installation of the module
             params['date_start'] = date_start
             query += '''AND m.date >= %(date_start)s'''
 
-        query += " ORDER BY m.l10n_fr_secure_sequence_number DESC) "
+        query += " ORDER BY m.unalterable_sequence_number DESC) "
         query += '''SELECT array_agg(move_id) AS move_ids,
                            array_agg(line_id) AS line_ids,
                            sum(balance) AS balance
@@ -84,7 +85,7 @@ class AccountClosing(models.Model):
             date_start = previous_closing.create_date
             cumulative_total += previous_closing.cumulative_total
 
-        aml_aggregate = self._query_for_aml(company, first_move.l10n_fr_secure_sequence_number, date_start)
+        aml_aggregate = self._query_for_aml(company, first_move.unalterable_sequence_number, date_start)
 
         total_interval = aml_aggregate['balance'] or 0
         cumulative_total += total_interval
@@ -97,7 +98,7 @@ class AccountClosing(models.Model):
         return {'total_interval': total_interval,
                 'cumulative_total': cumulative_total,
                 'last_move_id': last_move.id,
-                'last_move_hash': last_move.l10n_fr_hash,
+                'last_move_hash': last_move.unalterable_hash,
                 'date_closing_stop': interval_dates['date_stop'],
                 'date_closing_start': date_start,
                 'name': interval_dates['name_interval'] + ' - ' + interval_dates['date_stop'][:10]}
@@ -131,14 +132,6 @@ class AccountClosing(models.Model):
         return {'interval_from': FieldDateTime.to_string(interval_from),
                 'date_stop': FieldDateTime.to_string(date_stop),
                 'name_interval': name_interval}
-
-    @api.multi
-    def write(self, vals):
-        raise UserError(_('Sale Closings are not meant to be written or deleted under any circumstances.'))
-
-    @api.multi
-    def unlink(self):
-        raise UserError(_('Sale Closings are not meant to be written or deleted under any circumstances.'))
 
     @api.model
     def _automated_closing(self, frequency='daily'):

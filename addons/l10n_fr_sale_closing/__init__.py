@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import models
 from odoo import api, SUPERUSER_ID
-from ..l10n_fr_certification.models.res_company import UNALTERABLE_COUNTRIES
+
+from odoo.addons.account_unalterable.models.res_company import UNALTERABLE_COUNTRIES
 
 
 def _setup_inalterability(cr, registry):

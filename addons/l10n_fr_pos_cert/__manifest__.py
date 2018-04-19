@@ -26,8 +26,7 @@ The module adds following features:
     'auto_install': False,
     'application': False,
     'data': [
-        'data/pos_inalterability.xml',
         'views/account_views.xml',
+        'views/inalterability_check_wizard_view.xml',
     ],
-    'post_init_hook': '_setup_inalterability',
 }
