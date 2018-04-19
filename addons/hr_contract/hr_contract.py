@@ -31,11 +31,11 @@ class hr_employee(osv.osv):
 
     _columns = {
         'manager': fields.boolean('Is a Manager'),
-        'medic_exam': fields.date('Medical Examination Date'),
-        'place_of_birth': fields.char('Place of Birth'),
-        'children': fields.integer('Number of Children'),
-        'vehicle': fields.char('Company Vehicle'),
-        'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
+        'medic_exam': fields.date('Medical Examination Date', groups="base.group_hr_user"),
+        'place_of_birth': fields.char('Place of Birth', groups="base.group_hr_user"),
+        'children': fields.integer('Number of Children', groups="base.group_hr_user"),
+        'vehicle': fields.char('Company Vehicle', groups="base.group_hr_user"),
+        'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers", groups="base.group_hr_user"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
         'contract_id': fields.function(_get_latest_contract, string='Current Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
         'contracts_count': fields.function(_contracts_count, type='integer', string='Contracts'),
