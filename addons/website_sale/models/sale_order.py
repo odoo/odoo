@@ -153,7 +153,8 @@ class SaleOrder(models.Model):
         quantity = 0
         order_line = False
         if self.state != 'draft':
-            request.session['sale_order_id'] = None
+            if request.session.sale_order_id:
+                request.session['sale_order_id'] = None
             raise UserError(_('It is forbidden to modify a sales order which is not in draft status'))
         if line_id is not False:
             order_lines = self._cart_find_product_line(product_id, line_id, **kwargs)

@@ -439,8 +439,9 @@ class WebsiteSale(http.Controller):
     def checkout_redirection(self, order):
         # must have a draft sales order with lines at this point, otherwise reset
         if not order or order.state != 'draft':
-            request.session['sale_order_id'] = None
-            request.session['sale_transaction_id'] = None
+            if request.session.sale_order_id or request.session.sale_transaction_id:
+                request.session['sale_order_id'] = None
+                request.session['sale_transaction_id'] = None
             return request.redirect('/shop')
 
         if order and not order.order_line:

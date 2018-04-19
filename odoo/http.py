@@ -1080,10 +1080,12 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         :returns: the new context
         """
         assert self.uid, "The user needs to be logged-in to initialize his context"
-        self.context = request.env['res.users'].context_get() or {}
-        self.context['uid'] = self.uid
-        self._fix_lang(self.context)
-        return self.context
+        context = request.env['res.users'].context_get() or {}
+        context['uid'] = self.uid
+        self._fix_lang(context)
+        if self.context != context:
+            self.context = context
+        return context
 
     def _fix_lang(self, context):
         """ OpenERP provides languages which may not make sense and/or may not

@@ -197,7 +197,8 @@ class Website(models.Model):
 
         if self.env['product.pricelist'].browse(force_pricelist).exists():
             pricelist_id = force_pricelist
-            request.session['website_sale_current_pl'] = pricelist_id
+            if request.session.website_sale_current_pl != pricelist_id:
+                request.session['website_sale_current_pl'] = pricelist_id
             update_pricelist = True
 
         if not self._context.get('pricelist'):
@@ -292,7 +293,8 @@ class Website(models.Model):
                         sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
 
         else:
-            request.session['sale_order_id'] = None
+            if request.session.sale_order_id:
+                request.session['sale_order_id'] = None
             return self.env['sale.order']
 
         return sale_order
@@ -317,9 +319,8 @@ class Website(models.Model):
 
     def sale_reset(self):
         request.session.update({
-            'sale_order_id': False,
-            'sale_transaction_id': False,
-            'website_sale_current_pl': False,
+            k: v for k, v in ['sale_order_id', 'sale_transaction_id', 'website_sale_current_pl']
+            if k not in request.session or request.session[k] != v
         })
 
     @api.model

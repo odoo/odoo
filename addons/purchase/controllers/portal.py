@@ -77,7 +77,8 @@ class CustomerPortal(CustomerPortal):
             limit=self._items_per_page,
             offset=pager['offset']
         )
-        request.session['my_purchases_history'] = orders.ids[:100]
+        if request.session.my_purchases_history != orders.ids[:100]:
+            request.session['my_purchases_history'] = orders.ids[:100]
 
         values.update({
             'date': date_begin,

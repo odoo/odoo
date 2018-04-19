@@ -255,9 +255,10 @@ class WebsiteBlog(http.Controller):
         }
         response = request.render("website_blog.blog_post_complete", values)
 
-        request.session[request.session.sid] = request.session.get(request.session.sid, [])
-        if not (blog_post.id in request.session[request.session.sid]):
-            request.session[request.session.sid].append(blog_post.id)
+        session_blog_posts = request.session.get(request.session.sid, [])
+        if not (blog_post.id in session_blog_posts):
+            session_blog_posts.append(blog_post.id)
+            request.session[request.session.sid] = session_blog_posts
             # Increase counter
             blog_post.sudo().write({
                 'visits': blog_post.visits+1,

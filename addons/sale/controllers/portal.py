@@ -109,7 +109,8 @@ class CustomerPortal(CustomerPortal):
         )
         # search the count to display, according to the pager data
         quotations = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_quotes_history'] = quotations.ids[:100]
+        if request.session.my_quotes_history != quotations.ids[:100]:
+            request.session['my_quotes_history'] = quotations.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -160,7 +161,8 @@ class CustomerPortal(CustomerPortal):
         )
         # content according to pager and archive selected
         orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_orders_history'] = orders.ids[:100]
+        if request.session.my_orders_history != orders.ids[:100]:
+            request.session['my_orders_history'] = orders.ids[:100]
 
         values.update({
             'date': date_begin,

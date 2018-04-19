@@ -148,7 +148,6 @@ def ensure_db(redirect='/web/database/selector'):
         request.session.logout()
         abort_and_redirect(request.httprequest.url)
 
-    request.session.db = db
 
 def module_installed(environment):
     # Candidates module the current heuristic is the /static dir

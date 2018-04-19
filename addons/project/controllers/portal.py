@@ -53,7 +53,8 @@ class CustomerPortal(CustomerPortal):
 
         # content according to pager and archive selected
         projects = Project.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_projects_history'] = projects.ids[:100]
+        if request.session.my_projects_history != projects.ids[:100]:
+            request.session['my_projects_history'] = projects.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -143,7 +144,8 @@ class CustomerPortal(CustomerPortal):
         )
         # content according to pager and archive selected
         tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_tasks_history'] = tasks.ids[:100]
+        if request.session.my_tasks_history != tasks.ids[:100]:
+            request.session['my_tasks_history'] = tasks.ids[:100]
 
         values.update({
             'date': date_begin,

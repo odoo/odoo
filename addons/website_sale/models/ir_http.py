@@ -10,6 +10,6 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _dispatch(cls):
         affiliate_id = request.httprequest.args.get('affiliate_id')
-        if affiliate_id:
+        if affiliate_id and request.session.affiliate_id != int(affiliate_id):
             request.session['affiliate_id'] = int(affiliate_id)
         return super(IrHttp, cls)._dispatch()
