@@ -57,6 +57,8 @@ class Users(models.Model):
 
         # create a welcome message
         user._create_welcome_message()
+        # Auto-subscribe to channels
+        self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
         return user
 
     @api.multi
