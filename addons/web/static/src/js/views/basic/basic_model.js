@@ -347,6 +347,7 @@ var BasicModel = AbstractModel.extend({
         var element = this.localData[id];
         var isNew = this.isNew(id);
         var rollback = 'rollback' in options ? options.rollback : isNew;
+        var initialOffset = element.offset;
         this._visitChildren(element, function (elem) {
             if (rollback && elem._savePoint) {
                 if (elem._savePoint instanceof Array) {
@@ -365,6 +366,7 @@ var BasicModel = AbstractModel.extend({
                 delete elem.tempLimitIncrement;
             }
         });
+        element.offset = initialOffset;
     },
     /**
      * Duplicate a record (by calling the 'copy' route)
