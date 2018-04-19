@@ -540,7 +540,7 @@ var SeoConfigurator = Dialog.extend({
         }
         else{
             preview = new Preview(this, {
-                description: _("You have hidden this page from search results. It won't be indexed by search engines."),
+                description: _t("You have hidden this page from search results. It won't be indexed by search engines."),
             });
         }
         var $preview = this.$('.js_seo_preview');
