@@ -1074,8 +1074,17 @@ take the following attributes:
   (e.g. ``{"user_id": 100}``)
 ``consolidation_exclude``
   name of the field that describe if the task has to be excluded
+<<<<<<< HEAD
   from the consolidation
   if set to true it displays a striped zone in the consolidation line
+=======
+  from the consolidation if set to true it hides the corresponding
+  line and displays a striped zone in the consolidation line
+``color``
+  name of the field that describes the color in which the line should be displayed
+  (default = 0 = o_gantt_color_0 = #F4DCA9)
+
+>>>>>>> [DOC] gantt_view: documents consolidation_exclude and color attributes
 
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
@@ -1093,9 +1102,15 @@ take the following attributes:
 ``drag_resize``
   resizing of the tasks, default is ``true``
 
+<<<<<<< HEAD
 ``progress``
   name of a field providing the completion percentage for the record's event,
   between 0 and 100
+=======
+.. ``progress``
+    name of a field providing the completion percentage for the record's event,
+    between 0 and 100
+>>>>>>> [DOC] gantt_view: documents consolidation_exclude and color attributes
 
 .. _reference/views/diagram:
 
