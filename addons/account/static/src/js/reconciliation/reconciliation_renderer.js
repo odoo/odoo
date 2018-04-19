@@ -745,7 +745,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
         });
         if (invalid.length) {
-            this.do_warn(_("Some fields are undefined"), invalid.join(', '));
+            this.do_warn(_t("Some fields are undefined"), invalid.join(', '));
             return;
         }
         this.trigger_up('create_proposition');
