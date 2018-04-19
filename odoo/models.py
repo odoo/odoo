@@ -2734,6 +2734,7 @@ class BaseModel(object):
                 #  - copy inherited fields iff their original field is copied
                 fields[name] = field.new(
                     inherited=True,
+                    inherited_field=field,
                     related=(parent_field, name),
                     related_sudo=False,
                     copy=field.copy,
@@ -2850,7 +2851,7 @@ class BaseModel(object):
             try:
                 field.setup_full(self)
             except Exception:
-                if partial and field.manual:
+                if partial and field.base_field.manual:
                     # Something goes wrong when setup a manual field.
                     # This can happen with related fields using another manual many2one field
                     # that hasn't been loaded because the comodel does not exist yet.
