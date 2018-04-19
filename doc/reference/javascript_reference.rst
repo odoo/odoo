@@ -1142,6 +1142,84 @@ may need to directly call a controller (available on some route).
         params: { some: kwargs},
     });
 
+Notifications
+==============
+
+The Odoo framework has a standard way to communicate various informations to the
+user: notifications, which are displayed on the top right of the user interface.
+
+There are two types of notifications:
+
+- *notification*: useful to display some feedback.  For example, whenever a user
+  unsubscribed to a channel.
+
+- *warning*: useful to display some important/urgent information.  Typically
+  most kind of (recoverable) errors in the system.
+
+Also, notifications can be used to ask a question to the user without disturbing
+its workflow.  Imagine a phone call received through VOIP: a sticky notification
+could be displayed with two buttons *Accept* and *Decline*.
+
+Notification system
+-------------------
+
+The notification system in Odoo is designed with the following components:
+
+- a *Notification* widget: this is a simple widget that is meant to be created
+  and displayed with the desired information
+
+- a *NotificationService*: a service whose responsability is to create and
+  destroy notifications whenever a request is done (with a custom_event). Note
+  that the web client is a service provider.
+
+- two helper functions in *ServiceMixin*: *do_notify* and *do_warn*
+
+
+Displaying a notification
+-------------------------
+The most common way to display a notification is by using two methods that come
+from the *ServiceMixin*:
+
+- *do_notify(title, message, sticky, className)*:
+    Display a notification of type *notification*.
+
+    - *title*: string. This will be displayed on the top as a title
+
+    - *message*: string, the content of the notification
+
+    - *sticky*: boolean, optional. If true, the notification will stay until the
+      user dismisses it.  Otherwise, the notification will be automatically
+      closed after a short delay.
+
+    - *className*: string, optional.  This is a css class name that will be
+      automatically added to the notification.  This could be useful for styling
+      purpose, even though its use is discouraged.
+
+- *do_warn(title, message, sticky, className)*:
+    Display a notification of type *warning*.
+
+    - *title*: string. This will be displayed on the top as a title
+
+    - *message*: string, the content of the notification
+
+    - *sticky*: boolean, optional. If true, the notification will stay until the
+      user dismisses it.  Otherwise, the notification will be automatically
+      closed after a short delay.
+
+    - *className*: string, optional.  This is a css class name that will be
+      automatically added to the notification.  This could be useful for styling
+      purpose, even though its use is discouraged.
+
+Here are two examples on how to use these methods:
+
+.. code-block:: javascript
+
+    // note that we call _t on the text to make sure it is properly translated.
+    this.do_notify(_t("Success"), _t("Your signature request has been sent."));
+
+    this.do_warn(_t("Error"), _t("Filter name is required."));
+
+
 
 Translation management
 ======================

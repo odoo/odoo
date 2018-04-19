@@ -71,12 +71,12 @@ var NotificationService = AbstractService.extend({
      * @param {string} [params.buttons[0].icon] font-awsome className or image src
      * @returns {Number} notification id
      */
-    notify: function (options) {
+    notify: function (params) {
         if (!this.$el) {
             this.$el = $('<div class="o_notification_manager"/>');
             this.$el.prependTo('body');
         }
-        var notification = this.notifications[++id] = new Notification(this, options);
+        var notification = this.notifications[++id] = new Notification(this, params);
         notification.appendTo(this.$el);
         return id;
     },
