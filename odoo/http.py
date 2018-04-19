@@ -1008,12 +1008,29 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def __getattr__(self, attr):
         return self.get(attr, None)
     def __setattr__(self, k, v):
+        if self._already_set(k, v):
+            return
         if getattr(self, "inited", False):
             try:
                 object.__getattribute__(self, k)
             except:
                 return self.__setitem__(k, v)
         object.__setattr__(self, k, v)
+
+    def __setitem__(self, k, v):
+        if self._already_set(k, v):
+            return
+        super(OpenERPSession, self).__setitem__(k, v)
+
+    def update(self, other, **kwargs):
+        if all(self._already_set(k, v) for k, v in dict(other or {}, **kwargs).items()):
+            return
+        super(OpenERPSession, self).update(other, **kwargs)
+
+    def _already_set(self, k, v):
+        if k in self and v == self[k]:
+            return True
+        return False
 
     def authenticate(self, db, login=None, password=None, uid=None):
         """
@@ -1402,7 +1419,14 @@ class Root(object):
         else:
             response = result
 
-        if httprequest.session.should_save:
+        now = datetime.datetime.now()
+        a_day_ago = (now - datetime.timedelta(days=1))
+
+        outdated = not httprequest.session.save_date or httprequest.session.save_date < a_day_ago
+        should_save = httprequest.session.should_save or outdated
+
+        if should_save:
+            httprequest.session.save_date = now
             if httprequest.session.rotate:
                 self.session_store.delete(httprequest.session)
                 httprequest.session.sid = self.session_store.generate_key()

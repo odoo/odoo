@@ -317,9 +317,9 @@ class Website(models.Model):
 
     def sale_reset(self):
         request.session.update({
-            'sale_order_id': False,
-            'sale_transaction_id': False,
-            'website_sale_current_pl': False,
+            'sale_order_id': None,
+            'sale_transaction_id': None,
+            'website_sale_current_pl': None,
         })
 
     @api.model
