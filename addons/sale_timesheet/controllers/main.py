@@ -302,7 +302,7 @@ class SaleTimesheetController(http.Controller):
 
     def _table_get_empty_so_lines(self, projects):
         """ get the Sale Order Lines having no timesheet but having generated a task or a project """
-        so_lines = projects.sudo().mapped('sale_line_id.order_id.order_line').filtered(lambda sol: sol.is_service)
+        so_lines = projects.sudo().mapped('sale_line_id.order_id.order_line').filtered(lambda sol: sol.is_service and not sol.is_expense)
         return set(so_lines.ids), set(so_lines.mapped('order_id').ids)
 
     # --------------------------------------------------
