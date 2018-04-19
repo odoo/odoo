@@ -19,7 +19,12 @@ python:
   - "2.7"
 
 env:
-  - VERSION="9.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" TESTS="1" WEBSITE_REPO="1"
+  global:
+  - VERSION="9.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
+  matrix:
+  - INCLUDE=applications
+  - INCLUDE=no_applications TESTS="1"
+  - INCLUDE=localization
 
 virtualenv:
   system_site_packages: true
@@ -29,15 +34,23 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
-  - export INCLUDE=$(getaddons.py -m ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons)
+  - rm -rf ${HOME}/${ODOO_REPO#*/}-${VERSION}; ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - export EXCLUDE=hw_scanner,hw_escpos,theme_bootswatch
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
+  - if [ $INCLUDE = 'applications' ]; then
+        export INCLUDE=$(getaddons.py -m --only-applications ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons);
+        find ${HOME} -name __init__.py -exec sed -i  "/import test_crawl/d" {} \; ;
+    elif [ $INCLUDE = 'no_applications' ]; then
+        export INCLUDE=$(getaddons.py -m --exclude-applications --exclude-localization ${HOME}/build/${ODOO_REPO}/addons);
+    elif [ $INCLUDE = 'localization' ]; then
+        export INCLUDE=$(getaddons.py -m --only-localization ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons);
+        find ${HOME} -name __openerp__.py -exec sed -i "/'_auto_install_l10n'/d" {} \; ;
+    fi
   - SERVER_PATH=${HOME}/${ODOO_REPO#*/}-${VERSION}
   - export TRAVIS_BUILD_DIR=${SERVER_PATH}/openerp/addons
   - travis_run_tests
