@@ -216,7 +216,7 @@ class DeliveryCarrier(models.Model):
                 continue
 
             # Not using advanced pricing per destination: override lines
-            if record.delivery_type == 'base_on_rule' and not (record.fixed_price is not False or record.free_if_more_than):
+            if record.delivery_type == 'fixed' and not (record.fixed_price is not False or record.free_if_more_than):
                 record.price_rule_ids.unlink()
 
             # Check that float, else 0.0 is False
