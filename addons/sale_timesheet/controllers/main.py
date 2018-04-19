@@ -151,9 +151,11 @@ class SaleTimesheetController(http.Controller):
         rows_sale_line = {}  # (so, sol) -> [INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted]
         for sale_line_id in empty_line_ids:  # add service SO line having no timesheet
             sale_line_row_key = (map_sol_so.get(sale_line_id), sale_line_id)
-            rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line_id, _('No Sale Order Line')), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line'}] + default_row_vals[:]
             sale_line = map_sol.get(sale_line_id)
-            rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
+            is_milestone = sale_line.product_id.invoice_policy == 'delivery' and sale_line.product_id.service_type == 'manual' if sale_line else False
+            rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line_id, _('No Sale Order Line')), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line', 'is_milestone': is_milestone}] + default_row_vals[:]
+            if not is_milestone:
+                rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
 
         for row_key, row_employee in rows_employee.items():
             sale_line_id = row_key[1]
@@ -162,15 +164,21 @@ class SaleTimesheetController(http.Controller):
             sale_line_row_key = (sale_order_id, sale_line_id)
             if sale_line_row_key not in rows_sale_line:
                 sale_line = map_sol.get(sale_line_id, request.env['sale.order.line'])
-                rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line.id) if sale_line else _('No Sale Order Line'), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line'}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
-                rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
+                is_milestone = sale_line.product_id.invoice_policy == 'delivery' and sale_line.product_id.service_type == 'manual' if sale_line else False
+                rows_sale_line[sale_line_row_key] = [{'label': map_sol_names.get(sale_line.id) if sale_line else _('No Sale Order Line'), 'res_id': sale_line_id, 'res_model': 'sale.order.line', 'type': 'sale_order_line', 'is_milestone': is_milestone}] + default_row_vals[:]  # INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted
+                if not is_milestone:
+                    rows_sale_line[sale_line_row_key][-2] = sale_line.product_uom._compute_quantity(sale_line.product_uom_qty, uom_hour, raise_if_failure=False) if sale_line else 0.0
 
             for index in range(len(rows_employee[row_key])):
                 if index != 0:
                     rows_sale_line[sale_line_row_key][index] += rows_employee[row_key][index]
-                    rows_sale_line[sale_line_row_key][-1] = rows_sale_line[sale_line_row_key][-2] - rows_sale_line[sale_line_row_key][5]
+                    if not rows_sale_line[sale_line_row_key][0].get('is_milestone'):
+                        rows_sale_line[sale_line_row_key][-1] = rows_sale_line[sale_line_row_key][-2] - rows_sale_line[sale_line_row_key][5]
+                    else:
+                        rows_sale_line[sale_line_row_key][-1] = 0
 
         rows_sale_order = {}  # so -> [INFO, before, M1, M2, M3, Done, M3, M4, M5, After, Forecasted]
+        rows_sale_order_done_sold = dict.fromkeys(set(map_sol_so.values()) | set([None]), dict(sold=0.0, done=0.0))  # SO id -> {'sold':0.0, 'done': 0.0}
         for row_key, row_sale_line in rows_sale_line.items():
             sale_order_id = row_key[0]
             # sale order row
@@ -181,9 +189,16 @@ class SaleTimesheetController(http.Controller):
                 if index != 0:
                     rows_sale_order[sale_order_id][index] += rows_sale_line[row_key][index]
 
+            # do not sum the milestone SO line for sold and done (for remaining computation)
+            if not rows_sale_line[row_key][0].get('is_milestone'):
+                rows_sale_order_done_sold[sale_order_id]['sold'] += rows_sale_line[row_key][-2]
+                rows_sale_order_done_sold[sale_order_id]['done'] += rows_sale_line[row_key][5]
+
         # remaining computation of SO row, as Sold - Done (timesheet total)
-        for sale_order_id, sale_order_row in rows_sale_order.items():
-            sale_order_row[-1] = sale_order_row[-2] - sale_order_row[5]
+        for sale_order_id, done_sold_vals in rows_sale_order_done_sold.items():
+            item = done_sold_vals.get(sale_order_id)
+            if item:
+                rows_sale_order[sale_order_id] = item['sold'] - item['done']
 
         # group rows SO, SOL and their related employee rows.
         timesheet_forecast_table_rows = []

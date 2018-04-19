@@ -78,9 +78,6 @@ var PivotModel = AbstractModel.extend({
             var type = self.fields[measure].type;
             return (type === 'many2one') ? measure + ":count_distinct" : measure;
         });
-        var fields = _.map(other_groupbys, function (field) {
-            return field.split(':')[0];
-        });
 
         var groupbys = [];
 
@@ -94,7 +91,7 @@ var PivotModel = AbstractModel.extend({
                     method: 'read_group',
                     context: self.data.context,
                     domain: header.domain.length ? header.domain : self.data.domain,
-                    fields: [].concat(field, fields, measures),
+                    fields: measures,
                     groupBy: groupBy,
                     lazy: false,
                 });
@@ -270,6 +267,7 @@ var PivotModel = AbstractModel.extend({
             this.data.colGroupBys = params.context.pivot_column_groupby || this.data.colGroupBys;
             this.data.groupedBy = params.context.pivot_row_groupby || this.data.groupedBy;
             this.data.measures = this._processMeasures(params.context.pivot_measures) || this.data.measures;
+            this.defaultGroupedBy = this.data.groupedBy.length ? this.data.groupedBy : this.defaultGroupedBy;
         }
         if ('domain' in params) {
             this.data.domain = params.domain;
@@ -298,7 +296,7 @@ var PivotModel = AbstractModel.extend({
 
             self._updateTree(old_col_root, self.data.main_col.root);
             new_groupby_length = self._getHeaderDepth(self.data.main_col.root) - 1;
-            self.data.main_row.groupbys = old_col_root.groupbys.slice(0, new_groupby_length);
+            self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
         });
     },
     /**
@@ -551,9 +549,6 @@ var PivotModel = AbstractModel.extend({
                 return measure;
             }
         });
-        var fields = _.map(rowGroupBys.concat(colGroupBys), function (field) {
-                        return field.split(':')[0];
-                    }).concat(measures);
 
         for (var i = 0; i < rowGroupBys.length + 1; i++) {
             for (var j = 0; j < colGroupBys.length + 1; j++) {
@@ -567,7 +562,7 @@ var PivotModel = AbstractModel.extend({
                     method: 'read_group',
                     context: self.data.context,
                     domain: self.data.domain,
-                    fields: fields,
+                    fields: measures,
                     groupBy: groupBy,
                     lazy: false,
                 });
