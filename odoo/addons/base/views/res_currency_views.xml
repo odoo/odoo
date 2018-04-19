@@ -171,20 +171,5 @@
             <field name="context">{'active_test': False}</field>
         </record>
 
-        <!-- We override the view res_company here because the action wasn't defined before -->
-        <record id="action_view_company_form_link_2_currencies" model="ir.ui.view">
-            <field name="name">res.company.form</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@id='company_currency']" position="after">
-                    <label for="id" invisible="1"/>
-                    <p class="text-muted">
-                        <a href="" type="action" name="%(base.action_currency_all_form)d">Activate more currencies</a>.
-                    </p>
-                </xpath>
-            </field>
-        </record>
-
     </data>
 </odoo>
