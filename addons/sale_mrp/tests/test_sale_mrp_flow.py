@@ -380,3 +380,28 @@ class TestSaleMrpFlow(common.TransactionCase):
         del_qty = sum(sol.qty_delivered for sol in so.order_line)
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
+
+    def test_log_activity_on_related_picking(self):
+        product_a = self.env.ref('mrp.product_product_computer_desk')
+        order_form = Form(self.env['sale.order'])
+        order_form.partner_id = self.env.ref('base.res_partner_2')
+        with order_form.order_line.new() as line:
+            line.product_id = product_a
+            line.product_uom_qty = 10
+        order = order_form.save()
+        order.action_confirm()
+        self.env['procurement.group'].run_scheduler()
+        mnf_product_a = self.env['mrp.production'].search([('origin', '=', order.name)])
+        self.assertTrue(mnf_product_a, 'Manufacturing order not created.')
+        change_prod_qty_form = Form(self.env['change.production.qty'])
+        change_prod_qty_form.mo_id = mnf_product_a
+        change_prod_qty_form.product_qty = 8
+        change_prod_qty_rec = change_prod_qty_form.save()
+        change_prod_qty_rec.change_prod_qty()
+        activity = self.env['mail.activity'].search([('res_id', '=', order.picking_ids.id)])
+        self.assertIsNotNone(activity)
+        self.assertEquals(activity.res_id, order.picking_ids.id)
+        mnf_product_a.action_cancel()
+        activity = self.env['mail.activity'].search([('res_id', '=', order.picking_ids.id)])
+        self.assertIsNotNone(activity)
+        self.assertIn(order.picking_ids.id, activity.mapped('res_id'))
