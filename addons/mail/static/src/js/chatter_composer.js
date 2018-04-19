@@ -201,14 +201,23 @@ var ChatterComposer = composer.BasicComposer.extend({
         }
 
         var self = this;
-        var recipient_done = $.Deferred();
-        if (this.options.is_log) {
-            recipient_done.resolve([]);
-        } else {
-            var checked_suggested_partners = this.get_checked_suggested_partners();
-            recipient_done = this.check_suggested_partners(checked_suggested_partners);
-        }
-        recipient_done.then(function (partner_ids) {
+        var recipientDoneDef = $.Deferred();
+
+        // any operation on the full-composer will reload the record, so
+        // warn the user that any unsaved changes on the record will be lost.
+        this.trigger_up('discard_record_changes', {
+            proceed: function () {
+                if (self.options.is_log) {
+                    recipientDoneDef.resolve([]);
+                } else {
+                    var checked_suggested_partners = self.get_checked_suggested_partners();
+                    self.check_suggested_partners(checked_suggested_partners)
+                        .then(recipientDoneDef.resolve.bind(recipientDoneDef));
+                }
+            },
+        });
+
+        recipientDoneDef.then(function (partner_ids) {
             var context = {
                 default_parent_id: self.id,
                 default_body: utils.get_text2html(self.$input.val()),
