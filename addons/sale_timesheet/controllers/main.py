@@ -3,6 +3,7 @@
 from ast import literal_eval
 import babel
 from dateutil.relativedelta import relativedelta
+import json
 
 from odoo import http, fields, _
 from odoo.http import request
@@ -24,6 +25,7 @@ class SaleTimesheetController(http.Controller):
         return {
             'html_content': view.render(values),
             'project_ids': projects.ids,
+            'actions': self._plan_prepare_actions(projects),
         }
 
     def _plan_prepare_values(self, projects):
@@ -306,6 +308,17 @@ class SaleTimesheetController(http.Controller):
     # --------------------------------------------------
     # Actions: Stat buttons, ...
     # --------------------------------------------------
+
+    def _plan_prepare_actions(self, projects):
+        actions = []
+        if len(projects) == 1 and not projects.sale_line_id and not projects.tasks.mapped('sale_line_id') and request.env.user.has_group('sales_team.group_sale_salesman'):
+            actions.append({
+                'label': _("Create a Sales Order"),
+                'type': 'action',
+                'action_id': 'sale_timesheet.project_project_action_multi_create_sale_order',
+                'context': json.dumps({'active_id': projects.id}),
+            })
+        return actions
 
     def _plan_get_stat_button(self, projects):
         stat_buttons = []
