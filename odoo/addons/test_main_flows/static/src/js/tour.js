@@ -150,14 +150,14 @@ tour.register('main_flow_tour', {
     extra_trigger: "body:not(:has(table.o_list_view div.o_field_widget[name='product_id'] input))",
     content: _t("Click here to add some lines."),
     position: "bottom",
-}, 
-{ 
+},
+{
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
     extra_trigger: '.o_field_widget[name=bom_line_ids] .o_data_row:nth(1).o_selected_row',
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: "text the_flow.component2",
-}, 
+},
 {
     trigger: ".ui-menu-item > a:contains('the_flow.component2')",
     auto: true,
@@ -640,12 +640,12 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_journal_default_cta] > a[id=configure_bank_journal_link], div[name=bank_journal_default_cta] > a[id=configure_bank_journal_btn]',
+    trigger: 'div[name=bank_journal_default_cta] > a[data-name=action_choose_institution], div[name=bank_journal_default_cta] > a[data-name=action_choose_institution]',
     content: _t('Configure Bank Journal'),
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'button[name=configure_manually]',
+    trigger: '.js_configure_manually',
     content: _t('Enter manual data for bank account'),
     position: 'bottom',
 }, {
@@ -663,7 +663,7 @@ tour.register('main_flow_tour', {
     trigger: ".ui-menu-item > a:contains('the_flow.account')",
     in_modal: false,
 }, {
-    trigger: ".modal-footer .oe_highlight",
+    trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
 }, {
