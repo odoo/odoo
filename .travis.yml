@@ -1,47 +1,50 @@
 language: python
 sudo: false
-cache: pip
+cache:
+  apt: true
+  directories:
+    - $HOME/.cache/pip
 
 python:
   - "3.5"
 
 addons:
   apt:
-# only add the two lines below if you need wkhtmltopdf for your tests
-#    sources:
-#      - pov-wkhtmltopdf
     packages:
       - expect-dev  # provides unbuffer utility
-      - python-lxml  # because pip installation is slow
-      - python-simplejson
-      - python-serial
-      - python-yaml
-#      - wkhtmltopdf  # only add if needed and check the before_install section below
-
-# set up an X server to run wkhtmltopdf.
-#before_install:
-#  - "export DISPLAY=:911.0"
-#  - "sh -e /etc/init.d/xvfb start"
 
 env:
-  - VERSION="11.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" TESTS="1"
+  global:
+  - VERSION="11.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
+  - EXCLUDE="base_gengo,hw_blackbox_be,hw_escpos,hw_proxy,hw_scale,hw_scanner,theme_bootswatch,website_gengo"
+  - WKHTMLTOPDF_VERSION="0.12.4"
+  matrix:
+  - INCLUDE="applications"
+  - INCLUDE="no_applications" TESTS="1"
+  - INCLUDE="localization"
 
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
 
 install:
-  - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
-  - pip install -Ur ${HOME}/maintainer-quality-tools/requirements.txt
-  - pip install -Ur ${HOME}/build/${ODOO_REPO}/requirements.txt
-  - pip install -q QUnitSuite flake8 coveralls pylint
-  - npm install -g less less-plugin-clean-css
-  - (cd ${HOME}/maintainer-quality-tools/travis/ && wget -qO- -t 1 --timeout=240 https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz | tar -xJ --strip-components=2 wkhtmltox/bin/wkhtmltopdf)
   - sed -i "s/'phantomjs'/'disable_phantomjs'/g" ${TRAVIS_BUILD_DIR}/odoo/tests/common.py
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
-  - export INCLUDE=$(getaddons.py -m ${HOME}/build/${ODOO_REPO}/addons)
-  - export EXCLUDE=base_gengo,website_gengo,hw_scanner,hw_escpos,theme_bootswatch,l10n_ae,l10n_ar,l10n_at,l10n_au,l10n_be,l10n_be_hr_payroll,l10n_be_hr_payroll_account,l10n_be_hr_payroll_fleet,l10n_be_intrastat,l10n_be_invoice_bba,l10n_bo,l10n_br,l10n_ca,l10n_ch,l10n_cl,l10n_cn,l10n_cn_small_business,l10n_cn_standard,l10n_co,l10n_cr,l10n_de,l10n_de_skr03,l10n_de_skr04,l10n_do,l10n_ec,l10n_es,l10n_et,l10n_eu_service,l10n_fr,l10n_fr_certification,l10n_fr_fec,l10n_fr_hr_payroll,l10n_fr_pos_cert,l10n_fr_sale_closing,l10n_generic_coa,l10n_gr,l10n_gt,l10n_hn,l10n_hr,l10n_hu,l10n_in,l10n_in_hr_payroll,l10n_in_purchase,l10n_in_sale,l10n_in_schedule6,l10n_in_stock,l10n_it,l10n_jp,l10n_lu,l10n_ma,l10n_multilang,l10n_mx,l10n_nl,l10n_no,l10n_nz,l10n_pa,l10n_pe,l10n_pl,l10n_pt,l10n_ro,l10n_sa,l10n_sg,l10n_si,l10n_syscohada,l10n_th,l10n_tr,l10n_uk,l10n_us,l10n_uy,l10n_ve,l10n_vn
+  - travis_install_nightly
+  - rm -rf ${HOME}/${ODOO_REPO#*/}-${VERSION}; ln -s ${TRAVIS_BUILD_DIR} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
+  - if [ $INCLUDE = 'applications' ]; then
+        export INCLUDE=$(getaddons.py -m --only-applications ${TRAVIS_BUILD_DIR}/odoo/addons ${TRAVIS_BUILD_DIR}/addons);
+        sed -i "/import test_crawl/d" ${TRAVIS_BUILD_DIR}/addons/website/tests/__init__.py ;
+    elif [ $INCLUDE = 'no_applications' ]; then
+        export INCLUDE=$(getaddons.py -m --exclude-applications --exclude-localization ${TRAVIS_BUILD_DIR}/addons);
+    elif [ $INCLUDE = 'localization' ]; then
+        export INCLUDE=$(getaddons.py -m --only-localization ${TRAVIS_BUILD_DIR}/odoo/addons ${TRAVIS_BUILD_DIR}/addons);
+        sed -i "/'_auto_install_l10n'/d" ${TRAVIS_BUILD_DIR}/addons/account/__manifest__.py  ;
+    fi
   - SERVER_PATH=${HOME}/${ODOO_REPO#*/}-${VERSION}
   - export TRAVIS_BUILD_DIR=${SERVER_PATH}/odoo/addons
   - travis_run_tests
