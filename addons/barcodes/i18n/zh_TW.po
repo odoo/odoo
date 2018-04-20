@@ -3,16 +3,16 @@
 # * barcodes
 # 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Martin Trigaux, 2017
 # Michael Yeung, 2017
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: Michael Yeung, 2017\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr "'*' 此非為一個有效的Regex條碼模式，請您確認'.*' ?"
+msgstr "'*' 不是一個有效的正則條碼模式。您的意思是'.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:200
@@ -42,7 +42,7 @@ msgstr ": 大括號只能後跟D序列的N序列"
 #: code:addons/barcodes/models/barcodes.py:198
 #, python-format
 msgid ": empty braces."
-msgstr ": 空的括號"
+msgstr ": 空的括號。"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -53,15 +53,15 @@ msgid ""
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
 "<i>條碼命名規則</i>定義如何識別和歸類條碼。\n"
-"當條碼被掃碼後，它就會關聯到匹配到的<i>第一項<i>規則。\n"
-"模式的語法是正則表達式，如果正則表達式匹配到條碼的前綴，則條碼被匹配。"
+"當條碼被掃碼後，它就會關聯到匹配到的<i>第一條</i>規則，並且有匹配的模式。\n"
+"模式的語法是一般的表達形式，如果一般的表達式匹配條碼的前綴，則條碼被匹配。"
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
-msgstr "一個條碼命名規則定義了POS如何識別和解釋條碼"
+msgstr "一個條碼命名規則定義了POS如何識別和詮釋條碼"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
@@ -78,12 +78,12 @@ msgstr "總是"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr "此條碼命名規則的內部標識碼"
+msgstr "此條碼命名規則的內部標識"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
 msgid "An internal identification of the barcode nomenclature"
-msgstr "條碼命名規則的內部標識"
+msgstr "條碼命名規則的內部識別"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:177
@@ -122,12 +122,12 @@ msgstr "掃瞄到條碼"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Cashier"
-msgstr "收銀櫃台"
+msgstr "收銀櫃檯"
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Click to add a Barcode Nomenclature ."
-msgstr "點選添加條碼命名規則"
+msgstr "點選以添加條碼命名規則。"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -138,13 +138,13 @@ msgstr "客戶"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -156,7 +156,7 @@ msgstr "信用卡"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:359
 #, python-format
 msgid "Discard"
-msgstr "捨棄"
+msgstr "放棄"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -178,7 +178,7 @@ msgstr "EAN-13"
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "EAN-13 to UPC-A"
-msgstr "EAN-13 轉 UPC-A"
+msgstr "EAN-13 轉為 UPC-A"
 
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
@@ -195,7 +195,7 @@ msgstr "編碼"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:301
 #, python-format
 msgid "Error : Barcode command is undefined"
-msgstr ""
+msgstr "錯誤：條碼命令未定義"
 
 #. module: barcodes
 #. openerp-web
@@ -221,26 +221,26 @@ msgstr "HTTP 路由"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新者"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -250,12 +250,12 @@ msgstr "位置"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Lot"
-msgstr ""
+msgstr "批次"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "Never"
-msgstr ""
+msgstr "從不"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_name
@@ -265,7 +265,7 @@ msgstr "條碼命名規則"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Package"
-msgstr ""
+msgstr "包裹"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -277,10 +277,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
-"模式也可以定義為如何數值化，例如重量或者價格也可以被編碼到條碼。\n"
-"它們以 <code>{NNN}</code>表示，在這裡Ｎ用來定義號碼哪兒編碼為數字。\n"
-"浮點數也支持，小數用Ｄ表示，例如<code>{NNNDD}</code>。\n"
-"在這些案例中，在相關記錄的條碼字段<i>必填</i>顯示這些數字為０。"
+"模式也可以定義為如何將數值，例如重量或者價格也可以\n"
+"被編碼到條碼。它們以<code> {NNN}</code>表示，在這裡Ｎ's\n"
+"用來定義號碼哪兒編碼為數字。浮點數也支援而\n"
+"小數用Ｄ's表示，例如<code></code>{NNNDD}。在這些案例中，\n"
+"在相關記錄的條碼字段<i>必填</i>顯示這些數字為\n"
+"０。"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -290,12 +292,12 @@ msgstr "標價產品"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
 msgid "Rule Name"
-msgstr ""
+msgstr "規則名稱"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_rule_ids
 msgid "Rules"
-msgstr ""
+msgstr "規則"
 
 #. module: barcodes
 #. openerp-web
@@ -334,7 +336,7 @@ msgstr "條碼規則列表"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
 msgid "The matched pattern will alias to this barcode"
-msgstr "匹配模式將別名到該條碼"
+msgstr "匹配模式將別名加到該條碼"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:196
@@ -349,21 +351,21 @@ msgstr "條碼模式中有一個語法錯誤"
 msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
-msgstr "這條規則只適用於特殊編碼的條形編碼"
+msgstr "這條規則將只適用於特定編碼的條碼。"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:64
 #, python-format
 msgid "To modify this document, please first start edition."
-msgstr "要修改資料，請先開始編輯"
+msgstr "要修改文檔，請先開始編輯。"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:333
 #, python-format
 msgid "To set the quantity please scan a barcode first."
-msgstr "設定數量前請先掃瞄條碼."
+msgstr "設定數量前請先掃瞄條碼。"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
@@ -403,12 +405,12 @@ msgstr "單位產品"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
-msgstr "用於規則排序，以遞減序列的規則先做處理"
+msgstr "用於規則排序，這樣較小序列的規則最先匹配"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr "前一個掃瞄到的條碼編號"
+msgstr "上次掃瞄到的條碼的值"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -423,7 +425,7 @@ msgstr "barcode.nomenclature"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
 msgid "barcode.rule"
-msgstr ""
+msgstr "barcode.rule"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin

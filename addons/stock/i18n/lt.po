@@ -3,8 +3,9 @@
 # * stock
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Silvija Butko <silvija.butko@gmail.com>, 2017
 # Martin Trigaux, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Anatolij, 2017
@@ -14,7 +15,6 @@
 # Andrius Preimantas <andrius@versada.lt>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
 msgid ""
 msgstr ""
@@ -421,8 +421,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Activate <i>Track lots or serial numbers</i></strong> in your"
 msgstr ""
-"<strong>Aktyvuoti <i>Sekite lot'us iarba serijinius numerius</i></strong> "
-"savo"
+"<strong>Aktyvuokite <i>partijų arba serijinių numerių stebėjimą</i></strong>"
+" savo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1061,7 +1061,7 @@ msgstr "Pagal partiją"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr "Pagal unikalią partiją"
+msgstr "Pagal unikalų serijinį numerį"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:612
@@ -1270,7 +1270,7 @@ msgstr "Paspauskite, norėdami pridėti vietą."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Click to add a lot/serial number."
-msgstr "Paspauskite, norėdami pridėti lot / serijinį numerį."
+msgstr "Paspauskite, norėdami pridėti partiją / serijinį numerį."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1513,7 +1513,7 @@ msgstr "Sukūrimo data"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "Sukurti naujus lot / serijinius numerius"
+msgstr "Sukurti naujas partijas / serijinius numerius"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -3004,7 +3004,7 @@ msgstr "Inventorizuota vieta"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_lot_id
 msgid "Inventoried Lot/Serial Number"
-msgstr "Inventorizuotas lot / serijinis numeris"
+msgstr "Inventorizuota partija / serijinis numeris"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_partner_id
@@ -3560,12 +3560,12 @@ msgstr "Partija/Serijinis :"
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:res.request.link,name:stock.req_link_tracking
 msgid "Lot/Serial Number"
-msgstr "Lot/ / Serijinis numeris"
+msgstr "Partijos / Serijinis numeris"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr "Lot / Serijinio numerio inventorizacija"
+msgstr "Partijos / Serijinio numerio atsargos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_production_lot
@@ -3593,7 +3593,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form_simple
 #: model:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Lots/Serial Numbers"
-msgstr "Lot / Serijiniai numeriai"
+msgstr "Partijos / serijiniai numeriai"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:541
@@ -3628,7 +3628,7 @@ msgstr "Valdyti skirtingus sandėlio savininkus"
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr "Tvarkyti lot / serijinius numerius"
+msgstr "Tvarkyti partijas / serijinius numerius"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
@@ -4067,7 +4067,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:113
 #, python-format
 msgid "One Lot/Serial Number"
-msgstr "Vienas lot / serijinis numeris"
+msgstr "Viena partija / serijinis numeris"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:111
@@ -5626,7 +5626,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
 msgid "Serial Number Name"
-msgstr "Partijos pavadinimas"
+msgstr "Serijinio numerio pavadinimas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_warehouse_id
@@ -6179,7 +6179,7 @@ msgstr "Sandėlio kodas turi būti unikalus įmonėje!"
 #. module: stock
 #: sql_constraint:stock.production.lot:0
 msgid "The combination of serial number and product must be unique !"
-msgstr "Serijnio numerio ir produkto derinys turi būti unikalūs!"
+msgstr "Serijnio numerio ir produkto derinys turi būti unikalus!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_company_id
@@ -6694,7 +6694,7 @@ msgstr "USPS"
 #: model:ir.model.fields,help:stock.field_stock_inventory_line_prodlot_name
 #: model:ir.model.fields,help:stock.field_stock_production_lot_name
 msgid "Unique Lot/Serial Number"
-msgstr "Unikali partija / Serijinis numeris"
+msgstr "Unikali partija / serijinis numeris"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -6838,7 +6838,7 @@ msgstr "Skubu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Naudoti esančias partijas / Serijiniai numeriai"
+msgstr "Naudoti esančias partijas / serijinius numerius"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form

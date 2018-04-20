@@ -647,12 +647,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             res_id: (module, name)
             for res_id, module, name in cr.fetchall()
         }
+        def to_xid(record_id):
+            (module, name) = xids[record_id]
+            return ('%s.%s' % (module, name)) if module else name
 
         # create missing xml ids
         missing = self.filtered(lambda r: r.id not in xids)
         if not missing:
             return (
-                (record, '%s.%s' % xids[record.id])
+                (record, to_xid(record.id))
                 for record in self
             )
 
@@ -681,7 +684,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.env['ir.model.data'].invalidate_cache(fnames=fields)
 
         return (
-            (record, '%s.%s' % xids[record.id])
+            (record, to_xid(record.id))
             for record in self
         )
 

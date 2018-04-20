@@ -4,16 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# Michael Yeung, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Bill Hsu <hcm86@icloud.com>, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +32,7 @@ msgstr "使用者定義目標和目標類型。用挑戰可以自動創建目標
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
-msgstr "所有員工徽章，直接或通過用戶鏈接到員工"
+msgstr "所有僱員勳章，直接與僱員鏈接或者通過使用者鏈接"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -41,24 +40,27 @@ msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
-msgstr "給選定的使用者分配一個目標列表，自動創建目標的挑戰可以是一段時期(每週，每月……)目標是為指定的使用者或者組成員創建的。"
+msgstr ""
+"給選定的使用者分配一個目標列表以進行評核。\n"
+"自動創建目標的挑戰可以是一段時期(每週，每月……)。\n"
+"目標是為指定的使用者或者群組的成員創建的。"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
 msgid "Badges"
-msgstr "勳章"
+msgstr "徽章"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "徽章是對良好的工作的獎勵。授予您認為應得的那些人。"
+msgstr "徽章是對良好工作的獎勵。授予您認為應得的那些人。"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr "與員工直接相關的徽章"
+msgstr "直接與僱員鏈接的徽章"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -75,17 +77,17 @@ msgstr "挑戰"
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid "Click to create a challenge."
-msgstr "點選創建一個挑戰"
+msgstr "點選以創建一個挑戰。"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Click to create a goal."
-msgstr "點選創建一個目標"
+msgstr "點選創建一個目標。"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Click to grant this employee his first badge"
-msgstr "點擊授予該員工首枚徽章"
+msgstr "點選授予該員工首枚徽章"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -95,7 +97,7 @@ msgstr "描述他們做了什麼，以及為什麼它很重要（將公開）"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "直接徽章"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
@@ -117,12 +119,12 @@ msgstr "員工人力資源目標"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "遊戲化勳章"
+msgstr "遊戲化徽章"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr "遊戲化的使用者勳章"
+msgstr "遊戲化的使用者徽章"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
@@ -148,12 +150,12 @@ msgstr "授予"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "授予的員工人數"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
 msgid "Has Badges"
-msgstr ""
+msgstr "擁有徽章"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
@@ -169,7 +171,7 @@ msgstr "需要獎勵的職員"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr "獎勵給職員"
+msgstr "獎勵職員"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/models/gamification.py:18
@@ -180,7 +182,7 @@ msgstr "選中的職員和選中的使用者不一致。"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
 msgid "Users"
-msgstr "用戶"
+msgstr "使用者"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -197,7 +199,7 @@ msgstr "不允許給自己頒發徽章"
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr "只能將徽章授予存在的職員使用者。"
+msgstr "您只能將徽章授予連接至使用者的職員。"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard

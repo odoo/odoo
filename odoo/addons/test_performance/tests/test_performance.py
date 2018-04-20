@@ -185,3 +185,20 @@ class TestPerformance(TransactionCase):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
         model = self.env['test_performance.mail']
         model.create({'name': self.str('Y')})
+
+    @queryCount(admin=5, demo=5)
+    def test_several_prefetch(self):
+        initial_records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(initial_records), 5)
+        for i in range(8):
+            self.env.cr.execute('insert into test_performance_base(value) select value from test_performance_base')
+        records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(records), 1280)
+        self.resetQueryCount()
+        # should only cause 2 queries thanks to prefetching
+        records.mapped('value')
+        records.invalidate_cache(['value'])
+        # should only cause 2 queries thanks to prefetching
+        with self.env.do_in_onchange():
+            records.mapped('value')
+        self.env.cr.execute('delete from test_performance_base where id not in %s', (tuple(initial_records.ids),))
