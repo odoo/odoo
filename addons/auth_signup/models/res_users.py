@@ -82,7 +82,7 @@ class ResUsers(models.Model):
         if 'partner_id' not in values:
             if self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') != 'b2c':
                 raise SignupError(_('Signup is not allowed for uninvited users'))
-        return self._create_user_from_template(values)
+        return self.with_context(no_reset_password=True)._create_user_from_template(values)
 
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
@@ -99,7 +99,7 @@ class ResUsers(models.Model):
         values['active'] = True
         try:
             with self.env.cr.savepoint():
-                return template_user.with_context(no_reset_password=True).copy(values)
+                return template_user.copy(values)
         except Exception as e:
             # copy may failed if asked login is not available.
             raise SignupError(ustr(e))
