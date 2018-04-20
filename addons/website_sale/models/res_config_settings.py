@@ -45,7 +45,12 @@ class ResConfigSettings(models.TransientModel):
         default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
         help="Email sent to customer at the end of the checkout process")
 
-    automatic_invoice = fields.Boolean("Automatic Invoice")
+    automatic_invoice = fields.Boolean("Automatic Invoice",
+                                       help="The invoice is generated automatically and available in the customer portal "
+                                       "when the transaction is confirmed by the payment acquirer.\n"
+                                       "The invoice is marked as paid and the payment is registered in the payment journal "
+                                       "defined in the configuration of the payment acquirer.\n"
+                                       "This mode is advised if you issue the final invoice at the order and not after the delivery.")
 
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
 
