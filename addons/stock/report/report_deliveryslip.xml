@@ -114,7 +114,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_line_ids.filtered(lambda x: x.product_uom_qty)" t-as="move_line">
+                            <tr t-foreach="o.move_line_ids" t-as="move_line">
                                 <td>
                                     <span t-field="move_line.product_id"/>
                                     <p t-if="o.picking_type_code == 'outgoing'">
