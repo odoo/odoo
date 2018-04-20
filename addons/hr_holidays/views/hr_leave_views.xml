@@ -199,6 +199,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="edit_holiday_new_request"/>
+        <field name="context">{}</field>
         <field name="domain">[('user_id', '=', uid)]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
         <field name="help" type="html">
@@ -248,6 +249,7 @@
             'search_default_approve':1,
         }</field>
         <field name="view_id" ref="edit_new_allocation"/>
+        <field name="domain">[]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
     </record>
 
@@ -276,6 +278,8 @@
                 Create a new leave request
             </p>
         </field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
     </record>
 
@@ -285,6 +289,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar</field>
         <field name="context">{'search_default_department':1, 'search_default_approve':1}</field>
+        <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new leave request
@@ -352,6 +357,7 @@
             'default_department_id': active_id,
             'search_default_approve':1}
         </field>
+        <field name="domain">[]</field>
         <field name="view_id" ref="view_holiday"/>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
     </record>
