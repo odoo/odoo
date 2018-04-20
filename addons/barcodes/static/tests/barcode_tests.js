@@ -8,6 +8,7 @@ var fieldRegistry = require('web.field_registry');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+var NotificationService = require('web.NotificationService');
 
 var createView = testUtils.createView;
 var triggerKeypressEvent = testUtils.triggerKeypressEvent;
@@ -64,13 +65,15 @@ QUnit.test('Button with barcode_trigger', function (assert) {
                 '</header>' +
             '</form>',
         res_id: 2,
+        services: [NotificationService.extend({
+            notify: function (params) {
+                assert.step(params.type);
+            }
+        })],
         intercepts: {
             execute_action: function (event) {
                 assert.strictEqual(event.data.action_data.name, 'do_something',
                     "do_something method call verified");
-            },
-            warning: function () {
-                assert.step('warn');
             },
         },
     });
@@ -509,11 +512,11 @@ QUnit.test('barcode_scanned only trigger error for active view', function (asser
                 '</form>',
         },
         res_id: 1,
-        intercepts: {
-            warning: function (event) {
-                assert.step(event.name);
+        services: [NotificationService.extend({
+            notify: function (params) {
+                assert.step(params.type);
             }
-        },
+        })],
         viewOptions: {
             mode: 'edit',
         },
