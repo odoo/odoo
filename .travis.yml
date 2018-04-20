@@ -38,6 +38,7 @@ install:
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
   - rm -rf ${HOME}/${ODOO_REPO#*/}-${VERSION}; ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
+  - pip install gengo
   - export EXCLUDE=hw_scanner,hw_escpos,theme_bootswatch
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
