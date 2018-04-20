@@ -87,7 +87,7 @@
                             <tr t-if="has_product_available">
                                 <th>Product</th>
                                 <th>Quantity</th>
-                                <th><span t-if="has_location">From</span></th>
+                                <th><span t-if="has_location and o.state!='done'">From</span></th>
                                 <th t-if="has_serial_number" width="15%">Lot/Serial barcode</th>
                                 <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
                             </tr>
@@ -111,7 +111,7 @@
                                                 <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
                                             </td>
                                             <td>
-                                                <span t-if="has_location">
+                                                <span t-if="has_location and o.state!='done'">
                                                     <span t-field="ml.location_id"/>
                                                 </span>
                                             </td>
