@@ -34,22 +34,20 @@
                                 </div>
                                 <div class="col-xs-6 o_kanban_primary_right">
                                     <div t-if="record.count_mo_waiting.raw_value > 0" class="row">
-                                        <div class="col-xs-9">
+                                        <div class="pull-right mr16">
                                             <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
                                                 Waiting
                                             </a>
-                                        </div>
-                                        <div class="col-xs-3">
+                                            <span class="ml8"/>
                                             <field name="count_mo_waiting"/>
                                         </div>
                                     </div>
                                     <div t-if="record.count_mo_late.raw_value > 0" class="row">
-                                        <div class="col-xs-9">
+                                        <div class="pull-right mr16">
                                             <a class="oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_late': 1}">
                                                 Late
                                             </a>
-                                        </div>
-                                        <div class="col-xs-3">
+                                            <span class="ml8"/>
                                             <field name="count_mo_late"/>
                                         </div>
                                     </div>
