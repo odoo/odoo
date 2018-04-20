@@ -16,7 +16,7 @@ addons:
 env:
   global:
   - VERSION="11.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
-  - EXCLUDE="base_gengo,hw_blackbox_be,hw_escpos,hw_proxy,hw_scale,hw_scanner,theme_bootswatch,website_gengo"
+  - EXCLUDE="hw_blackbox_be,hw_escpos,hw_proxy,hw_scale,hw_scanner,theme_bootswatch"
   - WKHTMLTOPDF_VERSION="0.12.4"
   matrix:
   - INCLUDE="applications"
@@ -33,6 +33,7 @@ install:
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - travis_install_nightly
   - rm -rf ${HOME}/${ODOO_REPO#*/}-${VERSION}; ln -s ${TRAVIS_BUILD_DIR} ${HOME}/${ODOO_REPO#*/}-${VERSION}
+  - pip install gengo
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
