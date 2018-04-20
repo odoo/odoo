@@ -94,11 +94,83 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    滿意度調查\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>您好！</p>\n"
+"                <p>請花一些寶貴時間評價 \"<strong>${object.name}</strong>\" 任務的相關服務，\n"
+"                   任務已經分配到 <strong>${object.rating_get_rated_partner_id().name}</strong>。</p>\n"
+"                <p>我們期待您的回饋，以幫助我們不斷改進。</p>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:10px 20px\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                    <tr>\n"
+"                        <td style=\"text-align:center;\">\n"
+"                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                請告訴我們您對服務的感受：\n"
+"                            </h2>\n"
+"                            <div style=\"text-color: #888888\">（請點選其中一個表情）</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:10px 10px;\">\n"
+"                            <table style=\"width:100%;text-align:center;\">\n"
+"                                <tr>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/10\">\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/5\">\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/1\">\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
+"                % if object.project_id.rating_status == 'stage':\n"
+"                    <p>此客戶調查已經發送，因為您的任務已經移動到階段 <b>${object.stage_id.name}</b></p>\n"
+"                % endif\n"
+"                % if object.project_id.rating_status == 'periodic':\n"
+"                    <p>此客戶調查 <b>${object.project_id.rating_status_period}</b>發送，前提是任務處於 <b>${object.stage_id.name}</b> 階段。</p>\n"
+"                % endif\n"
+"                <p>電子信件由 <a target=\"_blank\" href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo 專案</a>根據 <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a> 自動發送</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr "${object.project_id.company_id.name}: 服务点评请求"
+msgstr "${object.project_id.company_id.name}: 服務點評請求"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -108,7 +180,7 @@ msgstr "% 任務"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/>尚無評級"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -122,37 +194,40 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"當客戶回覆此階段的回饋請求時，會自動修改看板狀態。\n"
+" * 客戶的良好回饋會將看板狀態更新為「準備進入新階段」（綠色標識）。\n"
+" *中等或不好的回饋會將看板狀態設定為「阻止」（紅色標識）。\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project_report
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr "客戶評分"
+msgstr "客戶評級"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
 msgid "Customer Ratings on tasks"
-msgstr ""
+msgstr "客戶評價任務"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
 msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
-msgstr "客戶對任務的評分。如果您沒有評分，請更改您的專案設置以將其開啟。"
+msgstr "任務的客戶評級。如果您尚無評級，請更改專案設定以便激活評級。"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
 msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
-msgstr "客戶對任務/議題的評分。如果您沒有評分，請更改您的專案設置以將其開啟。"
+msgstr "任務/問題的客戶評級。如果您尚無評級，請更改專案設定以便激活評級。"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr "客戶評分"
+msgstr "客戶點評"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -164,12 +239,14 @@ msgstr "每天"
 msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
-msgstr "編輯專案階段，並在要啟動評分的階段上設置郵件模板。"
+msgstr ""
+"編輯專案階段並\n"
+" 在您想要激活評級的階段上設定電子信件模板。"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr "好 % 項目"
+msgstr "好 % 專案"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
@@ -185,11 +262,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
-"如何獲得客戶的回饋？\n"
-" - 更改階段時評分：當任務/議題在另一個階段被拖拉時，郵件將被發送\n"
-" - 定期評級：評分郵件將定期發送\n"
+"如何獲得客戶回饋？\n"
+"- 改變階段時評級：當任務/問題拉到另一個階段時將發送電子信件\n"
+"- 定期評級：將定期發送電子信件\n"
 "\n"
-"不要忘記在您想要獲得客戶回饋的地方上設置郵件模板。"
+" 請記住，為想要獲得客戶回饋的階段設定電子信件模板。"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -197,7 +274,7 @@ msgid ""
 "If set and if the project's rating configuration is 'Rating when changing "
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
-msgstr ""
+msgstr "如果設定，且專案評級配置為「改變階段時評級」，那麼當任務達到此步驟時，將會給客戶發送電子信件。"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -207,22 +284,22 @@ msgstr "最近30天"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr "最近評分：高度不滿意"
+msgstr "最近點評：高度不滿意"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr "最近評分：不滿意"
+msgstr "最近點評：不滿意"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr "最近評分：滿意"
+msgstr "最近點評：滿意"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr "沒評分"
+msgstr "沒點評"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -234,25 +311,25 @@ msgstr "一個月一次"
 msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
-msgstr "過去30天內的滿意度百分比。從更多選單中獲取評分內容。"
+msgstr "過去 30 天，滿意評級百分比。從『更多』選單獲取評級詳細信息。"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr "定期評分"
+msgstr "定期點評"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Project"
-msgstr "項目"
+msgstr "專案"
 
 #. module: rating_project
 #: model:ir.actions.server,name:rating_project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
 #: model:ir.cron,name:rating_project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "專案：發送評級"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -262,7 +339,7 @@ msgstr "每季度"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_search
 msgid "Rated tasks"
-msgstr ""
+msgstr "評級任務"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
@@ -273,74 +350,74 @@ msgstr "點評"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr "評分信件模板"
+msgstr "點評信件模板"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr "評分頻率"
+msgstr "點評頻率"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "評級請求截止日期"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Rating for tasks"
-msgstr ""
+msgstr "任務評級"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr "在變更階段時評分"
+msgstr "在變更階段時點評"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr "評分"
+msgstr "點評"
 
 #. module: rating_project
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "%s 評級"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
 msgid "Ratings on tasks"
-msgstr ""
+msgstr "任務評級"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "設定電子信件模板到階段"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "任務"
 
 #. module: rating_project
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr "任務評分"
+msgstr "任務點評"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "任務階段"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
 msgid "There is no rating for tasks of this project at the moment."
-msgstr ""
+msgstr "目前沒有此專案任務的評級。"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment."
-msgstr "這個對象目前沒有評分"
+msgstr "這個對象目前沒有點評。"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -350,7 +427,7 @@ msgstr "一個月二次"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Weekly"
-msgstr ""
+msgstr "每週"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0

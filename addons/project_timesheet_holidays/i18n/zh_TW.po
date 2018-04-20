@@ -5,15 +5,14 @@
 # Translators:
 # Martin Trigaux, 2017
 # Michael Yeung, 2017
-# Bill Hsu <hcm86@icloud.com>, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2017\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +23,7 @@ msgstr ""
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "輔助核算明細"
+msgstr "分析行"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_holidays_timesheet_ids
@@ -40,7 +39,7 @@ msgstr "公司"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company_leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings_leave_timesheet_project_id
 msgid "Default project value for timesheet generated from leave type."
-msgstr ""
+msgstr "從休假類型生成的工時表的預設專案值。"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:30
@@ -48,19 +47,19 @@ msgstr ""
 msgid ""
 "For the leaves to generate timesheet, the internal project and task are "
 "requried."
-msgstr ""
+msgstr "對於生成工時表的休假，要求有內部專案和任務。"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_holidays_status_timesheet_generate
 msgid "Generate Timesheet"
-msgstr ""
+msgstr "生成時間表"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_holidays_status_timesheet_generate
 msgid ""
 "If checked, when validating a leave, timesheet will be generated in the "
 "Vacation Project of the company."
-msgstr ""
+msgstr "如果選中，在驗證休假時，將在公司的假期專案中生成時間表。"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:30
@@ -69,17 +68,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings_leave_timesheet_project_id
 #, python-format
 msgid "Internal Project"
-msgstr ""
+msgstr "內部專案"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_holidays_status_timesheet_task_id
 msgid "Internal Task for timesheet"
-msgstr ""
+msgstr "時間表的內部任務"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_holidays
 msgid "Leave"
-msgstr "休假"
+msgstr "退出"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line_holiday_id
@@ -90,7 +89,7 @@ msgstr "休假申請"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company_leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings_leave_timesheet_task_id
 msgid "Leave Task"
-msgstr ""
+msgstr "休假任務"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_holidays_status
@@ -101,23 +100,23 @@ msgstr "休假類型"
 #: code:addons/project_timesheet_holidays/models/res_company.py:40
 #, python-format
 msgid "Leaves"
-msgstr ""
+msgstr "休假"
 
 #. module: project_timesheet_holidays
 #: model:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
-msgstr "項目"
+msgstr "專案"
 
 #. module: project_timesheet_holidays
 #: model:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
-msgstr ""
+msgstr "任務"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_holidays_status_timesheet_project_id
 msgid ""
 "The project will contain the timesheet generated when a leave is validated."
-msgstr ""
+msgstr "專案將包含驗證休假時生成的時間表。"
 
 #. module: project_timesheet_holidays
 #: model:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -130,7 +129,7 @@ msgstr "工時表"
 msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
-msgstr ""
+msgstr "您無法刪除附於休假後的時間表行。請取消休假。"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
