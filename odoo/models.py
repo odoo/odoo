@@ -3772,6 +3772,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')
+
+        if query.is_false():
+            # optimization: no need to query, as no record satisfies the domain
+            return 0 if count else []
+
         order_by = self._generate_order_by(order, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
 
