@@ -54,6 +54,9 @@
                     <t t-set="show_SN_LN" t-value="o.env.user.has_group('stock.group_lot_on_delivery_slip')"/>
                     <!-- This checks if the setting "Expiration Dates on Delivery Slip" was ticked-->
                     <t t-set="show_expiration_date" t-value="o.env.user.has_group('stock.group_expiration_date_on_delivery_slip')"/>
+                    
+                    <t t-set="any_SN_LN" t-value="any([ml.lot_id for ml in o.move_line_ids])"/>
+                    <t t-set="any_expiration_date" t-value="any([env['stock.production.lot'].search([('id', '=', ml.lot_id.id)]).use_date for ml in o.move_line_ids])"/>
 
                     <!-- of the following 3 tables, only one of them is displayed at a time  -->
                     <table class="table table-condensed mt48" t-if="not o.move_line_ids and o.state!='done'">
@@ -79,20 +82,20 @@
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
-                                <th t-if="show_SN_LN"><strong>SN/LN</strong></th>
-                                <th t-if="show_SN_LN and show_expiration_date"><strong>Expiration Date</strong></th>
+                                <th t-if="show_SN_LN and any_SN_LN"><strong>SN/LN</strong></th>
+                                <th t-if="show_SN_LN and show_expiration_date and any_expiration_date"><strong>Expiration Date</strong></th>
                                 <th><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="o.move_line_ids.filtered(lambda x: x.product_uom_qty)" t-as="move_line">
                                 <td><span t-field="move_line.product_id"/></td>
-                                <td t-if="show_SN_LN">
+                                <td t-if="show_SN_LN and any_SN_LN">
                                     <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
                                     <span t-else="">N/A</span>
                                 </td>
-                                <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
-                                <td t-if="show_SN_LN and show_expiration_date">
+                                <td t-if="show_SN_LN and show_expiration_date and any_expiration_date">
+                                    <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
                                     <span t-if="expiration_date" t-esc="expiration_date"/>
                                     <span t-else="">N/A</span>
                                 </td>
@@ -108,8 +111,8 @@
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
-                                <th t-if="show_SN_LN"><strong>SN/LN</strong></th>
-                                <th t-if="show_SN_LN and show_expiration_date"><strong>Expiration Date</strong></th>
+                                <th t-if="show_SN_LN and any_SN_LN"><strong>SN/LN</strong></th>
+                                <th t-if="show_SN_LN and show_expiration_date and any_expiration_date"><strong>Expiration Date</strong></th>
                                 <th class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -124,12 +127,12 @@
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
                                 </td>
-                                <td t-if="show_SN_LN">
+                                <td t-if="show_SN_LN and any_SN_LN">
                                     <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
                                     <span t-else="">N/A</span>
                                 </td>
-                                <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
-                                <td t-if="show_SN_LN and show_expiration_date">
+                                <td t-if="show_SN_LN and show_expiration_date and any_expiration_date">
+                                    <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
                                     <span t-if="expiration_date" t-esc="expiration_date"/>
                                     <span t-else="">N/A</span>
                                 </td>
