@@ -3,17 +3,17 @@
 # * hr_holidays
 # 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Martin Trigaux, 2017
 # Michael Yeung, 2017
 # Bill Hsu <hcm86@icloud.com>, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:42+0000\n"
 "PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "!important &gt;&lt;/td&gt;"
-msgstr "!重要 &gt;&lt;/td&gt;"
+msgstr "!important &gt;&lt;/td&gt;"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -50,19 +50,19 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_holidays.py:123
 #, python-format
 msgid "%g remaining out of %g"
-msgstr "%g 剩餘 %g"
+msgstr "%g剩餘%g"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:333
 #, python-format
 msgid "%s : %.2f day(s)"
-msgstr ""
+msgstr "%s：%.2f 天"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:335
 #, python-format
 msgid "%s on %s : %.2f day(s)"
-msgstr "%s on %s : %.2f day(s)"
+msgstr "%s (%s)：%.2f 天"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -96,12 +96,12 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">from</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">從</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "<small class=\"text-muted\">to</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">到</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -128,7 +128,7 @@ msgstr "今日缺勤"
 msgid ""
 "Absent Employee(s), Whose leaves request are either confirmed or validated "
 "on today"
-msgstr "缺席的員工是指那些請假單並未當天得到批准的人"
+msgstr "缺勤的員工，是指那些休假申請在今天得到確認或驗證的人"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -144,12 +144,12 @@ msgstr "今日缺勤"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Active Leaves and Allocations"
-msgstr "啟用休假分配"
+msgstr "啟用休假和進行分配"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -175,12 +175,12 @@ msgstr "為員工分配休假"
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree_customize
 msgid "Allocated Days"
-msgstr "分配的天數"
+msgstr "已分配的天數"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days_temp
 msgid "Allocation"
-msgstr ""
+msgstr "分配"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_holiday_type
@@ -211,13 +211,13 @@ msgstr "待批准的分配申請"
 #: code:addons/hr_holidays/models/hr.py:129
 #, python-format
 msgid "Allocation for %s"
-msgstr "%s 的分配"
+msgstr "%s分配"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "Allocation of %s : %.2f day(s) To %s"
-msgstr ""
+msgstr " %s分配： 向 %s 分配 %.2f 天"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
@@ -237,7 +237,7 @@ msgstr "允許不受限制"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Analyze from"
-msgstr "分析表單"
+msgstr "分析來自"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_double_validation
@@ -255,7 +255,7 @@ msgstr "評價分析"
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 #, python-format
 msgid "Approve"
-msgstr "核准"
+msgstr "批准"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -263,7 +263,7 @@ msgstr "核准"
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
-msgstr "已核准"
+msgstr "已批准"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -289,7 +289,7 @@ msgstr "藍色"
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Both Approved and Confirmed"
-msgstr "批准和確認"
+msgstr "已經批准和確認"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -299,7 +299,7 @@ msgstr "棕色"
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee"
-msgstr "員工"
+msgstr "按員工"
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
@@ -311,12 +311,12 @@ msgstr "按員工標籤"
 msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
-msgstr "對職員：單個職員的分配/休假，對職員附加：一組職員的分配/休假"
+msgstr "按員工：單個員工的分配/申請，按員工標籤：一類員工組的分配/申請"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
 msgid "Can reset"
-msgstr "能重置"
+msgstr "可重置"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
@@ -327,12 +327,12 @@ msgstr "取消"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
 msgid "Cancelled"
-msgstr "取消"
+msgstr "已取消"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Category"
-msgstr "分類"
+msgstr "類別"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_category_id
@@ -345,35 +345,35 @@ msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
 "Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
 msgstr ""
-"如果有人想休息，選擇「休假申請」。\n"
-"如果有人想增加准假的天數，選擇「分配申請」"
+"如果有人想休假，請選擇「休假申請」。\n"
+"如果您想增加某人可用的休假天數，請選擇「分配申請」"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
 msgid "Click here to create a new leave allocation request."
-msgstr "點擊這裡創建一個新的分配申請。"
+msgstr "點選此處創建一個新的休假分配申請。"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
 msgid "Click here to create a new leave allocation."
-msgstr "點擊這裡創建一個新的假期分配。"
+msgstr "點選此處創建一個新的休假分配。"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
 #: model:ir.actions.act_window,help:hr_holidays.open_employee_leaves
 msgid "Click here to create a new leave request."
-msgstr "點擊這裡創建一個新的請假。"
+msgstr "點選此處創建一個新的休假申請。"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
 msgid "Click to create a new leave request."
-msgstr "點擊創建一個新的休假申請"
+msgstr "點選以創建一個新的休假申請。"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
-msgstr ""
+msgstr "顏色"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_color_name
@@ -383,7 +383,7 @@ msgstr "報表中的顏色"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Comment by Manager"
-msgstr "管理員建議"
+msgstr "管理員的建議"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_company_id
@@ -393,12 +393,12 @@ msgstr "公司"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
 msgid "Compensatory Days"
-msgstr "調休"
+msgstr "調休日"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_configuration
 msgid "Configuration"
-msgstr "設置"
+msgstr "配置"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -418,7 +418,7 @@ msgstr "已確認"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_create_uid
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_create_date
@@ -426,17 +426,17 @@ msgstr "建立者"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_create_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_state
 msgid "Current Leave Status"
-msgstr "當前休假狀態"
+msgstr "目前休假狀態"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_current_leave_id
 msgid "Current Leave Type"
-msgstr "當前休假類型"
+msgstr "目前休假類型"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -488,7 +488,7 @@ msgstr "顯示名稱"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Duration"
-msgstr "會議時間"
+msgstr "時長"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -502,7 +502,7 @@ msgstr "員工"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_category_id
 msgid "Employee Tag"
-msgstr ""
+msgstr "員工標籤"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
@@ -524,7 +524,7 @@ msgstr "結束日期"
 msgid ""
 "Filters only on allocations and requests that belong to an leave type that "
 "is 'active' (active field is True)"
-msgstr ""
+msgstr "篩選只限於休假類型是「有效」（有效字段值為真）的分配以及申請"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_first_approver_id
@@ -535,13 +535,13 @@ msgstr "首次審批"
 #: code:addons/hr_holidays/report/holidays_summary_report.py:112
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "表單內容丟失，無法列印此報表。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_date_from
 msgid "From"
-msgstr "自"
+msgstr "從"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leave_date_from
@@ -552,27 +552,27 @@ msgstr "起始日期"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_payslip_status
 msgid ""
 "Green this button when the leave has been taken into account in the payslip."
-msgstr "當薪資條中核准該筆休假後，這個按鈕是綠色的"
+msgstr "當薪資單中計入了該休假時，此按鈕顯示為綠色"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_report_note
 msgid "HR Comments"
-msgstr "HR 備註"
+msgstr "人力資源備註"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_department
 msgid "HR Department"
-msgstr "HR 部門"
+msgstr "人力資源部門"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Leaves Summary Report By Department"
-msgstr "按部門的休假摘要報表"
+msgstr "按部門的休假摘要報告"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
@@ -587,14 +587,14 @@ msgstr "按員工的休假摘要報告"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_active
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
-msgstr "如果生效字段設定為假，它將隱藏而不是刪除這准假類型。"
+msgstr "如果有效字段設定為假，它將允許您隱藏休假類型而不刪除它。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_limit
@@ -602,7 +602,7 @@ msgid ""
 "If you select this check box, the system allows the employees to take more "
 "leaves than the available ones for this type and will not take them into "
 "account for the \"Remaining Legal Leaves\" defined on the employee form."
-msgstr "如果您打上勾，系統允許職員的休假天數大於這種類型的可用天數，並且計入職員表單上的項目\"剩餘法定休假\"。"
+msgstr "如果您勾選此方格，系統會允許職員的休假天數大於此類型的可用天數，並且不會將此計入職員表單上定義的\"剩餘法定休假\"。"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -617,7 +617,7 @@ msgstr "象牙白"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee___last_update
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_uid
@@ -625,7 +625,7 @@ msgstr "最後修改:"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_uid
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新者"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_write_date
@@ -633,7 +633,7 @@ msgstr "最後更新："
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_write_date
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -643,7 +643,7 @@ msgstr "淡紫色"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 msgid "Leave"
-msgstr "休假"
+msgstr "退出"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -654,7 +654,7 @@ msgstr "休假詳情"
 #: model:ir.actions.act_window,name:hr_holidays.open_employee_leaves
 #: model:ir.ui.menu,name:hr_holidays.menu_open_employee_leave
 msgid "Leave Details"
-msgstr "休假詳細描述"
+msgstr "休假明細"
 
 #. module: hr_holidays
 #: selection:hr.holidays,type:0
@@ -700,26 +700,26 @@ msgstr "休假類型"
 #: code:addons/hr_holidays/models/hr_holidays.py:439
 #, python-format
 msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
-msgstr "請假必須確認（“批准”）才能批准"
+msgstr "必須確認休假申請（「待批准」），以便批准申請。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:475
 #, python-format
 msgid "Leave request must be confirmed in order to approve it."
-msgstr "請假申請必須經過確認才能獲得批准。"
+msgstr "必須確認休假申請，以便批准申請。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:535
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
-msgstr "請假申請必須經過確認或驗證才能拒絕。"
+msgstr "必須確認或驗證休假申請，以便拒絕申請。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:422
 #, python-format
 msgid ""
 "Leave request must be in Draft state (\"To Submit\") in order to confirm it."
-msgstr "離開請求必須處於草稿狀態（“提交”）才能確認。"
+msgstr "休假申請必須是「草稿」狀態（「待提交」），以便確認申請。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:407
@@ -727,7 +727,7 @@ msgstr "離開請求必須處於草稿狀態（“提交”）才能確認。"
 msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
 "to Draft."
-msgstr "請假狀態必須是“拒絕”或“批准”才能重置為草稿。"
+msgstr "休假申請必須是「已拒絕」或「待批准」狀態，以便重新設定為草擬狀態。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
@@ -743,7 +743,7 @@ msgstr "待批准休假"
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
-msgstr ""
+msgstr "休假"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_allocation_approve
@@ -753,7 +753,7 @@ msgstr "休假分配"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_leaves_taken
 msgid "Leaves Already Taken"
-msgstr "休假早已使用"
+msgstr "已用休假"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
@@ -789,7 +789,7 @@ msgstr "休假摘要"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Leaves Taken:"
-msgstr ""
+msgstr "已用休假："
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
@@ -822,32 +822,32 @@ msgstr "休假將要顯示在薪資條中"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Leaves."
-msgstr "休假"
+msgstr "休假。"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_approved
 msgid "Leaves/Allocation Approved"
-msgstr "休假／分配批准"
+msgstr "休假／分配已批准"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_refused
 msgid "Leaves/Allocation Refused"
-msgstr "休假／分配拒絕"
+msgstr "休假／分配被拒絕"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
 msgid "Leaves/Allocations Confirmed"
-msgstr "休假/分配審核"
+msgstr "已確認休假 / 分配"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
 msgid "Leaves/Allocations First Approval"
-msgstr "休假/分配 一級批准"
+msgstr "休假 / 分配初次審批"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2018"
-msgstr ""
+msgstr "2018 年法定休假"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -899,12 +899,12 @@ msgstr "洋紅色"
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
-msgstr "管理員"
+msgstr "經理"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Leaves:"
-msgstr ""
+msgstr "最長的休假是："
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_max_leaves
@@ -920,7 +920,7 @@ msgstr "最大允許的休假 - 已取得的休假"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
 msgid ""
 "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
-msgstr "最大允許的休假 - 已取得的休假 - 等待批准的休假"
+msgstr "最大允許的休假－已取得的休假－等待批准的休假"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_meeting_id
@@ -930,13 +930,13 @@ msgstr "會議"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_categ_id
 msgid "Meeting Type"
-msgstr ""
+msgstr "會議類型"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 msgid "Mode"
-msgstr ""
+msgstr "模式"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -946,7 +946,7 @@ msgstr "月"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Department Leaves"
-msgstr "我部門的休假"
+msgstr "本部門的休假"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
@@ -961,12 +961,12 @@ msgstr "我的請求"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Team Leaves"
-msgstr "我團隊的休假"
+msgstr "本團隊的休假"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "New"
-msgstr "新增"
+msgstr "新建"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
@@ -985,7 +985,7 @@ msgstr "休假天數"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_number_of_days_temp
 msgid ""
 "Number of days of the leave request according to your working schedule."
-msgstr ""
+msgstr "根據您的工作安排，申請休假天數。"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -997,7 +997,7 @@ msgstr "主管"
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
-msgstr "一旦休假被批准，Odoo會在日曆上生成一個這種類型的活動。"
+msgstr "一旦休假被批准，Odoo 將在日曆上生成一個此類型的活動。"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -1007,31 +1007,35 @@ msgid ""
 "                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
+"如果休假申請已記錄，該申請將發送 \n"
+" 給經理進行驗證。確保設定正確的休假 \n"
+" 類型（串休、法定休假、病假）和與休假相關的確切 \n"
+" 的開放天數。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:477
 #, python-format
 msgid "Only an HR Manager can apply the second approval on leave requests."
-msgstr "只有人力資源經理可以申請第二個批准請假。"
+msgstr "僅人力資源經理可以在休假申請上應用二次審批。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:405
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
-msgstr "只有人力資源經理或有關的員工可以重置為草稿。"
+msgstr "僅人力資源經理或相關的員工可以重置為草稿。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:428
 #: code:addons/hr_holidays/models/hr_holidays.py:466
 #, python-format
 msgid "Only an HR Officer or Manager can approve leave requests."
-msgstr "只有人力資源主管或經理可以批准請假。"
+msgstr "僅人力資源專員或經理可以批准休假申請。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:552
 #, python-format
 msgid "Only an HR Officer or Manager can refuse leave requests."
-msgstr "只有人力資源主管或經理可以拒絕請假。"
+msgstr "僅人力資源專員或經理可以拒絕休假申請。"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1041,7 +1045,7 @@ msgstr "選項"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
 msgid "Parent"
-msgstr "上層"
+msgstr "上級"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
@@ -1052,7 +1056,7 @@ msgstr "列印"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_notes
 msgid "Reasons"
-msgstr "理由"
+msgstr "原因"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1075,7 +1079,7 @@ msgstr "已拒絕"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "用於管理資源訪問權限的使用者名稱"
+msgstr "用於管理資源訪問權限的相關使用者名。"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
@@ -1111,7 +1115,7 @@ msgstr "報告在最近的薪資單"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_report
 msgid "Reporting"
-msgstr "報表"
+msgstr "報告"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_type
@@ -1121,7 +1125,7 @@ msgstr "申請類型"
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_approved
 msgid "Request approved"
-msgstr "休假已批准"
+msgstr "請求已批准"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
@@ -1151,30 +1155,30 @@ msgstr "重置為草稿"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
-msgstr "搜索休假"
+msgstr "搜尋休假"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Search Leave Type"
-msgstr "搜索休假類型"
+msgstr "搜尋休假類型"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_second_approver_id
 msgid "Second Approval"
-msgstr "第二次審批"
+msgstr "二次審批"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:596
 #, python-format
 msgid "See Allocation"
-msgstr ""
+msgstr "查看分配"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:596
 #, python-format
 msgid "See Leave"
-msgstr ""
+msgstr "查看休假"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_holiday_type
@@ -1211,7 +1215,7 @@ msgstr "總數"
 msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
-msgstr "沒有輸入員工或者員工類別。請確認您的登錄使用者和一個員工關聯。"
+msgstr "沒有輸入員工或者員工類別。請確認您的使用者登錄連接到和一個員工。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr.py:117
@@ -1220,13 +1224,13 @@ msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
 " You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
-"“剩餘年假”這個字段只適用於選項“允許超出限制”沒有勾選時的一個假別。(%s Found)否則係統更新會失敗，因為我們不知道應該更新哪種假別。\n"
-"如果配置不允許使用這個字段，您應該使用位於“休假”下的“請假單”或“續假單”菜單來管理員工的休假天數。"
+"「剩餘法定休假」字段後的功能僅適用於只有一種休假類型且未選中「允許覆蓋限制」（找到%s）的情況。否則，更新會變得含糊不清，因為我們無法確定何種休假類型已經更新完畢。\n"
+" 如果配置不允許使用此字段，您可能想要使用位於「休假申請」中的經典選單「休假申請」和「分配申請」，以管理員工的休假天數。"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0."
-msgstr "天數必須大於0."
+msgstr "天數必須大於0。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:259
@@ -1251,37 +1255,41 @@ msgid ""
 "The status is 'Refused', when leave request is refused by manager.\n"
 "The status is 'Approved', when leave request is approved by manager."
 msgstr ""
+"創建休假申請時，狀態設定為「待提交」。\n"
+" 當由使用者確認休假申請時，狀態為「待批准」。\n"
+" 當經理拒絕休假申請時，狀態為「已拒絕」。\n"
+" 當經理批准休假申請時，狀態為「已批准」。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_first_approver_id
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr "這個字段會被自動填充，值是審批這個休假申請的使用者。"
+msgstr "此位置會被自動由審批此休假申請的使用者填寫。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_second_approver_id
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
-msgstr "這個地方是自動填充的誰第二次生效這准假。（如果要兩次生效）"
+msgstr "此位置是由需要在第二層級驗證休假的使用者自動填寫。（如果休假類型需要兩次驗證）"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_color_name
 msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
-msgstr "此顏色將用在按部門的報表/休假的請假統計中。"
+msgstr "這種顏色會用於位於報告> 按部門休假的休假摘要中 。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
-msgstr ""
+msgstr "此值通過所有休假申請與負值相加得出。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
-msgstr ""
+msgstr "此值通過所有休假申請與正值相加得出。"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1297,12 +1305,12 @@ msgstr "至日期"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "To Do"
-msgstr ""
+msgstr "待辦"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "To Report in Payslip"
-msgstr "將反映在薪資條中"
+msgstr "在薪資單中報告"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1317,7 +1325,7 @@ msgstr "員工總數"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
 msgid "Total holidays by type"
-msgstr "假期總計 按類型"
+msgstr "按類型匯總休假"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee_remaining_leaves
@@ -1325,7 +1333,7 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
-msgstr "分配個這個職員的法定休假總數，改變這個值生成分配/休假申請。所有沒有超出限制的休假類型的總數。"
+msgstr "分配給該員工的法定休假總數，更改此值以創建分配/休假申請。根據所有的休假類型的總數，未超出限制。"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1335,18 +1343,18 @@ msgstr "類型"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr "加班"
+msgstr "無薪假"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Unread Messages"
-msgstr "未讀訊息"
+msgstr "未讀消息"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_user_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_user_id
 msgid "User"
-msgstr "用戶"
+msgstr "使用者"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -1356,7 +1364,7 @@ msgstr "驗證"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Validator"
-msgstr ""
+msgstr "驗證人"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1376,7 +1384,7 @@ msgstr "等待審批"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "Waiting Second Approval"
-msgstr "等待第二次審批"
+msgstr "等待二次審批"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_first_validated
@@ -1394,20 +1402,22 @@ msgstr "麥黃色"
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr "選中後，這種類型的分配和休假申請需經二次驗證才能批准"
+msgstr "選中後，此類型的分配/休假申請需經二次驗證才能獲批。"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
 msgid ""
 "You can assign remaining Legal Leaves for each employee, Odoo\n"
 "               will automatically create and validate allocation requests."
-msgstr "您可以為每個僱員設定法定休假，Odoo會自動的創建和批准配置需求"
+msgstr ""
+"您可以為每個員工分配剩餘休假，Odoo\n"
+"將自動創建並驗證分配申請。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:249
 #, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
-msgstr "在同一天內不允許存在兩次時間重疊的休假申請"
+msgstr "兩次休假不能重疊在同一天！"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:375
@@ -1419,7 +1429,7 @@ msgstr "不能夠刪除狀態為 %s 的休假。"
 #: code:addons/hr_holidays/models/hr.py:140
 #, python-format
 msgid "You cannot reduce validated allocation requests"
-msgstr "您不能降低已確認的配置申請"
+msgstr "您無法減少已驗證的分配申請"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:356
@@ -1427,7 +1437,7 @@ msgstr "您不能降低已確認的配置申請"
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
-msgstr "您不能作為 '%s'來設定休假申請。請與人力資源管理員聯繫。"
+msgstr "您不能作為 '%s'來設定休假申請。請與人力資源經理聯繫。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
@@ -1445,7 +1455,7 @@ msgstr "天"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "e.g. Report to the next month..."
-msgstr "例如，到下個月的報表中"
+msgstr "例如，在下個月報告..."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -1460,4 +1470,4 @@ msgstr "report.hr_holidays.report_holidayssummary"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
-msgstr ""
+msgstr "到"
