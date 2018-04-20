@@ -101,9 +101,9 @@ class PosSession(models.Model):
 
     @api.multi
     def _compute_picking_count(self):
-        ids = set(pos.config_id.picking_type_id.id for pos in self)
+        picking_types = self.mapped('config_id.picking_type_id')
         data = self.env['stock.picking'].read_group(
-            [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', list(ids))],
+            [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', picking_types)],
             ['picking_type_id'], ['picking_type_id'])
         count = dict(
             map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
