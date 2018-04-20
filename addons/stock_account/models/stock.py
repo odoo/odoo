@@ -312,7 +312,9 @@ class StockMove(models.Model):
             self.write(vals)
         elif self._is_out():
             valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)
-            valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+            valued_quantity = 0
+            for valued_move_line in valued_move_lines:
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, self.product_id.uom_id)
             self.env['stock.move']._run_fifo(self, quantity=quantity)
             if self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
