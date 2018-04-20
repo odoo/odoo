@@ -1016,7 +1016,7 @@ class ProcurementRule(models.Model):
 
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and 'group_id' in values and values['group_id'].id) or False
+                (gpo == 'propagate' and values.get('group_id') and values['group_id'].id) or False
 
         return {
             'partner_id': partner.id,
