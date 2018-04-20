@@ -354,6 +354,25 @@ class SaleTimesheetController(http.Controller):
             'domain': [('project_id', 'in', projects.ids)],
             'icon': 'fa fa-tasks',
         })
+        if request.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
+            sale_orders = projects.mapped('sale_line_id.order_id') | projects.mapped('tasks.sale_order_id')
+            if sale_orders:
+                stat_buttons.append({
+                    'name': _('Sales Orders'),
+                    'count': len(sale_orders),
+                    'res_model': 'sale.order',
+                    'domain': [('id', 'in', sale_orders.ids)],
+                    'icon': 'fa fa-dollar',
+                })
+                invoices = sale_orders.mapped('invoice_ids').filtered(lambda inv: inv.type == 'out_invoice')
+                if invoices:
+                    stat_buttons.append({
+                        'name': _('Invoices'),
+                        'count': len(invoices),
+                        'res_model': 'account.invoice',
+                        'domain': [('id', 'in', invoices.ids), ('type', '=', 'out_invoice')],
+                        'icon': 'fa fa-pencil-square-o',
+                    })
         return stat_buttons
 
     @http.route('/timesheet/plan/action', type='json', auth="user")
@@ -388,4 +407,10 @@ class SaleTimesheetController(http.Controller):
             tasks = request.env['project.task'].sudo().search(literal_eval(domain))
             if len(tasks.mapped('project_id')) == 1:
                 action['context']['default_project_id'] = tasks.mapped('project_id')[0].id
+        elif res_model == 'sale.order':
+            action = request.env.ref('sale.action_orders').read()[0]
+            action['domain'] = domain
+        elif res_model == 'account.invoice':
+            action = request.env.ref('account.action_invoice_tree1').read()[0]
+            action['domain'] = domain
         return action
