@@ -101,14 +101,12 @@ class PosSession(models.Model):
 
     @api.multi
     def _compute_picking_count(self):
-        ids = set(pos.config_id.picking_type_id.id for pos in self)
-        data = self.env['stock.picking'].read_group(
-            [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', list(ids))],
-            ['picking_type_id'], ['picking_type_id'])
-        count = dict(
-            map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
+        data = self.env['pos.order'].read_group(
+            [('picking_id.state', '!=', 'done'), ('session_id', 'in', self.ids)],
+            ['session_id'], ['session_id'])
+        count = dict([(x['session_id'][0], x['session_id_count']) for x in data])
         for pos in self:
-            pos.picking_count = count.get(pos.config_id.picking_type_id.id, 0)
+            pos.picking_count = count.get(pos.id, 0)
 
     @api.multi
     def action_stock_picking(self):
