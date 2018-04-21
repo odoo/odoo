@@ -1014,6 +1014,21 @@ var FieldPhone = FieldEmail.extend({
     },
 
     /**
+     * Remove possibly present &shy; characters when saving number
+     *
+     * @override
+     * @private
+     */
+    _setValue: function (value, options) {
+        // NOT NEEDED AS OF SAAS-11.3
+        if (value) {
+            // remove possibly pasted &shy; characters
+            value = value.replace(/\u00AD/g, '');
+        }
+        return this._super(value, options);
+    },
+
+    /**
      * Phone fields are clickable in readonly on small screens ~= on phones.
      * This can be overriden by call-capable modules to display a clickable
      * link in different situations, like always regardless of screen size,
@@ -1211,9 +1226,6 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
-    },
-    isSet: function () {
-        return true;
     },
 });
 

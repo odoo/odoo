@@ -603,7 +603,7 @@ class JsonRequest(WebRequest):
             request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
         else:
             # regular jsonrpc2
-            request = self.httprequest.stream.read().decode(self.httprequest.charset)
+            request = self.httprequest.get_data().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:

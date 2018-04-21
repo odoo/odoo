@@ -442,6 +442,10 @@ security-related topics:
   only for controlling/managing the installation.
   *Never* use any default passwords like admin/admin, even for test/staging databases.
 
+- Do **not** install demo data on internet-facing servers. Databases with demo data contain
+  default logins and passwords that can be used to get into your systems and cause significant
+  trouble, even on staging/dev systems.
+
 - Use appropriate database filters ( :option:`--db-filter <odoo-bin --db-filter>`)
   to restrict the visibility of your databases according to the hostname.
   See :ref:`db_filter`.
@@ -473,6 +477,12 @@ security-related topics:
   Configure the web proxy to limit the size of requests, set appropriate timeouts,
   and then enable the :option:`proxy mode <odoo-bin --proxy-mode>` option.
   See also :ref:`https_proxy`.
+
+- If you need to allow remote SSH access to your servers, make sure to set a strong password
+  for **all** accounts, not just `root`. It is strongly recommended to entirely disable
+  password-based authentication, and only allow public key authentication. Also consider
+  restricting access via a VPN, allowing only trusted IPs in the firewall, and/or
+  running a brute-force detection system such as `fail2ban` or equivalent.
 
 - Whenever possible, host your public-facing demo/test/staging instances on different
   machines than the production ones. And apply the same security precautions as for

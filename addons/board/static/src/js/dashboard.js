@@ -20,7 +20,7 @@ FormView.include({
      */
     init: function (viewInfo) {
         this._super.apply(this, arguments);
-        this.controllerParams.viewID = viewInfo.view_id;
+        this.controllerParams.customViewID = viewInfo.custom_view_id;
     },
 });
 
@@ -33,7 +33,7 @@ FormController.include({
     }),
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.viewID = params.viewID;
+        this.customViewID = params.customViewID;
     },
 
     //--------------------------------------------------------------------------
@@ -63,9 +63,9 @@ FormController.include({
         var board = this.renderer.getBoard();
         var arch = QWeb.render('DashBoard.xml', _.extend({}, board));
         return this._rpc({
-                route: '/web/view/add_custom',
+                route: '/web/view/edit_custom',
                 params: {
-                    view_id: this.viewID,
+                    custom_id: this.customViewID,
                     arch: arch,
                 }
             }).then(dataManager.invalidate.bind(dataManager));
@@ -139,6 +139,31 @@ FormRenderer.include({
         this._super.apply(this, arguments);
         this.noContentHelp = params.noContentHelp;
         this.actionsDescr = {};
+        this._boardSubcontrollers = []; // for board: controllers of subviews
+    },
+    /**
+     * Call `on_attach_callback` for each subview
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        _.each(this._boardSubcontrollers, function (controller) {
+            if ('on_attach_callback' in controller) {
+                controller.on_attach_callback();
+            }
+        });
+    },
+    /**
+     * Call `on_detach_callback` for each subview
+     *
+     * @override
+     */
+    on_detach_callback: function () {
+        _.each(this._boardSubcontrollers, function (controller) {
+            if ('on_detach_callback' in controller) {
+                controller.on_detach_callback();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -241,6 +266,7 @@ FormRenderer.include({
                         hasSelectors: false,
                     });
                     return view.getController(self).then(function (controller) {
+                        self._boardSubcontrollers.push(controller);
                         return controller.appendTo(params.$node);
                     });
                 });

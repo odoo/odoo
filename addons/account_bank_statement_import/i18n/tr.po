@@ -10,13 +10,14 @@
 # Martin Trigaux, 2017
 # Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2017
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,7 +118,7 @@ msgstr "Banka Hesap Özeti Kalemi"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr ""
+msgstr "Banka kurulumu yapıldı olarak işaretlendi."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
@@ -146,6 +147,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Bu yevmiyeden aynı sıradaki faturaları ve iade/fiyat farklarını görmek "
+"istemiyorsanız lütfen bu kutuyu işaretleyin."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -393,6 +396,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Manuel: Odoo'dan dışında nakit, çek ya da bir başka bir yöntemle ödemelerinizi yapın.\n"
+"Elektronik: online olarak satın alındığında ya da  abone olunduğunda,müşteri tarafından kaydedilen bir kart üzerinde işlem talep ederek ödemelerinizi otomatik olarak yapın (ödeme token'ı).\n"
+"Toplu Kayıt: Toplu Çek Çıkışında oluşturulmuş birkaç müşteri çekiniz bankaya iletilir. Odoo'da tanımlı banka hesabınızı kodladığınız zaman, size toplu çek çıkışları için yeniden uzlaştırma önerilecektir. Bu seçeneğe ayarlar menüsünden ulaşılabilir."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -401,6 +407,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Manuel: Odoo dışında fatura ödemelerini nakit ya da başka bir yöntemle yap.\n"
+"Çek: Çek ile fatura ödemesini yap ve Odoo'dan çıktısını al.\n"
+"SEPA Credit Transfer: Bankanıza gönderdiğiniz bir  SEPA Alacak Transferi dosyası ile ödemenizi yapın. Bu seçeneğe ayarlar menüsünden ulaşılabilir."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
@@ -455,6 +464,7 @@ msgstr "Sıra"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
 msgid "Set active to false to hide the Journal without removing it."
 msgstr ""
+"Yevmiyeyi kaldırmadan gizlemek için etkin seçeneğini yanlış olarak ayarla."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
@@ -469,7 +479,7 @@ msgstr "Panelde yevmiyeyi göster"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
 msgid "Technical field used in the special view for the setup bar step."
-msgstr ""
+msgstr "Kurulum barı adımlarının özel görünümü için kullanılan teknik alan."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -518,7 +528,7 @@ msgstr "Sonraki İade/Fiyat Farkı için sıradaki numara kullanılacak"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "Sonraki fatura için sıradaki numara kullanılacaktır."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
@@ -526,6 +536,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"Bu alan, bu yevmiyenin iade/fiyat farkı kayıtları numaralandırılması ile "
+"ilgili bilgileri içerir."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id

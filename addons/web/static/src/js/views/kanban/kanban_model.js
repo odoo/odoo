@@ -369,7 +369,10 @@ var KanbanModel = BasicModel.extend({
         while (element) {
             if (element.progressBar) {
                 return def.then(function (data) {
-                    return self._load(element, {onlyGroups: true}).then(function () {
+                    return self._load(element, {
+                        keepEmptyGroups: true,
+                        onlyGroups: true,
+                    }).then(function () {
                         return data;
                     });
                 });

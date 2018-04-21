@@ -81,6 +81,12 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Dự thảo: chưa xác nhận vừa chưa được ấn định lịch cho đến khi được xác nhận.\n"
+" * Đang đợi Hoạt động khác: đang đợi một hoạt động khác trong chuỗi dịch chuyển được thực thi trước khi dịch chuyển này chuyển sang trạng thái khả dụng (vd: trong chu trình Make-To-Order).\n"
+" * Đang đợi: nếu chuwa có hàng khả dụng bởi vì hàng hoá chưa được xí cho dịch chuyển này.\n"
+" * Sẵn sàng: các sản phẩm đã được xí và sẵn sàng dịch chuyển. Nếu chính sách giao hàng là 'Càng sớm càng tốt' thì điều này sẽ xảy ra ngay khi bất cứ số lượng nào đó được xí.\n"
+" * Hoàn thành: đã được dịch chuyển, không thể thay đổi hay huỷ được nữa.\n"
+" * Huỷ: đã bị huỷ, không thể được xác nhận nữa."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -127,6 +133,14 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Địa điểm Nhà cung cấp: Địa điểm ảo đại diện cho địa điểm nguồn của sản phẩm được cung cấp bởi các nhà cung cấp của bạn\n"
+"* Chỉ xem: Địa điểm ảo được sử dụng để xây dựng cấu trúc phả hệ cho hệ thống kho của bạn, kết hợp các địa điểm con; không thể trực tiếp lưu trữ hàng hoá\n"
+"* Địa điểm nội bộ: Các địa điểm vật lý bên trong hệ thống kho của bạn,\n"
+"* Địa điểm khách hàng: Địa điểm ảo đại diện cho địa điểm đích đối với các sản phẩm / hàng hoá mà bạn giao cho các khách hàng của bạn\n"
+"* Mất mát/Kiểm kê: Địa điểm ảo được sử dụng làm địa điểm đối ứng cho các hoạt động kiểm kê được sử dụng để hiệu chỉnh mức tồn kho (Kiểm kho vật lý)\n"
+"* Cung ứng: Địa điểm ảo được sử dụng như một địa điểm đối ứng tạm thời cho các hoạt động cung ứng (procurement) khi mà địa điểm nguồn chưa được (nhà cung cấp hoặc sản xuất) biết. Địa điểm ảo này sẽ trống rống sau khi Trình lập lịch cung ứng chạy xong.\n"
+"* Sản xuất: Địa điểm ảo đối ứng dùng trong các hoạt động sản xuất: nguyên vật liệu được tiêu thụ trong quá trình sản xuất sẽ được đưa vào đây và các thành phẩm sẽ từ đây ra.\n"
+"* Địa điểm chuyển tiếp: Địa điểm đối ứng mà được sử dụng trong các hoạt động dịch chuyển hàng hoá liên kho hoặc liên công ty\n"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

@@ -3,6 +3,7 @@
 # * sale_order_dates
 # 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Martin Trigaux, 2017
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
 msgid "Commitment Date"
-msgstr ""
+msgstr "承諾日期"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
@@ -30,23 +31,26 @@ msgid ""
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 msgstr ""
+"客戶要求的發運日期。\n"
+"當這個訂單被確認後，發貨的期望的日期將被根據這個日期和公司安全延遲計算。\n"
+"如果您希望這個發貨越快越好，您就將此字段留空。這樣期望的日期將使用預設方法計算：根據產品前置時間和公司的安全天數。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr ""
+msgstr "確認的產品發貨日期。該日期是根據產品的各種提前期計算出來的承諾給客戶的交貨日期。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "首個交貨單的創建日期。"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
 msgid "Effective Date"
-msgstr ""
+msgstr "實際日期"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -56,18 +60,18 @@ msgstr "報價單"
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
-msgstr ""
+msgstr "要求日期"
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "要求的日期太早！"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "銷售訂單細項"
+msgstr "銷售訂單行"
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/models/sale_order.py:58
@@ -75,4 +79,4 @@ msgstr "銷售訂單細項"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
+msgstr "客戶要求的日期早於承諾日期。您可能不能滿足客戶要求。"

@@ -961,14 +961,17 @@ class DataSet(http.Controller):
 
 class View(http.Controller):
 
-    @http.route('/web/view/add_custom', type='json', auth="user")
-    def add_custom(self, view_id, arch):
-        CustomView = request.env['ir.ui.view.custom']
-        CustomView.create({
-            'user_id': request.session.uid,
-            'ref_id': view_id,
-            'arch': arch
-        })
+    @http.route('/web/view/edit_custom', type='json', auth="user")
+    def edit_custom(self, custom_id, arch):
+        """
+        Edit a custom view
+
+        :param int custom_id: the id of the edited custom view
+        :param str arch: the edited arch of the custom view
+        :returns: dict with acknowledged operation (result set to True)
+        """
+        custom_view = request.env['ir.ui.view.custom'].browse(custom_id)
+        custom_view.write({ 'arch': arch })
         return {'result': True}
 
 class Binary(http.Controller):

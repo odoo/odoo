@@ -7,14 +7,14 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# SButko <silvija.butko@gmail.com>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: SButko <silvija.butko@gmail.com>, 2018\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/account_payment/models/payment.py:61
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr ""
+msgstr "<%s>  transakcija (%s) nepavyko patvirtinti sąskaitos: <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
@@ -38,7 +38,7 @@ msgstr "<%s> transakcija (%s) nepavyko : <%s>"
 #: code:addons/account_payment/models/payment.py:52
 #, python-format
 msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
+msgstr "<%s> transakcija (%s) netinkamas statusas: %s"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -51,16 +51,18 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pay "
 "Now</span>"
 msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Mokėti "
+"dabar</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Apmokėta"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Pending"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Laukianti"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -77,17 +79,19 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Atlikta</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid "<strong>Transactions</strong>"
-msgstr ""
+msgstr "<strong>Transakcijos</strong>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:80
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Sumos nesutapimas (%s)"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:52
@@ -96,6 +100,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Jei išsaugosime Jūsų mokėjimo informaciją savo serveryje, abonementiniai "
+"mokėjimai bus atlikti automatiškai."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -106,12 +112,12 @@ msgstr "Sąskaita faktūra"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "Paskutinė transakcija"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "Mokėjimo transakcijų skaičius "
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:50
@@ -129,7 +135,7 @@ msgstr "Mokėti dabar"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "Pay with"
-msgstr ""
+msgstr "Apmokėti su"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
@@ -159,22 +165,25 @@ msgid ""
 "The invoice was not confirmed despite response from the acquirer (%s): "
 "invoice amount is %r but acquirer replied with %r."
 msgstr ""
+"Sąskaita nebuvo patvirtinta, nepaisant to, kad pirkėjas atsakė (%s): "
+"sąskaitos suma yra %r, bet pirkėjo - %r."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: impossible to validate invoice."
 msgstr ""
+"Įvyko klaida apdorojant Jūsų mokėjimą: negalima patvirtinti sąskaitos."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice state."
-msgstr ""
+msgstr "Įvyko klaida apdorojant Jūsų mokėjimą: netinkamas sąskaitos statusas."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "Įvyko klaida apdorojant Jūsų mokėjimą: netinkama sąskaita."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -182,27 +191,31 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Įvyko klaida apdorojant Jūsų mokėjimą: problema dėl kredito kortelės ID "
+"patvirtinimo."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
+"Įvyko klaida apdorojant Jūsų mokėjimą: transakcijos sumos problema.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "Įvyko klaida apdorojant Jūsų mokėjimą: transakcija nepavyko.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr ""
+msgstr "Įvyko klaida apdorojant Jūsų mokėjimą: transakcijos problema.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
+"Įvyko klaida apdorojant Jūsų mokėjimą: netinkamas kredito kortelės ID."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
@@ -213,4 +226,4 @@ msgstr "Operacijos"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Jūsų mokėjimas buvo patvirtintas."

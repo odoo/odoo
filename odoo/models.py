@@ -647,9 +647,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             res_id: (module, name)
             for res_id, module, name in cr.fetchall()
         }
+        def to_xid(record_id):
+            (module, name) = xids[record_id]
+            return ('%s.%s' % (module, name)) if module else name
 
         # create missing xml ids
         missing = self.filtered(lambda r: r.id not in xids)
+        if not missing:
+            return (
+                (record, to_xid(record.id))
+                for record in self
+            )
+
         xids.update(
             (r.id, (modname, '%s_%s_%s' % (
                 r._table,
@@ -658,6 +667,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             )))
             for r in missing
         )
+        fields = ['module', 'model', 'name', 'res_id']
         cr.copy_from(io.StringIO(
             u'\n'.join(
                 u"%s\t%s\t%s\t%d" % (
@@ -669,21 +679,22 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 for record in missing
             )),
             table='ir_model_data',
-            columns=['module', 'model', 'name', 'res_id'],
+            columns=fields,
         )
-
-        self.invalidate_cache()
+        self.env['ir.model.data'].invalidate_cache(fnames=fields)
 
         return (
-            (record, '%s.%s' % xids[record.id])
+            (record, to_xid(record.id))
             for record in self
         )
 
     @api.multi
-    def _export_rows(self, fields):
+    def _export_rows(self, fields, batch_invalidate=True):
         """ Export fields of the records in ``self``.
 
             :param fields: list of lists of fields to traverse
+            :param batch_invalidate:
+                whether to clear the cache for the top-level object every so often (avoids huge memory consumption when exporting large numbers of records)
             :return: list of lists of corresponding values
         """
         import_compatible = self.env.context.get('import_compat', True)
@@ -699,6 +710,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 for rec in sub:
                     yield rec
                 rs.invalidate_cache(ids=sub.ids)
+        if not batch_invalidate:
+            splittor = lambda rs: rs
 
         # both _ensure_xml_id and the splitter want to work on recordsets but
         # neither returns one, so can't really be composed...
@@ -749,7 +762,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         # 'display_name' where no subfield is exported
                         fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
                                    for p in fields]
-                        lines2 = value._export_rows(fields2)
+                        lines2 = value._export_rows(fields2, batch_invalidate=False)
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
@@ -1688,31 +1701,38 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         orderby_terms = []
         groupby_terms = [gb['qualified_field'] for gb in annotated_groupbys]
-        groupby_fields = [gb['groupby'] for gb in annotated_groupbys]
         if not orderby:
             return groupby_terms, orderby_terms
 
         self._check_qorder(orderby)
+
+        # when a field is grouped as 'foo:bar', both orderby='foo' and
+        # orderby='foo:bar' generate the clause 'ORDER BY "foo:bar"'
+        groupby_fields = {
+            gb[key]: gb['groupby']
+            for gb in annotated_groupbys
+            for key in ('field', 'groupby')
+        }
         for order_part in orderby.split(','):
             order_split = order_part.split()
             order_field = order_split[0]
             if order_field == 'id' or order_field in groupby_fields:
-
                 if self._fields[order_field.split(':')[0]].type == 'many2one':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
                 else:
-                    order = '"%s" %s' % (order_field, '' if len(order_split) == 1 else order_split[1])
-                    orderby_terms.append(order)
+                    order_split[0] = '"%s"' % groupby_fields.get(order_field, order_field)
+                    orderby_terms.append(' '.join(order_split))
             elif order_field in aggregated_fields:
-                order_split[0] = '"' + order_field + '"'
+                order_split[0] = '"%s"' % order_field
                 orderby_terms.append(' '.join(order_split))
             else:
                 # Cannot order by a field that will not appear in the results (needs to be grouped or aggregated)
                 _logger.warn('%s: read_group order by `%s` ignored, cannot sort on empty columns (not grouped/aggregated)',
                              self._name, order_part)
+
         return groupby_terms, orderby_terms
 
     @api.model
@@ -2282,6 +2302,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 #  - copy inherited fields iff their original field is copied
                 fields[name] = field.new(
                     inherited=True,
+                    inherited_field=field,
                     related=(parent_field, name),
                     related_sudo=False,
                     copy=field.copy,
@@ -2399,7 +2420,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             try:
                 field.setup_full(self)
             except Exception:
-                if not self.pool.loaded and field.manual:
+                if not self.pool.loaded and field.base_field.manual:
                     # Something goes wrong when setup a manual field.
                     # This can happen with related fields using another manual many2one field
                     # that hasn't been loaded because the comodel does not exist yet.
