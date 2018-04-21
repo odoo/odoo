@@ -1468,7 +1468,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)
         :param str order: sort string
-        :param bool count: if True, returns a list of ids. Internal use only, uSe :meth:`~.search_count` instead. (default: False)
+        :param bool count: if True, returns a list of ids. Internal use only, use :meth:`~.search_count` instead. (default: False)
         :returns: at most ``limit`` records matching the search criteria
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
