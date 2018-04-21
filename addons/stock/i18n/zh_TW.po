@@ -34,6 +34,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> 產品單位是 %s (%s) - 庫存移動單位是 %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:231
@@ -43,6 +46,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"阻塞: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -1694,12 +1700,12 @@ msgstr "交付不付款"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr ""
+msgstr "目的港碼頭交貨"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DES
 msgid "DELIVERED EX SHIP"
-msgstr ""
+msgstr "船上交貨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
@@ -2159,7 +2165,7 @@ msgstr "直運"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "現場交貨"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2241,17 +2247,17 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr ""
+msgstr "船邊交貨"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr ""
+msgstr "貨交承運人"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr ""
+msgstr "船上交貨"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -2930,19 +2936,19 @@ msgstr "內部參考號碼，它不同於製造商的批次/序列號碼"
 #: code:addons/stock/models/product.py:257
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "非法的域左操作符 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:259
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr ""
+msgstr "非法的域操作符 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:261
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "非法的域右操作符 %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -3036,7 +3042,7 @@ msgstr "盤點行"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
 msgid "Inventory Lines"
-msgstr ""
+msgstr "盤點明細行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3342,7 +3348,7 @@ msgstr "鏈接的份"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "明細行的列表視圖"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -4997,7 +5003,7 @@ msgstr "數量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done_uom_ordered
 msgid "Quantity Done"
-msgstr ""
+msgstr "完成數量"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5025,7 +5031,7 @@ msgstr "數量不能為負數"
 #: code:addons/stock/models/stock_move.py:394
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "數量減少！"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
@@ -5561,7 +5567,7 @@ msgstr "搜索庫存"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr ""
+msgstr "搜尋盤點明細"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
@@ -7397,7 +7403,7 @@ msgstr "您應該為每件不同產品提供不同的序列號"
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
-msgstr ""
+msgstr "您對此產品仍然有一些有效的重新排序規則。 請先歸檔或刪除它們。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:226
@@ -7588,7 +7594,7 @@ msgstr "stock.return.picking.line"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

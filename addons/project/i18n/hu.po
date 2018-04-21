@@ -1006,10 +1006,10 @@ msgid ""
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready for next stage indicates the task is ready to be pulled to the next stage"
 msgstr ""
-"Egy feladat kanban állapota megmutatja a speciális helyzet hatását:\n"
-" * Normál: az alapértelmezett helyzet\n"
-" * Blokkolt: azt mutatja, hogy valami megakadályozza ennek a feladatnak a folyamatát\n"
-" * Készen áll a következő szintre: azt mutatja, hogy a feladat készen áll a továbblépésre a következő szakaszba"
+"Egy feladat kanban állapota jelzi az előrehaladását befolyásoló speciális állapotokat:\n"
+" * Normál: az alapértelmezett állapot\n"
+" * Blokkolt: azt mutatja, hogy valami megakadályozza ezen feladat előrehaladását\n"
+" * Készen áll a következő szakaszra: azt mutatja, hogy a feladat készen áll a következő szakaszba való áthúzásra"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1201,14 +1201,14 @@ msgstr "Hozzárendelt feladatok"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
 msgid "Assigned To"
-msgstr "Hozzárendelve"
+msgstr "Hozzárendelt személy:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_id
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "Hozzárendelve"
+msgstr "Hozzárendelt személy:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
@@ -1302,7 +1302,7 @@ msgstr ""
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Blocked"
-msgstr "Zárolt"
+msgstr "Blokkolt"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1351,7 +1351,7 @@ msgstr "Mégsem"
 #: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
-msgstr "Törölve"
+msgstr "Visszavonva"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1374,8 +1374,8 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
-"Válasszon egy <b>projekt nevet</b>. (pld. Weboldal indítás, Termék "
-"fejlesztés, Irodai rendezvény, stb.)"
+"Válasszon egy <b>projektnevet</b>. (pl. Weboldalindítás, Termékfejlesztés, "
+"Irodai rendezvény, stb.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1431,7 +1431,7 @@ msgstr "Kattintson új projekt létrehozásához.<br>"
 #. module: project
 #: selection:project.config.settings,module_pad:0
 msgid "Collaborative rich text on task description"
-msgstr "Segítségnyújtó szöveg a folyamat leíráshoz"
+msgstr "Kollaboratív, formázott szöveg használata a feladat leírásánál"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1508,7 +1508,7 @@ msgstr "Tanácsadói megbízás"
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Contact"
-msgstr "Kapcsolat"
+msgstr "Kapcsolattartó"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
@@ -1859,7 +1859,7 @@ msgstr "Ne habozzon kiválasztani csak azon eseményeket, amelyek érdeklik Önt
 #: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
-msgstr "Elvégezve"
+msgstr "Kész"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2009,7 +2009,7 @@ msgstr "Végül a feladat telepítésre került"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Kanban"
-msgstr "Kanban nézetben behajtott"
+msgstr "Kanbannézetben behajtott"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2066,7 +2066,7 @@ msgstr "Előrejelzések"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts, planning and Gantt charts"
-msgstr "Előrejelzések, tervezés és Gantt listák"
+msgstr "Előrejelzések, tervezés és Gantt diagramok"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2887,7 +2887,7 @@ msgstr "Tulajdonos"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
 msgid "Pads"
-msgstr "Szerkesztők / Pad-ok"
+msgstr "Szerkesztők"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
@@ -3085,7 +3085,7 @@ msgstr "Látványtervezésre / reklámszövegírásra kész"
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr "Következő szakaszra ugorhat"
+msgstr "Készen áll a következő szakaszra"
 
 #. module: project
 #. openerp-web
@@ -3113,7 +3113,7 @@ msgstr "Bemutatásra,  kiadásra vagy küldésre kész"
 #: model:project.task,legend_done:project.project_task_19
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
-msgstr "Újranyitásra kész"
+msgstr "Készen áll az újranyitásra"
 
 #. module: project
 #. openerp-web
@@ -3160,7 +3160,7 @@ msgstr "Hátralévő idő"
 #: code:addons/project/static/src/js/project.js:48
 #, python-format
 msgid "Remove Cover Image"
-msgstr "Borító kép eltávolítása"
+msgstr "Borítókép eltávolítása"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3189,7 +3189,7 @@ msgstr "Riportkészítés"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reports"
-msgstr "Kimutatások"
+msgstr "Riportok"
 
 #. module: project
 #. openerp-web
@@ -3233,7 +3233,7 @@ msgstr "Projekt keresése"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr "Kiválaszt"
+msgstr "Kiválasztás"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3266,14 +3266,14 @@ msgstr "Szolgáltatási szint szerződés (SLA)"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr "Borító kép beállítása"
+msgstr "Borítókép beállítása"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
-msgstr "Egy borító kép beállítása"
+msgstr "Borítókép beállítása"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_general_settings
@@ -3430,7 +3430,7 @@ msgstr "Feladat blokkolva"
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Opened"
-msgstr "Feladat megnyitott"
+msgstr "Feladat megnyitva"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -3474,7 +3474,7 @@ msgstr "Feladat blokkolva"
 #. module: project
 #: selection:project.config.settings,module_pad:0
 msgid "Task description is plain text"
-msgstr "Feladat leírás egy egyszerű szöveg"
+msgstr "A feladat leírása egy egyszerű szöveg"
 
 #. module: project
 #. openerp-web
@@ -3500,7 +3500,7 @@ msgstr "A feladat tesztelése befejeződött"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 msgid "Task opened"
-msgstr "Feladat megnyitott"
+msgstr "Feladat megnyitva"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -3660,8 +3660,8 @@ msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
 msgstr ""
-"Nincs elérhető kép a borító beállításához. A feladathoz küldjön egy üzenetet"
-" egy kép melléklettel."
+"Nem áll rendelkezésre borítóként beállítható kép. Küldjön egy csatolt képet "
+"tartalmazó üzenetet a feladatra."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
@@ -3699,7 +3699,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"A szakasz behajtott kanban nézetben, ha nincsenek benne megjeleníthető "
+"Ez a szakasz behajtott kanbannézetben, ha nincsenek benne megjeleníthető "
 "rekordok."
 
 #. module: project
@@ -3814,7 +3814,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "Track customer satisfaction on tasks"
-msgstr "Ügyfélelégedettség követése a feladatokon"
+msgstr "Ügyfélelégedettség nyomon követése a feladatokon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3877,7 +3877,7 @@ msgstr ""
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the priority for tasks related to gold customers"
 msgstr ""
-"Használja a prioritást az arany fokozatú ügyfelekkel összefüggő feladatok "
+"Használja az elsőbbséget az arany fokozatú ügyfelekkel összefüggő feladatok "
 "esetében"
 
 #. module: project
@@ -3925,7 +3925,7 @@ msgstr "Tekintse meg a heti statisztikákat"
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr "Összes alkalmazott által látható"
+msgstr "Az összes alkalmazott láthatja"
 
 #. module: project
 #: code:addons/project/models/project.py:205
@@ -4079,8 +4079,8 @@ msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
 msgstr ""
-"Eszköztippet is adhat a kanban és forma nézetekben lévő csillag "
-"használatához."
+"Helyi súgót is megadhat a kanban- és űrlapnézetekben rendelkezésre álló "
+"csillag használatáról."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4173,7 +4173,7 @@ msgstr ", és aktiválja a következőket:"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr "pl. Munkahelyi rendezvény"
+msgstr "pl. Irodai rendezvény"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
