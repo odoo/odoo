@@ -7,6 +7,7 @@
 # trieu le <trieu.lth@gmail.com>, 2016
 # fanha99 <fanha99@hotmail.com>, 2016
 # Martin Trigaux, 2016
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2016
 # son dang <son.dang@doda100.com>, 2016
 # PHAM QUOC MY <mypham2802@gmail.com>, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
@@ -14,7 +15,6 @@
 # Tuan Tran <tmtuan.projects@gmail.com>, 2017
 # Su Pham Nghiep Vu <nghiepvusupham58@gmail.com>, 2017
 # file aio <fileaio@gmail.com>, 2017
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2017
 # Thang Duong Bao <nothingctrl@gmail.com>, 2017
 # Jean-Charles Drubay <jcdrubay@gmail.com>, 2017
 # Thang Tong <thangtn0586@gmail.com>, 2017
@@ -453,6 +453,7 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Cấu hình này tùy theo công ty mà bạn đăng nhập vào dùng.</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
@@ -658,7 +659,7 @@ msgstr "<strong>Chi phí:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr ""
+msgstr "<strong>Vị thế tài chính:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -841,7 +842,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Total</strong>"
-msgstr "<strong>Tổng</strong>"
+msgstr "<strong>Tổng tiền</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1830,7 +1831,7 @@ msgstr "Bút toán quản trị"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytic Line"
+msgstr "Dòng phân tích"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1841,7 +1842,7 @@ msgstr "Analytic Lines"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Từ khóa phân tích"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_analytic_id
@@ -2255,7 +2256,7 @@ msgstr "Hoá đơn để thanh toán"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Tin báo khóa lại"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2782,7 +2783,7 @@ msgstr "Bình luận"
 #: model:ir.model.fields,field_description:account.field_account_invoice_commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Commercial Entity"
+msgstr "Tổ chức thương mại"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3250,7 +3251,7 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:account.field_validate_account_move_create_date
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_create_date
 msgid "Created on"
-msgstr "Thời điểm tạo"
+msgstr "Được tạo lúc"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit
@@ -3419,7 +3420,7 @@ msgstr "Hoàn tiền cho Khách hàng"
 #: model:ir.model.fields,field_description:account.field_product_product_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_taxes_id
 msgid "Customer Taxes"
-msgstr "Các Thuế cho Khách hàng"
+msgstr "Thuế khách hàng"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -3635,7 +3636,7 @@ msgstr "Miêu tả tại sao bạn lấy tiền từ két:"
 #: model:ir.ui.view,arch_db:account.view_account_type_form
 #, python-format
 msgid "Description"
-msgstr "Miêu tả"
+msgstr "Mô tả"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_note
@@ -3685,7 +3686,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Disc.(%)"
-msgstr "Chiết khấu (%)"
+msgstr "CK. (%)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_discount
@@ -4526,7 +4527,7 @@ msgstr "Tốt lắm!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_weight
 msgid "Gross Weight"
-msgstr "Tổng khối lượng"
+msgstr "Tổng trọng lượng"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -5064,7 +5065,7 @@ msgstr "Hóa đơn"
 #: model:mail.message.subtype,description:account.mt_invoice_created
 #: model:mail.message.subtype,name:account.mt_invoice_created
 msgid "Invoice Created"
-msgstr ""
+msgstr "Hóa đơn được tạo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date_invoice
@@ -5189,7 +5190,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "Đã xuất hóa đơn"
+msgstr "Đã lên hóa đơn"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_refund_out_tree
@@ -5708,7 +5709,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_validate_account_move_write_uid
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Sửa lần cuối bởi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_write_date
@@ -6145,7 +6146,7 @@ msgstr "Thêm"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Thêm thông tin"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6279,7 +6280,7 @@ msgstr "Không theo dõi"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "Không tin nhắn"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1080
@@ -6974,7 +6975,7 @@ msgstr "Payment Term Line"
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 #: model:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Payment Terms"
-msgstr "Các điều khoản thanh toán"
+msgstr "Điều khoản thanh toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_type
@@ -8082,6 +8083,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Chọn tùy chọn \"Cảnh báo\" sẽ hiển thị thông điệp cho người dùng, Chọn "
+"\"Cảnh báo đóng\" sẽ thoát ra ngoài kèm cảnh báo và chặn luồng. Cảnh báo sẽ "
+"được điền ở phần thông tin dưới đây."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_template_action
@@ -8134,7 +8138,7 @@ msgstr "Tháng Chín"
 #: model:ir.model.fields,field_description:account.field_account_tax_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_template_sequence
 msgid "Sequence"
-msgstr "Trình tự"
+msgstr "Thứ tự"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_active
@@ -8333,12 +8337,12 @@ msgstr "Trạng thái"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_subtotal
 msgid "Subtotal"
-msgstr "Tổng phụ"
+msgstr "Thành tiền"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "TIN:"
-msgstr ""
+msgstr "MST:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -9082,6 +9086,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
+"Tài khoản này sẽ được dùng lên hóa đơn thay cho tài khoản chi phí mặc định "
+"của sản phẩm này."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product_property_account_income_id
@@ -9090,6 +9096,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
 msgstr ""
+"Tài khoản này sẽ được dùng lên hóa đơn thay cho tài khoản ghi nhận giá trị "
+"bán hàng mặc định của sản phẩm này."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category_property_account_expense_categ_id
@@ -9687,7 +9695,7 @@ msgstr "Các Bút Toán chưa được đối soát"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Giá trị trước thuế"
+msgstr "Tổng chưa thuế"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
@@ -9906,7 +9914,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_product_product_supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Thuế NCC"
+msgstr "Thuế nhà cung cấp"
 
 #. module: account
 #. openerp-web
@@ -9941,7 +9949,7 @@ msgstr "Cảnh báo"
 #: code:addons/account/models/account_invoice.py:499
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Cảnh báo cho %s"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -10470,7 +10478,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
