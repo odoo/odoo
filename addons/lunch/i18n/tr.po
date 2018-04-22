@@ -51,7 +51,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
-msgstr ""
+msgstr "Bir ürün ismi, kategorisi, fiyatı ve tedarikçisi ile tanımlanır."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__active
@@ -85,6 +85,9 @@ msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
 "                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
 msgstr ""
+"Uyarılar, çalışanı öğle yemeği siparişleriyle ilgili olası sorunlara karşı uyarmak için kullanılır.\n"
+"\n"
+"Bir öğle yemeği uyarısı oluşturmak için, tekrarlamasını, uyarının gerçekleştirileceği zaman aralığını ve görüntülenecek mesajı tanımlamanız gerekir."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
@@ -105,7 +108,7 @@ msgstr "Arşivlenmiş"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__balance_visible
 msgid "Balance Visible"
-msgstr ""
+msgstr "Görünür Bakiye"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__start_hour
@@ -115,7 +118,7 @@ msgstr "Arasında"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_alert_kanban
 msgid "Between:"
-msgstr ""
+msgstr "Arasında:"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -125,7 +128,7 @@ msgstr "Çalışan tarafından"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Order"
-msgstr ""
+msgstr "Siparişe Göre"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -135,12 +138,12 @@ msgstr "Kullanıcıya Göre"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Vendor"
-msgstr ""
+msgstr "Tedarikçiye göre"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove__description
 msgid "Can be an order or a payment"
-msgstr ""
+msgstr "Bir sipariş ya da bir ödeme olabilir."
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove__amount
@@ -148,6 +151,8 @@ msgid ""
 "Can be positive (payment) or negative (order or payment if user wants to get"
 " his money back)"
 msgstr ""
+"Pozitif (ödeme) ya da negatif (eğer kullanıcı parasını geri "
+"istediyse,sipariş ya da ödeme) olabilir."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
@@ -170,7 +175,7 @@ msgstr "Nakit Hareketi"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__cash_move_balance
 msgid "Cash Move Balance"
-msgstr ""
+msgstr "Nakit Hareket Dengesi "
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
@@ -207,7 +212,7 @@ msgstr "Denetim Hesapları"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "Tedarikçi Kontrolü"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -308,6 +313,8 @@ msgstr "Çalışan Ödemeleri"
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky__is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
 msgstr ""
+"Şanslı siparişinizin maksimum bütçesini ayarlamak için bu seçeneği "
+"etkinleştirin."
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -331,7 +338,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Feeling Lucky"
-msgstr ""
+msgstr "Şanslı Hisset"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__friday
@@ -359,11 +366,14 @@ msgstr ""
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
 msgstr ""
+"Öğle yemeği ürünleri ile ilgili bütün kategorilere buradan ulaşabilirsiniz."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
 msgstr ""
+"Burada tedarikçiler tarafından gruplanmış bugünün siparişlerini "
+"görebilirsiniz."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
@@ -375,7 +385,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky"
-msgstr ""
+msgstr "Kendimi şanslı hissediyorum."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
@@ -457,7 +467,7 @@ msgstr "Öğle yemeği Uyarısı"
 #: code:addons/lunch/models/lunch.py:265
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "Öğle Yemeği Nakit Hareketi"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:66
@@ -476,22 +486,22 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Lunch: Archive/Restore products"
-msgstr ""
+msgstr "Öğle Yemeği: Ürünleri Arşivle/Restore Et"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "Öğle Yemeği: Yemek İptali"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
 msgid "Lunch: Order meals"
-msgstr ""
+msgstr "Öğle Yemeği: Yemek Siparişi"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "Öğle Yemeği:Yemeği Teslim Al"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -502,7 +512,7 @@ msgstr "Yönetici"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky__max_budget
 msgid "Max Budget"
-msgstr ""
+msgstr "Maksimum Bütçe"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
@@ -523,7 +533,7 @@ msgstr "Hesaplarım gruplandı"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr ""
+msgstr "Öğle Yemeğim"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -565,7 +575,7 @@ msgstr ""
 #: code:addons/lunch/wizard/lucky_order.py:39
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
-msgstr ""
+msgstr "Hiçbir ürün isteğinizle uyuşmadı. Şimdi açlıktan öleceksin."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -586,19 +596,19 @@ msgstr ""
 #: code:addons/lunch/models/lunch.py:225
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "Sadece senin öğle yemeği yöneticin siparişleri iptal edebilir."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Sadece senin öğle yemeği yöneticin siparişleri verebilir."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:214
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
-msgstr ""
+msgstr "Sadece senin öğle yemeği yöneticin siparişleri alındı olarak ayarlar."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__order_id
@@ -639,7 +649,7 @@ msgstr "Sipariş Ağacı"
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_control_suppliers
 msgid "Orders by Vendor"
-msgstr ""
+msgstr "Tedarikçi Siparişleri"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -657,12 +667,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_ids
 msgid "Previous Order"
-msgstr ""
+msgstr "Önceki Sipariş"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_widget
 msgid "Previous Order Widget"
-msgstr ""
+msgstr "Önceki Sipariş Widget'ı"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
@@ -815,7 +825,7 @@ msgstr "Durum"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
-msgstr ""
+msgstr "Tüm siparişlerinizin özeti tedarikçiye ve tarihe göre gruplanır."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sunday
@@ -831,7 +841,7 @@ msgstr "Kullanıcının halihazırda çalıştığı firma"
 #: code:addons/lunch/models/lunch.py:129
 #, python-format
 msgid "The date of your order is in the past."
-msgstr ""
+msgstr "Sipariş tarihiniz geçmişte kalmıştır"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action
@@ -839,6 +849,8 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
 msgstr ""
+"Önceki sipariş kaydı bulunamamıştır. 'Benim Öğle Yemeğim'i tıklayın ve yeni "
+"bir yemek siparişi verin."
 
 #. module: lunch
 #. openerp-web
@@ -860,7 +872,7 @@ msgstr "Bugün"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
 msgid "Today's Orders"
-msgstr ""
+msgstr "Bugünün Siğarişleri"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__total
@@ -900,7 +912,7 @@ msgstr "Tedarikçi"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Month"
-msgstr ""
+msgstr "Aylara Göre Siparişlerin Tedarikçisi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday

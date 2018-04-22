@@ -7,13 +7,14 @@
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Martin Trigaux, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-22 14:09+0000\n"
 "PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1229,6 +1230,8 @@ msgid ""
 "                                    the raw materials of that product will be added to the\n"
 "                                    manufacturing order of the final product."
 msgstr ""
+"Eğer ürün tam olarak bitmemişse: bileşen olarak bu ürünü içeren üretim emri "
+"işlemi, bu ürünün hamaddesi  son ürünün üretim siparişine eklenecektir. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1255,7 +1258,7 @@ msgstr "Bilgilendirici, eşleştirmede kullanılmaz"
 #: code:addons/mrp/models/mrp_unbuild.py:210
 #, python-format
 msgid "Insufficient Quantity"
-msgstr ""
+msgstr "Yetersiz Miktar"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form
@@ -1299,7 +1302,7 @@ msgstr "Bu genel belgemi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
 msgid "Is the Current User Working"
-msgstr ""
+msgstr "Mevctu Kullanıcı Çalışıyor Mu?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:162
@@ -1314,6 +1317,9 @@ msgid ""
 "Set a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"Hammaddeleri bulduğunuz konumda üretiyorsanız boş bırakın. Sabit konumda "
+"üretiyorsanız konum ekleyin. Eğer alt yüklenici ile üretim operasyonu "
+"yapıyorsanız partnerinizin konumunu ekleyebilirsin."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter selection:mrp.bom,type:0
@@ -2600,6 +2606,9 @@ msgid ""
 "to produce after the quantity set in 'Quantity To Process' has been "
 "produced."
 msgstr ""
+"Önceki iş emrinden sonra, sıradaki iş emrini planlamak için ayarınızı "
+"'hayır' olarak yapın. 'İşlenecek Miktar' dan üretim yapmak için ayarınızı "
+"'evet' olarak yapın."
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
@@ -2677,7 +2686,7 @@ msgstr "Stok Hareketi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_dest_ids
 msgid "Stock Movements of Produced Goods"
-msgstr ""
+msgstr "Üretilen Malların Stok Hareketi"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
@@ -2790,7 +2799,7 @@ msgstr "1. operasyonun bileşenleri"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
 msgid "The database object this attachment will be attached to."
-msgstr ""
+msgstr "Bu eki içeren veritabanı eklenecektir."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__routing_id
@@ -2859,7 +2868,7 @@ msgstr "Üretilecek miktar pozitif olmalıdır!"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "Kayıtlı ID eklenmiştir."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__routing_id
@@ -2868,6 +2877,8 @@ msgid ""
 "create work orders afterwards which alters the execution of the "
 "manufacturing order."
 msgstr ""
+"Rota, kullanılan tüm Çalışma Merkezlerini ve ne kadar kullanıldığını içerir."
+" Bu daha sonra üretim emrini değiştirecek işler oluşturacaktır."
 
 #. module: mrp
 #: code:addons/mrp/models/procurement.py:20
@@ -3053,7 +3064,7 @@ msgstr "Toplam Çalışan Siparişler"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Total duration"
-msgstr ""
+msgstr "Toplam Süre"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3142,6 +3153,7 @@ msgid ""
 "Unlock the manufacturing order to correct what has been consumed or "
 "produced."
 msgstr ""
+"Üretilen ya da tüketilen şeyi düzeltmek için üretim emrinin kilidini aç."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3188,7 +3200,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Used In"
-msgstr ""
+msgstr "Burada Kullanıldı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
@@ -3520,6 +3532,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Bilgisayarınızdan bir dosya yükleyebilir ya da dosyanıza internet "
+"bağlantınızı kopyalayıp yapıştırabilirsiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:523
@@ -3583,7 +3597,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:93
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "Yapılmamış bir üretim emri oluşturamazsınız."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:46
