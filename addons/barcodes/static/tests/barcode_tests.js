@@ -404,4 +404,136 @@ QUnit.test('specification of widget barcode_handler', function (assert) {
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
     delete fieldRegistry.map.test_barcode_handler;
 });
+
+QUnit.test('specification of widget barcode_handler with keypress and notifyChange', function (assert) {
+    assert.expect(6);
+    var done = assert.async();
+
+    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
+
+    this.data.order.onchanges = {
+        _barcode_scanned: function () {},
+    };
+
+    // Define a specific barcode_handler widget for this test case
+    var TestBarcodeHandler = AbstractField.extend({
+        init: function () {
+            this._super.apply(this, arguments);
+
+            this.trigger_up('activeBarcode', {
+                name: 'test',
+                fieldName: 'line_ids',
+                notifyChange: false,
+                setQuantityWithKeypress: true,
+                quantity: 'quantity',
+                commands: {
+                    barcode: '_barcodeAddX2MQuantity',
+                }
+            });
+        },
+    });
+    fieldRegistry.add('test_barcode_handler', TestBarcodeHandler);
+
+    var form = createView({
+        View: FormView,
+        model: 'order',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="_barcode_scanned" widget="test_barcode_handler"/>' +
+                    '<field name="line_ids">' +
+                        '<tree>' +
+                            '<field name="product_id"/>' +
+                            '<field name="product_barcode" invisible="1"/>' +
+                            '<field name="quantity"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        mockRPC: function (route, args) {
+            assert.step(args.method);
+            return this._super.apply(this, arguments);
+        },
+        res_id: 1,
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+    _.each(['1','2','3','4','5','6','7','8','9','0','Enter'], triggerKeypressEvent);
+         // Quantity listener should open a dialog.
+    triggerKeypressEvent('5');
+
+    setTimeout(function () {
+        var keycode = $.ui.keyCode.ENTER;
+
+        assert.strictEqual($('.modal .modal-body').length, 1, 'should open a modal with a quantity as input');
+        assert.strictEqual($('.modal .modal-body .o_set_qty_input').val(), '5', 'the quantity by default in the modal shoud be 5');
+
+        $('.modal .modal-body .o_set_qty_input').val('7');
+
+        $('.modal .modal-body .o_set_qty_input').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+        assert.strictEqual(form.$('.o_data_row .o_data_cell:nth(1)').text(), '7',
+        "quantity checked should be 7");
+
+        assert.verifySteps(['read', 'read']);
+
+        form.destroy();
+        barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
+        delete fieldRegistry.map.test_barcode_handler;
+        done();
+    });
+});
+QUnit.test('barcode_scanned only trigger error for active view', function (assert) {
+    assert.expect(2);
+
+    this.data.order_line.fields._barcode_scanned = {string: 'Barcode scanned', type: 'char'};
+
+    var form = createView({
+        View: FormView,
+        model: 'order',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="_barcode_scanned" widget="barcode_handler"/>' +
+                    '<field name="line_ids">' +
+                        '<tree>' +
+                            '<field name="product_id"/>' +
+                            '<field name="product_barcode" invisible="1"/>' +
+                            '<field name="quantity"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        archs: {
+            "order_line,false,form":
+                '<form string="order line">' +
+                    '<field name="_barcode_scanned" widget="barcode_handler"/>' +
+                    '<field name="product_id"/>' +
+                '</form>',
+        },
+        res_id: 1,
+        intercepts: {
+            warning: function (event) {
+                assert.step(event.name);
+            }
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    form.$('.o_data_row:first').click();
+
+    // We do not trigger on the body since modal and 
+    // form view are both inside it.
+    function modalTriggerKeypressEvent(char) {
+        var keycode;
+        if (char === "Enter") {
+            keycode = $.ui.keyCode.ENTER;
+        } else {
+            keycode = char.charCodeAt(0);
+        }
+        return $('.modal').trigger($.Event('keypress', {which: keycode, keyCode: keycode}));
+    }
+    _.each(['O','-','B','T','N','.','c','a','n','c','e','l','Enter'], modalTriggerKeypressEvent);
+    assert.verifySteps(['warning'], "only one event should be triggered");
+    form.destroy();
+});
 });

@@ -1055,6 +1055,10 @@ take the following attributes:
   dictionary with the "group by" field as key and the maximum consolidation
   value that can be reached before displaying the cell in red
   (e.g. ``{"user_id": 100}``)
+``consolidation_exclude``
+  name of the field that describe if the task has to be excluded
+  from the consolidation
+  if set to true it displays a striped zone in the consolidation line
 
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
@@ -1069,11 +1073,9 @@ take the following attributes:
 ``drag_resize``
   resizing of the tasks, default is ``true``
 
-.. ``progress``
-    name of a field providing the completion percentage for the record's event,
-    between 0 and 100
-.. consolidation_exclude
-.. consolidation_color
+``progress``
+  name of a field providing the completion percentage for the record's event,
+  between 0 and 100
 
 .. _reference/views/diagram:
 

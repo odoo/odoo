@@ -146,7 +146,19 @@ QUnit.module('Views', {
     };
 
     QUnit.test('simple calendar rendering', function (assert) {
-        assert.expect(22);
+        assert.expect(24);
+
+        this.data.event.records.push({
+            id: 7,
+            user_id: session.uid,
+            partner_id: false,
+            name: "event 7",
+            start: "2016-12-18 09:00:00",
+            stop: "2016-12-18 10:00:00",
+            allday: false,
+            partner_ids: [2],
+            type: 1
+        });
 
         var calendar = createView({
             View: CalendarView,
@@ -187,7 +199,7 @@ QUnit.module('Views', {
         assert.strictEqual($sidebar.find('.o_selected_range').length, 1, "should highlight the target day in mini calendar");
 
         calendar.$buttons.find('.o_calendar_button_month').trigger('click'); // display all the month
-        assert.strictEqual(calendar.$('.fc-event').length, 6, "should display 6 events on the month (5 events + 2 week event - 1 'event 6' is filtered)");
+        assert.strictEqual(calendar.$('.fc-event').length, 7, "should display 7 events on the month (5 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')");
         assert.strictEqual($sidebar.find('.o_selected_range').length, 31, "month scale should highlight all days in mini calendar");
 
         // test filters
@@ -196,15 +208,19 @@ QUnit.module('Views', {
 
         var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(user))');
         assert.ok($typeFilter.length, "should display 'user' filter");
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 2, "should display 2 filter items for 'user'");
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'user'");
+
+        // filters which has no value should show with string "Undefined" and should show at the last
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), false, "filters having false value should be displayed at last in filter items");
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last > span').text(), "Undefined", "filters having false value should display 'Undefined' string");
 
         var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
         assert.ok($attendeesFilter.length, "should display 'attendees' filter");
         assert.strictEqual($attendeesFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
         assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
 
-        assert.strictEqual(calendar.$('.fc-event').length, 6,
-            "should display 6 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
+        assert.strictEqual(calendar.$('.fc-event').length, 7,
+            "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
         calendar.$('.o_calendar_filter .o_checkbox input').first().click();  // Disable first filter
         assert.strictEqual(calendar.$('.fc-event').length, 4, "should now only display 4 event");
         calendar.$('.o_calendar_filter .o_checkbox input').eq(1).click();  // Disable second filter
@@ -1714,6 +1730,41 @@ QUnit.module('Views', {
         calendar.destroy();
 
         testUtils.unpatch(mixins.ParentedMixin);
+    });
+
+    QUnit.test('timezone does not affect current day', function (assert) {
+        assert.expect(2);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar date_start="start_date">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return -2400; // 40 hours timezone
+                },
+            },
+
+        });
+
+        var $sidebar = calendar.$('.o_calendar_sidebar');
+
+        assert.strictEqual($sidebar.find('.ui-datepicker-current-day').text(), "12", "should highlight the target day");
+
+        // go to previous day
+        $sidebar.find('.ui-datepicker-current-day').prev().click();
+
+        assert.strictEqual($sidebar.find('.ui-datepicker-current-day').text(), "11", "should highlight the selected day");
+
+        calendar.destroy();
     });
 });
 

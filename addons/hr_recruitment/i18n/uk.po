@@ -4,9 +4,9 @@
 # 
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2017
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
+# Bohdan Lisnenko, 2017
+# Martin Trigaux, 2017
+# Zoriana Zaiats, 2017
 # Kateryna Onyshchenko <Katrona17@gmail.com>, 2017
 # Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
@@ -397,31 +397,40 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Шановні,</p>\n"
+"<p>Я дуже радий повідомити про те, що <strong> ${object.name} </strong> \n"
+"долучиться до нас як ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    в ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Будь ласка, привітайте його/її і допоможіть йому знайти свої позначки.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Contact:</b>"
-msgstr ""
+msgstr "<b>Контакт:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Degree:</b>"
-msgstr ""
+msgstr "<b>Рівень:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr ""
+msgstr "<b>Відділ:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Зустрічі</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Відстежувачі</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -465,11 +474,13 @@ msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
+"Додайте стовпці, щоб визначити <b>етапи інтерв'ю</b>.<br/><i>наприклад, "
+"Новий &gt; Кваліфікований &gt; Перше інтерв'ю &gt; Набір</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
 msgid "Address where employees are working"
-msgstr ""
+msgstr "Адреса, де працює співробітник"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_id
@@ -484,7 +495,7 @@ msgstr "Безпека псевдоніма контакту"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
-msgstr ""
+msgstr "ID псевдоніму"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
@@ -516,33 +527,33 @@ msgstr "Заявник"
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
-msgstr ""
+msgstr "Заявник найманий"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
-msgstr ""
+msgstr "Стадію заявника змінено"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr ""
+msgstr "Заявник створений"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr ""
+msgstr "Заявник найманий"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_name
 msgid "Applicant's Name"
-msgstr ""
+msgstr "Ім'я заявника"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 msgid "Applicants"
-msgstr ""
+msgstr "Заявники"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -551,6 +562,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"Кандидати та їх доданий CV створюються автоматично при відправленні електронного листа.\n"
+"Якщо ви встановлюєте модулі керування документами, всі резюме автоматично індексуються,\n"
+"так що ви можете легко шукати через їх вміст."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -568,12 +582,12 @@ msgstr "Додаток"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Application Summary"
-msgstr ""
+msgstr "Резюме кандидата"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application(s)"
-msgstr ""
+msgstr "Заява(и)"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
@@ -585,17 +599,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Applications"
-msgstr ""
+msgstr "Заяви"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_job_id
 msgid "Applied Job"
-msgstr ""
+msgstr "Подана заявка на роботу"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_priority
 msgid "Appreciation"
-msgstr ""
+msgstr "Оцінка"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -626,12 +640,12 @@ msgstr "Наявність"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
-msgstr ""
+msgstr "Рівень бакалавра"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
-msgstr ""
+msgstr "Відділом"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
@@ -641,7 +655,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
 msgid "By Recruiter"
-msgstr ""
+msgstr "Рекрутером"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -651,24 +665,24 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr ""
+msgstr "Категорія заявника"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr ""
+msgstr "Натисніть тут, щоб створити нову вакансію."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid "Click to add a new employee."
-msgstr ""
+msgstr "Натисніть, щоб додати нового працівника."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
-msgstr ""
+msgstr "Натисніть, щоб додати новий етап у процесі рекрутингу."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
@@ -724,12 +738,12 @@ msgstr "Контракт"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposal"
-msgstr ""
+msgstr "Контрактна пропозиція"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
 msgid "Contract Signed"
-msgstr ""
+msgstr "Підписаний контракт"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -744,24 +758,26 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Create Employee"
-msgstr ""
+msgstr "Створити співробітника"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create a Job Position"
-msgstr ""
+msgstr "Створити робочу позицію"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Create alias"
-msgstr ""
+msgstr "Створити псевдонім"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Створіть кілька псевдонімів, які дозволять вам відстежувати, звідки беруться"
+" заявники."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -789,7 +805,7 @@ msgstr "Дата створення"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Creation Week"
-msgstr ""
+msgstr "Тиждень створення"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_activity
@@ -804,7 +820,7 @@ msgstr "Днів для закриття"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_open
 msgid "Days to Open"
-msgstr ""
+msgstr "Дні для відкриття"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_defaults
@@ -827,6 +843,9 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
+"Визначте тут ваші етапи процесу рекрутингу, наприклад:\n"
+"кваліфікаційний дзвінок, перше інтерв'ю, друге інтерв'ю, відмовлено,\n"
+"найнятий"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -837,17 +856,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Degree"
-msgstr ""
+msgstr "Рівень"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
-msgstr ""
+msgstr "Рівень рекрутингу"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
 msgid "Degrees"
-msgstr ""
+msgstr "Рівні"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_delay_close
@@ -898,7 +917,7 @@ msgstr "Назва для відображення"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid "Doctoral Degree"
-msgstr ""
+msgstr "Рівень доктора"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_documents_count
@@ -915,6 +934,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
 msgstr ""
+"Не забудьте вказати відділ, якщо ваш процес найму\n"
+"відрізняється залежно від посади."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
@@ -939,6 +960,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"Надішліть псевдонім електронною поштою для цієї посади. Нові електронні "
+"листи автоматично створюють нових претендентів на цю посаду."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -971,7 +994,7 @@ msgstr "Подія"
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 msgid "Excellent"
-msgstr ""
+msgstr "Чудово"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_expected_employee
@@ -981,12 +1004,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected
 msgid "Expected Salary"
-msgstr ""
+msgstr "Очікувана зарплата"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Expected Salary Extra"
-msgstr ""
+msgstr "Очікувана додаткова зарплата"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -996,12 +1019,12 @@ msgstr "Розширені фільтри"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Extra advantages..."
-msgstr ""
+msgstr "Додаткові переваги..."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Feedback of interviews..."
-msgstr ""
+msgstr "Відгук інтерв'ю..."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
@@ -1011,7 +1034,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
-msgstr ""
+msgstr "Складено в рекрутинговій трубі"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1021,12 +1044,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr ""
+msgstr "Дає порядок послідовності при відображенні списку рівнів."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr ""
+msgstr "Дає послідовність при відображенні списку етапів."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1036,7 +1059,7 @@ msgstr "Добре"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
 msgid "Graduate"
-msgstr ""
+msgstr "Випускник"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1083,6 +1106,8 @@ msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
 msgstr ""
+"Якщо встановлено, для заявника використовується шаблон, коли заявник "
+"встановлений на етапі."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_active
@@ -1090,11 +1115,13 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
+"Якщо активне поле встановлено як помилкове, це дозволить вам приховати кейс,"
+" не виймаючи його."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
-msgstr ""
+msgstr "Початкове підтвердження"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_hr_recruitment_survey
@@ -1123,22 +1150,22 @@ msgstr ""
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "Робоча кампанія"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Job Email"
-msgstr ""
+msgstr "Робоча електронна пошта"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
-msgstr ""
+msgstr "ID роботи"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
 msgid "Job Location"
-msgstr ""
+msgstr "Робоче місцезнаходжння"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -1153,7 +1180,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_new
 msgid "Job Position created"
-msgstr ""
+msgstr "Посада створена"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
@@ -1171,7 +1198,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Робоча специфікація"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1181,12 +1208,12 @@ msgstr "Вакансії"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Jobs - Recruitment Form"
-msgstr ""
+msgstr "Роботи - рекрутингова фора"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
-msgstr ""
+msgstr "Джерела роботи"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
@@ -1200,7 +1227,7 @@ msgstr "Остання модифікація"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
 msgid "Last Stage"
-msgstr ""
+msgstr "Останній етап"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_last_stage_update
@@ -1246,7 +1273,7 @@ msgstr "Керівник"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
-msgstr ""
+msgstr "Рівень магістра"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
@@ -1282,28 +1309,28 @@ msgstr "Нова"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_applicant_count
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
 msgid "New Applicant"
-msgstr ""
+msgstr "Новий кандидат"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr ""
+msgstr "Нові кандидати"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
 msgid "New Application"
-msgstr ""
+msgstr "Нова заявка"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
 msgid "New Applications"
-msgstr ""
+msgstr "Нові заявки"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:426
 #, python-format
 msgid "New Employee %s Hired"
-msgstr ""
+msgstr "Нового працівника %s найнято"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
@@ -1313,17 +1340,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_hired_employee
 msgid "New Hired Employee"
-msgstr ""
+msgstr "Новий найнятий працівник"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
 msgid "Newly Hired Employees"
-msgstr ""
+msgstr "Новобранці"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee_newly_hired_employee
 msgid "Newly hired employee"
-msgstr ""
+msgstr "Новобранець"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_nmenu_activity
@@ -1340,7 +1367,7 @@ msgstr "Без теми"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet."
-msgstr ""
+msgstr "Ще немає жодного документу."
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1363,6 +1390,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo допомагає відстежувати заявників при наборі\n"
+"і дотримуватися всіх операцій: зустрічей, інтерв'ю тощо."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -1370,6 +1399,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Odoo допомагає відстежувати заявників при наборі\n"
+"і дотримуватися всіх операцій: зустрічей, інтерв'ю тощо."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -1475,12 +1506,12 @@ msgstr "Ймовірність"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_proposed
 msgid "Proposed Salary"
-msgstr ""
+msgstr "Запропонована зарплата"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_proposed_extra
 msgid "Proposed Salary Extra"
-msgstr ""
+msgstr "Запропонована додаткова зарплата"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1502,7 +1533,7 @@ msgstr "Вакансії"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr ""
+msgstr "Етап рекрутингу/кандидатів"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -1512,7 +1543,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Recruitment Analysis"
-msgstr ""
+msgstr "Аналіз рекрутингу"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1527,12 +1558,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_user_id
 msgid "Recruitment Responsible"
-msgstr ""
+msgstr "Відповідальний прийом на роботу"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
-msgstr ""
+msgstr "Рекрутинг"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
@@ -1552,7 +1583,7 @@ msgstr "Відхилено"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Відновити заявку"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1576,27 +1607,27 @@ msgstr "Відповідальний"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job02
 msgid "Resumes and Letters"
-msgstr ""
+msgstr "Резюме та листи"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected
 msgid "Salary Expected by Applicant"
-msgstr ""
+msgstr "Очікувана зарплата кандидата"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr ""
+msgstr "Очікувана кандидатом зарплата, додаткові переваги"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr ""
+msgstr "Запропонована організацією зарплата"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
+msgstr "Запропонована зарплата організацією, додаткові переваги"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -1606,17 +1637,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Schedule interview with this applicant"
-msgstr ""
+msgstr "Заплановане інтерв'ю з цим кандидатом"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Search Applicants"
-msgstr ""
+msgstr "Пошук кандидатів"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
 msgid "Second Interview"
-msgstr ""
+msgstr "Повторне інтерв"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1656,12 +1687,14 @@ msgstr "Джерело заявників"
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr ""
+msgstr "Джерела кандидатів"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Конкретна робота, яка використовує цей етап. Інші роботи не "
+"використовуватимуть цей етап."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1689,12 +1722,12 @@ msgstr "Стадію змінено"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_name
 msgid "Stage name"
-msgstr ""
+msgstr "Назва етапу"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Stage of Recruitment"
-msgstr ""
+msgstr "Етап рекрутингу"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_last_stage_id
@@ -1713,17 +1746,17 @@ msgstr "Стадії"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start Recruitment"
-msgstr ""
+msgstr "Розпочати рекрутинг"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Subject / Applicant"
-msgstr ""
+msgstr "Тема/Кандидат"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_name
 msgid "Subject / Application Name"
-msgstr ""
+msgstr "Тема/Назва заявки"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.applicant.category:0
@@ -1741,7 +1774,7 @@ msgstr "Мітки"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
 msgid "The date at which the applicant will be available to start working"
-msgstr ""
+msgstr "Дата, коли кандидат зможе почати працювати"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
@@ -1757,7 +1790,7 @@ msgstr ""
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr ""
+msgstr "Назва рівня рекрутингу має бути унікальною!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_name
@@ -1788,6 +1821,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Ці псевдоніми можуть бути електронними листами чи URL-адресами для кожного "
+"джерела. Коли заявник приїде сюди через один з них, ви дізнаєтеся, звідки "
+"він прибув."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1818,6 +1854,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Це меню допомагає вам шукати резюме та мотиваційні\n"
+"листи. Odoo автоматично показує .PDF, .DOC, DOCX, .TXT\n"
+"файли, щоби ви могли шукати ключові слова з вмісту\n"
+"файлів."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1841,6 +1881,8 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Спробуйте надіслати електронний лист на цю адресу, вона автоматично створить"
+" програму."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1879,6 +1921,7 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
 msgstr ""
+"Використовуйте шляхи переходів <b>повернутися на інформаційну панель</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
@@ -1888,14 +1931,14 @@ msgstr "Ел. пошта користувача"
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 msgid "Very Good"
-msgstr ""
+msgstr "Дуже добре"
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tour.js:11
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
-msgstr ""
+msgstr "Хочете <b>почати рекрутинг</b> як професіонал? <i>Розпчніть тут.</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1905,7 +1948,7 @@ msgstr "Ел. пошта підписників"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Вітаємо ${object.name} "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
@@ -1914,12 +1957,17 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+"Просто швидко подивіться на екран працівника Odoo, ви\n"
+"можете легко знайти всю необхідну інформації для кожної людини;\n"
+"контактні дані, робоче місце, наявність і т. д."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:430
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
+"Ви повинні визначити прикладне завдання та контактне ім'я для цього "
+"заявника."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
@@ -1934,13 +1982,13 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr ""
+msgstr "наприклад, менеджер з продажу"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:281
 #, python-format
 msgid "job applicants"
-msgstr ""
+msgstr "кандидати на роботу"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_config_settings

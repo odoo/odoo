@@ -1698,7 +1698,6 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('div[name="document"] > img').attr('width'), "90",
             "the image should correctly set its attributes");
         form.destroy();
-
     });
 
     QUnit.test('image fields in subviews are loaded correctly', function (assert) {
@@ -1746,6 +1745,34 @@ QUnit.module('basic_fields', {
         assert.strictEqual($('.modal-dialog').find('.o_field_image > img')[0].src,
             'data:image/png;base64,product_image',
             'The image of the many2many in its form view should be present');
+
+        form.destroy();
+    });
+
+    QUnit.test('image fields with required attribute', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" required="1" widget="image"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    throw new Error("Should not do a create RPC with unset required image field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'),
+            "form view should still be editable");
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_invalid'),
+            "image field should be displayed as invalid");
 
         form.destroy();
     });

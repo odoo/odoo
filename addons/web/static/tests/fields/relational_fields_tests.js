@@ -11248,6 +11248,38 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('default_get a reference field in a x2m', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.turtles.default = [
+            [0, false, {turtle_ref: 'product,37'}]
+        ];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree>' +
+                                '<field name="turtle_ref"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            archs: {
+                'turtle,false,form': '<form><field name="display_name"/><field name="turtle_ref"/></form>',
+            },
+        });
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_data_row:first').text(), "xphone",
+            "the default value should be correctly handled");
+        form.destroy();
+    });
+
     QUnit.test('widget reference on char field, reset by onchange', function (assert) {
         assert.expect(4);
 
@@ -11296,6 +11328,32 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('a[name="foo"]').text(), "xpad",
             "foo field should have been updated");
         form.destroy();
+    });
+
+    QUnit.test('reference and list navigation', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="reference"/></tree>',
+        });
+
+        // edit first row
+        list.$('.o_data_row .o_data_cell').first().click();
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_field_widget[name="reference"] input')[0], document.activeElement,
+            'input of first data row should be selected');
+
+        // press TAB to go to next line
+        list.$('.o_data_row:eq(0) input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_field_widget[name="reference"] select')[0], document.activeElement,
+            'select of second data row should be selected');
+
+        list.destroy();
     });
 
     QUnit.test('one2many with extra field from server not in form', function (assert) {

@@ -2281,6 +2281,21 @@ var FieldReference = FieldMany2One.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        if (this.mode === 'edit' && !this.field.relation) {
+            return this.$('select');
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 

@@ -2289,6 +2289,11 @@ msgid "Has Scrap Moves"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_has_tracking
+msgid "Has Tracking"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posz
 msgid "Height (Z)"
 msgstr ""
@@ -4885,6 +4890,7 @@ msgid "Reference of the document"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_kandan
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
 msgstr ""
@@ -6643,14 +6649,14 @@ msgid "Whether the move was added after the picking's confirmation"
 msgstr ""
 
 #. module: stock
-#: model:product.product,name:stock.test_quant_product
-#: model:product.template,name:stock.test_quant_product_product_template
-msgid "Whiteboard"
+#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
+msgid "Wizard"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
-msgid "Wizard"
+#: code:addons/stock/models/stock_production_lot.py:47
+#, python-format
+msgid "You are not allowed to change the product linked to a serial or lot number if some stock moves have already been created with that number. This would lead to inconsistencies in your stock."
 msgstr ""
 
 #. module: stock

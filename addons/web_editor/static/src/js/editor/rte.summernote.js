@@ -394,6 +394,9 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
+        options : {
+            onUpload: $editable.data('callbacks').onImageUpload,
+        },
     });
     return new $.Deferred().reject();
 };
@@ -784,6 +787,14 @@ eventHandler.attach = function (oLayoutInfo, options) {
     $(document).on("keyup", reRangeSelectKey);
 
     var clone_data = false;
+
+    if (options.model) {
+        oLayoutInfo.editable().data({'oe-model': options.model, 'oe-id': options.id});
+    }
+    if (options.getMediaDomain) {
+        oLayoutInfo.editable().data('oe-media-domain', options.getMediaDomain);
+    }
+
     var $node = oLayoutInfo.editor();
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
@@ -1085,6 +1096,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             _.extend({
                 res_model: data.$editable.data('oe-model'),
                 res_id: data.$editable.data('oe-id'),
+                domain: data.$editable.data('oe-media-domain'),
             }, data.options),
             data.$editable,
             data.media

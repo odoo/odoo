@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Michael Yeung, 2017
 # Bill Hsu <hcm86@icloud.com>, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,9 +41,9 @@ msgid ""
 "</p>\n"
 msgstr ""
 "\n"
-"<p>Hello,</p>\n"
+"<p>您好：</p>\n"
 "<p>\n"
-"    ${user.name} 分享 ${object.slide_type} <strong>${object.name}</strong> 給您!\n"
+"    ${user.name} 與您分享 ${object.slide_type} <strong>${object.name}</strong>！\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
@@ -52,7 +52,7 @@ msgstr ""
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        查看 <strong>${object.name}</strong>\n"
+"       查看 <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
 
@@ -76,9 +76,9 @@ msgid ""
 "</p>\n"
 msgstr ""
 "\n"
-"<p>Hello,</p>\n"
+"<p>您好：</p>\n"
 "<p>\n"
-"    一個新的 ${object.slide_type} <strong>${object.name}</strong> 剛剛發布 ${object.channel_id.name} 於 ${format_tz(object.write_date, tz=user.tz)}\n"
+"    新的 ${object.slide_type} <strong>${object.name}</strong> 已於 ${format_tz(object.write_date, tz=user.tz)} 發佈到 ${object.channel_id.name}\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
@@ -99,7 +99,7 @@ msgstr "#視圖"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
 msgid "# of Embedded Views"
-msgstr "嵌入式視圖"
+msgstr "#嵌入的視圖"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
@@ -116,12 +116,12 @@ msgstr "${user.name} 向您分享了 ${object.slide_type}!"
 msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
-msgstr "(不)歸檔頻道(不)時自動歸檔它的投影片。要繼續嗎？"
+msgstr "自動（取消）歸檔渠道（取消）歸檔其幻燈片。是否繼續？"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid ". Please try again with different keywords."
-msgstr "請使用不同的關鍵字再試一次。"
+msgstr "。請用不用的關鍵字再輸入一次。"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -158,7 +158,7 @@ msgstr "<b>分享:</b>"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-align-justify\"/> Transcript"
-msgstr "<i class=\"fa fa-align-justify\"/> 副本"
+msgstr "<i class=\"fa fa-align-justify\"/> 文本"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -168,7 +168,7 @@ msgstr "<i class=\"fa fa-arrow-right\"/> 查看全部"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
-msgstr "<i class=\"fa fa-bar-chart\"/> 統計量"
+msgstr "<i class=\"fa fa-bar-chart\"/> 統計數據"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -184,7 +184,7 @@ msgstr "<i class=\"fa fa-cloud-upload\"/> 上傳"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-code\"/> Embeded Views"
-msgstr "<i class=\"fa fa-code\"/> 內嵌視圖"
+msgstr "<i class=\"fa fa-code\"/> 嵌入的視圖"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -222,9 +222,7 @@ msgstr "<i class=\"fa fa-home\"/> 主頁"
 msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
 "                                        The social sharing module will be unlocked when a moderator will allow your publication."
-msgstr ""
-"<i class=\"fa fa-info-circle\"/>當主持人允許您發布時，社群共享的模組(social sharing "
-"module)將被解鎖。"
+msgstr "<i class=\"fa fa-info-circle\"/>社會共享的模組將被解鎖，當主持人允許您的出版物。"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -258,7 +256,7 @@ msgid ""
 "                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 msgstr ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+"                                                    <i class=\"fa fa-facebook-square\"/> 臉書"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -276,7 +274,7 @@ msgid ""
 "                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 msgstr ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"<i class=\"fa fa-linkedin-square\"/>LinkedIn"
+"<i class=\"fa fa-linkedin-square\"/>領英"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -285,7 +283,7 @@ msgid ""
 "                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 msgstr ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
-"<i class=\"fa fa-share-alt\"/> 社群分享"
+"<i class=\"fa fa-share-alt\"/> 社交分享"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -294,19 +292,19 @@ msgid ""
 "                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 msgstr ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"<i class=\"fa fa-twitter-square\"/> Twitter"
+"<i class=\"fa fa-twitter-square\"/> 推特"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"help-block\">Send presentation through email</span>"
-msgstr "<span class=\"help-block\">通過電子信件發送介紹信</span>"
+msgstr "<span class=\"help-block\">通過信件發送介紹</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
 "<span class=\"help-block\">Use permanent link to share in social "
 "media</span>"
-msgstr "<span class=\"help-block\">用永久連接分享社交媒體</span>"
+msgstr "<span class=\"help-block\">用固定鏈接在社交媒體裡分享</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -326,39 +324,39 @@ msgstr "標籤必須唯一!"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "API Key"
-msgstr "API Key"
+msgstr "API 密鑰"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
-msgstr ""
+msgstr "動作"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Archived"
-msgstr "已存檔"
+msgstr "歸檔"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
-msgstr ""
+msgstr "僅限已驗證的使用者"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
-msgstr "odoo工作日誌(Awesome Timesheet )"
+msgstr "Odoo 超棒的時間表"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag1
 msgid "CMS"
-msgstr ""
+msgstr "CMS"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
@@ -388,7 +386,7 @@ msgstr "類別"
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
 #, python-format
 msgid "Category"
-msgstr "分類"
+msgstr "類別"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
@@ -415,17 +413,17 @@ msgstr "頻道設定"
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
-msgstr "該標題於頻道裡已經存在，請在保存或發佈前修改標題。"
+msgstr "標題在頻道裡已經存在，請在保存或者發佈前修改標題。"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
 msgid "Channel for Slides"
-msgstr "投影片頻道"
+msgstr "幻燈片頻道"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channel visibility"
-msgstr "頻道是否可見"
+msgstr "頻道可見"
 
 #. module: website_slides
 #: model:ir.actions.act_url,name:website_slides.action_open_channels
@@ -438,7 +436,7 @@ msgstr "頻道"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
 msgid "Company Culture"
-msgstr ""
+msgstr "企業文化"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
@@ -459,8 +457,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
-"無法從獲取數據。文件無法使用或沒有權限。\n"
-"以下為系統的回應：%s"
+"無法從網址獲取數據。文檔或訪問權限不可用。\n"
+"這是已收到的回覆：%s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:322
@@ -469,13 +467,13 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
-"無法從網址獲得數據。文件無法使用或沒有權限：\n"
+"無法從網址獲得數據。文件或者訪問權限不存在:\n"
 "%s"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
-msgstr ""
+msgstr "創建 Google 專案並獲取密鑰"
 
 #. module: website_slides
 #. openerp-web
@@ -491,7 +489,7 @@ msgstr "創建新的標籤 '%s'"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
@@ -500,14 +498,14 @@ msgstr "建立者"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_public
 msgid ""
 "Default channel for slides, all public users can access content of this "
 "channel."
-msgstr "預設的投影片頻道，所有的網站訪問者都可以查看該頻道。"
+msgstr "預設的幻燈片頻道，所有的公眾使用者都可以訪問這個頻道。"
 
 #. module: website_slides
 #. openerp-web
@@ -518,19 +516,19 @@ msgstr "預設的投影片頻道，所有的網站訪問者都可以查看該頻
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Description"
-msgstr "說明"
+msgstr "描述"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:71
 #, python-format
 msgid "Discard"
-msgstr "捨棄"
+msgstr "放棄"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_6
 msgid "Discover how easy marketing your business can be with Odoo"
-msgstr ""
+msgstr "瞭解 Odoo 如何輕鬆實現業務行銷"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_0
@@ -541,11 +539,16 @@ msgid ""
 "\n"
 "Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
 msgstr ""
+"瞭解如何在單個應用程序上集成 MRP、 PLM、品質和維護，以便最大化製造業務的效率。\n"
+"\n"
+" 欲瞭解更多功能，請訪問以下網址：https://www.odoo.com/page/manufacturing-features  \n"
+"\n"
+" 瞭解 Odoo MRP：https://www.odoo.com/page/manufacturing"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_1
 msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
+msgstr "瞭解銷售人員喜愛的客戶關係管理 https://www.odoo.com/page/crm"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_2
@@ -554,9 +557,9 @@ msgid ""
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
-"探索適合任何企業規模與使用範例的整體性資訊整合軟體解決方案。\n"
+"瞭解適合任何業務規模和用例的一體化業務管理軟體解決方案。\n"
 "\n"
-"有關詳情，請訪問https://odoo.com\n"
+" 欲瞭解更多內容，請訪問 https://odoo.com "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
@@ -587,12 +590,12 @@ msgstr "單據"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
 msgid "Document ID"
-msgstr "文件ID"
+msgstr "文檔ID"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
 msgid "Document URL"
-msgstr "文件網址"
+msgstr "文檔網址"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -612,10 +615,10 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
-"下載odoo工作日誌(Awesome Timesheet )，發現時間跟踪和員工管理是多麼簡單！\n"
+"下載 Odoo Awesome Timesheet，瞭解時間追蹤和員工管理可以變得多麼輕鬆！\n"
 "\n"
-"Chrome：http://bit.ly/2613LcY\n"
-"iOS：http://bit.ly/1ZUZsZD"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
@@ -625,12 +628,12 @@ msgstr "下載安全"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
 msgid "Email template to send slide publication through email"
-msgstr "發送已經發佈的投影片的信件模板"
+msgstr "透過電郵發送已發佈的幻燈片之電郵模板"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
 msgid "Email template used when sharing a slide"
-msgstr "分享投影片的信件模板"
+msgstr "分享幻燈片時使用的信件模板"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
@@ -640,7 +643,7 @@ msgstr "嵌入代碼"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
 msgid "Embed Count"
-msgstr "嵌入計數"
+msgstr "嵌入個數"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -650,7 +653,7 @@ msgstr "嵌入您的網頁"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
 msgid "Embedded Slides View Counter"
-msgstr "嵌入投影片觀看次數"
+msgstr "嵌入幻燈片觀看個數"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -671,27 +674,27 @@ msgstr "錯誤消息"
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Everyone"
-msgstr "所有人"
+msgstr "每一個人"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Featured Presentation"
-msgstr "精選展示"
+msgstr "特性介紹"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_1
 msgid "Featured Presentations"
-msgstr "精選展示"
+msgstr "特性介紹"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
 msgid "Featured Slide"
-msgstr "已撥放的投影片"
+msgstr "特性幻燈片"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
 msgid "Featuring Policy"
-msgstr "放映規定"
+msgstr "特性政策"
 
 #. module: website_slides
 #. openerp-web
@@ -699,7 +702,7 @@ msgstr "放映規定"
 #: code:addons/website_slides/static/src/js/slides_upload.js:89
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr "文件太大. 文件大小不能超過 25 MB"
+msgstr "文件太大。文件大小不能超過 25 MB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
@@ -709,7 +712,7 @@ msgstr "完全訪問"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
@@ -719,29 +722,29 @@ msgstr "Google文檔密鑰"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Google Drive API 密鑰"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
 msgid "Graph of Slides"
-msgstr "投影片圖表"
+msgstr "幻燈片圖表"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
 msgid "Groups allowed to see presentations in this channel"
-msgstr "能在這個頻道查看內容的群組"
+msgstr "能在這個頻道查看內容的討論組"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
 msgid ""
 "Groups allowed to upload presentations in this channel. If void, every user "
 "can upload."
-msgstr "能在這個頻道上傳文件的群組。如果不設定，則所有的使用者都可上傳。"
+msgstr "組被允許在此頻道上傳演示。每一個使用者都可以上傳，如果設定為空。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_id
@@ -750,7 +753,7 @@ msgstr "能在這個頻道上傳文件的群組。如果不設定，則所有的
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
@@ -760,12 +763,12 @@ msgstr "圖像"
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
 msgid "Infographic"
-msgstr "圖表"
+msgstr "信息圖"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Infographics"
-msgstr "圖表"
+msgstr "信息圖"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:285
@@ -774,8 +777,8 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
-"伺服器內部錯誤，請稍後再嘗試或洽詢系統管理員。\n"
-"以下為系統錯誤訊息：%s"
+"伺服器內部錯誤，請稍後再嘗試或者聯繫管理員。\n"
+"這裡是錯誤信息：%s"
 
 #. module: website_slides
 #. openerp-web
@@ -791,7 +794,7 @@ msgstr "錯誤的文件類型。請選擇pfd文件或者圖像"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
@@ -800,7 +803,7 @@ msgstr "最後修改:"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新者"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
@@ -809,7 +812,7 @@ msgstr "最後更新："
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -819,13 +822,13 @@ msgstr "最新發佈"
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_8
 msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr ""
+msgstr "欲瞭解更多內容，請訪問 https://www.odoo.com/page/sales"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
-msgstr "類似"
+msgstr "喜愛"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag2
@@ -835,30 +838,30 @@ msgstr "市場推廣"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
 msgid "Medium"
-msgstr "媒介"
+msgstr "中等"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
 msgid "Message to display when not accessible due to access rights"
-msgstr "因訪問權限而無法訪問時所顯示之訊息"
+msgstr "顯示由於訪問權而無法訪問的消息"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
 msgid "Mime-type"
-msgstr "類型"
+msgstr "模擬－類型"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Viewed"
-msgstr "最受關注"
+msgstr "瀏覽最多的"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Voted"
-msgstr "最多評價"
+msgstr "最多投票的"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_name
@@ -872,7 +875,7 @@ msgstr "名稱"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
-msgstr "在 ${object.channel_id.name} 發佈的新的 ${object.slide_type}"
+msgstr "在${object.channel_id.name}發佈的新的${object.slide_type}"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -882,7 +885,7 @@ msgstr "最新"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "No Featured Presentation"
-msgstr "非特性介紹"
+msgstr "非特性演示"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
@@ -892,17 +895,17 @@ msgstr "沒有人"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channel_not_found
 msgid "No channel created or published yet."
-msgstr "暫時沒有頻道被建立或者發佈"
+msgstr "暫時沒有頻道被建立或者發佈。"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "No presentation available."
-msgstr "沒有介紹"
+msgstr "沒有介紹。"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "No presentation published yet."
-msgstr "暫時沒有對外展示被發佈"
+msgstr "暫時沒有發佈介紹。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
@@ -914,70 +917,70 @@ msgstr "文檔數量"
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
 msgid "Number of Infographics"
-msgstr "圖表數量"
+msgstr "信息圖數量"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
 msgid "Number of Presentations"
-msgstr "展示數量"
+msgstr "介紹數量"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
 msgid "Number of Videos"
-msgstr "影片數量"
+msgstr "視頻數量"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
 msgid "Odoo All-in-One Software Demonstration"
-msgstr "Odoo  All-in-One 軟體演示"
+msgstr "Odoo 一體化軟體演示"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
 msgid "Odoo CRM"
-msgstr ""
+msgstr "Odoo 客戶關係管理"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
 #: model:slide.tag,name:website_slides.tag5
 msgid "Odoo Days"
-msgstr "Odoo 日期"
+msgstr "Odoo 日"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
 msgid "Odoo Inventory"
-msgstr ""
+msgstr "Odoo 庫存"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
 msgid "Odoo MRP"
-msgstr ""
+msgstr "Odoo 物料需求計劃"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_6
 msgid "Odoo Marketing"
-msgstr ""
+msgstr "Odoo 市場行銷"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_8
 msgid "Odoo Sales"
-msgstr ""
+msgstr "Odoo 銷售"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr "Odoo標誌示範"
+msgstr "Odoo 標誌演示"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
 msgid "Open Days 2014 Infographic"
-msgstr "開放日2014年圖表"
+msgstr "2014年信息圖開放日"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_11
 msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr "開放代碼源CMS，CP值比較 - Mantavya Gajjar"
+msgstr "開源CMS，性能對比－Mantavya Gajjar"
 
 #. module: website_slides
 #. openerp-web
@@ -989,7 +992,7 @@ msgstr "PDF或圖像文件"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_partial
 msgid "Partner Channel"
-msgstr "合作夥伴社群"
+msgstr "合作夥伴渠道"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1001,20 +1004,20 @@ msgstr "請"
 #: code:addons/website_slides/static/src/js/slides.js:56
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
-msgstr "請<a href=\"/web?redirect=%s\">登錄</A>進行投影片投票"
+msgstr "請<a href=\"/web?redirect=%s\">登錄</A> 以對幻燈片投票"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:325
 #: code:addons/website_slides/models/slides.py:545
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
-msgstr "請輸入有效的YouTube或Google文件的URL"
+msgstr "請輸入有效的YouTube或Google文檔的網址"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:247
 #, python-format
 msgid "Please enter valid youtube or google doc url"
-msgstr "請輸入有效的YouTube的或Google文件的URL"
+msgstr "請輸入有效的YouTube或Google文檔網址"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
@@ -1026,7 +1029,7 @@ msgstr "展示"
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
 #: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
 msgid "Presentation Published"
-msgstr "展示發佈"
+msgstr "展示已發佈"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_footer
@@ -1038,7 +1041,7 @@ msgstr "展示"
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Private"
-msgstr ""
+msgstr "私有的"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
@@ -1048,7 +1051,7 @@ msgstr "私人頻道"
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Public"
-msgstr ""
+msgstr "公開"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
@@ -1063,12 +1066,12 @@ msgstr "發佈日期"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Published"
-msgstr ""
+msgstr "已發佈"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
 msgid "Published Template"
-msgstr "發佈的模板"
+msgstr "已發佈的模板"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1085,7 +1088,7 @@ msgstr "結果為"
 msgid ""
 "Review your channel settings to promote your most viewed or recent published"
 " presentation"
-msgstr "查看您的頻道設定，以推廣最受歡迎或最近發布的展示文件"
+msgstr "查看您的頻道設定，以促進您的觀看次數最多或最近發佈的演示"
 
 #. module: website_slides
 #. openerp-web
@@ -1104,12 +1107,12 @@ msgstr "存為草稿"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Search Slides"
-msgstr "搜尋投影片"
+msgstr "搜尋幻燈片"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
-msgstr ""
+msgstr "安全"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
@@ -1130,7 +1133,7 @@ msgstr "序列"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share Link"
-msgstr "分享連結"
+msgstr "分享鏈接"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1140,7 +1143,7 @@ msgstr "分享數"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share on Social Networks"
-msgstr "分享到社交平台"
+msgstr "分享到社交網路"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1155,22 +1158,22 @@ msgstr "共享的模板"
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Show channel but restrict presentations"
-msgstr "顯示頻道，但限制展示文件"
+msgstr "顯示頻道，但限制演示"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Slide"
-msgstr "投影片"
+msgstr "幻燈片"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
-msgstr "投影片標籤"
+msgstr "幻燈片標籤"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
 msgid "Slide to Promote"
-msgstr "投影片推進"
+msgstr "幻燈片以推廣"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
@@ -1187,7 +1190,7 @@ msgstr "幻燈片"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_category
 msgid "Slides Category"
-msgstr "投影片分類"
+msgstr "幻燈片分類"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -1201,14 +1204,14 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
-"停止手動列印和掃描。使用Odoo Sign的電子簽名！\n"
+"告別手動列印和掃瞄。轉投帶有 Odoo 標誌的電子簽名！\n"
 "\n"
-"更多在 https://www.odoo.com/page/sign"
+" 欲瞭解更多內容，請訪問 https://www.odoo.com/page/sign"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
-msgstr ""
+msgstr "標籤"
 
 #. module: website_slides
 #. openerp-web
@@ -1225,24 +1228,24 @@ msgstr "標籤"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Tags..."
-msgstr ""
+msgstr "標籤..."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "The"
-msgstr ""
+msgstr "這"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
-msgstr "文件類型將根據文件的網址和屬性（例如，展示文件與文件的高度和寬度）自動設定。"
+msgstr "文檔類型將根據文檔 URL 和屬性（例如，演示和文檔的高度和寬度）自動設定。"
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
 msgid "The slide name must be unique within a channel"
-msgstr "幻燈片名稱於該頻道中必須是唯一的"
+msgstr "幻燈片名稱必須是一個通道內唯一的"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
@@ -1262,7 +1265,7 @@ msgstr "這個頻道是私有的，它的內容僅限於某些使用者。"
 msgid ""
 "This video already exists in this channel <a target=\"_blank\" "
 "href=\"/slides/slide/%s\">click here to view it </a>"
-msgstr "此影片已存在於該頻道<a target=\"_blank\" href=\"/slides/slide/%s\">進行查看</A>"
+msgstr "此視頻已存在於該通道<a target=\"_blank\" href=\"/slides/slide/%s\">點選這裡查看</a>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
@@ -1276,7 +1279,7 @@ msgstr "略所圖"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
 #, python-format
 msgid "Title"
-msgstr "標題"
+msgstr "稱謂"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_total
@@ -1287,7 +1290,7 @@ msgstr "總計"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
 msgid "Total # Views"
-msgstr "整體的視圖數"
+msgstr "視圖總數"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
@@ -1309,7 +1312,7 @@ msgstr "未歸類"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Uncategorized presentation"
-msgstr "未分類的展示文件"
+msgstr "未分類的演示"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:534
@@ -1325,14 +1328,14 @@ msgstr "未發佈"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
 msgid "Upload Groups"
-msgstr "上傳權限群組"
+msgstr "上傳組"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid ""
 "Upload PDF presentations, documents, videos or infographic using the button "
 "below."
-msgstr "使用下面的按鈕上傳PDF展示文件，檔案，影片或圖表。"
+msgstr "使用下面的按鈕上傳PDF演示文稿、文檔、視頻或信息圖表。"
 
 #. module: website_slides
 #. openerp-web
@@ -1340,24 +1343,24 @@ msgstr "使用下面的按鈕上傳PDF展示文件，檔案，影片或圖表。
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #, python-format
 msgid "Upload Presentation"
-msgstr "上傳展示文件"
+msgstr "上傳演示"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:12
 #, python-format
 msgid "Uploading presentation..."
-msgstr "上傳展示文件..."
+msgstr "上傳演示..."
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_private
 msgid "Used to publish internal slides of company."
-msgstr "用來發佈公司內部的投影片。"
+msgstr "用來發佈公司內部的幻燈片。"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.channel_partial
 msgid "Used to publish slides in partner network privately."
-msgstr "用於私下發佈的合作夥伴網路的投影片"
+msgstr "用於私下發佈的合作夥伴網路的幻燈片。"
 
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
@@ -1367,7 +1370,7 @@ msgstr "視頻"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Videos"
-msgstr "影片"
+msgstr "視頻"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1397,59 +1400,62 @@ msgid ""
 "\n"
 "Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
 msgstr ""
+"面向 21 世紀的倉庫管理軟體 \n"
+"\n"
+" 瞭解 Odoo 庫存：https://www.odoo.com/page/warehouse"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
-msgstr ""
+msgstr "網站"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:114
 #, python-format
 msgid "You can not upload password protected file."
-msgstr "您無法上傳由密碼保護的文件。"
+msgstr "您無法上傳密碼保護的文件。"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
-msgstr "您已經投遞此張投影片"
+msgstr "您已經給這張幻燈片投票了"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:36
 #, python-format
 msgid "Youtube Video URL"
-msgstr "YouTube影片網址"
+msgstr "YouTube視頻網址"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:34
 #, python-format
 msgid "Youtube or Google Doc URL"
-msgstr "YouTube或Google文件的網址"
+msgstr "YouTube或Google文檔的網址"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
 msgid "Youtube or Google Document ID"
-msgstr "YouTube或Google文件ID"
+msgstr "YouTube或Google文檔ID"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_url
 msgid "Youtube or Google Document URL"
-msgstr "YouTube或Google文件的網址"
+msgstr "YouTube或Google文檔的網址"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "by email!"
-msgstr "經由電子信件！"
+msgstr "通過電子信件！"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "is empty."
-msgstr "空的"
+msgstr "空的。"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1460,7 +1466,7 @@ msgstr "私人的"
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 #: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 msgid "is private."
-msgstr "私人的"
+msgstr "私人的。"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1475,9 +1481,7 @@ msgstr "res.config.settings"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid "results found for the given criteria"
-msgstr ""
-"發現對於給定的標準結果\n"
-"results found for the given criteria"
+msgstr "發現對於給定的標準結果"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -1487,7 +1491,7 @@ msgstr "suggest_slide.name"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to send this"
-msgstr "發送"
+msgstr "發送此"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email

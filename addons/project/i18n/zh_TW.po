@@ -3,17 +3,17 @@
 # * project
 # 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Martin Trigaux, 2017
 # Michael Yeung, 2017
 # Bill Hsu <hcm86@icloud.com>, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,15 +137,15 @@ msgid ""
 "<p>Best regards,</p>"
 msgstr ""
 "\n"
-"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>尊敬的 ${object.partner_id.name or 'customer'}：</p>\n"
 "<p>感謝您的詢問。<br /></p>\n"
-"<p>如果您有任何問題，請告訴我們。</p>\n"
-"<p>Best regards,</p>"
+"<p>如果您有任何疑問，請隨時與我們聯繫。</p>\n"
+"<p>此致，</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr "＃截止日期"
+msgstr "# 直至截止日期的天數"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -156,12 +156,12 @@ msgstr "# 任務"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "分配的工作日天數"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "完成任務所需的工作日"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -180,7 +180,7 @@ msgstr "%s (副本)"
 msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
-msgstr "(Un)通過完成相關的任務和解決議題來達成專案的目標。您想繼續嗎？"
+msgstr "(反)存檔一個專案會自動(反)存檔它的任務和問題。您想繼續？"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -190,7 +190,7 @@ msgstr "- Odoo團隊"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks and Timesheets."
-msgstr ""
+msgstr "1. 瞭解任務和時間表。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -205,21 +205,21 @@ msgstr "2. 現在，我們花點時間來列出 <strong>您需要的專案:</str
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
-msgstr "<b>將任務</b>指派給某人。 <i>您可以隨時創建和邀請新用戶</i>"
+msgstr "<b>向某人分配任務</b>。<i>您可以隨時創建並邀請新使用者。</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:80
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
-msgstr "<b>點選保存按鈕</b>，您的更改將套用於任務上"
+msgstr "<b>點選保存按鈕 </b> 適用您對任務的更改。"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:48
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr "<b>拖拉＆amp;於階段間透過拖拉之方式將任務之進度進行管理</b>。"
+msgstr "處理列時<b>，可以在列間拖放任務。</b>"
 
 #. module: project
 #. openerp-web
@@ -227,19 +227,19 @@ msgstr "<b>拖拉＆amp;於階段間透過拖拉之方式將任務之進度進�
 #, python-format
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
-msgstr "<b>通過電子信件</b>邀請同事。<br/> <i>每行輸入一個電子信件。</i>"
+msgstr "<b>通過電子信件</b>邀請同事。<br/> <i>每行發送一個電子信件。</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr "<b>任務評等</b>標記任務的優先等級。"
+msgstr "<b>星標記任務</b>用於標識團隊優先級。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr "<i class=\"fa fa-user\"/> 負責人員"
+msgstr "<i class=\"fa fa-user\"/> 責任人"
 
 #. module: project
 #: code:addons/project/models/project.py:116
@@ -252,15 +252,15 @@ msgid ""
 "                    </p>"
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"檔案會做為附件上傳到您專案的任務與議題</p><p>\n"
-"以訊息或日誌發送一個附件檔案，並鏈接到您的專案。\n"
+"文檔會做為附件上傳到您專案的任務和問題。</p><p>\n"
+"以信息或日誌發送一個附件文檔鏈接到您的專案。\n"
 "</p>"
 
 #. module: project
 #: code:addons/project/models/project.py:144
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
-msgstr "<p class=\"oe_view_nocontent_create\">點選開啟一個新專案。</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">點選創建新專案。</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -275,19 +275,19 @@ msgstr "<span class=\"fa fa-comment-o\"/> 網站即時聊天"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr "<span class=\"fa fa-comment-o\"/> 網站即時聊天"
+msgstr "<span class=\"fa fa-comment-o\"/> 網站線上客服啟動"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
-msgstr "<span class=\"fa fa-envelope-o\"/> 發電子郵件給我們的專案專家"
+msgstr "<span class=\"fa fa-envelope-o\"/> 發電子信件給我們的專案專家"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
 " projects:"
-msgstr "<span class=\"fa fa-thumbs-o-down\"/> The <strong> 錯誤的方法</strong> 來使用專案："
+msgstr "<span class=\"fa fa-thumbs-o-down\"/><strong> 錯誤的方法</strong> 來使用專案："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -306,7 +306,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-laptop\"/>\n"
-"                                            <strong> 畫面設置</strong>\n"
+"                                            <strong> 螢幕定制</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -345,7 +345,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "<span class=\"fa fa-puzzle-piece\"/>\n"
-"<strong>通過Chrom擴展</strong>\n"
+"<strong>通過Chrome擴展</strong>\n"
 "</span>"
 
 #. module: project
@@ -358,7 +358,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-sitemap\"/>\n"
-"                                            <strong> 工作流的設定</strong>\n"
+"                                            <strong> 工作流的定制</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -398,6 +398,11 @@ msgid ""
 "                                            <span class=\"small\">Delay to close an Task</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+" <span class=\"fa fa-thumb-tack\"/>\n"
+" <strong>練習 2</strong> <br/>\n"
+" <span class=\"small\">延遲關閉任務 \n"
+"</span></span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -430,7 +435,7 @@ msgstr ""
 msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">注意：此操作將歸檔所選任務（目標任務除外）</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -439,8 +444,8 @@ msgid ""
 "                                    We have special options for unlimited number of customizations !\n"
 "                                    </span>"
 msgstr ""
-"<span><strong>聯繫我們客製您專屬的應用程序:</strong><br/>\n"
-"                                    我們有特別的設置去完成不限數量的個人化設定  !\n"
+"<span><strong>聯繫我們定制您的應用:</strong><br/>\n"
+"                                    我們有特別的選項去完成不限數量的自定義設定  !\n"
 "                                    </span>"
 
 #. module: project
@@ -449,7 +454,7 @@ msgid ""
 "<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
 "                                    </span>"
 msgstr ""
-"<span><strong>我們需要您的協助：</strong>如果您無法實現自己最中意的KPI績效考核，請與我們聯繫，我們可以幫您創建屬於您自己的客製化報表。\n"
+"<span><strong>我們來幫您：</strong>如果您無法實現自己喜歡的KPI績效考核，請與我們聯繫，我們可以幫您創建屬於您自己的自定義報表。\n"
 "                                    </span>"
 
 #. module: project
@@ -459,9 +464,7 @@ msgid ""
 "                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
 msgstr ""
 "<strong> 休會 (5分鐘)</strong>\n"
-"                                用樂觀的陳述和積極投入專案取得的成績來總結會議。\n"
-"                                會議的目標在強化團隊精神，並鼓勵所有成員互相協助扶持\n"
-"                                ，以確保該專案的成功。"
+"                                用樂觀的陳述和積極投入專案取得的成績來總結會議。始終加強團隊精神，並鼓勵所有成員互相監督，以確保該專案的成功。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -469,8 +472,8 @@ msgid ""
 "<strong> Critical items (10 min)</strong>\n"
 "                                Upon completing the project status review session, summarize the critical items."
 msgstr ""
-"<strong> 關鍵事項 (10分鐘)</strong>\n"
-"                                完成專案狀態審查會議，總結關鍵事項。"
+"<strong> 關鍵專案 (10分鐘)</strong>\n"
+"                                完成專案狀態審查會議，總結關鍵專案。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -478,6 +481,8 @@ msgid ""
 "<strong> New business tasks (5 min)</strong>\n"
 "                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  task as you walk through the project status session. Not every task warrants spending time here, so keep discussions to a minimum."
 msgstr ""
+"<strong>新的商業任務（5 分鐘）\n"
+"</strong> 在這周您可能已經瞭解到影響專案的某些事物。在會議中提前共享消息以便幫助團隊成員在您瀏覽專案狀態會話時考慮任務。不是每一項任務授權都需要在這裡花費時間，所以將討論保持在一個最低限度內。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -497,6 +502,8 @@ msgid ""
 "<strong> Q&amp;A and discussion time (10 min)</strong>\n"
 "                                Always give your team time to ask questions on tasks that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
 msgstr ""
+"<strong>問答和討論時間（10 分鐘）\n"
+"</strong> 總是給予您團隊時間以便對尚未討論的任務提問。這給您提供了另一個機會以便加強您在本周習得或在會議中發現的關鍵點。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -505,7 +512,7 @@ msgid ""
 "                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
 msgstr ""
 "<strong> 點名(5分鐘)</strong>\n"
-"                                在開始之前，讓每個人都知道誰在場。這對於已經撥打的遠程團隊成員來說很重要，並且以後可以節省您的時間。"
+"                                讓每個人都知道誰在開始之前出現。這對通過遠程撥號參會的團隊成員非常重要的，並且會節約後面的時間。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -514,7 +521,7 @@ msgid ""
 "                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
 msgstr ""
 "<strong> 總結和後續專案 (5 分鐘)</strong>\n"
-"                                總是在會議上即完成專案狀態摘要和後續行動列表，這可以有效的幫助推動專案進行。"
+"                                總是在會議上完成專案狀態摘要和行動項列表，以幫助沿推動專案進行。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -522,6 +529,8 @@ msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and is extremely useful for several cases."
 msgstr ""
+"<strong>Odoo 一個很棒的功能是擁有稱為 Etherpad 的協同筆記本電腦的集成。</strong><br/>\n"
+" 它替代了任務中的標準描述區域，並且對多個實例都極其有用。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -534,6 +543,8 @@ msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
 "                                    The deadline will help you determine if a task is progressing as expected  and to anticipate its next update."
 msgstr ""
+"<strong>添加截止日期</strong> <br/>\n"
+" 截止日期將幫助您確定任務是否如預期一般進展並且可以預測其下一次的更新時間。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -554,7 +565,7 @@ msgid ""
 "                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
 msgstr ""
 "<strong>請參與者準備</strong><br/>\n"
-"若要召開有效的會議，事先讓參與者做好準備,告知他們您期望他們如何為專案作出貢獻。"
+"若要召開有效的會議，事先讓參與者做好準備,告知對他們期望和他們可如何作出貢獻。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -567,13 +578,13 @@ msgid ""
 "<strong>Be careful about the messages you send</strong><br/>\n"
 "                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
 msgstr ""
-"<strong>請確認您要發送之訊息</strong><br/>\n"
-"                                    通過Odoo發送消息，將自動發送一封包含您的訊息的電子郵件給所有的訂閱者 ，包括內部員工，外部使用者或客戶。"
+"<strong>請確認您要發送消息</strong><br/>\n"
+"                                    通過Odoo發送消息，將自動發送一封包含您的消息的電子信件給所有的訂閱者 ，包括內部員工、外部使用者或客戶。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr "<strong>開立單據</strong>"
+msgstr "<strong>開單</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -582,14 +593,14 @@ msgid ""
 "                                    Avoid Monday mornings as your regular meeting day; choosing to meet later in the week gives participants time to get ready for the meeting and to work toward specific objectives in the days that follow."
 msgstr ""
 "<strong>選擇最合適的日子</strong><br/>\n"
-"                                    避免星期一上午作為定期開會的日子;選擇相較於星期一上午較晚的時間，給與會者為會議做好準備，並在接下來的日子為指定的目標而工作。"
+"                                    避免星期一上午作為定期開會的日子；選擇一周晚些時候給與會者為會議做準備，並在接下來的日子為指定的目標而努力。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Click on 'Reporting' on the main menu</strong> and generate "
 "statistics relevent to each profiles:"
-msgstr "<strong>點選 主選單上「報告」功能</strong>並生成和每個配置相關的統計:"
+msgstr "<strong>點選主選單上」報告「功能</strong>並生成和每個簡介相關的統計:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -602,6 +613,8 @@ msgid ""
 "<strong>Create tasks by email</strong><br/>\n"
 "                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task in the first stage of the project, with all the email recipients as its default followers."
 msgstr ""
+"<strong>通過電子信件創建任務</strong><br/> \n"
+" 在 Odoo 中，每個專案都有一個電子信件別名。如果您向該別名發送電子信件，它將自動地在專案的第一階段創建任務，並且將所有的電子信件收件人將視為它的預設跟隨者。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
@@ -625,7 +638,7 @@ msgid ""
 "                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
 msgstr ""
 "<strong>定義一個命名規則</strong><br/>\n"
-"在'任務標題' 字段添加關鍵字, 例如[客戶名稱]或者 [網站]. 這個會幫助您更加容易的在專案中找尋及搜尋任務清單"
+"在'任務標題' 字段添加關鍵字, 例如[客戶名稱]或者 [網站]。這會幫助您更加容易的在專案中巡航及搜尋大量的任務。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -647,7 +660,7 @@ msgstr "<strong>例如: </strong>"
 msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Tasks."
-msgstr ""
+msgstr "<strong>練習:</strong> 嘗試創建一個任務的「平均延遲關閉」的每月進度圖。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -662,6 +675,8 @@ msgid ""
 "<strong>Follow every meeting with a recap email</strong>\n"
 "                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, task/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
 msgstr ""
+"<strong>在每次會議後發送一封回顧電子信件 \n"
+" 會議完畢後，</strong>發佈會議記錄並將它們與已更新的專案時間表、任務/操作專案矩陣、以及任何其他合適的文檔一起發佈。嘗試為整個會議使用相同的模板並且一直不斷改進它。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -669,6 +684,7 @@ msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks of a project."
 msgstr ""
+"<strong>僅關注您所需內容 \\</strong><br/>n 使用通知最簡單的方式是關注整個專案：您將收到有關專案中所有新增和現有任務的通知。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -678,14 +694,14 @@ msgstr "<strong>對於任務:</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Getting reports</strong> on what your employees are working on"
-msgstr "獲得您的員工<strong>工作內容報告</strong>"
+msgstr "獲取您的員工<strong>工作內容報告</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Getting statistics</strong> on how much time a task takes to be "
 "completed"
-msgstr "獲得任務需要多少時間完成的<strong>統計</strong>"
+msgstr "獲取任務需要多少時間完成的<strong>統計</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -693,8 +709,8 @@ msgid ""
 "<strong>Have Clear Responsibilities</strong><br/>\n"
 "                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
-"<strong>清晰的職責分工</strong><br/>\n"
-"該項任務被指派的人負責這個任務的進度，負責人的圖像會在看板視圖上被顯示出來，而任務的負責人可能會隨著階段的不同而做改變。"
+"<strong>有清晰的職責</strong><br/>\n"
+"任務被賦予的人負責這個任務的進度和其頭像會在看板視圖上被顯示出來作為快速參考。當然，任務的責任人會隨著階段的不同而改變。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -706,8 +722,8 @@ msgid ""
 "best way to work if you have diluted responsibilities for your Kanban "
 "stages."
 msgstr ""
-"<strong>在 'Pull' 模式下</strong>, 準備進展到下一階段的任務由當前階段負責人標記為 『準備進入下一階段』 (使用狀態圖標) "
-"。然後，下一階段的負責人接手該任務，並將它推進到下一個階段。如果您要減少員工於看板階段的負責範圍，這是最好的工作方法。"
+"<strong>在 '拉' 模式下</strong>, 準備進展到下一階段的任務只是由目前階段負責人標記為 『準備下一階段』 (使用狀態圖標) "
+"。然後，下一階段的負責人接手該任務，並將它推進到下一個階段。如果您減少看板階段的負責範圍，這是最好的工作方法。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -717,36 +733,36 @@ msgid ""
 "stage. This is a simple way to work but only functions well if you work "
 "alone."
 msgstr ""
-"<strong>在 'Push' 模式下</strong>, 任務 (一旦他們滿足所有要求) "
-"由當前階段負責人推向下一階段。這種簡單的方式只有在您獨自工作時才能運轉。"
+"<strong>在 '推' 模式下</strong>, 任務 (一旦它們滿足所有要求) "
+"由目前階段負責人推向下一階段。這種簡單的方式只有在您獨自工作時才能運轉。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr "<strong>為您的客戶開立發票</strong> (每個月)"
+msgstr "<strong>為您的客戶開具發票</strong> (每個月)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Invoicing your customers</strong> on Time &amp; Material projects"
-msgstr "按時間和材料專案<strong>為客戶開具發票</strong> "
+msgstr "按時間和材料專案<strong>為您的客戶開具發票</strong> "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Message and communication history</strong>"
-msgstr "<strong>訊息和溝通歷史</strong>"
+msgstr "<strong>消息和溝通歷史</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Need help to structure your projects?</strong><br/>"
-msgstr "<strong>在專案開啟上需要幫忙嗎?</strong><br/>"
+msgstr "<strong>在構建您的專案時需要幫忙嗎?</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
-msgstr "<strong>需要幫助進行時間表管理嗎?現在就聯繫我們:</strong><br/>"
+msgstr "<strong>需要幫助管理時間表嗎?現在就聯繫我們:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -757,7 +773,7 @@ msgstr "<strong>需要幫助定義您的專案嗎?現在就聯繫我們:</strong
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Notes</strong>"
-msgstr "<strong>筆記</strong>"
+msgstr "<strong>備註</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -766,7 +782,7 @@ msgid ""
 "                                As project manager, you also need to be fully prepared. There should be no surprises during the meeting. Surprises can undermine your ability to manage the project and cause team members to lose confidence in you."
 msgstr ""
 "<strong>自己也要做好準備</strong><br/>\n"
-"作為專案經理, 剛開始就需要做好準備. 不要在會議中給大家製造「驚喜」，這會消弱您對專案的管理能力，而成員們也會對您失去信心"
+"作為專案經理, 您需要做好全面準備。不要在會議中給大家製造驚喜。驚喜會消弱您對專案的管理能力，並且另成員們對您失去信心。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
@@ -776,12 +792,12 @@ msgstr "<strong>專案經理</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr "<strong>專案</strong>"
+msgstr "<strong>專案:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr "<strong>推薦的動作：</strong>"
+msgstr "<strong>推薦的行動：</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -789,11 +805,13 @@ msgid ""
 "<strong>Rely on the chatter</strong><br/>\n"
 "                                    Below every Task (or more generally, below every Document in Odoo) is an area called Chatter."
 msgstr ""
+"<strong>依靠聊天</strong> <br/>\n"
+" 在每個任務下（或者一般來說，在 Odoo 的每個文檔下）有一個稱為聊天的區域。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Reported by</strong>"
-msgstr "<strong>匯報</strong>"
+msgstr "<strong>匯報人</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -801,11 +819,13 @@ msgid ""
 "<strong>Set Priorities</strong><br/>\n"
 "                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
 msgstr ""
+"<strong>設定優先級 \n"
+" 用於顯示優先級</strong><br/><i class=\"fa fa-star\"/>：在看板視圖中，高優先級任務將顯示在頂端如果您使用 Scrum 方法標明本周的任務，這將特別有用。同樣適用於狀態，您可以更改「專案階段」選項卡中星指標的含義。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Stages and Requirements</strong> for next stage:"
-msgstr "<strong>專案階段和需求</strong> (為了下一階段):"
+msgstr "<strong>階段和需求</strong> 的下一階段:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -813,27 +833,27 @@ msgid ""
 "<strong>Start with an answer.</strong><br/>\n"
 "                                The worst question to ask is, \"What did you do this week?\" It invariably  generates unnecessary, time-consuming dialogue from team members. Plus, you should already know what everyone on the team did during the week."
 msgstr ""
-"<strong>從回答開始.</strong><br/>\n"
-"最不好的開頭是 \"這周您做了什麼?\" 這樣總是會產生不必要且浪費時間的對話。於會議開始前您應該已經知道專案小組成員本周已經做了什麼以及相關進度 。"
+"<strong>從回答開始。</strong><br/>\n"
+"最不好的問題是 \"這周您做了什麼?\" 這樣總是會產生團隊成員不必要的、耗時的對話。而且，您已經應該知道每個成員本周已經做了什麼以及相關進度 。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
-msgstr "<strong>有兩種方法來管理看板的階段:</strong>"
+msgstr "<strong>有兩種方法來管理您的看板的階段:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>To increase the efficiency of your Projects</strong>, you should "
 "have a look at some of our other apps:"
-msgstr "<strong>為了增加專案的效率</strong>, 您應該看看我們其他的應用程式"
+msgstr "<strong>為了增加您的專案效率</strong>, 您應該看看我們其他的apps："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>To use Collaborative Notepads</strong>, simply activate the "
 "corresponding option in your"
-msgstr "<strong>要用Collaborative Notepads</strong>, 只要簡單的啟用相應的選項於 "
+msgstr "<strong>要用Collaborative Notepads</strong>, 只要簡單的激活相應的選項在您的"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -841,6 +861,8 @@ msgid ""
 "<strong>Use Status Indicator</strong><br/>\n"
 "                                    The Status indicator helps you manage Tasks by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:"
 msgstr ""
+"<strong>使用狀態指標</strong> <br/>\n"
+" 狀態指標通過給各種狀態三種不同顏色之一：灰色、綠色或紅色來幫助您管理任務。這些狀態的含義可以自由配置，例如："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -848,16 +870,18 @@ msgid ""
 "<strong>Use Tags</strong><br/>\n"
 "                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks to manage. Also, it becomes very easy to find Tasks by typing  the Tag into the main Search bar."
 msgstr ""
+"<strong>使用標籤</strong> <br/>\n"
+" 標籤是您專案階段的補充：它們可以作為二級分類，如果您有許多任務要管理，那麼該分類非常有用。此外，通過在主搜尋欄中鍵入標籤，可以輕易找到任務。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What Activities</strong> would you like to manage?"
-msgstr "<strong>什麼樣的活動</strong> 讓您想要來管理?"
+msgstr "<strong>什麼樣的活動</strong> 讓您想管理?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What do you expect</strong> from using Odoo Project?"
-msgstr "從Odoo的專案功能中您所<strong>期望</strong>的是?"
+msgstr "<strong>您對使用Odoo專案有什麼期望</strong>？"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -866,7 +890,7 @@ msgid ""
 "                            It can quickly become messy if everyone uses his own layout. Etherpad will allow you to create a basic template with a few titles and bullet points, making it much easier for everyone."
 msgstr ""
 "<strong>您有不同的書寫任務描述的使用者</strong><br/>\n"
-"如果每個人都用自己的佈局方式的話，專案很快就亂掉了。Etherpad能讓您創建一個基本帶有一些標題和要點的模板，這樣每個人工作起來就容易很多"
+"如果每個人都用自己的佈局方式的話，很快就亂掉了。Etherpad能讓您創建一個基本帶有一些標題和要點的模板，這樣每個人工作起來就容易很多。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -875,7 +899,7 @@ msgid ""
 "                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
 msgstr ""
 "<strong>您必須要管理版本和追蹤變化</strong><br/>\n"
-"Etherpad在短時間內自動保存文件，而使用者可以永久的在任何時間保存特定的版本。另外，一個\"time slider\"能讓任何人可以查詢pad的歷史記錄"
+"Etherpad在固定的短時間內自動保存文件並且使用者可以永久的在任何時間保存特定的版本。另外，一個\"時間滑塊\"能讓任何人查詢pad的歷史記錄。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -884,14 +908,14 @@ msgid ""
 "                            Etherpad allows users to simultaneously edit a text document, see all of the edits in real-time and with the ability to display each author's text in their own color."
 msgstr ""
 "<strong>您可以安排遠程會議</strong><br/>\n"
-"Etherpad能讓不同的使用者同時編輯同一個文件，可即時看到所有的編輯，並且還可以以不同顏色呈現每個編輯者之編輯或修改"
+"Etherpad允許不同使用者同時編輯同一個文本文檔，可以即時看到所有的編輯並且還可以用不同的顏色呈現每個編輯者的文本。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "當創建別名的新記錄時，一個Python字典被提供作為預設值"
+msgstr "當創建別名的新記錄時，一個Python字典將被評估以提供預設值。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -899,8 +923,8 @@ msgid ""
 "A project usually involves many stakeholders, be it the project's sponsor, resources, customers or external contractors. But the most important person in a project is usually the Project Manager.<br/>\n"
 "                    In Odoo, the Project Managers have the responsibility of managing the Kanban view: they ensure smooth progression of the projects, minimal downtime between stages and optimal work distribution between resources."
 msgstr ""
-"一個專案通常涉及很多利害關係人，可能是專案的發起人、資源、客戶或外部承包商等等。但專案中最重要的人物通常是專案經理。\n"
-"在Odoo中，專案經理擁有管理看板視圖的責任：他們保證專案順利進展，不同階段的最少的downtime以及最佳工作分配之間的資源"
+"一個專案通常涉及很多利益相關者，它是專案的發起人、資源、客戶或外部承包商。但專案中最重要的人通常是專案經理。<br/>\n"
+"在Odoo，專案經理擁有管理看板視圖的責任：他們保證專案順利進展，不同階段的最少的停擺時間和最佳工作分配之間的資源。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_kanban_state
@@ -910,6 +934,7 @@ msgid ""
 " * Red indicates something is preventing the progress of this task\n"
 " * Green indicates the task is ready to be pulled to the next stage"
 msgstr ""
+"任務的看板狀態表明特殊狀況正對其產生影響： *灰色是預設狀況 * 紅色表明某些事物正在阻礙該任務的進程 * 綠色表明任務已經準備好進入下一階段"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -919,7 +944,7 @@ msgstr "接收信件來自"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Account Preferences"
-msgstr "帳號優先選項"
+msgstr "帳號首選項"
 
 #. module: project
 #. openerp-web
@@ -933,24 +958,24 @@ msgstr "動作要有一個清晰的描述"
 msgid ""
 "Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
 "Settings</i>."
-msgstr "『有效』能夠根據人資模組的工時表開立發票，該設定於人力資源模組中設定"
+msgstr "在<i>人力資源配置</i>啟動 『允許根據工時表開立發票』。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_active
 #: model:ir.model.fields,field_description:project.field_project_task_active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Activities"
-msgstr "動態"
+msgstr "活動"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr "動態類別"
+msgstr "活動類型"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -964,14 +989,14 @@ msgstr "添加說明..."
 msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
-msgstr "增加列，為您的任務配置<b>階段</b>。<br/> <i>如：規格訂定＆gt ; 產品開發＆gt ; 開發完成</i>等"
+msgstr "添加列以便配置<b>任務階段</b>。<br/><i>例如，規格 > 開發 > 完成</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:56
 #, python-format
 msgid "Added in current sprint"
-msgstr "添加到當前衝刺"
+msgstr "添加到目前衝刺"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -986,28 +1011,28 @@ msgstr "別名"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr "別名聯絡人安全"
+msgstr "別名聯繫人安全"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr "別名名稱"
+msgstr "別名"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
 msgid "Alias domain"
-msgstr "網域別名"
+msgstr "別名域名"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
 msgid "Aliased Model"
-msgstr "別名模組"
+msgstr "別名模型"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:89
 #, python-format
 msgid "All"
-msgstr "所有"
+msgstr "全部"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1015,29 +1040,27 @@ msgid ""
 "Also, lead by example. When your team members see how prepared you are it "
 "will  reinforce the need for each of them to be prepared for status "
 "meetings."
-msgstr "另外，以身作則。當您的團隊成員看到您為專案所做的準備時，他們也會從內心為每一次專案進度例會做好準備。"
+msgstr "另外，以身作則。當您的團隊成員看到您為專案所做的準備時這會加強他們為每一次狀態例所做的準備。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Alternatively, Timesheets can be added directly from Tasks by activating "
 "<strong>'Log work activities on tasks'</strong> in the"
-msgstr ""
-"另外，工時表要能直接的被添加在任務中，只有啟動<strong>'在任務上記錄工作活動'</strong>從\n"
-"或者，可以通過在任務中激活<strong>“在任務中記錄工作活動”</strong>，直接從任務中添加時間表"
+msgstr "另外，工時表能直接的被添加在任務中只要激活<strong>'在任務上記錄工作活動'</strong>從"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "An internal message will not send any email notification, but your message "
 "will still be displayed to every user that has access to the page."
-msgstr "內部訊息不會發送任何電子郵件通知，但您的郵件仍然會顯示給每個有權訪問該頁面的用戶。"
+msgstr "內部信件不會發送任何電子信件通知，但您的信息仍會被每個能登陸到這個頁面的所有使用者看到。"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project_name
 msgid "Analytic Account"
-msgstr "輔助核算項目"
+msgstr "分析帳戶"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_line_ids
@@ -1051,18 +1074,18 @@ msgid ""
 " follow your Project's 'Task Assigned' events.  Then you'll be notified when"
 " a Task is created, and can  manually decide if you want to be notified for "
 "its other events too."
-msgstr ""
+msgstr "限制接收通知數量的另一個好方法是只關注專案的「已分配任務」事件。然後在創建任務時將通知您，並且可以手動決定是否在其他事件中同樣通知您。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr "已存檔"
+msgstr "已歸檔"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "分配給我"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1090,7 +1113,7 @@ msgstr "分派給"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "指派予"
+msgstr "分派給"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
@@ -1104,19 +1127,19 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
-"\n"
-"在每個專案階段，員工可以設定狀態為「阻塞」或對該任務/議題為「任務可進入下一階段」。\n"
-"                                您可以在此定義將各種狀態所顯示的標籤，取代系統所預設之標籤。"
+"在每一個階段，員工可以阻止或者讓任務／議題準備進入下一階段。\n"
+" 您可以在此處定義為狀態顯示的標籤來替代 \n"
+" 預設的標籤。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Attachment"
-msgstr ""
+msgstr "附件"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "附件並非來源於消息。"
 
 #. module: project
 #: code:addons/project/models/project.py:109
@@ -1135,7 +1158,7 @@ msgstr "在Apple Store可用"
 msgid ""
 "Back at the office, the manager splits the customer's requests into several "
 "tasks and delegates them to several employees."
-msgstr "回到辦公室，經理把客戶的需求分成幾個不同的任務然後分配給不同的員工"
+msgstr "回到辦公室，經理把客戶的需求分成幾個不同的任務然後分配給幾個員工。"
 
 #. module: project
 #. openerp-web
@@ -1242,7 +1265,7 @@ msgstr "取消"
 #: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
-msgstr "取消"
+msgstr "已取消"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1256,12 +1279,12 @@ msgstr "在專案的階段頁面更改它們的階段"
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
-msgstr "選擇一個<b>專案名稱</b>。 （如：網站發布，產品開發，辦公室派對等）"
+msgstr "選擇<b>專案名稱。</b>（例如，網站啟動、產品開發、公司聚會等）"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr "選擇專案郵件"
+msgstr "選擇專案信件"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_subtask_project_id
@@ -1269,7 +1292,7 @@ msgstr "選擇專案郵件"
 msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
-msgstr "選擇子任務項目，將啟用子任務並設置其預設專案（可能是專案本身）"
+msgstr "選擇子任務專案將同時啟用子任務並設定其預設專案（可能是專案本身）"
 
 #. module: project
 #. openerp-web
@@ -1283,7 +1306,7 @@ msgstr "清晰的描述和目的"
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr "點選卡片查看任務細節。"
+msgstr "點選卡片查看任務詳情。"
 
 #. module: project
 #. openerp-web
@@ -1291,19 +1314,19 @@ msgstr "點選卡片查看任務細節。"
 #, python-format
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
-msgstr "點選卡片<b>連結至您的專案</b>並開始規劃任務。"
+msgstr "點選卡進入<b>到專案</b>中並開始組織任務。"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:64
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr "點選按鈕以修改任務。"
+msgstr "點選此按鈕修改任務。"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr "點選創建一個新標籤."
+msgstr "點選以創建一個新標籤。"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1313,7 +1336,7 @@ msgstr "在任務管道點選添加階段"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr "點選創建新專案.<br>"
+msgstr "點選以創建新專案。<br>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1351,31 +1374,31 @@ msgstr "公司的計量單位"
 #: model:ir.ui.menu,name:project.menu_project_config
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Configuration"
-msgstr "設置"
+msgstr "配置"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:90
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr "可在模組的設定中找到配置選項。"
+msgstr "配置選項在設定應用裡可用。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
 "efficiently!"
-msgstr "祝賀您選擇的odoo專案讓您的公司運營的更加有效"
+msgstr "祝賀您選擇的odoo專案讓您的公司運營的更加有效！"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Congratulations, you're done !"
-msgstr "恭喜，您已經完成了"
+msgstr "恭喜，您已經完成了！"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Consulting mission"
-msgstr "諮詢任務"
+msgstr "咨詢使命"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -1384,7 +1407,7 @@ msgstr "諮詢任務"
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Contact"
-msgstr "聯絡人"
+msgstr "聯繫人"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_analytic_account_id
@@ -1406,7 +1429,7 @@ msgstr "文案／設計"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "封面圖像"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1416,17 +1439,17 @@ msgstr "創建"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create & Edit"
-msgstr ""
+msgstr "創建和編輯"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
 msgid "Create Date"
-msgstr "建立日期"
+msgstr "創建日期"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create a Gantt chart with your projects tasks and deadlines"
-msgstr "用專案任務和截止日期創建一張甘特圖"
+msgstr "用您的專案任務和最後期限創建一張甘特圖"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -1436,23 +1459,19 @@ msgstr "創建專案"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr "創建一個新的專案"
+msgstr "創建一個新的專案。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "創建一個新任務"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
-msgstr ""
-"通過給專案的電子郵件別名發送一個抄有您的同事的電郵\n"
-"\n"
-"\\\n"
-"透過發送一個電子郵件到專案別名以創建一個任務，並將您於信件中CC的同事加入訂閱者"
+msgstr "通過給專案的電子信件別名發送一個抄有您的同事的電郵以創建任務"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1462,7 +1481,7 @@ msgstr "至少創建３個任務"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create bills automatically based on Time &amp; Material."
-msgstr "根據時間＆amp；材料自動創建發票"
+msgstr "根據時間和材料自動創建發票"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1476,7 +1495,7 @@ msgstr "創建專案"
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_create_date
@@ -1484,7 +1503,7 @@ msgstr "建立者"
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1492,11 +1511,13 @@ msgid ""
 "Creating Tasks is the next step in managing your Projects.<br/>\n"
 "                        In Odoo, it is pretty straightforward, but here are some explanations you may find useful."
 msgstr ""
+"創建任務是管理專案的下一步 。<br/>\n"
+"  在 Odoo 中，十分直截了當，但是下面的一些解釋可能對您有幫助。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Creation Date"
-msgstr "建立日期"
+msgstr "創建日期"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_credit
@@ -1516,22 +1537,22 @@ msgstr "貨幣"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Current Timesheet"
-msgstr "當前的工時表"
+msgstr "目前的工時表"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr "任務的當前階段"
+msgstr "任務的目前階段"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr "任務的當前階段"
+msgstr "任務的目前階段"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "目前，未計劃任何活動。"
 
 #. module: project
 #: code:addons/project/models/project.py:818
@@ -1572,7 +1593,7 @@ msgstr "客戶取消了修理"
 #: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Customer has reported new issue"
-msgstr "客戶匯報了新議題"
+msgstr "客戶匯報了新問題"
 
 #. module: project
 #. openerp-web
@@ -1584,12 +1605,12 @@ msgstr "客服找到一些新的議題"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr "客戶支持票"
+msgstr "客戶支援票"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customization"
-msgstr "客制"
+msgstr "定制"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
@@ -1599,13 +1620,13 @@ msgstr "儀表板"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr "天數"
+msgstr "天"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_deadline
 msgid "Deadline"
-msgstr "截止日期"
+msgstr "截止日"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_debit
@@ -1624,7 +1645,10 @@ msgid ""
 "                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
-msgstr "定義在專案裡的步驟從創建任務，更新已結束的任務或議題。您將使用這些階段來追蹤解決任務或議題。"
+msgstr ""
+"定義專案裡將使用的步驟從\n"
+"創建任務到結束任務或議題。\n"
+"您將使用這些階段來追蹤解決任務或議題的進度。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -1637,7 +1661,7 @@ msgid ""
 "Depending on what you need and how you want to operate, there are several "
 "ways to work with Odoo. First, decide if you want to think in terms of "
 "tasks. Then, activate the Timesheets app if you need it."
-msgstr ""
+msgstr "根據您的需要和想要進行的操作，這裡有幾種使用 Odoo 的方式。首先，決定您是否想從任務的角度思考。然後，根據需要激活時間表應用。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1649,7 +1673,7 @@ msgstr "部署"
 #: code:addons/project/static/src/js/web_planner_project.js:20
 #, python-format
 msgid "Deployment"
-msgstr ""
+msgstr "部署"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_description
@@ -1676,7 +1700,7 @@ msgstr "開發過程"
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #, python-format
 msgid "Discard"
-msgstr "捨棄"
+msgstr "放棄"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_display_name
@@ -1700,7 +1724,7 @@ msgstr "分配"
 #: code:addons/project/static/src/js/web_planner_project.js:43
 #, python-format
 msgid "Distribution is completed"
-msgstr "分配完成"
+msgstr "分銷已完成"
 
 #. module: project
 #. openerp-web
@@ -1719,24 +1743,24 @@ msgstr "文檔"
 msgid ""
 "Don't create a Project for different locations (this could isolate teams "
 "that work at different locations)."
-msgstr "不要依不同的地點創建專案（這可能會隔離在不同地點工作的團隊）。"
+msgstr "不要給不同的地方創建不同的專案（這樣會使在不同地方工作的同事有隔離感）。 "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Don't create a Project for each of your customers - this will be too "
 "complicated to manage properly."
-msgstr "不要給您的每個客戶都創建一個專案－它會使您的管理過於複雜"
+msgstr "不要給您的每個客戶創建一個專案－它會使您的管理更加複雜。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to"
-msgstr "不要猶豫做"
+msgstr "不要猶豫去"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to select only the events you are interested in!"
-msgstr "不要有任何猶豫，直接選擇您喜歡的事件"
+msgstr "不要有任何猶豫，直接選擇您喜歡的活動！"
 
 #. module: project
 #. openerp-web
@@ -1754,14 +1778,14 @@ msgstr "完成"
 msgid ""
 "During a meeting, a customer asks a manager for a few modifications to a "
 "project."
-msgstr "在會議期間，客戶要求經理對項目進行一些修改。"
+msgstr "在會議中，客戶要求讓專案經理對專案做一些改動。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Each employee will have his own task, while the manager will be able to "
 "follow the global progress in the Kanban view of the project."
-msgstr "每個員工都有自己的任務，而專案經理將能夠在專案的看板視圖中關注專案整體的進展情況。"
+msgstr "每個僱員都有自己的任務，同時專案經理能夠在看板視圖中追蹤查看專案的整體進度。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -1772,7 +1796,7 @@ msgstr "編輯任務"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_from
 msgid "Email"
-msgstr "電郵"
+msgstr "電子郵箱"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1782,12 +1806,12 @@ msgstr "電郵別名"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
 msgid "Email Template"
-msgstr "郵件範本"
+msgstr "電郵模板"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
-msgstr "電子郵件"
+msgstr "電子信件"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1798,7 +1822,7 @@ msgstr "結束"
 #: model:ir.model.fields,field_description:project.field_project_task_date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_end
 msgid "Ending Date"
-msgstr "期末日期"
+msgstr "結束日期"
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -1810,7 +1834,7 @@ msgstr "錯誤！專案的起始日期須大於結束日期。"
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr "預計完成任務的時間，通常由專案經理在任務處於規劃階段-草稿狀態時設置。"
+msgstr "實行任務的估計時間，通常由專案經理在任務草稿階段時設定。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1818,8 +1842,8 @@ msgid ""
 "Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
 "                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
 msgstr ""
-"即便在odoo中沒有特定的字段表明特定階段的負責人，但是指定專案中每個階段的負責人還是很重要的<br/>\n"
-"這個人將會負責確認每個階段並且保證移向下一階段的各項條件都已經滿足"
+"即便在Odoo中沒有特定的字段指明，但是指定您專案中每個階段的負責人還是很重要的。<br/>\n"
+"這個人將會負責確認每個階段並且保證移向下一階段的各項條件都已經滿足。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1828,7 +1852,7 @@ msgid ""
 "                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
 msgstr ""
 "每個行業都是不同的。<br/>\n"
-"odoo能讓您客制每種應用方式，並且針對自己專案的特殊需求客制化呈現之畫面"
+"odoo能讓您定制每種應用並且通常針對自己專案的特殊需求定制螢幕呈現。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1840,24 +1864,24 @@ msgstr "例子"
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Expert advice has been requested"
-msgstr "正在尋求專家意見"
+msgstr "已經在請求專家建議"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
 msgid "Expiration Date"
-msgstr "有效日期"
+msgstr "到期日期"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_legend_priority
 msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
-msgstr ""
+msgstr "解釋文本用於幫助使用者在該階段的任務或問題上使用星標記。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr "進階過濾器"
+msgstr "擴展篩選"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -1867,7 +1891,7 @@ msgstr "額外信息"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Extra useful for when you're with a customer or in a meeting."
-msgstr "特別適用於與客戶或會議時的情境。"
+msgstr "當您和客戶在一起或者在會議時候非常有用。"
 
 #. module: project
 #. openerp-web
@@ -1886,14 +1910,14 @@ msgstr "最後的任務已經部署"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Kanban"
-msgstr "於看板畫面中折疊階段"
+msgstr "在看板中折疊"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr "關注此專案的同時，追蹤此專案的任務和議題關聯的事件。"
+msgstr "關注此專案的同時，追蹤此專案的任務和問題關聯的事件。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1903,14 +1927,14 @@ msgstr "我關注的"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "For employees, the"
-msgstr "例如，"
+msgstr "對於用，"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "For example, risk and task owners should come prepared to share the status "
 "of their item and, ideally, a path to resolution."
-msgstr ""
+msgstr "例如，風險和任務所有者應該準備好共享他們專案的狀態，理想狀態下，還有解決途徑。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1926,7 +1950,7 @@ msgstr ""
 msgid ""
 "For the same reason, don't create a Project based on weeks or time (example:"
 " Scrum)."
-msgstr "出於相同的原因，不要創建一個基於周期或者時間的專案（例如：Scrum）"
+msgstr "同樣的理由，不要創建一個根據周或者時間的專案（例如：Scrum）"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_project_forecast
@@ -1936,7 +1960,7 @@ msgstr "預測"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr "未來活動"
+msgstr "未來的活動"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -1946,12 +1970,12 @@ msgstr "GTD"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Generate a timesheet report to attach to your customer invoices"
-msgstr "產生工時報表，附加到您的客戶發票"
+msgstr "生成工時表報表附到客戶發票上"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get full synchronization with Odoo"
-msgstr "與Odoo完全同步"
+msgstr "用odoo完成全部的同步"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1966,17 +1990,17 @@ msgstr "找到更多apps"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr "在專案看版上給任務標上標籤"
+msgstr "在專案看版上給任務標籤標識。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_sequence
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr "當顯示專案列表時，給出序列順序"
+msgstr "當顯示專案列表時，給出序列順序。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr "輸入序號，用於排序任務清單列表"
+msgstr "當顯示任務列表時，給出序列順序。"
 
 #. module: project
 #. openerp-web
@@ -1986,9 +2010,7 @@ msgid ""
 "Good job! Your completed the Project Management tour. You can continue with "
 "the <b>implementation guide</b> to help you setup Project Management in your"
 " company."
-msgstr ""
-"Good job!\n"
-"您完成了專案管理之旅。您可以繼續使用<b>實施指南</b>來幫助您在公司中設置專案管理。"
+msgstr "非常棒！您已經完成了專案管理之旅。您可以繼續使用<b>實施指南</b>以幫助您在公司建立專案管理。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2003,23 +2025,23 @@ msgstr "綠色"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "綠色看板標籤"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
-msgstr "綠色：任務可以進入下一階段（此階段的工作已經完成）"
+msgstr "綠色：任務可以進入下一段（這一階段的工作已經完成）"
 
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "灰色"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "灰色看板標籤"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2031,22 +2053,22 @@ msgstr "灰色：任務在進行中（有人還在做）"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組按"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Here are some of the <strong>available customizations</strong>"
-msgstr "有一些<strong>可用客制化</strong>"
+msgstr "有一些<strong>可用定制化</strong>"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr "在這裡您可以創建新的任務"
+msgstr "在這裡，您可以創建新的任務"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "高"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_privacy_visibility
@@ -2058,16 +2080,16 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
-"掌握屬於目前專案的任務或議題的權限設定：\n"
-" - 僅限受邀人員：員工只能看到後續的專案，任務或議題\n"
-" - 所有員工都可以看到：員工可以看到所有專案，任務或議題(僅公司內部)\n"
-" - 通過下列顧客可見：員工看到一切;如果網站功能被開啟，外\n"
-"    部用戶使用者之公司或其屬下員工可能會看到專案，任務或議題\n"
+"保持目前專案任務或問題的可見性：\n"
+"- 僅根據邀請：員工只能查看關注的專案、任務或問題 \n"
+"- 所有員工可見：員工可查看所有專案、任務或問題 \n"
+"- 僅關注的客戶可見：員工可查看一切；\n"
+" 如果網站已激活，門戶使用者可查看自己或其公司其他人關注的專案、任務或問題\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hours"
-msgstr ""
+msgstr "小時"
 
 #. module: project
 #: code:addons/project/models/project.py:730
@@ -2083,73 +2105,73 @@ msgstr "我來做"
 #: model:ir.model.fields,field_description:project.field_project_task_type_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_thread_id
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr "上級記錄ID支援別名(例如:專案支援任務創建別名)"
+msgstr "上級記錄ID支援別名(例如：專案支援任務創建別名)"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Idea has been transformed into concrete actions"
-msgstr "想法已經被轉換為具體的行動上"
+msgstr "主意已經被轉換為實際行動"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea is fully explained"
-msgstr "想法已被充分解釋"
+msgstr "主意已全面解釋"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Ideally, a person should only be responsible for one project."
-msgstr "理想情況下，一個人只能對一個專案負責。"
+msgstr "在理想情況下，一個人只能對一個專案負責。"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
 #, python-format
 msgid "Ideas"
-msgstr "想法/創意"
+msgstr "創意"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr "定義議題和阻塞點更加容易"
+msgstr "辨認議題和阻塞點更加容易"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
 msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
-msgstr "若於此設置客戶之電子郵件位址，當任務或問題到達此階段時，將自動發送訊息至客戶電子信箱位址。"
+msgstr "當任務或問題到達這一步時，設定的電子信件將發送給客戶。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
-msgstr "如果將啟用取消，將可以不用刪除就隱藏專案"
+msgstr "如果有效字段設為否，可以不用刪除就隱藏專案。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "If you don't want to receive email notifications, you can uncheck the option"
 " in your"
-msgstr "如果您不想接收電子郵件通知，您可以於勾選單中取消您的選項"
+msgstr "如果您不想接收通知信件，您可以在您的選項不勾選"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "If you want to limit access for certain users or customers, simply use the "
 "Privacy / Visibility settings in the Project Settings."
-msgstr "如果要限制某些用戶或客戶的訪問權限，只需使用“專案設置”中的“隱私/權限”設置即可。"
+msgstr "如果您想限制某些使用者或者客戶的權限，就可以在專案設定中使用隱私／可視性設定。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2157,7 +2179,7 @@ msgid ""
 "If you work on a Time &amp; Material project, you'll probably want to "
 "extract a Timesheet of the tasks to invoice directly to the customer. To do "
 "that:"
-msgstr ""
+msgstr "如果您處理時間和材料專案，您可能想要提取任務時間表以便直接向客戶開發票。為此："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2240,7 +2262,7 @@ msgstr "進行中"
 #: code:addons/project/static/src/js/web_planner_project.js:80
 #, python-format
 msgid "Incoming"
-msgstr "入向"
+msgstr "入庫"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_planned_hours
@@ -2253,33 +2275,33 @@ msgid ""
 "Internal email associated with this project. Incoming emails are "
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
-msgstr "和這個專案相關的內部郵件。收件會自動的同步為任務（或者是議題，如果issue模組已經安裝過）"
+msgstr "與這個專案相關的內部信件。收件會自動的與任務同步（或者是可選的議題，如果議題追蹤模組已經安裝了）。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Internal notes are messages that will appear in the Chatter but will not be "
 "notified in Odoo's Inbox."
-msgstr "內部筆記是將出現在Chatter中的消息，但不會在Odoo的收件箱中通知。"
+msgstr "內部提示會顯示在Chatter中但是不會通知到odoo的收件箱。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "議題版本"
+msgstr "問題版本"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Issue is being worked on"
-msgstr "議題正在解決中"
+msgstr "問題正在解決中"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #, python-format
 msgid "Issue is resolved"
-msgstr "議題處理完成了"
+msgstr "議題被解決掉了"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2290,8 +2312,8 @@ msgid ""
 " as milestones that have been met or are ahead of schedule. This will make "
 "participants feel motivated to engage in the conversation."
 msgstr ""
-"最好從一個\"專案進度狀況回顧\"開始，例如\"我們晚了兩周\"\"我們還在預算範圍內\" 或者 "
-"\"根據流程我們已經完成一半了\"當然您也可以，用積極的消息開始一個會議，例如：目前我們還在跟著原定計劃走或者走在計劃前面。這會使與會者願意參與到會話中"
+"最好從一個\"專案回答\"開始，例如：\"我們晚了兩周\"，「我們還在預算範圍內\" 或者 "
+"\"根據流程模式我們已經完成一半了\"。當然您也可以，用積極的消息開始一個會議，例如：里程碑已經完成或者計劃前實現。這會驅使與會者願意參與到會話中。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2299,6 +2321,8 @@ msgid ""
 "It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
 "                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
 msgstr ""
+"是時候考慮在 Odoo 中如何將活動轉變為真正的專案。<br/>\n"
+" 為此，最重要的部分是定義專案的各個階段。階段是指任務所經歷的不同步驟，從創建到結束。它們將出現在您專案的「看板」視圖中。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2306,14 +2330,14 @@ msgid ""
 "It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
 "                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
 msgstr ""
-"有必要知道為什麼您想用odoo和您的目的是什麼。\n"
-"確實，有很多方式來管理專案，為了找到最適合您的那一種，您需要清楚的知道您想要達到什麼目的，我們希望將您的目標轉化為您公司的真正改進。"
+"有必要知道為什麼您想用odoo專案和您的目標是什麼。\n"
+"確實，有很多方式來管理專案，為了找到最適合您的那一種，您需要清楚的知道您想要達到什麼目的。然後，我們希望幫您公司把您的目標轉化為真正的改進。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "It's for logging every change, event or message related to the Document."
-msgstr "用來記錄文檔相關的每次變動，時間，或者信息"
+msgstr "用來記錄文檔相關的每次變動、時間或者信息"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2321,17 +2345,17 @@ msgid ""
 "It's usually a good idea to take time to analyze your tasks once a year. "
 "Here are some KPIs you should take a look at. Ask yourself 'How can they be "
 "improved?'"
-msgstr ""
+msgstr "每年花費一定的時間來分析您的任務通常是一個不錯的選擇。您應該查看以下一些 KPI。問自己「如何對其進行改進？」"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "看板阻塞說明"
+msgstr "看板阻塞解釋"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr "看板進展中說明"
+msgstr "看板進展說明"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2363,7 +2387,7 @@ msgstr "持續跟進信息和會話"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Know what my employees are working on"
-msgstr "知道我的員工在做什麼"
+msgstr "知道我的僱員在做什麼"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2378,7 +2402,7 @@ msgstr "最後信息"
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:86
@@ -2395,7 +2419,7 @@ msgstr "最後階段更新"
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_write_date
@@ -2403,33 +2427,33 @@ msgstr "最後更新："
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr "最後活動"
+msgstr "晚活動"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
 msgid ""
 "Learn how to better organize your company using Projects, Tasks and "
 "Timesheets."
-msgstr ""
+msgstr "瞭解如何使用專案、任務和時間表更好地組織您的公司。"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
 msgid "Let's create your first project."
-msgstr "創建第一個專案."
+msgstr "創建您第一個專案。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
-msgstr ""
+msgstr "允許公司定制要使用何種 Pad 安裝鏈接到新的 pad 中（例如：http://etherpad.com/）。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2437,47 +2461,47 @@ msgid ""
 "Link this project to an analytic account if you need financial management on"
 " projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
-msgstr "如果您需要對專案進行財務管理，請將此專案鏈接到分析帳戶。它使您能夠將項目與預算，計劃，成本和收入分析，項目時間表等連接起來。"
+msgstr "如果您需要專案的財務管理，鏈接此專案到一個分析帳戶。它能讓您鏈接預算、規劃、成本和收入分析、專案工時表等到專案。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
-msgstr "列表，計劃和追蹤要做的事情"
+msgstr "列出、計劃和追蹤要做的事情"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr ""
+msgstr "低"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "主要附件"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Manage your resources with Gantt charts"
-msgstr ""
+msgstr "使用甘特圖管理您的資源"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr "管理員"
+msgstr "經理"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Managing a group of people, a team or a department (example: R&amp;D team, "
 "HR Department, etc.)"
-msgstr "管理一群人，一個團隊或者一個部門（例如:研發部門，人資部門等等）"
+msgstr "管理一群人、一個團隊或者一個部門（例如：研發部門、人資部門等等）"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Managing long projects that span over many months and/or need Timesheets."
-msgstr "管理跨越多個月或者需要工時表的長期專案。"
+msgstr "管理跨越多個月和／或者還需要工時表的長期專案。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2488,43 +2512,42 @@ msgid ""
 "stages and tasks you want to be informed about. Fortunately, Odoo Project "
 "has many levels of notifications and messages you can choose from."
 msgstr ""
-"管理通知是必要的：太少您可能會錯過重要的信息，太多您又會得到太多不必要的信息，加重您的負擔。\n"
-"關鍵是在專案階段和您想被通知到的任務中找一個平衡點。幸運的是，Odoo專案有很多級別的通知和信息您可以來選擇"
+"管理通知是必要的：太少您可能會錯過重要的信息，太多您又會得到太多不必要的信息。秘訣在於在專案階段和您想被通知到的任務中找一個平衡點。幸運的是，Odoo專案有很多級別的通知和信息供您選擇。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Marketing Department"
-msgstr "市場部門"
+msgstr "市場行銷部門"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr "成員"
+msgstr "會員"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
 msgid "Merge Selected Tasks"
-msgstr ""
+msgstr "合併所選的任務"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 msgid "Merge Tasks"
-msgstr ""
+msgstr "合併任務"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
 msgid "Merge into an existing task"
-msgstr ""
+msgstr "融入現有的任務"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
-msgstr "員工之間更有效的溝通"
+msgstr "僱員間的質檢更加有效的溝通"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
-msgstr "我的動態"
+msgstr "我的活動"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2534,17 +2557,17 @@ msgstr "我的收藏夾"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "我關注的任務"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
 msgid "My Next Activities"
-msgstr ""
+msgstr "我的後續活動"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr ""
+msgstr "我的任務"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:31
@@ -2557,7 +2580,7 @@ msgstr "名稱"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "任務名稱："
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2584,7 +2607,7 @@ msgstr "需要功能或者技術幫助"
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
 msgid "New"
-msgstr "新增"
+msgstr "新建"
 
 #. module: project
 #. openerp-web
@@ -2596,7 +2619,7 @@ msgstr "新加的修理"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
 msgid "New task name"
-msgstr ""
+msgstr "新的任務名稱"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:30
@@ -2609,13 +2632,13 @@ msgstr "最新"
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 #: model:ir.ui.view,arch_db:project.project_task_view_tree_activity
 msgid "Next Activities"
-msgstr "下一個動態"
+msgstr "下一步活動"
 
 #. module: project
 #: code:addons/project/models/project.py:775
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "無主題"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2649,17 +2672,17 @@ msgstr "通知"
 #: code:addons/project/static/src/js/tour.js:43
 #, python-format
 msgid "Now that the project is set up, <b>create a few tasks</b>."
-msgstr "現在專案已經建立，<b>可以開始創建一些任務了!</b>。"
+msgstr "現在專案設定完畢，<b>創建幾個任務。</b>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "打開任務的工作天數"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "結束任務的工作天數"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -2678,12 +2701,7 @@ msgid ""
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
 "                        who's in charge, all in one place."
 msgstr ""
-"Odoo專案是一個能讓公司中所有人能看到專案中任務和活動的方法\n"
-"跟進事情的進展，事情被困住，知道誰在負責，全部都在一個地方能看到\n"
-"\n"
-"\n"
-"Odoo項目是一種超快，簡單的方式，讓您的公司內的每個人都可以看到您的活動和任務。\n"
-"了解事情的進展情況，在一個地方可以查詢專案目前在什麼狀況，知道誰在負責，。"
+"Odoo專案是一個能讓公司所有人能看到您的任務和活動的非常快和容易的方法。跟進事情的進展，事情被困住，知道誰在負責，全部都在一個地方能看到。"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -2691,7 +2709,7 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks "
 "efficiently. You can track progress, discuss on tasks, attach documents, "
 "etc."
-msgstr "Odoo專案管理允許您管理您的任務以及有效的專案。您可以追蹤進展，任務狀態，附加文件等方面進行討論。"
+msgstr "Odoo專案管理允許您有效的管理您任務的管道。您可以追蹤進展、討論任務，附加文件等。"
 
 #. module: project
 #: code:addons/project/models/project.py:200
@@ -2706,7 +2724,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有傳入郵件將被附加到的線索（記錄）的可選標識，即使它們沒有回复。如果設置，這將完全阻止新記錄的創建。"
+msgstr "所有收件都將附上一條線程（記錄）選配的ID，即使它們不曾回覆過它。如果設定了，這個將完全阻止新記錄的創建。"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2723,13 +2741,13 @@ msgstr "組織會議"
 msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
-msgstr "為企業內部，個人或客戶專案規畫專案活動（計劃任務，跟踪問題，發票時間表）。"
+msgstr "組織內部的、個人的或者客戶專案的活動（計劃任務，跟進議題，給工時表開立發票）。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Organize your company, from personal tasks to collaborative meeting minutes."
-msgstr "組織公司，從個人任務到協作會議記錄。"
+msgstr "組織您的公司，從個人任務至協同會議紀要。"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2742,7 +2760,7 @@ msgstr "拖期任務"
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr "當任務或者議題處於此階段時，覆蓋為看板選擇的阻塞狀態顯示的預設值。"
+msgstr "當任務或者議題在這個階段的時候，覆蓋看板選擇中顯示阻塞狀態的預設的值。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -2750,7 +2768,7 @@ msgstr "當任務或者議題處於此階段時，覆蓋為看板選擇的阻塞
 msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr "當任務或問題處於該階段時，覆蓋為看板選擇的完成狀態顯示的預設值。"
+msgstr "當任務或者議題在這個階段的時候，覆蓋看板選擇中顯示阻塞狀態的預設的值。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2758,12 +2776,12 @@ msgstr "當任務或問題處於該階段時，覆蓋為看板選擇的完成狀
 msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr "當任務或問題處於該階段時，覆蓋為看板選擇的正常狀態顯示的預設值。"
+msgstr "當任務或者議題在這個階段的時候，覆蓋看板選擇中顯示阻塞狀態的預設的值。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
 msgid "Owner"
-msgstr "擁有者"
+msgstr "所有者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
@@ -2790,9 +2808,7 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"上級模型擁有此別名。擁有別名參考的模型\n"
-"並不一定是來自alias_model_id的模型。\n"
-"例如：項目(parent_model)和任務(模型)"
+"上級模型擁有別名。擁有別名參照的模型不必是alias_model_id給出的模型 (例如：專案(parent_model)和任務 (model))"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2802,7 +2818,7 @@ msgstr "計劃那天的活動"
 #. module: project
 #: model:ir.model,name:project.model_web_planner
 msgid "Planner"
-msgstr "計畫"
+msgstr "計劃"
 
 #. module: project
 #: code:addons/project/models/project.py:887
@@ -2810,7 +2826,7 @@ msgstr "計畫"
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
-msgstr "請刪除鏈接到您要刪除的帳戶的項目中的現有任務。"
+msgstr "請刪除鏈接到您想刪除的科目的專案中的任務。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
@@ -2820,10 +2836,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"使用信件過濾器(mailgateway)在文件發布消息時之策略。\n"
-"- everyone: 任何人都可以提交\n"
-"- partners: 只有認證過的合作夥伴\n"
-"- followers: 只有相關文件或下列群組成員的訂閱者\n"
+"通過信件網關在文檔上提交一個消息的政策。\n"
+"- 任何人: 任何人都可以提交\n"
+"- 合作夥伴: 只有認證過的合作夥伴\n"
+"- 跟隨者: 只有相關文件或下列頻道成員的跟隨者\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2860,7 +2876,7 @@ msgstr "產品或者軟體版本"
 #: model:res.request.link,name:project.req_link_project
 #, python-format
 msgid "Project"
-msgstr "項目"
+msgstr "專案"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
@@ -2881,7 +2897,7 @@ msgstr "專案個數"
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr ""
+msgstr "專案經理"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2890,17 +2906,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Name"
-msgstr ""
+msgstr "專案名稱"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings"
-msgstr ""
+msgstr "專案設定"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings."
-msgstr "專案設定"
+msgstr "專案設定。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2912,12 +2928,12 @@ msgstr "專案任務"
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Project Time Unit"
-msgstr ""
+msgstr "專案時間單位"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr ""
+msgstr "專案任務"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2927,7 +2943,7 @@ msgstr "專案任務"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "專案：激活示例專案"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2948,12 +2964,12 @@ msgstr "專案"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr "專案 & 任務"
+msgstr "專案和任務"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_rating_project
 msgid "Rating on Tasks"
-msgstr ""
+msgstr "任務評級"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_1
@@ -2986,19 +3002,19 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "下一階段就緒"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready for layout / copywriting"
-msgstr "為佈局／版權準備"
+msgstr "為佈局／撰寫做好準備"
 
 #. module: project
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr "準備好下一個階段"
+msgstr "下一階段就緒"
 
 #. module: project
 #. openerp-web
@@ -3044,12 +3060,12 @@ msgstr "接收 ${object.name}"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "記錄線索ID"
+msgstr "記錄線程ID"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "記錄的顏色"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -3059,7 +3075,7 @@ msgstr "紅色"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "紅色看板標籤"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3113,7 +3129,7 @@ msgstr "修理完成"
 #: model:ir.ui.menu,name:project.menu_project_report
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr "報表"
+msgstr "報告"
 
 #. module: project
 #. openerp-web
@@ -3145,42 +3161,42 @@ msgstr "Scrum方法論"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "Search"
-msgstr "搜索"
+msgstr "搜尋"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:92
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "搜尋<span class=\"nolabel\">（在內容）</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr "搜索專案"
+msgstr "搜尋專案"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "在全部範圍內搜尋"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:94
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "在客戶中搜尋"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:93
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "在消息中搜尋"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "在階段中搜尋"
 
 #. module: project
 #. openerp-web
@@ -3192,13 +3208,13 @@ msgstr "選擇"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Send an alert when a task is stuck in red for more than a few days"
-msgstr "當一個任務被卡住變紅幾天後發送提醒"
+msgstr "當一個任務被卡住變紅幾天後發送一個警告"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Send an automatic confirmation to all emails sent to your customer support"
-msgstr ""
+msgstr "針對向您的客戶支援發送的所有電子信件，發送自動確認"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_sequence
@@ -3230,7 +3246,7 @@ msgstr "設定一張封面圖像"
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
-msgstr "設置"
+msgstr "設定"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3250,14 +3266,14 @@ msgstr "在儀表板顯示專案"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "顯示在今天之前的下一個行動日期的所有記錄"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "So if you're looking for the history of a Task, or the latest message on a "
 "Task, simply go to the corresponding Document and you'll find it!"
-msgstr ""
+msgstr "因此如果要查找一個任務的歷史或者一個任務的最新消息，只要進入對應文檔即可找到！"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3269,14 +3285,14 @@ msgstr "軟體開發"
 #: code:addons/project/static/src/js/web_planner_project.js:16
 #, python-format
 msgid "Specification"
-msgstr ""
+msgstr "規格"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Specification is validated"
-msgstr "規範是可用的"
+msgstr "規格是可用的"
 
 #. module: project
 #. openerp-web
@@ -3288,7 +3304,7 @@ msgstr "任務的規範被寫下來了"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "拆分您的任務以將您的工作組織到子里程碑中"
 
 #. module: project
 #. openerp-web
@@ -3311,7 +3327,7 @@ msgstr "階段"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "階段已改變"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3321,28 +3337,28 @@ msgstr "階段描述和工具提示"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
 msgid "Stage Name"
-msgstr ""
+msgstr "階段名稱"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "階段已改變"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr ""
+msgstr "階段"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr "已加星號"
+msgstr "星標"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "帶星標的說明"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3363,12 +3379,12 @@ msgstr "起始日期"
 #: model:ir.model.fields,field_description:project.field_project_project_subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_project_id
 msgid "Sub-task Project"
-msgstr "子任務項目"
+msgstr "子任務專案"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr "子任務數"
+msgstr "子任務次數"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3381,7 +3397,7 @@ msgstr "子任務"
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr "標籤名稱已經存在！"
+msgstr "標籤名已存在!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3395,12 +3411,12 @@ msgstr "標籤"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks"
-msgstr ""
+msgstr "專案任務的標籤"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
 msgid "Target Project"
-msgstr ""
+msgstr "目標專案"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -3409,7 +3425,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
-msgstr ""
+msgstr "任務"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -3430,7 +3446,7 @@ msgstr "受阻的任務"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Task Management"
-msgstr ""
+msgstr "任務管理"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3454,12 +3470,12 @@ msgstr "任務準備"
 #: model:ir.ui.view,arch_db:project.task_type_edit
 #: model:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr ""
+msgstr "任務階段"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "任務階段已改變"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_name
@@ -3530,7 +3546,7 @@ msgstr "任務可以到下一階段了"
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Tasks"
-msgstr ""
+msgstr "任務"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3546,7 +3562,7 @@ msgstr "任務分析"
 #: model:ir.model.fields,field_description:project.field_project_project_type_ids
 #: model:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr ""
+msgstr "任務階段"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3556,38 +3572,38 @@ msgstr "任務分析"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks are the main mechanism in Odoo and are activated by default."
-msgstr "任務是Odoo專案模組中的主要功能，預設情況下是啟用的。"
+msgstr "任務是Odoo中主要的機制並且預設有效的。"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr "項目和使用者的任務"
+msgstr "專案和使用者的任務"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
-msgstr ""
+msgstr "要合併的任務"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:50
 #, python-format
 msgid "Test"
-msgstr ""
+msgstr "測試"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:58
 #, python-format
 msgid "Test is OK, need to document"
-msgstr "測試好了，需要進一步文檔化"
+msgstr "測試好了，需要記錄"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Testing"
-msgstr ""
+msgstr "測試"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3599,17 +3615,17 @@ msgid ""
 " mean it's always a good idea: let's start by helping you understand what "
 "can be a good project."
 msgstr ""
-"Odoo專案應用程序可用於管理許多活動，從新產品的開發到客日常的客戶服務。用一些創造力，它甚至能用來管理市場營銷溝通或者個人專案。但是它可以做並不意味著它總是一個好的主意：讓我們來幫助您理解什麼是好的專案"
+"Odoo專案應用可用於管理許多活動，從新產品的開發到日常的客戶支援。用一些創造力，它甚至能用來管理您的市場行銷通訊或個人專案。儘管它可以做並不意味著它總是一個好主意：讓我們開始來幫助您理解什麼是好的專案。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following task has been merged into this one:"
-msgstr ""
+msgstr "以下任務已併入該任務中："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following tasks have been merged into this one:"
-msgstr ""
+msgstr "以下任務已併入該任務中："
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model_id
@@ -3617,15 +3633,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
-"相應於這個別名對應的模型(Odoo單據種類)。任何一封不屬於對某個已存在的記錄的到來信件，將導致此模組中新記錄的創建(例如，一個新的項目任務)。"
+msgstr "此別名對應的模型(Odoo單據種類)。任何一封非回覆已存在的記錄的收件將導致此模型創建新的記錄(例如：一個專案任務)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "郵件別名的名稱，例如，如果您要收取 <jobs@example.odoo.com> 的電子郵件,別名就要被設為：\"jobs\""
+msgstr "信件別名的名稱，例如，如果您要收取 <jobs@example.odoo.com> 的電子信件,別名就要被設為：\"jobs\""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3635,12 +3650,12 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"基於此別名接收到的信件，創建記錄的所有人。若此字段沒有設定，系統將試圖根據發送者(From)地址來查找正確的所有者，如果對於那個地址沒有系統使用者被發現，將使用系統管理員帳戶。"
+"在收到此別名的電子信件時創建記錄的所有者。如果此字段未設定，系統將嘗試根據發件人(發件人)地址查找正確的所有者，或者如果沒有找到該地址的系統使用者，將使用管理員帳戶。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "The same features as the Chrome extension, but on your mobile phone!"
-msgstr "和Chrome擴展同樣的特性，但是是在您的手機上"
+msgstr "與Chrome擴展有著同樣的特性，但是是在您的移動手機上！"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
@@ -3659,16 +3674,14 @@ msgstr "沒有任務。"
 msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
-msgstr "沒有可用圖像能被設定為封面，在任務上發送一條信息並附上一張圖像"
+msgstr "沒有可用圖像能被設定為封面。在任務上發送一條信息並附上一張圖像。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_cc
 msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
-msgstr ""
-"這些電子郵件地址將被發送前添加到此記錄的所有寄出和寄入電子郵件的CC字段。\n"
-"       用逗號分隔多個電子郵件地址"
+msgstr "這些電子信件地址將此記錄的所有傳入和傳出電子信件發送前添加到這些電子信件的 CC 字段中。用逗號分隔多個電子信件地址"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_from
@@ -3681,14 +3694,14 @@ msgid ""
 "This is particularly useful to manage help and support: all incoming email  "
 "from customers will be transformed into a task that you'll be able to track "
 "easily!"
-msgstr ""
+msgstr "這對於管理幫助和支援特別有用：所有客戶發來的電子信件都會轉變為任務，非常方便追蹤！"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "This replaces task's description text field by a collaborative rich text "
 "pad. This is advised if tasks involve several people."
-msgstr ""
+msgstr "通過協作式富文本板替代任務的描述文本字段。如果任務涉及若干人員，則建議使用該工具。"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3697,33 +3710,35 @@ msgid ""
 "This report allows you to analyse the performance of your projects and "
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
-msgstr "這個報表用於分析您專案和成員的效率。可以分析任務數量、計劃工時和實際工時的對比、任務的平均花費天數"
+msgstr "此報表用於分析您專案和使用者的績效。您可以分析任務數量、計劃工時和實際工時的對比、開始或完成任務的平均花費天數等。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_fold
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "當這個階段中沒有任何記錄需要呈現之時，這個階段在看板視圖中折疊"
+msgstr "當此階段沒有任何記錄要呈現的時候，此階段在看板視圖中被折疊起來。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "This task has been merged into the following task:"
-msgstr ""
+msgstr "該任務已併入以下任務中："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
 "                        return to it at any time: your progress is automatically saved."
-msgstr "全部的過程可能要花費您幾個小時，但是不要擔心，您可以休息一會並且可以在任何時候回過頭來：這個過程會被自動保存起來"
+msgstr ""
+"全部的過程可能要花費您幾個小時，但是不要擔心，您可以休息一會並且\n"
+"可以在任何時候回過頭來：您的進度會被自動保存起來。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This will add an Invoice Tasks menu in the Project module, that can be used "
 "to select the Timesheet to invoice."
-msgstr "這會在專案模組中增加一個新的選單，它可以被用來去選擇要開立發票的工時表"
+msgstr "這將會在專案模組中增加一個新的選單，它可以用來選擇要開立發票的工時表。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
@@ -3734,8 +3749,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
-"這將設置專案模組和任務中使用的度量單位。\n"
-"如果您使用鏈接到專案模組的時間表，請不要忘記設置正確的度量單位(如工時)。"
+"這設定了專案和任務所使用的度量單位。\n"
+" 如果您使用鏈接到專案的時間表，請不要忘記在員工中設定正確的度量單位。"
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3745,7 +3760,7 @@ msgstr "任務時間估算"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "時間管理"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3755,7 +3770,7 @@ msgstr "時間排程"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_hr_timesheet
 msgid "Timesheets"
-msgstr ""
+msgstr "工時表"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3764,8 +3779,9 @@ msgid ""
 "                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
 "                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
 msgstr ""
-"工時表通常是運營公司所必要的，他們也比較容易出現人為錯誤，重複，令人發瘋的，並且有時給員工帶來壓力<br/>\n"
-"幸運的是,Odoo已經有一些是這些能夠更加有效和更小痛苦的解決辦法"
+"工時表通常是運營公司所必要的。<br/>\n"
+"它們也容易出現人為錯誤、重複、惱人，並且有時給員工帶來壓力。<br/>\n"
+"幸運的是，Odoo已經有多個解決方法能夠令其更有效率和減少痛苦！"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3781,7 +3797,7 @@ msgstr "時間表工作時間調整甘特圖報表"
 #: code:addons/project/controllers/portal.py:84
 #, python-format
 msgid "Title"
-msgstr "標題"
+msgstr "稱謂"
 
 #. module: project
 #. openerp-web
@@ -3789,41 +3805,41 @@ msgstr "標題"
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
-msgstr ""
+msgstr "待辦"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
 "Project."
-msgstr "要配置看板視圖中的狀態，可以進入到專案中的『專案階段』頁面進行設定"
+msgstr "要配置看板視圖中的狀態，可以進入專案中的『專案階段』頁面。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
-msgstr "如果要用工時表，進入"
+msgstr "如果要用工時表，進入您的"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr "今日行程"
+msgstr "今天的活動"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr "總剩餘時間，任務執行者可定期重估"
+msgstr "總剩餘時間，任務執行者可定期重估。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr "允許在專案發行完成後啟動客戶評級"
+msgstr "對任務進行客戶滿意度追蹤"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "追蹤在專案和任務上花費的時間"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3835,12 +3851,12 @@ msgstr "未分派"
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr "未讀訊息"
+msgstr "未讀消息"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtask Project"
-msgstr ""
+msgstr "使用子任務專案"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
@@ -3855,7 +3871,7 @@ msgstr "使用工時表"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "將協作式富文本板用於任務"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3871,29 +3887,29 @@ msgstr ""
 msgid ""
 "Use the <b>implementation guide</b> to setup Project Management in your "
 "company."
-msgstr "使用<b>實施指南</b>開始使用強大的專案管理功能!"
+msgstr "使用<b>實施指南</b>在您的公司中設定專案管理。"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:85
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
-msgstr "使用前一頁<b>返回到您的任務管道</b>。"
+msgstr "使用麵包屑返回<b>到您的任務管道中。</b>"
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the star for tasks related to gold customers"
-msgstr ""
+msgstr "對與重要的客戶相關的任務使用星標記"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr "用戶"
+msgstr "使用者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
 msgid "User Email"
-msgstr "使用者Email"
+msgstr "使用者電郵"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3903,10 +3919,10 @@ msgid ""
 "                        Your team members will probably try to avoid those kind of meetings, or have to rush afterwards to meet their deadlines...<br/><br/>\n"
 "                        So how can you, as project manager, structure a weekly status meeting where team members are engaged, informed and willing to contribute to the project's next steps? Here are some tips."
 msgstr ""
-"通常，一個專案的團隊成員通過每週（或者每月）的階段會議來管理<br/>\n"
-"有時，這些會議可能要持續數個小時並且還要隊專案參與者過於詳細的審查。<br/>\n"
-"您的團隊成員可能會盡可能的避免這類會議或者在會以後需要趕在最後期限之前完成……<br/><br/>\n"
-"所以，作為專案經理，您如何才能讓團隊成員參與，被通知到，並且自願為專案的下幾步做出貢獻？這裡有一些建議。"
+"通常，一個專案的團隊成員通過每週（或者每月）的階段會議來管理。<br/>\n"
+"有時，這些會議可能要持續數個小時並且還要參與者通過詳細的審查。<br/>\n"
+"您的團隊成員可能盡可能的避免這類會議或者在會後需要趕其期限...<br/><br/>\n"
+"所以，作為專案經理，您該如何組織每週階段會議讓團隊成員參與、被告知，並且自願為專案的下幾步做出貢獻？這裡有一些建議。"
 
 #. module: project
 #. openerp-web
@@ -3918,7 +3934,7 @@ msgstr "驗證"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr "查看分析（工時單，效率等等）"
+msgstr "查看統計（工時表、效率等等）"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3937,7 +3953,7 @@ msgstr "所有員工可見"
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr "對正在關注的客戶可見"
+msgstr "正在關注的客戶可見"
 
 #. module: project
 #. openerp-web
@@ -3945,7 +3961,7 @@ msgstr "對正在關注的客戶可見"
 #: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Customer"
-msgstr "Wait. Customer"
+msgstr "等待。客戶"
 
 #. module: project
 #. openerp-web
@@ -3953,7 +3969,7 @@ msgstr "Wait. Customer"
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #, python-format
 msgid "Wait. Expert"
-msgstr "Wait. Expert"
+msgstr "等待。專家"
 
 #. module: project
 #. openerp-web
@@ -3961,7 +3977,7 @@ msgstr "Wait. Expert"
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr "想要用更好的方式來<b>管理您的專案</b>？就從這裡開始吧!</i>"
+msgstr "想要以更好<b>的方式管理您的專案？</b><i>一切從這裡開始。</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_cc
@@ -3971,12 +3987,12 @@ msgstr "關注者的電子信件"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can add fields related to your business on any screen, for example:"
-msgstr "我們可以在任何和業務相關的界面添加字段，例如："
+msgstr "我們可以在任何和業務相關的螢幕添加字段，例如："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr "我們能自動的按照步驟完成業務流程，例如："
+msgstr "我們能自動的按照步驟完成工作流，例如："
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3990,14 +4006,14 @@ msgstr "我們可以根據您的需求或者GoogleDocs模板實現定制報表�
 msgid ""
 "We hope this process helped you implement our project management "
 "application."
-msgstr "我們希望這個流程幫您實現專案管理應用"
+msgstr "我們希望這個流程幫您實現專案管理應用。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "We've developed a super simple and efficient Chrome extension to enter your "
 "timesheets:<br/><br/>"
-msgstr "我們已經開發了一個超級簡單並且超級有效的Chrome擴展用來輸入工時表：<br/><br/>"
+msgstr "我們已經開發了一個超級簡單並且超級有效的Chrome擴展用來輸入您的工時表：<br/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4007,12 +4023,12 @@ msgstr "歡迎"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average number of working hours necessary to close a task?"
-msgstr ""
+msgstr "結束任務需要的平均工作時長是多少？"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average time before a task is assigned / closed?"
-msgstr ""
+msgstr "分配／結束任務前所用的平均時間是多少？"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4028,7 +4044,7 @@ msgstr "錯過了最後期限的數量是多少？"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of tasks worked on / closed?"
-msgstr ""
+msgstr "處理／結束任務的平均時間是多少？"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4038,7 +4054,7 @@ msgstr "一年下來工作小時數的平均數是多少？"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr "該專案是否要顯示於儀表板上?"
+msgstr "專案是否應顯示在儀表板"
 
 #. module: project
 #. openerp-web
@@ -4050,37 +4066,37 @@ msgstr "工作已經開始"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "工作時間"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "分配任務所需的工作時間"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "結束的工作時間"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "分配的工作天數"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "結束的工作天數"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "分配的工作時長"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "結束的工作時長"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -4090,53 +4106,53 @@ msgstr "工作量"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write Date"
-msgstr ""
+msgstr "修改日期"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
-msgstr "您還可以添加一個說明來讓您的同時理解相關階段的意思和目的"
+msgstr "您還可以添加一個說明來讓您同事理解該階段的意思和目的。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
-msgstr "對於看板視圖和表單視圖中的可用星星的使用，會有一個工具提示給您使用"
+msgstr "關於看板視圖和表單視圖中可使用的星星，您可以提供一個工具提示。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can even include any report in your dashboard for permanent access!"
-msgstr "您甚至可以一直在您的儀表板中包含任何報表"
+msgstr "您甚至可以一直在您的儀表板中包含任何報表以供長期訪問！"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can learn more about Timesheets in the 'Use Timesheets' section of this "
 "planner."
-msgstr "您可以在這個計劃中的『使用工時表』章節中瞭解到更多的工時表"
+msgstr "您可以在這個計劃中『使用工時表』章節中瞭解到更多的工時表"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid ""
 "You can now manage your tasks in order to get things done efficiently. Track"
 " progress, discuss, attach documents, etc."
-msgstr "現在您可以使用任務更加有效的做完事情。追蹤流程，討論，附件等等"
+msgstr "現在您可以管理您的任務令您更有效率的完成事情。追蹤流程、討論、附加文件等。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can reply directly to a message from you email software; the message and"
 " its attachments will be added to the Chatter."
-msgstr "您可以從您自己的郵件系統對一個消息進行回復；您回復的消息和附件會被添加在odoo中"
+msgstr "您可以從自己的電郵軟體直接回覆消息；您的消息和附件將會被添加在Chatter中。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr "您可以保存報告，以便以後輕鬆重複使用及查找"
+msgstr "您可以將報表保存便於以後重複使用"
 
 #. module: project
 #: code:addons/project/models/project.py:547
@@ -4145,7 +4161,7 @@ msgid ""
 "You can't define a parent task if its project is not correctly configured. "
 "The sub-task's project of the parent task's project should be this task's "
 "project"
-msgstr ""
+msgstr "如果未正確配置專案，您將無法定義上級任務。上級任務專案的子任務專案應該是該任務的專案"
 
 #. module: project
 #: code:addons/project/models/project.py:67
@@ -4154,7 +4170,7 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the "
 "project."
-msgstr "您不能刪除一個專案，其中包含任務。您可以刪除所有專案的任務，然後刪除專案或乾脆取消的專案。"
+msgstr "您不能刪除一個包含任務的專案。您可以刪除所有專案的任務，然後刪除專案或乾脆取消的專案。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4169,7 +4185,7 @@ msgstr "您的目標"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr "您的Odoo 專案管理應用程式已啟動，並正常運行"
+msgstr "Odoo 專案應用程序已啟動並開始運行"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4184,17 +4200,17 @@ msgstr "您的專案"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr "啟動示例專案"
+msgstr "激活示例專案"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "and activate 'Log work activities on tasks'"
-msgstr ""
+msgstr "要使用工時表，請進入「專案設定」並激活「在任務中記錄工作活動」"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr "例如：辦公室派對"
+msgstr "例如：公司聚會"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4209,7 +4225,7 @@ msgstr "oe_kanban_text_red"
 #. module: project
 #: model:ir.model,name:project.model_project_task_merge_wizard
 msgid "project.task.merge.wizard"
-msgstr ""
+msgstr "project.task.merge.wizard"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -4219,23 +4235,23 @@ msgstr "res.config.settings"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
-msgstr "給我們發郵件"
+msgstr "給我們發信件"
 
 #. module: project
 #: code:addons/project/models/project.py:595
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "任務"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr "請描述<br/> 您的使用經驗，以及改進建議 !"
+msgstr "去描述<br/> 您的經驗，以及改進建議 !"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "結合使用。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
