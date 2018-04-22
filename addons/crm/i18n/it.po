@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"POT-Creation-Date: 2018-04-20 11:58+0000\n"
+"PO-Revision-Date: 2018-04-20 11:58+0000\n"
 "Last-Translator: Manuela Feliciani <mfeliciani@alice.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_res_partner_meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_users_meeting_count
 msgid "# Meetings"
-msgstr "# Appuntamenti"
+msgstr "# Riunioni"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_nbr_activities
@@ -336,8 +336,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
-"<span class=“o_stat_text” attrs=“{‘invisible’: [(‘meeting_count’, ‘&lt;’, 2)]}”> Meetings</span>\n"
-"                                    <span class=“o_stat_text” attrs=“{‘invisible’: [(‘meeting_count’, ‘&gt;’, 1)]}”> Meeting</span>"
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\">Riunioni</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Riunioni</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -890,7 +890,7 @@ msgstr "Target delle attività raggiunto"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Activities Todo"
-msgstr "Attività da fare"
+msgstr "Attività In Programma"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
@@ -961,7 +961,7 @@ msgstr ""
 "                         performance di vendita."
 
 #. module: crm
-#: code:addons/crm/wizard/base_partner_merge.py:274
+#: code:addons/crm/wizard/base_partner_merge.py:273
 #, python-format
 msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
@@ -971,7 +971,7 @@ msgstr ""
 "fondere contatti con emails differenti."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:905
+#: code:addons/crm/models/crm_lead.py:916
 #, python-format
 msgid ""
 "All email incoming to %s will automatically\n"
@@ -1023,7 +1023,7 @@ msgstr "Archivio"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Archived"
-msgstr "Archiviato"
+msgstr "Contatti Archiviati"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1155,7 +1155,7 @@ msgstr "Chiama per una Demo"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Campaign"
-msgstr "Campagna"
+msgstr "Campagna Marketing"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1639,7 +1639,7 @@ msgstr "Cliente"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_web_clearbit
 msgid "Customer Autocomplete"
-msgstr "Completamento automatico del Cliente"
+msgstr "Compila automaticamente i dati dei clienti"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1126
@@ -2076,8 +2076,8 @@ msgstr "Assegnazione Forzara"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Formats phone numbers"
-msgstr "Formato numeri telefonici"
+msgid "Format phone numbers based on national conventions"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:588
@@ -2381,7 +2381,7 @@ msgstr "Contatto iniziale"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Internal Notes"
-msgstr "Note Interne"
+msgstr "Appunti"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2506,7 +2506,7 @@ msgstr "Lead Creata"
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr "Tag associati alla Lead"
+msgstr "Tag associati ai lead"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2662,7 +2662,7 @@ msgstr "Cerca informazioni sulla società (nome, logo, ecc.)"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Lost"
-msgstr "Persa"
+msgstr "Opportunità perse"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -3343,8 +3343,8 @@ msgstr "Telefono"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_crm_phone_validation
-msgid "Phone Validation"
-msgstr "Convalida numero di telefono"
+msgid "Phone Formatting"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3368,7 +3368,7 @@ msgstr "Scripts telefonico"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 #, python-format
 msgid "Pipeline"
-msgstr "Opportunità "
+msgstr "Pipeline"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -4325,7 +4325,7 @@ msgstr "Troppo costoso"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue
 msgid "Total Revenue"
-msgstr "Entrate Totali"
+msgstr "Ricavi Totali"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -4590,7 +4590,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
 msgid "We don't have people/skills"
-msgstr "Non abbiamo persone / competenze"
+msgstr "Mancanza di personale/competenze"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4612,7 +4612,7 @@ msgstr "Sito web del contatto"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Weekly Meetings"
-msgstr "Meetings settimanali"
+msgstr "Riunioni settimanali"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4706,7 +4706,7 @@ msgstr "Procedura Guidata"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Won"
-msgstr "Accettato"
+msgstr "Opportunità Accettate"
 
 #. module: crm
 #: model:ir.filters,name:crm.filter_opportunity_country
