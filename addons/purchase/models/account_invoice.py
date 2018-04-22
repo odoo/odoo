@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.tools.float_utils import float_compare
 
 from odoo.exceptions import UserError
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
-
     purchase_id = fields.Many2one(
         comodel_name='purchase.order',
         string='Add Purchase Order',
         readonly=True, states={'draft': [('readonly', False)]},
-        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.'
+        help='Load the vendor bill based on selected purchase order. Several PO can be selected.'
     )
 
     @api.onchange('state', 'partner_id', 'invoice_line_ids')
