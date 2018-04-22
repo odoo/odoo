@@ -359,9 +359,24 @@ class PosOrder(models.Model):
             if rounding_method == 'round_globally':
                 for group_key, group_value in grouped_data.iteritems():
                     if group_key[0] == 'tax':
+                        tax_amount_credit = 0.0
+                        tax_amount_debit = 0.0
                         for line in group_value:
+                            tax_amount_credit += line['credit'] - cur.round(line['credit'])
+                            tax_amount_debit += line['debit'] - cur.round(line['debit'])
                             line['credit'] = cur.round(line['credit'])
                             line['debit'] = cur.round(line['debit'])
+                        tax_amount_credit = cur.round(tax_amount_credit)
+                        tax_amount_debit = cur.round(tax_amount_debit)
+                        if tax_amount_credit > 0 or tax_amount_debit > 0:
+                            line = group_value[0]
+                            insert_data('tax', {
+                                'name': line['name'] + '. ' +_('Round Globally'),
+                                'account_id': line['account_id'],
+                                'credit': tax_amount_credit,
+                                'debit': tax_amount_debit,
+                                'tax_line_id': line['tax_line_id']
+                            })
 
             # counterpart
             insert_data('counter_part', {
