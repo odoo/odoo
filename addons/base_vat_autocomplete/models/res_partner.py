@@ -21,6 +21,9 @@ except ImportError:
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    def dummy_return_lib_version(self):
+        return stdnum.__version__
+
     @api.onchange('vat')
     def vies_vat_change(self):
         def _check_city(lines, country='BE'):
