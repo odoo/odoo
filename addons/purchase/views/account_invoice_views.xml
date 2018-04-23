@@ -61,6 +61,7 @@
             <field name="vendor_bill_id" position="after">
                 <field name="vendor_bill_purchase_id" attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('type', '=', 'in_refund')]}"
                     class="oe_edit_only" domain="[('partner_id','child_of',[partner_id])]"
+                    placeholder="Select a purchase order or an old bill"
                     options="{'no_create': True, 'no_open': True}"/>
                 <field name="purchase_id" class="oe_edit_only"
                     invisible="1" context="{'show_total_amount': True}"/>
