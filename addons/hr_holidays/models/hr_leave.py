@@ -419,7 +419,7 @@ class HolidaysRequest(models.Model):
             date_from = fields.Datetime.from_string(leave.date_from)
             date_to = fields.Datetime.from_string(leave.date_to)
 
-            self.env['resource.calendar.leaves'].create({
+            self.env['resource.calendar.leaves'].sudo().create({
                 'name': leave.name,
                 'date_from': fields.Datetime.to_string(date_from),
                 'holiday_id': leave.id,
