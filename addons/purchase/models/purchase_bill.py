@@ -68,8 +68,6 @@ class AccountInvoice(models.Model):
     @api.onchange('vendor_bill_purchase_id')
     def _onchange_bill_purchase_order(self):
         if not self.vendor_bill_purchase_id:
-            self.purchase_id = False
-            self.vendor_bill_id = False
             return {}
         self.purchase_id = self.vendor_bill_purchase_id.purchase_order_id
         self.vendor_bill_id = self.vendor_bill_purchase_id.vendor_bill_id
