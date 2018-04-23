@@ -141,6 +141,7 @@ setup(
         'html2text',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+        'libsass',
         'mako',
         'mock',
         'ofxparse',
