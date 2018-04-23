@@ -1,24 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
   <data noupdate="1">
-    <record model="note.stage" id="demo_note_stage_01">
-      <field name="name">Today</field>
-      <field name="sequence">1</field>
-      <field name="user_id" ref="base.user_demo"/>
-    </record>
-
-    <record model="note.stage" id="demo_note_stage_02">
-      <field name="name">Tomorrow</field>
-      <field name="sequence">2</field>
-      <field name="user_id" ref="base.user_demo"/>
-    </record>
-
-    <record model="note.stage" id="demo_note_stage_03">
-      <field name="name">Later</field>
-      <field name="sequence">3</field>
-      <field name="user_id" ref="base.user_demo"/>
-    </record>
-
     <record id="note_1" model="note.note">
       <field name="name">Customer report #349872</field>
       <field name="memo"><![CDATA[<b>Customer report #349872</b>
@@ -29,17 +11,15 @@
      ]]>
       </field>
       <field name="user_id" ref="base.user_demo"/>
-      <field name="stage_id" ref="demo_note_stage_01"/>
       <field name="color">2</field>
     </record>
 
     <record id="note_2" model="note.note">
-      <field name="memo"><![CDATA[<b>Call Fabien</b>
+      <field name="memo"><![CDATA[<b>Call Raoulette</b>
     <br/><br/>* Followed by the telephone conversation and mail about D.544.3
     ]]>
       </field>
       <field name="user_id" ref="base.user_demo"/>
-      <field name="stage_id" ref="demo_note_stage_01"/>
     </record>
 
     <record id="note_4" model="note.note">
@@ -56,7 +36,6 @@
     ]]>
       </field>
       <field name="user_id" ref="base.user_demo"/>
-      <field name="stage_id" ref="demo_note_stage_02"/>
     </record>
 
     <record id="note_6" model="note.note">
@@ -97,7 +76,6 @@
       ]]>
       </field>
       <field name="user_id" ref="base.user_demo"/>
-      <field name="stage_id" ref="demo_note_stage_02"/>
     </record>
 
     <record id="note_12" model="note.note">
