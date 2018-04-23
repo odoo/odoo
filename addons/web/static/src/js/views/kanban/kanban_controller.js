@@ -107,6 +107,12 @@ var KanbanController = BasicController.extend({
         var groupedByM2o = groupByField && (groupByField.type === 'many2one');
         return groupedByM2o;
     },
+    resequenceColumn: function (ids) {
+        var self = this;
+        var state = this.model.get(this.handle, {raw: true});
+        var model = state.fields[state.groupedBy[0]].relation;
+        return this.model.resequence(model, ids, this.handle);
+    },
     /**
      * This method calls the server to ask for a resequence.  Note that this
      * does not rerender the user interface, because in most case, the
@@ -156,6 +162,12 @@ var KanbanController = BasicController.extend({
     _onAddColumn: function (event) {
         var self = this;
         this.model.createGroup(event.data.value, this.handle).then(function () {
+            var state = self.model.get(self.handle);
+            var ids = _.chain(state.data)
+                        .map(function (group) { return group.res_id; })
+                        .filter(function (res_id) { return _.isNumber(res_id) }).value();
+            return self.resequenceColumn(ids);
+        }).then(function () {
             return self.update({}, {reload: false});
         }).then(function () {
             self._updateButtons();
@@ -428,9 +440,7 @@ var KanbanController = BasicController.extend({
      */
     _onResequenceColumn: function (event) {
         var self = this;
-        var state = this.model.get(this.handle, {raw: true});
-        var model = state.fields[state.groupedBy[0]].relation;
-        this.model.resequence(model, event.data.ids, this.handle).then(function () {
+        this.resequenceColumn(event.data.ids).then(function () {
             self._updateEnv();
         });
     },
