@@ -94,7 +94,7 @@ class AccountAnalyticLine(models.Model):
         return self.env.context.get('user_id', self.env.user.id)
 
     name = fields.Char('Description', required=True)
-    date = fields.Date('Date', required=True, index=True, default=fields.Date.context_today)
+    date = fields.Datetime('Date', required=True, index=True, default=fields.Date.context_today)
     amount = fields.Monetary('Amount', required=True, default=0.0)
     unit_amount = fields.Float('Quantity', default=0.0)
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='restrict', index=True)
