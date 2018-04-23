@@ -44,7 +44,6 @@ class ResPartner(models.Model):
             partner[field] = value
             non_set_address_fields.remove(field)
 
-        print('Version stdnum: %s' % stdnum.__version__)
         if stdnum_vat is None:
             return {}
 
