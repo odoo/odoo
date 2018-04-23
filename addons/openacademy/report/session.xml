@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <report
+            id="report_session"
+            model="openacademy.session"
+            string="Session Report"
+            name="openacademy.report_session_view"
+            file="openacademy.report_session"
+            report_type="qweb-pdf" />
+
+        <template id="report_session_view">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 t-field="doc.name"/>
+                            <p>From <span t-field="doc.start_date"/> to <span t-field="doc.end_date"/></p>
+                            <p>Status: <span t-field="doc.state" /></p>
+                            <h3>Attendees:</h3>
+                            <ul>
+                                <t t-foreach="doc.attendee_ids" t-as="attendee">
+                                    <li><span t-field="attendee.name"/></li>
+                                </t>
+                            </ul>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="openacademy.report_session" model="ir.actions.report">
+            <field name="report_type">qweb-html</field>
+        </record>
+
+
+        <report
+            id="report_attendee"
+            model="openacademy.session"
+            string="Attendee Report"
+            name="openacademy.report_attendee_view"
+            file="openacademy.report_attendee_view"
+            report_type="qweb-pdf" />
+
+        <template id="report_attendee_view">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-foreach="doc.attendee_ids" t-as="attendee">
+                        <t t-call="web.html_container">
+                            <t t-call="web.external_layout">
+                                <div class="page">
+
+                                    <div class="row">
+                                        <div name="attendee_address" class="col-xs-5 col-xs-offset-7">
+                                            <address t-esc="attendee" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
+                                        </div>
+                                    </div>
+
+                                     <div class="row">
+                                        Dear <span t-field="attendee.name"/>,<br/>
+                                        You are invite to the training. Check the information below<br/><br/>
+                                    </div>
+
+                                    <div class="row">
+                                         <table class="table table-condensed">
+                                            <tr>
+                                                <td><b>From:</b></td>
+                                                <td><span t-field="doc.start_date"/></td>
+                                                <td><b>To:</b></td>
+                                                <td><span t-field="doc.end_date"/></td>
+                                            </tr>
+                                             <tr>
+                                                 <td><b>Instructor:</b></td>
+                                                 <td><span t-field="doc.instructor_id.name"/></td>
+                                             </tr>
+                                             <tr>
+                                                 <td><b>Course:</b></td>
+                                                 <td><span t-field="doc.course_id.name"/></td>
+                                             </tr>
+                                             <tr>
+                                                 <td><b>Duration:</b></td>
+                                                 <td><span t-field="doc.duration"/></td>
+                                             </tr>
+                                         </table>
+                                    </div>
+
+                                    <div class="row">
+                                        Scan here:
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', attendee.name, 600, 100)" style="width:300px;height:50px"/>
+                                    </div>
+
+                                </div>
+                            </t>
+                        </t>
+                    </t>
+                <p style="page-break-after:always;"></p>
+            </t>
+        </template>
+
+    </data>
+</odoo>

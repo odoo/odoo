@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="openacademy.course_view_list">
+      <field name="name">openacademy.course.tree</field>
+      <field name="model">openacademy.course</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="responsible_id" />
+          <field name="level" />
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="openacademy.course_view_form">
+      <field name="name">openacademy form</field>
+      <field name="model">openacademy.course</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+              <group>
+                  <field name="name"/>
+                  <field name="responsible_id" />
+                  <field name="level" widget="radio"/>
+                  <field name="currency_id" />
+                  <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+              </group>
+              <notebook>
+                  <page string="Description" name="desc" >
+                      <field name="description"/>
+                  </page>
+                  <page string="Sessions" name="sessions" >
+                      <field name="session_ids">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="instructor_id" />
+                            <field name="start_date" />
+                            <field name="duration" />
+                            <field name="percentage_per_day" />
+                            <field name="seats" />
+                        </tree>
+                      </field>
+                  </page>
+              </notebook>
+          </sheet>
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers"/>
+            <field name="message_ids" widget="mail_thread"/>
+          </div>
+         </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="openacademy.course_view_search">
+      <field name="name">openacademy search</field>
+      <field name="model">openacademy.course</field>
+      <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="responsible_id" />
+            <field name="description"/>
+            <filter name="my_courses" string="My Courses"
+                    domain="[('responsible_id', '=', uid)]"/>
+            <filter name="by_responsible" string="Responsible"
+                    context="{'group_by': 'responsible_id'}"/>
+         </search>
+      </field>
+    </record>
+
+
+
+    <record model="ir.actions.act_window" id="openacademy.action_course">
+      <field name="name">openacademy course</field>
+      <field name="res_model">openacademy.course</field>
+      <field name="view_mode">kanban,tree,form</field>
+      <field name="context">{'search_default_my_courses': 1, 'default_responsible_id' : uid}</field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="Academy" id="openacademy.menu_root" web_icon="fa fa-graduation-cap,#FFFFFF,#51CAB2"/>
+    <!-- menu categories -->
+    <menuitem name="Courses" id="openacademy.menu_course_top" parent="openacademy.menu_root"/>
+    <!-- actions -->
+    <menuitem name="Courses" id="openacademy.menu_course" parent="openacademy.menu_course_top"
+              action="openacademy.action_course"/>
+  </data>
+</odoo>

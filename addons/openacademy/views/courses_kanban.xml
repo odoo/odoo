@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+      <record model="ir.actions.act_window" id="openacademy.action_session_course_kanban">
+          <field name="name">openacademy session</field>
+          <field name="res_model">openacademy.session</field>
+          <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+          <field name="context">{ 'search_default_course_id': [active_id],
+                                  'default_course_id': active_id,
+                                  'search_default_by_instructor': 1 }</field>
+          <field name="help" type="html">
+              <p class="oe_view_nocontent_create">Create your first session</p>
+          </field>
+      </record>
+
+      <record model="ir.ui.view" id="openacademy.course_view_kaban">
+        <field name="name">openacademy.course_view_kaban</field>
+        <field name="model">openacademy.course</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban">
+                <field name="name"/>
+                <field name="color"/>
+                <field name="session_count" />
+                <field name="responsible_id" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div class="o_project_kanban_main">
+                                <div class="o_kanban_card_content o_visible">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span><t t-esc="record.name.value"/></span>
+                                            <span><t t-esc="record.responsible_id.value"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_pane o_invisible" groups="openacademy.group_manager">
+                                    <div class="o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div>
+                                            <a type="edit">Settings</a>
+                                        </div>
+                                        <div>
+                                            <a name="%(openacademy.action_session_course_kanban)d" type="action">Sessions</a>
+                                        </div>
+                                    </div>
+                                    <div t-if="widget.editable" class="o_project_kanban_colorpicker">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                </div>
+                                <div class="o_project_kanban_manage" groups="openacademy.group_manager">
+                                    <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                </div>
+                            </div>
+
+                            <div class="o_project_kanban_boxes">
+                                <a class="o_project_kanban_box" name="%(openacademy.action_session_course_kanban)d" type="action">
+                                    <span class="o_value"><t t-esc="record.session_count.value"/></span>
+                                    <span class="o_label">Session</span>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+  </data>
+</odoo>
