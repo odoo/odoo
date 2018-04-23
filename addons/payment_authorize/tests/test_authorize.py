@@ -96,7 +96,7 @@ class AuthorizeForm(AuthorizeCommon):
         self.assertEqual(data_set[0].get('data-action-url'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong data-action-url POST url')
         for el in tree.iterfind('input'):
             values = list(el.attrib.values())
-            if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state', 'data_set']:
+            if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state', 'data_set', 'x_company']:
                 continue
             self.assertEqual(
                 values[2],
