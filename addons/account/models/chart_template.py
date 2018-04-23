@@ -847,7 +847,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
     @api.multi
     def existing_accounting(self, company_id):
-        model_to_check = ['account.move.line', 'account.invoice', 'account.move', 'account.payment', 'account.bank.statement']
+        model_to_check = ['account.move.line', 'account.invoice', 'account.payment', 'account.bank.statement']
         for model in model_to_check:
             if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
                 return True
@@ -882,7 +882,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 accounting_props.unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
-            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.journal']
+            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal']
             for model in models_to_delete:
                 res = self.env[model].search([('company_id', '=', self.company_id.id)])
                 if len(res):
