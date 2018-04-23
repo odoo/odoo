@@ -90,6 +90,12 @@
             margin: 2px 0;
             list-style: none;
             border-radius: $border-radius-base;
+            &.bg-error {
+                @extend .bg-danger;
+            }
+            &.text-error {
+                @extend .text-danger;
+            }
         }
     }
 
