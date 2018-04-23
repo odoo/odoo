@@ -11,6 +11,7 @@ from suds.client import Client
 _logger = logging.getLogger(__name__)
 
 try:
+    import stdnum
     import stdnum.eu.vat as stdnum_vat
 except ImportError:
     _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
@@ -40,6 +41,7 @@ class ResPartner(models.Model):
             partner[field] = value
             non_set_address_fields.remove(field)
 
+        print(stdnum.__version__)
         if stdnum_vat is None:
             return {}
 
