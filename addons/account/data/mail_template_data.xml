@@ -71,7 +71,7 @@ from ${object.company_id.name}.
             <field name="body_html" type="html">
 <div>
 % set record = ctx.get('record')
-% set company = record and record.company_id or user.company_id
+% set company = record and record.company_id or ctx.get('company')
 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
 <tbody>
     <!-- HEADER -->
