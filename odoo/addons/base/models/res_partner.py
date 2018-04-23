@@ -706,6 +706,8 @@ class Partner(models.Model):
                 return False
         except requests.exceptions.ConnectionError as e:
             return False
+        except requests.exceptions.Timeout as e:
+            return False
         return base64.b64encode(res.content)
 
     @api.multi
