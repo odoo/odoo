@@ -68,6 +68,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'views/res_users_views.xml',
         'data/service_cron_reverse.xml',
         'views/account_fiscal_year_view.xml',
+        'wizard/multi_compose_message_views.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
