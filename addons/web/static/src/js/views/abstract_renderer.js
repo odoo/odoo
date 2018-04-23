@@ -67,6 +67,11 @@ return Widget.extend({
     getLocalState: function () {
     },
     /**
+     * Order to focus to be given to the content of the current view
+     */
+    giveFocus: function () {
+    },
+    /**
      * This is the reverse operation from getLocalState.  With this method, we
      * expect the renderer to restore all DOM state, if it is relevant.
      *

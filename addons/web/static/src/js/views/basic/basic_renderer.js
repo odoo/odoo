@@ -135,13 +135,6 @@ var BasicRenderer = AbstractRenderer.extend({
             dom.setSelectionRange(field.getFocusableElement().get(0), {start: offset, end: offset});
         }
     },
-
-    /**
-     * Order to focus to be given to the content of the current view
-     */
-    giveFocus:function() {
-    },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
