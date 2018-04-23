@@ -37,7 +37,7 @@ class AccountInvoicePurchase(models.Model):
                     NULL as vendor_bill_id, id as purchase_order_id
                 FROM purchase_order
                 WHERE
-                    invoice_status='to invoice'
+                    invoice_status in ('to invoice', 'no')
             )""")
 
     def name_get(self):
@@ -48,7 +48,10 @@ class AccountInvoicePurchase(models.Model):
             name = doc.name or ''
             if doc.reference:
                 name+=' - '+doc.reference
-            amt = lang.format('%.'+str(doc.currency_id.decimal_places)+'f', doc.amount, True, True)
+            amount = doc.amount
+            if doc.purchase_order_id and doc.purchase_order_id.invoice_status=='no':
+                amount = 0.0
+            amt = lang.format('%.'+str(doc.currency_id.decimal_places)+'f', amount, True, True)
             if doc.currency_id.position=='before':
                 name+= ': {}{}'.format(doc.currency_id.symbol, amt)
             else:
