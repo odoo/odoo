@@ -198,6 +198,21 @@
                 </li>
             </ul>
         </div>
+        <div t-if="searchbar_groupby" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_groupby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-bars fa-lg" />
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
+                <li t-foreach="searchbar_groupby" t-as="option" t-att-class="groupby == option and 'active'">
+                    <a t-att-href="default_url + '?' + keep_query('*', groupby=option)">
+                        <span t-esc="searchbar_groupby[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
     </template>
 
     <template id="portal_contact" name="Contact">
