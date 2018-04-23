@@ -130,36 +130,41 @@
             <h3>Tasks
                 <t t-call="portal.portal_searchbar"/>
             </h3>
-            <t t-if="not tasks">
+            <t t-if="not grouped_tasks">
                 <div class="alert alert-warning mt8" role="alert">
                     There are no tasks.
                 </div>
             </t>
-            <div t-if="tasks" class="panel panel-default">
-                <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
-                    <thead>
-                        <tr class="active">
-                            <th class="col-md-9">Task</th>
-                            <th class="col-md-2">Stage</th>
-                            <th>Ref</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="tasks" t-as="task">
-                            <tr>
-                                <td>
-                                    <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
-                                </td>
-                                <td>
-                                    <span class="label label-info" title="Current stage of the task" t-esc="task.stage_id.name" />
-                                </td>
-                                <td>
-                                    <span t-esc="task.id"/>
-                                </td>
-                            </tr>
-                        </t>
-                    </tbody>
-                </table></div>
+            <div t-if="grouped_tasks" class="panel panel-default">
+                <div class="table-responsive">
+                    <t t-foreach="grouped_tasks" t-as="tasks">
+                        <table class="table table-hover o_portal_my_doc_table">
+                            <thead>
+                                <tr class="active">
+                                    <th t-if="groupby == 'none'" class="col-md-9">Name</th>
+                                    <th t-else="" class="col-md-9"><span t-field="tasks[0].project_id.label_tasks"/> for project: <span t-field="tasks[0].project_id.name"/></th>
+                                    <th class="col-md-2">Stage</th>
+                                    <th>Ref</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="tasks" t-as="task">
+                                    <tr>
+                                        <td>
+                                            <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
+                                        </td>
+                                        <td>
+                                            <span class="label label-info" title="Current stage of the task" t-esc="task.stage_id.name" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="task.id"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
             </div>
             <div t-if="pager" class="o_portal_pager text-center">
                 <t t-call="portal.pager"/>

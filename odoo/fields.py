@@ -2539,6 +2539,7 @@ class Id(Field):
         'string': 'ID',
         'store': True,
         'readonly': True,
+        'prefetch': False,
     }
 
     def update_db(self, model, columns):
