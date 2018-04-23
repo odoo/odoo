@@ -1089,7 +1089,7 @@ ListView.List = Class.extend({
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
             if (value instanceof Array && !_.isEmpty(value)
-                    && !record.get(column.id + '__display')) {
+                    && (!record.get(column.id + '__display') && record.get(column.id + '__display') !== '')) {
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
