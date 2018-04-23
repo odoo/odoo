@@ -30,7 +30,7 @@ class AccountInvoicePurchase(models.Model):
                     id as vendor_bill_id, NULL as purchase_order_id
                 FROM account_invoice
                 WHERE
-                    type='in_invoice'
+                    type='in_invoice' and state in ('open','paid','cancel')
             UNION
                 SELECT
                     -id, name, partner_ref, partner_id, date_order as date, amount_untaxed as amount, currency_id, company_id,
@@ -45,7 +45,7 @@ class AccountInvoicePurchase(models.Model):
         lang_code = self.env.user.lang
         lang = self.env['res.lang'].search([('code', '=', lang_code)]) 
         for doc in self:
-            name = doc.name
+            name = doc.name or ''
             if doc.reference:
                 name+=' - '+doc.reference
             amt = lang.format('%.'+str(doc.currency_id.decimal_places)+'f', doc.amount, True, True)
