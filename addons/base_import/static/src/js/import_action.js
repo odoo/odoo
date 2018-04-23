@@ -301,10 +301,10 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
 
         if (result.headers.length === 1) {
             this.$('.oe_import_options').show();
-            this.onresults(null, null, null, [{
+            this.onresults(null, null, null, {'messages': [{
                 type: 'warning',
                 message: _t("A single column was found in the file, this often means the file separator is incorrect")
-            }]);
+            }]});
         }
 
         this.$('.oe_import_date_format').val(time.strftime_to_moment_format(result.options.date_format));
@@ -472,11 +472,11 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                 // "JSON-RPC error" to an import failure, and
                 // prevent default handling (warning dialog)
                 if (event) { event.preventDefault(); }
-                return $.when([{
+                return $.when({'messages': [{
                     type: 'error',
                     record: false,
                     message: error.data.arguments && error.data.arguments[1] || error.message,
-                }]);
+                }]});
             }) ;
     },
     onvalidate: function () {
@@ -485,22 +485,25 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     },
     onimport: function () {
         var self = this;
-        return this.call_import({ dryrun: false }).done(function (message) {
+        return this.call_import({ dryrun: false }).done(function (results) {
+            var message = results.messages;
             if (!_.any(message, function (message) {
                     return message.type === 'error'; })) {
-                self['import_succeeded']();
+                self['import_succeeded'](results);
                 return;
             }
-            self['import_failed'](message);
+            self['import_failed'](results);
         });
     },
-    onimported: function () {
+    onimported: function (event, from, to, results) {
+        this.do_notify(_t("Import completed"), _.str.sprintf(_t("%d records were successfully imported"), results.ids.length));
         this.exit();
     },
     exit: function () {
         this.trigger_up('history_back');
     },
-    onresults: function (event, from, to, message) {
+    onresults: function (event, from, to, results) {
+        var message = results.messages;
         var no_messages = _.isEmpty(message);
         if (no_messages) {
             message.push({

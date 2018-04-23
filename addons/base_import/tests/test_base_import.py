@@ -422,7 +422,7 @@ class test_convert_import_data(TransactionCase):
         )
 
         # if results empty, no errors
-        self.assertItemsEqual(results, [])
+        self.assertItemsEqual(results['messages'], [])
 
     def test_parse_relational_fields(self):
         """ Ensure that relational fields float and date are correctly
@@ -596,4 +596,4 @@ class test_failures(TransactionCase):
             ['name', 'db_datas'],
             [],
             {'headers': True, 'separator': ',', 'quoting': '"'})
-        self.assertFalse(results, "results should be empty on successful import")
+        self.assertFalse(results['messages'], "results should be empty on successful import")

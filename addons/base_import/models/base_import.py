@@ -698,7 +698,7 @@ class Import(models.TransientModel):
                   error message associated with the error (a string)
                   and ``record`` the data which failed to import (or
                   ``false`` if that data isn't available or provided)
-        :rtype: list({type, message, record})
+        :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
         self._cr.execute('SAVEPOINT import')
@@ -708,11 +708,13 @@ class Import(models.TransientModel):
             # Parse date and float field
             data = self._parse_import_data(data, import_fields, options)
         except ValueError as error:
-            return [{
-                'type': 'error',
-                'message': pycompat.text_type(error),
-                'record': False,
-            }]
+            return {
+                'messages': [{
+                    'type': 'error',
+                    'message': pycompat.text_type(error),
+                    'record': False,
+                }]
+            }
 
         _logger.info('importing %d rows...', len(data))
 
@@ -751,4 +753,4 @@ class Import(models.TransientModel):
                             'field_name': fields[index]
                         })
 
-        return import_result['messages']
+        return import_result
